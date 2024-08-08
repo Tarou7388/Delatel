@@ -3,11 +3,11 @@ CREATE DATABASE Delatel;
 USE Delatel;
 
 CREATE TABLE tb_tipo_soporte (
-    id_tipo_soporte INT AUTO_INCREMENT PRIMARY KEY,
-    tipo_soporte VARCHAR(50) NOT NULL,
-    create_at DATETIME DEFAULT NOW(),
-    update_at DATETIME NULL,
-    inactive_at DATETIME NULL
+    id_tipo_soporte 	INT AUTO_INCREMENT PRIMARY KEY,
+    tipo_soporte 		VARCHAR(50) NOT NULL,
+    create_at 			DATETIME DEFAULT NOW(),
+    update_at 			DATETIME NULL,
+    inactive_at 		DATETIME NULL
 ) ENGINE = InnoDB;
 
 CREATE TABLE tb_departamentos (
@@ -30,55 +30,55 @@ CREATE TABLE tb_distritos (
 ) ENGINE=InnoDB;
 
 CREATE TABLE tb_roles (
-    id_rol INT AUTO_INCREMENT PRIMARY KEY,
-    rol VARCHAR(30) NOT NULL,
-    create_at DATETIME DEFAULT NOW(),
-    update_at DATETIME NULL,
+    id_rol 		INT AUTO_INCREMENT PRIMARY KEY,
+    rol 		VARCHAR(30) NOT NULL,
+    create_at 	DATETIME DEFAULT NOW(),
+    update_at 	DATETIME NULL,
     inactive_at DATETIME NULL
 ) ENGINE = InnoDB;
 
 CREATE TABLE tb_servicios (
-    id_servicio INT PRIMARY KEY AUTO_INCREMENT,
-    servicio VARCHAR(50) NOT NULL,
-    create_at DATETIME DEFAULT NOW(),
-    update_at DATETIME NULL,
-    inactive_at DATETIME NULL,
+    id_servicio 	INT PRIMARY KEY AUTO_INCREMENT,
+    servicio 		VARCHAR(50) NOT NULL,
+    create_at 		DATETIME DEFAULT NOW(),
+    update_at 		DATETIME NULL,
+    inactive_at 	DATETIME NULL,
     CONSTRAINT servi_uk_servicio UNIQUE (servicio)
 ) ENGINE = InnoDB;
 
 CREATE TABLE tb_sectores (
-    id_sector INT PRIMARY KEY AUTO_INCREMENT,
-    id_distrito INT NOT NULL,
-    sector VARCHAR(60) NOT NULL,
-    create_at DATETIME DEFAULT NOW(),
-    update_at DATETIME NULL,
-    inactive_at DATETIME NULL,
+    id_sector 		INT PRIMARY KEY AUTO_INCREMENT,
+    id_distrito 	INT NOT NULL,
+    sector 			VARCHAR(60) NOT NULL,
+    create_at 		DATETIME DEFAULT NOW(),
+    update_at 		DATETIME NULL,
+    inactive_at 	DATETIME NULL,
     CONSTRAINT secto_uk_sector UNIQUE (sector),
     CONSTRAINT secto_fk_id_distrito FOREIGN KEY (id_distrito) REFERENCES tb_distritos (id_distrito)
 ) ENGINE = InnoDB;
 
 CREATE TABLE tb_permisos (
-    id_permiso INT PRIMARY KEY AUTO_INCREMENT,
-    id_rol INT NOT NULL,
-    modulo VARCHAR(30) NOT NULL,
-    permiso BIT NOT NULL DEFAULT 0,
-    create_at DATETIME DEFAULT NOW(),
-    update_at DATETIME NULL,
-    inactive_at DATETIME NULL,
+    id_permiso 		INT PRIMARY KEY AUTO_INCREMENT,
+    id_rol 			INT NOT NULL,
+    modulo 			VARCHAR(30) NOT NULL,
+    permiso 		BIT NOT NULL DEFAULT 0,
+    create_at 		DATETIME DEFAULT NOW(),
+    update_at 		DATETIME NULL,
+    inactive_at 	DATETIME NULL,
     CONSTRAINT permi_fk_id_rol FOREIGN KEY (id_rol) REFERENCES tb_roles (id_rol)
 ) ENGINE = InnoDB;
 
 CREATE TABLE tb_personas (
-    id_persona INT PRIMARY KEY AUTO_INCREMENT,
-    tipo_doc CHAR(3) NOT NULL,
-    nro_doc VARCHAR(15) NOT NULL,
-    apellidos VARCHAR(30) NOT NULL,
-    nombres VARCHAR(30) NOT NULL,
-    telefono CHAR(9) NOT NULL,
-    email VARCHAR(100) NULL,
-    create_at DATETIME NOT NULL DEFAULT NOW(),
-    update_at DATETIME NULL,
-    inactive_at DATETIME NULL,
+    id_persona		INT PRIMARY KEY AUTO_INCREMENT,
+    tipo_doc 		CHAR(3) NOT NULL,
+    nro_doc		 	VARCHAR(15) NOT NULL,
+    apellidos 		VARCHAR(30) NOT NULL,
+    nombres 		VARCHAR(30) NOT NULL,
+    telefono 		CHAR(9) NOT NULL,
+    email 			VARCHAR(100) NULL,
+    create_at 		DATETIME NOT NULL DEFAULT NOW(),
+    update_at 		DATETIME NULL,
+    inactive_at 	DATETIME NULL,
     CONSTRAINT perso_uk_nro_doc UNIQUE (nro_doc),
     CONSTRAINT perso_uk_telefono UNIQUE (telefono)
 ) ENGINE = InnoDB;
@@ -205,3 +205,28 @@ CREATE TABLE tb_soporte (
     CONSTRAINT sopor_fk_id_tipo_soporte FOREIGN KEY (id_tipo_soporte) REFERENCES tb_tipo_soporte (id_tipo_soporte),
     CONSTRAINT sopor_fk_id_tecnico FOREIGN KEY (id_tecnico) REFERENCES tb_responsables (id_responsable)
 ) ENGINE = InnoDB;
+
+CREATE TABLE tb_producto(
+    id_producto      INT PRIMARY KEY AUTO_INCREMENT,
+    tipo_producto    VARCHAR(30) NOT NULL,
+    descripcion     VARCHAR(60) NOT NULL,
+    marca           VARCHAR(30) NOT NULL,
+    precio_actual	DECIMAL(7,2) NOT NULL,
+	create_at 		DATETIME NOT NULL DEFAULT NOW(),
+    update_at 		DATETIME NULL,
+    inactive_at 	DATETIME NULL
+)ENGINE=INNODB;
+
+CREATE TABLE tb_kardex (
+	id_soporte 		INT PRIMARY KEY AUTO_INCREMENT,
+    id_producto     INT ,
+    fecha			DATE NOT NULL,
+    tipo_operacion	VARCHAR(20) NOT NULL,
+    motivo			VARCHAR(90) NOT NULL,
+    cantidad		INT NOT NULL,
+    valor_unico_historico	DECIMAL(7,2) NOT NULL,
+	create_at 		DATETIME NOT NULL DEFAULT NOW(),
+    update_at 		DATETIME NULL,
+    inactive_at 	DATETIME NULL,
+    CONSTRAINT kard_fk_id_producto FOREIGN KEY (id_producto) REFERENCES tb_producto (id_producto)
+)ENGINE=INNODB;
