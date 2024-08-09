@@ -12,24 +12,17 @@ class Producto extends Conexion{
     }
 
     //Función para registrar el producto
-    public function add($params = []):int{
-        $idproducto = null;
-        try{
-            $query = $this->pdo->prepare("call spu_productos_registrar(?,?,?,?)");
-            $query->execute(
-                array(
-                    $params['idmarca'],
-                    $params['idtipoproducto'],
-                    $params['descripcion'],
-                    $params['modelo']
-                )
-            );
-            $row = $query->fetch(PDO::FETCH_ASSOC);
-            $idproducto = $row['idproducto'];
-        }
-        catch(Exception $e){
-            $idproducto = -1;
-        }
-        return $idproducto; 
-    }
+    public function add($params = [])
+  {
+    $query = $this->pdo->prepare("CALL spu_productos_agregar(?,?,?,?)");
+    $query->execute(
+      [
+        $params['tipo_producto'],
+        $params['descripcion'],
+        $params['marca'],
+        $params['precio_actual']
+      ]
+    );
+    return $query->fetchAll(PDO::FETCH_ASSOC);
+  }
 }

@@ -218,12 +218,13 @@ CREATE TABLE tb_producto(
 )ENGINE=INNODB;
 
 CREATE TABLE tb_kardex (
-	id_soporte 		INT PRIMARY KEY AUTO_INCREMENT,
-    id_producto     INT ,
+	id_kardex 		INT PRIMARY KEY AUTO_INCREMENT,
+    id_producto     INT NOT NULL,
     fecha			DATE NOT NULL,
     tipo_operacion	VARCHAR(20) NOT NULL,
     motivo			VARCHAR(90) NOT NULL,
     cantidad		INT NOT NULL,
+    saldo_total		INT NOT NULL,
     valor_unico_historico	DECIMAL(7,2) NOT NULL,
 	create_at 		DATETIME NOT NULL DEFAULT NOW(),
     update_at 		DATETIME NULL,
