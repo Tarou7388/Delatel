@@ -131,6 +131,12 @@ $host = $_ENV['HOST'];
               <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
               Personas
             </a>
+            
+            <!-- Roles!-->
+            <a class="nav-link" href="<?= $host; ?>views/roles.php">
+              <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+              Roles
+            </a>
 
           </div>
         </div>
