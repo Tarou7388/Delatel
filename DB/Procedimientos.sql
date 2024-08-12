@@ -12,57 +12,61 @@ BEGIN
 END //
 DELIMITER ;
 
-
-
-CALL spu_productos_agregar("A","B","C",10.50);
-
-SELECT * FROM tb_producto;
-
-/*/------------------------------------------------/*/
-
-CREATE VIEW vs_kardex AS
-SELECT 
-    K.id_kardex,
-    P.tipo_producto,
-    P.nombre as producto,
-    P.marca,
-    K.fecha,
-    K.tipo_operacion,
-    K.motivo,
-    K.cantidad,
-    K.valor_unitario_historico,
-    P.precio_actual,
-    K.saldo_total
-FROM 
-    tb_kardex K
-INNER JOIN 
-    tb_producto P ON K.idproducto = P.idproducto
+/*/-----------------------VIEW DEL KARDEX-------------------------/*/
+CREATE VIEW vw_kardex AS
+SELECT
+	k.id_kardex,
+    p.tipo_producto as producto,
+    p.descripcion,
+    p.marca,
+    p.precio_actual,
+    k.fecha,
+    k.tipo_operacion,
+    k.motivo,
+    k.cantidad,
+    k.saldo_total,
+    k.valor_unico_historico,
+    k.create_at as fecha_creacion
+FROM
+    tb_producto p
+JOIN
+    tb_kardex k ON p.id_producto = k.id_producto
 ORDER BY 
-    K.fecha DESC;
-
+	k.create_at DESC;
+/*/-----------------------VIEW DEL KARDEX-------------------------/*/
 
 /*/----------------------------------------------- /*/
 DELIMITER $$
-
 CREATE PROCEDURE spu_registrar_kardex(
     IN p_id_producto INT,
     IN p_fecha DATE,
     IN p_tipo_operacion VARCHAR(20),
     IN p_motivo VARCHAR(90),
     IN p_cantidad INT,
-    IN p_valor_unitario_historico DECIMAL(7,2),
-    IN p_saldo_total INT
+    IN p_valor_unitario_historico DECIMAL(7,2)
 )
 BEGIN
     DECLARE p_saldo_kardex_actual INT DEFAULT 0;
-
-    -- Obtener el saldo actual del producto
-    SELECT cantidad
+    
+    -- Obtener el saldo actual
+    SELECT saldo_total
     INTO p_saldo_kardex_actual
     FROM tb_kardex
     WHERE id_producto = p_id_producto
     ORDER BY fecha DESC
     LIMIT 1;
+
+    -- En caso sea nulo, se pone como 0
+    IF p_saldo_kardex_actual IS NULL THEN
+        SET p_saldo_kardex_actual = 0;
+    END IF;
+
+    -- En caso de superar a la cantidad actual en la salida se bloquea el proceso
+    IF p_tipo_operacion = 'SALIDA' THEN
+        IF p_saldo_kardex_actual < p_cantidad THEN
+            SIGNAL SQLSTATE '45000';
+        END IF;
+    END IF;
 
     -- Actualizar el saldo según el tipo de operación
     IF p_tipo_operacion = 'ENTRADA' THEN
@@ -95,14 +99,16 @@ BEGIN
 END $$
 DELIMITER ;
 
+/*
+CALL spu_productos_agregar("A","B","C",25.00);
+SELECT * FROM tb_producto;
 CALL spu_registrar_kardex(
-    1,               -- p_id_producto
-    '2024-08-09',    -- p_fecha
-    'SALIDA',       -- p_tipo_operacion
-    'Daño de fabrica', -- p_motivo
-    10,             -- p_cantidad
-    25.50,           -- p_valor_unitario_historico
-    1000             -- p_saldo_total
+    1,                    -- p_id_producto
+    '2024-08-12',         -- p_fecha
+    'SALIDA',             -- p_tipo_operacion
+    'b',                  -- p_motivo
+    100,                   -- p_cantidad
+    29.00                 -- p_valor_unitario_historico
 );
-
-SELECT * FROM tb_kardex;
+SELECT * FROM vw_kardex;
+*/

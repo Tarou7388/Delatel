@@ -7,10 +7,10 @@
     </ol>
     <div class="card mb-4">
         <div class="card-header">
-                Complete los datos
+            Complete los datos
         </div>
         <div class="card-body">
-              <form action="" id="form-validaciones-kardex" autocomplete="off">
+            <form action="" id="form-validaciones-kardex" autocomplete="off">
                 <!-- primera fila -->
                 <div class="row g-2 m-b2">
 
@@ -34,10 +34,8 @@
 
                     <div class="col-md">
                         <div class="form-floating">
-                            <select name="idcolaborador" id="idcolaborador" class="form-select" required>
-                                <option value="">Seleccione</option>
-                            </select>
-                            <label for="idcolaborador">Colaborador</label>
+                            <input type="date" class="form-control" id="fecha">
+                            <label for="fecha">Fecha</label>
                         </div>
                     </div>
 
@@ -66,13 +64,24 @@
 
                 </div> <!-- ./segunda fila -->
 
+
+                <!-- tercera fila -->
+                <div class="row g-2 mt-2">
+                    <div class="col-md">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="Motivo">
+                            <label for="Motivo">Motivo</label>
+                        </div>
+                    </div>
+                </div> <!-- ./tercera fila -->
+
                 <!-- Botones -->
                 <div class="text-end mt-2">
                     <button type="submit" id="registrar-colaborador" class="btn btn-primary btn-sm">Actualizar Kardex</button>
                     <button type="reset" id="cancelar" class="btn btn-secondary btn-sm">Cancelar Proceso</button>
                 </div>
-                
-            </form>        
+
+            </form>
         </div>
     </div>
 </div>
@@ -81,7 +90,7 @@
 <script>
     document.addEventListener("DOMContentLoaded", () => {
 
-        const idproductoField = document.querySelector("#idproducto"); 
+        const idproductoField = document.querySelector("#idproducto");
         const stockactualField = document.querySelector("#stockactual");
 
         //Función Autoejecutable para mostrar los productos en el select 
@@ -97,7 +106,9 @@
                         tipoProducto.appendChild(tagOption)
                     });
                 })
-                .catch(e => { console.error(e) })
+                .catch(e => {
+                    console.error(e)
+                })
         })();
 
         //Función AutoEjecutable para mostrar los nombre de usuarios de los colaboradores
@@ -113,7 +124,9 @@
                         NomUsuario.appendChild(tagOption)
                     });
                 })
-                .catch(e => { console.error(e) })
+                .catch(e => {
+                    console.error(e)
+                })
         })();
 
         //Obtener valor del idproducto
@@ -157,7 +170,7 @@
         }
 
         //Función para guardar el registro de kardex
-        function GuardarKardex(){
+        function GuardarKardex() {
             const params = new FormData()
             params.append("operacion", "add")
             params.append("idproducto", document.querySelector("#idproducto").value)
@@ -168,8 +181,8 @@
 
             //options > fetch
             const options = {
-                'method' : 'POST',
-                'body'   : params
+                'method': 'POST',
+                'body': params
             }
 
             //Ejecutamos el envío asíncrono
@@ -186,25 +199,28 @@
                         timer: 1500
                     });
                 })
-                .catch( e => { console.error(e) })
+                .catch(e => {
+                    console.error(e)
+                })
         }
 
         document.querySelector("#form-validaciones-kardex").addEventListener("submit", (event) => {
             event.preventDefault();
 
             //Si la cantidad es mayor que el stock actual
-            if(!ValidarCantidadSalida()){
+            if (!ValidarCantidadSalida()) {
                 return;
             }
 
-            if(confirm("¿Estás seguro de realizar esta Actualización?")){
+            if (confirm("¿Estás seguro de realizar esta Actualización?")) {
                 GuardarKardex();
             }
         });
-        
+
     })
 </script>
 
 
 </body>
+
 </html>
