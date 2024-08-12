@@ -1,16 +1,14 @@
 <?php
 session_start();
-require_once '../Models/Gerencia.php';
+require_once '../Models/Usuarios.php';
 
 $usuario = new Usuario();
 
 if(isset($_GET["Operacion"])){
     if($_GET["Operacion"] == "Login"){
-        $resultado = $usuario->login(["nombreUser", $_GET["NombreUser"]]);
+        $resultado = $usuario->login(["nombreUser" => $_GET["nombreUser"]]);
         $Login = [
             "estado" => false,
-            "nombres" => "",
-            "apellidos" => "",
             "idrol" => -1,
             "idUsuario" => -1,
             "mensaje" => ""
@@ -22,7 +20,13 @@ if(isset($_GET["Operacion"])){
                 $Login['idUsuario'] = $resultado['id_usuario'];
                 $Login['mensaje'] = "Bienvenido";
                 $_SESSION['login'] = $Login;
+            }else{
+                $Login['mensaje'] = "Contraseña Incorrecta";
             }
+        }else{
+            $Login["mensaje"] = "No existe";
         }
+        $response = $Login;
+        echo json_encode($response);
     }
 }
