@@ -59,7 +59,7 @@
 -->
 
 
-<?php require_once "../../footer.php"; ?>
+<?php require_once "../footer.php"; ?>
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {

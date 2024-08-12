@@ -85,7 +85,7 @@
         </div>
     </div>
 </div>
-<?php require_once '../../footer.php'; ?>
+<?php require_once "../footer.php"; ?>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.addEventListener("DOMContentLoaded", () => {
