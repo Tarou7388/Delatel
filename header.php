@@ -71,11 +71,11 @@ $host = $_ENV['HOST'];
             </a>
             <div class="collapse" id="collapse1">
               <div class="ps-4">
-                <a class="nav-link" href="<?= $host; ?>views/soporte/Ficha_GPON.php">
+                <a class="nav-link" href="<?= $host; ?>views/Ficha_GPON.php">
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                   Ficha Averias GPON
                 </a>
-                <a class="nav-link" href="<?= $host; ?>views/soporte/Ficha_WISP.php">
+                <a class="nav-link" href="<?= $host; ?>views/Ficha_WISP.php">
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                   Ficha Averias WISP
                 </a>
@@ -109,12 +109,12 @@ $host = $_ENV['HOST'];
             <div class="collapse" id="collapse3">
               <div class="ps-4">
                 <!-- KARDEX!-->
-                <a class="nav-link" href="<?= $host; ?>views/kardex/">
+                <a class="nav-link" href="<?= $host; ?>views/kardex.php">
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                   Kardex
                 </a>
                 <!-- Productos!-->
-                <a class="nav-link" href="<?= $host; ?>views/kardex/productos.php">
+                <a class="nav-link" href="<?= $host; ?>views/productos.php">
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                   Productos
                 </a>
