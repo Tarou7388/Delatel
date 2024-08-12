@@ -12,7 +12,7 @@ class Kardex extends Conexion
 
     public function getAll($params = [])
     {
-        $query = $this->pdo->prepare("SELECT * FROM vs_kardex WHERE producto = ?");
+        $query = $this->pdo->prepare("SELECT * FROM vw_kardex WHERE producto = ?");
         $query->execute([$params['producto']]);
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }

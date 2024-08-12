@@ -71,13 +71,13 @@ $host = $_ENV['HOST'];
             </a>
             <div class="collapse" id="collapse1">
               <div class="ps-4">
-                <a class="nav-link" href="<?= $host; ?>soporte/ficha_GPON.php">
+                <a class="nav-link" href="<?= $host; ?>views/soporte/Ficha_GPON.php">
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                  Opción 1
+                  Ficha Averias GPON
                 </a>
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="<?= $host; ?>views/soporte/Ficha_WISP.php">
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                  Opción 2
+                  Ficha Averias WISP
                 </a>
               </div>
             </div>

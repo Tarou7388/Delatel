@@ -1,8 +1,7 @@
 <?php require_once "../../header.php" ?>
 
-<div class="container mt-5">
+<div class="container-fluid px-4">
     <h2 class="mb-4">Productos</h2>
-
     <!-- Formulario para agregar producto -->
     <div class="card">
         <div class="card-header">Agregar Producto</div>
