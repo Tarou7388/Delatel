@@ -1,4 +1,4 @@
-<?php require_once "../../header.php" ?>
+<?php require_once "../header.php" ?>
 
 <div class="container-fluid px-4">
     <h2 class="mb-4">Productos</h2>
