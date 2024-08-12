@@ -66,8 +66,8 @@ $host = $_ENV['HOST'];
 
             <!-- Boton Desplegable para Soporte *Puede usarlo si lo necesitan!-->
             <a class="nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="false" aria-controls="collapseExample">
-              <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-              Soporte
+              <div class="sb-nav-link-icon"><i class="fa-solid fa-wrench"></i></div>
+              Soporte 
             </a>
             <div class="collapse" id="collapse1">
               <div class="ps-4">
