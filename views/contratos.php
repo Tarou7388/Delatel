@@ -59,25 +59,37 @@
       <h4>Listar contratos</h4>
     </div>
     <div class="card-body">
-      <table id="listarContratos">
+    <table id="listarContratos" class="table table-striped">
         <thead>
           <tr>
-            <th>Column 1</th>
-            <th>Column 2</th>
+            <th>Cliente</th>
+            <th>Contrato</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>Row 1 Data 1</td>
-            <td>Row 1 Data 2</td>
+            <td>Cliente 1</td>
+            <td>Contrato 1</td>
+            <td>
+              <button class="btn btn-sm btn-primary">Editar</button>
+              <button class="btn btn-sm btn-danger">Eliminar</button>
+            </td>
           </tr>
           <tr>
-            <td>Row 2 Data 1</td>
-            <td>Row 2 Data 2</td>
+            <td>Cliente 2</td>
+            <td>Contrato 2</td>
+            <td>
+              <button class="btn btn-sm btn-primary">Editar</button>
+              <button class="btn btn-sm btn-danger">Eliminar</button>
+            </td>
           </tr>
+          <!-- Más filas de ejemplo -->
         </tbody>
       </table>
     </div>
   </div>
 </div>
+<script src="../js/datatables-simple-demo.js">
+</script>
 <?php require_once "../footer.php"; ?>
