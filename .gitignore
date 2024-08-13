@@ -2,3 +2,9 @@ Test/
 test/
 TEST/
 vendor/
+composer.lock
+composer.phar
+node_modules/
+npm-debug.log
+yarn-error.log
+dist/

@@ -5,26 +5,63 @@
         <h2 class="text-center">Registro</h2>
 
         <form>
-            <label class="form-label">Fibra optica</label>
-            <div class="row g-3 mb-2">
-                <div class="col md-6">
-                    <input type="text" class="form-control" id="lblUsuario" placeholder="Usuario">
-                </div>
-                <div class="col md-6">
-                    <input type="text" class="form-control" id="lblClaveAcceso" placeholder="Clave de acceso">
+            <div class="conteiner">
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="text-center card-title">Fibra optica</h6>
+                        <label class="form-label">Datos del servicio</label>
+                        <div class="row g-3 mb-2">
+                            <div class="col md-6">
+                                <input type="text" class="form-control" id="lblUsuario" disabled=true placeholder="Usuario"> <!-- Crear de manera automatica -->
+                            </div>
+                            <div class="col md-6">
+                                <input type="text" class="form-control" id="lblClaveAcceso" disabled=true placeholder="Clave de acceso"> <!-- Crear de manera automatica -->
+                            </div>
+                        </div>
+                        <div class="col md-6">
+                            <input type="number" class="form-control" id="lblPotencia" placeholder="Potencia">
+                        </div>
+                        <label class="form-label mt-2">Datos del Modén</label>
+                        <div class="row g-3 mb-2">
+                            <div class="col md-6">
+                                <input type="text" class="form-control" id="lblSSDI" placeholder="SSDI">
+                            </div>
+                            <div class="col md-6">
+                                <input type="text" class="form-control" id="lblSeguridad" placeholder="Contraseña">
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <select class="form-control" id="slcProducto" placeholder="Marca - Modelo">
+                                <option value="0" selected disabled>Selecione</option>
+                                <option value="1">Huawei - T23</option>
+                                <option value="1">Huawei - T24</option>
+                                <option value="1">Huawei - T25</option>
+                                <option value="1">Huawei - T26</option>
+                                <option value="1">Huawei - T27</option>
+                                <option value="1">LG - N11</option>
+                                <option value="1">Home - U78</option>
+                            </select>
+                        </div>
+                        <div class="row g-3 mb-2">
+                            <div class="col md-6">
+                                <select type="text" class="form-select" id="slcBanda" placeholder="Banda">
+                                    <option value="2G">2G</option>
+                                    <option value="5G" selected>5G</option>
+                                </select>
+                            </div>
+                            <div class="col md-6">
+                                <input type="number" class="form-control" id="lblAntenas" placeholder="Antena#">
+                            </div>
+                            <div class="col md-6 form-check form-switch d-flex align-items-center">
+                                <input class="form-check-input" type="checkbox" id="chkCatv">
+                                <label class="form-check-label" for="chkCatv">CATV</label>
+                            </div>
+                            <button class="btn btn-outline-primary" type="Button" id="btnAniadir">Añadir</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="row g-3 mb-2">
-                <div class="col md-6">
-                    <input type="text" class="form-control" id="lblSSDI" placeholder="SSDI">
-                </div>
-                <div class="col md-6">
-                    <input type="text" class="form-control" id="lblIp" placeholder="IP">
-                </div>
-            </div>
-            <div class="mb-2">
-                <textarea class="form-control" id="confirm-password" placeholder="Señal" rows="3"></textarea>
-            </div>
+    
             <div class="mb-3">
                 <label for="genero" class="form-label">Género</label>
                 <select class="form-select" id="genero">
