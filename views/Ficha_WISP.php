@@ -3,11 +3,15 @@
 <div class="container-fluid px-4">
     <h1 class="mt-4">Control de Averías WISP</h1>
 
-    <div class="text-end">
-        <label for="numero_ficha">N°</label> 
-        <input type="number" class="form-control form-control-sm d-inline-block w-auto">
-        <label for="fecha">Fecha</label> 
-        <input type="date" class="form-control form-control-sm d-inline-block w-auto">
+    <div class="row g-3 mb-2">
+        <div class="row g-3 mb-2">
+            <div class="col md-6">
+                <input type="text" class="form-control" id="lblnumFicha" placeholder="N°" disabled>
+            </div>
+            <div class="col md-6">
+                <input type="date" class="form-control" id="lblfecha" placeholder="Fecha" disabled>
+            </div>
+        </div>
     </div>
 
     <br>
@@ -25,7 +29,7 @@
                     <div class="col-md">
                         <label for="lblnrodocumento">Número Identificador</label> 
                         <div class="input-group">
-                            <input type="tel" class="form-control" maxlength="11" minlength="11" pattern="[0-11]+" id="nrodocumento" autofocus required>            
+                            <input type="tel" class="form-control" maxlength="12" minlength="12" pattern="[0-12]+" id="nrodocumento" autofocus required>            
                             <button class="input-group-text btn btn-secondary" type="button" id="buscar-nrodocumento"><i class="fa-solid fa-magnifying-glass"></i></button>
                         </div>
                     </div>
@@ -105,10 +109,12 @@
                 <hr>
 
                 <!-- Botones -->
-                <div class="text-end">
-                    <button type="button" id="btncodigo_Barra" class="btn btn-warning btn-sm">Verificar Código</button>
-                    <button type="submit" id="btnregistrar_soporte" class="btn btn-primary btn-sm">Registrar Soporte</button>
-                    <button type="reset" id="btncancelar" class="btn btn-secondary btn-sm">Cancelar Proceso</button>
+                <div class="row">
+                    <div class="col-12 text-center text-md-end mb-3">
+                        <button type="button" id="btncodigo_Barra" class="btn btn-warning btn-sm me-2 mb-2 mb-md-0">Verificar Código</button>
+                        <button type="submit" id="btnregistrar_soporte" class="btn btn-primary btn-sm me-2 mb-2 mb-md-0">Registrar Soporte</button>
+                        <button type="reset" id="btncancelar" class="btn btn-secondary btn-sm mb-2 mb-md-0">Cancelar Proceso</button>
+                    </div>
                 </div>
 
             </form>
