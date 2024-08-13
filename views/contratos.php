@@ -1,6 +1,7 @@
 <?php require_once '../header.php'; ?>
 <div class="container">
-  <div class="card mt-3">
+  <h2 class="mt-3">Contratos</h2>
+  <div class="card mt-5">
     <div class="card-header">
       <h4>Registrar contratos</h4>
     </div>
