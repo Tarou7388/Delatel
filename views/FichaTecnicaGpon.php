@@ -3,24 +3,20 @@
 <div class="container">
     <div class="form-container">
         <h2 class="text-center">Registro</h2>
+
         <form>
-            <div class="mb-2">
-                <div class="input-group">
-                    <input type="text" class="form-control" id="codigo-promocional" placeholder="Numero de documento">
-                    <button class="btn btn-outline-primary" type="submit" id="btnBuscarDocumento">Aplicar</button>
-                </div>
-            </div>
-            <div class="mb-2">
-                <input type="text" class="form-control" id="lblNombreCLiente" disabled=true placeholder="Nombre del cliente">
-            </div>
-            <div class="mb-2">
-                <input type="text" class="form-control" id="lblPlanServicio" disabled=true placeholder="Plan de servicio">
-            </div>
-            <hr>
-            <label class="form-label">Parametros del Wireless</label>
+            <label class="form-label">Fibra optica</label>
             <div class="row g-3 mb-2">
                 <div class="col md-6">
-                    <input type="text" class="form-control" id="lblBase" placeholder="Base">
+                    <input type="text" class="form-control" id="lblUsuario" placeholder="Usuario">
+                </div>
+                <div class="col md-6">
+                    <input type="text" class="form-control" id="lblClaveAcceso" placeholder="Clave de acceso">
+                </div>
+            </div>
+            <div class="row g-3 mb-2">
+                <div class="col md-6">
+                    <input type="text" class="form-control" id="lblSSDI" placeholder="SSDI">
                 </div>
                 <div class="col md-6">
                     <input type="text" class="form-control" id="lblIp" placeholder="IP">
@@ -38,6 +34,12 @@
                     <option value="otro">Otro</option>
                     <option value="no-declarar">Prefiero no declarar</option>
                 </select>
+            </div>
+            <div class="mb-2">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="codigo-promocional" placeholder="Numero de documento">
+                    <button class="btn btn-outline-primary" type="submit" id="btnBuscarDocumento">Aplicar</button>
+                </div>
             </div>
             <div class="mb-3">
                 <label for="pais" class="form-label">País</label>

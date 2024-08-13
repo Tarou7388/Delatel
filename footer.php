@@ -13,5 +13,5 @@
 </footer>
 </div>
 </div>
-
+<script src="https://cdn.datatables.net/v/dt/dt-2.1.3/datatables.min.js"></script>
 <script src="<?= $host ?>/js/scripts.js"></script>
