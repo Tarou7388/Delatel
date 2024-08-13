@@ -93,9 +93,9 @@ $host = $_ENV['HOST'];
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                   Ficha Instalacion WISP
                 </a>
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="<?= $host; ?>views/contratos.php">
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                  Opción 2
+                  Contratos
                 </a>
               </div>
             </div>
