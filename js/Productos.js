@@ -1,9 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-    const nombreProducto = document.querySelector("#nombreProducto");
-    const precioActual = document.querySelector("#precioActual");
-    const tipoProducto = document.querySelector("#tipoProducto");
-    const marca = document.querySelector("#marca");
+    const nombreProducto = document.querySelector("#txtNombreProducto");
+    const precioActual = document.querySelector("#txtPrecioActual");
+    const tipoProducto = document.querySelector("#slcTipoProducto");
+    const marca = document.querySelector("#slcMarca");
 
     document.getElementById("form-productos").addEventListener("submit", (event) => {
         event.preventDefault();
