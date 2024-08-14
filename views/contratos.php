@@ -18,17 +18,17 @@
           </div>
           <div class="col-md-3">
             <label for="fecha-inicio" class="form-label">Fecha de inicio</label>
-            <input type="date" class="form-control" id="fecha-inicio" name="fecha-inicio" required>
+            <input type="date" class="form-control" id="fechaInicio" name="fechaInicio" required>
           </div>
           <div class="col-md-3">
             <label for="fecha-fin" class="form-label">Fecha de fin</label>
-            <input type="date" class="form-control" id="fecha-fin" name="fecha-fin" required>
+            <input type="date" class="form-control" id="fechaFin" name="fechaFin" required>
           </div>
         </div>
         <div class="row mt-2">
           <div class="col-md-3">
             <label for="servicio" class="form-label">Servicio</label>
-            <select class="form-select" id="">
+            <select class="form-select" id="servicio">
               <option value="">Elije un valor</option>
             </select>
           </div>
@@ -42,7 +42,7 @@
           </div>
           <div class="col-md-3">
             <label for="" class="form-label">Sector</label>
-            <select name="" class="form-select" id=""></select>
+            <select name="" class="form-select" id="sector"></select>
           </div>
         </div>
         <div class="row">
