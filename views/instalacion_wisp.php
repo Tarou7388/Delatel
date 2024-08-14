@@ -140,24 +140,24 @@
                     <input type="text" id="txtOtros" class="form-control">
                 </div>
             </div>
-        </div>
-    </div>
-    <!-- Cuarto Card -->
-    <div class="row g-3 mt-3">
-        <div class="col-4">
-            <label for="instalador">Instalador:</label>
-            <input id="txtInstalador" class="form-control"></input>
-        </div>
-        <div class="col-3">
-            <label for="fechains">Fecha:</label>
-            <input id="txtFechains" class="form-control"></input>
+            <div class="row g-3 mt-3">
+                <div class="col-4">
+                    <label for="instalador">Instalador:</label>
+                    <input id="txtInstalador" class="form-control"></input>
+                </div>
+                <div class="col-3">
+                    <label for="fechains">Fecha:</label>
+                    <input id="txtFechains" class="form-control"></input>
+                </div>
+            </div>
+
+            <div class="text-end mt-4">
+                <button type="submit" id="btnRegistrar" class="btn btn-primary ">Registrar</button>
+                <button type="reset" id="btnCancelar" class="btn btn-secondary ">Cancelar</button>
+            </div>
         </div>
     </div>
 
-    <div class="text-end mt-4">
-        <button type="submit" id="btnRegistrar" class="btn btn-primary ">Registrar</button>
-        <button type="reset" id="btnCancelar" class="btn btn-secondary ">Cancelar</button>
-    </div>
 
     <?php require_once "../footer.php"; ?>
     </body>
