@@ -8,24 +8,28 @@
         <div class="card-body">
             <form action="" method="" id="form-productos">
                 <div class="form-group">
-                    <label for="Nproducto">Nombre de producto:</label>
-                    <input type="text" class="form-control" id="Nproducto" name="Nproducto" required>
+                    <label for="nombreProducto">Nombre de producto:</label>
+                    <input type="text" class="form-control" id="nombreProducto" name="nombreProducto" required>
                 </div>
                 <div class="form-group">
-                    <label for="tipoproducto">Tipo de Producto:</label>
-                    <select class="form-control" id="idtipoproducto" name="idtipoproducto">
-                        <!-- Aquí se cargarán las opciones de tipo de producto -->
+                    <label for="tipoProducto">Tipo de Producto:</label>
+                    <select class="form-control" id="tipoProducto" name="tipoProducto">
+                        <option value="Router">Router</option>
+                        <option value="Triplexor">Triplexor</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="idmarca">Marca:</label>
-                    <select class="form-control" id="idmarca" name="idmarca">
-                        <!-- Aquí se cargarán las opciones de marca -->
+                    <label for="marca">Marca:</label>
+                    <select class="form-control" id="marca" name="marca">
+                        <option value="Huawei">Huawei</option>
+                        <option value="Netgear">Netgear</option>
+                        <option value="ASUS">ASUS</option>
+                        <option value="SérieECOFLEX10">Série ECOFLEX10.</option>
                     </select>
                 </div>
                 <div class="form-group col-3">
-                    <label for="Precio">Precio:</label>
-                    <input type="number" class="form-control" id="Precio" name="Precio" required>
+                    <label for="precioActual">Precio:</label>
+                    <input type="number" class="form-control" id="precioActual" name="precioActual" required>
                 </div>
                 <button type="submit" class="btn btn-primary mt-3">Agregar Producto</button>
             </form>

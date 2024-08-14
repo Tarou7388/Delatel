@@ -1,81 +1,31 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-    const valtip = document.getElementById("idtipoproducto");
-    const valmr = document.getElementById("idmarca");
-
-    function cargarProductos() {
-        fetch(`../../controllers/Producto.controller.php?operacion=getAll`)
-            .then(response => response.json())
-            .then(data => {
-                const listaProductos = document.getElementById('lista-productos');
-                console.log(data);
-                listaProductos.innerHTML = '';
-                data.forEach((producto, index) => {
-                    const row = `
-                <tr>
-                    <td>${index + 1}</td>
-                    <td>${producto.marcas}</td>
-                    <td>${producto.tipoproducto}</td>
-                    <td>${producto.descripcion}</td>
-                    <td>${producto.modelo}</td>
-                </tr>
-            `;
-                    listaProductos.innerHTML += row;
-                });
-            })
-    };
-
-    (() => {
-        fetch(`../../controllers/Marca.controller.php?operacion=getAll`)
-            .then(response => response.json())
-            .then(data => {
-                const selectMarca = document.getElementById('idmarca');
-                data.forEach(marca => {
-                    const option = document.createElement('option');
-                    option.value = marca.idmarcas;
-                    option.text = marca.marcas;
-                    selectMarca.appendChild(option);
-                });
-            })
-    })();
-
-    (() => {
-        fetch(`../../controllers/Tipoproducto.controller.php?operacion=getAll`)
-            .then(response => response.json())
-            .then(data => {
-                const selectMarca = document.getElementById('idtipoproducto');
-                data.forEach(marca => {
-                    const option = document.createElement('option');
-                    option.value = marca.idtipoproducto;
-                    option.text = marca.tipoproducto;
-                    selectMarca.appendChild(option);
-                });
-            })
-    })();
+    const nombreProducto = document.querySelector("#nombreProducto");
+    const precioActual = document.querySelector("#precioActual");
+    const tipoProducto = document.querySelector("#tipoProducto");
+    const marca = document.querySelector("#marca");
 
     document.getElementById("form-productos").addEventListener("submit", (event) => {
         event.preventDefault();
-        console.log(valtip.value);
-        console.log(valmr.value);
+        console.log(nombreProducto.value);
+        console.log(precioActual.value);
+        console.log(tipoProducto.value);
+        console.log(marca.value);
 
         const params = new FormData();
-        params.append('operacion', 'addpr');
-        params.append('descripcion', document.querySelector("#descripcion").value);
-        params.append('modelo', document.querySelector("#modelo").value);
-        params.append('idtipoproducto', valtip.value);
-        params.append('idmarca', valmr.value);
+        params.append('operacion', 'add');
+        params.append('tipo_producto', tipoProducto.value);
+        params.append('nombreProducto', nombreProducto.value);
+        params.append('precio_actual', precioActual.value);
+        params.append('marca', marca.value);
 
-        fetch('../../controllers/Producto.controller.php', {
-                method: 'POST',
-                body: params
-            })
+        fetch('../controllers/Productos.controllers.php', {
+            method: 'POST',
+            body: params
+        })
             .then(response => response.json())
             .then(data => {
                 console.log(data);
-                cargarProductos();
             })
     });
-
-    cargarProductos();
-
 })

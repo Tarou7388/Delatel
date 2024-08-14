@@ -1,3 +1,4 @@
+
 const config = {
     HOST: "http://localhost/DELATEL/"
 };

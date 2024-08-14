@@ -18,7 +18,7 @@ class Producto extends Conexion{
     $query->execute(
       [
         $params['tipo_producto'],
-        $params['descripcion'],
+        $params['nombreProducto'],
         $params['marca'],
         $params['precio_actual']
       ]
