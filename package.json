@@ -1,5 +1,11 @@
 {
+  "scripts": {
+    "generate-config": "node generate-config.js",
+    "install-and-generate": "npm install && npm run generate-config"
+  },
   "dependencies": {
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "dotenv-webpack": "^8.1.0",
+    "fs-extra": "^11.2.0"
   }
 }

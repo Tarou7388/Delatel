@@ -1,5 +1,5 @@
-/* const env = require('./config');
-console.log(process.env.HOST); */
+import config from '../env.js';
+
 window.addEventListener("DOMContentLoaded", event => {
   
   function $(id) {
@@ -9,13 +9,12 @@ window.addEventListener("DOMContentLoaded", event => {
     const user = $("#NomUser").value;
     const pass = $("#PassUser").value;
     if (user != "") {
-      console.log(user)
-      console.log(pass)
-      fetch(`http://localhost/delatel/controllers/Usuarios.controllers.php?Operacion=Login&nombreUser=${user}&pass=${pass}`)
+      fetch(`${config.HOST}controllers/Usuarios.controllers.php?Operacion=Login&nombreUser=${user}&pass=${pass}`)
         .then((respuesta) => respuesta.json())
         .then((datos) => {
           if (datos.estado) {
             alert(datos.mensaje)
+            window.location.href = `${config.HOST}views`;
           } else {
             alert(datos.mensaje)
           }

@@ -55,4 +55,4 @@
     </body>
 </html>
 
-<script src = "http://localhost/DELATEL/js/Login.js"></script>
+<script type="module" src = "http://localhost/DELATEL/js/Login.js"></script>
