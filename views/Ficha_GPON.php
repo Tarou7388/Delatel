@@ -1,3 +1,4 @@
+
 <?php require_once '../header.php'; ?>
 
 <div class="container-fluid px-4">
@@ -6,10 +7,10 @@
     <div class="row g-3 mb-2">
         <div class="row g-3 mb-2">
             <div class="col md-6">
-                <input type="number" class="form-control" id="lblnumFicha" placeholder="N°" disabled>
+                <input type="number" class="form-control" id="txtNumFicha" placeholder="N°" disabled>
             </div>
             <div class="col md-6">
-                <input type="date" class="form-control" id="lblfecha" placeholder="Fecha" disabled>
+                <input type="date" class="form-control" id="txtFecha" placeholder="Fecha" disabled>
             </div>
         </div>
     </div>
@@ -27,21 +28,21 @@
                  <h5>Datos del Usuario</h5>
                  <div class="row g-2 mb-2">
                      <div class="col-md">
-                         <label for="lblnrodocumento">Número Identificador</label> 
+                         <label>Número Identificador</label> 
                          <div class="input-group">
-                             <input type="tel" class="form-control" maxlength="11" minlength="11" pattern="[0-11]+" id="nrodocumento" autofocus required>            
-                             <button class="input-group-text btn btn-secondary" type="button" id="buscar-nrodocumento"><i class="fa-solid fa-magnifying-glass"></i></button>
+                             <input type="tel" class="form-control" maxlength="11" minlength="11" pattern="[0-11]+" id="txtNrodocumento" autofocus required>            
+                             <button class="input-group-text btn btn-secondary" type="button" id="btnNrodocumento"><i class="fa-solid fa-magnifying-glass"></i></button>
                          </div>
                      </div>
  
                      <div class="col-md">
-                         <label for="lblid_cliente">Cliente</label>
-                         <input type="text" class="form-control" id="id_cliente" disabled>    
+                         <label>Cliente</label>
+                         <input type="text" class="form-control" id="txtCliente" disabled>    
                      </div>
  
                      <div class="col-md">
-                         <label for="lblplan">Plan</label>
-                         <input type="text" class="form-control" id="plan" disabled>
+                         <label>Plan</label>
+                         <input type="text" class="form-control" id="txtPlan" disabled>
                      </div>
  
                  </div> <!-- Fin de la Primera Fila -->
@@ -53,18 +54,18 @@
                 <div class="row g-2 mb-2">
 
                     <div class="col-md">
-                        <label for="lblpppoe">PPPoE</label>
-                        <input type="text" class="form-control" id="pppoe" required>
+                        <label>PPPoE</label>
+                        <input type="text" class="form-control" id="txtPppoe" required>
                     </div>
 
                     <div class="col-md">
-                        <label for="lblpotencia">Potencia</label>
-                        <input type="number" class="form-control" id="potencia" required>
+                        <label>Potencia</label>
+                        <input type="number" class="form-control" id="txtPotencia" required>
                     </div>
 
                     <div class="col-md">
-                        <label for="lblpppoe">CATV</label>
-                        <input type="text" class="form-control" id="catv" placeholder="SI/NO" required>
+                        <label>CATV</label>
+                        <input type="text" class="form-control" id="txtCatv" placeholder="SI/NO" required>
                     </div>
 
                 </div> <!-- Fin de la Segunda Fila -->
@@ -73,18 +74,18 @@
                 <div class="row g-2 mb-2">
 
                     <div class="col-md">
-                        <label for="lblclave">Clave</label>
-                        <input type="text" class="form-control" id="clave" required>
+                        <label>Clave</label>
+                        <input type="text" class="form-control" id="txtClave" required>
                     </div>
 
                     <div class="col-md">
-                        <label for="lblvlan">VLAN</label>
-                        <input type="number" class="form-control" id="vlan" required>
+                        <label>VLAN</label>
+                        <input type="number" class="form-control" id="txtVlan" required>
                     </div>
 
                     <div class="col-md">
-                        <label for="lblpotencia">Potencia</label>
-                        <input type="number" class="form-control" id="potencia" required>
+                        <label>Potencia</label>
+                        <input type="number" class="form-control" id="txtPotencia" required>
                     </div> <!-- Fin de Tercera Fila -->
 
                 </div>
@@ -93,25 +94,25 @@
                 <div class="row g-2 mb-2">
 
                     <div class="col-md">
-                        <label for="lblssid">SSID</label>
-                        <input type="text" class="form-control" id="potencia" required>
+                        <label>SSID</label>
+                        <input type="text" class="form-control" id="txtPotencia" required>
                     </div>
 
                     <div class="col-md">
-                        <label for="lblpass">Password</label>
-                        <input type="text" class="form-control" id="pass" required>
+                        <label>Password</label>
+                        <input type="text" class="form-control" id="txtPass" required>
                     </div>
 
                     <div class="col-md">
-                        <label for="lblotros">Otros</label>
-                        <input type="text" class="form-control" id="otros" required>
+                        <label>Otros</label>
+                        <input type="text" class="form-control" id="txtOtros" required>
                     </div>
 
                 </div>
                 <div>
                     <div class="col-md">
-                        <label for="lblest_Inicial">Estado Inicial</label>
-                        <textarea type="text" class="form-control" id="est_Inicial" style="height: 100px" required></textarea>
+                        <label>Estado Inicial</label>
+                        <textarea type="text" class="form-control" id="txtaEstadoInicial" style="height: 100px" required></textarea>
                     </div>
                 </div> <!-- Fin de Cuarta Fila -->
 
@@ -123,18 +124,18 @@
                  <div class="row g-2 mb-2">  
 
                     <div class="col-md">
-                        <label for="lblpppoe">PPPoE</label>
-                        <input type="text" class="form-control" id="pppoe" required>
+                        <label>PPPoE</label>
+                        <input type="text" class="form-control" id="txtPppoe" required>
                     </div>
 
                     <div class="col-md">
-                        <label for="lblpotencia">Potencia</label>
-                        <input type="number" class="form-control" id="potencia" required>
+                        <label>Potencia</label>
+                        <input type="number" class="form-control" id="txtPotencia" required>
                     </div>
 
                     <div class="col-md">
-                        <label for="lblpppoe">CATV</label>
-                        <input type="text" class="form-control" id="catv" placeholder="SI/NO" required>
+                        <label>CATV</label>
+                        <input type="text" class="form-control" id="txtCatv" placeholder="SI/NO" required>
                     </div>
 
                  </div> <!-- Fin de la Primera Fila -->
@@ -143,18 +144,18 @@
                 <div class="row g-2 mb-2">
 
                     <div class="col-md">
-                        <label for="lblclave">Clave</label>
-                        <input type="text" class="form-control" id="clave" required>
+                        <label>Clave</label>
+                        <input type="text" class="form-control" id="txtClave" required>
                     </div>
 
                     <div class="col-md">
-                        <label for="lblvlan">VLAN</label>
-                        <input type="number" class="form-control" id="vlan" required>
+                        <label>VLAN</label>
+                        <input type="number" class="form-control" id="txtVlan" required>
                     </div>
 
                     <div class="col-md">
-                        <label for="lblpotencia">Potencia</label>
-                        <input type="number" class="form-control" id="potencia" required>
+                        <label>Potencia</label>
+                        <input type="number" class="form-control" id="txtPotencia" required>
                     </div> <!-- Fin de la Segunda Fila -->
 
                 </div>
@@ -163,26 +164,26 @@
                 <div class="row g-2 mb-2">
 
                     <div class="col-md">
-                        <label for="lblssid">SSID</label>
-                        <input type="text" class="form-control" id="potencia" required>
+                        <label>SSID</label>
+                        <input type="text" class="form-control" id="txtSsid" required>
                     </div>
 
                     <div class="col-md">
-                        <label for="lblpass">Password</label>
-                        <input type="text" class="form-control" id="pass" required>
+                        <label>Password</label>
+                        <input type="text" class="form-control" id="txtPass" required>
                     </div>
 
                     <div class="col-md">
-                        <label for="lblotros">Otros</label>
-                        <input type="text" class="form-control" id="otros" required>
+                        <label>Otros</label>
+                        <input type="text" class="form-control" id="txtOtros" required>
                     </div>
 
                 </div>
 
                 <div>
                     <div class="col-md">
-                        <label for="lblproc_Solucion">Procedimiento de Solución</label>
-                        <textarea type="text" class="form-control" id="proc_Solucion" style="height: 100px" required></textarea>    
+                        <label>Procedimiento de Solución</label>
+                        <textarea type="text" class="form-control" id="txtaProceSolucion" style="height: 100px" required></textarea>    
                     </div>
                 </div> <!-- Fin de la Tercera Fila -->
 
@@ -191,9 +192,9 @@
                 <!-- Botones -->
                 <div class="row">
                     <div class="col-12 text-center text-md-end mb-3">
-                        <button type="button" id="btncodigo_Barra" class="btn btn-warning btn-sm me-2 mb-2 mb-md-0">Verificar Código</button>
-                        <button type="submit" id="btnregistrar_soporte" class="btn btn-primary btn-sm me-2 mb-2 mb-md-0">Registrar Soporte</button>
-                        <button type="reset" id="btncancelar" class="btn btn-secondary btn-sm mb-2 mb-md-0">Cancelar Proceso</button>
+                        <button type="button" id="btnCodigoBarra" class="btn btn-warning btn-sm me-2 mb-2 mb-md-0">Verificar Código</button>
+                        <button type="submit" id="btnRegistrarSoporte" class="btn btn-primary btn-sm me-2 mb-2 mb-md-0">Registrar Soporte</button>
+                        <button type="reset" id="btnCancelar" class="btn btn-secondary btn-sm mb-2 mb-md-0">Cancelar Proceso</button>
                     </div>
                 </div>
 

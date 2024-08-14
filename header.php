@@ -68,7 +68,7 @@ $host = $_ENV['HOST'];
             <!-- Boton Desplegable para Soporte *Puede usarlo si lo necesitan!-->
             <a class="nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="false" aria-controls="collapseExample">
               <div class="sb-nav-link-icon"><i class="fa-solid fa-wrench"></i></div>
-              Soporte 
+              Soporte
             </a>
             <div class="collapse" id="collapse1">
               <div class="ps-4">
@@ -126,7 +126,7 @@ $host = $_ENV['HOST'];
               </div>
             </div>
 
-            
+
 
             <!-- Empresas!-->
             <a class="nav-link" href="#">
@@ -134,11 +134,19 @@ $host = $_ENV['HOST'];
               Empresas
             </a>
             <!-- Personas!-->
-            <a class="nav-link" href="#">
+            <a class="nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapseExample">
               <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
               Personas
             </a>
-            
+            <div class="collapse" id="collapse4">
+              <div class="ps-4">
+                <a class="nav-link" href="<?= $host; ?>views/usuarios.php">
+                  <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                  Usuarios
+                </a>
+              </div>
+            </div>
+
             <!-- Roles!-->
             <a class="nav-link" href="<?= $host; ?>views/roles.php">
               <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>

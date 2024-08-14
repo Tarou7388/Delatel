@@ -6,10 +6,10 @@
     <div class="row g-3 mb-2">
         <div class="row g-3 mb-2">
             <div class="col md-6">
-                <input type="number" class="form-control" id="lblnumFicha" placeholder="N°" disabled>
+                <input type="text" class="form-control" id="txtNumFicha" placeholder="N°" disabled>
             </div>
             <div class="col md-6">
-                <input type="date" class="form-control" id="lblfecha" placeholder="Fecha" disabled>
+                <input type="date" class="form-control" id="txtFecha" placeholder="Fecha" disabled>
             </div>
         </div>
     </div>
@@ -27,8 +27,8 @@
                 <div class="row g-2 mb-2">
 
                     <div class="col-md">
-                        <label for="lblperiodo">Periodo</label>
-                        <select class="form-select" id="periodo" aria-label="Selecciona una opción">
+                        <label>Periodo</label>
+                        <select class="form-select" id="slcPeriodo" aria-label="Selecciona una opción">
                             <option selected disabled>Elige una opción</option>
                             <option value="1">Mensual</option>
                             <option value="2">Contado</option>
@@ -36,13 +36,13 @@
                     </div>
 
                     <div class="col-md">
-                        <label for="lblpotencia">Potencia</label>
-                        <input type="text" class="form-control" id="potencia" required>
+                        <label>Potencia</label>
+                        <input type="text" class="form-control" id="txtPotencia" required>
                     </div>
 
                     <div class="col-md">
-                        <label for="lblpotencia">Sintonizador</label>
-                        <input type="text" class="form-control" id="sintonizador">
+                        <label>Sintonizador</label>
+                        <input type="text" class="form-control" id="txtSintonizador">
                     </div>
 
                 </div> <!-- Fin de Primera Fila -->
@@ -52,11 +52,11 @@
                 <!-- Segunda Fila -->
                 <div class="row g-2 mb-2">
 
-                    <div class="col-md">
-                        <label for="lbltriplexor">Triplexor</label>
+                <div class="col-md">
+                        <label>Triplexor</label>
                         <div class="input-group">
-                            <input type="text" id="num_triplexor" class="form-control">
-                            <select class="form-select" id="triplexor" aria-label="Selecciona una opción">
+                            <input type="text" id="txtNumTriplexor" class="form-control">
+                            <select class="form-select" id="slcTriplexor" aria-label="Selecciona una opción">
                                 <option selected disabled>Elige una opción</option>
                                 <option value="1">No</option>
                                 <option value="2">Activo</option>
@@ -66,10 +66,10 @@
                     </div>
 
                     <div class="col-md">
-                        <label for="lblspliter">Spliter</label>
+                        <label>Spliter</label>
                         <div class="input-group">
-                            <input type="text" id="num_pliter" class="form-control">
-                            <select class="form-select" id="spliter" aria-label="Selecciona una opción">
+                            <input type="text" id="txtNumSpliter" class="form-control">
+                            <select class="form-select" id="slcSpliter" aria-label="Selecciona una opción">
                                 <option selected disabled>Elige una opción</option>
                                 <option value="1">1x3</option>
                                 <option value="2">1x5</option>
@@ -79,18 +79,18 @@
                     </div>
 
                     <div class="col-md">
-                        <label for="lbltriplexor">Cable</label>
+                        <label>Cable</label>
                         <div class="input-group">
-                            <input type="text" class="form-control">
-                            <input type="text" class="form-control" id="cable" disabled>
+                            <input type="text" class="form-control" id="txtCable">
+                            <input type="number" class="form-control" id="txtPrecioCable" disabled>
                         </div>
                     </div>
 
                     <div class="col-md">
-                        <label for="lbltriplexor">Conectores</label>
+                        <label>Conectores</label>
                         <div class="input-group">
-                            <input type="number" class="form-control">
-                            <input type="text" class="form-control" id="conector" disabled>
+                            <input type="number" class="form-control" id="txtConector">
+                            <input type="number" class="form-control" id="txtPrecioConector" disabled>
                         </div>
                     </div> <!-- Fin de Segunda Fila -->
 
@@ -99,8 +99,8 @@
                 <!-- Tercera Fila -->
                 <div>
                     <div class="col-md">
-                        <label for="lblproc_Solucion">Detalles</label>
-                        <textarea type="text" class="form-control" id="detalles" style="height: 100px" required></textarea>    
+                        <label>Detalles</label>
+                        <textarea type="text" class="form-control" id="txtaDetalles" style="height: 100px" required></textarea>    
                     </div>
                 </div>
 
@@ -109,9 +109,9 @@
                <!-- Botones -->
                <div class="row">
                     <div class="col-12 text-center text-md-end mb-3">
-                        <button type="button" id="btncodigo_Barra" class="btn btn-warning btn-sm me-2 mb-2 mb-md-0">Verificar Código</button>
-                        <button type="submit" id="btnregistrar_soporte" class="btn btn-primary btn-sm me-2 mb-2 mb-md-0">Registrar Soporte</button>
-                        <button type="reset" id="btncancelar" class="btn btn-secondary btn-sm mb-2 mb-md-0">Cancelar Proceso</button>
+                        <button type="button" id="btnCodigoBarra" class="btn btn-warning btn-sm me-2 mb-2 mb-md-0">Verificar Código</button>
+                        <button type="submit" id="btnRegistrarSoporte" class="btn btn-primary btn-sm me-2 mb-2 mb-md-0">Registrar Soporte</button>
+                        <button type="reset" id="btnCancelar" class="btn btn-secondary btn-sm mb-2 mb-md-0">Cancelar Proceso</button>
                     </div>
                 </div>
 
