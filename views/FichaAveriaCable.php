@@ -6,10 +6,10 @@
     <div class="row g-3 mb-2">
         <div class="row g-3 mb-2">
             <div class="col md-6">
-                <input type="text" class="form-control" id="lblnumFicha" placeholder="N°" disabled>
+                <input type="text" class="form-control" id="txtNumFicha" placeholder="N°" disabled>
             </div>
             <div class="col md-6">
-                <input type="date" class="form-control" id="lblfecha" placeholder="Fecha" disabled>
+                <input type="date" class="form-control" id="txtFecha" placeholder="Fecha" disabled>
             </div>
         </div>
     </div>
@@ -25,27 +25,26 @@
 
                 <!-- Primera Fila -->
                 <h5>Datos del Cliente</h5>
-                <div class="row g-2 mb-2">
-
-                    <div class="col-md">
-                        <label for="lblnrodocumento">Número Identificador</label> 
-                        <div class="input-group">
-                            <input type="tel" class="form-control" maxlength="12" minlength="12" pattern="[0-12]+" id="nrodocumento" autofocus required>            
-                            <button class="input-group-text btn btn-secondary" type="button" id="buscar-nrodocumento"><i class="fa-solid fa-magnifying-glass"></i></button>
-                        </div>
-                    </div>
-
-                    <div class="col-md">
-                        <label for="lblcliente">Cliente</label>
-                        <input type="text" class="form-control" id="id_cliente" disabled>    
-                    </div>
-
-                    <div class="col-md">
-                        <label for="lblplan">Plan</label>
-                        <input type="text" class="form-control" id="plan" disabled>
-                    </div>
-
-                </div> <!-- Fin de la primera fila -->
+                 <div class="row g-2 mb-2">
+                     <div class="col-md">
+                         <label>Número Identificador</label> 
+                         <div class="input-group">
+                             <input type="tel" class="form-control" maxlength="11" minlength="11" pattern="[0-11]+" id="txtNrodocumento" autofocus required>            
+                             <button class="input-group-text btn btn-secondary" type="button" id="btnNrodocumento"><i class="fa-solid fa-magnifying-glass"></i></button>
+                         </div>
+                     </div>
+ 
+                     <div class="col-md">
+                         <label>Cliente</label>
+                         <input type="text" class="form-control" id="txtCliente" disabled>    
+                     </div>
+ 
+                     <div class="col-md">
+                         <label>Plan</label>
+                         <input type="text" class="form-control" id="txtPlan" disabled>
+                     </div>
+ 
+                 </div> <!-- Fin de la Primera Fila -->
 
                 <hr>
 
@@ -54,8 +53,8 @@
                 <div class="row g-2 mb-2">
 
                     <div class="col-md">
-                        <label for="lblperiodo">Periodo</label>
-                        <select class="form-select" id="periodo" aria-label="Selecciona una opción">
+                        <label>Periodo</label>
+                        <select class="form-select" id="slcPeriodo" aria-label="Selecciona una opción">
                             <option selected disabled>Elige una opción</option>
                             <option value="1">Mensual</option>
                             <option value="2">Contado</option>
@@ -63,13 +62,13 @@
                     </div>
 
                     <div class="col-md">
-                        <label for="lblpotencia">Potencia</label>
-                        <input type="text" class="form-control" id="potencia" required>
+                        <label>Potencia</label>
+                        <input type="text" class="form-control" id="txtPotencia" required>
                     </div>
 
                     <div class="col-md">
-                        <label for="lblpotencia">Sintonizador</label>
-                        <input type="text" class="form-control" id="sintonizador">
+                        <label>Sintonizador</label>
+                        <input type="text" class="form-control" id="txtSintonizador">
                     </div>
 
                 </div> <!-- Fin de Segunda Fila -->
@@ -80,10 +79,10 @@
                 <div class="row g-2 mb-2">
 
                     <div class="col-md">
-                        <label for="lbltriplexor">Triplexor</label>
+                        <label>Triplexor</label>
                         <div class="input-group">
-                            <input type="text" id="num_triplexor" class="form-control">
-                            <select class="form-select" id="triplexor" aria-label="Selecciona una opción">
+                            <input type="text" id="txtNumTriplexor" class="form-control">
+                            <select class="form-select" id="slcTriplexor" aria-label="Selecciona una opción">
                                 <option selected disabled>Elige una opción</option>
                                 <option value="1">No</option>
                                 <option value="2">Activo</option>
@@ -93,10 +92,10 @@
                     </div>
 
                     <div class="col-md">
-                        <label for="lblspliter">Spliter</label>
+                        <label>Spliter</label>
                         <div class="input-group">
-                            <input type="text" id="num_pliter" class="form-control">
-                            <select class="form-select" id="spliter" aria-label="Selecciona una opción">
+                            <input type="text" id="txtNumSpliter" class="form-control">
+                            <select class="form-select" id="slcSpliter" aria-label="Selecciona una opción">
                                 <option selected disabled>Elige una opción</option>
                                 <option value="1">1x3</option>
                                 <option value="2">1x5</option>
@@ -106,18 +105,18 @@
                     </div>
 
                     <div class="col-md">
-                        <label for="lbltriplexor">Cable</label>
+                        <label>Cable</label>
                         <div class="input-group">
-                            <input type="text" class="form-control">
-                            <input type="text" class="form-control" id="cable" disabled>
+                            <input type="text" class="form-control" id="txtCable">
+                            <input type="number" class="form-control" id="txtPrecioCable" disabled>
                         </div>
                     </div>
 
                     <div class="col-md">
-                        <label for="lbltriplexor">Conectores</label>
+                        <label>Conectores</label>
                         <div class="input-group">
-                            <input type="number" class="form-control">
-                            <input type="text" class="form-control" id="conector" disabled>
+                            <input type="number" class="form-control" id="txtConector">
+                            <input type="number" class="form-control" id="txtPrecioConector" disabled>
                         </div>
                     </div> <!-- Fin de Tercera Fila -->
 
@@ -126,8 +125,8 @@
                 <!-- Cuarta Fila -->
                 <div>
                     <div class="col-md">
-                        <label for="lblest_Inicial">Estado Inicial</label>
-                        <textarea type="text" class="form-control" id="est_Inicial" style="height: 100px" required></textarea>
+                        <label>Estado Inicial</label>
+                        <textarea type="text" class="form-control" id="txtaEstadoInicial" style="height: 100px" required></textarea>
                     </div>
                 </div>
 
@@ -137,8 +136,8 @@
                 <div class="row g-2 mb-2">
 
                     <div class="col-md">
-                        <label for="lblperiodo">Periodo</label>
-                        <select class="form-select" id="periodo" aria-label="Selecciona una opción">
+                        <label>Periodo</label>
+                        <select class="form-select" id="slcPeriodo" aria-label="Selecciona una opción">
                             <option selected disabled>Elige una opción</option>
                             <option value="1">Mensual</option>
                             <option value="2">Contado</option>
@@ -146,13 +145,13 @@
                     </div>
 
                     <div class="col-md">
-                        <label for="lblpotencia">Potencia</label>
-                        <input type="text" class="form-control" id="potencia" required>
+                        <label>Potencia</label>
+                        <input type="text" class="form-control" id="txtPotencia" required>
                     </div>
 
                     <div class="col-md">
-                        <label for="lblpotencia">Sintonizador</label>
-                        <input type="text" class="form-control" id="sintonizador">
+                        <label>Sintonizador</label>
+                        <input type="text" class="form-control" id="txtSintonizador">
                     </div>
 
                 </div> <!-- Fin de Segunda Fila -->
@@ -162,11 +161,11 @@
                 <!-- Tercera Fila -->
                 <div class="row g-2 mb-2">
 
-                    <div class="col-md">
-                        <label for="lbltriplexor">Triplexor</label>
+                <div class="col-md">
+                        <label>Triplexor</label>
                         <div class="input-group">
-                            <input type="text" id="num_triplexor" class="form-control">
-                            <select class="form-select" id="triplexor" aria-label="Selecciona una opción">
+                            <input type="text" id="txtNumTriplexor" class="form-control">
+                            <select class="form-select" id="slcTriplexor" aria-label="Selecciona una opción">
                                 <option selected disabled>Elige una opción</option>
                                 <option value="1">No</option>
                                 <option value="2">Activo</option>
@@ -176,10 +175,10 @@
                     </div>
 
                     <div class="col-md">
-                        <label for="lblspliter">Spliter</label>
+                        <label>Spliter</label>
                         <div class="input-group">
-                            <input type="text" id="num_pliter" class="form-control">
-                            <select class="form-select" id="spliter" aria-label="Selecciona una opción">
+                            <input type="text" id="txtNumSpliter" class="form-control">
+                            <select class="form-select" id="slcSpliter" aria-label="Selecciona una opción">
                                 <option selected disabled>Elige una opción</option>
                                 <option value="1">1x3</option>
                                 <option value="2">1x5</option>
@@ -189,18 +188,18 @@
                     </div>
 
                     <div class="col-md">
-                        <label for="lbltriplexor">Cable</label>
+                        <label>Cable</label>
                         <div class="input-group">
-                            <input type="text" class="form-control">
-                            <input type="text" class="form-control" id="cable" disabled>
+                            <input type="text" class="form-control" id="txtCable">
+                            <input type="number" class="form-control" id="txtPrecioCable" disabled>
                         </div>
                     </div>
 
                     <div class="col-md">
-                        <label for="lbltriplexor">Conectores</label>
+                        <label>Conectores</label>
                         <div class="input-group">
-                            <input type="number" class="form-control">
-                            <input type="text" class="form-control" id="conector" disabled>
+                            <input type="number" class="form-control" id="txtConector">
+                            <input type="number" class="form-control" id="txtPrecioConector" disabled>
                         </div>
                     </div> <!-- Fin de Tercera Fila -->
 
@@ -209,8 +208,8 @@
                 <!-- Cuarta Fila -->
                 <div>
                     <div class="col-md">
-                        <label for="lblproc_Solucion">Procedimiento de Solución</label>
-                        <textarea type="text" class="form-control" id="proc_Solucion" style="height: 100px" required></textarea>    
+                        <label>Procedimiento de Solución</label>
+                        <textarea type="text" class="form-control" id="txtaProceSolucion" style="height: 100px" required></textarea>    
                     </div>
                 </div> 
 
@@ -219,9 +218,9 @@
                 <!-- Botones -->
                 <div class="row">
                     <div class="col-12 text-center text-md-end mb-3">
-                        <button type="button" id="btncodigo_Barra" class="btn btn-warning btn-sm me-2 mb-2 mb-md-0">Verificar Código</button>
-                        <button type="submit" id="btnregistrar_soporte" class="btn btn-primary btn-sm me-2 mb-2 mb-md-0">Registrar Soporte</button>
-                        <button type="reset" id="btncancelar" class="btn btn-secondary btn-sm mb-2 mb-md-0">Cancelar Proceso</button>
+                        <button type="button" id="btnCodigoBarra" class="btn btn-warning btn-sm me-2 mb-2 mb-md-0">Verificar Código</button>
+                        <button type="submit" id="btnRegistrarSoporte" class="btn btn-primary btn-sm me-2 mb-2 mb-md-0">Registrar Soporte</button>
+                        <button type="reset" id="btnCancelar" class="btn btn-secondary btn-sm mb-2 mb-md-0">Cancelar Proceso</button>
                     </div>
                 </div>
 
