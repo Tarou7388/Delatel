@@ -1,4 +1,7 @@
+/* const env = require('./config');
+console.log(process.env.HOST); */
 window.addEventListener("DOMContentLoaded", event => {
+  
   function $(id) {
     return document.querySelector(id);
   }
