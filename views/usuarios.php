@@ -53,7 +53,7 @@
       <h4>Listar usuarios</h4>
     </div>
     <div class="card-body">
-    <table id="tblListarUsuarios" class="table table-striped">
+    <table id="listarUsuarios" class="table table-striped">
         <thead>
           <tr>
             <th>N°</th>
@@ -96,4 +96,5 @@
     </div>
   </div>
 </div>
+<script src="../js/datatables-simple-demo.js"></script>
 <?php require_once "../footer.php"; ?>

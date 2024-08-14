@@ -59,7 +59,7 @@
       <h4>Listar contratos</h4>
     </div>
     <div class="card-body">
-    <table id="listarContratos" class="table table-striped">
+      <table id="listarContratos" class="table table-striped">
         <thead>
           <tr>
             <th>Cliente</th>
