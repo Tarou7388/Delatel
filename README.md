@@ -27,4 +27,5 @@ Antes de comenzar, asegúrate de tener los siguientes requisitos instalados en t
 
    ```bash
    composer install
+   npm install
    npm run generate-config
