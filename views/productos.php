@@ -8,19 +8,19 @@
         <div class="card-body">
             <form action="" method="" id="form-productos">
                 <div class="form-group">
-                    <label for="nombreProducto">Nombre de producto:</label>
-                    <input type="text" class="form-control" id="nombreProducto" name="nombreProducto" required>
+                    <label for="txtNombreProducto">Nombre de producto:</label>
+                    <input type="text" class="form-control" id="txtNombreProducto" name="txtNombreProducto" required>
                 </div>
                 <div class="form-group">
-                    <label for="tipoProducto">Tipo de Producto:</label>
-                    <select class="form-control" id="tipoProducto" name="tipoProducto">
+                    <label for="slcTipoProducto">Tipo de Producto:</label>
+                    <select class="form-control" id="slcTipoProducto" name="slcTipoProducto" required>
                         <option value="Router">Router</option>
                         <option value="Triplexor">Triplexor</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="marca">Marca:</label>
-                    <select class="form-control" id="marca" name="marca">
+                    <label for="slcMarca">Marca:</label>
+                    <select class="form-control" id="slcMarca" name="slcMarca"  required>
                         <option value="Huawei">Huawei</option>
                         <option value="Netgear">Netgear</option>
                         <option value="ASUS">ASUS</option>
@@ -28,8 +28,8 @@
                     </select>
                 </div>
                 <div class="form-group col-3">
-                    <label for="precioActual">Precio:</label>
-                    <input type="number" class="form-control" id="precioActual" name="precioActual" required>
+                    <label for="slcPrecioActual">Precio:</label>
+                    <input type="number" class="form-control" id="slcPrecioActual" name="slcPrecioActual" required>
                 </div>
                 <button type="submit" class="btn btn-primary mt-3">Agregar Producto</button>
             </form>
@@ -46,7 +46,7 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Marca</th>
+                        <th>slcMarca</th>
                         <th>Tipo de Producto</th>
                         <th>Descripción</th>
                         <th>Modelo</th>
