@@ -29,3 +29,15 @@ Antes de comenzar, asegúrate de tener los siguientes requisitos instalados en t
    composer install
    npm install
    npm run generate-config
+
+   Modificación en el PHP.ini - Lineas 931/938 quitar ;
+   ```
+   extension=fileinfo
+   extension=gd
+   extension=gettext
+   extension=gmp
+   extension=intl
+   extension=imap
+   extension=mbstring
+   extension=exif      ; Must be after mbstring as it depends on it
+   extension=mysqli
