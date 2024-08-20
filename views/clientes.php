@@ -52,8 +52,7 @@
         <thead>
           <tr>
             <th>N°</th>
-            <th>Nombres</th>
-            <th>Apellidos</th>
+            <th>Nombres y Apellidos</th>
             <th>Tipo Doc.</th>
             <th>Numero de Doc.</th>
             <th>Telefono</th>
@@ -65,7 +64,6 @@
         <tbody>
           <tr>
             <td>1</td>
-            <td>persona 1</td>
             <td>persona 1</td>
             <td>DNI</td>
             <td>71592495</td>
@@ -116,5 +114,5 @@
 
 
 </div>
-<script src="../js/clientes-datatable.js"></script>
+<script src="../js/clientes.js"></script>
 <?php require_once '../footer.php'; ?>

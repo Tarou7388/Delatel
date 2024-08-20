@@ -96,5 +96,5 @@
     </div>
   </div>
 </div>
-<script src="../js/datatables-simple-demo.js"></script>
+<script src="../js/usuarios.js"></script>
 <?php require_once "../footer.php"; ?>
