@@ -29,6 +29,7 @@ Antes de comenzar, asegúrate de tener los siguientes requisitos instalados en t
    composer install
    npm install
    npm run generate-config
+   ```
 
    Modificación en el PHP.ini - Lineas 931/938 quitar ;
    ```
@@ -41,3 +42,4 @@ Antes de comenzar, asegúrate de tener los siguientes requisitos instalados en t
    extension=mbstring
    extension=exif      ; Must be after mbstring as it depends on it
    extension=mysqli
+   ```
