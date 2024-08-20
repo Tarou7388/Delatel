@@ -144,6 +144,10 @@ $host = $_ENV['HOST'];
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                   Usuarios
                 </a>
+                <a class="nav-link" href="<?= $host; ?>views/clientes.php">
+                  <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                  Clientes
+                </a>
               </div>
             </div>
 
