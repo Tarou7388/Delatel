@@ -90,7 +90,7 @@ $host = $_ENV['HOST'];
             </a>
             <div class="collapse" id="collapse2">
               <div class="ps-4">
-                <a class="nav-link" href="<?= $host; ?>views/instalacion_wisp.php">
+                <a class="nav-link" href="<?= $host; ?>views/FichaTecnicaWisp.php">
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                   Ficha Instalacion WISP
                 </a>
