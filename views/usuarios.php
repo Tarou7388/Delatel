@@ -8,7 +8,7 @@
     <div class="card-body">
       <form action="">
 
-      
+
         <div class="row">
           <div class="col-md-4">
             <label for="lblTipoDoc" class="form-label">Tipo de Documento</label>
@@ -45,7 +45,10 @@
             <input type="text" id="email" class="form-control">
           </div>
         </div>
+        <button class="btn btn-primary">Registrar</button>
+        <button class="btn btn-danger">Cancelar</button>
       </form>
+
     </div>
   </div>
   <div class="card mt-3">
@@ -53,7 +56,7 @@
       <h4>Listar usuarios</h4>
     </div>
     <div class="card-body">
-    <table id="listarUsuarios" class="table table-striped">
+      <table id="listarUsuarios" class="table table-striped">
         <thead>
           <tr>
             <th>N°</th>
@@ -96,5 +99,5 @@
     </div>
   </div>
 </div>
-<script src="../js/usuarios.js"></script>
+<script src="../js/usuario.js"></script>
 <?php require_once "../footer.php"; ?>

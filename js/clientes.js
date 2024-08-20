@@ -21,7 +21,7 @@ window.addEventListener("DOMContentLoaded", event => {
     // Lógica para guardar cambios
     alert('Cambios guardados');
     // Puedes cerrar el modal manualmente si lo deseas
-    var myModal = new bootstrap.Modal(document.getElementById('updateModal'));
-    myModal.hide();
+    var modal = new bootstrap.Modal(document.getElementById('updateModal'));
+    modal.hide();
   });
 });
