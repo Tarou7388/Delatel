@@ -230,5 +230,5 @@ CREATE TABLE tb_kardex (
 	create_at 		DATETIME NOT NULL DEFAULT NOW(),
     update_at 		DATETIME NULL,
     inactive_at 	DATETIME NULL,
-    CONSTRAINT kard_fk_id_producto FOREIGN KEY (id_producto) REFERENCES tb_producto (id_producto)
+    CONSTRAINT kard_fk_id_producto FOREIGN KEY (id_producto) REFERENCES tb_productos (id_producto)
 )ENGINE=INNODB;
