@@ -7,7 +7,8 @@ CREATE TABLE tb_tipo_soporte (
     tipo_soporte 		VARCHAR(50) NOT NULL,
     create_at 			DATETIME DEFAULT NOW(),
     update_at 			DATETIME NULL,
-    inactive_at 		DATETIME NULL
+    inactive_at 		DATETIME NULL,
+    CONSTRAINT tiposopor_uk_tipo_soporte UNIQUE(tipo_soporte)
 ) ENGINE = InnoDB;
 
 CREATE TABLE tb_departamentos (
