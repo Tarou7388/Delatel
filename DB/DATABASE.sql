@@ -34,7 +34,8 @@ CREATE TABLE tb_roles (
     rol 		VARCHAR(30) NOT NULL,
     create_at 	DATETIME DEFAULT NOW(),
     update_at 	DATETIME NULL,
-    inactive_at DATETIME NULL
+    inactive_at DATETIME NULL,
+    CONSTRAINT roles_uk_rol UNIQUE(rol)
 ) ENGINE = InnoDB;
 
 CREATE TABLE tb_servicios (
