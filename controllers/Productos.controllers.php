@@ -19,3 +19,12 @@ if (isset($_POST['operacion'])) {
       break;
   }
 }
+
+if (isset($_GET['operacion'])) {
+  switch ($_GET['operacion']) {
+    case "getAll":
+      $resultado = $producto->getAll();
+      echo json_encode($resultado);
+      break;
+  }
+}

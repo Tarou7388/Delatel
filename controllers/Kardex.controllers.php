@@ -27,5 +27,12 @@ if (isset($_GET["operacion"])) {
       $resultado = $kardex->getAll();
       echo json_encode($resultado);
       break;
+
+    case "obtenerStock":
+      $datos = ["id_producto" => $_POST['id_producto']];
+      $resultado = $kardex->getStockById($datos);
+      echo json_encode($resultado);
+
+      break;
   }
 }

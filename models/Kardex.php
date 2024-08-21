@@ -17,10 +17,18 @@ class Kardex extends Conexion
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
 
+
+    public function getStockById($params = [])
+    {
+        $query = $this->pdo->prepare("SELECT saldo_total FROM vw_kardex WHERE id_producto = ?");
+        $query->execute($params['id_producto']);
+        return $query->fetch(PDO::FETCH_ASSOC);
+    }
+
     public function add($params = [])
     {
         try {
-            $query = $this->pdo->prepare("CALL spu_registrar_kardex(?, ?, ?, ?, ?, ?)");
+            $query = $this->pdo->prepare("CALL spu_kardex_registrar(?, ?, ?, ?, ?, ?)");
             $query->execute([
                 $params['id_producto'],
                 $params['fecha'],
