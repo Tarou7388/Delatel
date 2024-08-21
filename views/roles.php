@@ -73,17 +73,6 @@
 </div>
 <?php require_once "../footer.php"; ?>
 </body>
-
-
-<script>
-  $(document).ready(function() {
-    $('#myTable').DataTable({
-      "paging": false,
-      "searching": false,
-      "info": false,
-      "lengthChange": false
-    });
-  });
-</script>
+<script src="../js/Rol.js"></script>
 
 </html>
