@@ -22,34 +22,34 @@
             Complete los Datos
         </div>
         <div class="card-body">
-            <form action="" id="frm-registro-gpon" autocomplete="off">
+            <form action="" id="frmRegistroGpon" autocomplete="off">
 
-                 <!-- Primera Fila -->
-                 <h5>Datos del Usuario</h5>
-                 <div class="row g-2 mb-2">
-                     <div class="col-md">
-                         <label>Número Identificador</label> 
-                         <div class="input-group">
-                             <input type="tel" class="form-control" maxlength="11" minlength="11" pattern="[0-11]+" id="txtNrodocumento" autofocus required>            
-                             <button class="input-group-text btn btn-secondary" type="button" id="btnNrodocumento"><i class="fa-solid fa-magnifying-glass"></i></button>
-                         </div>
-                     </div>
- 
-                     <div class="col-md">
-                         <label>Cliente</label>
-                         <input type="text" class="form-control" id="txtCliente" disabled>    
-                     </div>
- 
-                     <div class="col-md">
-                         <label>Plan</label>
-                         <input type="text" class="form-control" id="txtPlan" disabled>
-                     </div>
- 
-                 </div> <!-- Fin de la Primera Fila -->
+                <!-- Primera Fila -->
+                <h5>Datos del Usuario</h5>
+                <div class="row g-2 mb-2">
+                    <div class="col-md">
+                        <label>Número Identificador</label> 
+                        <div class="input-group">
+                            <input type="tel" class="form-control" maxlength="11" minlength="11" pattern="[0-11]+" id="txtNrodocumento" autofocus required>            
+                            <button class="input-group-text btn btn-secondary" type="button" id="btnNrodocumento"><i class="fa-solid fa-magnifying-glass"></i></button>
+                        </div>
+                    </div>
 
-                 <hr>
+                    <div class="col-md">
+                        <label>Cliente</label>
+                        <input type="text" class="form-control" id="txtCliente" disabled>    
+                    </div>
 
-                 <!-- Segunda Fila -->
+                    <div class="col-md">
+                        <label>Plan</label>
+                        <input type="text" class="form-control" id="txtPlan" disabled>
+                    </div>
+
+                </div> <!-- Fin de la Primera Fila -->
+
+                <hr>
+
+                <!-- Segunda Fila -->
                 <h5>Parámetros Técnicos</h5>
                 <div class="row g-2 mb-2">
 
@@ -63,9 +63,9 @@
                         <input type="number" class="form-control" id="txtPotencia" required>
                     </div>
 
-                    <div class="col-md">
-                        <label>CATV</label>
-                        <input type="text" class="form-control" id="txtCatv" placeholder="SI/NO" required>
+                    <div class="col md-6 form-check form-switch d-flex align-items-center">
+                        <input class="form-check-input ms-5"" type="checkbox" id="chkCatv">
+                        <label class="form-check-label" for="chkCatv">CATV</label>
                     </div>
 
                 </div> <!-- Fin de la Segunda Fila -->
@@ -133,9 +133,9 @@
                         <input type="number" class="form-control" id="txtPotencia" required>
                     </div>
 
-                    <div class="col-md">
-                        <label>CATV</label>
-                        <input type="text" class="form-control" id="txtCatv" placeholder="SI/NO" required>
+                    <div class="col md-6 form-check form-switch d-flex align-items-center">
+                        <input class="form-check-input ms-5"" type="checkbox" id="chkCatv">
+                        <label class="form-check-label" for="chkCatv">CATV</label>
                     </div>
 
                  </div> <!-- Fin de la Primera Fila -->

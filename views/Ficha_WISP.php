@@ -22,7 +22,7 @@
             Complete los datos
         </div>
         <div class="card-body">
-            <form action="" id="form-registro-wisp" autocomplete="off">
+            <form action="" id="frmRegistroWisp" autocomplete="off">
 
                 <!-- Primera Fila -->
                 <h5>Datos del Usuario</h5>
