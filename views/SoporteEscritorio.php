@@ -47,21 +47,21 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Planes</h5>
+                                    <h5 class="modal-title" id="exampleModalLabel">Selecciona un Plan</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <select class="form-select" id="planSelect" aria-label="Selecciona un plan">
-                                        <option selected disabled>Selecciona un plan</option>
-                                        <option value="1">WISP</option>
-                                        <option value="2">GPON</option>
-                                        <option value="3">CABLE</option>
-                                        <option value="4">GPON Y CABLE</option>
-                                        <option value="5">WISP Y CABLE</option>
-                                        <option value="6">WISP Y GPON</option>
-                                    </select>
+                                    <ul class="list-group">
+                                        <li class="list-group-item" data-value="1">WISP</li>
+                                        <li class="list-group-item" data-value="2">GPON</li>
+                                        <li class="list-group-item" data-value="3">CABLE</li>
+                                        <li class="list-group-item" data-value="4">GPON Y CABLE</li>
+                                        <li class="list-group-item" data-value="5">WISP Y CABLE</li>
+                                        <li class="list-group-item" data-value="6">WISP Y GPON</li>
+                                    </ul>
                                 </div>
                                 <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                                 </div>
                             </div>
                         </div>
