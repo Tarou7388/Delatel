@@ -35,7 +35,7 @@ window.addEventListener('DOMContentLoaded', event => {
       ]
     });
   });
-  
+
   $(document).ready(function () {
     $('#listarActividades').DataTable({
       "language": {
@@ -51,4 +51,6 @@ window.addEventListener('DOMContentLoaded', event => {
       ]
     });
   });
+  
 });
+

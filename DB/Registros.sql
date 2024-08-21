@@ -126,3 +126,22 @@ INSERT INTO tb_soporte (id_contrato, id_tipo_soporte, id_tecnico, fecha_hora_sol
 (3, 3, 3, '2024-03-21 09:30:00', '2024-03-21 10:00:00', 'Problemas de conectividad en la red.', 'Configuración y prueba de la red realizada.', 'Alta'),
 (4, 1, 4, '2024-04-26 14:00:00', '2024-04-26 15:30:00', 'Falla en el sistema de alarma.', 'Sustitución de los sensores defectuosos realizada.', 'Baja'),
 (5, 2, 5, '2024-05-31 13:00:00', '2024-05-31 14:30:00', 'Sistema de climatización ineficiente.', 'Ajuste y mantenimiento del sistema completado.', 'Media');
+
+CALL spu_productos_agregar("ASUS", "Router A", "RT-AX88U", 25.00, "12345678901234567890123456789012345");
+CALL spu_productos_agregar("Linksys", "Router B", "E8450", 26.00, "12345678901234567890123456789012345");
+CALL spu_productos_agregar("Huawei", "Router C", "WS5200", 27.00, "12345678901234567890123456789012345");
+CALL spu_productos_agregar("Netgear", "Router D", "Nighthawk X6", 28.00, "12345678901234567890123456789012345");
+CALL spu_productos_agregar("Cisco", "Router E", "ISR4331", 29.00, "12345678901234567890123456789012345");
+
+CALL spu_kardex_registrar(1, '2024-08-12', 'ENTRADA', 'Compra Inicial', 100, 25.00);
+CALL spu_kardex_registrar(2, '2024-08-13', 'ENTRADA', 'Reabastecimiento', 100, 26.00);
+CALL spu_kardex_registrar(3, '2024-08-14', 'ENTRADA', 'Pedido Especial', 100, 27.00);
+CALL spu_kardex_registrar(4, '2024-08-15', 'ENTRADA', 'Sustitución', 100, 28.00);
+CALL spu_kardex_registrar(5, '2024-08-16', 'ENTRADA', 'Inventario Completo', 100, 29.00);
+
+CALL spu_kardex_registrar(1, '2024-08-17', 'SALIDA', 'Venta', 50, 25.00);
+CALL spu_kardex_registrar(2, '2024-08-18', 'SALIDA', 'Devolución', 50, 26.00);
+CALL spu_kardex_registrar(3, '2024-08-19', 'SALIDA', 'Prueba de Cliente', 50, 27.00);
+CALL spu_kardex_registrar(4, '2024-08-20', 'SALIDA', 'Muestra', 50, 28.00);
+CALL spu_kardex_registrar(5, '2024-08-21', 'SALIDA', 'Exhibición', 50, 29.00);
+
