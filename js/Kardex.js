@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
         data.forEach(row => {
           const tagOption = document.createElement("option");
           tagOption.value = row.id_producto;
-          tagOption.innerHTML = `${row.nombre} ${row.modelo}`;
+          tagOption.innerHTML = `${row.marca} ${row.modelo} ${row.tipo_producto}`;
           tipoProducto.appendChild(tagOption);
         });
       })
@@ -28,8 +28,12 @@ document.addEventListener("DOMContentLoaded", () => {
   idproductoField.addEventListener("change", () => {
     const idproducto = idproductoField.value;
     if (idproducto) {
+      console.log(idproducto);
       MostrarStockActual(idproducto);
       cantidadField.value = "";
+    }else
+    {
+      cantidadField.value = 0;
     }
   });
 

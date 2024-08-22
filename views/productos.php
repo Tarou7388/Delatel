@@ -7,31 +7,41 @@
         <div class="card-header">Agregar Producto</div>
         <div class="card-body">
             <form action="" method="" id="form-productos">
+                
                 <div class="form-group">
-                    <label for="txtNombreProducto">Nombre de producto:</label>
-                    <input type="text" class="form-control" id="txtNombreProducto" name="txtNombreProducto" required>
-                </div>
-                <div class="form-group">
-                    <label for="slcTipoProducto">Tipo de Producto:</label>
+                    <label for="slcTipoProducto">Tipo Producto:</label>
                     <select class="form-control" id="slcTipoProducto" name="slcTipoProducto" required>
                         <option value="Router">Router</option>
                         <option value="Triplexor">Triplexor</option>
                     </select>
                 </div>
+
                 <div class="form-group">
                     <label for="slcMarca">Marca:</label>
-                    <select class="form-control" id="slcMarca" name="slcMarca"  required>
+                    <select class="form-control" id="slcMarca" name="slcMarca" required>
                         <option value="Huawei">Huawei</option>
                         <option value="Netgear">Netgear</option>
                         <option value="ASUS">ASUS</option>
                         <option value="SérieECOFLEX10">Série ECOFLEX10.</option>
                     </select>
                 </div>
-                <div class="form-group col-3">
-                    <label for="txtPrecioActual">Precio:</label>
-                    <input type="number" class="form-control" id="txtPrecioActual" name="txtPrecioActual" step="0.01" required>
+
+                <div class="form-group">
+                    <label for="txtModelo">Modelo:</label>
+                    <input type="text" class="form-control" id="txtModelo" name="txtModelo" required>
                 </div>
-                <button type="submit" class="btn btn-primary mt-3">Agregar Producto</button>
+
+                <div class="row">
+                    <div class="form-group col-3">
+                        <label for="txtPrecioActual">Precio:</label>
+                        <input type="number" class="form-control" id="txtPrecioActual" name="txtPrecioActual" step="0.01" required>
+                    </div>
+                    <div class="form-group col-3">
+                        <label for="txtCodigoBarras">Codigo Barras:</label>
+                        <input type="text" class="form-control" id="txtCodigoBarras" name="txtCodigoBarras" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Agregar Codigo</button>
             </form>
         </div>
     </div>

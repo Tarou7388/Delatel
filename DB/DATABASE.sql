@@ -214,7 +214,7 @@ CREATE TABLE tb_soporte (
 CREATE TABLE tb_productos(
     id_producto      INT PRIMARY KEY AUTO_INCREMENT,
     marca           VARCHAR(30) NOT NULL,
-    nombre     		VARCHAR(60) NOT NULL,
+    tipo_producto    VARCHAR(60) NOT NULL,
     modelo           VARCHAR(30) NOT NULL,
     precio_actual	DECIMAL(7,2) NOT NULL,
     codigo_barra    VARCHAR(120) NOT NULL,

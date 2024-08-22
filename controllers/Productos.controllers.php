@@ -9,10 +9,11 @@ if (isset($_POST['operacion'])) {
   switch ($_POST['operacion']) {
     case 'add':
       $datos = [
-        "tipo_producto"         => $_POST['tipo_producto'],
-        "nombreProducto"        => $_POST['nombreProducto'],
-        "precio_actual"         => $_POST['precio_actual'],
-        "marca"                 => $_POST['marca'],
+        "marca"             => $_POST['marca'],
+        "tipo_producto"     => $_POST['tipo_producto'],
+        "modelo"            => $_POST['modelo'],
+        "precio_actual"     => $_POST['precio_actual'],
+        "Codigo_Barras"     => $_POST['Codigo_Barras']
       ];
       $resultado = $producto->add($datos);
       echo json_encode($resultado);

@@ -4,14 +4,14 @@ DELIMITER //
 
 CREATE PROCEDURE spu_productos_agregar(
     IN p_marca VARCHAR(30),
-    IN p_nombre VARCHAR(60),
+    IN p_tipo_producto VARCHAR(60),
     IN p_modelo VARCHAR(30),
     IN p_precio_actual DECIMAL(7, 2),
     IN p_codigo_barra VARCHAR(120)
 )
 BEGIN
-    INSERT INTO tb_productos (marca, nombre, modelo, precio_actual, codigo_barra, create_at)
-    VALUES (p_marca, p_nombre, p_modelo, p_precio_actual, p_codigo_barra, NOW());
+    INSERT INTO tb_productos (marca, tipo_producto, modelo, precio_actual, codigo_barra, create_at)
+    VALUES (p_marca, p_tipo_producto, p_modelo, p_precio_actual, p_codigo_barra, NOW());
 END //
 
 DELIMITER ;
@@ -19,8 +19,9 @@ DELIMITER ;
 CREATE VIEW vw_kardex AS
 SELECT
     k.id_kardex,
+    p.id_producto,
     p.modelo,
-    p.nombre,
+    p.tipo_producto,
     p.marca,
     p.precio_actual,
     k.fecha,

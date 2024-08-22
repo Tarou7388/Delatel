@@ -21,14 +21,14 @@ class Producto extends Conexion
 
   public function add($params = [])
   {
-    $query = $this->pdo->prepare("CALL spu_productos_agregar(?,?,?,?)");
+    $query = $this->pdo->prepare("CALL spu_productos_agregar(?,?,?,?,?)");
     $query->execute(
       [
+        $params['marca'],
         $params['tipo_producto'],
-        $params['nombreProducto'],
+        $params['modelo'],
         $params['precio_actual'],
-        $params['marca']
-
+        $params['Codigo_Barras'],
       ]
     );
     return $query->fetchAll(PDO::FETCH_ASSOC);
