@@ -27,12 +27,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   idproductoField.addEventListener("change", () => {
     const idproducto = idproductoField.value;
+
     if (idproducto) {
       console.log(idproducto);
       MostrarStockActual(idproducto);
       cantidadField.value = "";
-    }else
-    {
+    } else {
       cantidadField.value = 0;
     }
   });
@@ -41,9 +41,10 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const response = await fetch(`../controllers/kardex.controllers.php?operacion=obtenerStock&id_producto=${idproducto}`);
       const data = await response.json();
-      stockactualField.value = data.saldo_total;
+      stockactualField.value = data.saldo_total !== undefined ? data.saldo_total : 0;
     } catch (error) {
       console.error("Error al obtener el stock actual:", error);
+      stockactualField.value = 0;
     }
   }
 

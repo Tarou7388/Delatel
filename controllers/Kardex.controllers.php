@@ -8,12 +8,12 @@ if (isset($_POST['operacion'])) {
 
     case 'add':
       $datos = [
-        "idproducto"            => $_POST['idproducto'],
+        "id_producto"            => $_POST['idproducto'],
         "fecha"                  => $_POST['fecha'],
-        "tipooperacion"         => $_POST['tipooperacion'],
+        "tipo_operacion"         => $_POST['tipooperacion'],
         "motivo"                 => $_POST['motivo'],
         "cantidad"               => $_POST['cantidad'],
-        "valorunitariohistorico" => $_POST['valorunitariohistorico'],
+        "valor_unitario_historico" => $_POST['valorunitariohistorico'],
       ];
       $resultado = $kardex->add($datos);
       echo json_encode($resultado);
