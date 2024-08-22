@@ -28,8 +28,8 @@
                     </select>
                 </div>
                 <div class="form-group col-3">
-                    <label for="slcPrecioActual">Precio:</label>
-                    <input type="number" class="form-control" id="slcPrecioActual" name="slcPrecioActual" required>
+                    <label for="txtPrecioActual">Precio:</label>
+                    <input type="number" class="form-control" id="txtPrecioActual" name="txtPrecioActual" step="0.01" required>
                 </div>
                 <button type="submit" class="btn btn-primary mt-3">Agregar Producto</button>
             </form>
