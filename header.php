@@ -62,7 +62,7 @@ $host = $_ENV['HOST'];
             </a>
             <div class="sb-sidenav-menu-heading">Módulos</div>
 
-            <a class="nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="false" aria-controls="collapseExample" hidden>
+            <a class="nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="false" aria-controls="collapseExample" id=molSoporte hidden>
               <div class="sb-nav-link-icon"><i class="fa-solid fa-wrench"></i></div>
               Soporte Tecnico
             </a>
@@ -80,7 +80,7 @@ $host = $_ENV['HOST'];
               </div>
             </div>
 
-            <a class="nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapseExample" hidden>
+            <a class="nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapseExample" id=molContratos hidden>
               <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
               Contratos
             </a>
@@ -102,7 +102,7 @@ $host = $_ENV['HOST'];
               </div>
             </div>
 
-            <a class="nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapseExample" hidden>
+            <a class="nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapseExample" id=molInventariado hidden>
               <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
               Inventariado
             </a>
@@ -120,7 +120,7 @@ $host = $_ENV['HOST'];
               </div>
             </div>
 
-            <a class="nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapseExample" hidden>
+            <a class="nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapseExample" id=molPersonas hidden>
               <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
               Personas
             </a>
@@ -138,7 +138,7 @@ $host = $_ENV['HOST'];
               </div>
             </div>
 
-            <a class="nav-link" href="<?= $host; ?>views/RolesGeneral.php" hidden>
+            <a class="nav-link" href="<?= $host; ?>views/RolesGeneral.php" id=molRoles hidden>
               <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
               Roles
             </a>

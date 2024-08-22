@@ -28,13 +28,12 @@ INSERT INTO tb_distritos (distrito, id_provincia) VALUES
 ('Trujillo Centro', 4),
 ('Callao Centro', 5);
 
-INSERT INTO tb_roles (rol, create_at, update_at, inactive_at) VALUES
-('Administrador', NOW(), NULL, NULL),       -- ID 1
-('Soporte', NOW(), NULL, NULL),             -- ID 2
-('Oficina', NOW(), NULL, NULL),             -- ID 3
-('Tecnico Campo', NOW(), NULL, NULL),       -- ID 4
-('Tecnico Oficina', NOW(), NULL, NULL),     -- ID 5
-('Almacen - Tecnico', NOW(), NULL, NULL);   -- ID 6
+INSERT INTO tb_roles (rol) VALUES
+('Administrador'),       -- ID 1
+('Tecnico Oficina'),     -- ID 2
+('Oficina'),             -- ID 3
+('Tecnico Campo'),       -- ID 4
+('Almacen - Tecnico');   -- ID 5
 
 INSERT INTO tb_servicios (servicio, create_at, update_at, inactive_at) VALUES
 ('Cable', NOW(), NULL, NULL),
@@ -51,12 +50,32 @@ INSERT INTO tb_sectores (id_distrito, sector, create_at, update_at, inactive_at)
 (4, 'Zona Residencial', NOW(), NULL, NULL),
 (5, 'Parque Tecnológico', NOW(), NULL, NULL);
 
-INSERT INTO tb_permisos (id_rol, modulo, permiso, create_at, update_at, inactive_at) VALUES
-(1, 'Usuarios', 1, NOW(), NULL, NULL),
-(1, 'Reportes', 0, NOW(), NULL, NULL),
-(2, 'Usuarios', 0, NOW(), NULL, NULL),
-(2, 'Reportes', 1, NOW(), NULL, NULL),
-(3, 'Usuarios', 0, NOW(), NULL, NULL);
+INSERT INTO tb_permisos (id_rol, modulo, permisoC, permisoR, permisoU, permisoD) VALUES
+(1, 'Soporte', 1,1,1,1),
+(1, 'Contratos', 1,1,1,1),
+(1, 'Inventariado', 1,1,1,1),
+(1, 'Personas', 1,1,1,1),
+(1, 'Roles', 1,1,1,1),
+(2, 'Soporte', 1,1,1,1),
+(2, 'Contratos', 0,0,0,0),
+(2, 'Inventariado', 0,0,0,0),
+(2, 'Personas', 0,1,0,0),
+(2, 'Roles', 0,0,0,0),
+(3, 'Soporte', 0,1,0,0),
+(3, 'Contratos', 1,1,1,1),
+(3, 'Inventariado', 0,0,0,0),
+(3, 'Personas', 1,1,1,1),
+(3, 'Roles', 0,0,0,0),
+(4, 'Soporte', 1,1,1,1),
+(4, 'Contratos', 0,1,0,0),
+(4, 'Inventariado', 0,0,0,0),
+(4, 'Personas', 0,1,0,0),
+(4, 'Roles', 0,0,0,0),
+(5, 'Soporte', 1,1,1,1),
+(5, 'Contratos', 0,1,0,0),
+(5, 'Inventariado', 1,1,1,1),
+(5, 'Personas', 0,1,0,0),
+(5, 'Roles', 0,0,0,0);
 
 INSERT INTO tb_personas (tipo_doc, nro_doc, apellidos, nombres, telefono, email, create_at, update_at, inactive_at) VALUES
 ('DNI', '12345678', 'García', 'Luis', '987654321', 'luis.garcia@example.com', NOW(), NULL, NULL),
@@ -139,8 +158,12 @@ CALL spu_kardex_registrar(3, '2024-08-14', 'ENTRADA', 'Pedido Especial', 100, 27
 CALL spu_kardex_registrar(4, '2024-08-15', 'ENTRADA', 'Sustitución', 100, 28.00);
 CALL spu_kardex_registrar(5, '2024-08-16', 'ENTRADA', 'Inventario Completo', 100, 29.00);
 
+
 CALL spu_kardex_registrar(1, '2024-08-17', 'SALIDA', 'Venta', 50, 25.00);
 CALL spu_kardex_registrar(1, '2024-08-17', 'SALIDA', 'Venta prueba', 65, 25.00);
+
+SELECT * from tb_kardex;
+
 CALL spu_kardex_registrar(2, '2024-08-18', 'SALIDA', 'Devolución', 50, 26.00);
 CALL spu_kardex_registrar(3, '2024-08-19', 'SALIDA', 'Prueba de Cliente', 50, 27.00);
 CALL spu_kardex_registrar(4, '2024-08-20', 'SALIDA', 'Muestra', 50, 28.00);
