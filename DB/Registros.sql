@@ -140,6 +140,7 @@ CALL spu_kardex_registrar(4, '2024-08-15', 'ENTRADA', 'Sustitución', 100, 28.00
 CALL spu_kardex_registrar(5, '2024-08-16', 'ENTRADA', 'Inventario Completo', 100, 29.00);
 
 CALL spu_kardex_registrar(1, '2024-08-17', 'SALIDA', 'Venta', 50, 25.00);
+CALL spu_kardex_registrar(1, '2024-08-17', 'SALIDA', 'Venta prueba', 65, 25.00);
 CALL spu_kardex_registrar(2, '2024-08-18', 'SALIDA', 'Devolución', 50, 26.00);
 CALL spu_kardex_registrar(3, '2024-08-19', 'SALIDA', 'Prueba de Cliente', 50, 27.00);
 CALL spu_kardex_registrar(4, '2024-08-20', 'SALIDA', 'Muestra', 50, 28.00);

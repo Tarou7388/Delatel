@@ -26,4 +26,22 @@ class Usuario extends Conexion
             die($e->getMessage());
         }
     }
+    public function registrar($data = [])
+    {
+        try {
+            $consulta = $this->pdo->prepare("CALL spu_usuarios_registrar(?,?,?)");
+            $consulta->execute(
+                array(
+                    $data['idPersona'],
+                    $data['nombreUser'],
+                    $data['pass']
+                )
+            );
+
+            return $consulta->fetch(PDO::FETCH_ASSOC);
+        } 
+        catch(Exception $e){
+            die($e->getMessage());
+        }
+    }
 }
