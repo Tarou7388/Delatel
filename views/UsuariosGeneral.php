@@ -19,13 +19,13 @@
           <div class="col-md-4">
             <label for="" class="form-label">Numero de documento</label>
             <div class="input-group">
-              <input type="number" id="nDoc" class="form-control">
+              <input type="number" id="txtNdoc" class="form-control" autocomplete="off">
               <button class="btn btn-primary" type="button" id="btnBuscar">Buscar</button>
             </div>
           </div>
           <div class="col-md-4">
             <label for="" class="form-label">Apellidos</label>
-            <input type="text" id="txtPaterno" class="form-control" disabled>
+            <input type="text" id="txtApe" class="form-control" disabled>
           </div>
         </div>
 
@@ -34,19 +34,33 @@
         <div class="row">
           <div class="col-md-4">
             <label for="" class="form-label">Nombres</label>
-            <input type="text" id="nombre" class="form-control" disabled>
+            <input type="text" id="txtNombre" class="form-control" disabled >
           </div>
           <div class="col-md-4">
             <label for="" class="form-label">Telefono Principal</label>
-            <input type="text" id="telPrincipal" class="form-control">
+            <input type="text" id="txtTelPrincipal" class="form-control" autocomplete="off">
           </div>
           <div class="col-md-4">
             <label for="" class="form-label">Correo</label>
-            <input type="text" id="email" class="form-control">
+            <input type="text" id="txtEmail" class="form-control" autocomplete="off">
           </div>
         </div>
-        <button class="btn btn-primary">Registrar</button>
-        <button class="btn btn-danger">Cancelar</button>
+        <div class="row">
+          <div class="col-md-4">
+            <label for="" class="form-label">Usuario</label>
+            <input type="text" id="txtUsuario" class="form-control" autocomplete="off">
+          </div>
+          <div class="col-md-4">
+            <label for="" class="form-label">Contraseña</label>
+            <input type="password" id="txtContrasena" class="form-control" autocomplete="off">
+          </div>
+        </div>
+        <div class="row mt-4">
+          <div class="col">
+            <button class="btn btn-primary">Registrar</button>
+            <button class="btn btn-danger">Cancelar</button>
+          </div>
+        </div>
       </form>
 
     </div>
@@ -60,8 +74,8 @@
         <thead>
           <tr>
             <th>N°</th>
-            <th>Usuario</th>
-            <th>Nombre del usuario</th>
+            <th>Nombre y Apellidos</th>
+            <th>Nombre de usuario</th>
             <th>Cargo</th>
             <th>Fecha de inicio</th>
             <th>Fecha de baja</th>
@@ -69,7 +83,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
+          <!-- <tr>
             <td>1</td>
             <td>usuario 1</td>
             <td>nombre 1</td>
@@ -93,7 +107,7 @@
               <button class="btn btn-sm btn-danger">Eliminar</button>
             </td>
           </tr>
-          <!-- Más filas de ejemplo -->
+          Más filas de ejemplo -->
         </tbody>
       </table>
     </div>

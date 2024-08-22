@@ -39,3 +39,20 @@ BEGIN
         VALUES
             (p_id_persona, p_nombre_user, p_pass);
 END $$
+
+CREATE VIEW vw_usuarios AS
+SELECT
+    pe.apellidos,
+    pe.nombres,
+    us.nombre_user,
+    ro.rol as "Cargo",
+    us.create_at,
+    us.inactive_at
+FROM
+    tb_responsables res
+INNER JOIN
+    tb_usuarios us ON res.id_usuario = us.id_usuario
+INNER JOIN
+    tb_personas pe ON us.id_persona = pe.id_persona
+INNER JOIN
+    tb_roles ro ON res.id_rol = ro.id_rol;
