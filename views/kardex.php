@@ -48,8 +48,8 @@
                         <div class="form-floating">
                             <select name="slcTipomovimiento" id="slcTipomovimiento" class="form-select" required>
                                 <option value="">Seleccione</option>
-                                <option value="E">Entrada</option>
-                                <option value="S">Salida</option>
+                                <option value="ENTRADA">Entrada</option>
+                                <option value="SALIDA">Salida</option>
                             </select>
                             <label for="slcTipomovimiento">Tipo de Movimiento</label>
                         </div>
@@ -62,13 +62,20 @@
                         </div>
                     </div>
 
+                    <div class="col-md">
+                        <div class="form-floating">
+                            <input type="number" minlength="0" class="form-control" id="txtValorunitario" step="0.01" required>
+                            <label for="txtValorunitario">Valor Unitario</label>
+                        </div>
+                    </div>
+
                 </div> <!-- ./segunda fila -->
 
                 <!-- tercera fila -->
                 <div class="row g-2 mt-2">
                     <div class="col-md">
                         <div class="form-floating">
-                            <textarea name="txtaMotivo" id=""></textarea>
+                            <textarea name="txtaMotivo" id="txtaMotivo" class="form-control" style="width: 100%;" rows="5"></textarea>
                             <label for="txtaMotivo">Motivo</label>
                         </div>
                     </div>

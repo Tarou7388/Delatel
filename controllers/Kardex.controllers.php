@@ -5,14 +5,15 @@ $kardex = new Kardex();
 
 if (isset($_POST['operacion'])) {
   switch ($_POST['operacion']) {
+
     case 'add':
       $datos = [
-        "id_producto"            => $_POST['idproducto'],
+        "idproducto"            => $_POST['idproducto'],
         "fecha"                  => $_POST['fecha'],
-        "tipo_operacion"         => $_POST['tipooperacion'],
+        "tipooperacion"         => $_POST['tipooperacion'],
         "motivo"                 => $_POST['motivo'],
         "cantidad"               => $_POST['cantidad'],
-        "valor_unitario_historico" => $_POST['valorunitariohistorico'],
+        "valorunitariohistorico" => $_POST['valorunitariohistorico'],
       ];
       $resultado = $kardex->add($datos);
       echo json_encode($resultado);
@@ -29,10 +30,7 @@ if (isset($_GET["operacion"])) {
       break;
 
     case "obtenerStock":
-      $datos = ["id_producto" => $_POST['id_producto']];
-      $resultado = $kardex->getStockById($datos);
-      echo json_encode($resultado);
-
+      echo json_encode($kardex->getStockById(["id_producto" => $_GET['id_producto']]));
       break;
   }
 }

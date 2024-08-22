@@ -11,8 +11,8 @@ if (isset($_POST['operacion'])) {
       $datos = [
         "tipo_producto"         => $_POST['tipo_producto'],
         "nombreProducto"        => $_POST['nombreProducto'],
-        "marca"                 => $_POST['marca'],
         "precio_actual"         => $_POST['precio_actual'],
+        "marca"                 => $_POST['marca'],
       ];
       $resultado = $producto->add($datos);
       echo json_encode($resultado);

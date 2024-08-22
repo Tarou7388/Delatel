@@ -18,7 +18,7 @@ class Producto extends Conexion
     $query->execute();
     return $query->fetchAll(PDO::FETCH_ASSOC);
   }
-  //Función para registrar el producto
+
   public function add($params = [])
   {
     $query = $this->pdo->prepare("CALL spu_productos_agregar(?,?,?,?)");
@@ -26,8 +26,9 @@ class Producto extends Conexion
       [
         $params['tipo_producto'],
         $params['nombreProducto'],
-        $params['marca'],
-        $params['precio_actual']
+        $params['precio_actual'],
+        $params['marca']
+
       ]
     );
     return $query->fetchAll(PDO::FETCH_ASSOC);

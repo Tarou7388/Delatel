@@ -26,18 +26,15 @@ $host = $_ENV['HOST'];
 <body class="sb-nav-fixed">
 
   <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-    <!-- Navbar Brand-->
     <a class="navbar-brand ps-3" href="<?= $host; ?>dashboard.php">Dashboard Delatel</a>
-    <!-- Sidebar Toggle-->
     <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
-    <!-- Navbar Search-->
+
     <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
       <div class="input-group">
         <input class="form-control" type="text" placeholder="Buscar cliente" aria-label="Search for..." aria-describedby="btnNavbarSearch" />
         <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
       </div>
     </form>
-    <!-- Navbar-->
     <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i>
@@ -65,29 +62,29 @@ $host = $_ENV['HOST'];
             </a>
             <div class="sb-sidenav-menu-heading">Módulos</div>
 
-            <!-- Boton Desplegable para Soporte *Puede usarlo si lo necesitan!-->
-            <a class="nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="false" aria-controls="collapseExample">
+            <a class="nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="false" aria-controls="collapseExample" id=molSoporte hidden>
               <div class="sb-nav-link-icon"><i class="fa-solid fa-wrench"></i></div>
-              Soporte
+              Soporte Tecnico
             </a>
+
             <div class="collapse" id="collapse1">
               <div class="ps-4">
-                <a class="nav-link" href="<?= $host; ?>views/Ficha_GPON.php">
+                <a class="nav-link" href="<?= $host; ?>views/FichaGpon.php">
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                   Ficha Averias GPON
                 </a>
-                <a class="nav-link" href="<?= $host; ?>views/Ficha_WISP.php">
+                <a class="nav-link" href="<?= $host; ?>views/FichaWisp.php">
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                   Ficha Averias WISP
                 </a>
               </div>
             </div>
 
-            <!-- Boton Desplegable para Instalaciones *Puede usarlo si lo necesitan!-->
-            <a class="nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapseExample">
+            <a class="nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapseExample" id=molContratos hidden>
               <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-              Instalacion
+              Contratos
             </a>
+
             <div class="collapse" id="collapse2">
               <div class="ps-4">
                 <a class="nav-link" href="<?= $host; ?>views/FichaTecnicaWisp.php">
@@ -98,61 +95,50 @@ $host = $_ENV['HOST'];
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                   Ficha Instalacion GPON
                 </a>
-                <a class="nav-link" href="<?= $host; ?>views/contratos.php">
+                <a class="nav-link" href="<?= $host; ?>views/ContratosGeneral.php">
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                   Contratos
                 </a>
               </div>
             </div>
 
-
-            <!-- Boton Desplegable para Kardex/Productos *Puede usarlo si lo necesitan!-->
-            <a class="nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapseExample">
+            <a class="nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapseExample" id=molInventariado hidden>
               <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
               Inventariado
             </a>
+
             <div class="collapse" id="collapse3">
               <div class="ps-4">
-                <!-- KARDEX!-->
-                <a class="nav-link" href="<?= $host; ?>views/kardex.php">
+                <a class="nav-link" href="<?= $host; ?>views/Kardex.php">
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                   Kardex
                 </a>
-                <!-- Productos!-->
-                <a class="nav-link" href="<?= $host; ?>views/productos.php">
+                <a class="nav-link" href="<?= $host; ?>views/Productos.php">
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                   Productos
                 </a>
               </div>
             </div>
 
-
-
-            <!-- Empresas!-->
-            <a class="nav-link" href="#">
-              <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-              Empresas
-            </a>
-            <!-- Personas!-->
-            <a class="nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapseExample">
+            <a class="nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapseExample" id=molPersonas hidden>
               <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
               Personas
             </a>
+
             <div class="collapse" id="collapse4">
               <div class="ps-4">
-                <a class="nav-link" href="<?= $host; ?>views/usuarios.php">
+                <a class="nav-link" href="<?= $host; ?>views/UsuariosGeneral.php">
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                   Usuarios
                 </a>
-                <a class="nav-link" href="<?= $host; ?>views/clientes.php">
+                <a class="nav-link" href="<?= $host; ?>views/ClientesGeneral.php">
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                   Clientes
                 </a>
               </div>
             </div>
 
-            <!-- Roles!-->
-            <a class="nav-link" href="<?= $host; ?>views/roles.php">
+            <a class="nav-link" href="<?= $host; ?>views/RolesGeneral.php" id=molRoles hidden>
               <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
               Roles
             </a>
