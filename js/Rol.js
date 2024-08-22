@@ -2,10 +2,12 @@ document.addEventListener("DOMContentLoaded", () => {
   // DataTable
   $(document).ready(function() {
     $('#myTable').DataTable({
-      "paging": false,
-      "searching": false,
-      "info": false,
-      "lengthChange": false
+      language: {
+        "url": "//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json"
+      },
+      paging: true,
+      searching: true,
+      info: false
     });
   });
 
@@ -44,4 +46,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
   //Fin registrar rol
+
+  
 });

@@ -26,4 +26,7 @@ class Roles extends Conexion{
       return $e->getMessage();
     }
   }
+  public function getPerm(){
+    
+  }
 }
