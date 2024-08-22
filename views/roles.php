@@ -9,11 +9,14 @@
       <div class="card-body">
         <div class="col-md-2 mb-3">
           <div class="form-group">
-            <form action="">
+            <!-- Cambiado el formulario para que tenga un id -->
+            <form id="frmRol">
               <label for="nombreRol">Nombre de Rol</label>
               <div class="input-group">
-                <input type="text" class="form-control" id="nombreRol" name="nombreRol" required>
-                <button class="btn btn-primary" type="button">Agregar</button>
+                <!-- Asegúrate de que el input tenga el atributo name correcto -->
+                <input type="text" class="form-control" id="nombreRol" name="rol" required autocomplete="off">
+                <!-- Cambiado el botón para que no envíe el formulario tradicionalmente -->
+                <button class="btn btn-primary" type="submit">Agregar</button>
               </div>
             </form>
           </div>
@@ -21,6 +24,7 @@
       </div>
     </div>
   </div>
+
 
   <div class="container-fluid d-flex justify-content-center py-4">
     <div class="card w-100" style="max-width: 90%;">
