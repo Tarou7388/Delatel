@@ -160,9 +160,6 @@ CALL spu_kardex_registrar(5, '2024-08-16', 'ENTRADA', 'Inventario Completo', 100
 
 
 CALL spu_kardex_registrar(1, '2024-08-17', 'SALIDA', 'Venta', 50, 25.00);
-CALL spu_kardex_registrar(1, '2024-08-17', 'SALIDA', 'Venta prueba', 65, 25.00);
-
-SELECT * from tb_kardex;
 
 CALL spu_kardex_registrar(2, '2024-08-18', 'SALIDA', 'Devolución', 50, 26.00);
 CALL spu_kardex_registrar(3, '2024-08-19', 'SALIDA', 'Prueba de Cliente', 50, 27.00);

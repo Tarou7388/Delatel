@@ -1,5 +1,7 @@
 <?php
 session_start();
+
+
 require_once '../Models/Usuarios.php';
 
 $usuario = new Usuario();
@@ -16,7 +18,7 @@ if(isset($_GET["Operacion"])){
         if ($resultado != false){
             if (password_verify($_GET['pass'], $resultado["pass"])) {
                 $Login['estado'] = true;
-                $Login['idrol'] = $resultado['id_rol'];
+                $Login['idRol'] = $resultado['id_rol'];
                 $Login['idUsuario'] = $resultado['id_usuario'];
                 $Login['mensaje'] = "Bienvenido";
                 $_SESSION['login'] = $Login;
@@ -28,5 +30,10 @@ if(isset($_GET["Operacion"])){
         }
         $response = $Login;
         echo json_encode($response);
+    }
+    if($_GET["Operacion"] == "CerrarSesion"){
+        session_unset();
+        session_destroy();
+        header("Location: http://localhost/delatel");
     }
 }

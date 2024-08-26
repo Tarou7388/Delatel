@@ -1,3 +1,18 @@
+<?php
+session_start();
+
+require __DIR__ . '/vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
+$host = $_ENV['HOST'];
+
+if (isset($_SESSION['login']) && $_SESSION['login']['estado']) {
+  header("Location: $host/views");
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -20,9 +35,9 @@
                                 <div class="card shadow-lg border-0 rounded-lg mt-5">
                                     <div class="card-header"><h3 class="text-center font-weight-light my-4">Iniciar sesion</h3></div>
                                     <div class="card-body">
-                                        <form>
+                                        <form id=frmLogin>
                                             <div class="form-floating mb-3">
-                                                <input class="form-control" id="NomUser" type="email" placeholder="name@example.com" />
+                                                <input class="form-control" id="NomUser" type="text" placeholder="name@example.com" />
                                                 <label for="NomUser">Nombre Usuario</label>
                                             </div>
                                             <div class="form-floating mb-3">
@@ -30,7 +45,7 @@
                                                 <label for="PassUser">Clave de Acceso</label>
                                             </div>
                                             <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
-                                                <a class="btn btn-primary" id="btnIniciar">Iniciar Sesion</a>
+                                                <button class="btn btn-primary" id=btnIniciar type="submit">Iniciar Sesión</button>
                                             </div>
                                         </form>
                                     </div>

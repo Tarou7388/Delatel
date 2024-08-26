@@ -7,9 +7,12 @@ CREATE PROCEDURE spu_login_usuarios(
 )
 BEGIN
     SELECT 
+        u.nombre_user,
         u.id_usuario,
+        r.id_responsable as id_usuario,
         u.pass,
         r.id_rol
+        
     FROM 
         tb_usuarios u
     JOIN 

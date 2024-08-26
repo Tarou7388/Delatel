@@ -1,9 +1,21 @@
 <?php
+
+session_start();
+
+$permisos = $_SESSION['permisos'];
+
 require __DIR__ . '/vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
 $host = $_ENV['HOST'];
+
+if (!isset($_SESSION['login']) || (isset($_SESSION['login']) && !$_SESSION['login']['estado'])) {
+  //Te vas a tu casa...
+  header("Location: $host");
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -45,7 +57,7 @@ $host = $_ENV['HOST'];
           <li>
             <hr class="dropdown-divider" />
           </li>
-          <li><a class="dropdown-item" href="<?= $host ?>/controllers/Colaborador.controller.php?operacion=destroy">Cerrar Sesion</a></li>
+          <li><a class="dropdown-item" href="<?= $host ?>/controllers/Usuarios.controllers.php?Operacion=CerrarSesion">Cerrar Sesion</a></li>
         </ul>
       </li>
     </ul>
@@ -153,3 +165,7 @@ $host = $_ENV['HOST'];
     </div>
     <div id="layoutSidenav_content">
       <main>
+      <script>
+        const permisos = <?php echo json_encode($permisos); ?>;
+      </script>
+      <script src="<?=$host?>js/Header.js"></script>

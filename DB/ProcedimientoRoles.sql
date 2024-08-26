@@ -12,7 +12,6 @@ CREATE PROCEDURE spu_listar_permisos(
 )
 BEGIN
     SELECT 
-        r.rol AS rol,
         p.modulo,
         p.permisoC AS crear,
         p.permisoR AS leer,
@@ -21,7 +20,9 @@ BEGIN
     FROM 
         tb_roles r
     JOIN 
-        tb_permisos p ON p.id_rol = r.p_id_rol
+        tb_permisos p ON p.id_rol = r.id_rol
     WHERE 
-        r.p_id_rol = p_id_rol;
-END
+        r.id_rol = p_id_rol;
+END$$
+
+

@@ -1,7 +1,7 @@
 <?php
 require_once "Conexion.php";
 
-class Roles extends Conexion{
+class Rol extends Conexion{
   private $pdo;
 
   public function __construct()
@@ -26,7 +26,16 @@ class Roles extends Conexion{
       return $e->getMessage();
     }
   }
-  public function getPerm(){
-    
+  public function getPermisos($data = []){
+    try{
+      $consulta = $this->pdo->prepare("CALL spu_listar_permisos(?)");
+      $consulta->execute([
+        $data['rol']
+      ]);
+      return $consulta->fetchAll(PDO::FETCH_ASSOC);
+    }
+    catch(Exception $e){
+      return $e->getMessage();
+    }
   }
 }
