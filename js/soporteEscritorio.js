@@ -5,10 +5,10 @@ document.addEventListener('DOMContentLoaded', function () {
     dropdownItems.forEach(function(item) {
         item.addEventListener('click', function() {
             const value = this.getAttribute('data-value');
-            const text = this.textContent;
-
-            // Actualiza el texto del botón
-            dropdownButton.textContent = text;
+            const name = this.getAttribute('data-name');
+            
+            // Actualiza el texto del botón con el data-name
+            dropdownButton.textContent = name;
             dropdownButton.setAttribute('data-value', value);
 
             // Oculta el modal
