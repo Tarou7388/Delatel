@@ -34,7 +34,7 @@
 
                     <div class="col-md">
                         <div class="form-floating">
-                            <input type="date" class="form-control" id="txtfecha">
+                            <input type="date" class="form-control" id="txtfecha" disabled>
                             <label for="txtfecha">Fecha</label>
                         </div>
                     </div>
@@ -64,7 +64,7 @@
 
                     <div class="col-md">
                         <div class="form-floating">
-                            <input type="number" minlength="0" class="form-control" id="txtValorunitario" step="0.01" required>
+                            <input type="number" minlength="0" class="form-control" id="txtValorunitario" step="0.01" required disabled>
                             <label for="txtValorunitario">Valor Unitario</label>
                         </div>
                     </div>
@@ -75,7 +75,7 @@
                 <div class="row g-2 mt-2">
                     <div class="col-md">
                         <div class="form-floating">
-                            <textarea name="txtaMotivo" id="txtaMotivo" class="form-control" style="width: 100%;" rows="5"></textarea>
+                            <textarea name="txtaMotivo" id="txtaMotivo" class="form-control" style="width: 100%;" rows="5"></textarea required>
                             <label for="txtaMotivo">Motivo</label>
                         </div>
                     </div>

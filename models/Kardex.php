@@ -20,7 +20,7 @@ class Kardex extends Conexion
 
     public function getStockById($params = [])
     {
-        $query = $this->pdo->prepare("SELECT saldo_total FROM vw_kardex WHERE id_producto = ?");
+        $query = $this->pdo->prepare("SELECT saldo_total,precio_actual FROM vw_kardex WHERE id_producto = ?");
 
         $query->execute([$params['id_producto']]);
 
