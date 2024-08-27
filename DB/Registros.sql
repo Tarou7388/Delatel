@@ -149,10 +149,10 @@ INSERT INTO tb_soporte (id_contrato, id_tipo_soporte, id_tecnico, fecha_hora_sol
 (5, 2, 5, '2024-05-31 13:00:00', '2024-05-31 14:30:00', 'Sistema de climatización ineficiente.', 'Ajuste y mantenimiento del sistema completado.', 'Media');
 
 CALL spu_productos_agregar("ASUS", "Router A", "RT-AX88U", 25.00, "12345678901234567890123456789012345");
-CALL spu_productos_agregar("Linksys", "Router B", "E8450", 26.00, "12345678901234567890123456789012345");
-CALL spu_productos_agregar("Huawei", "Router C", "WS5200", 27.00, "12345678901234567890123456789012345");
-CALL spu_productos_agregar("Netgear", "Router D", "Nighthawk X6", 28.00, "12345678901234567890123456789012345");
-CALL spu_productos_agregar("Cisco", "Router E", "ISR4331", 29.00, "12345678901234567890123456789012345");
+CALL spu_productos_agregar("Linksys", "Router B", "E8450", 26.00, "12345678901234567890123456789012346");
+CALL spu_productos_agregar("Huawei", "Router C", "WS5200", 27.00, "12345678901234567890123456789012347");
+CALL spu_productos_agregar("Netgear", "Router D", "Nighthawk X6", 28.00, "12345678901234567890123456789012348");
+CALL spu_productos_agregar("Cisco", "Router E", "ISR4331", 29.00, "12345678901234567890123456789012349");
 
 CALL spu_kardex_registrar(1, '2024-08-12', 'ENTRADA', 'Compra Inicial', 100, 25.00);
 CALL spu_kardex_registrar(2, '2024-08-13', 'ENTRADA', 'Reabastecimiento', 100, 26.00);
