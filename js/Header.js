@@ -7,19 +7,19 @@ window.addEventListener("DOMContentLoaded", () => {
     const Roles = $("#molRoles");
 
 
-    if(permisos[0].leer == 1){
+    if(permisos[0].permisos.soporte.leer == 1){
         Soporte.removeAttribute('hidden');
     }
-    if(permisos[1].leer == 1){
+    if(permisos[0].permisos.soporte.leer == 1){
         Contratos.removeAttribute('hidden');
     }
-    if(permisos[2].leer == 1){
+    if(permisos[0].permisos.soporte.leer == 1){
         Inventariado.removeAttribute('hidden');
     }
-    if(permisos[3].leer == 1){
+    if(permisos[0].permisos.soporte.leer == 1){
         Personas.removeAttribute('hidden');
     }
-    if(permisos[4].leer == 1){
+    if(permisos[0].permisos.soporte.leer == 1){
         Roles.removeAttribute('hidden');
     }
 });

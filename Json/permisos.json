@@ -1,0 +1,33 @@
+{
+    "soporte": {
+      "crear": 1,
+      "leer": 1,
+      "actualizar": 1,
+      "eliminar": 1
+    },
+    "contratos": {
+      "crear": 1,
+      "leer": 1,
+      "actualizar": 1,
+      "eliminar": 1
+    },
+    "inventariado": {
+      "crear": 1,
+      "leer": 1,
+      "actualizar": 1,
+      "eliminar": 1
+    },
+    "personas": {
+      "crear": 1,
+      "leer": 1,
+      "actualizar": 1,
+      "eliminar": 1
+    },
+    "roles": {
+      "crear": 1,
+      "leer": 1,
+      "actualizar": 1,
+      "eliminar": 1
+    }
+  }
+  

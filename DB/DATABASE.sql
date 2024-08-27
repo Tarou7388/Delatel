@@ -33,6 +33,7 @@ CREATE TABLE tb_distritos (
 CREATE TABLE tb_roles (
     id_rol 		INT AUTO_INCREMENT PRIMARY KEY,
     rol 		VARCHAR(30) NOT NULL,
+    permisos    JSON NOT NULL,
     create_at 	DATETIME DEFAULT NOW(),
     update_at 	DATETIME NULL,
     inactive_at DATETIME NULL,
@@ -57,20 +58,6 @@ CREATE TABLE tb_sectores (
     inactive_at 	DATETIME NULL,
     CONSTRAINT secto_uk_sector UNIQUE (sector),
     CONSTRAINT secto_fk_id_distrito FOREIGN KEY (id_distrito) REFERENCES tb_distritos (id_distrito)
-) ENGINE = InnoDB;
-
-CREATE TABLE tb_permisos (
-    id_permiso 		INT PRIMARY KEY AUTO_INCREMENT,
-    id_rol 			INT NOT NULL,
-    modulo 			VARCHAR(30) NOT NULL,
-    permisoC 		BIT NOT NULL DEFAULT 0,
-    permisoR 		BIT NOT NULL DEFAULT 0,
-    permisoU 		BIT NOT NULL DEFAULT 0,
-    permisoD 		BIT NOT NULL DEFAULT 0,
-    create_at 		DATETIME DEFAULT NOW(),
-    update_at 		DATETIME NULL,
-    inactive_at 	DATETIME NULL,
-    CONSTRAINT permi_fk_id_rol FOREIGN KEY (id_rol) REFERENCES tb_roles (id_rol)
 ) ENGINE = InnoDB;
 
 CREATE TABLE tb_personas (

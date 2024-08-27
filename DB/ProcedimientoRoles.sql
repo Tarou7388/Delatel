@@ -14,17 +14,10 @@ CREATE PROCEDURE spu_listar_permisos(
 )
 BEGIN
     SELECT 
-        p.modulo,
-        p.permisoC AS crear,
-        p.permisoR AS leer,
-        p.permisoU AS actualizar,
-        p.permisoD AS eliminar
-    FROM 
-        tb_roles r
-    JOIN 
-        tb_permisos p ON p.id_rol = r.id_rol
+        permisos
+    FROM tb_roles r
     WHERE 
         r.id_rol = p_id_rol;
-END
+END $$
 
-
+call spu_listar_permisos(1);

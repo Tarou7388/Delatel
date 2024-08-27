@@ -28,12 +28,12 @@ INSERT INTO tb_distritos (distrito, id_provincia) VALUES
 ('Trujillo Centro', 4),
 ('Callao Centro', 5);
 
-INSERT INTO tb_roles (rol) VALUES
-('Administrador'),       -- ID 1
-('Tecnico Oficina'),     -- ID 2
-('Oficina'),             -- ID 3
-('Tecnico Campo'),       -- ID 4
-('Almacen - Tecnico');   -- ID 5
+INSERT INTO tb_roles (rol, permisos) VALUES
+('Administrador', '{"soporte": {"crear": 1, "leer": 1, "actualizar": 1, "eliminar": 1}, "contratos": {"crear": 1, "leer": 1, "actualizar": 1, "eliminar": 1}, "inventariado": {"crear": 1, "leer": 1, "actualizar": 1, "eliminar": 1}, "personas": {"crear": 1, "leer": 1, "actualizar": 1, "eliminar": 1}, "roles": {"crear": 1, "leer": 1, "actualizar": 1, "eliminar": 1}}'),
+('Tecnico Oficina', '{"soporte": {"crear": 1, "leer": 1, "actualizar": 1, "eliminar": 1}, "contratos": {"crear": 0, "leer": 0, "actualizar": 0, "eliminar": 0}, "inventariado": {"crear": 0, "leer": 0, "actualizar": 0, "eliminar": 0}, "personas": {"crear": 0, "leer": 1, "actualizar": 0, "eliminar": 0}, "roles": {"crear": 0, "leer": 0, "actualizar": 0, "eliminar": 0}}'),
+('Oficina', '{"soporte": {"crear": 0, "leer": 1, "actualizar": 0, "eliminar": 0}, "contratos": {"crear": 1, "leer": 1, "actualizar": 1, "eliminar": 1}, "inventariado": {"crear": 0, "leer": 0, "actualizar": 0, "eliminar": 0}, "personas": {"crear": 1, "leer": 1, "actualizar": 1, "eliminar": 1}, "roles": {"crear": 0, "leer": 0, "actualizar": 0, "eliminar": 0}}'),
+('Tecnico Campo', '{"soporte": {"crear": 1, "leer": 1, "actualizar": 1, "eliminar": 1}, "contratos": {"crear": 0, "leer": 1, "actualizar": 0, "eliminar": 0}, "inventariado": {"crear": 0, "leer": 0, "actualizar": 0, "eliminar": 0}, "personas": {"crear": 0, "leer": 1, "actualizar": 0, "eliminar": 0}, "roles": {"crear": 0, "leer": 0, "actualizar": 0, "eliminar": 0}}'),
+('Almacen - Tecnico', '{"soporte": {"crear": 1, "leer": 1, "actualizar": 1, "eliminar": 1}, "contratos": {"crear": 0, "leer": 1, "actualizar": 0, "eliminar": 0}, "inventariado": {"crear": 1, "leer": 1, "actualizar": 1, "eliminar": 1}, "personas": {"crear": 0, "leer": 1, "actualizar": 0, "eliminar": 0}, "roles": {"crear": 0, "leer": 0, "actualizar": 0, "eliminar": 0}}');
 
 INSERT INTO tb_servicios (servicio, create_at, update_at, inactive_at) VALUES
 ('Cable', NOW(), NULL, NULL),
@@ -50,32 +50,6 @@ INSERT INTO tb_sectores (id_distrito, sector, create_at, update_at, inactive_at)
 (4, 'Zona Residencial', NOW(), NULL, NULL),
 (5, 'Parque Tecnológico', NOW(), NULL, NULL);
 
-INSERT INTO tb_permisos (id_rol, modulo, permisoC, permisoR, permisoU, permisoD) VALUES
-(1, 'Soporte', 1,1,1,1),
-(1, 'Contratos', 1,1,1,1),
-(1, 'Inventariado', 1,1,1,1),
-(1, 'Personas', 1,1,1,1),
-(1, 'Roles', 1,1,1,1),
-(2, 'Soporte', 1,1,1,1),
-(2, 'Contratos', 0,0,0,0),
-(2, 'Inventariado', 0,0,0,0),
-(2, 'Personas', 0,1,0,0),
-(2, 'Roles', 0,0,0,0),
-(3, 'Soporte', 0,1,0,0),
-(3, 'Contratos', 1,1,1,1),
-(3, 'Inventariado', 0,0,0,0),
-(3, 'Personas', 1,1,1,1),
-(3, 'Roles', 0,0,0,0),
-(4, 'Soporte', 1,1,1,1),
-(4, 'Contratos', 0,1,0,0),
-(4, 'Inventariado', 0,0,0,0),
-(4, 'Personas', 0,1,0,0),
-(4, 'Roles', 0,0,0,0),
-(5, 'Soporte', 1,1,1,1),
-(5, 'Contratos', 0,1,0,0),
-(5, 'Inventariado', 1,1,1,1),
-(5, 'Personas', 0,1,0,0),
-(5, 'Roles', 0,0,0,0);
 
 INSERT INTO tb_personas (tipo_doc, nro_doc, apellidos, nombres, telefono, email, create_at, update_at, inactive_at) VALUES
 ('DNI', '12345678', 'García', 'Luis', '987654321', 'luis.garcia@example.com', NOW(), NULL, NULL),
