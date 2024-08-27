@@ -30,14 +30,14 @@
     <div class="card w-100" style="max-width: 90%;">
       <div class="card-header">Gestionar Permisos de Rol</div>
       <div class="card-body">
-        <table id="myTable" class="display">
+        <table id="tablaRol" class="display">
           <thead>
             <tr>
               <th>Rol</th>
               <th>Permisos</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="mostrar">
             
           </tbody>
         </table>
@@ -50,10 +50,10 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Permisos</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" id="permisos">
         ...
       </div>
       <div class="modal-footer">
@@ -66,6 +66,7 @@
 </div>
 <?php require_once "../footer.php"; ?>
 </body>
+<script>const permisos = <?=$permisos?></script>
 <script src="../js/Rol.js"></script>
 
 </html>
