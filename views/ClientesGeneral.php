@@ -94,14 +94,7 @@
         </div>
         <div class="modal-body">
           <form id="updateForm">
-            <!-- <div class="mb-3">
-              <label for="nombre" class="form-label">Nombre</label>
-              <input type="text" class="form-control" id="nombre" placeholder="Nombre">
-            </div>
-            <div class="mb-3">
-              <label for="apellido" class="form-label">Apellido</label>
-              <input type="text" class="form-control" id="apellido" placeholder="Apellido">
-            </div> -->
+            
           </form>
         </div>
         <div class="modal-footer">

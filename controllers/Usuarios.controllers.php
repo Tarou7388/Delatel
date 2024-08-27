@@ -37,3 +37,16 @@ if(isset($_GET["Operacion"])){
         header("Location: http://localhost/delatel");
     }
 }
+
+if(isset($_POST["Operacion"])){
+    if($_POST["Operacion"] == "Registrar"){
+        $contrasenia = password_hash($_POST["pass"], PASSWORD_BCRYPT);
+        $data = [
+            "idPersona" => $_POST["idPersona"],
+            "nombreUser" => $_POST["nombreUser"],
+            "pass" => $contrasenia
+        ];
+        $resultado = $usuario->registrar($data);
+        echo json_encode(["guardado" => $resultado]);
+    }
+}

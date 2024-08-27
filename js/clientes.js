@@ -1,10 +1,10 @@
 window.addEventListener("DOMContentLoaded", event => {
   $(document).ready(function () {
     $('#listarCliente').DataTable({
-      "language": {
-        "url": "//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json"
+      language: {
+        url: "https://cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json"
       },
-      "columnDefs": [
+      columnDefs: [
         { "width": "5%", "targets": 0 },
         { "width": "30%", "targets": 1 },  
         { "width": "10%", "targets": 2 },  
@@ -14,7 +14,7 @@ window.addEventListener("DOMContentLoaded", event => {
         { "width": "10%", "targets": 6 }, 
         { "width": "15%", "targets": 7 }
       ],
-      "autoWidth": false  
+      autoWidth: false  
     });
   });
   document.getElementById('saveChanges').addEventListener('click', function () {
