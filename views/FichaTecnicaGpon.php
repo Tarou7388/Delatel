@@ -1,4 +1,5 @@
 <?php require_once "../header.php"; ?>
+<link rel="stylesheet" href="../css/gpon.css">
 
 <div class="modal fade" id="mdlRepetidor" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
