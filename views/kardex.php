@@ -119,7 +119,7 @@
 <?php require_once "../footer.php"; ?>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="../js/Kardex.js"></script>
-
+<script src="../js/kardexDatatable.js"></script>
 
 </body>
 
