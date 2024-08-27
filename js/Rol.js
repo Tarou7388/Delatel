@@ -10,6 +10,13 @@ document.addEventListener("DOMContentLoaded", () => {
       info: false
     });
   });
+  //Cargar Roles
+  function CargarRoles(){
+    fetch()
+    .then()
+    .then()
+    .catch()
+  }
 
   //Registrar Rol
 

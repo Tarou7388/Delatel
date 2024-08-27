@@ -38,18 +38,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Rol 1</td>
-              <td><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Ver permisos</button></td>
-            </tr>
-            <tr>
-              <td>Rol 2</td>
-              <td><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Ver permisos</button></td>
-            </tr>
-            <tr>
-              <td>Rol 3</td>
-              <td><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Ver permisos</button></td>
-            </tr>
+            
           </tbody>
         </table>
       </div>

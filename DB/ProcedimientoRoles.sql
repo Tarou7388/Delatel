@@ -23,6 +23,6 @@ BEGIN
         tb_permisos p ON p.id_rol = r.id_rol
     WHERE 
         r.id_rol = p_id_rol;
-END$$
+END
 
 
