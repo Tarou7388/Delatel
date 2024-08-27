@@ -27,11 +27,12 @@ class Kardex extends Conexion
         return $query->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function add($params = [])
+    public function add($params = []):bool
     {
+        $status=false;
         try {
             $query = $this->pdo->prepare("CALL spu_kardex_registrar(?, ?, ?, ?, ?, ?)");
-            $query->execute([
+            $status = $query->execute([
                 $params['id_producto'],
                 $params['fecha'],
                 $params['tipo_operacion'],
@@ -39,8 +40,10 @@ class Kardex extends Conexion
                 $params['cantidad'],
                 $params['valor_unitario_historico']
             ]);
+            return $status;
         } catch (Exception $e) {
-            return $e->getMessage();
+            return $status = false;
+            
         }
     }
 

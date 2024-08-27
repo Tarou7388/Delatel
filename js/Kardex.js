@@ -31,7 +31,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const idproducto = idproductoField.value;
 
     if (idproducto) {
-      console.log(idproducto);
       MostrarStockActual(idproducto);
       cantidadField.value = "";
       tablaKardex.ajax.url(`../controllers/kardex.controllers.php?operacion=obtenerProducto&id_producto=${idproducto}`).load();
@@ -44,7 +43,6 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const response = await fetch(`../controllers/kardex.controllers.php?operacion=obtenerStock&id_producto=${idproducto}`);
       const data = await response.json();
-      console.log(data);
       stockactualField.value = data.saldo_total !== undefined ? data.saldo_total : 0;
       txtvalorhistorico.value = data.precio_actual !== undefined ? data.precio_actual : 0;
       fecha.value = date;
@@ -69,11 +67,14 @@ document.addEventListener("DOMContentLoaded", () => {
       method: 'POST',
       body: params
     };
-
     fetch(`../controllers/kardex.controllers.php`, options)
       .then(response => response.json())
       .then(data => {
-        console.log(data)
+        if(data.Guardado){
+            alert("Se ha guardado correctamente");
+        }else{
+            alert("Error: Verfique que se haya hecho bien la operacion");
+        }
         document.querySelector("#form-validaciones-kardex").reset();
         tablaKardex.ajax.reload();
       })

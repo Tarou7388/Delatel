@@ -15,8 +15,8 @@ if (isset($_POST['operacion'])) {
         "cantidad"               => $_POST['cantidad'],
         "valor_unitario_historico" => $_POST['valorunitariohistorico'],
       ];
-      $resultado = $kardex->add($datos);
-      echo json_encode($resultado);
+      $estado = $kardex->add($datos);
+      echo json_encode(["Guardado" => $estado]);
       break;
   }
 }
