@@ -96,7 +96,7 @@
     <div class="card w-100" style="max-width: 90%;">
         <div class="card-header">Gestionar Kardex</div>
         <div class="card-body">
-            <table id="myTable" class="display">
+            <table id="TbKardex" name="TbKardex" class="display">
                 <thead>
                     <tr>
                         <th>ID Producto</th>
@@ -108,6 +108,9 @@
                         <th>Valor Único Histórico</th>
                     </tr>
                 </thead>
+                <tbody>
+                    
+                </tbody>
             </table>
         </div>
     </div>
@@ -116,7 +119,7 @@
 <?php require_once "../footer.php"; ?>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="../js/Kardex.js"></script>
-
+<script src="../js/kardexDatatable.js"></script>
 
 </body>
 

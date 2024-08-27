@@ -25,19 +25,19 @@ class Usuario extends Conexion
       die($e->getMessage());
     }
   }
-  public function registrar($data = [])
+  public function registrar($data = []):bool
   {
     try {
+      $status=false;
       $consulta = $this->pdo->prepare("CALL spu_usuarios_registrar(?,?,?)");
-      $consulta->execute(
+      $status=$consulta->execute(
         array(
           $data['idPersona'],
           $data['nombreUser'],
           $data['pass']
         )
       );
-
-      return $consulta->fetch(PDO::FETCH_ASSOC);
+      return $status;
     } catch (Exception $e) {
       die($e->getMessage());
     }

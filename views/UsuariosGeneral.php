@@ -34,7 +34,7 @@
         <div class="row">
           <div class="col-md-4">
             <label for="" class="form-label">Nombres</label>
-            <input type="text" id="txtNombre" class="form-control" disabled >
+            <input type="text" id="txtNombre" class="form-control" disabled>
           </div>
           <div class="col-md-4">
             <label for="" class="form-label">Telefono Principal</label>
@@ -53,6 +53,12 @@
           <div class="col-md-4">
             <label for="" class="form-label">Contraseña</label>
             <input type="password" id="txtContrasena" class="form-control" autocomplete="off">
+          </div>
+          <div class="col-md-4">
+            <label for="slcRol" class="form-label">Rol</label>
+            <select id="slcRol" class="form-control">
+              <option value="" disabled selected>Selecciona un rol</option>
+            </select>
           </div>
         </div>
         <div class="row mt-4">
@@ -83,35 +89,11 @@
           </tr>
         </thead>
         <tbody>
-          <!-- <tr>
-            <td>1</td>
-            <td>usuario 1</td>
-            <td>nombre 1</td>
-            <td>tecnico</td>
-            <td>01/01/24</td>
-            <td>01/01/24</td>
-            <td>
-              <button class="btn btn-sm btn-primary">Editar</button>
-              <button class="btn btn-sm btn-danger">Eliminar</button>
-            </td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>Usuario 2</td>
-            <td>Nombre 2</td>
-            <td>supervisor</td>
-            <td>01/01/24</td>
-            <td>01/01/24</td>
-            <td>
-              <button class="btn btn-sm btn-primary">Editar</button>
-              <button class="btn btn-sm btn-danger">Eliminar</button>
-            </td>
-          </tr>
-          Más filas de ejemplo -->
         </tbody>
       </table>
     </div>
   </div>
 </div>
 <script src="../js/datable-Usuarios.js"></script>
+<script src="../js/Usuarios.js"></script>
 <?php require_once "../footer.php"; ?>
