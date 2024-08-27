@@ -43,4 +43,18 @@ class Kardex extends Conexion
             return $e->getMessage();
         }
     }
+
+    public function getbyidProducto($params = [])
+    {
+        try {
+            $query = $this->pdo->prepare("CALL spu_kardex_filtrar(?)");
+            $query->execute([
+                $params['id_producto']
+            ]);
+
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
 }

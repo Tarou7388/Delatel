@@ -32,5 +32,9 @@ if (isset($_GET["operacion"])) {
     case "obtenerStock":
       echo json_encode($kardex->getStockById(["id_producto" => $_GET['id_producto']]));
       break;
+
+    case "obtenerProducto":
+      echo json_encode($kardex->getbyidProducto(["id_producto" => $_GET['id_producto']]));
+      break;
   }
 }

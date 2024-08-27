@@ -32,6 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log(idproducto);
       MostrarStockActual(idproducto);
       cantidadField.value = "";
+      tablaKardex.ajax.url(`../controllers/kardex.controllers.php?operacion=obtenerProducto&id_producto=${idproducto}`).load();
     } else {
       cantidadField.value = 0;
     }
@@ -69,6 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .then(data => {
         console.log(data)
         document.querySelector("#form-validaciones-kardex").reset();
+        tablaKardex.ajax.reload();
       })
       .catch(e => {
         console.error(e);
@@ -84,4 +86,29 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+
+  // TABLA DE VISTA DE KARDEX
+  const tablaKardex = $('#myTable').DataTable({
+      ajax: {
+        url: '../controllers/kardex.controllers.php?operacion=obtenerProducto&id_producto=${idproducto}',  // La ruta de tu controlador que retorna los datos JSON
+        type: 'GET',
+        dataSrc: ''  // DataTables espera un array de objetos en el JSON
+      },
+      columns: [
+        { data: 'id_producto' },
+        { data: 'fecha' },
+        { data: 'tipo_operacion' },
+        { data: 'motivo' },
+        { data: 'cantidad' },
+        { data: 'saldo_total' },
+        { data: 'valor_unico_historico' }
+      ],
+      order: [[1, 'desc']],
+      language: {
+        "url": "//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json"
+      },
+      paging: true,
+      searching: true,
+      info: false
+  });
 });

@@ -91,6 +91,28 @@
         </div>
     </div>
 </div>
+
+<div class="container-fluid d-flex justify-content-center py-4">
+    <div class="card w-100" style="max-width: 90%;">
+        <div class="card-header">Gestionar Kardex</div>
+        <div class="card-body">
+            <table id="myTable" class="display">
+                <thead>
+                    <tr>
+                        <th>ID Producto</th>
+                        <th>Fecha</th>
+                        <th>Tipo de Operación</th>
+                        <th>Motivo</th>
+                        <th>Cantidad</th>
+                        <th>Saldo Total</th>
+                        <th>Valor Único Histórico</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
 <?php require_once "../footer.php"; ?>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="../js/Kardex.js"></script>

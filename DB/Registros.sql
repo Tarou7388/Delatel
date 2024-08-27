@@ -102,14 +102,16 @@ INSERT INTO tb_usuarios (id_persona, nombre_user, pass) VALUES
 (2, 'amartinez', '$2y$10$3uS8rP3q14NxWtXEefIi3.7JuG3.xWMOo9UoLS53uK87YEfEIBGHm'), 
 (3, 'clopez', '$2y$10$3uS8rP3q14NxWtXEefIi3.7JuG3.xWMOo9UoLS53uK87YEfEIBGHm'), 
 (4, 'mperez', '$2y$10$3uS8rP3q14NxWtXEefIi3.7JuG3.xWMOo9UoLS53uK87YEfEIBGHm'), 
-(5, 'jfernandez', '$2y$10$3uS8rP3q14NxWtXEefIi3.7JuG3.xWMOo9UoLS53uK87YEfEIBGHm');
+(5, 'jfernandez', '$2y$10$3uS8rP3q14NxWtXEefIi3.7JuG3.xWMOo9UoLS53uK87YEfEIBGHm'),
+(6, 'Example', '$2y$10$rVTflHuPt0btU6sXKBm/oOa8ZPSBV5x0doWaWyY9UoNXGleRcX7dG'); /*123456*/
 
 INSERT INTO tb_responsables (id_usuario, id_rol) VALUES
 (1, 1),
 (2, 2),
 (3, 3),
 (4, 4),
-(5, 5);
+(5, 5),
+(6, 5);
 
 INSERT INTO tb_tarifarios (id_servicio, id_usuario, precio, fecha_inicio) VALUES
 (1, 1, 150.00, '2024-01-01'),
@@ -158,9 +160,7 @@ CALL spu_kardex_registrar(3, '2024-08-14', 'ENTRADA', 'Pedido Especial', 100, 27
 CALL spu_kardex_registrar(4, '2024-08-15', 'ENTRADA', 'Sustitución', 100, 28.00);
 CALL spu_kardex_registrar(5, '2024-08-16', 'ENTRADA', 'Inventario Completo', 100, 29.00);
 
-
 CALL spu_kardex_registrar(1, '2024-08-17', 'SALIDA', 'Venta', 50, 25.00);
-
 CALL spu_kardex_registrar(2, '2024-08-18', 'SALIDA', 'Devolución', 50, 26.00);
 CALL spu_kardex_registrar(3, '2024-08-19', 'SALIDA', 'Prueba de Cliente', 50, 27.00);
 CALL spu_kardex_registrar(4, '2024-08-20', 'SALIDA', 'Muestra', 50, 28.00);

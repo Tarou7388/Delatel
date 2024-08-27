@@ -220,7 +220,8 @@ CREATE TABLE tb_productos(
     codigo_barra    VARCHAR(120) NOT NULL,
 	create_at 		DATETIME NOT NULL DEFAULT NOW(),
     update_at 		DATETIME NULL,
-    inactive_at 	DATETIME NULL
+    inactive_at 	DATETIME NULL,
+    CONSTRAINT produ_uk_codigo_barra UNIQUE(codigo_barra)
 )ENGINE=INNODB;
 
 CREATE TABLE tb_kardex (

@@ -97,3 +97,11 @@ BEGIN
 END $$
 
 DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE spu_kardex_filtrar(
+	IN p_idproducto INT
+)
+BEGIN
+	SELECT * FROM vw_kardex WHERE id_producto = p_idproducto ORDER BY id_producto DESC;
+END $$
