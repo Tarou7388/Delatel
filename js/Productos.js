@@ -9,11 +9,6 @@ document.addEventListener("DOMContentLoaded", () => {
     .getElementById("form-productos")
     .addEventListener("submit", (event) => {
       event.preventDefault();
-      console.log(marca.value);
-      console.log(precioActual.value);
-      console.log(tipoProducto.value);
-      console.log(Modelo.value);
-      console.log(CodigoBarras.value);
 
       const params = new FormData();
       params.append("operacion", "add");
@@ -27,10 +22,15 @@ document.addEventListener("DOMContentLoaded", () => {
         method: "POST",
         body: params,
       })
-        .then((response) => response.text())
+        .then((response) => response.json())
         .then((data) => {
-          console.log(data);
+          if (data.Guardado) {
+            alert("Se ha guardado correctamente");
+          } else {
+            alert("Error: Verfique que se haya hecho bien la operacion");
+          }
           document.querySelector("#form-productos").reset();
+
           tablaProductos.ajax.reload();
         });
     });

@@ -81,13 +81,13 @@ if (!isset($_SESSION['login']) || (isset($_SESSION['login']) && !$_SESSION['logi
 
             <div class="collapse" id="collapse1">
               <div class="ps-4">
-                <a class="nav-link" href="<?= $host; ?>views/FichaGpon.php">
+                <a class="nav-link" href="<?= $host; ?>views/SoporteMovil.php">
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                  Ficha Averias GPON
+                  Ficha Soporte Movil
                 </a>
-                <a class="nav-link" href="<?= $host; ?>views/FichaWisp.php">
+                <a class="nav-link" href="<?= $host; ?>views/SoporteEscritorio.php">
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                  Ficha Averias WISP
+                  Ficha Soporte Escritorio
                 </a>
               </div>
             </div>

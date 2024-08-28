@@ -28,7 +28,7 @@ class Producto extends Conexion
 
   public function getAll()
   {
-    $query = $this->pdo->prepare("SELECT * FROM tb_productos");
+    $query = $this->pdo->prepare("SELECT * FROM tb_productos ORDER BY id_producto DESC");
     $query->execute();
     return $query->fetchAll(PDO::FETCH_ASSOC);
   }

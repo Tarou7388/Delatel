@@ -7,12 +7,14 @@
         <div class="card-header">Agregar Producto</div>
         <div class="card-body">
             <form action="" method="" id="form-productos">
-                
+
                 <div class="form-group">
                     <label for="slcTipoProducto">Tipo Producto:</label>
                     <select class="form-control" id="slcTipoProducto" name="slcTipoProducto" required>
                         <option value="Router">Router</option>
                         <option value="Triplexor">Triplexor</option>
+                        <option value="Modem">Módem</option>
+                        <option value="Repetidor">Repetidor</option>
                     </select>
                 </div>
 
@@ -22,7 +24,11 @@
                         <option value="Huawei">Huawei</option>
                         <option value="Netgear">Netgear</option>
                         <option value="ASUS">ASUS</option>
-                        <option value="SérieECOFLEX10">Série ECOFLEX10.</option>
+                        <option value="TP-Link">TP-Link</option>
+                        <option value="D-Link">D-Link</option>
+                        <option value="Zyxel">Zyxel</option>
+                        <option value="Ubiquiti">Ubiquiti</option>
+                        <option value="Cisco">Cisco</option>
                     </select>
                 </div>
 
