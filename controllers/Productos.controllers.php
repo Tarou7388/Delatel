@@ -15,8 +15,8 @@ if (isset($_POST['operacion'])) {
         "precio_actual"     => $_POST['precio_actual'],
         "Codigo_Barras"     => $_POST['Codigo_Barras']
       ];
-      $resultado = $producto->add($datos);
-      echo json_encode($resultado);
+      $estado = $producto->add($datos);
+      echo json_encode(["Guardado" => $estado]);
       break;
   }
 }
@@ -24,8 +24,8 @@ if (isset($_POST['operacion'])) {
 if (isset($_GET['operacion'])) {
   switch ($_GET['operacion']) {
     case "getAll":
-      $resultado = $producto->getAll();
-      echo json_encode($resultado);
+      $estado = $producto->getAll();
+      echo json_encode($estado);
       break;
   }
 }

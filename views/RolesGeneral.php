@@ -66,7 +66,6 @@
 </div>
 <?php require_once "../footer.php"; ?>
 </body>
-<script>const permisos = <?=$permisos?></script>
 <script src="../js/Rol.js"></script>
 
 </html>

@@ -19,18 +19,24 @@ class Producto extends Conexion
     return $query->fetchAll(PDO::FETCH_ASSOC);
   }
 
-  public function add($params = [])
+  public function add($params = []): bool
   {
-    $query = $this->pdo->prepare("CALL spu_productos_agregar(?,?,?,?,?)");
-    $query->execute(
-      [
-        $params['marca'],
-        $params['tipo_producto'],
-        $params['modelo'],
-        $params['precio_actual'],
-        $params['Codigo_Barras'],
-      ]
-    );
+    $status = false;
+    try {
+      $query = $this->pdo->prepare("CALL spu_productos_agregar(?,?,?,?,?)");
+      $status = $query->execute(
+        [
+          $params['marca'],
+          $params['tipo_producto'],
+          $params['modelo'],
+          $params['precio_actual'],
+          $params['Codigo_Barras'],
+        ]);
+      return $status;
+    } catch (Exception $e) {
+      return $status = false;
+    }
+
     return $query->fetchAll(PDO::FETCH_ASSOC);
   }
 }
