@@ -101,12 +101,12 @@ INSERT INTO tb_clientes (id_persona, id_empresa, direccion, referencia, estado, 
 (NULL, 4, 'Jirón de la Unión 100, Lima', 'A media cuadra de la Plaza Mayor', 0, NOW(), NULL, NULL),
 (10, NULL, 'Calle Mayor 101, Barcelona', 'Cerca del mercado central', 1, NOW(), NULL, NULL);
 
-INSERT INTO tb_contratos (id_cliente, id_tarifario, id_sector, id_usuario_registro, id_usuario_tecnico, direccion_servicio, referencia, coordenada, fecha_inicio, fecha_fin, fecha_registro, ficha_instalacion, descuento, monto_pagado, nota, estado) VALUES
-(1, 1, 1, 1, NULL, 'Av. Siempre Viva 123, Springfield', 'Cerca de la plaza principal', '12.3456, -65.4321', '2024-01-15', '2024-06-15', '2024-01-01', '{"tipo":"electrico","voltaje":"220V"}', 10.00, 200.00, 'Primer contrato con cliente nuevo', 1),
-(2, 2, 2, 3, NULL, 'Calle Falsa 456, Gotham', 'Cerca del cine local', '34.5678, -76.5432', '2024-02-01', '2024-07-01', '2024-02-01', '{"tipo":"hidraulico","presion":"1.5 bar"}', 15.00, 300.00, 'Instalación programada', 1),
-(3, 3, 3, 2, NULL, 'Av. Los Pinos 789, Lima', 'Esquina con Av. Las Flores', '23.4567, -54.3210', '2024-03-01', '2024-08-01', '2024-03-01', '{"tipo":"telecomunicacion","frecuencia":"2.4 GHz"}', NULL, 250.00, 'Revisión mensual incluida', 1),
-(4, 4, 4, 5, NULL, 'Jirón de la Unión 100, Lima', 'Frente a la Plaza Mayor', '45.6789, -43.2109', '2024-04-01', '2024-09-01', '2024-04-01', '{"tipo":"seguridad","camaras":"4"}', 5.00, 150.00, 'Descuento aplicado por contrato anual', 0),
-(5, 5, 5, 4, NULL, 'Calle Mayor 101, Barcelona', 'Cerca del mercado central', '56.7890, -32.1098', '2024-05-01', '2024-10-01', '2024-05-01', '{"tipo":"climatizacion","temperatura":"18-22°C"}', 20.00, 350.00, 'Contrato especial por volumen', 1);
+INSERT INTO tb_contratos (id_cliente, id_tarifario, id_sector, id_usuario_registro, id_usuario_tecnico, direccion_servicio, referencia, coordenada, fecha_inicio, fecha_fin, fecha_registro, ficha_instalacion, pagos, nota, estado) VALUES 
+(1, 1, 1, 1, NULL, 'Av. Siempre Viva 123, Springfield', 'Cerca de la plaza principal', '12.3456, -65.4321', '2024-01-15', '2024-06-15', '2024-01-01', '{"tipo":"electrico","voltaje":"220V"}', '{"monto":"200.00","metodo":"tarjeta","fecha":"2024-01-02"}', 'Primer contrato con cliente nuevo', 1),
+(2, 2, 2, 3, NULL, 'Calle Falsa 456, Gotham', 'Cerca del cine local', '34.5678, -76.5432', '2024-02-01', '2024-07-01', '2024-02-01', '{"tipo":"hidraulico","presion":"1.5 bar"}', '{"monto":"300.00","metodo":"efectivo","fecha":"2024-02-03"}', 'Instalación programada', 1),
+(3, 3, 3, 2, NULL, 'Av. Los Pinos 789, Lima', 'Esquina con Av. Las Flores', '23.4567, -54.3210', '2024-03-01', '2024-08-01', '2024-03-01', '{"tipo":"telecomunicacion","frecuencia":"2.4 GHz"}', '{"monto":"250.00","metodo":"transferencia","fecha":"2024-03-05"}', 'Revisión mensual incluida', 1),
+(4, 4, 4, 5, NULL, 'Jirón de la Unión 100, Lima', 'Frente a la Plaza Mayor', '45.6789, -43.2109', '2024-04-01', '2024-09-01', '2024-04-01', '{"tipo":"seguridad","camaras":"4"}', '{"monto":"150.00","metodo":"tarjeta","fecha":"2024-04-06"}', 'Descuento aplicado por contrato anual', 0),
+(5, 5, 5, 4, NULL, 'Calle Mayor 101, Barcelona', 'Cerca del mercado central', '56.7890, -32.1098', '2024-05-01', '2024-10-01', '2024-05-01', '{"tipo":"climatizacion","temperatura":"18-22°C"}', '{"monto":"350.00","metodo":"cheque","fecha":"2024-05-08"}', 'Contrato especial por volumen', 1);
 
 INSERT INTO tb_contactabilidad (id_persona, id_tarifario, fecha_hora_contacto, direccion_servicio, dias_vigencia, nota) VALUES
 (1, 1, '2024-01-10 14:30:00', 'Av. Siempre Viva 123, Springfield', 30, 'Contacto inicial realizado con éxito.'),
@@ -115,28 +115,16 @@ INSERT INTO tb_contactabilidad (id_persona, id_tarifario, fecha_hora_contacto, d
 (4, 4, '2024-04-25 11:00:00', 'Jirón de la Unión 100, Lima', 60, 'Se discutieron los términos del contrato y se acordó una revisión futura.'),
 (5, 5, '2024-05-30 09:30:00', 'Calle Mayor 101, Barcelona', 30, 'Se completó la verificación del servicio y se envió confirmación.'); 
 
-INSERT INTO tb_soporte (id_contrato, id_tipo_soporte, id_tecnico, fecha_hora_solicitud, fecha_hora_asistencia, descripcion_problema, descripcion_solucion, prioridad) VALUES
-(1, 1, 1, '2024-01-10 15:00:00', '2024-01-10 16:00:00', 'Problema con el voltaje en el área principal.', 'Reemplazo del regulador de voltaje realizado.', 'Alta'),
-(2, 2, 2, '2024-02-16 11:00:00', '2024-02-16 12:30:00', 'Fugas en la tubería principal.', 'Reparación de fugas y prueba de presión completada.', 'Media'),
-(3, 3, 3, '2024-03-21 09:30:00', '2024-03-21 10:00:00', 'Problemas de conectividad en la red.', 'Configuración y prueba de la red realizada.', 'Alta'),
-(4, 1, 4, '2024-04-26 14:00:00', '2024-04-26 15:30:00', 'Falla en el sistema de alarma.', 'Sustitución de los sensores defectuosos realizada.', 'Baja'),
-(5, 2, 5, '2024-05-31 13:00:00', '2024-05-31 14:30:00', 'Sistema de climatización ineficiente.', 'Ajuste y mantenimiento del sistema completado.', 'Media');
+INSERT INTO tb_soporte (id_contrato, id_tipo_soporte, id_tecnico, fecha_hora_solicitud, fecha_hora_asistencia, descripcion_problema, descripcion_solucion, prioridad, pagos) VALUES 
+(1, 1, 1, '2024-01-10 15:00:00', '2024-01-10 16:00:00', 'Problema con el voltaje en el área principal.', 'Reemplazo del regulador de voltaje realizado.', 'Alta', '{"monto":"50.00","metodo":"tarjeta","fecha":"2024-01-11"}'),
+(2, 2, 2, '2024-02-16 11:00:00', '2024-02-16 12:30:00', 'Fugas en la tubería principal.', 'Reparación de fugas y prueba de presión completada.', 'Media', '{"monto":"100.00","metodo":"efectivo","fecha":"2024-02-17"}'),
+(3, 3, 3, '2024-03-21 09:30:00', '2024-03-21 10:00:00', 'Problemas de conectividad en la red.', 'Configuración y prueba de la red realizada.', 'Alta', '{"monto":"75.00","metodo":"transferencia","fecha":"2024-03-22"}'),
+(4, 1, 4, '2024-04-26 14:00:00', '2024-04-26 15:30:00', 'Falla en el sistema de alarma.', 'Sustitución de los sensores defectuosos realizada.', 'Baja', '{"monto":"40.00","metodo":"tarjeta","fecha":"2024-04-27"}'),
+(5, 2, 5, '2024-05-31 13:00:00', '2024-05-31 14:30:00', 'Sistema de climatización ineficiente.', 'Ajuste y mantenimiento del sistema completado.', 'Media', '{"monto":"120.00","metodo":"cheque","fecha":"2024-06-01"}');
 
-CALL spu_productos_agregar("ASUS", "Router A", "RT-AX88U", 25.00, "12345678901234567890123456789012345");
-CALL spu_productos_agregar("Linksys", "Router B", "E8450", 26.00, "12345678901234567890123456789012346");
-CALL spu_productos_agregar("Huawei", "Router C", "WS5200", 27.00, "12345678901234567890123456789012347");
-CALL spu_productos_agregar("Netgear", "Router D", "Nighthawk X6", 28.00, "12345678901234567890123456789012348");
-CALL spu_productos_agregar("Cisco", "Router E", "ISR4331", 29.00, "12345678901234567890123456789012349");
-
-CALL spu_kardex_registrar(1, '2024-08-12', 'ENTRADA', 'Compra Inicial', 100, 25.00);
-CALL spu_kardex_registrar(2, '2024-08-13', 'ENTRADA', 'Reabastecimiento', 100, 26.00);
-CALL spu_kardex_registrar(3, '2024-08-14', 'ENTRADA', 'Pedido Especial', 100, 27.00);
-CALL spu_kardex_registrar(4, '2024-08-15', 'ENTRADA', 'Sustitución', 100, 28.00);
-CALL spu_kardex_registrar(5, '2024-08-16', 'ENTRADA', 'Inventario Completo', 100, 29.00);
-
-CALL spu_kardex_registrar(1, '2024-08-17', 'SALIDA', 'Venta', 50, 25.00);
-CALL spu_kardex_registrar(2, '2024-08-18', 'SALIDA', 'Devolución', 50, 26.00);
-CALL spu_kardex_registrar(3, '2024-08-19', 'SALIDA', 'Prueba de Cliente', 50, 27.00);
-CALL spu_kardex_registrar(4, '2024-08-20', 'SALIDA', 'Muestra', 50, 28.00);
-CALL spu_kardex_registrar(5, '2024-08-21', 'SALIDA', 'Exhibición', 50, 29.00);
-
+INSERT INTO tb_productos (marca, tipo_producto, modelo, precio_actual, codigo_barra) VALUES 
+("ASUS", "Router A", "RT-AX88U", 25.00, "12345678901234567890123456789012345"),
+("Linksys", "Router B", "E8450", 26.00, "12345678901234567890123456789012346"),
+("Huawei", "Router C", "WS5200", 27.00, "12345678901234567890123456789012347"),
+("Netgear", "Router D", "Nighthawk X6", 28.00, "12345678901234567890123456789012348"),
+("Cisco", "Router E", "ISR4331", 29.00, "12345678901234567890123456789012349");

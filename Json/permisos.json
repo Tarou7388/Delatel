@@ -1,33 +1,32 @@
 {
     "soporte": {
-      "crear": 1,
-      "leer": 1,
-      "actualizar": 1,
-      "eliminar": 1
+      "crear": 0,
+      "leer": 0,
+      "actualizar": 0,
+      "eliminar": 0
     },
     "contratos": {
-      "crear": 1,
-      "leer": 1,
-      "actualizar": 1,
-      "eliminar": 1
+      "crear": 0,
+      "leer": 0,
+      "actualizar": 0,
+      "eliminar": 0
     },
     "inventariado": {
-      "crear": 1,
-      "leer": 1,
-      "actualizar": 1,
-      "eliminar": 1
+      "crear": 0,
+      "leer": 0,
+      "actualizar": 0,
+      "eliminar": 0
     },
     "personas": {
-      "crear": 1,
-      "leer": 1,
-      "actualizar": 1,
-      "eliminar": 1
+      "crear": 0,
+      "leer": 0,
+      "actualizar": 0,
+      "eliminar": 0
     },
     "roles": {
-      "crear": 1,
-      "leer": 1,
-      "actualizar": 1,
-      "eliminar": 1
+      "crear": 0,
+      "leer": 0,
+      "actualizar": 0,
+      "eliminar": 0
     }
   }
-  
