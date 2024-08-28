@@ -5,6 +5,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const Modelo = document.querySelector("#txtModelo");
   const CodigoBarras = document.querySelector("#txtCodigoBarras");
 
+
+  
   document
     .getElementById("form-productos")
     .addEventListener("submit", (event) => {

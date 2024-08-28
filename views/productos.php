@@ -47,7 +47,7 @@
                         <input type="text" class="form-control" id="txtCodigoBarras" name="txtCodigoBarras" required>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary mt-3">Agregar Codigo</button>
+                <button type="submit" class="btn btn-primary mt-3">Agregar Producto</button>
             </form>
         </div>
     </div>

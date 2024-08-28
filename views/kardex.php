@@ -77,23 +77,6 @@
                         <div class="form-floating">
                             <select name="txtaMotivo" id="txtaMotivo" class="form-select" required>
                                 <option value="">Seleccione</option>
-
-                                <!-- Grupo de opciones para Entrada -->
-                                <optgroup label="Entrada">
-                                    <option value="Compra de Equipos">Compra de Equipos</option>
-                                    <option value="Reemplazo de Equipos">Reemplazo de Equipos</option>
-                                    <option value="Actualización de Equipos">Actualización de Equipos</option>
-                                    <option value="Recepción de Equipos Nuevos">Recepción de Equipos Nuevos</option>
-                                </optgroup>
-
-                                <!-- Grupo de opciones para Salida -->
-                                <optgroup label="Salida">
-                                    <option value="Devolución por Cancelación">Devolución por Cancelación</option>
-                                    <option value="Equipos en Desuso">Equipos en Desuso</option>
-                                    <option value="Venta de Equipos">Venta de Equipos</option>
-                                    <option value="Pérdida o Robo">Pérdida o Robo</option>
-                                    <option value="Descarte por Obsolescencia">Descarte por Obsolescencia</option>
-                                </optgroup>
                             </select>
                             <label for="txtaMotivo">Motivo</label>
                         </div>
