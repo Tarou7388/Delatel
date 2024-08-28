@@ -43,8 +43,10 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const response = await fetch(`../controllers/kardex.controllers.php?operacion=obtenerStock&id_producto=${idproducto}`);
       const data = await response.json();
+      const response2 = await fetch(`../controllers/Productos.controllers.php?operacion=getById&id_producto=${idproducto}`);
+      const data2 = await response2.json();
       stockactualField.value = data.saldo_total !== undefined ? data.saldo_total : 0;
-      txtvalorhistorico.value = data.precio_actual !== undefined ? data.precio_actual : 0;
+      txtvalorhistorico.value = data2.precio_actual !== undefined ? data2.precio_actual : 0;
       fecha.value = date;
     } catch (error) {
       console.error("Error al obtener el stock actual:", error);

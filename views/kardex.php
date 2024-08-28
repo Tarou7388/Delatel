@@ -75,7 +75,12 @@
                 <div class="row g-2 mt-2">
                     <div class="col-md">
                         <div class="form-floating">
-                            <textarea name="txtaMotivo" id="txtaMotivo" class="form-control" style="width: 100%;" rows="5"></textarea required>
+                        <select name="txtaMotivo" id="txtaMotivo" class="form-select" required>
+                                <option value="">Seleccione</option>
+                                <option value="Nuevas Adquisiciones">Nuevas Adquisiciones</option>
+                                <option value="Ventas">Ventas</option>
+                                <option value="Daños">Daños</option>
+                            </select>
                             <label for="txtaMotivo">Motivo</label>
                         </div>
                     </div>

@@ -12,6 +12,20 @@ class Producto extends Conexion
   {
     $this->pdo = parent::getConexion();
   }
+
+
+  public function getbyid($params = [])
+  {
+
+    $query = $this->pdo->prepare("SELECT * FROM tb_productos WHERE id_producto=?");
+    $query->execute(
+      [
+        $params['id_producto']
+      ]
+    );
+    return $query->fetch(PDO::FETCH_ASSOC);
+  }
+
   public function getAll()
   {
     $query = $this->pdo->prepare("SELECT * FROM tb_productos");
@@ -31,7 +45,8 @@ class Producto extends Conexion
           $params['modelo'],
           $params['precio_actual'],
           $params['Codigo_Barras'],
-        ]);
+        ]
+      );
       return $status;
     } catch (Exception $e) {
       return $status = false;

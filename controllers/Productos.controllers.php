@@ -27,5 +27,10 @@ if (isset($_GET['operacion'])) {
       $estado = $producto->getAll();
       echo json_encode($estado);
       break;
+    case "getById":
+      $resultado = $producto->getbyid(["id_producto" => $_GET['id_producto']]);
+      echo json_encode($resultado);
+      break;
+      
   }
 }

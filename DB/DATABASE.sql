@@ -208,7 +208,8 @@ CREATE TABLE tb_productos(
 	create_at 		DATETIME NOT NULL DEFAULT NOW(),
     update_at 		DATETIME NULL,
     inactive_at 	DATETIME NULL,
-    CONSTRAINT produ_uk_codigo_barra UNIQUE(codigo_barra)
+    CONSTRAINT produ_uk_codigo_barra UNIQUE(codigo_barra),
+    CONSTRAINT produc_uk_tp_md_mc UNIQUE (marca,tipo_producto,modelo)
 )ENGINE=INNODB;
 
 CREATE TABLE tb_kardex (

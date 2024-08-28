@@ -47,35 +47,32 @@
     </div>
 </div>
 
-<!-- Tabla de productos 
-<div class="container mt-5">
-    <div class="card mt-5">
-        <div class="card-header">Lista de Productos</div>
+<div class="container-fluid d-flex justify-content-center py-4">
+    <div class="card w-100" style="max-width: 90%;">
+        <div class="card-header">Gestionar Productos</div>
         <div class="card-body">
-            <table class="table table-striped">
+            <table id="TbProductos" name="TbProductos" class="display">
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th>slcMarca</th>
+                        <th>Marca</th>
                         <th>Tipo de Producto</th>
-                        <th>Descripción</th>
                         <th>Modelo</th>
+                        <th>Precio Actual</th>
+                        <th>Código de Barra</th>
                     </tr>
                 </thead>
-                <tbody id="lista-productos">
-                  Aquí se cargarán los productos 
+                <tbody>
                 </tbody>
             </table>
         </div>
     </div>
-
 </div>
--->
 
 
 <?php require_once "../footer.php"; ?>
 
 <script src="../js/Productos.js"></script>
+<script src="../js/productosDatatable.js"></script>
 
 </body>
 
