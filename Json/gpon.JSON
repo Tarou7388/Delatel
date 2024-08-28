@@ -1,0 +1,27 @@
+{
+  "FibraOptica":{
+    "Usuario":"nombrePersona",
+    "ClaveAcceso":"contraseñaRed",
+    "Plan":"",
+    "Potencia":89,
+    "Moden":{
+      "SSID":"",
+      "Seguridad":"",
+      "Marca":"",
+      "Banda":["2G","5G"],
+      "Num_Antena":6,
+      "CATV":true
+    },
+    "repetidor":{},
+    "Detalles":""
+  },
+  "CableDigital":{
+    "Plan":"",
+    "PagoInstalacion":"",
+    "Periodo":"",
+    "Potencia":"",
+    "Sintonizador":{},
+    "Triplexor":false,
+    "Conector":""
+  }
+}
