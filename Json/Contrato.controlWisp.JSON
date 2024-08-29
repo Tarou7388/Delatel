@@ -1,0 +1,29 @@
+{
+  "ParametrosGenerales":{
+    "Antenas": "Marca",
+    "Router": "Marca",
+    "Frecuencia":["2G","5G"],
+    "Base": "Distrito (Chincha)",
+    "Sub-Base":"Sector (Rosedal)",
+    "SignalStrengh": ".-55 dBm",
+    "NoiseFloor":".-98 dBm",
+    "TransmitCCQ":96.8,
+    "TX/RX-Rate":72.22
+  },
+  "ConfiguracionRed":{
+    "WAN":"172.16.16.159",
+    "Mascara":"255.255.255.0",
+    "PuertaEnlace":"172.16.16.1",
+    "DNS1":"8.8.8.8",
+    "DNS2":"8.8.4.4"
+  },
+  "ConfiguracionLAN":{
+    "LAN":"192.168.10.1",
+    "Acceso" :123456,
+    "SSID":"NombreRed",
+    "Seguridad":"contraseña",
+    "Otros":"Detalles",
+    "Instalador":"NombreInstalador",
+    "Fecha":"26/08/2022"
+  }
+}
