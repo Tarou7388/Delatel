@@ -138,10 +138,11 @@ BEGIN
 END $$
 
 CREATE PROCEDURE spu_registrar_roles(
-    p_rol VARCHAR(30)
+    p_rol VARCHAR(30),
+    p_permisos JSON
 )
 BEGIN
-    INSERT INTO tb_roles (rol) VALUES (p_rol);
+    INSERT INTO tb_roles (rol, permisos) VALUES (p_rol, p_permisos);
 END $$
 
 CREATE PROCEDURE spu_listar_permisos(

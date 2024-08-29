@@ -2,7 +2,7 @@ CREATE DATABASE Delatel;
 
 USE Delatel;
 
-CREATE TABLE tb_tipo_soporte (
+CREATE TABLE tb_tipo_soporte(
     id_tipo_soporte 	INT AUTO_INCREMENT PRIMARY KEY,
     tipo_soporte 		VARCHAR(50) NOT NULL,
     create_at 			DATETIME DEFAULT NOW(),

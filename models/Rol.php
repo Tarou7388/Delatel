@@ -17,13 +17,17 @@ class Rol extends Conexion
     return $query->fetchAll(PDO::FETCH_ASSOC);
   }
 
-  public function addRol($params = [])
+  public function addRol($params = []):bool
   {
     try {
-      $query = $this->pdo->prepare("CALL spu_registrar_roles(?)");
-      $query->execute([
-        $params['rol']
+      $status=false;
+      $query = $this->pdo->prepare("CALL spu_registrar_roles(?,?)");
+      $permisosJson = json_encode($params['permisos']);
+      $status=$query->execute([
+        $params['rol'],
+        $permisosJson
       ]);
+      return $status;
     } catch (Exception $e) {
       return $e->getMessage();
     }
