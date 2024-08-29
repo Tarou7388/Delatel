@@ -107,7 +107,7 @@ if (!isset($_SESSION['login']) || (isset($_SESSION['login']) && !$_SESSION['logi
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                   Ficha Instalacion GPON
                 </a>
-                <a class="nav-link" href="<?= $host; ?>views/FichaCable.php">
+                <a class="nav-link" href="<?= $host; ?>views/FichaTecnicaCable.php">
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                   Ficha Instalacion Cable
                 </a>
