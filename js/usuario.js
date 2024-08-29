@@ -1,3 +1,4 @@
+import config from '../env.js';
 window.addEventListener("DOMContentLoaded", event => {
   if (permisos[0].permisos.personas.leer != 1) {
     window.location.href = `${config.HOST}views`;
