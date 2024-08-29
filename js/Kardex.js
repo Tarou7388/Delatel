@@ -1,13 +1,9 @@
 import config from '../env.js';
 
 document.addEventListener("DOMContentLoaded", function () {
-  if (permisos[0].permisos.inventariado.crear == 1) {
-    console.log(permisos[0].permisos.inventariado);
-    console.log(permisos[0].permisos.inventariado.crear); // 1 = si puede - 0 = no puede
-    console.log(permisos[0].permisos.inventariado.leer);
-    console.log(permisos[0].permisos.inventariado.actualizar);
-    console.log(permisos[0].permisos.inventariado.eliminar);
-
+  if (permisos[0].permisos.inventariado.leer != 1) {
+    window.location.href = `${config.HOST}views`;
+  }
     const tipoMovimientoSelect = document.getElementById("slcTipomovimiento");
     const motivoSelect = document.getElementById("txtaMotivo");
 
@@ -152,7 +148,4 @@ document.addEventListener("DOMContentLoaded", function () {
           GuardarKardex();
         }
       });
-  } else {
-     window.location.href = `${config.HOST}views`;
-  }
 });
