@@ -1,0 +1,18 @@
+{
+  "fibraoptica":{
+    "usuario":"nombrePersona",
+    "claveacceso":"contraseñaRed",
+    "plan":"",
+    "potencia":89,
+    "moden":{
+      "ssid":"",
+      "seguridad":"",
+      "marca":"",
+      "banda":["2G","5G"],
+      "numeroantena":6,
+      "catv":true
+    },
+    "repetidor":{},
+    "detalles":""
+  }
+}

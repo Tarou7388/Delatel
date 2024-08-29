@@ -1,7 +1,7 @@
 {
   "parametrosgenerales":{
-    "antenas": "Marca",
-    "router": "Marca",
+    "antenas": "marca",
+    "router": "marca",
     "frecuencia":["2G","5G"],
     "base": "Distrito (Chincha)",
     "subbase":"Sector (Rosedal)",

@@ -490,7 +490,7 @@
 </div>
 <?php require_once "../footer.php"; ?>
 
-<script src="../js/soporteEscritorio.js"></script>
+<script type="module" src="../js/soporteEscritorio.js"></script>
 
 </body>
 

@@ -1,0 +1,26 @@
+{
+  "parametrosgpon": {
+    "pppoe": "",
+    "potecia": 48,
+    "catv": true,
+    "clave": "",
+    "vlan": 105,
+    "potencia": 15,
+    "ssid": "familialopez",
+    "password": "contraseña",
+    "otros": "",
+    "estadoinicial": ""
+  },
+  "cambiosgpon": {
+    "pppoe": "",
+    "potecia": 48,
+    "catv": true,
+    "clave": "",
+    "vlan": 105,
+    "potencia": 15,
+    "ssid": "familialopez",
+    "password": "contraseña",
+    "otros": "",
+    "procedimientosolucion": ""
+  }
+}
