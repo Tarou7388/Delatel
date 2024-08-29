@@ -2,7 +2,6 @@
 
 <div class="container-fluid px-4 mt-5">
     <select class="form-control" name="slchangeRegistro" id="slchangeRegistro">
-        <option value="">Seleccionar...</option>
         <option value="Persona">Persona</option>
         <option value="Empresa">Empresa</option>
     </select>

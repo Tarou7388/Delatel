@@ -112,7 +112,12 @@ END $$
 
 DELIMITER $$
 CREATE PROCEDURE spu_empresas_registrar(
-	
+	p_ruc          CHAR(3),
+    p_representante_legal           VARCHAR(15),
+    p_razon_social         VARCHAR(30),
+    p_nombre_comercial          VARCHAR(30),
+    p_telefono 		    CHAR(9),
+    p_email             VARCHAR(100)
 )
 BEGIN
 
