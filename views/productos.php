@@ -77,7 +77,7 @@
 
 <?php require_once "../footer.php"; ?>
 
-<script src="../js/Productos.js"></script>
+<script type="module" src="../js/Productos.js"></script>
 <script src="../js/productosDatatable.js"></script>
 
 </body>
