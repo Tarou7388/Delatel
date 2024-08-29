@@ -1,27 +1,64 @@
 {
-  "FibraOptica":{
-    "Usuario":"nombrePersona",
-    "ClaveAcceso":"contraseñaRed",
-    "Plan":"",
-    "Potencia":89,
-    "Moden":{
-      "SSID":"",
-      "Seguridad":"",
-      "Marca":"",
-      "Banda":["2G","5G"],
-      "Num_Antena":6,
-      "CATV":true
+  "fibraoptica":{
+    "usuario":"nombrePersona",
+    "claveacceso":"contraseñaRed",
+    "plan":"",
+    "potencia":89,
+    "moden":{
+      "ssid":"",
+      "seguridad":"",
+      "marca":"",
+      "banda":["2G","5G"],
+      "numeroantena":6,
+      "catv":true
     },
     "repetidor":{},
-    "Detalles":""
+    "detalles":""
   },
-  "CableDigital":{
-    "Plan":"",
-    "PagoInstalacion":"",
-    "Periodo":"",
-    "Potencia":"",
-    "Sintonizador":{},
-    "Triplexor":false,
-    "Conector":""
-  }
+  "cabledigital":{
+    "plan":"cable",
+    "pagoinstalacion":30,
+    "periodo":"mensual",
+    "potencia":4,
+    "sintonizador":{},
+    "triplexor":{
+      "requerido":true,
+      "cargador":true
+    },
+    "conector":{ 
+      "numeroconector":1,
+      "precio":1.50
+    },
+    "spliter": [{
+			"cantidad": 1,
+			"tipo": "1x3"
+		}, {
+			"cantidad": 1,
+			"tipo": "1x2"
+		}],
+    "cable": {
+			"metrosadicionales": 30,
+			"preciometro": 1.5
+		},
+		"conectores": {
+			"cantidad": 4,
+			"precio": 1.0
+		}
+  },
+  "otros": {
+		"num_sintonizador": 2,
+		"costo_alquiler": 80.0,
+		"formapago": "yape",
+		"cable": 45,
+		"conect": 4,
+		"medicion_caja": {
+			"gpon": 16,
+			"catv": 43
+		},
+		"medicion_casa": {
+			"gpon": 17,
+			"catv": 4
+		},
+		"detalles": ""
+	}
 }

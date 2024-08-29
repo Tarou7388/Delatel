@@ -1,29 +1,29 @@
 {
-  "ParametrosGenerales":{
-    "Antenas": "Marca",
-    "Router": "Marca",
-    "Frecuencia":["2G","5G"],
-    "Base": "Distrito (Chincha)",
-    "Sub-Base":"Sector (Rosedal)",
-    "SignalStrengh": ".-55 dBm",
-    "NoiseFloor":".-98 dBm",
-    "TransmitCCQ":96.8,
-    "TX/RX-Rate":72.22
+  "parametrosgenerales":{
+    "antenas": "Marca",
+    "router": "Marca",
+    "frecuencia":["2G","5G"],
+    "base": "Distrito (Chincha)",
+    "subbase":"Sector (Rosedal)",
+    "signalstrengh": ".-55 dBm",
+    "noisefloor":".-98 dBm",
+    "transmitccq":96.8,
+    "tx/rxrate":72.22
   },
-  "ConfiguracionRed":{
-    "WAN":"172.16.16.159",
-    "Mascara":"255.255.255.0",
-    "PuertaEnlace":"172.16.16.1",
-    "DNS1":"8.8.8.8",
-    "DNS2":"8.8.4.4"
+  "configuracionred":{
+    "wan":"172.16.16.159",
+    "mascara":"255.255.255.0",
+    "puertaenlace":"172.16.16.1",
+    "dns1":"8.8.8.8",
+    "dns2":"8.8.4.4"
   },
-  "ConfiguracionLAN":{
-    "LAN":"192.168.10.1",
-    "Acceso" :123456,
-    "SSID":"NombreRed",
-    "Seguridad":"contraseña",
-    "Otros":"Detalles",
-    "Instalador":"NombreInstalador",
-    "Fecha":"26/08/2022"
+  "configuracionlan":{
+    "lan":"192.168.10.1",
+    "acceso" :123456,
+    "ssid":"NombreRed",
+    "seguridad":"contraseña",
+    "otros":"Detalles",
+    "instalador":"NombreInstalador",
+    "fecha":"26/08/2022"
   }
 }
