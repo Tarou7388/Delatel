@@ -151,6 +151,10 @@ if (!isset($_SESSION['login']) || (isset($_SESSION['login']) && !$_SESSION['logi
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                   Clientes
                 </a>
+                <a class="nav-link" href="<?= $host; ?>views/PersonaEmpresas.php">
+                  <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                 Registro
+                </a>
               </div>
             </div>
 
