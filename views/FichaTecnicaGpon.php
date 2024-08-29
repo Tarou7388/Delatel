@@ -2,13 +2,13 @@
 <link rel="stylesheet" href="../css/gpon.css">
 
 <div class="modal fade" id="mdlRepetidor" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="exampleModalLabel">Añadir Repetidor</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body" id=mdlRepetidorBody>
+      <div class="modal-body" id="mdlRepetidorBody">
         <div class="mb-2">
           <input type="text" class="form-control" id="txtSsidRepetidor" placeholder="SSID">
         </div>
@@ -18,7 +18,7 @@
         <div class="mb-2">
           <div class="input-group">
             <input type="text" class="form-control" id="txtMarcaModeloRepetidor" placeholder="Marca - Modelo">
-            <button class="btn btn-outline-primary" type="submit" id="btnEscanearRepetidor">Escanear</button>
+            <button class="btn btn-outline-primary" type="button" id="btnEscanearRepetidor">Escanear</button>
           </div>
         </div>
         <div class="mb-2">
@@ -27,7 +27,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" id=btnAñadirRepetidor class="btn btn-primary">Guardar</button>
+        <button type="button" id="btnAñadirRepetidor" class="btn btn-primary">Guardar</button>
       </div>
     </div>
   </div>
@@ -99,6 +99,10 @@
               <div class="mt-4">
                 <textarea type="text" class="form-control" id="txtaDetallesModen" placeholder="Detalles"></textarea>
               </div>
+            </div>
+            <div class="mt-4">
+              <button class="btn btn-primary btn-sm" id="btnGuardar">Guardar</button>
+              <button class="btn btn-secondary btn-sm" id="btnCancelar">Cancelar</button>
             </div>
           </div>
         </div>
