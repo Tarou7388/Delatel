@@ -110,6 +110,14 @@ BEGIN
     SELECT LAST_INSERT_ID() AS id_persona;
 END $$
 
+DELIMITER $$
+CREATE PROCEDURE spu_empresas_registrar(
+	
+)
+BEGIN
+
+END $$
+
 CREATE PROCEDURE spu_clientes_registrar(
     p_id_persona        INT,
     p_id_empresa        INT,
