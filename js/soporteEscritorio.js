@@ -1,4 +1,7 @@
-document.addEventListener('DOMContentLoaded', function () {
+window.addEventListener('DOMContentLoaded', function () {
+    if (permisos[0].permisos.soporte.leer != 1) {
+        window.location.href = `${config.HOST}views`;
+      }
     const dropdownItems = document.querySelectorAll('.list-group-item');
     const dropdownButton = document.getElementById('btnModal');
 

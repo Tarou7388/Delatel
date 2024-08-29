@@ -1,4 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
+  if (permisos[0].permisos.inventariado.leer != 1) {
+    window.location.href = `${config.HOST}views`;
+  }
   const marca = document.querySelector("#slcMarca");
   const precioActual = document.querySelector("#txtPrecioActual");
   const tipoProducto = document.querySelector("#slcTipoProducto");
