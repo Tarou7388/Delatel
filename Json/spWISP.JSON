@@ -1,14 +1,14 @@
 {
-  "parametros":{
-    "base":"Chincha",
-    "ip":"",
-    "señal":"",
-    "estadoinicial":""
+  "parametros": {
+    "base": "Chincha",
+    "ip": "",
+    "señal": "",
+    "estadoInicial": ""
   },
-  "cambios":{
-    "nuevabase":"",
-    "nuevoip":"",
-    "señal":"",
-    "procedimiento":""
+  "cambios": {
+    "nuevaBase": "",
+    "nuevoIP": "",
+    "señal": "",
+    "procedimiento": ""
   }
 }
