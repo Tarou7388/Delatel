@@ -17,42 +17,32 @@
             <form class="form-control" id="frmEmpresas">
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <label for="txtNumDocumentoEmpresa" class="form-label">Número de documento</label>
-                        <input type="text" class="form-control" id="txtNumDocumentoEmpresa">
-                    </div>
-                    <div class="col-md-6">
                         <label for="txtRuc" class="form-label">RUC</label>
-                        <input type="text" class="form-control" id="txtRuc">
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label for="txtNombresEmpresa" class="form-label">Nombres</label>
-                        <input type="text" class="form-control" id="txtNombresEmpresa">
+                        <input type="text" class="form-control" id="txtRuc" name="ruc">
                     </div>
                     <div class="col-md-6">
-                        <label for="txtApellidosEmpresa" class="form-label">Apellidos</label>
-                        <input type="text" class="form-control" id="txtApellidosEmpresa">
+                        <label for="txtRepresentanteLegal" class="form-label">Representante Legal</label>
+                        <input type="text" class="form-control" id="txtRepresentanteLegal" name="representante_legal">
                     </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label for="txtRazonSocial" class="form-label">Razón Social</label>
-                        <input type="text" class="form-control" id="txtRazonSocial">
+                        <input type="text" class="form-control" id="txtRazonSocial" name="razon_social">
                     </div>
                     <div class="col-md-6">
                         <label for="txtNombreComercial" class="form-label">Nombre Comercial</label>
-                        <input type="text" class="form-control" id="txtNombreComercial">
+                        <input type="text" class="form-control" id="txtNombreComercial" name="nombre_comercial">
                     </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <label for="txtDireccionEmpresa" class="form-label">Dirección</label>
-                        <input type="text" class="form-control" id="txtDireccionEmpresa">
+                        <label for="txtTelefono" class="form-label">Teléfono</label>
+                        <input type="text" class="form-control" id="txtTelefono" name="telefono">
                     </div>
                     <div class="col-md-6">
-                        <label for="txtReferenciaEmpresa" class="form-label">Referencia</label>
-                        <input type="text" class="form-control" id="txtReferenciaEmpresa">
+                        <label for="txtEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="txtEmail" name="email">
                     </div>
                 </div>
                 <div class="d-flex justify-content-end">
@@ -63,6 +53,7 @@
         </div>
     </div>
 </div>
+
 
 <div class="container-fluid px-4 mt-5">
     <div class="card d-none" id="divPersonaCard">

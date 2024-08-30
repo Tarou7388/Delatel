@@ -12,9 +12,10 @@ class Empresa extends Conexion
     }
 
     public function registrar($data = []):bool{
+        $status = false;
         try{
             $consulta = $this->pdo->prepare("CALL spu_empresas_registrar(?,?,?,?,?,?)");
-            $consulta->execute(array(
+            $status =$consulta->execute(array(
                 $data["ruc"],
                 $data["representante_legal"],
                 $data["razon_social"],
@@ -22,7 +23,7 @@ class Empresa extends Conexion
                 $data["telefono"],
                 $data["email"]
             ));
-            return $consulta->fetch(PDO::FETCH_ASSOC);
+            return $status;
         }
         catch(Exception $e){
             die($e->getMessage());
