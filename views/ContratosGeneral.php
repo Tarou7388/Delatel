@@ -74,6 +74,7 @@
             <td>
               <button class="btn btn-sm btn-primary">Editar</button>
               <button class="btn btn-sm btn-danger">Eliminar</button>
+              <button type="button" class="btn btn-outline-primary" id="generar">Generar PDF</button>
             </td>
           </tr>
           <tr>
@@ -82,6 +83,7 @@
             <td>
               <button class="btn btn-sm btn-primary">Editar</button>
               <button class="btn btn-sm btn-danger">Eliminar</button>
+              <button type="button" class="btn btn-outline-primary" id="generar">Generar PDF</button>
             </td>
           </tr>
           <!-- Más filas de ejemplo -->
@@ -90,6 +92,7 @@
     </div>
   </div>
 </div>
+<script src="../js/contratos.js"></script>
 <script src="../js/datatables-simple-demo.js">
 </script>
 <?php require_once "../footer.php"; ?>
