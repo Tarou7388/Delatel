@@ -9,7 +9,7 @@ class Persona extends Conexion{
         $this->pdo = parent::getConexion();
     }
 
-    public function registrar($data = []):bool{
+    public function registrar($data = []){
         try{
             $consulta = $this->pdo->prepare("CALL spu_personas_registrar(?,?,?,?,?,?)");
             $consulta->execute(array(

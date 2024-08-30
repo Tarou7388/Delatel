@@ -110,17 +110,17 @@ BEGIN
     SELECT LAST_INSERT_ID() AS id_persona;
 END $$
 
-DELIMITER $$
 CREATE PROCEDURE spu_empresas_registrar(
-	p_ruc          CHAR(3),
-    p_representante_legal           VARCHAR(15),
-    p_razon_social         VARCHAR(30),
-    p_nombre_comercial          VARCHAR(30),
-    p_telefono 		    CHAR(9),
-    p_email             VARCHAR(100)
+    p_ruc CHAR(11),
+    p_representante_legal VARCHAR(70),
+    p_razon_social VARCHAR(100),
+    p_nombre_comercial VARCHAR(100),
+    p_telefono CHAR(9),
+    p_email VARCHAR(100)
 )
 BEGIN
-
+    INSERT INTO tb_empresas (ruc, representante_legal, razon_social, nombre_comercial, telefono, email, create_at)
+    VALUES (p_ruc, p_representante_legal, p_razon_social, p_nombre_comercial, p_telefono, p_email, NOW());
 END $$
 
 CREATE PROCEDURE spu_clientes_registrar(

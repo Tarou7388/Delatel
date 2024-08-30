@@ -19,6 +19,6 @@ if(isset($_POST["Operacion"])){
             "email" => $_POST["email"]
         ];
         $resultado=$persona->registrar($datos);
-        echo json_encode(["guardado" => $resultado]);
+        echo json_encode($resultado);
     }
 }
