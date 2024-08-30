@@ -199,6 +199,7 @@ CREATE TABLE tb_soporte (
     CONSTRAINT sopor_fk_id_tecnico FOREIGN KEY (id_tecnico) REFERENCES tb_responsables (id_responsable)
 ) ENGINE = InnoDB;
 
+
 CREATE TABLE tb_productos(
     id_producto      INT PRIMARY KEY AUTO_INCREMENT,
     marca           VARCHAR(30) NOT NULL,

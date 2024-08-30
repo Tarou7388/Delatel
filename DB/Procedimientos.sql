@@ -207,3 +207,12 @@ INNER JOIN
     tb_personas pe ON us.id_persona = pe.id_persona
 INNER JOIN
     tb_roles ro ON res.id_rol = ro.id_rol;
+
+    
+CREATE PROCEDURE spu_registrar_fichasoporte(
+  IN p_soporte JSON
+)
+BEGIN
+  INSERT INTO tb_soporte (pagos) 
+  VALUES (p_soporte);
+END $$
