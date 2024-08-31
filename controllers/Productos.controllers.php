@@ -31,6 +31,26 @@ if (isset($_GET['operacion'])) {
       $resultado = $producto->getbyid(["id_producto" => $_GET['id_producto']]);
       echo json_encode($resultado);
       break;
-      
+  }
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+  $inputData = file_get_contents('php://input');
+  $data = json_decode($inputData, true);
+
+  if (isset($data['id_producto'])) {
+    $datos = [
+      "marca"          => $data['marca'],
+      "tipo_producto"  => $data['tipo_producto'],
+      "modelo"         => $data['modelo'],
+      "precio_actual"  => $data['precio_actual'],
+      "codigo_barra"   => $data['codigo_barra'],
+      "id_producto"    => $data['id_producto']
+    ];
+
+    $estado = $producto->updateProducto($datos);
+    echo json_encode(["Actualizado" => $estado]);
+  } else {
+    echo json_encode(["Actualizado" => false, "error" => "ID de producto no encontrado"]);
   }
 }

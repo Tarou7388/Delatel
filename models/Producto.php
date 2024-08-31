@@ -54,4 +54,25 @@ class Producto extends Conexion
 
     return $query->fetchAll(PDO::FETCH_ASSOC);
   }
+
+  public function updateProducto($data = []): bool
+  {
+    try {
+      $query = $this->pdo->prepare("CALL spu_productos_actualizar(?, ?, ?, ?, ?, ?)");
+      $status = $query->execute(
+        [
+          $data["id_producto"],
+          $data["marca"],
+          $data["tipo_producto"],
+          $data["modelo"],
+          $data["precio_actual"],
+          $data["codigo_barra"]
+        ]
+      );
+      return $status;
+    } catch (Exception $e) {
+      error_log($e->getMessage()); // Opcional: Para registrar errores
+      return false;
+    }
+  }
 }

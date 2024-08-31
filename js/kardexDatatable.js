@@ -78,7 +78,7 @@ const tablaKardex = $('#TbKardex').DataTable({
     ],
     order: [[1, 'desc']],
     language: {
-        "url": "../es-ES.json"
+        "url": "../json/es-ES.json"
     },
     paging: true,
     searching: true,
