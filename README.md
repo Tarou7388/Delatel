@@ -43,3 +43,8 @@ Antes de comenzar, asegúrate de tener los siguientes requisitos instalados en t
    extension=exif      ; Must be after mbstring as it depends on it
    extension=mysqli
    ```
+
+   Instalación de Dompdf
+   ```
+   composer require dompdf/dompdf
+   ```

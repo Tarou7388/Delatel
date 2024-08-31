@@ -61,18 +61,18 @@ CREATE TABLE tb_sectores (
 ) ENGINE = InnoDB;
 
 CREATE TABLE tb_personas (
-    id_persona		INT PRIMARY KEY AUTO_INCREMENT,
-    tipo_doc 		CHAR(3) NOT NULL,
-    nro_doc		 	VARCHAR(15) NOT NULL,
-    apellidos 		VARCHAR(30) NOT NULL,
-    nombres 		VARCHAR(30) NOT NULL,
-    telefono 		CHAR(9) NOT NULL,
-    email 			VARCHAR(100) NULL,
-    create_at 		DATETIME NOT NULL DEFAULT NOW(),
-    update_at 		DATETIME NULL,
-    inactive_at 	DATETIME NULL,
-    CONSTRAINT perso_uk_nro_doc UNIQUE (nro_doc),
-    CONSTRAINT perso_uk_telefono UNIQUE (telefono)
+    id_persona       INT PRIMARY KEY AUTO_INCREMENT,
+    tipo_doc         CHAR(3) NOT NULL,
+    nro_doc          VARCHAR(15) NOT NULL,
+    apellidos        VARCHAR(30) NOT NULL,
+    nombres          VARCHAR(30) NOT NULL,
+    telefono         CHAR(9) NOT NULL,
+    email            VARCHAR(100) NULL,
+    create_at        DATETIME NOT NULL DEFAULT NOW(),
+    update_at        DATETIME NULL,
+    inactive_at      DATETIME NULL,
+    CONSTRAINT perso_uk_nro_doc UNIQUE (nro_doc, tipo_doc),
+    CONSTRAINT perso_ck_tipo_doc CHECK (tipo_doc IN ('DNI', 'PAS', 'CAR'))
 ) ENGINE = InnoDB;
 
 CREATE TABLE tb_empresas (
@@ -190,6 +190,7 @@ CREATE TABLE tb_soporte (
     descripcion_solucion TEXT NOT NULL,
     prioridad VARCHAR(50) NOT NULL,
     pagos JSON NOT NULL,
+    soporte JSON NOT NULL,
     create_at DATETIME NOT NULL DEFAULT NOW(),
     update_at DATETIME NULL,
     inactive_at DATETIME NULL,
@@ -197,6 +198,7 @@ CREATE TABLE tb_soporte (
     CONSTRAINT sopor_fk_id_tipo_soporte FOREIGN KEY (id_tipo_soporte) REFERENCES tb_tipo_soporte (id_tipo_soporte),
     CONSTRAINT sopor_fk_id_tecnico FOREIGN KEY (id_tecnico) REFERENCES tb_responsables (id_responsable)
 ) ENGINE = InnoDB;
+
 
 CREATE TABLE tb_productos(
     id_producto      INT PRIMARY KEY AUTO_INCREMENT,

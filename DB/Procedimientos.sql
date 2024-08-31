@@ -110,6 +110,19 @@ BEGIN
     SELECT LAST_INSERT_ID() AS id_persona;
 END $$
 
+CREATE PROCEDURE spu_empresas_registrar(
+    p_ruc CHAR(11),
+    p_representante_legal VARCHAR(70),
+    p_razon_social VARCHAR(100),
+    p_nombre_comercial VARCHAR(100),
+    p_telefono CHAR(9),
+    p_email VARCHAR(100)
+)
+BEGIN
+    INSERT INTO tb_empresas (ruc, representante_legal, razon_social, nombre_comercial, telefono, email, create_at)
+    VALUES (p_ruc, p_representante_legal, p_razon_social, p_nombre_comercial, p_telefono, p_email, NOW());
+END $$
+
 CREATE PROCEDURE spu_clientes_registrar(
     p_id_persona        INT,
     p_id_empresa        INT,
@@ -213,3 +226,12 @@ INNER JOIN
     tb_personas pe ON us.id_persona = pe.id_persona
 INNER JOIN
     tb_roles ro ON res.id_rol = ro.id_rol;
+
+    
+CREATE PROCEDURE spu_registrar_fichasoporte(
+  IN p_soporte JSON
+)
+BEGIN
+  INSERT INTO tb_soporte (pagos) 
+  VALUES (p_soporte);
+END $$
