@@ -145,6 +145,25 @@ BEGIN
     INSERT INTO tb_roles (rol, permisos) VALUES (p_rol, p_permisos);
 END $$
 
+CREATE PROCEDURE spu_listar_permisos_id(
+    p_id_rol INT
+)
+BEGIN
+    SELECT rol, permisos FROM tb_roles
+    WHERE id_rol = p_id_rol;
+END$$
+
+CREATE PROCEDURE spu_actualizar_permisos_id(
+    p_id_rol    INT,
+    p_permisos  JSON
+)
+BEGIN
+    UPDATE tb_roles
+        SET
+            permisos = p_permisos
+        WHERE id_rol = p_id_rol;
+END$$
+
 CREATE PROCEDURE spu_listar_permisos(
     p_id_rol INT
 )
