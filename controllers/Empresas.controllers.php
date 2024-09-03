@@ -11,7 +11,8 @@ if ($_POST["operacion"] == "Registrar") {
         "razon_social"          => $_POST["razon_social"],
         "nombre_comercial"      => $_POST["nombre_comercial"],
         "telefono"              => $_POST["telefono"],
-        "email"                 => $_POST["email"]
+        "email"                 => $_POST["email"],
+        "iduser_create"         => $_POST["iduser_create"]
     ];
     
     $resultado = $empresa->registrar($datos);

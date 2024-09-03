@@ -95,35 +95,6 @@ BEGIN
     WHERE nombre_user = p_nombre_user and inactive_at IS NULL;
 END $$ 
 
-
-CREATE PROCEDURE spu_personas_registrar(
-    p_tipo_doc          CHAR(3),
-    p_nro_doc           VARCHAR(15),
-    p_apellidos         VARCHAR(30),
-    p_nombres           VARCHAR(30),
-    p_telefono 		    CHAR(9),
-    p_email             VARCHAR(100)
-)
-BEGIN
-    INSERT INTO tb_personas (tipo_doc, nro_doc, apellidos, nombres, telefono, email) 
-    VALUES (p_tipo_doc, p_nro_doc, p_apellidos, p_nombres, p_telefono, p_email);
-
-    SELECT LAST_INSERT_ID() AS id_persona;
-END $$
-
-CREATE PROCEDURE spu_empresas_registrar(
-    p_ruc CHAR(11),
-    p_representante_legal VARCHAR(70),
-    p_razon_social VARCHAR(100),
-    p_nombre_comercial VARCHAR(100),
-    p_telefono CHAR(9),
-    p_email VARCHAR(100)
-)
-BEGIN
-    INSERT INTO tb_empresas (ruc, representante_legal, razon_social, nombre_comercial, telefono, email, create_at)
-    VALUES (p_ruc, p_representante_legal, p_razon_social, p_nombre_comercial, p_telefono, p_email, NOW());
-END $$
-
 CREATE PROCEDURE spu_clientes_registrar(
     p_id_persona        INT,
     p_id_empresa        INT,
@@ -149,14 +120,6 @@ BEGIN
         VALUES
             (p_id_persona, p_nombre_user, p_pass);
     SELECT LAST_INSERT_ID() AS id_usuario;
-END $$
-
-CREATE PROCEDURE spu_registrar_roles(
-    p_rol VARCHAR(30),
-    p_permisos JSON
-)
-BEGIN
-    INSERT INTO tb_roles (rol, permisos) VALUES (p_rol, p_permisos);
 END $$
 
 CREATE PROCEDURE spu_listar_permisos_id(
@@ -188,46 +151,6 @@ BEGIN
     WHERE 
         r.id_rol = p_id_rol;
 END $$
-
-CREATE VIEW vw_kardex AS
-SELECT
-    k.id_kardex,
-    p.id_producto,
-    p.modelo,
-    p.tipo_producto,
-    p.marca,
-    p.precio_actual,
-    k.fecha,
-    k.tipo_operacion,
-    k.motivo,
-    k.cantidad,
-    k.saldo_total,
-    k.valor_unico_historico,
-    k.create_at AS fecha_creacion
-FROM
-    tb_productos p
-JOIN
-    tb_kardex k ON p.id_producto = k.id_producto
-ORDER BY 
-    k.create_at DESC;
-
-CREATE VIEW vw_usuarios AS
-SELECT
-    pe.apellidos,
-    pe.nombres,
-    us.nombre_user,
-    ro.rol as "Cargo",
-    us.create_at,
-    us.inactive_at
-FROM
-    tb_responsables res
-INNER JOIN
-    tb_usuarios us ON res.id_usuario = us.id_usuario
-INNER JOIN
-    tb_personas pe ON us.id_persona = pe.id_persona
-INNER JOIN
-    tb_roles ro ON res.id_rol = ro.id_rol;
-
 
 CREATE PROCEDURE spu_registrar_fichasoporte(
     IN p_id_contrato INT,
@@ -290,3 +213,313 @@ BEGIN
   WHERE id_producto = p_id_producto;
 END $$
 
+CREATE PROCEDURE spu_tipo_soporte_registrar(
+    p_tipo_soporte   VARCHAR(50),
+    p_iduser_create  INT
+)
+BEGIN
+    INSERT INTO tb_tipo_soporte (tipo_soporte, iduser_create)
+    VALUES (p_tipo_soporte, p_iduser_create);
+END $$
+
+CREATE PROCEDURE spu_servicios_registrar(
+    p_servicio       VARCHAR(50),
+    p_iduser_create  INT
+)
+BEGIN
+    INSERT INTO tb_servicios (servicio, iduser_create)
+    VALUES (p_servicio, p_iduser_create);
+END $$
+
+CREATE PROCEDURE spu_paquetes_registrar(
+    p_id_servicio     INT,
+    p_precio          DECIMAL(7,2),
+    p_fecha_inicio    DATE,
+    p_fecha_fin       DATE,
+    p_iduser_create   INT
+)
+BEGIN
+    INSERT INTO tb_paquetes (id_servicio, precio, fecha_inicio, fecha_fin, iduser_create)
+    VALUES (p_id_servicio, p_precio, p_fecha_inicio, p_fecha_fin, p_iduser_create);
+END $$
+
+CREATE PROCEDURE spu_sectores_registrar(
+    p_id_distrito    INT,
+    p_sector         VARCHAR(60),
+    p_iduser_create  INT
+)
+BEGIN
+    INSERT INTO tb_sectores (id_distrito, sector, iduser_create)
+    VALUES (p_id_distrito, p_sector, p_iduser_create);
+END $$
+
+CREATE PROCEDURE spu_roles_registrar(
+    p_rol            VARCHAR(30),
+    p_permisos       JSON,
+    p_iduser_create  INT
+)
+BEGIN
+    INSERT INTO tb_roles (rol, permisos, iduser_create)
+    VALUES (p_rol, p_permisos, p_iduser_create);
+END $$
+
+CREATE PROCEDURE spu_personas_registrar(
+    p_tipo_doc          CHAR(3),
+    p_nro_doc           VARCHAR(15),
+    p_apellidos         VARCHAR(30),
+    p_nombres           VARCHAR(30),
+    p_telefono 		    CHAR(9),
+    p_email             VARCHAR(100),
+    p_iduser_create		INT
+    )
+BEGIN
+    INSERT INTO tb_personas (tipo_doc, nro_doc, apellidos, nombres, telefono, email,iduser_create) 
+    VALUES (p_tipo_doc, p_nro_doc, p_apellidos, p_nombres, p_telefono, p_email,p_iduser_create);
+
+    SELECT LAST_INSERT_ID() AS id_persona;
+END $$
+
+CREATE PROCEDURE spu_empresas_registrar(
+    p_ruc                VARCHAR(11),
+    p_representante_legal VARCHAR(70),
+    p_razon_social        VARCHAR(100),
+    p_nombre_comercial    VARCHAR(100),
+    p_telefono            CHAR(9),
+    p_email               VARCHAR(100),
+    p_iduser_create       INT
+)
+BEGIN
+    INSERT INTO tb_empresas (ruc, representante_legal, razon_social, nombre_comercial, telefono, email, iduser_create) 
+    VALUES (p_ruc, p_representante_legal, p_razon_social, p_nombre_comercial, p_telefono, p_email, p_iduser_create);
+END $$
+
+CREATE PROCEDURE spu_registrar_roles(
+    p_rol VARCHAR(30),
+    p_permisos JSON
+)
+BEGIN
+    INSERT INTO tb_roles (rol, permisos) VALUES (p_rol, p_permisos);
+END $$
+
+CREATE VIEW vw_kardex AS
+SELECT
+    k.id_kardex,
+    p.id_producto,
+    p.modelo,
+    p.tipo_producto,
+    p.marca,
+    p.precio_actual,
+    k.fecha,
+    k.tipo_operacion,
+    k.motivo,
+    k.cantidad,
+    k.saldo_total,
+    k.valor_unico_historico,
+    k.create_at AS fecha_creacion
+FROM
+    tb_productos p
+JOIN
+    tb_kardex k ON p.id_producto = k.id_producto
+ORDER BY 
+    k.create_at DESC;
+    
+CREATE VIEW vw_usuarios AS
+SELECT
+    pe.apellidos,
+    pe.nombres,
+    us.nombre_user,
+    ro.rol as "Cargo",
+    us.create_at,
+    us.inactive_at
+FROM
+    tb_responsables res
+INNER JOIN
+    tb_usuarios us ON res.id_usuario = us.id_usuario
+INNER JOIN
+    tb_personas pe ON us.id_persona = pe.id_persona
+INNER JOIN
+    tb_roles ro ON res.id_rol = ro.id_rol;
+
+CREATE VIEW vw_personas_listar AS
+SELECT
+    p.id_persona,
+    p.tipo_doc,
+    p.nro_doc,
+    p.apellidos,
+    p.nombres,
+    p.telefono,
+    p.email,
+    p.create_at,
+    p.update_at,
+    p.inactive_at,
+    
+    p.iduser_create,
+    u1.nombre_user AS usuario_creador,
+    
+    p.iduser_update,
+    u2.nombre_user AS usuario_modificador,
+    
+    p.iduser_inactive,
+    u3.nombre_user AS usuario_inactivador
+
+FROM
+    tb_personas p
+LEFT JOIN
+    tb_usuarios u1 ON p.iduser_create = u1.id_usuario
+LEFT JOIN
+    tb_usuarios u2 ON p.iduser_update = u2.id_usuario
+LEFT JOIN
+    tb_usuarios u3 ON p.iduser_inactive = u3.id_usuario;
+    
+    
+CREATE VIEW vw_empresas_listar AS
+SELECT
+    e.id_empresa,
+    e.ruc,
+    e.representante_legal,
+    e.razon_social,
+    e.nombre_comercial,
+    e.telefono,
+    e.email,
+    e.create_at,
+    e.update_at,
+    e.inactive_at,
+    e.iduser_create,
+    u1.nombre_user AS usuario_creador,
+    e.iduser_update,
+    u2.nombre_user AS usuario_modificador,
+    e.iduser_inactive,
+    u3.nombre_user AS usuario_inactivador
+FROM
+    tb_empresas e
+LEFT JOIN
+    tb_usuarios u1 ON e.iduser_create = u1.id_usuario
+LEFT JOIN
+    tb_usuarios u2 ON e.iduser_update = u2.id_usuario
+LEFT JOIN
+    tb_usuarios u3 ON e.iduser_inactive = u3.id_usuario;
+
+
+CREATE VIEW vw_tipo_soporte_listar AS
+SELECT
+    t.id_tipo_soporte,
+    t.tipo_soporte,
+    t.create_at,
+    t.update_at,
+    t.inactive_at,
+    t.iduser_create,
+    u1.nombre_user AS usuario_creador,
+    t.iduser_update,
+    u2.nombre_user AS usuario_modificador,
+    t.iduser_inactive,
+    u3.nombre_user AS usuario_inactivador
+FROM
+    tb_tipo_soporte t
+LEFT JOIN
+    tb_usuarios u1 ON t.iduser_create = u1.id_usuario
+LEFT JOIN
+    tb_usuarios u2 ON t.iduser_update = u2.id_usuario
+LEFT JOIN
+    tb_usuarios u3 ON t.iduser_inactive = u3.id_usuario;
+
+
+CREATE VIEW vw_servicios_listar AS
+SELECT
+    s.id_servicio,
+    s.servicio,
+    s.create_at,
+    s.update_at,
+    s.inactive_at,
+    s.iduser_create,
+    u1.nombre_user AS usuario_creador,
+    s.iduser_update,
+    u2.nombre_user AS usuario_modificador,
+    s.iduser_inactive,
+    u3.nombre_user AS usuario_inactivador
+FROM
+    tb_servicios s
+LEFT JOIN
+    tb_usuarios u1 ON s.iduser_create = u1.id_usuario
+LEFT JOIN
+    tb_usuarios u2 ON s.iduser_update = u2.id_usuario
+LEFT JOIN
+    tb_usuarios u3 ON s.iduser_inactive = u3.id_usuario;
+
+
+CREATE VIEW vw_paquetes_listar AS
+SELECT
+    p.id_paquete,
+    p.id_servicio,
+    s.servicio AS nombre_servicio,
+    p.precio,
+    p.fecha_inicio,
+    p.fecha_fin,
+    p.create_at,
+    p.update_at,
+    p.inactive_at,
+    p.iduser_create,
+    u1.nombre_user AS usuario_creador,
+    p.iduser_update,
+    u2.nombre_user AS usuario_modificador,
+    p.iduser_inactive,
+    u3.nombre_user AS usuario_inactivador
+FROM
+    tb_paquetes p
+LEFT JOIN
+    tb_servicios s ON p.id_servicio = s.id_servicio
+LEFT JOIN
+    tb_usuarios u1 ON p.iduser_create = u1.id_usuario
+LEFT JOIN
+    tb_usuarios u2 ON p.iduser_update = u2.id_usuario
+LEFT JOIN
+    tb_usuarios u3 ON p.iduser_inactive = u3.id_usuario;
+
+
+CREATE VIEW vw_roles_listar AS
+SELECT
+    r.id_rol,
+    r.rol,
+    r.permisos,
+    r.create_at,
+    r.update_at,
+    r.inactive_at,
+    r.iduser_create,
+    u1.nombre_user AS usuario_creador,
+    r.iduser_update,
+    u2.nombre_user AS usuario_modificador,
+    r.iduser_inactive,
+    u3.nombre_user AS usuario_inactivador
+FROM
+    tb_roles r
+LEFT JOIN
+    tb_usuarios u1 ON r.iduser_create = u1.id_usuario
+LEFT JOIN
+    tb_usuarios u2 ON r.iduser_update = u2.id_usuario
+LEFT JOIN
+    tb_usuarios u3 ON r.iduser_inactive = u3.id_usuario;
+
+CREATE VIEW vw_sectores_listar AS
+SELECT
+    s.id_sector,
+    s.sector,
+    s.id_distrito,
+    d.distrito AS nombre_distrito,
+    s.create_at,
+    s.update_at,
+    s.inactive_at,
+    s.iduser_create,
+    u1.nombre_user AS usuario_creador,
+    s.iduser_update,
+    u2.nombre_user AS usuario_modificador,
+    s.iduser_inactive,
+    u3.nombre_user AS usuario_inactivador
+FROM
+    tb_sectores s
+LEFT JOIN
+    tb_distritos d ON s.id_distrito = d.id_distrito
+LEFT JOIN
+    tb_usuarios u1 ON s.iduser_create = u1.id_usuario
+LEFT JOIN
+    tb_usuarios u2 ON s.iduser_update = u2.id_usuario
+LEFT JOIN
+    tb_usuarios u3 ON s.iduser_inactive = u3.id_usuario;

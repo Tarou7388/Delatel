@@ -8,6 +8,9 @@ CREATE TABLE tb_tipo_soporte(
     create_at 			DATETIME DEFAULT NOW(),
     update_at 			DATETIME NULL,
     inactive_at 		DATETIME NULL,
+    iduser_create	 INT NOT NULL,
+	iduser_update 	 INT NULL,
+	iduser_inactive	 INT NULL,
     CONSTRAINT tiposopor_uk_tipo_soporte UNIQUE(tipo_soporte)
 ) ENGINE = InnoDB;
 
@@ -37,6 +40,9 @@ CREATE TABLE tb_roles (
     create_at 	DATETIME DEFAULT NOW(),
     update_at 	DATETIME NULL,
     inactive_at DATETIME NULL,
+    iduser_create	 INT NOT NULL,
+	iduser_update 	 INT NULL,
+	iduser_inactive	 INT NULL,
     CONSTRAINT roles_uk_rol UNIQUE(rol)
 ) ENGINE = InnoDB;
 
@@ -46,6 +52,9 @@ CREATE TABLE tb_servicios (
     create_at 		DATETIME DEFAULT NOW(),
     update_at 		DATETIME NULL,
     inactive_at 	DATETIME NULL,
+	iduser_create	 INT NOT NULL,
+	iduser_update 	 INT NULL,
+	iduser_inactive	 INT NULL,
     CONSTRAINT servi_uk_servicio UNIQUE (servicio)
 ) ENGINE = InnoDB;
 
@@ -53,9 +62,12 @@ CREATE TABLE tb_sectores (
     id_sector 		INT PRIMARY KEY AUTO_INCREMENT,
     id_distrito 	INT NOT NULL,
     sector 			VARCHAR(60) NOT NULL,
-    create_at 		DATETIME DEFAULT NOW(),
+    create_at 		DATETIME NOT NULL DEFAULT NOW(),
     update_at 		DATETIME NULL,
     inactive_at 	DATETIME NULL,
+	iduser_create	 INT NOT NULL,
+	iduser_update 	 INT NULL,
+	iduser_inactive	 INT NULL,
     CONSTRAINT secto_uk_sector UNIQUE (sector),
     CONSTRAINT secto_fk_id_distrito FOREIGN KEY (id_distrito) REFERENCES tb_distritos (id_distrito)
 ) ENGINE = InnoDB;
@@ -71,6 +83,9 @@ CREATE TABLE tb_personas (
     create_at        DATETIME NOT NULL DEFAULT NOW(),
     update_at        DATETIME NULL,
     inactive_at      DATETIME NULL,
+    iduser_create	 INT NOT NULL,
+	iduser_update 	 INT NULL,
+	iduser_inactive	 INT NULL,
     CONSTRAINT perso_uk_nro_doc UNIQUE (nro_doc, tipo_doc),
     CONSTRAINT perso_ck_tipo_doc CHECK (tipo_doc IN ('DNI', 'PAS', 'CAR'))
 ) ENGINE = InnoDB;
@@ -86,6 +101,9 @@ CREATE TABLE tb_empresas (
     create_at DATETIME NOT NULL DEFAULT NOW(),
     update_at DATETIME NULL,
     inactive_at DATETIME NULL,
+	iduser_create	 INT NOT NULL,
+	iduser_update 	 INT NULL,
+	iduser_inactive	 INT NULL,
     CONSTRAINT empre_uk_ruc UNIQUE (ruc),
     CONSTRAINT empre_uk_telefono UNIQUE (telefono)
 ) ENGINE = InnoDB;
@@ -193,11 +211,29 @@ CREATE TABLE tb_soporte (
     create_at DATETIME NOT NULL DEFAULT NOW(),
     update_at DATETIME NULL,
     inactive_at DATETIME NULL,
+	iduser_create	 INT NOT NULL,
+	iduser_update 	 INT NULL,
+	iduser_inactive	 INT NULL,
     CONSTRAINT sopor_fk_id_contrato FOREIGN KEY (id_contrato) REFERENCES tb_contratos (id_contrato),
     CONSTRAINT sopor_fk_id_tipo_soporte FOREIGN KEY (id_tipo_soporte) REFERENCES tb_tipo_soporte (id_tipo_soporte),
     CONSTRAINT sopor_fk_id_tecnico FOREIGN KEY (id_tecnico) REFERENCES tb_responsables (id_responsable)
 ) ENGINE = InnoDB;
 
+CREATE TABLE tb_paquetes
+(
+	id_paquete		 INT PRIMARY KEY AUTO_INCREMENT,
+    id_servicio		 INT NOT NULL,
+    precio			 DECIMAL(7,2) NOT NULL,
+    fecha_inicio	 DATE NOT NULL,
+    fecha_fin		 DATE NOT NULL,
+	create_at 		 DATETIME NOT NULL DEFAULT NOW(),
+    update_at 		 DATETIME NULL,
+    inactive_at 	 DATETIME NULL,
+    iduser_create	 INT NOT NULL,
+	iduser_update 	 INT NULL,
+	iduser_inactive	 INT NULL,
+    CONSTRAINT fk_paque_id_servicio FOREIGN KEY (id_servicio) REFERENCES tb_servicios (id_servicio)
+)ENGINE = InnoDB;
 
 CREATE TABLE tb_productos(
     id_producto      INT PRIMARY KEY AUTO_INCREMENT,
