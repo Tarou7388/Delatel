@@ -12,7 +12,7 @@ class Rol extends Conexion
 
   public function getAllRol()
   {
-    $query  = $this->pdo->prepare("SELECT id_rol, rol from tb_roles WHERE inactive_at IS NULL");
+    $query  = $this->pdo->prepare("SELECT id_rol, rol,usuario_creador,usuario_modificador from vw_roles_listar WHERE inactive_at IS NULL");
     $query->execute();
     return $query->fetchAll(PDO::FETCH_ASSOC);
   }
@@ -21,11 +21,12 @@ class Rol extends Conexion
   {
     try {
       $status=false;
-      $query = $this->pdo->prepare("CALL spu_registrar_roles(?,?)");
+      $query = $this->pdo->prepare("CALL spu_registrar_roles(?,?,?)");
       $permisosJson = json_encode($params['permisos']);
       $status=$query->execute([
         $params['rol'],
-        $permisosJson
+        $permisosJson,
+        $params['iduser_create']
       ]);
       return $status;
     } catch (Exception $e) {
@@ -72,12 +73,13 @@ class Rol extends Conexion
   public function updatePermisos($data = []):bool{
     try{
       $status = false;
-      $consulta = $this->pdo->prepare("CALL spu_actualizar_permisos_id(?,?)");
+      $consulta = $this->pdo->prepare("CALL spu_actualizar_permisos_id(?,?,?)");
       $permisosJson = json_encode($data['permisos']);
       $status = $consulta->execute(
         array(
           $data["idRol"],
-          $permisosJson
+          $permisosJson,
+          $data["iduser_update"]
         )
       );
       return $status;

@@ -2,6 +2,7 @@ import config from '../env.js';
 
 window.addEventListener("DOMContentLoaded", () => {
   let idRolActual = -1;
+  const userid= user['idUsuario'];
   const rol = document.getElementById('nombreRol');
   const form = document.getElementById('frmRol');
   const tbody = document.querySelector("#mostrar");
@@ -73,7 +74,8 @@ window.addEventListener("DOMContentLoaded", () => {
       method: 'POST',
       body: JSON.stringify({
         permisos: json,
-        adicionales: datosAdicionales
+        adicionales: datosAdicionales,
+        iduser_create: userid
       })
     })
       .then(respuesta => {
@@ -174,13 +176,15 @@ window.addEventListener("DOMContentLoaded", () => {
     const datosAdicionales = {
       operacion: 'updatePermisos',
       idRol: idRolActual
+      
     };
 
     fetch(`${config.HOST}controllers/Roles.controllers.php`, { // Ajusta la ruta a tu script PHP
       method: 'PUT',
       body: JSON.stringify({
         permisos: permisosActualizados,
-        adicionales: datosAdicionales
+        adicionales: datosAdicionales,
+        iduser_update:userid
       })
     })
       .then(respuesta => respuesta.json())

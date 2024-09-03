@@ -175,5 +175,6 @@ if (!isset($_SESSION['login']) || (isset($_SESSION['login']) && !$_SESSION['logi
       <main>
       <script>
         const permisos = <?php echo json_encode($permisos); ?>;
+        const user = <?php echo json_encode($_SESSION['login']); ?>;
       </script>
       <script src="<?=$host?>js/Header.js"></script>

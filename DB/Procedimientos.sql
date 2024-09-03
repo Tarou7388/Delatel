@@ -132,12 +132,14 @@ END$$
 
 CREATE PROCEDURE spu_actualizar_permisos_id(
     p_id_rol    INT,
-    p_permisos  JSON
+    p_permisos  JSON,
+    p_iduser_update INT
 )
 BEGIN
     UPDATE tb_roles
         SET
-            permisos = p_permisos
+            permisos = p_permisos,
+            iduser_update = p_iduser_update
         WHERE id_rol = p_id_rol;
 END$$
 

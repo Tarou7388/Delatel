@@ -1,6 +1,8 @@
 import config from "../env.js";
 
 document.addEventListener("DOMContentLoaded", function () {
+  const userid= JSON.stringify(user['idUsuario']);
+
   if (permisos[0].permisos.personas.leer != 1) {
     window.location.href = `${config.HOST}views`;
   }
@@ -14,8 +16,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const txtNumDocumentoPersona = document.getElementById("txtNumDocumentoPersona");
   const txtNombresPersona = document.getElementById("txtNombresPersona");
   const txtApellidosPersona = document.getElementById("txtApellidosPersona");
-  const txtTelefono = document.getElementById("txtTelefono");
-  const txtEmail = document.getElementById("txtEmail");
+  const txtTelefono = document.getElementById("txtTelefonoPersona");
+  const txtEmail = document.getElementById("txtEmailPersona");
 
   const btnCancelarPersona = document.getElementById("btnCancelarPersona");
 
@@ -44,13 +46,17 @@ document.addEventListener("DOMContentLoaded", function () {
       params.append("apellidos", txtApellidosPersona.value);
       params.append("telefono", txtTelefono.value);
       params.append("email", txtEmail.value);
+      params.append("iduser_create",userid);
+
+      console.log(txtEmail.value);
+      console.log(txtTelefono.value);
 
       const options = {
         method: "POST",
         body: params,
       };
 
-      fetch(`../controllers/Personas.controlles.php`, options)
+      fetch(`${config.HOST}controllers/Personas.controlles.php`, options)
         .then((response) => response.json())
         .then((data) => {
           if (data.id_persona > 0) {

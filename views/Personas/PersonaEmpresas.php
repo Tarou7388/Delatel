@@ -18,7 +18,7 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label for="txtRuc" class="form-label">RUC</label>
-                        <input type="text" class="form-control" id="txtRuc" name="ruc">
+                        <input type="text" class="form-control" id="txtRuc" name="ruc" maxlength="11">
                     </div>
                     <div class="col-md-6">
                         <label for="txtRepresentanteLegal" class="form-label">Representante Legal</label>
@@ -38,7 +38,7 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label for="txtTelefono" class="form-label">Teléfono</label>
-                        <input type="text" class="form-control" id="txtTelefono" name="telefono">
+                        <input type="text" class="form-control" id="txtTelefono" name="telefono" maxlength="11">
                     </div>
                     <div class="col-md-6">
                         <label for="txtEmail" class="form-label">Email</label>
@@ -89,11 +89,11 @@
                     </div>
                     <div class="col-md-4">
                         <label for="txtTelefono" class="form-label">Teléfono</label>
-                        <input type="text" class="form-control" id="txtTelefono">
+                        <input type="text" class="form-control" id="txtTelefonoPersona" maxlength="11">
                     </div>
                     <div class="col-md-4">
                         <label for="txtEmail" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="txtEmail">
+                        <input type="email" class="form-control" id="txtEmailPersona">
                     </div>
                 </div>
                 <div class="d-flex justify-content-end">

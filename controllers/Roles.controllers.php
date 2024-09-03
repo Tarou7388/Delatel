@@ -36,9 +36,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     case 'add':
       $rolDato = $datos['adicionales']['rol'];
       $permisos = $datos['permisos'];
+      $iduser_create =$datos['iduser_create'];
       $datosEnviar = [
         "rol" => $rolDato,
-        "permisos" => $permisos
+        "permisos" => $permisos,
+        "iduser_create" => $iduser_create
       ];
       $resultado = $rol->addRol($datosEnviar);
       echo json_encode(["guardado" => $resultado]);
@@ -54,9 +56,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     case 'updatePermisos':
       $rolDato = $datos['adicionales']['idRol'];
       $permisos = $datos['permisos'];
+      $iduser_update =$datos['iduser_update'];
       $datosEnviar = [
         "idRol" => $rolDato,
-        "permisos" => $permisos
+        "permisos" => $permisos,
+        "iduser_update" => $iduser_update
       ];
       $resultado = $rol->updatePermisos($datosEnviar);
       echo json_encode(["guardado" => $resultado]);

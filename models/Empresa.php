@@ -14,14 +14,15 @@ class Empresa extends Conexion
     public function registrar($data = []):bool{
         $status = false;
         try{
-            $consulta = $this->pdo->prepare("CALL spu_empresas_registrar(?,?,?,?,?,?)");
+            $consulta = $this->pdo->prepare("CALL spu_empresas_registrar(?,?,?,?,?,?,?)");
             $status =$consulta->execute(array(
                 $data["ruc"],
                 $data["representante_legal"],
                 $data["razon_social"],
                 $data["nombre_comercial"],
                 $data["telefono"],
-                $data["email"]
+                $data["email"],
+                $data["iduser_create"]
             ));
             return $status;
         }

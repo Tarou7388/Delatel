@@ -1,10 +1,11 @@
 import config from "../env.js";
 
 document.addEventListener("DOMContentLoaded", function () {
+  const userid= JSON.stringify(user['idUsuario']);
   if (permisos[0].permisos.personas.leer != 1) {
     window.location.href = `${config.HOST}views`;
   }
-
+   
   const divEmpresaCard = document.getElementById("divEmpresaCard");
   const frmEmpresas = document.getElementById("frmEmpresas");
 
@@ -29,13 +30,14 @@ document.addEventListener("DOMContentLoaded", function () {
       params.append("nombre_comercial", txtNombreComercial.value);
       params.append("telefono", txtTelefono.value);
       params.append("email", txtEmail.value);
+      params.append("iduser_create",userid);
 
       const options = {
         method: "POST",
         body: params,
       };
 
-      fetch(`../controllers/Empresas.controllers.php`, options)
+      fetch(`${config.HOST}controllers/Empresas.controllers.php`, options)
         .then((response) => response.json())
         .then((data) => {
           if (data.guardado) {
