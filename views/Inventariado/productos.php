@@ -1,4 +1,4 @@
-<?php require_once "../header.php" ?>
+<?php require_once "../../header.php" ?>
 
 <div class="container-fluid px-4">
     <h2 class="mb-4">Productos</h2>
@@ -125,10 +125,10 @@
     </div>
 </div>
 
-<?php require_once "../footer.php"; ?>
+<?php require_once "../../footer.php"; ?>
 
-<script type="module" src="../js/Productos.js"></script>
-<script src="../js/productosDatatable.js"></script>
+<script type="module" src="../../js/Productos.js"></script>
+<script src="../../js/ProductosDatatable.js"></script>
 
 </body>
 

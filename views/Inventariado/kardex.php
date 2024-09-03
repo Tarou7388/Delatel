@@ -1,4 +1,4 @@
-<?php require_once '../header.php'; ?>
+<?php require_once '../../header.php'; ?>
 
 <div class="container-fluid px-4">
     <h1 class="mt-4">Kardex</h1>
@@ -119,10 +119,10 @@
     </div>
 </div>
 
-<?php require_once "../footer.php"; ?>
+<?php require_once "../../footer.php"; ?>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script type="module" src="../js/Kardex.js"></script>
-<script src="../js/kardexDatatable.js"></script>
+<script type="module" src="../../js/Kardex.js"></script>
+<script type="module" src="../../js/kardexDatatable.js"></script>
 
 </body>
 

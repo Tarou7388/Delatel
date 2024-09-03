@@ -1,4 +1,4 @@
-<?php require_once "../header.php"; ?>
+<?php require_once "../../header.php"; ?>
 
 <div class="modal fade" id="mdlPermisos" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
@@ -84,8 +84,8 @@
 
 
 
-<?php require_once "../footer.php"; ?>
+<?php require_once "../../footer.php"; ?>
 </body>
-<script type="module" src="../js/Rol.js"></script>
+<script type="module" src="../../js/Rol.js"></script>
 
 </html>

@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const CodigoBarras = document.querySelector("#txtCodigoBarras");
 
 
-  
+
   document
     .getElementById("form-productos")
     .addEventListener("submit", (event) => {
@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
       params.append("modelo", Modelo.value);
       params.append("Codigo_Barras", CodigoBarras.value);
 
-      fetch("../controllers/Productos.controllers.php", {
+      fetch(`${config.HOST}controllers/Productos.controllers.php`, {
         method: "POST",
         body: params,
       })

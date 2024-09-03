@@ -1,5 +1,5 @@
 
-const ruta = "../controllers/kardex.controllers.php?operacion=getAll";
+const ruta = `../../controllers/kardex.controllers.php?operacion=getAll`;
 
 const tablaKardex = $('#TbKardex').DataTable({
     dom: `
@@ -12,10 +12,10 @@ const tablaKardex = $('#TbKardex').DataTable({
             extend: 'csv',
             text: '<i class="bi bi-file-earmark-csv"></i> Exportar CSV',
             className: 'btn btn-primary me-2',
-            filename: function() {
+            filename: function () {
                 return getFileName('CSV');
             },
-            title:function() {
+            title: function () {
                 return getFileTitle();
             }
         },
@@ -23,10 +23,10 @@ const tablaKardex = $('#TbKardex').DataTable({
             extend: 'excel',
             text: '<i class="bi bi-file-earmark-excel"></i> Exportar Excel',
             className: 'btn btn-success me-2',
-            filename: function() {
+            filename: function () {
                 return getFileName('Excel');
             },
-            title:function() {
+            title: function () {
                 return getFileTitle();
             }
         },
@@ -34,10 +34,10 @@ const tablaKardex = $('#TbKardex').DataTable({
             extend: 'pdf',
             text: '<i class="bi bi-file-earmark-pdf"></i> Exportar PDF',
             className: 'btn btn-danger me-2',
-            filename: function() {
+            filename: function () {
                 return getFileName('PDF');
             },
-            title:function() {
+            title: function () {
                 return getFileTitle();
             }
         },
@@ -78,7 +78,7 @@ const tablaKardex = $('#TbKardex').DataTable({
     ],
     order: [[1, 'desc']],
     language: {
-        "url": "../json/es-ES.json"
+        "url": "../../json/es-ES.json"
     },
     paging: true,
     searching: true,
