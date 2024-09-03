@@ -18,11 +18,11 @@
                 <table class="table" id="tablaPermisos">
                   <thead>
                     <tr>
-                      <th scope="col">Modulos</th>
-                      <th scope="col">Leer</th>
-                      <th scope="col">Crear</th>
-                      <th scope="col">Actualizar</th>
-                      <th scope="col">Eliminar</th>
+                      <th scope="col">Módulos</th>
+                      <th scope="col"><input type="checkbox" id="chkLeer">Leer</th>
+                      <th scope="col"><input type="checkbox" id="chkCrear">Crear</th>
+                      <th scope="col"><input type="checkbox" id="chkActualizar">Actualizar</th>
+                      <th scope="col"><input type="checkbox" id="chkEliminar">Eliminar</th>
                     </tr>
                   </thead>
                   <tbody id="cardBodyTabla">

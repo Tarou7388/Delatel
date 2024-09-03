@@ -92,7 +92,7 @@ BEGIN
         tb_usuarios u
     JOIN 
         tb_responsables r ON u.id_usuario = r.id_usuario
-    WHERE nombre_user = p_nombre_user;
+    WHERE nombre_user = p_nombre_user and inactive_at = NULL;
 END $$ 
 
 CREATE PROCEDURE spu_personas_registrar(

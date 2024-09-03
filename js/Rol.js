@@ -1,7 +1,7 @@
 import config from '../env.js';
 
 window.addEventListener("DOMContentLoaded", () => {
-  let idRolActual = -1; 
+  let idRolActual = -1;
   const rol = document.getElementById('nombreRol');
   const form = document.getElementById('frmRol');
   const tbody = document.querySelector("#mostrar");
@@ -85,6 +85,7 @@ window.addEventListener("DOMContentLoaded", () => {
       .then(data => {
         alert("Rol agregado exitosamente.");
         form.reset();
+        location.reload();
       })
       .catch(error => {
         console.error('Error:', error);
@@ -110,19 +111,19 @@ window.addEventListener("DOMContentLoaded", () => {
       moduloCelda.textContent = modulo;
 
       const leerCelda = document.createElement('td');
-      leerCelda.innerHTML = `<input type="checkbox" id="${modulo}-leer" ${permisosModulo.leer ? 'checked' : ''}/>`;
+      leerCelda.innerHTML = `<input type="checkbox" class="leer" id="${modulo}-leer" ${permisosModulo.leer ? 'checked' : ''}/>`;
       leerCelda.style.textAlign = 'center';
 
       const crearCelda = document.createElement('td');
-      crearCelda.innerHTML = `<input type="checkbox" id="${modulo}-crear" ${permisosModulo.crear ? 'checked' : ''}/>`;
+      crearCelda.innerHTML = `<input type="checkbox" class="crear" id="${modulo}-crear" ${permisosModulo.crear ? 'checked' : ''}/>`;
       crearCelda.style.textAlign = 'center';
 
       const actualizarCelda = document.createElement('td');
-      actualizarCelda.innerHTML = `<input type="checkbox" id="${modulo}-actualizar" ${permisosModulo.actualizar ? 'checked' : ''}/>`;
+      actualizarCelda.innerHTML = `<input type="checkbox" class="actualizar" id="${modulo}-actualizar" ${permisosModulo.actualizar ? 'checked' : ''}/>`;
       actualizarCelda.style.textAlign = 'center';
 
       const eliminarCelda = document.createElement('td');
-      eliminarCelda.innerHTML = `<input type="checkbox" id="${modulo}-eliminar" ${permisosModulo.eliminar ? 'checked' : ''}/>`;
+      eliminarCelda.innerHTML = `<input type="checkbox" class="eliminar" id="${modulo}-eliminar" ${permisosModulo.eliminar ? 'checked' : ''}/>`;
       eliminarCelda.style.textAlign = 'center';
 
       fila.appendChild(moduloCelda);
@@ -132,6 +133,28 @@ window.addEventListener("DOMContentLoaded", () => {
       fila.appendChild(eliminarCelda);
       tbodyModal.appendChild(fila);
     }
+    verificarEstadoCheck()
+  }
+
+  function verificarEstadoCheck() {
+    const checkboxesLeer = document.querySelectorAll('.leer');
+    const checkboxesCrear = document.querySelectorAll('.crear');
+    const checkboxesActualizar = document.querySelectorAll('.actualizar');
+    const checkboxesEliminar = document.querySelectorAll('.eliminar');
+
+    function todasActivas(checkboxes) {
+      return Array.from(checkboxes).every(checkbox => checkbox.checked);
+    }
+
+    const leerActivas = todasActivas(checkboxesLeer);
+    const crearActivas = todasActivas(checkboxesCrear);
+    const actualizarActivas = todasActivas(checkboxesActualizar);
+    const eliminarActivas = todasActivas(checkboxesEliminar);
+
+    document.querySelector("#chkLeer").checked = leerActivas;
+    document.querySelector("#chkCrear").checked = crearActivas;
+    document.querySelector("#chkEliminar").checked = eliminarActivas;
+    document.querySelector("#chkActualizar").checked = actualizarActivas;
   }
 
   async function actualizarPermisos() {
@@ -143,7 +166,9 @@ window.addEventListener("DOMContentLoaded", () => {
       if (!permisosActualizados[modulo]) {
         permisosActualizados[modulo] = {};
       }
-      permisosActualizados[modulo][permiso] = checkbox.checked ? 1 : 0;
+      if (checkbox.checked == true) {
+        permisosActualizados[modulo][permiso] = true;
+      }
     });
 
     const datosAdicionales = {
@@ -158,10 +183,10 @@ window.addEventListener("DOMContentLoaded", () => {
         adicionales: datosAdicionales
       })
     })
-    .then(respuesta => respuesta.json())
-    .then(datos => {
-      alert("Rol actualizado exitosamente.");
-    })
+      .then(respuesta => respuesta.json())
+      .then(datos => {
+        alert("Rol actualizado exitosamente.");
+      })
   }
 
   document.querySelector("#btnCambiosPermisos").addEventListener('click', () => {
@@ -186,5 +211,36 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  document.querySelector("#chkLeer").addEventListener('change', (event) => {
+    if(event.target.checked){
+      document.querySelectorAll('.leer').forEach(checkbox => checkbox.checked = true);
+    }else{
+      document.querySelectorAll('.leer').forEach(checkbox => checkbox.checked = false);
+    }
+  });
+
+  document.querySelector("#chkCrear").addEventListener('change', (event) => {
+    if(event.target.checked){
+      document.querySelectorAll('.crear').forEach(checkbox => checkbox.checked = true);
+    }else{
+      document.querySelectorAll('.crear').forEach(checkbox => checkbox.checked = false);
+    }
+  });
+
+  document.querySelector("#chkActualizar").addEventListener('change', (event) => {
+    if(event.target.checked){
+      document.querySelectorAll('.actualizar').forEach(checkbox => checkbox.checked = true);
+    }else{
+      document.querySelectorAll('.actualizar').forEach(checkbox => checkbox.checked = false);
+    }
+  });
+
+  document.querySelector("#chkEliminar").addEventListener('change', (event) => {
+    if(event.target.checked){
+      document.querySelectorAll('.eliminar').forEach(checkbox => checkbox.checked = true);
+    }else{
+      document.querySelectorAll('.eliminar').forEach(checkbox => checkbox.checked = false);
+    }
+  });
 
 });

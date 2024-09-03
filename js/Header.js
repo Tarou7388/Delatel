@@ -1,5 +1,4 @@
 window.addEventListener("DOMContentLoaded", () => {
-
     function $(id) { return document.querySelector(id) }
     const Soporte = $("#molSoporte");
     const Contratos = $("#molContratos");
@@ -7,20 +6,19 @@ window.addEventListener("DOMContentLoaded", () => {
     const Personas = $("#molPersonas");
     const Roles = $("#molRoles");
 
-
-    if(permisos[0].permisos.soporte.leer == 1){
+    if(permisos[0].permisos.soporte?.leer){
         Soporte.removeAttribute('hidden');
     }
-    if(permisos[0].permisos.contratos.leer == 1){
+    if(permisos[0].permisos.contratos?.leer){
         Contratos.removeAttribute('hidden');
     }
-    if(permisos[0].permisos.inventariado.leer == 1){
+    if(permisos[0].permisos.inventariado?.leer){
         Inventariado.removeAttribute('hidden');
     }
-    if(permisos[0].permisos.personas.leer == 1){
+    if(permisos[0].permisos.personas?.leer){
         Personas.removeAttribute('hidden');
     }
-    if(permisos[0].permisos.roles.leer == 1){
+    if(permisos[0].permisos.roles?.leer){
         Roles.removeAttribute('hidden');
     }
 });

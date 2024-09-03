@@ -12,13 +12,12 @@ window.addEventListener("DOMContentLoaded", (event) => {
         const cantCable = parseFloat(txtCantCable.value) || 0;
         const precioCable = parseFloat(txtPrecioCable.value) || 0;
         const costoCable = cantCable * precioCable;
-        txtCostoCable.value = costoCable.toFixed(2); // Actualiza el campo txtCostoCable
+        txtCostoCable.value = costoCable.toFixed(2);
 
-        // Cálculo del costo del conector
         const cantConector = parseFloat(txtCantConector.value) || 0;
         const precioConector = parseFloat(txtPrecioConector.value) || 0;
         const costoConector = cantConector * precioConector;
-        txtCostoConector.value = costoConector.toFixed(2); // Actualiza el campo txtCostoConector
+        txtCostoConector.value = costoConector.toFixed(2);
     }
 
     function ActualizarCantidadSintotizador() {

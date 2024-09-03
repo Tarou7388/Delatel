@@ -189,7 +189,6 @@ CREATE TABLE tb_soporte (
     descripcion_problema TEXT NOT NULL,
     descripcion_solucion TEXT NOT NULL,
     prioridad VARCHAR(50) NOT NULL,
-    pagos JSON NOT NULL,
     soporte JSON NOT NULL,
     create_at DATETIME NOT NULL DEFAULT NOW(),
     update_at DATETIME NULL,

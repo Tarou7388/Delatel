@@ -12,7 +12,7 @@ class Rol extends Conexion
 
   public function getAllRol()
   {
-    $query  = $this->pdo->prepare("SELECT id_rol, rol from tb_roles");
+    $query  = $this->pdo->prepare("SELECT id_rol, rol from tb_roles WHERE inactive_at IS NULL");
     $query->execute();
     return $query->fetchAll(PDO::FETCH_ASSOC);
   }

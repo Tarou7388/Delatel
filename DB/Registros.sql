@@ -29,11 +29,11 @@ INSERT INTO tb_distritos (distrito, id_provincia) VALUES
 ('Callao Centro', 5);
 
 INSERT INTO tb_roles (rol, permisos) VALUES
-('Administrador', '{"soporte": {"crear": 1, "leer": 1, "actualizar": 1, "eliminar": 1}, "contratos": {"crear": 1, "leer": 1, "actualizar": 1, "eliminar": 1}, "inventariado": {"crear": 1, "leer": 1, "actualizar": 1, "eliminar": 1}, "personas": {"crear": 1, "leer": 1, "actualizar": 1, "eliminar": 1}, "roles": {"crear": 1, "leer": 1, "actualizar": 1, "eliminar": 1}}'),
-('Tecnico Oficina', '{"soporte": {"crear": 1, "leer": 1, "actualizar": 1, "eliminar": 1}, "contratos": {"crear": 0, "leer": 0, "actualizar": 0, "eliminar": 0}, "inventariado": {"crear": 0, "leer": 0, "actualizar": 0, "eliminar": 0}, "personas": {"crear": 0, "leer": 1, "actualizar": 0, "eliminar": 0}, "roles": {"crear": 0, "leer": 0, "actualizar": 0, "eliminar": 0}}'),
-('Oficina', '{"soporte": {"crear": 0, "leer": 1, "actualizar": 0, "eliminar": 0}, "contratos": {"crear": 1, "leer": 1, "actualizar": 1, "eliminar": 1}, "inventariado": {"crear": 0, "leer": 0, "actualizar": 0, "eliminar": 0}, "personas": {"crear": 1, "leer": 1, "actualizar": 1, "eliminar": 1}, "roles": {"crear": 0, "leer": 0, "actualizar": 0, "eliminar": 0}}'),
-('Tecnico Campo', '{"soporte": {"crear": 1, "leer": 1, "actualizar": 1, "eliminar": 1}, "contratos": {"crear": 0, "leer": 1, "actualizar": 0, "eliminar": 0}, "inventariado": {"crear": 0, "leer": 0, "actualizar": 0, "eliminar": 0}, "personas": {"crear": 0, "leer": 1, "actualizar": 0, "eliminar": 0}, "roles": {"crear": 0, "leer": 0, "actualizar": 0, "eliminar": 0}}'),
-('Almacen - Tecnico', '{"soporte": {"crear": 1, "leer": 1, "actualizar": 1, "eliminar": 1}, "contratos": {"crear": 0, "leer": 1, "actualizar": 0, "eliminar": 0}, "inventariado": {"crear": 1, "leer": 1, "actualizar": 1, "eliminar": 1}, "personas": {"crear": 0, "leer": 1, "actualizar": 0, "eliminar": 0}, "roles": {"crear": 0, "leer": 0, "actualizar": 0, "eliminar": 0}}');
+('Administrador', '{"soporte": {"crear": true, "leer": true, "actualizar": true, "eliminar": true}, "contratos": {"crear": true, "leer": true, "actualizar": true, "eliminar": true}, "inventariado": {"crear": true, "leer": true, "actualizar": true, "eliminar": true}, "personas": {"crear": true, "leer": true, "actualizar": true, "eliminar": true}, "roles": {"crear": true, "leer": true, "actualizar": true, "eliminar": true}}'),
+('Tecnico Oficina', '{"soporte": {"crear": true, "leer": true, "actualizar": true, "eliminar": true}, "contratos": {}, "inventariado": {}, "personas": { "leer": true}, "roles": {}}'),
+('Oficina', '{"soporte": { "leer": true}, "contratos": {"crear": true, "leer": true, "actualizar": true, "eliminar": true}, "inventariado": {}, "personas": {"crear": true, "leer": true, "actualizar": true, "eliminar": true}, "roles": {}}'),
+('Tecnico Campo', '{"soporte": {"crear": true, "leer": true, "actualizar": true, "eliminar": true}, "contratos": { "leer": true}, "inventariado": {}, "personas": { "leer": true}, "roles": {}}'),
+('Almacen - Tecnico', '{"soporte": {"crear": true, "leer": true, "actualizar": true, "eliminar": true}, "contratos": { "leer": true}, "inventariado": {"crear": true, "leer": true, "actualizar": true, "eliminar": true}, "personas": { "leer": true}, "roles": {}}');
 
 INSERT INTO tb_servicios (servicio, create_at, update_at, inactive_at) VALUES
 ('Cable', NOW(), NULL, NULL),
@@ -115,12 +115,12 @@ INSERT INTO tb_contactabilidad (id_persona, id_tarifario, fecha_hora_contacto, d
 (4, 4, '2024-04-25 11:00:00', 'Jirón de la Unión 100, Lima', 60, 'Se discutieron los términos del contrato y se acordó una revisión futura.'),
 (5, 5, '2024-05-30 09:30:00', 'Calle Mayor 101, Barcelona', 30, 'Se completó la verificación del servicio y se envió confirmación.'); 
 
-INSERT INTO tb_soporte (id_contrato, id_tipo_soporte, id_tecnico, fecha_hora_solicitud, fecha_hora_asistencia, descripcion_problema, descripcion_solucion, prioridad, pagos) VALUES 
-(1, 1, 1, '2024-01-10 15:00:00', '2024-01-10 16:00:00', 'Problema con el voltaje en el área principal.', 'Reemplazo del regulador de voltaje realizado.', 'Alta', '{"monto":"50.00","metodo":"tarjeta","fecha":"2024-01-11"}'),
-(2, 2, 2, '2024-02-16 11:00:00', '2024-02-16 12:30:00', 'Fugas en la tubería principal.', 'Reparación de fugas y prueba de presión completada.', 'Media', '{"monto":"100.00","metodo":"efectivo","fecha":"2024-02-17"}'),
-(3, 3, 3, '2024-03-21 09:30:00', '2024-03-21 10:00:00', 'Problemas de conectividad en la red.', 'Configuración y prueba de la red realizada.', 'Alta', '{"monto":"75.00","metodo":"transferencia","fecha":"2024-03-22"}'),
-(4, 1, 4, '2024-04-26 14:00:00', '2024-04-26 15:30:00', 'Falla en el sistema de alarma.', 'Sustitución de los sensores defectuosos realizada.', 'Baja', '{"monto":"40.00","metodo":"tarjeta","fecha":"2024-04-27"}'),
-(5, 2, 5, '2024-05-31 13:00:00', '2024-05-31 14:30:00', 'Sistema de climatización ineficiente.', 'Ajuste y mantenimiento del sistema completado.', 'Media', '{"monto":"120.00","metodo":"cheque","fecha":"2024-06-01"}');
+INSERT INTO tb_soporte (id_contrato, id_tipo_soporte, id_tecnico, fecha_hora_solicitud, fecha_hora_asistencia, descripcion_problema, descripcion_solucion, prioridad, soporte, create_at) VALUES 
+(1, 1, 1, '2024-01-10 15:00:00', '2024-01-10 16:00:00', 'Problema con el voltaje en el área principal.', 'Reemplazo del regulador de voltaje realizado.', 'Alta', '{"monto":"50.00","metodo":"tarjeta","fecha":"2024-01-11"}', NOW()),
+(2, 2, 2, '2024-02-16 11:00:00', '2024-02-16 12:30:00', 'Fugas en la tubería principal.', 'Reparación de fugas y prueba de presión completada.', 'Media', '{"monto":"100.00","metodo":"efectivo","fecha":"2024-02-17"}', NOW()),
+(3, 3, 3, '2024-03-21 09:30:00', '2024-03-21 10:00:00', 'Problemas de conectividad en la red.', 'Configuración y prueba de la red realizada.', 'Alta', '{"monto":"75.00","metodo":"transferencia","fecha":"2024-03-22"}', NOW()),
+(4, 1, 4, '2024-04-26 14:00:00', '2024-04-26 15:30:00', 'Falla en el sistema de alarma.', 'Sustitución de los sensores defectuosos realizada.', 'Baja', '{"monto":"40.00","metodo":"tarjeta","fecha":"2024-04-27"}', NOW()),
+(5, 2, 5, '2024-05-31 13:00:00', '2024-05-31 14:30:00', 'Sistema de climatización ineficiente.', 'Ajuste y mantenimiento del sistema completado.', 'Media', '{"monto":"120.00","metodo":"cheque","fecha":"2024-06-01"}', NOW());
 
 INSERT INTO tb_productos (marca, tipo_producto, modelo, precio_actual, codigo_barra) VALUES 
 ("ASUS", "Router A", "RT-AX88U", 25.00, "12345678901234567890123456789012345"),
