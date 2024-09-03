@@ -1,4 +1,4 @@
-<?php require_once "../header.php"; ?>
+<?php require_once "../../header.php"; ?>
 
 <div class="modal fade" id="mdlSintotizador" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
@@ -149,4 +149,4 @@
   </div>
 </div>
 
-<?php require_once "../footer.php"; ?>
+<?php require_once "../../footer.php"; ?>

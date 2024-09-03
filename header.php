@@ -99,19 +99,19 @@ if (!isset($_SESSION['login']) || (isset($_SESSION['login']) && !$_SESSION['logi
 
             <div class="collapse" id="collapse2">
               <div class="ps-4">
-                <a class="nav-link" href="<?= $host; ?>views/FichaTecnicaWisp.php">
+                <a class="nav-link" href="<?= $host; ?>views/Contratos/FichaTecnicaWisp.php">
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                   Ficha Instalacion WISP
                 </a>
-                <a class="nav-link" href="<?= $host; ?>views/FichaTecnicaGpon.php">
+                <a class="nav-link" href="<?= $host; ?>views/Contratos/FichaTecnicaGpon.php">
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                   Ficha Instalacion GPON
                 </a>
-                <a class="nav-link" href="<?= $host; ?>views/FichaTecnicaCable.php">
+                <a class="nav-link" href="<?= $host; ?>views/Contratos/FichaTecnicaCable.php">
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                   Ficha Instalacion Cable
                 </a>
-                <a class="nav-link" href="<?= $host; ?>views/ContratosGeneral.php">
+                <a class="nav-link" href="<?= $host; ?>views/Contratos/ContratosGeneral.php">
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                   Contratos
                 </a>
@@ -151,7 +151,7 @@ if (!isset($_SESSION['login']) || (isset($_SESSION['login']) && !$_SESSION['logi
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                   Clientes
                 </a>
-                <a class="nav-link" href="<?= $host; ?>views/PersonaEmpresas.php">
+                <a class="nav-link" href="<?= $host; ?>views/Personas/PersonaEmpresas.php">
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                  Registro
                 </a>

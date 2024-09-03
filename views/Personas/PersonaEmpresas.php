@@ -1,4 +1,4 @@
-<?php require_once '../header.php'; ?>
+<?php require_once '../../header.php'; ?>
 
 <div class="container-fluid px-4 mt-5">
     <select class="form-control" name="slchangeRegistro" id="slcChangeRegistro">
@@ -105,9 +105,9 @@
     </div>
 </div>
 
-<?php require_once "../footer.php"; ?>
-<script type="module" src="../js/Empresa.js"></script>
-<script type="module" src="../js/Persona.js"></script>
+<?php require_once "../../footer.php"; ?>
+<script type="module" src="../../js/Empresa.js"></script>
+<script type="module" src="../../js/Persona.js"></script>
 
 </body>
 

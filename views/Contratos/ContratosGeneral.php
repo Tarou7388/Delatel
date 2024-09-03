@@ -1,4 +1,4 @@
-<?php require_once '../header.php'; ?>
+<?php require_once '../../header.php'; ?>
 <div class="container">
   <h2 class="mt-3">Contratos</h2>
   <div class="card mt-5">
@@ -92,7 +92,6 @@
     </div>
   </div>
 </div>
-<script src="../js/contratos.js"></script>
-<script src="../js/datatables-simple-demo.js">
+<script src="../../js/contratos.js"></script>
 </script>
-<?php require_once "../footer.php"; ?>
+<?php require_once "../../footer.php"; ?>

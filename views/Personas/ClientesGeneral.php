@@ -1,4 +1,4 @@
-<?php require_once '../header.php'; ?>
+<?php require_once '../../header.php'; ?>
 <div class="container">
   <div class="card mt-3">
     <div class="card-header">
@@ -107,5 +107,5 @@
 
 
 </div>
-<script src="../js/clientes.js"></script>
-<?php require_once '../footer.php'; ?>
+<script src="../../js/clientes.js"></script>
+<?php require_once '../../footer.php'; ?>

@@ -1,4 +1,4 @@
-<?php require_once "../header.php"; ?>
+<?php require_once "../../header.php"; ?>
 
 <div class="container-fluid px-4">
     <h2 class="mt-4">Control de WISP</h2>
@@ -158,7 +158,7 @@
         </div>
     </div>
 
-    <?php require_once "../footer.php"; ?>
+    <?php require_once "../../footer.php"; ?>
     </body>
 
     </html>

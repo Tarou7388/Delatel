@@ -1,4 +1,4 @@
-<?php require_once '../header.php'; ?>
+<?php require_once '../../header.php'; ?>
 <div class="container mt-2">
   <h2>Usuarios</h2>
   <div class="card mt-3">
@@ -94,6 +94,5 @@
     </div>
   </div>
 </div>
-<script src="../js/datable-Usuarios.js"></script>
 <script src="../js/Usuarios.js"></script>
-<?php require_once "../footer.php"; ?>
+<?php require_once "../../footer.php"; ?>

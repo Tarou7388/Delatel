@@ -1,4 +1,4 @@
-<?php require_once "../header.php"; ?>
+<?php require_once "../../header.php"; ?>
 <link rel="stylesheet" href="../css/gpon.css">
 
 <div class="modal fade" id="mdlRepetidor" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -111,7 +111,7 @@
   </div>
 </div>
 
-<?php require_once "../footer.php"; ?>
+<?php require_once "../../footer.php"; ?>
 
 <script src="../js/FichaTecnicaGpon.js"></script>
 </body>
