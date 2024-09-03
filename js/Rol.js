@@ -9,7 +9,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   (async function () {
     try {
-      const respuesta = await fetch('../controllers/Roles.controllers.php?operacion=getAllRol');
+      const respuesta = await fetch('../../controllers/Roles.controllers.php?operacion=getAllRol');
       const datos = await respuesta.json();
       listarRol(datos);
       tabla();
@@ -69,7 +69,7 @@ window.addEventListener("DOMContentLoaded", () => {
       operacion: 'add',
       rol: rol.value
     };
-    fetch('../controllers/Roles.controllers.php', {
+    fetch('../../controllers/Roles.controllers.php', {
       method: 'POST',
       body: JSON.stringify({
         permisos: json,
@@ -212,33 +212,33 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 
   document.querySelector("#chkLeer").addEventListener('change', (event) => {
-    if(event.target.checked){
+    if (event.target.checked) {
       document.querySelectorAll('.leer').forEach(checkbox => checkbox.checked = true);
-    }else{
+    } else {
       document.querySelectorAll('.leer').forEach(checkbox => checkbox.checked = false);
     }
   });
 
   document.querySelector("#chkCrear").addEventListener('change', (event) => {
-    if(event.target.checked){
+    if (event.target.checked) {
       document.querySelectorAll('.crear').forEach(checkbox => checkbox.checked = true);
-    }else{
+    } else {
       document.querySelectorAll('.crear').forEach(checkbox => checkbox.checked = false);
     }
   });
 
   document.querySelector("#chkActualizar").addEventListener('change', (event) => {
-    if(event.target.checked){
+    if (event.target.checked) {
       document.querySelectorAll('.actualizar').forEach(checkbox => checkbox.checked = true);
-    }else{
+    } else {
       document.querySelectorAll('.actualizar').forEach(checkbox => checkbox.checked = false);
     }
   });
 
   document.querySelector("#chkEliminar").addEventListener('change', (event) => {
-    if(event.target.checked){
+    if (event.target.checked) {
       document.querySelectorAll('.eliminar').forEach(checkbox => checkbox.checked = true);
-    }else{
+    } else {
       document.querySelectorAll('.eliminar').forEach(checkbox => checkbox.checked = false);
     }
   });

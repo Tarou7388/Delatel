@@ -1,4 +1,7 @@
-const ruta = "../controllers/Productos.controllers.php?operacion=getAll";
+const ruta = "../../controllers/Productos.controllers.php?operacion=getAll";
+if (permisos[0].permisos.inventariado.leer != 1) {
+    window.location.href = `${config.HOST}views`;
+  }
 
 const tablaProductos = $('#TbProductos').DataTable({
     dom: `
@@ -73,7 +76,7 @@ const tablaProductos = $('#TbProductos').DataTable({
 $('#TbProductos tbody').on('click', '.btn-edit', function () {
     const idProducto = $(this).data('id');
 
-    fetch('../controllers/Productos.controllers.php?operacion=getById&id_producto=' + idProducto)
+    fetch(`${config.HOST}controllers/Productos.controllers.php?operacion=getById&id_producto=` + idProducto)
         .then(response => response.json())
         .then(producto => {
             $('#txtIdProducto').val(producto.id_producto);
@@ -100,7 +103,7 @@ $('#form-editar-producto').on('submit', function (e) {
         codigo_barra: $('#txtEditarCodigoBarras').val()
     };
 
-    fetch('../controllers/Productos.controllers.php?operacion=update', {
+    fetch(`${config.HOST}controllers/Productos.controllers.php?operacion=update`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'

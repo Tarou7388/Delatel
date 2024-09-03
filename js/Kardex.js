@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const date = new Date().toISOString().split("T")[0];
 
     (() => {
-      fetch(`../controllers/Productos.controllers.php?operacion=getAll`)
+      fetch(`${config.HOST}controllers/Productos.controllers.php?operacion=getAll`)
         .then((response) => response.json())
         .then((data) => {
           const tipoProducto = document.querySelector("#idproducto");
@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function () {
         cantidadField.value = "";
         tablaKardex.ajax
           .url(
-            `../controllers/kardex.controllers.php?operacion=obtenerProducto&id_producto=${idproducto}`
+            `${config.HOST}controllers/kardex.controllers.php?operacion=obtenerProducto&id_producto=${idproducto}`
           )
           .load();
       } else {
@@ -86,11 +86,11 @@ document.addEventListener("DOMContentLoaded", function () {
     async function MostrarStockActual(idproducto) {
       try {
         const response = await fetch(
-          `../controllers/kardex.controllers.php?operacion=obtenerStock&id_producto=${idproducto}`
+          `${config.HOST}controllers/kardex.controllers.php?operacion=obtenerStock&id_producto=${idproducto}`
         );
         const data = await response.json();
         const response2 = await fetch(
-          `../controllers/Productos.controllers.php?operacion=getById&id_producto=${idproducto}`
+          `${config.HOST}controllers/Productos.controllers.php?operacion=getById&id_producto=${idproducto}`
         );
         const data2 = await response2.json();
         stockactualField.value =
@@ -121,7 +121,7 @@ document.addEventListener("DOMContentLoaded", function () {
           method: "POST",
           body: params,
         };
-        fetch(`../controllers/kardex.controllers.php`, options)
+        fetch(`../../controllers/kardex.controllers.php`, options)
           .then((response) => response.json())
           .then((data) => {
             if (data.Guardado) {

@@ -125,11 +125,11 @@ if (!isset($_SESSION['login']) || (isset($_SESSION['login']) && !$_SESSION['logi
 
             <div class="collapse" id="collapse3">
               <div class="ps-4">
-                <a class="nav-link" href="<?= $host; ?>views/Kardex.php">
+                <a class="nav-link" href="<?= $host; ?>views/Inventariado/Kardex.php">
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                   Kardex
                 </a>
-                <a class="nav-link" href="<?= $host; ?>views/Productos.php">
+                <a class="nav-link" href="<?= $host; ?>views/Inventariado/Productos.php">
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                   Productos
                 </a>
@@ -143,11 +143,11 @@ if (!isset($_SESSION['login']) || (isset($_SESSION['login']) && !$_SESSION['logi
 
             <div class="collapse" id="collapse4">
               <div class="ps-4">
-                <a class="nav-link" href="<?= $host; ?>views/UsuariosGeneral.php">
+                <a class="nav-link" href="<?= $host; ?>views/Personas/UsuariosGeneral.php">
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                   Usuarios
                 </a>
-                <a class="nav-link" href="<?= $host; ?>views/ClientesGeneral.php">
+                <a class="nav-link" href="<?= $host; ?>views/Personas/ClientesGeneral.php">
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                   Clientes
                 </a>
@@ -158,7 +158,7 @@ if (!isset($_SESSION['login']) || (isset($_SESSION['login']) && !$_SESSION['logi
               </div>
             </div>
 
-            <a class="nav-link" href="<?= $host; ?>views/RolesGeneral.php" id=molRoles hidden>
+            <a class="nav-link" href="<?= $host; ?>views/Roles/RolesGeneral.php" id=molRoles hidden>
               <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
               Roles
             </a>
