@@ -113,7 +113,7 @@
 
 <?php require_once "../../footer.php"; ?>
 
-<script src="../../js/FichaTecnicaGpon.js"></script>
+
 </body>
 
 </html>

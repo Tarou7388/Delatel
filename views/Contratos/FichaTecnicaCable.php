@@ -256,5 +256,5 @@
     </div>
   </div>
 </div>
-
+<script src="../../js/FichaTecnicaGpon.js"></script>
 <?php require_once "../../footer.php"; ?>
