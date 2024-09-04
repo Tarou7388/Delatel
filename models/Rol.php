@@ -21,7 +21,7 @@ class Rol extends Conexion
   {
     try {
       $status=false;
-      $query = $this->pdo->prepare("CALL spu_registrar_roles(?,?,?)");
+      $query = $this->pdo->prepare("CALL spu_roles_registrar(?,?,?)");
       $permisosJson = json_encode($params['permisos']);
       $status=$query->execute([
         $params['rol'],

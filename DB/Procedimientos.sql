@@ -139,7 +139,8 @@ BEGIN
     UPDATE tb_roles
         SET
             permisos = p_permisos,
-            iduser_update = p_iduser_update
+            iduser_update = p_iduser_update,
+            update_at = NOW()
         WHERE id_rol = p_id_rol;
 END$$
 
