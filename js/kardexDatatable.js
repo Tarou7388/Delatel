@@ -1,7 +1,7 @@
 
 const ruta = `../../controllers/kardex.controllers.php?operacion=getAll`;
 
-const tablaKardex = $('#TbKardex').DataTable({
+window.tablaKardex = $('#TbKardex').DataTable({
     dom: `
     <"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6 text-end"f>>
     <"row"<"col-sm-12"tr>>

@@ -3,7 +3,7 @@ if (permisos[0].permisos.inventariado.leer != 1) {
     window.location.href = `${config.HOST}views`;
   }
 
-const tablaProductos = $('#TbProductos').DataTable({
+window.tablaProductos = $('#TbProductos').DataTable({
     dom: `
     <"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6 text-end"f>>
     <"row"<"col-sm-12"tr>>
@@ -103,7 +103,7 @@ $('#form-editar-producto').on('submit', function (e) {
         codigo_barra: $('#txtEditarCodigoBarras').val()
     };
 
-    fetch(`${config.HOST}controllers/Productos.controllers.php?operacion=update`, {
+    fetch(`../../controllers/Productos.controllers.php?operacion=update`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'

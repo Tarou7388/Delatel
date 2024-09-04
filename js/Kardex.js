@@ -107,7 +107,6 @@ document.addEventListener("DOMContentLoaded", function () {
     //Función para guardar el registro de kardex
     function GuardarKardex() {
       if (permisos[0].permisos.inventariado.crear == 1) {
-        console.log("Permitido");
         const params = new FormData();
         params.append("operacion", "add");
         params.append("idproducto", idproductoField.value);
