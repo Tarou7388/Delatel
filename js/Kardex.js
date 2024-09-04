@@ -126,7 +126,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (data.Guardado) {
               alert("Se ha guardado correctamente");
             } else {
-              alert("Error: Verfique que se haya hecho bien la operacion");
+              alert("Error: Verfique la cantidad ingresada");
             }
             document.querySelector("#form-validaciones-kardex").reset();
             tablaKardex.ajax.reload();
