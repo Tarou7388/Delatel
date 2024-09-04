@@ -76,7 +76,7 @@ const tablaProductos = $('#TbProductos').DataTable({
 $('#TbProductos tbody').on('click', '.btn-edit', function () {
     const idProducto = $(this).data('id');
 
-    fetch(`${config.HOST}controllers/Productos.controllers.php?operacion=getById&id_producto=` + idProducto)
+    fetch(`../../controllers/Productos.controllers.php?operacion=getById&id_producto=` + idProducto)
         .then(response => response.json())
         .then(producto => {
             $('#txtIdProducto').val(producto.id_producto);
