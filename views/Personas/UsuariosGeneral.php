@@ -94,5 +94,5 @@
     </div>
   </div>
 </div>
-<script src="../js/Usuarios.js"></script>
+<script type="module" src="../../js/usuario.js"></script>
 <?php require_once "../../footer.php"; ?>

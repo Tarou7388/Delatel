@@ -107,5 +107,5 @@
 
 
 </div>
-<script src="../../js/clientes.js"></script>
+<script type="module" src="../../js/clientes.js"></script>
 <?php require_once '../../footer.php'; ?>
