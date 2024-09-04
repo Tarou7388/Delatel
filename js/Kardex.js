@@ -106,8 +106,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     //Función para guardar el registro de kardex
     function GuardarKardex() {
-      if (permisos[0].permisos.inventariado.crear == 1) {
-        const params = new FormData();
+      if (permisos[0].permisos.inventariado.crear != 1) {
+        alert("No tienes permiso para esta acción");
+      }
+      const params = new FormData();
         params.append("operacion", "add");
         params.append("idproducto", idproductoField.value);
         params.append("fecha", fecha.value);
@@ -134,7 +136,6 @@ document.addEventListener("DOMContentLoaded", function () {
           .catch((e) => {
             console.error(e);
           });
-      }
     }
 
     // Manejar el evento submit del formulario

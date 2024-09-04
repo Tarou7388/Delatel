@@ -92,6 +92,9 @@ $('#TbProductos tbody').on('click', '.btn-edit', function () {
 });
 
 $('#form-editar-producto').on('submit', function (e) {
+    if (permisos[0].permisos.inventariado.crear != 1) {
+        alert("No tienes permiso para esta acción");
+    }
     e.preventDefault();
 
     const datosProducto = {

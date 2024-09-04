@@ -16,6 +16,9 @@ document.addEventListener("DOMContentLoaded", () => {
     .addEventListener("submit", (event) => {
       event.preventDefault();
 
+      if (permisos[0].permisos.inventariado.crear != 1) {
+        alert("No tienes permiso para esta acción");
+      }
       const params = new FormData();
       params.append("operacion", "add");
       params.append("tipo_producto", tipoProducto.value);
