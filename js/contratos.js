@@ -15,7 +15,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const boton = document.querySelector("#generar");
 
   boton.addEventListener("click", () => {
-    window.open(`../views/reports/Carpeta-PDF/soporte.php`);
+    window.open(`../reports/Carpeta-PDF/soporte.php`);
   });
 
 });
