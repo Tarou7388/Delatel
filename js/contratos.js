@@ -1,10 +1,11 @@
-document.addEventListener("DOMContentLoaded", () => {
+import config from "../env.js";
+window.addEventListener("DOMContentLoaded", () => {
   $(document).ready(function () {
     $('#listarContratos').DataTable({
-      "language": {
-        "url": "//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json"
+      language: {
+        url: `${config.HOST}Json/es-Es.json`
       },
-      "columnDefs": [
+      columnDefs: [
         { "width": "40%", "targets": 0 },
         { "width": "20%", "targets": 1 },
         { "width": "40%", "targets": 2 }
