@@ -1,4 +1,4 @@
-<?php require_once '../header.php'; ?> 
+<?php require_once '../../header.php'; ?> 
 
 <div class="container-fluid px-4">
     <h1 class="mt-4">Soporte de Cable</h1>
@@ -230,4 +230,4 @@
     </div>
 </div>
 
-<?php require_once "../footer.php"; ?>
+<?php require_once "../../footer.php"; ?>
