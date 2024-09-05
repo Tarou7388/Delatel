@@ -107,37 +107,7 @@
     </form>
   </div>
 </div>
-<div class="modal fade" id="mdlRepetidor" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-sm">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Añadir Repetidor</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body" id="mdlRepetidorBody">
-        <div class="mb-2">
-          <input type="text" class="form-control" id="txtSsidRepetidor" placeholder="SSID">
-        </div>
-        <div class="mb-2">
-          <input type="text" class="form-control" id="txtContraseniaRepetidor" placeholder="Contraseña">
-        </div>
-        <div class="mb-2">
-          <div class="input-group">
-            <input type="text" class="form-control" id="txtMarcaModeloRepetidor" placeholder="Marca - Modelo">
-            <button class="btn btn-outline-primary" type="button" id="btnEscanearRepetidor">Escanear</button>
-          </div>
-        </div>
-        <div class="mb-2">
-          <input type="text" class="form-control" id="txtIpRepetidor" placeholder="IP">
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" id="btnAñadirRepetidor" class="btn btn-primary">Guardar</button>
-      </div>
-    </div>
-  </div>
-</div>
+
 
 
 
