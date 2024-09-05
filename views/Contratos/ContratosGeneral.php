@@ -92,6 +92,10 @@
     </div>
   </div>
 </div>
-<script src="../../js/contratos.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+      
+  });
 </script>
+<script src="../../js/contratos.js"></script>
 <?php require_once "../../footer.php"; ?>

@@ -16,13 +16,13 @@
             <thead></thead>
             <tbody>
               <tr>
-                <td><img src="http://localhost/DELATEL/image/logo.jfif" class="logo" alt=""></td>
+                <td><img src="http://localhost/DELATEL/image/logo.png" class="logo" alt=""></td>
                 <td><h3 style="margin: 10px 0; flex-grow: 1;">CONTRATO DE PRESTACIÓN DEL SERVICIO DE ACCESO A INTERNET FIJO POSTPAGO</h3></td>
               </tr>
             </tbody>
           </table>
 
-          <h3>Reporte Generado el día {FECHA}</h3>
+          <h3>Reporte Generado el día: ___/___/___</h3>
 
           <h4><img src="http://localhost/DELATEL/image/list.png" class="icono" alt=""> 1) ¿QUÉ ESTÁS CONTRATANDO?</h4>
           <p><strong>DELAFIBER (DELATEL PERU)</strong>, con domicilio en Calle San Jose 103 – Grocio Prado - Chincha – Ica con RUC; se compromete a prestar el Servicio de acceso a internet fijo Postpago</p>
@@ -177,7 +177,7 @@
               para  enviarte información comercial, publicidad u otra finalidad.
             </p>
 
-            <h4><img src="http://localhost/DELATEL/image/check2.png" class="icono" alt="">  13) ACEPTACIÓN DEL CONTRATO</h4>
+            <h4><img src="http://localhost/DELATEL/image/check(2).png" class="icono" alt="">  13) ACEPTACIÓN DEL CONTRATO</h4>
             <p>   
               La aceptación de este contrato se realizará con la  firma manuscrita del presente documento, al obtener la información biométrica 
               de tu huella  dactilar o mediante otro tipo de firma digital en la versión digital del presente contrato. <strong>La cartilla y anexo 
