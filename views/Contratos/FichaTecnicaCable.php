@@ -30,7 +30,6 @@
     </div>
   </div>
 </div>
-
 <div class="container">
   <div class="form-container mt-3">
     <h2 class="text-center">Registro</h2>
@@ -107,9 +106,6 @@
     </form>
   </div>
 </div>
-
-
-
-
+<script src="../../js/FichaTecnicaCable.js"></script>
 
 <?php require_once "../../footer.php"; ?>
