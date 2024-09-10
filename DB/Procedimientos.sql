@@ -7,11 +7,12 @@ CREATE PROCEDURE spu_productos_agregar(
     IN p_tipo_producto VARCHAR(60),
     IN p_modelo VARCHAR(30),
     IN p_precio_actual DECIMAL(7, 2),
-    IN p_codigo_barra VARCHAR(120)
+    IN p_codigo_barra VARCHAR(120),
+    IN p_iduser_create INT
 )
 BEGIN
-    INSERT INTO tb_productos (marca, tipo_producto, modelo, precio_actual, codigo_barra, create_at)
-    VALUES (p_marca, p_tipo_producto, p_modelo, p_precio_actual, p_codigo_barra, NOW());
+    INSERT INTO tb_productos (marca, tipo_producto, modelo, precio_actual, codigo_barra, create_at,iduser_create)
+    VALUES (p_marca, p_tipo_producto, p_modelo, p_precio_actual, p_codigo_barra, NOW(),p_iduser_create);
 END $$
 
 CREATE PROCEDURE spu_kardex_registrar(
@@ -20,7 +21,8 @@ CREATE PROCEDURE spu_kardex_registrar(
     IN p_tipo_operacion VARCHAR(20),
     IN p_motivo VARCHAR(90),
     IN p_cantidad INT,
-    IN p_valor_unitario_historico DECIMAL(7,2)
+    IN p_valor_unitario_historico DECIMAL(7,2),
+    IN p_iduser_create INT
 )
 BEGIN
     DECLARE p_saldo_kardex_actual INT DEFAULT 0;
@@ -56,7 +58,8 @@ BEGIN
         cantidad,
         saldo_total,
         valor_unico_historico,
-        create_at
+        create_at,
+        iduser_create
     )
     VALUES (
         p_id_producto,
@@ -66,7 +69,8 @@ BEGIN
         p_cantidad,
         p_saldo_kardex_actual,
         p_valor_unitario_historico,
-        NOW()
+        NOW(),
+        p_iduser_create
     );
 END $$
 
@@ -100,25 +104,27 @@ CREATE PROCEDURE spu_clientes_registrar(
     p_id_empresa        INT,
     p_direccion         VARCHAR(50),
     p_referencia        VARCHAR(150),
-    p_estado            BIT
+    p_estado            BIT,
+	p_iduser_create INT
 )
 BEGIN
     IF p_id_empresa = '' THEN
         SET p_id_empresa = NULL;
     END IF;
-    INSERT INTO tb_clientes(id_persona, id_empresa, direccion, referencia, estado) 
-    VALUES (p_id_persona, p_id_empresa, p_direccion, p_referencia, p_estado);
+    INSERT INTO tb_clientes(id_persona, id_empresa, direccion, referencia, estado,iduser_create) 
+    VALUES (p_id_persona, p_id_empresa, p_direccion, p_referencia, p_estado,p_iduser_create);
 END $$
 
 CREATE PROCEDURE spu_usuarios_registrar(
     p_id_persona        INT,
     p_nombre_user       VARCHAR(100),
-    p_pass              VARCHAR(60)
+    p_pass              VARCHAR(60),
+	p_iduser_create INT
 )
 BEGIN
-    INSERT tb_usuarios(id_persona, nombre_user, pass) 
+    INSERT tb_usuarios(id_persona, nombre_user, pass,iduser_create) 
         VALUES
-            (p_id_persona, p_nombre_user, p_pass);
+            (p_id_persona, p_nombre_user, p_pass,p_iduser_create);
     SELECT LAST_INSERT_ID() AS id_usuario;
 END $$
 
@@ -165,7 +171,8 @@ CREATE PROCEDURE spu_registrar_fichasoporte(
     IN p_descripcion_solucion TEXT,
     IN p_prioridad VARCHAR(50),
     IN p_pagos JSON,
-    IN p_soporte JSON
+    IN p_soporte JSON,
+	IN p_iduser_create INT
 )
 BEGIN
     INSERT INTO tb_soporte (
@@ -179,7 +186,8 @@ BEGIN
         prioridad,
         pagos,
         soporte,
-        create_at
+        create_at,
+        iduser_create
     )
     VALUES (
         p_id_contrato,
@@ -192,7 +200,8 @@ BEGIN
         p_prioridad,
         p_pagos,
         p_soporte,
-        NOW()
+        NOW(),
+        p_iduser_create
     );
 END $$
 
@@ -202,7 +211,8 @@ CREATE PROCEDURE spu_productos_actualizar(
   IN p_tipo_producto VARCHAR(60),
   IN p_modelo VARCHAR(30),
   IN p_precio_actual DECIMAL(7,2),
-  IN p_codigo_barra VARCHAR(120)
+  IN p_codigo_barra VARCHAR(120),
+  IN p_iduser_update INT
 )
 BEGIN
   UPDATE tb_productos 
@@ -210,6 +220,7 @@ BEGIN
     marca = p_marca,
     tipo_producto = p_tipo_producto,
     modelo = p_modelo,
+    iduser_update = p_iduser_update,
     precio_actual = p_precio_actual,
     codigo_barra = p_codigo_barra,
     update_at = NOW()
@@ -298,10 +309,11 @@ END $$
 
 CREATE PROCEDURE spu_registrar_roles(
     p_rol VARCHAR(30),
-    p_permisos JSON
+    p_permisos JSON,
+	p_iduser_create INT
 )
 BEGIN
-    INSERT INTO tb_roles (rol, permisos) VALUES (p_rol, p_permisos);
+    INSERT INTO tb_roles (rol, permisos,iduser_create) VALUES (p_rol, p_permisos,p_iduser_create);
 END $$
 
 CREATE VIEW vw_kardex AS

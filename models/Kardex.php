@@ -31,14 +31,15 @@ class Kardex extends Conexion
     {
         $status=false;
         try {
-            $query = $this->pdo->prepare("CALL spu_kardex_registrar(?, ?, ?, ?, ?, ?)");
+            $query = $this->pdo->prepare("CALL spu_kardex_registrar(?, ?, ?, ?, ?, ?,?)");
             $status = $query->execute([
                 $params['id_producto'],
                 $params['fecha'],
                 $params['tipo_operacion'],
                 $params['motivo'],
                 $params['cantidad'],
-                $params['valor_unitario_historico']
+                $params['valor_unitario_historico'],
+                $params["iduser_create"]
             ]);
             return $status;
         } catch (Exception $e) {

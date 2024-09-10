@@ -14,7 +14,7 @@ class Soporte extends Conexion
   {
     try {
       $status = false;
-      $query = $this->pdo->prepare("CALL spu_registrar_fichasoporte(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+      $query = $this->pdo->prepare("CALL spu_registrar_fichasoporte(?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)");
       $pagosJson = json_encode($params['pagos']);
       $soporteJson = json_encode($params['soporte']);
       $status = $query->execute([
@@ -27,7 +27,8 @@ class Soporte extends Conexion
         $params['descripcion_solucion'],
         $params['prioridad'],
         $pagosJson,
-        $soporteJson
+        $soporteJson,
+        $params["iduser_create"]
       ]);
       return $status;
     } catch (Exception $e) {

@@ -29,12 +29,13 @@ class Usuario extends Conexion
   {
     try {
       $status=false;
-      $consulta = $this->pdo->prepare("CALL spu_usuarios_registrar(?,?,?)");
+      $consulta = $this->pdo->prepare("CALL spu_usuarios_registrar(?,?,?,?)");
       $status=$consulta->execute(
         array(
           $data['idPersona'],
           $data['nombreUser'],
-          $data['pass']
+          $data['pass'],
+          $data["iduser_create"]
         )
       );
       return $status;

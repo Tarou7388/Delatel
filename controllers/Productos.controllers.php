@@ -13,7 +13,8 @@ if (isset($_POST['operacion'])) {
         "tipo_producto"     => $_POST['tipo_producto'],
         "modelo"            => $_POST['modelo'],
         "precio_actual"     => $_POST['precio_actual'],
-        "Codigo_Barras"     => $_POST['Codigo_Barras']
+        "Codigo_Barras"     => $_POST['Codigo_Barras'],
+        "iduser_create"         => $_POST["iduser_create"]
       ];
       $estado = $producto->add($datos);
       echo json_encode(["Guardado" => $estado]);
@@ -45,7 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
       "modelo"         => $data['modelo'],
       "precio_actual"  => $data['precio_actual'],
       "codigo_barra"   => $data['codigo_barra'],
-      "id_producto"    => $data['id_producto']
+      "id_producto"    => $data['id_producto'],
+      "iduser_update"    => $data['iduser_update']
     ];
 
     $estado = $producto->updateProducto($datos);

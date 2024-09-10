@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (permisos[0].permisos.inventariado.leer != 1) {
     window.location.href = `${config.HOST}views`;
   }
+  const userid= user['idUsuario'];
   const marca = document.querySelector("#slcMarca");
   const precioActual = document.querySelector("#txtPrecioActual");
   const tipoProducto = document.querySelector("#slcTipoProducto");
@@ -26,6 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
       params.append("precio_actual", precioActual.value);
       params.append("modelo", Modelo.value);
       params.append("Codigo_Barras", CodigoBarras.value);
+      params.append("iduser_create", userid);
 
       fetch(`${config.HOST}controllers/Productos.controllers.php`, {
         method: "POST",

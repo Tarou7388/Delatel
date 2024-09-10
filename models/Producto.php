@@ -37,7 +37,7 @@ class Producto extends Conexion
   {
     $status = false;
     try {
-      $query = $this->pdo->prepare("CALL spu_productos_agregar(?,?,?,?,?)");
+      $query = $this->pdo->prepare("CALL spu_productos_agregar(?,?,?,?,?,?)");
       $status = $query->execute(
         [
           $params['marca'],
@@ -45,6 +45,8 @@ class Producto extends Conexion
           $params['modelo'],
           $params['precio_actual'],
           $params['Codigo_Barras'],
+          $params["iduser_create"]
+          
         ]
       );
       return $status;
@@ -58,7 +60,7 @@ class Producto extends Conexion
   public function updateProducto($data = []): bool
   {
     try {
-      $query = $this->pdo->prepare("CALL spu_productos_actualizar(?, ?, ?, ?, ?, ?)");
+      $query = $this->pdo->prepare("CALL spu_productos_actualizar(?, ?, ?, ?, ?, ?,?)");
       $status = $query->execute(
         [
           $data["id_producto"],
@@ -66,7 +68,8 @@ class Producto extends Conexion
           $data["tipo_producto"],
           $data["modelo"],
           $data["precio_actual"],
-          $data["codigo_barra"]
+          $data["codigo_barra"],
+          $data["iduser_update"]
         ]
       );
       return $status;

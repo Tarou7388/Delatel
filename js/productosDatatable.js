@@ -1,8 +1,8 @@
 const ruta = "../../controllers/Productos.controllers.php?operacion=getAll";
 if (permisos[0].permisos.inventariado.leer != 1) {
     window.location.href = `${config.HOST}views`;
-  }
-
+}
+const userid = user['idUsuario'];
 window.tablaProductos = $('#TbProductos').DataTable({
     dom: `
     <"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6 text-end"f>>
@@ -14,8 +14,8 @@ window.tablaProductos = $('#TbProductos').DataTable({
             extend: 'csv',
             text: '<i class="bi bi-file-earmark-csv"></i> Exportar CSV',
             className: 'btn btn-primary me-2',
-            filename:'Productos',
-            title:'Productos',
+            filename: 'Productos',
+            title: 'Productos',
             exportOptions: {
                 columns: ':not(:last-child)'
             }
@@ -24,8 +24,8 @@ window.tablaProductos = $('#TbProductos').DataTable({
             extend: 'excel',
             text: '<i class="bi bi-file-earmark-excel"></i> Exportar Excel',
             className: 'btn btn-success me-2',
-            filename:'Productos',
-            title:'Productos',
+            filename: 'Productos',
+            title: 'Productos',
             exportOptions: {
                 columns: ':not(:last-child)'
             }
@@ -34,8 +34,8 @@ window.tablaProductos = $('#TbProductos').DataTable({
             extend: 'pdf',
             text: '<i class="bi bi-file-earmark-pdf"></i> Exportar PDF',
             className: 'btn btn-danger me-2',
-            filename:'Productos',
-            title:'Productos',
+            filename: 'Productos',
+            title: 'Productos',
             exportOptions: {
                 columns: ':not(:last-child)'
             }
@@ -103,7 +103,8 @@ $('#form-editar-producto').on('submit', function (e) {
         marca: $('#slcEditarMarca').val(),
         modelo: $('#txtEditarModelo').val(),
         precio_actual: $('#txtEditarPrecioActual').val(),
-        codigo_barra: $('#txtEditarCodigoBarras').val()
+        codigo_barra: $('#txtEditarCodigoBarras').val(),
+        iduser_update: (userid)
     };
 
     fetch(`../../controllers/Productos.controllers.php?operacion=update`, {

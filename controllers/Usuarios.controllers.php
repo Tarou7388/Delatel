@@ -44,7 +44,8 @@ if(isset($_POST["Operacion"])){
         $data = [
             "idPersona" => $_POST["idPersona"],
             "nombreUser" => $_POST["nombreUser"],
-            "pass" => $contrasenia
+            "pass" => $contrasenia,
+            "iduser_create"         => $_POST["iduser_create"]
         ];
         $resultado = $usuario->registrar($data);
         echo json_encode(["guardado" => $resultado]);

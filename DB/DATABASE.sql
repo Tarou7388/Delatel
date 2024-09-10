@@ -116,6 +116,9 @@ CREATE TABLE tb_usuarios (
     create_at DATETIME DEFAULT NOW(),
     update_at DATETIME NULL,
     inactive_at DATETIME NULL,
+	iduser_create	 	INT NOT NULL,
+	iduser_update 	 	INT NULL,
+	iduser_inactive	 	INT NULL,
     CONSTRAINT usuar_fk_id_persona FOREIGN KEY (id_persona) REFERENCES tb_personas (id_persona),
     CONSTRAINT usuar_uk_nombre_user UNIQUE (nombre_user)
 ) ENGINE = InnoDB;
@@ -126,6 +129,9 @@ CREATE TABLE tb_responsables(
     id_rol           INT NOT NULL,
     fecha_inicio     DATETIME NOT NULL DEFAULT NOW(),
     fecha_fin        DATETIME NULL,
+	iduser_create	 	INT NOT NULL,
+	iduser_update 	 	INT NULL,
+	iduser_inactive	 	INT NULL,
     CONSTRAINT respo_fk_id_usuario FOREIGN KEY (id_usuario) REFERENCES tb_usuarios (id_usuario),
     CONSTRAINT respo_fk_id_rol FOREIGN KEY (id_rol) REFERENCES tb_roles (id_rol)
 ) ENGINE = InnoDB;
@@ -137,6 +143,9 @@ CREATE TABLE tb_tarifarios (
     precio DECIMAL(7, 2) NOT NULL,
     fecha_inicio DATE NOT NULL,
     fecha_fin DATE NULL,
+	iduser_create	 	INT NOT NULL,
+	iduser_update 	 	INT NULL,
+	iduser_inactive	 	INT NULL,
     CONSTRAINT tarif_fk_id_servicio FOREIGN KEY (id_servicio) REFERENCES tb_servicios (id_servicio),
     CONSTRAINT tarif_fk_id_usuario FOREIGN KEY (id_usuario) REFERENCES tb_responsables (id_responsable),
     CONSTRAINT tarif_ck_precio CHECK (precio > 0)
@@ -152,6 +161,9 @@ CREATE TABLE tb_clientes (
     create_at DATETIME NOT NULL DEFAULT NOW(),
     update_at DATETIME NULL,
     inactive_at DATETIME NULL,
+	iduser_create	 	INT NOT NULL,
+	iduser_update 	 	INT NULL,
+	iduser_inactive	 	INT NULL,
     CONSTRAINT clien_fk_id_persona FOREIGN KEY (id_persona) REFERENCES tb_personas (id_persona),
     CONSTRAINT clien_fk_id_empresa FOREIGN KEY (id_empresa) REFERENCES tb_empresas (id_empresa)
 ) ENGINE = InnoDB;
@@ -175,6 +187,8 @@ CREATE TABLE tb_contratos (
     create_at DATETIME NOT NULL DEFAULT NOW(),
     update_at DATETIME NULL,
     inactive_at DATETIME NULL,
+	iduser_update 	 	INT NULL,
+	iduser_inactive	 	INT NULL,
     CONSTRAINT contr_fk_id_cliente FOREIGN KEY (id_cliente) REFERENCES tb_clientes (id_cliente),
     CONSTRAINT contr_fk_id_tarifario FOREIGN KEY (id_tarifario) REFERENCES tb_tarifarios (id_tarifario),
     CONSTRAINT contr_fk_id_sector FOREIGN KEY (id_sector) REFERENCES tb_sectores (id_sector),
@@ -192,6 +206,9 @@ CREATE TABLE tb_contactabilidad (
     nota 		TEXT NOT NULL,
     create_at 	DATETIME NOT NULL DEFAULT NOW(),
     update_at 	DATETIME NULL,
+	iduser_create	 	INT NOT NULL,
+	iduser_update 	 	INT NULL,
+	iduser_inactive	 	INT NULL,
     CONSTRAINT conta_fk_id_persona FOREIGN KEY (id_persona) REFERENCES tb_personas (id_persona),
     CONSTRAINT conta_fk_id_tarifario FOREIGN KEY (id_tarifario) REFERENCES tb_tarifarios (id_tarifario)
 ) ENGINE = InnoDB;
@@ -244,6 +261,9 @@ CREATE TABLE tb_productos(
 	create_at 		DATETIME NOT NULL DEFAULT NOW(),
     update_at 		DATETIME NULL,
     inactive_at 	DATETIME NULL,
+	iduser_create	 	INT NOT NULL,
+	iduser_update 	 	INT NULL,
+	iduser_inactive	 	INT NULL,
     CONSTRAINT produ_uk_codigo_barra UNIQUE(codigo_barra),
     CONSTRAINT produc_uk_tp_md_mc UNIQUE (marca,tipo_producto,modelo)
 )ENGINE=INNODB;
@@ -260,5 +280,8 @@ CREATE TABLE tb_kardex (
 	create_at 		DATETIME NOT NULL DEFAULT NOW(),
     update_at 		DATETIME NULL,
     inactive_at 	DATETIME NULL,
+	iduser_create	 	INT NOT NULL,
+    iduser_update 	 	INT NULL,
+	iduser_inactive	 	INT NULL,
     CONSTRAINT kard_fk_id_producto FOREIGN KEY (id_producto) REFERENCES tb_productos (id_producto)
 )ENGINE=INNODB;

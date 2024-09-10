@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
   if (permisos[0].permisos.inventariado.leer != 1) {
     window.location.href = `${config.HOST}views`;
   }
+    const userid= user['idUsuario'];
     const tipoMovimientoSelect = document.getElementById("slcTipomovimiento");
     const motivoSelect = document.getElementById("txtaMotivo");
 
@@ -117,6 +118,7 @@ document.addEventListener("DOMContentLoaded", function () {
         params.append("motivo", motivoField.value);
         params.append("cantidad", cantidadField.value);
         params.append("valorunitariohistorico", txtvalorhistorico.value);
+        params.append("iduser_create", userid);
 
         const options = {
           method: "POST",
