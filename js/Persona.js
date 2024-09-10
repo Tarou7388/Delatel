@@ -19,6 +19,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const txtTelefono = document.getElementById("txtTelefonoPersona");
   const txtEmail = document.getElementById("txtEmailPersona");
 
+  const txtDireccion = document.getElementById("txtDireccionPersona");
+  const txtReferencia = document.getElementById("txtReferenciaPersona");
+
   const btnCancelarPersona = document.getElementById("btnCancelarPersona");
 
   function toggleForms(value) {

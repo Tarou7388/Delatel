@@ -16,6 +16,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const txtTelefono = document.getElementById("txtTelefono");
   const txtEmail = document.getElementById("txtEmail");
 
+  const txtDireccion = document.getElementById("txtDireccion");
+  const txtReferencia = document.getElementById("txtReferencia");
+
+
   const btnCancelarEmpresa = document.getElementById("btnCancelarEmpresa");
 
   frmEmpresas.addEventListener("submit", (event) => {
