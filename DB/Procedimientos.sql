@@ -305,6 +305,8 @@ CREATE PROCEDURE spu_empresas_registrar(
 BEGIN
     INSERT INTO tb_empresas (ruc, representante_legal, razon_social, nombre_comercial, telefono, email, iduser_create) 
     VALUES (p_ruc, p_representante_legal, p_razon_social, p_nombre_comercial, p_telefono, p_email, p_iduser_create);
+    
+    SELECT LAST_INSERT_ID() AS id_empresa;
 END $$
 
 CREATE PROCEDURE spu_registrar_roles(

@@ -11,8 +11,7 @@ class Empresa extends Conexion
         $this->pdo = parent::getConexion();
     }
 
-    public function registrar($data = []):bool{
-        $status = false;
+    public function registrar($data = []){
         try{
             $consulta = $this->pdo->prepare("CALL spu_empresas_registrar(?,?,?,?,?,?,?)");
             $status =$consulta->execute(array(

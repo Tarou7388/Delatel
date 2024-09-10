@@ -17,32 +17,58 @@
             <form class="form-control" id="frmEmpresas">
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <label for="txtRuc" class="form-label">RUC</label>
-                        <input type="text" class="form-control" id="txtRuc" name="ruc" maxlength="11">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="txtRuc" name="ruc" maxlength="11" placeholder="RUC">
+                            <label for="txtRuc">RUC</label>
+                        </div>
                     </div>
                     <div class="col-md-6">
-                        <label for="txtRepresentanteLegal" class="form-label">Representante Legal</label>
-                        <input type="text" class="form-control" id="txtRepresentanteLegal" name="representante_legal">
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label for="txtRazonSocial" class="form-label">Razón Social</label>
-                        <input type="text" class="form-control" id="txtRazonSocial" name="razon_social">
-                    </div>
-                    <div class="col-md-6">
-                        <label for="txtNombreComercial" class="form-label">Nombre Comercial</label>
-                        <input type="text" class="form-control" id="txtNombreComercial" name="nombre_comercial">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="txtRepresentanteLegal" name="representante_legal" placeholder="Representante Legal">
+                            <label for="txtRepresentanteLegal">Representante Legal</label>
+                        </div>
                     </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <label for="txtTelefono" class="form-label">Teléfono</label>
-                        <input type="text" class="form-control" id="txtTelefono" name="telefono" maxlength="11">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="txtRazonSocial" name="razon_social" placeholder="Razón Social">
+                            <label for="txtRazonSocial">Razón Social</label>
+                        </div>
                     </div>
                     <div class="col-md-6">
-                        <label for="txtEmail" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="txtEmail" name="email">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="txtNombreComercial" name="nombre_comercial" placeholder="Nombre Comercial">
+                            <label for="txtNombreComercial">Nombre Comercial</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="txtTelefono" name="telefono" maxlength="11" placeholder="Teléfono">
+                            <label for="txtTelefono">Teléfono</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input type="email" class="form-control" id="txtEmail" name="email" placeholder="Email">
+                            <label for="txtEmail">Email</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="txtDireccion" name="direccion" placeholder="Dirección">
+                            <label for="txtDireccion">Dirección</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="txtReferencia" name="referencia" placeholder="Referencia">
+                            <label for="txtReferencia">Referencia</label>
+                        </div>
                     </div>
                 </div>
                 <div class="d-flex justify-content-end">
@@ -54,7 +80,6 @@
     </div>
 </div>
 
-
 <div class="container-fluid px-4 mt-5">
     <div class="card d-none" id="divPersonaCard">
         <div class="card-header bg-secondary text-white">
@@ -65,38 +90,67 @@
             <form class="form-control" id="frmPersonas">
                 <div class="row mb-3">
                     <div class="col-md-4">
-                        <label for="slcTipoDocumento" class="form-label">Tipo de Documento</label>
-                        <select class="form-select" id="slcTipoDocumento">
-                            <option selected id="">Seleccionar...</option>
-                            <option value="DNI" id="optDNI">DNI</option>
-                            <option value="Pasaporte" id="optPasaporte">Pasaporte</option>
-                            <option value="Carné de Extranjería" id="optCarneExtranjeria">Carné de Extranjería</option>
-                        </select>
+                        <div class="form-floating">
+                            <select class="form-select" id="slcTipoDocumento" aria-label="Tipo de Documento">
+                                <option selected>Seleccionar...</option>
+                                <option value="DNI" id="optDNI">DNI</option>
+                                <option value="Pasaporte" id="optPasaporte">Pasaporte</option>
+                                <option value="Carné de Extranjería" id="optCarneExtranjeria">Carné de Extranjería</option>
+                            </select>
+                            <label for="slcTipoDocumento">Tipo de Documento</label>
+                        </div>
                     </div>
                     <div class="col-md-4">
-                        <label for="txtNumDocumentoPersona" class="form-label">Número de documento</label>
-                        <input type="text" class="form-control" id="txtNumDocumentoPersona">
+                        <div class="form-floating">
+                            <input type="number" id="txtNumDocumentoPersona" class="form-control" placeholder="Número de documento">
+                            <label for="txtNumDocumentoPersona">Número de documento</label>
+                        </div>
                     </div>
                     <div class="col-md-4">
-                        <label for="txtNombresPersona" class="form-label">Nombres</label>
-                        <input type="text" class="form-control" id="txtNombresPersona">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="txtTelefonoPersona" maxlength="11" placeholder="Teléfono">
+                            <label for="txtTelefonoPersona">Teléfono</label>
+                        </div>
                     </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-md-4">
-                        <label for="txtApellidosPersona" class="form-label">Apellidos</label>
-                        <input type="text" class="form-control" id="txtApellidosPersona">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="txtNombresPersona" placeholder="Nombres">
+                            <label for="txtNombresPersona">Nombres</label>
+                        </div>
                     </div>
                     <div class="col-md-4">
-                        <label for="txtTelefono" class="form-label">Teléfono</label>
-                        <input type="text" class="form-control" id="txtTelefonoPersona" maxlength="11">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="txtApellidosPersona" placeholder="Apellidos">
+                            <label for="txtApellidosPersona">Apellidos</label>
+                        </div>
                     </div>
                     <div class="col-md-4">
-                        <label for="txtEmail" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="txtEmailPersona">
+                        <div class="form-floating">
+                            <input type="email" class="form-control" id="txtEmailPersona" placeholder="Email">
+                            <label for="txtEmailPersona">Email</label>
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="txtDireccion" name="direccion" placeholder="Dirección">
+                            <label for="txtDireccionPersona">Dirección</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="txtReferencia" name="referencia" placeholder="Referencia">
+                            <label for="txtReferenciaPersona">Referencia</label>
+                        </div>
                     </div>
                 </div>
-                <div class="d-flex justify-content-end">
+
+                <div class="d-flex justify-content-end mt-3">
                     <button type="submit" class="btn btn-primary me-2" id="btnRegistrarPersona">Registrar</button>
                     <button type="reset" class="btn btn-secondary" id="btnCancelarPersona">Cancelar</button>
                 </div>
@@ -104,6 +158,7 @@
         </div>
     </div>
 </div>
+
 
 <?php require_once "../../footer.php"; ?>
 <script type="module" src="../../js/Empresa.js"></script>

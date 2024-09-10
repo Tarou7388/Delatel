@@ -40,11 +40,8 @@ document.addEventListener("DOMContentLoaded", function () {
       fetch(`${config.HOST}controllers/Empresas.controllers.php`, options)
         .then((response) => response.json())
         .then((data) => {
-          if (data.guardado) {
-            alert("Empresa registrada correctamente");
-          } else {
-            alert("Error: Verifique los datos ingresados");
-          }
+            console.log(data);
+
           frmEmpresas.reset();
         })
         .catch((e) => {
