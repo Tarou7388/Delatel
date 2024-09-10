@@ -10,7 +10,10 @@
         <div class="row">
           <div class="col-md-3">
             <label for="documento" class="form-label">Número de documento</label>
-            <input type="text" class="form-control" id="documento" name="documento" required>
+            <div class="input-group">
+              <input type="text" class="form-control" id="documento" name="documento" required>
+              <img class="btn btn-outline-primary" type="button"><img src="../../image/check.png"></img> </button>
+            </div>
           </div>
           <div class="col-md-3">
             <label for="nombre" class="form-label">Nombre de cliente</label>
@@ -86,7 +89,6 @@
               <button type="button" class="btn btn-outline-primary" id="generar">Generar PDF</button>
             </td>
           </tr>
-          <!-- Más filas de ejemplo -->
         </tbody>
       </table>
     </div>

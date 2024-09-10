@@ -183,7 +183,6 @@ CREATE TABLE tb_contratos (
     fecha_registro DATE NOT NULL,
     ficha_instalacion JSON NOT NULL,
     nota TEXT NULL,
-    estado BIT NOT NULL,
     create_at DATETIME NOT NULL DEFAULT NOW(),
     update_at DATETIME NULL,
     inactive_at DATETIME NULL,
