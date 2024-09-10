@@ -27,5 +27,14 @@ class Persona extends Conexion{
             die($e->getMessage());
         }
     }
+    public function listar($params=[]){
+    
+        $consulta = $this->pdo->prepare("CALL sp_buscar_por_dni(?)");
+        $consulta->execute(
+            [$params['dni']]
+        );
+        return $consulta->fetchAll(PDO::FETCH_ASSOC);
+        
+    }
 }
 ?>

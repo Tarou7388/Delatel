@@ -547,3 +547,20 @@ Select
     sector
 FROM
     tb_sectores
+
+CREATE PROCEDURE sp_buscar_por_dni(
+    IN p_dni VARCHAR(15)
+)
+BEGIN
+    SELECT 
+        p.id_persona,
+        p.nombres,
+        p.apellidos,
+        c.direccion
+    FROM 
+        tb_personas p
+    LEFT JOIN 
+        tb_clientes c ON p.id_persona = c.id_persona
+    WHERE 
+        p.nro_doc = p_dni AND p.tipo_doc = 'DNI';
+END $$
