@@ -25,5 +25,14 @@ class Sector extends Conexion
     }
   }
 
-  public function getAll() {}
+  public function getAll()
+  {
+    try {
+      $query = $this->pdo->prepare("SELECT * FROM vw_listar_sectores");
+      $query->execute();
+      return $query->fetchAll(PDO::FETCH_ASSOC);
+    } catch (Exception $e) {
+      die($e->getMessage());
+    }
+  }
 }

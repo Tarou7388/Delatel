@@ -540,3 +540,10 @@ LEFT JOIN
     tb_usuarios u2 ON s.iduser_update = u2.id_usuario
 LEFT JOIN
     tb_usuarios u3 ON s.iduser_inactive = u3.id_usuario;
+
+Create view vw_listar_sectores AS
+Select 
+    id_sector,
+    sector
+FROM
+    tb_sectores
