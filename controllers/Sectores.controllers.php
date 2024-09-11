@@ -18,9 +18,10 @@ if (isset($_POST["operacion"]) && $_POST["operacion"] == "add") {
     exit;
 }
 
-if ($_GET["operacion"] == "getAll") {
-    $resultado = $sectores->getAll();
-    echo json_encode($resultado);
-    exit; 
+if (isset($_GET["operacion"])) {
+    if ($_GET["operacion"] == "getAll") {
+        $resultado = $sectores->getAll();
+        echo json_encode($resultado);
+        exit;
+    }
 }
-

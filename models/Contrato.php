@@ -39,10 +39,12 @@ class Contrato extends Conexion
             die($e->getMessage());
         }
     }
-    public function getAll()
+    public function getAll(): array
     {
         try {
-            $query = $this->pdo->prepare("");
+            $query = $this->pdo->prepare("CALL spu_contratos_listar()");
+            $query->execute();
+            return $query->fetchAll(PDO::FETCH_ASSOC);
         } catch (Exception $e) {
             die($e->getMessage());
         }

@@ -99,13 +99,6 @@ INSERT INTO tb_responsables (id_usuario, id_rol,iduser_create) VALUES
 (5, 5,1),
 (6, 5,1);
 
-INSERT INTO tb_tarifarios (id_servicio, id_usuario, precio, fecha_inicio,iduser_create) VALUES
-(1, 1, 150.00, '2024-01-01',1),
-(2, 2, 200.00, '2024-02-01',1),
-(3, 3, 175.50, '2024-03-01',1),
-(4, 4, 220.00, '2024-04-01',1),
-(5, 5, 190.00, '2024-05-01',1);
-
 INSERT INTO tb_clientes (id_persona, id_empresa, direccion, referencia, estado, create_at, update_at, inactive_at,iduser_create) VALUES
 (6, NULL, 'Av. Siempre Viva 123, Springfield', 'Frente al parque central', 1, NOW(), NULL, NULL,1),
 (NULL, 2, 'Calle Falsa 456, Gotham', 'A una cuadra del cine', 1, NOW(), NULL, NULL,1),
@@ -113,14 +106,14 @@ INSERT INTO tb_clientes (id_persona, id_empresa, direccion, referencia, estado, 
 (NULL, 4, 'Jirón de la Unión 100, Lima', 'A media cuadra de la Plaza Mayor', 0, NOW(), NULL, NULL,1),
 (10, NULL, 'Calle Mayor 101, Barcelona', 'Cerca del mercado central', 1, NOW(), NULL, NULL,1);
 
-INSERT INTO tb_contratos (id_cliente, id_tarifario, id_sector, id_usuario_registro, id_usuario_tecnico, direccion_servicio, referencia, coordenada, fecha_inicio, fecha_fin, fecha_registro, ficha_instalacion, nota) VALUES 
+INSERT INTO tb_contratos (id_cliente, id_paquete, id_sector, id_usuario_registro, id_usuario_tecnico, direccion_servicio, referencia, coordenada, fecha_inicio, fecha_fin, fecha_registro, ficha_instalacion, nota) VALUES 
 (1, 1, 1, 1, NULL, 'Av. Siempre Viva 123, Springfield', 'Cerca de la plaza principal', '12.3456, -65.4321', '2024-01-15', '2024-06-15', '2024-01-01', '{"tipo":"electrico","voltaje":"220V"}', 'Primer contrato con cliente nuevo'),
 (2, 2, 2, 3, NULL, 'Calle Falsa 456, Gotham', 'Cerca del cine local', '34.5678, -76.5432', '2024-02-01', '2024-07-01', '2024-02-01', '{"tipo":"hidraulico","presion":"1.5 bar"}', 'Instalación programada'),
 (3, 3, 3, 2, NULL, 'Av. Los Pinos 789, Lima', 'Esquina con Av. Las Flores', '23.4567, -54.3210', '2024-03-01', '2024-08-01', '2024-03-01', '{"tipo":"telecomunicacion","frecuencia":"2.4 GHz"}', 'Revisión mensual incluida'),
 (4, 4, 4, 5, NULL, 'Jirón de la Unión 100, Lima', 'Frente a la Plaza Mayor', '45.6789, -43.2109', '2024-04-01', '2024-09-01', '2024-04-01', '{"tipo":"seguridad","camaras":"4"}', 'Descuento aplicado por contrato anual'),
 (5, 5, 5, 4, NULL, 'Calle Mayor 101, Barcelona', 'Cerca del mercado central', '56.7890, -32.1098', '2024-05-01', '2024-10-01', '2024-05-01', '{"tipo":"climatizacion","temperatura":"18-22°C"}', 'Contrato especial por volumen');
 
-INSERT INTO tb_contactabilidad (id_persona, id_tarifario, fecha_hora_contacto, direccion_servicio, dias_vigencia, nota,iduser_create) VALUES
+INSERT INTO tb_contactabilidad (id_persona, id_paquete, fecha_hora_contacto, direccion_servicio, dias_vigencia, nota,iduser_create) VALUES
 (1, 1, '2024-01-10 14:30:00', 'Av. Siempre Viva 123, Springfield', 30, 'Contacto inicial realizado con éxito.',1),
 (2, 2, '2024-02-15 10:00:00', 'Calle Falsa 456, Gotham', 15, 'Se acordó la fecha para la instalación.',1),
 (3, 3, '2024-03-20 16:45:00', 'Av. Los Pinos 789, Lima', 45, 'Cliente solicitó información adicional sobre el servicio.',1),
