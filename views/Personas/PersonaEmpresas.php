@@ -138,13 +138,13 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="txtDireccion" name="direccion" placeholder="Dirección">
+                            <input type="text" class="form-control" id="txtDireccionPersona" name="direccion" placeholder="Dirección">
                             <label for="txtDireccionPersona">Dirección</label>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="txtReferencia" name="referencia" placeholder="Referencia">
+                            <input type="text" class="form-control" id="txtReferenciaPersona" name="referencia" placeholder="Referencia">
                             <label for="txtReferenciaPersona">Referencia</label>
                         </div>
                     </div>

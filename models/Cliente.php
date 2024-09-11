@@ -15,15 +15,17 @@ class Cliente extends Conexion
 
     public function add($data = [])
     {
+        $status = false;
         try {
             $consulta = $this->pdo->prepare("CALL spu_clientes_registrar(?,?,?,?,?)");
-            $consulta->execute(array(
+            $status= $consulta->execute(array(
                 $data["idPersona"],
                 $data["idempresa"],
                 $data["direccion"],
                 $data["referencia"],
                 $data["iduser_create"]
             ));
+            return $status;
         } catch (Exception $e) {
             die($e->getMessage());
         }
@@ -48,11 +50,18 @@ class Cliente extends Conexion
         }
     }
 
-    public function getByDoc($params = [])
+    public function getByDni($params = [])
     {
-        $consulta = $this->pdo->prepare("CALL spu_cliente_doc_buscar (?)");
+        $consulta = $this->pdo->prepare("CALL spu_cliente_dni_buscar (?)");
         $consulta->execute(
-            [$params['doc']]
+            [$params['dni']]
+        );
+        return $consulta->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function getByRuc($params=[]){
+        $consulta = $this->pdo->prepare("CALL spu_cliente_ruc_buscar (?)");
+        $consulta->execute(
+            [$params['ruc']]
         );
         return $consulta->fetchAll(PDO::FETCH_ASSOC);
     }

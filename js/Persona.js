@@ -1,7 +1,7 @@
 import config from "../env.js";
 
 document.addEventListener("DOMContentLoaded", function () {
-  const userid= JSON.stringify(user['idUsuario']);
+  const userid = JSON.stringify(user["idUsuario"]);
 
   if (permisos[0].permisos.personas.leer != 1) {
     window.location.href = `${config.HOST}views`;
@@ -13,7 +13,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const frmPersonas = document.getElementById("frmPersonas");
 
   const slcTipoDocumento = document.getElementById("slcTipoDocumento");
-  const txtNumDocumentoPersona = document.getElementById("txtNumDocumentoPersona");
+  const txtNumDocumentoPersona = document.getElementById(
+    "txtNumDocumentoPersona"
+  );
   const txtNombresPersona = document.getElementById("txtNombresPersona");
   const txtApellidosPersona = document.getElementById("txtApellidosPersona");
   const txtTelefono = document.getElementById("txtTelefonoPersona");
@@ -38,7 +40,8 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   frmPersonas.addEventListener("submit", (event) => {
-    event.preventDefault(); event.preventDefault();
+    event.preventDefault();
+    event.preventDefault();
 
     if (permisos[0].permisos.personas.crear == 1) {
       const params = new FormData();
@@ -49,10 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
       params.append("apellidos", txtApellidosPersona.value);
       params.append("telefono", txtTelefono.value);
       params.append("email", txtEmail.value);
-      params.append("iduser_create",userid);
-
-      console.log(txtEmail.value);
-      console.log(txtTelefono.value);
+      params.append("iduser_create", userid);
 
       const options = {
         method: "POST",
@@ -64,6 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .then((data) => {
           if (data.id_persona > 0) {
             alert("Persona registrada correctamente");
+            registrarcliente(data.id_persona);
           } else {
             alert("Error: Verifique los datos ingresados");
           }
@@ -80,6 +81,34 @@ document.addEventListener("DOMContentLoaded", function () {
     toggleForms(valor);
   });
 
-
   toggleForms(slcChangeRegistro.value);
+
+  function registrarcliente(idPersonar) {
+    const params = new FormData();
+    params.append("operacion", "add");;
+    params.append("direccion", txtDireccion.value);
+    params.append("referencia", txtReferencia.value);
+    params.append("idempresa","")
+    params.append("idPersona", idPersonar);
+    params.append("iduser_create", userid);
+
+    const options = {
+      method: "POST",
+      body: params,
+    };
+
+    fetch(`${config.HOST}controllers/Cliente.controllers.php`, options)
+      .then((response) => response.text())
+      .then((data) => {
+        console.log(data)
+        if (data.Actualizado) {
+          alert("Correcto");
+        } else {
+          alert("Error: Verifique");
+        }
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  }
 });

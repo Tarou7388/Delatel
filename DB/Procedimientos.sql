@@ -109,6 +109,8 @@ CREATE PROCEDURE spu_clientes_registrar(
 BEGIN
     IF p_id_empresa = '' THEN
         SET p_id_empresa = NULL;
+	ELSEIF id_persona = '' THEN
+        SET id_persona = NULL;
     END IF;
     INSERT INTO tb_clientes(id_persona, id_empresa, direccion, referencia,iduser_create) 
     VALUES (p_id_persona, p_id_empresa, p_direccion, p_referencia,p_iduser_create);
@@ -342,7 +344,7 @@ BEGIN
     INSERT INTO tb_roles (rol, permisos,iduser_create) VALUES (p_rol, p_permisos,p_iduser_create);
 END $$
 
-CREATE PROCEDURE spu_persona_dni_buscar(
+CREATE PROCEDURE sp_buscar_por_dni(
     IN p_dni VARCHAR(15)
 )
 BEGIN
@@ -358,21 +360,6 @@ BEGIN
     WHERE 
         p.nro_doc = p_dni AND p.tipo_doc = 'DNI';
 END $$
-
-CREATE PROCEDURE spu_cliente_doc_buscar(IN _doc VARCHAR(15))
-BEGIN
-    IF LENGTH(_doc) > 8 THEN
-        SELECT e.id_empresa, e.ruc, e.razon_social, e.representante_legal, c.direccion, c.referencia
-        FROM tb_empresas e
-        INNER JOIN tb_clientes c ON c.id_empresa = e.id_empresa
-        WHERE e.ruc = _doc;
-    ELSE
-        SELECT p.id_persona, p.nro_doc, p.apellidos, p.nombres, c.direccion, c.referencia
-        FROM tb_personas p
-        INNER JOIN tb_clientes c ON c.id_persona = p.id_persona
-        WHERE p.nro_doc = _doc;
-    END IF;
-END$$
 
 CREATE VIEW vw_kardex AS
 SELECT
@@ -567,4 +554,19 @@ SELECT
 FROM tb_paquetes p
     JOIN tb_servicios s ON p.id_servicio = s.id_servicio;
 
+CREATE PROCEDURE spu_cliente_dni_buscar(IN _dni varchar(15))
+BEGIN
+        SELECT p.id_persona, p.nro_doc, p.apellidos, p.nombres, c.direccion, c.referencia
+        FROM tb_personas p
+        INNER JOIN tb_clientes c ON c.id_persona = p.id_persona
+        WHERE p.nro_doc = _dni;
+    
+END$$
 
+CREATE PROCEDURE spu_cliente_ruc_buscar(IN _ruc varchar(15))
+BEGIN
+    SELECT e.id_empresa, e.ruc, e.razon_social, e.representante_legal, c.direccion, c.referencia
+        FROM tb_empresas e
+        INNER JOIN tb_clientes c ON c.id_empresa = e.id_empresa
+        WHERE e.ruc = _ruc;
+END$$
