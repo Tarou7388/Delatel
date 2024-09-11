@@ -32,10 +32,7 @@
           <div class="col-md-3">
             <label for="slcServicio" class="form-label">Servicio</label>
             <select class="form-select" id="slcServicio">
-              <option value=1>Elije un valor</option>
-              <option value=2>Elije un valor</option>
-              <option value=3>Elije un valor</option>
-              <option value=4>Elije un valor</option>
+              <option value="0" disabled selected>Selecione</option>
             </select>
           </div>
           <div class="col-md-3">
@@ -66,7 +63,7 @@
         <div class="row">
           <div class="col-md-3 mt-3">
             <button class="btn btn-primary" id="btnRegistrar">Registrar</button>
-            <button class="btn btn-secondary">Cancelar</button>
+            <button class="btn btn-secondary" type="reset">Cancelar</button>
           </div>
         </div>
       </form>
@@ -81,6 +78,8 @@
         <thead>
           <tr>
             <th>Cliente</th>
+            <th>Numero de Doc</th>
+            <th>Servicio</th>
             <th>Direccion</th>
             <th>Fecha de inicio</th>
             <th>Fecha de fin</th>

@@ -5,30 +5,21 @@ window.addEventListener("DOMContentLoaded", () => {
   const dni = document.querySelector("#txtDni");
   const fechaInicio = document.querySelector("#txtFechaInicio");
   const fechaFin = document.querySelector("#txtFechaFin");
-  const tarifario = document.querySelector("#slcServicio");
   const precio = document.querySelector("#txtPrecio");
   const direccion = document.querySelector("#txtDireccion");
   const sector = document.querySelector("#slcSector");
   const referencia = document.querySelector("#txtReferencia");
   const coordenada = document.querySelector("#txtCoordenada");
   const slcSector = document.querySelector("#slcSector");
-
-  $(document).ready(function () {
-    $('#listarContratos').DataTable({
-      language: {
-        url: `${config.HOST}Json/es-Es.json`
-      },
-      columnDefs: [
-        { "width": "20%", "targets": 0 },
-        { "width": "20%", "targets": 1 },
-        { "width": "20%", "targets": 2 },
-        { "width": "20%", "targets": 3 },
-        { "width": "20%", "targets": 4 } 
-      ]
-    });
-  });
+  const slcServicio = document.querySelector("#slcServicio");
 
   $('#slcSector').select2({
+    theme: 'bootstrap-5',
+    placeholder: "Seleccione",
+    allowClear: true
+  });
+
+  $('#slcServicio').select2({
     theme: 'bootstrap-5',
     placeholder: "Seleccione",
     allowClear: true
@@ -46,6 +37,20 @@ window.addEventListener("DOMContentLoaded", () => {
   })();
 
   (async () => {
+
+    const response = await fetch(`${config.HOST}controllers/paquetes.controllers.php?operacion=getAll`);
+    const data = await response.json();
+    data.forEach((paquetes) => {
+      const option = document.createElement("option");
+
+      const id = paquetes.id + " - " +  paquetes.tipo_paquete;
+      option.value =id;
+      option.textContent = paquetes.nombre;
+      slcServicio.appendChild(option);
+    });
+  })();
+
+  (async () => {
     const response = await fetch(`${config.HOST}controllers/contrato.controllers.php?operacion=getAll`);
     const data = await response.json();
     const tbody = document.querySelector("#listarContratos tbody");
@@ -54,6 +59,8 @@ window.addEventListener("DOMContentLoaded", () => {
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td>${contrato.nombre_cliente}</td>
+        <td>${contrato.num_identificacion}</td>
+        <td>${contrato.servicio}</td>
         <td>${contrato.direccion_servicio}</td>
         <td>${contrato.fecha_inicio}</td>
         <td>${contrato.fecha_fin}</td>
@@ -66,16 +73,28 @@ window.addEventListener("DOMContentLoaded", () => {
       tbody.appendChild(tr);
     });
 
-    const botones = document.querySelectorAll(".btnGenerar");
+    var tabla = new DataTable(('#listarContratos'), {
+      language: {
+        url: `${config.HOST}Json/es-Es.json`
+      },
+      columnDefs: [
+        { "width": "12.5%", "targets": 0 },
+        { "width": "12.5%", "targets": 1 },
+        { "width": "12.5%", "targets": 2 },
+        { "width": "12.5%", "targets": 3 },
+        { "width": "11%", "targets": 4 },
+        { "width": "12.5%", "targets": 5 },
+        { "width": "14%", "targets": 6 }
+      ]
+    });
 
-    console.log(botones);
+    const botones = document.querySelectorAll(".btnGenerar");
 
     botones.forEach(boton => {
       boton.addEventListener("click", () => {
         window.open(`../reports/Carpeta-PDF/soporte.php`);
       });
     });
-
   })();
 
   async function fichaInstalacionGpon() {
@@ -103,26 +122,27 @@ window.addEventListener("DOMContentLoaded", () => {
     const operacion = "add";
     const idUsuarioRegistro = user.idRol;
 
-    if (dni.val() === "" || fechaInicio.val() === "" || fechaFin.val() === "" || tarifario.val() === "" ||
-      precio.val() === "" || direccion.val() === "" || sector.val() === "" || referencia.val() === "" ||
-      coordenada.val() === "" || slcSector.val() === "0") {
+    if (dni.value === "" || fechaInicio.value === "" || fechaFin.value === "" || slcServicio.value === "0" ||
+      precio.value === "" || direccion.value === "" || sector.value === "" || referencia.value === "" ||
+      coordenada.value === "" || slcSector.value === "0") {
       alert("Complete todos los campos");
     }
     else {
+      const idServicio = parseInt(slcServicio.value.split(" - ")[0]);
       const registro = await fetch(`${config.HOST}controllers/contrato.controllers.php`, {
         method: "POST",
         body: JSON.stringify({
           operacion: operacion,
           parametros: {
             idCliente: 1,
-            idTarifario: tarifario.val(),
-            idSector: sector.val(),
+            idTarifario: idServicio,
+            idSector: sector.value,
             idUsuarioRegistro: idUsuarioRegistro,
-            direccion: direccion.val(),
-            referencia: referencia.val(),
-            coordenada: coordenada.val(),
-            fechaInicio: fechaInicio.val(),
-            fechaFin: fechaFin.val(),
+            direccion: direccion.value,
+            referencia: referencia.value,
+            coordenada: coordenada.value,
+            fechaInicio: fechaInicio.value,
+            fechaFin: fechaFin.value,
             fechaRegistro: fechaRegistro,
             fichaInstalacion: fichaInstalacion,
             nota: nota

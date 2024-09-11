@@ -2,7 +2,7 @@ DELIMITER $$
 
 CREATE PROCEDURE spu_contratos_registrar(
     IN p_id_cliente INT,
-    IN p_id_tarifario INT,
+    IN p_id_paquete INT,
     IN p_id_sector INT,
     IN p_id_usuario_registro INT,
     IN p_direccion_servicio VARCHAR(200),
@@ -17,7 +17,7 @@ CREATE PROCEDURE spu_contratos_registrar(
 BEGIN
     INSERT INTO tb_contratos (
         id_cliente,
-        id_tarifario,
+        id_paquete,
         id_sector,
         id_usuario_registro,
         direccion_servicio,
@@ -30,7 +30,7 @@ BEGIN
         nota
     ) VALUES (
         p_id_cliente,
-        p_id_tarifario,
+        p_id_paquete,
         p_id_sector,
         p_id_usuario_registro,
         p_direccion_servicio,

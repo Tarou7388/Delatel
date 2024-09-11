@@ -578,7 +578,6 @@ JOIN
 ON
     p.id_servicio = s.id_servicio;
 
-
 CREATE PROCEDURE buscar_cliente(IN input VARCHAR(15))
 BEGIN
 
