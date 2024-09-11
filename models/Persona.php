@@ -29,7 +29,7 @@ class Persona extends Conexion{
     }
     public function listar($params=[]){
     
-        $consulta = $this->pdo->prepare("CALL sp_buscar_por_dni(?)");
+        $consulta = $this->pdo->prepare("CALL spu_persona_dni_buscar(?)");
         $consulta->execute(
             [$params['dni']]
         );

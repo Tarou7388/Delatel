@@ -50,7 +50,7 @@ class Cliente extends Conexion
 
     public function getByDoc($params = [])
     {
-        $consulta = $this->pdo->prepare("CALL sp_buscar_cliente_doc (?)");
+        $consulta = $this->pdo->prepare("CALL spu_cliente_doc_buscar (?)");
         $consulta->execute(
             [$params['doc']]
         );
