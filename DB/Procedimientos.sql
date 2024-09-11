@@ -528,17 +528,23 @@ SELECT
 FROM tb_paquetes p
     JOIN tb_servicios s ON p.id_servicio = s.id_servicio;
 
-CREATE PROCEDURE buscar_cliente(IN input VARCHAR(15))
+
+
+CREATE PROCEDURE sp_buscar_cliente_doc(IN _doc VARCHAR(15))
 BEGIN
-    IF LENGTH(input) > 8 THEN
+    IF LENGTH(_doc) > 8 THEN
         SELECT e.id_empresa, e.ruc, e.razon_social, e.representante_legal, c.direccion, c.referencia, c.estado
         FROM tb_empresas e
         LEFT JOIN tb_clientes c ON c.id_empresa = e.id_empresa
-        WHERE e.ruc = input;
+        WHERE e.ruc = _doc;
     ELSE
         SELECT p.id_persona, p.nro_doc, p.apellidos, p.nombres, c.direccion, c.referencia, c.estado
         FROM tb_personas p
         LEFT JOIN tb_clientes c ON c.id_persona = p.id_persona
-        WHERE p.nro_doc = input;
+        WHERE p.nro_doc = _doc;
     END IF;
-END$$
+END
+
+
+
+

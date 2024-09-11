@@ -21,5 +21,11 @@ class Cliente extends Conexion{
             die($e->getMessage());
         }
     }
-
+    public function getByDoc($params=[]){
+        $consulta = $this->pdo->prepare("CALL sp_buscar_cliente_doc (?)");
+        $consulta->execute(
+            [$params['doc']]
+        );
+        return $consulta->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
