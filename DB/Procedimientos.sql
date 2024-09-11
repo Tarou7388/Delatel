@@ -577,3 +577,20 @@ JOIN
     tb_servicios s
 ON
     p.id_servicio = s.id_servicio;
+
+
+CREATE PROCEDURE buscar_cliente(IN input VARCHAR(15))
+BEGIN
+
+    SELECT p.id_persona, p.nro_doc, p.apellidos, p.nombres, c.direccion, c.referencia, c.estado
+    FROM tb_personas p
+    JOIN tb_clientes c ON c.id_persona = p.id_persona
+    WHERE p.nro_doc = input;
+
+    SELECT e.id_empresa, e.ruc, e.razon_social, e.representante_legal, c.direccion, c.referencia, c.estado
+    FROM tb_empresas e
+    JOIN tb_clientes c ON c.id_empresa = e.id_empresa
+    WHERE e.ruc = input;
+    
+END$$
+
