@@ -93,17 +93,20 @@
                         <div class="form-floating">
                             <select class="form-select" id="slcTipoDocumento" aria-label="Tipo de Documento">
                                 <option selected>Seleccionar...</option>
-                                <option value="DNI" id="optDNI">DNI</option>
-                                <option value="Pasaporte" id="optPasaporte">Pasaporte</option>
-                                <option value="Carné de Extranjería" id="optCarneExtranjeria">Carné de Extranjería</option>
+                                <option value="DNI">DNI</option>
+                                <option value="Pasaporte">Pasaporte</option>
+                                <option value="Carné de Extranjería">Carné de Extranjería</option>
                             </select>
                             <label for="slcTipoDocumento">Tipo de Documento</label>
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="form-floating">
-                            <input type="number" id="txtNumDocumentoPersona" class="form-control" placeholder="Número de documento">
-                            <label for="txtNumDocumentoPersona">Número de documento</label>
+                        <div class="input-group">
+                            <div class="form-floating flex-fill">
+                                <input type="number" id="nDoc" class="form-control" placeholder="Número de documento">
+                                <label for="nDoc">Número de documento</label>
+                            </div>
+                            <button class="btn btn-primary" type="button" id="btnBuscar"><i class="fa-solid fa-magnifying-glass"></i></button>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -113,6 +116,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="row mb-3">
                     <div class="col-md-4">
                         <div class="form-floating">
@@ -132,19 +136,18 @@
                             <label for="txtEmailPersona">Email</label>
                         </div>
                     </div>
-                    
                 </div>
 
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="txtDireccionPersona" name="direccion" placeholder="Dirección">
+                            <input type="text" class="form-control" id="txtDireccionPersona" placeholder="Dirección">
                             <label for="txtDireccionPersona">Dirección</label>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="txtReferenciaPersona" name="referencia" placeholder="Referencia">
+                            <input type="text" class="form-control" id="txtReferenciaPersona" placeholder="Referencia">
                             <label for="txtReferenciaPersona">Referencia</label>
                         </div>
                     </div>
@@ -156,8 +159,77 @@
                 </div>
             </form>
         </div>
+
     </div>
+
+
+    <div class="card mt-5">
+        <div class="card-header">
+            <h4>Listar Clientes</h4>
+        </div>
+        <div class="card-body">
+            <table id="listarCliente" class="table table-striped mt-4">
+                <thead>
+                    <tr>
+                        <th>N°</th>
+                        <th>Nombres y Apellidos</th>
+                        <th>Tipo Doc.</th>
+                        <th>Numero de Doc.</th>
+                        <th>Telefono</th>
+                        <th>Email</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>persona 1</td>
+                        <td>DNI</td>
+                        <td>71592495</td>
+                        <td>907520277</td>
+                        <td>example@example.com</td>
+                        <td>Activo</td>
+                        <td>
+                            <button class="btn btn-primary" title="Actualizar" data-bs-toggle="modal" data-bs-target="#updateModal">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                            <button class="btn btn-danger" title="Eliminar">
+                                <i class="fas fa-trash-alt"></i> <!-- Font Awesome icon for delete -->
+                            </button>
+                        </td>
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateModalLabel">Actualizar Cliente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="updateForm">
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="saveChanges">Guardar cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
+
+
+
+
 
 
 <?php require_once "../../footer.php"; ?>
