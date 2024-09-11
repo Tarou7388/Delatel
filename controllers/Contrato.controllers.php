@@ -4,6 +4,14 @@ require_once '../models/Contrato.php';
 
 $contrato = new Contrato();
 
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+  switch ($_GET['operacion']) {
+    case 'getAll':
+      echo json_encode($contrato->getAll());
+      break;
+  }
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $json = file_get_contents('php://input');
     $datos = json_decode($json, true);

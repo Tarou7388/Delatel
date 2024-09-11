@@ -49,10 +49,7 @@
           <div class="col-md-3">
             <label for="slcSector" class="form-label">Sector</label>
             <select class="form-select" id="slcSector">
-              <option value=1>Elije un valor</option>
-              <option value=2>Elije un valor</option>
-              <option value=3>Elije un valor</option>
-              <option value=4>Elije un valor</option>
+              <option value="0" disabled selected>Selecione</option>
             </select>
           </div>
         </div>
@@ -84,29 +81,13 @@
         <thead>
           <tr>
             <th>Cliente</th>
-            <th>Contrato</th>
+            <th>Direccion</th>
+            <th>Fecha de inicio</th>
+            <th>Fecha de fin</th>
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Cliente 1</td>
-            <td>Contrato 1</td>
-            <td>
-              <button class="btn btn-sm btn-primary">Editar</button>
-              <button class="btn btn-sm btn-danger">Eliminar</button>
-              <button type="button" class="btn btn-outline-primary" id="generar">Generar PDF</button>
-            </td>
-          </tr>
-          <tr>
-            <td>Cliente 2</td>
-            <td>Contrato 2</td>
-            <td>
-              <button class="btn btn-sm btn-primary">Editar</button>
-              <button class="btn btn-sm btn-danger">Eliminar</button>
-              <button type="button" class="btn btn-outline-primary" id="generar">Generar PDF</button>
-            </td>
-          </tr>
         </tbody>
       </table>
     </div>
