@@ -39,4 +39,12 @@ class Contrato extends Conexion
             die($e->getMessage());
         }
     }
+    public function getAll()
+    {
+        try {
+            $query = $this->pdo->prepare("");
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+    }
 }

@@ -564,3 +564,16 @@ Select
     sector
 FROM
     tb_sectores;
+
+CREATE VIEW view_paquetes_info AS
+SELECT
+    s.servicio AS nombre,
+    p.id_paquete AS id,
+    p.precio AS precio,
+    p.tipo_paquete AS tipo_paquete
+FROM
+    tb_paquetes p
+JOIN
+    tb_servicios s
+ON
+    p.id_servicio = s.id_servicio;

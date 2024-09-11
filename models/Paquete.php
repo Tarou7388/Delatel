@@ -27,5 +27,13 @@ class Paquete extends Conexion
     }
   }
 
-  public function getAll() {}
+  public function getAll() {
+    try{
+      $query = $this->pdo->prepare("SELECT * FROM view_paquetes_info");
+      $query->execute();
+      return $query->fetchAll(PDO::FETCH_ASSOC);
+    }catch (Exception $e) {
+      die($e->getMessage());
+    }
+  }
 }
