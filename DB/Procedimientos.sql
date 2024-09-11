@@ -97,7 +97,7 @@ BEGIN
     JOIN 
         tb_responsables r ON u.id_usuario = r.id_usuario
     WHERE nombre_user = p_nombre_user and inactive_at IS NULL;
-END $$ 
+END $$
 
 CREATE PROCEDURE spu_clientes_registrar(
     p_id_persona        INT,
@@ -350,29 +350,17 @@ SELECT
     k.saldo_total,
     k.valor_unico_historico,
     k.create_at AS fecha_creacion
-FROM
-    tb_productos p
-JOIN
-    tb_kardex k ON p.id_producto = k.id_producto
-ORDER BY 
-    k.create_at DESC;
-    
+FROM tb_productos p
+    JOIN tb_kardex k ON p.id_producto = k.id_producto
+ORDER BY k.create_at DESC;
+
 CREATE VIEW vw_usuarios AS
-SELECT
-    pe.apellidos,
-    pe.nombres,
-    us.nombre_user,
-    ro.rol as "Cargo",
-    us.create_at,
-    us.inactive_at
+SELECT pe.apellidos, pe.nombres, us.nombre_user, ro.rol as "Cargo", us.create_at, us.inactive_at
 FROM
     tb_responsables res
-INNER JOIN
-    tb_usuarios us ON res.id_usuario = us.id_usuario
-INNER JOIN
-    tb_personas pe ON us.id_persona = pe.id_persona
-INNER JOIN
-    tb_roles ro ON res.id_rol = ro.id_rol;
+    INNER JOIN tb_usuarios us ON res.id_usuario = us.id_usuario
+    INNER JOIN tb_personas pe ON us.id_persona = pe.id_persona
+    INNER JOIN tb_roles ro ON res.id_rol = ro.id_rol;
 
 CREATE VIEW vw_personas_listar AS
 SELECT
@@ -386,26 +374,19 @@ SELECT
     p.create_at,
     p.update_at,
     p.inactive_at,
-    
     p.iduser_create,
     u1.nombre_user AS usuario_creador,
-    
     p.iduser_update,
     u2.nombre_user AS usuario_modificador,
-    
     p.iduser_inactive,
     u3.nombre_user AS usuario_inactivador
 
 FROM
     tb_personas p
-LEFT JOIN
-    tb_usuarios u1 ON p.iduser_create = u1.id_usuario
-LEFT JOIN
-    tb_usuarios u2 ON p.iduser_update = u2.id_usuario
-LEFT JOIN
-    tb_usuarios u3 ON p.iduser_inactive = u3.id_usuario;
-    
-    
+    LEFT JOIN tb_usuarios u1 ON p.iduser_create = u1.id_usuario
+    LEFT JOIN tb_usuarios u2 ON p.iduser_update = u2.id_usuario
+    LEFT JOIN tb_usuarios u3 ON p.iduser_inactive = u3.id_usuario;
+
 CREATE VIEW vw_empresas_listar AS
 SELECT
     e.id_empresa,
@@ -426,13 +407,9 @@ SELECT
     u3.nombre_user AS usuario_inactivador
 FROM
     tb_empresas e
-LEFT JOIN
-    tb_usuarios u1 ON e.iduser_create = u1.id_usuario
-LEFT JOIN
-    tb_usuarios u2 ON e.iduser_update = u2.id_usuario
-LEFT JOIN
-    tb_usuarios u3 ON e.iduser_inactive = u3.id_usuario;
-
+    LEFT JOIN tb_usuarios u1 ON e.iduser_create = u1.id_usuario
+    LEFT JOIN tb_usuarios u2 ON e.iduser_update = u2.id_usuario
+    LEFT JOIN tb_usuarios u3 ON e.iduser_inactive = u3.id_usuario;
 
 CREATE VIEW vw_tipo_soporte_listar AS
 SELECT
@@ -449,13 +426,9 @@ SELECT
     u3.nombre_user AS usuario_inactivador
 FROM
     tb_tipo_soporte t
-LEFT JOIN
-    tb_usuarios u1 ON t.iduser_create = u1.id_usuario
-LEFT JOIN
-    tb_usuarios u2 ON t.iduser_update = u2.id_usuario
-LEFT JOIN
-    tb_usuarios u3 ON t.iduser_inactive = u3.id_usuario;
-
+    LEFT JOIN tb_usuarios u1 ON t.iduser_create = u1.id_usuario
+    LEFT JOIN tb_usuarios u2 ON t.iduser_update = u2.id_usuario
+    LEFT JOIN tb_usuarios u3 ON t.iduser_inactive = u3.id_usuario;
 
 CREATE VIEW vw_servicios_listar AS
 SELECT
@@ -472,13 +445,9 @@ SELECT
     u3.nombre_user AS usuario_inactivador
 FROM
     tb_servicios s
-LEFT JOIN
-    tb_usuarios u1 ON s.iduser_create = u1.id_usuario
-LEFT JOIN
-    tb_usuarios u2 ON s.iduser_update = u2.id_usuario
-LEFT JOIN
-    tb_usuarios u3 ON s.iduser_inactive = u3.id_usuario;
-
+    LEFT JOIN tb_usuarios u1 ON s.iduser_create = u1.id_usuario
+    LEFT JOIN tb_usuarios u2 ON s.iduser_update = u2.id_usuario
+    LEFT JOIN tb_usuarios u3 ON s.iduser_inactive = u3.id_usuario;
 
 CREATE VIEW vw_paquetes_listar AS
 SELECT
@@ -499,15 +468,10 @@ SELECT
     u3.nombre_user AS usuario_inactivador
 FROM
     tb_paquetes p
-LEFT JOIN
-    tb_servicios s ON p.id_servicio = s.id_servicio
-LEFT JOIN
-    tb_usuarios u1 ON p.iduser_create = u1.id_usuario
-LEFT JOIN
-    tb_usuarios u2 ON p.iduser_update = u2.id_usuario
-LEFT JOIN
-    tb_usuarios u3 ON p.iduser_inactive = u3.id_usuario;
-
+    LEFT JOIN tb_servicios s ON p.id_servicio = s.id_servicio
+    LEFT JOIN tb_usuarios u1 ON p.iduser_create = u1.id_usuario
+    LEFT JOIN tb_usuarios u2 ON p.iduser_update = u2.id_usuario
+    LEFT JOIN tb_usuarios u3 ON p.iduser_inactive = u3.id_usuario;
 
 CREATE VIEW vw_roles_listar AS
 SELECT
@@ -525,12 +489,9 @@ SELECT
     u3.nombre_user AS usuario_inactivador
 FROM
     tb_roles r
-LEFT JOIN
-    tb_usuarios u1 ON r.iduser_create = u1.id_usuario
-LEFT JOIN
-    tb_usuarios u2 ON r.iduser_update = u2.id_usuario
-LEFT JOIN
-    tb_usuarios u3 ON r.iduser_inactive = u3.id_usuario;
+    LEFT JOIN tb_usuarios u1 ON r.iduser_create = u1.id_usuario
+    LEFT JOIN tb_usuarios u2 ON r.iduser_update = u2.id_usuario
+    LEFT JOIN tb_usuarios u3 ON r.iduser_inactive = u3.id_usuario;
 
 CREATE VIEW vw_sectores_listar AS
 SELECT
@@ -549,21 +510,14 @@ SELECT
     u3.nombre_user AS usuario_inactivador
 FROM
     tb_sectores s
-LEFT JOIN
-    tb_distritos d ON s.id_distrito = d.id_distrito
-LEFT JOIN
-    tb_usuarios u1 ON s.iduser_create = u1.id_usuario
-LEFT JOIN
-    tb_usuarios u2 ON s.iduser_update = u2.id_usuario
-LEFT JOIN
-    tb_usuarios u3 ON s.iduser_inactive = u3.id_usuario;
+    LEFT JOIN tb_distritos d ON s.id_distrito = d.id_distrito
+    LEFT JOIN tb_usuarios u1 ON s.iduser_create = u1.id_usuario
+    LEFT JOIN tb_usuarios u2 ON s.iduser_update = u2.id_usuario
+    LEFT JOIN tb_usuarios u3 ON s.iduser_inactive = u3.id_usuario;
 
 Create view vw_listar_sectores AS
-Select 
-    id_sector,
-    sector
-FROM
-    tb_sectores;
+Select id_sector, sector
+FROM tb_sectores;
 
 CREATE VIEW view_paquetes_info AS
 SELECT
@@ -571,26 +525,20 @@ SELECT
     p.id_paquete AS id,
     p.precio AS precio,
     p.tipo_paquete AS tipo_paquete
-FROM
-    tb_paquetes p
-JOIN
-    tb_servicios s
-ON
-    p.id_servicio = s.id_servicio;
-
+FROM tb_paquetes p
+    JOIN tb_servicios s ON p.id_servicio = s.id_servicio;
 
 CREATE PROCEDURE buscar_cliente(IN input VARCHAR(15))
 BEGIN
-
-    SELECT p.id_persona, p.nro_doc, p.apellidos, p.nombres, c.direccion, c.referencia, c.estado
-    FROM tb_personas p
-    JOIN tb_clientes c ON c.id_persona = p.id_persona
-    WHERE p.nro_doc = input;
-
-    SELECT e.id_empresa, e.ruc, e.razon_social, e.representante_legal, c.direccion, c.referencia, c.estado
-    FROM tb_empresas e
-    JOIN tb_clientes c ON c.id_empresa = e.id_empresa
-    WHERE e.ruc = input;
-    
+    IF LENGTH(input) > 8 THEN
+        SELECT e.id_empresa, e.ruc, e.razon_social, e.representante_legal, c.direccion, c.referencia, c.estado
+        FROM tb_empresas e
+        LEFT JOIN tb_clientes c ON c.id_empresa = e.id_empresa
+        WHERE e.ruc = input;
+    ELSE
+        SELECT p.id_persona, p.nro_doc, p.apellidos, p.nombres, c.direccion, c.referencia, c.estado
+        FROM tb_personas p
+        LEFT JOIN tb_clientes c ON c.id_persona = p.id_persona
+        WHERE p.nro_doc = input;
+    END IF;
 END$$
-
