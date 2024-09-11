@@ -557,15 +557,14 @@ BEGIN
     IF LENGTH(_doc) > 8 THEN
         SELECT e.id_empresa, e.ruc, e.razon_social, e.representante_legal, c.direccion, c.referencia
         FROM tb_empresas e
-        LEFT JOIN tb_clientes c ON c.id_empresa = e.id_empresa
+        INNER JOIN tb_clientes c ON c.id_empresa = e.id_empresa
         WHERE e.ruc = _doc;
     ELSE
         SELECT p.id_persona, p.nro_doc, p.apellidos, p.nombres, c.direccion, c.referencia
         FROM tb_personas p
-        LEFT JOIN tb_clientes c ON c.id_persona = p.id_persona
+        INNER JOIN tb_clientes c ON c.id_persona = p.id_persona
         WHERE p.nro_doc = _doc;
     END IF;
-    
 END$$
 
-
+CALL sp_buscar_cliente_doc('20456789012')
