@@ -109,8 +109,8 @@ CREATE PROCEDURE spu_clientes_registrar(
 BEGIN
     IF p_id_empresa = '' THEN
         SET p_id_empresa = NULL;
-	ELSEIF id_persona = '' THEN
-        SET id_persona = NULL;
+	ELSEIF p_id_persona = '' THEN
+        SET p_id_persona = NULL;
     END IF;
     INSERT INTO tb_clientes(id_persona, id_empresa, direccion, referencia,iduser_create) 
     VALUES (p_id_persona, p_id_empresa, p_direccion, p_referencia,p_iduser_create);
