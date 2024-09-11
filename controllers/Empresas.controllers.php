@@ -16,5 +16,5 @@ if ($_POST["operacion"] == "Registrar") {
     ];
     
     $resultado = $empresa->registrar($datos);
-    echo json_encode(["guardado" => $resultado]);
+    echo json_encode($resultado);
 }

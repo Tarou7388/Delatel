@@ -15,7 +15,6 @@ class Cliente extends Conexion
 
     public function add($data = [])
     {
-        $status = false;
         try {
             $consulta = $this->pdo->prepare("CALL spu_clientes_registrar(?,?,?,?,?)");
             $status= $consulta->execute(array(

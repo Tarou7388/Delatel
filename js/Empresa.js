@@ -44,8 +44,7 @@ document.addEventListener("DOMContentLoaded", function () {
       fetch(`${config.HOST}controllers/Empresas.controllers.php`, options)
         .then((response) => response.json())
         .then((data) => {
-          registrarcliente(data.idEmpresa);
-
+          registrarcliente(data.id_empresa);
           frmEmpresas.reset();
         })
         .catch((e) => {
@@ -73,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((response) => response.text())
       .then((data) => {
         console.log(data)
-        if (data.Actualizado) {
+        if (data.Guardado) {
           alert("Correcto");
         } else {
           alert("Error: Verifique");
