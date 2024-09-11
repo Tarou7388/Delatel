@@ -5,7 +5,7 @@ $cliente = new Cliente();
 
 if(isset($_GET["operacion"])){
   switch($_GET['operacion']){
-    case 'getByDoc':
+    case 'getByDni':
       $resultado = $cliente->getByDni(["dni" => $_GET['dni']]);
       echo json_encode($resultado);
       break;
