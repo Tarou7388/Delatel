@@ -104,15 +104,39 @@ CREATE PROCEDURE spu_clientes_registrar(
     p_id_empresa        INT,
     p_direccion         VARCHAR(50),
     p_referencia        VARCHAR(150),
-    p_estado            BIT,
 	p_iduser_create INT
 )
 BEGIN
     IF p_id_empresa = '' THEN
         SET p_id_empresa = NULL;
     END IF;
-    INSERT INTO tb_clientes(id_persona, id_empresa, direccion, referencia, estado,iduser_create) 
-    VALUES (p_id_persona, p_id_empresa, p_direccion, p_referencia, p_estado,p_iduser_create);
+    INSERT INTO tb_clientes(id_persona, id_empresa, direccion, referencia,iduser_create) 
+    VALUES (p_id_persona, p_id_empresa, p_direccion, p_referencia,p_iduser_create);
+END $$
+
+CREATE PROCEDURE spu_clientes_actualizar(
+    p_id_persona        INT,
+    p_id_empresa        INT,
+    p_direccion         VARCHAR(50),
+    p_referencia        VARCHAR(150),
+    p_iduser_update     INT,
+    p_id_cliente        INT
+)
+BEGIN
+    IF p_id_empresa = '' THEN
+        SET p_id_empresa = NULL;
+    ELSEIF p_id_persona = '' THEN
+        SET p_id_persona = NULL;
+    END IF;
+    
+    UPDATE tb_clientes SET
+        id_persona = p_id_persona,
+        id_empresa = p_id_empresa,
+        direccion = p_direccion,
+        referencia = p_referencia,
+        iduser_update = p_iduser_update
+    WHERE id_cliente = p_id_cliente;
+    
 END $$
 
 CREATE PROCEDURE spu_usuarios_registrar(
@@ -528,23 +552,20 @@ SELECT
 FROM tb_paquetes p
     JOIN tb_servicios s ON p.id_servicio = s.id_servicio;
 
-
-
 CREATE PROCEDURE sp_buscar_cliente_doc(IN _doc VARCHAR(15))
 BEGIN
     IF LENGTH(_doc) > 8 THEN
-        SELECT e.id_empresa, e.ruc, e.razon_social, e.representante_legal, c.direccion, c.referencia, c.estado
+        SELECT e.id_empresa, e.ruc, e.razon_social, e.representante_legal, c.direccion, c.referencia
         FROM tb_empresas e
         LEFT JOIN tb_clientes c ON c.id_empresa = e.id_empresa
         WHERE e.ruc = _doc;
     ELSE
-        SELECT p.id_persona, p.nro_doc, p.apellidos, p.nombres, c.direccion, c.referencia, c.estado
+        SELECT p.id_persona, p.nro_doc, p.apellidos, p.nombres, c.direccion, c.referencia
         FROM tb_personas p
         LEFT JOIN tb_clientes c ON c.id_persona = p.id_persona
         WHERE p.nro_doc = _doc;
     END IF;
-END
-
-
+    
+END$$
 
 
