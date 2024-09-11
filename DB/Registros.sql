@@ -65,13 +65,13 @@ INSERT INTO tb_servicios (servicio, create_at,iduser_create) VALUES
 ('Fibra optica 2', NOW(),1),
 ('Antena 2', NOW(),1);
 
-INSERT INTO tb_paquetes (id_servicio, precio, fecha_inicio, fecha_fin, create_at, iduser_create)
-VALUES 
-(1, 150.00, '2024-09-01', '2024-09-30', NOW(), 1),
-(2, 200.00, '2024-09-05', '2024-10-05', NOW(), 1),
-(3, 250.00, '2024-09-10', '2024-10-10', NOW(), 1),
-(4, 180.00, '2024-09-15', '2024-10-15', NOW(), 1),
-(5, 220.00, '2024-09-20', '2024-10-20', NOW(), 1);
+INSERT INTO tb_paquetes (id_servicio, precio, tipo_paquete, fecha_inicio, fecha_fin, iduser_create) VALUES
+(1, 100.00, 'CABl', '2023-01-01', '2023-12-31', 1),
+(2, 150.00, 'WISP', '2023-02-01', '2023-11-30', 1),
+(3, 200.00, 'GPON', '2023-03-01', '2023-10-31', 1),
+(4, 120.00, 'CABl', '2023-04-01', '2023-09-30', 1),
+(5, 180.00, 'WISP', '2023-05-01', '2023-08-31', 1),
+(6, 220.00, 'GPON', '2023-06-01', '2023-07-31', 1);
 
 INSERT INTO tb_sectores (id_distrito, sector, create_at, iduser_create) VALUES
 (1, 'Centro Histórico', NOW(), 1),

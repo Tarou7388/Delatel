@@ -239,6 +239,7 @@ CREATE TABLE tb_paquetes
 	id_paquete		 INT PRIMARY KEY AUTO_INCREMENT,
     id_servicio		 INT NOT NULL,
     precio			 DECIMAL(7,2) NOT NULL,
+    tipo_paquete	 CHAR(4) CHECK (tipo_paquete IN ('CABl', 'WISP', 'GPON')),
     fecha_inicio	 DATE NOT NULL,
     fecha_fin		 DATE NOT NULL,
 	create_at 		 DATETIME NOT NULL DEFAULT NOW(),
@@ -249,6 +250,7 @@ CREATE TABLE tb_paquetes
 	iduser_inactive	 INT NULL,
     CONSTRAINT fk_paque_id_servicio FOREIGN KEY (id_servicio) REFERENCES tb_servicios (id_servicio)
 )ENGINE = InnoDB;
+
 
 CREATE TABLE tb_productos(
     id_producto      INT PRIMARY KEY AUTO_INCREMENT,

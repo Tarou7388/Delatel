@@ -318,6 +318,23 @@ BEGIN
     INSERT INTO tb_roles (rol, permisos,iduser_create) VALUES (p_rol, p_permisos,p_iduser_create);
 END $$
 
+CREATE PROCEDURE sp_buscar_por_dni(
+    IN p_dni VARCHAR(15)
+)
+BEGIN
+    SELECT 
+        p.id_persona,
+        p.nombres,
+        p.apellidos,
+        c.direccion
+    FROM 
+        tb_personas p
+    LEFT JOIN 
+        tb_clientes c ON p.id_persona = c.id_persona
+    WHERE 
+        p.nro_doc = p_dni AND p.tipo_doc = 'DNI';
+END $$
+
 CREATE VIEW vw_kardex AS
 SELECT
     k.id_kardex,
@@ -546,21 +563,4 @@ Select
     id_sector,
     sector
 FROM
-    tb_sectores
-
-CREATE PROCEDURE sp_buscar_por_dni(
-    IN p_dni VARCHAR(15)
-)
-BEGIN
-    SELECT 
-        p.id_persona,
-        p.nombres,
-        p.apellidos,
-        c.direccion
-    FROM 
-        tb_personas p
-    LEFT JOIN 
-        tb_clientes c ON p.id_persona = c.id_persona
-    WHERE 
-        p.nro_doc = p_dni AND p.tipo_doc = 'DNI';
-END $$
+    tb_sectores;
