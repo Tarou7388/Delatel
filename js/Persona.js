@@ -42,8 +42,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
   frmPersonas.addEventListener("submit", (event) => {
     event.preventDefault();
-    event.preventDefault();
+    const bandera = verificarCamposPersona();
+    if(!bandera)
+    {
+      registrarpersona();
+    }
+    
+  });
 
+  function registrarpersona()
+  {
     if (permisos[0].permisos.personas.crear == 1) {
       const params = new FormData();
       params.append("Operacion", "Registrar");
@@ -75,7 +83,7 @@ document.addEventListener("DOMContentLoaded", function () {
           console.error(e);
         });
     }
-  });
+  }
 
   slcChangeRegistro.addEventListener("change", () => {
     const valor = slcChangeRegistro.value;
@@ -114,12 +122,12 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   btnBuscar.addEventListener("click", () => {
-    ObtenerDataDNI(txtNumDocumentoPersona.value);
+    ObtenerDataDNI("getapi",txtNumDocumentoPersona.value);
   });
 
-  function ObtenerDataDNI(dni) {
+  function ObtenerDataDNI(operacion,dni) {
     fetch(
-      `${config.HOST}controllers/Personas.controlles.php?Operacion=getapi&dni=${encodeURIComponent(
+      `${config.HOST}controllers/Personas.controlles.php?Operacion=${operacion}&dni=${encodeURIComponent(
         dni
       )}`
     )
@@ -133,5 +141,22 @@ document.addEventListener("DOMContentLoaded", function () {
       .catch((e) => {
         console.error(e);
       });
+  }
+
+  function verificarCamposPersona() {
+    const camposPersona = [
+      slcTipoDocumento, txtNumDocumentoPersona, txtNombresPersona,
+      txtApellidosPersona, txtTelefono, txtEmail,
+      txtDireccion, txtReferencia
+    ];
+  
+    for (let campo of camposPersona) {
+      if (campo.value.trim() === '') {
+        alert('Por favor, complete todos los campos de la persona.');
+        return true;
+      }
+    }
+  
+    return false;
   }
 });

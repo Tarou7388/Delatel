@@ -19,7 +19,7 @@
                     <div class="col-md-6">
                         <div class="input-group">
                             <div class="form-floating flex-fill">
-                                <input type="number" id="txtRuc" class="form-control" placeholder="R.U.C">
+                                <input type="number" id="txtRuc" class="form-control" placeholder="R.U.C" require>
                                 <label for="txtRuc">RUC</label>
                             </div>
                             <button class="btn btn-primary" type="button" id="btnBuscarEmpresa"><i class="fa-solid fa-magnifying-glass"></i></button>
@@ -27,7 +27,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="txtRepresentanteLegal" name="representante_legal" placeholder="Representante Legal">
+                            <input type="text" class="form-control" id="txtRepresentanteLegal" name="representante_legal" placeholder="Representante Legal" require>
                             <label for="txtRepresentanteLegal">Representante Legal</label>
                         </div>
                     </div>
@@ -35,13 +35,13 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="txtRazonSocial" name="razon_social" placeholder="Razón Social">
+                            <input type="text" class="form-control" id="txtRazonSocial" name="razon_social" placeholder="Razón Social" require>
                             <label for="txtRazonSocial">Razón Social</label>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="txtNombreComercial" name="nombre_comercial" placeholder="Nombre Comercial">
+                            <input type="text" class="form-control" id="txtNombreComercial" name="nombre_comercial" placeholder="Nombre Comercial" require>
                             <label for="txtNombreComercial">Nombre Comercial</label>
                         </div>
                     </div>
@@ -49,13 +49,13 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="txtTelefono" name="telefono" maxlength="11" placeholder="Teléfono">
+                            <input type="text" class="form-control" id="txtTelefono" name="telefono" maxlength="11" placeholder="Teléfono" require>
                             <label for="txtTelefono">Teléfono</label>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating">
-                            <input type="email" class="form-control" id="txtEmail" name="email" placeholder="Email">
+                            <input type="email" class="form-control" id="txtEmail" name="email" placeholder="Email" require>
                             <label for="txtEmail">Email</label>
                         </div>
                     </div>
@@ -63,13 +63,13 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="txtDireccion" name="direccion" placeholder="Dirección">
+                            <input type="text" class="form-control" id="txtDireccion" name="direccion" placeholder="Dirección" require>
                             <label for="txtDireccion">Dirección</label>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="txtReferencia" name="referencia" placeholder="Referencia">
+                            <input type="text" class="form-control" id="txtReferencia" name="referencia" placeholder="Referencia" require>
                             <label for="txtReferencia">Referencia</label>
                         </div>
                     </div>
@@ -106,7 +106,7 @@
                     <div class="col-md-4">
                         <div class="input-group">
                             <div class="form-floating flex-fill">
-                                <input type="number" id="txtNumDocumentoPersona" class="form-control" placeholder="Número de documento">
+                                <input type="number" id="txtNumDocumentoPersona" class="form-control" placeholder="Número de documento" require>
                                 <label for="txtNumDocumentoPersona">Número de documento</label>
                             </div>
                             <button class="btn btn-primary" type="button" id="btnBuscar"><i class="fa-solid fa-magnifying-glass"></i></button>
@@ -114,7 +114,7 @@
                     </div>
                     <div class="col-md-4">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="txtTelefonoPersona" maxlength="11" placeholder="Teléfono">
+                            <input type="text" class="form-control" id="txtTelefonoPersona" maxlength="11" placeholder="Teléfono" require>
                             <label for="txtTelefonoPersona">Teléfono</label>
                         </div>
                     </div>
@@ -123,19 +123,19 @@
                 <div class="row mb-3">
                     <div class="col-md-4">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="txtNombresPersona" placeholder="Nombres" disabled>
+                            <input type="text" class="form-control" id="txtNombresPersona" placeholder="Nombres" disabled require>
                             <label for="txtNombresPersona">Nombres</label>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="txtApellidosPersona" placeholder="Apellidos" disabled>
+                            <input type="text" class="form-control" id="txtApellidosPersona" placeholder="Apellidos" disabled require>
                             <label for="txtApellidosPersona">Apellidos</label>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-floating">
-                            <input type="email" class="form-control" id="txtEmailPersona" placeholder="Email">
+                            <input type="email" class="form-control" id="txtEmailPersona" placeholder="Email" require>
                             <label for="txtEmailPersona">Email</label>
                         </div>
                     </div>
@@ -144,13 +144,13 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="txtDireccionPersona" placeholder="Dirección">
+                            <input type="text" class="form-control" id="txtDireccionPersona" placeholder="Dirección" require>
                             <label for="txtDireccionPersona">Dirección</label>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="txtReferenciaPersona" placeholder="Referencia">
+                            <input type="text" class="form-control" id="txtReferenciaPersona" placeholder="Referencia" require>
                             <label for="txtReferenciaPersona">Referencia</label>
                         </div>
                     </div>

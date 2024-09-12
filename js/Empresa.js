@@ -25,7 +25,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
   frmEmpresas.addEventListener("submit", (event) => {
     event.preventDefault();
+    const bandera = verificarCampos();
+    if(!bandera)
+    {
+      registrarEmpresa();
+    }
+  });
 
+  function registrarEmpresa()
+  {
     if (permisos[0].permisos.personas.crear == 1) {
       const params = new FormData();
       params.append("operacion", "Registrar");
@@ -52,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
           console.error(e);
         });
     }
-  });
+  }
 
 
   function registrarcliente(idEmpresa) {
@@ -85,12 +93,12 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   btnBuscarEmpresa.addEventListener("click", () => {
-    ObtenerDataRUC(txtRuc.value);
+    ObtenerDataRUC("getapiruc",txtRuc.value);
   });
 
-  function ObtenerDataRUC(ruc) {
+  function ObtenerDataRUC(operacion,ruc) {
     fetch(
-      `${config.HOST}controllers/Personas.controlles.php?Operacion=getapiruc&ruc=${encodeURIComponent(
+      `${config.HOST}controllers/Personas.controlles.php?Operacion=${operacion}&ruc=${encodeURIComponent(
         ruc
       )}`
     )
@@ -103,5 +111,22 @@ document.addEventListener("DOMContentLoaded", function () {
       .catch((e) => {
         console.error(e);
       });
+  }
+
+  function verificarCampos() {
+    const campos = [
+      txtRuc, txtRepresentanteLegal, txtRazonSocial,
+      txtNombreComercial, txtTelefono, txtEmail,
+      txtDireccion, txtReferencia
+    ];
+  
+    for (let campo of campos) {
+      if (campo.value.trim() === '') {
+        alert('Por favor, complete todos los campos.');
+        return true;
+      }
+    }
+
+    return false;
   }
 });
