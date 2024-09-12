@@ -10,10 +10,10 @@ if (isset($_GET["valor"])) {
   if ($valor) {
       if (strlen($valor) == 8) {
           // Asumir que el valor es un DNI
-          $resultado = $cliente->getByDni(["dni" => $valor]);
+          $resultado = $cliente->getByPersona(["numDoc" => $valor]);
       } elseif (strlen($valor) > 8) {
           // Asumir que el valor es un RUC
-          $resultado = $cliente->getByRuc(["ruc" => $valor]);
+          $resultado = $cliente->getByEmpresa(["numDoc" => $valor]);
       } else {
           // Parámetro no válido
           $resultado = ["error" => "Valor no válido"];
