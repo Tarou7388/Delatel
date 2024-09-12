@@ -104,7 +104,8 @@ CREATE PROCEDURE spu_clientes_registrar(
     p_id_empresa        INT,
     p_direccion         VARCHAR(50),
     p_referencia        VARCHAR(150),
-	p_iduser_create INT
+	p_iduser_create INT,
+    p_coordenadas       VARCHAR(50)
 )
 BEGIN
     IF p_id_empresa = '' THEN
@@ -112,8 +113,8 @@ BEGIN
 	ELSEIF p_id_persona = '' THEN
         SET p_id_persona = NULL;
     END IF;
-    INSERT INTO tb_clientes(id_persona, id_empresa, direccion, referencia,iduser_create) 
-    VALUES (p_id_persona, p_id_empresa, p_direccion, p_referencia,p_iduser_create);
+    INSERT INTO tb_clientes(id_persona, id_empresa, direccion, referencia,iduser_create,coordenadas) 
+    VALUES (p_id_persona, p_id_empresa, p_direccion, p_referencia,p_iduser_create,p_coordenadas);
 END $$
 
 CREATE PROCEDURE spu_clientes_actualizar(
@@ -122,7 +123,8 @@ CREATE PROCEDURE spu_clientes_actualizar(
     p_direccion         VARCHAR(50),
     p_referencia        VARCHAR(150),
     p_iduser_update     INT,
-    p_id_cliente        INT
+    p_id_cliente        INT,
+    p_coordenadas       VARCHAR(50)
 )
 BEGIN
     IF p_id_empresa = '' THEN
@@ -136,7 +138,8 @@ BEGIN
         id_empresa = p_id_empresa,
         direccion = p_direccion,
         referencia = p_referencia,
-        iduser_update = p_iduser_update
+        iduser_update = p_iduser_update,
+        coordenadas = p_coordenadas
     WHERE id_cliente = p_id_cliente;
     
 END $$
@@ -360,6 +363,36 @@ BEGIN
     WHERE 
         p.nro_doc = p_dni AND p.tipo_doc = 'DNI';
 END $$
+CREATE PROCEDURE spu_cliente_dni_buscar(IN _dni varchar(15))
+BEGIN
+        SELECT 
+        p.id_persona, 
+        p.nro_doc, 
+        p.apellidos, 
+        p.nombres, 
+        c.direccion, 
+        c.referencia,
+        c.coordenadas
+        FROM tb_personas p
+        INNER JOIN tb_clientes c ON c.id_persona = p.id_persona
+        WHERE p.nro_doc = _dni;
+    
+END$$
+
+CREATE PROCEDURE spu_cliente_ruc_buscar(IN _ruc varchar(15))
+BEGIN
+    SELECT 
+    e.id_empresa, 
+    e.ruc, 
+    e.razon_social, 
+    e.representante_legal,
+    c.direccion, 
+    c.referencia,
+    c.coordenadas
+        FROM tb_empresas e
+        INNER JOIN tb_clientes c ON c.id_empresa = e.id_empresa
+        WHERE e.ruc = _ruc;
+END$$
 
 CREATE VIEW vw_kardex AS
 SELECT
@@ -554,19 +587,3 @@ SELECT
 FROM tb_paquetes p
     JOIN tb_servicios s ON p.id_servicio = s.id_servicio;
 
-CREATE PROCEDURE spu_cliente_dni_buscar(IN _dni varchar(15))
-BEGIN
-        SELECT p.id_persona, p.nro_doc, p.apellidos, p.nombres, c.direccion, c.referencia
-        FROM tb_personas p
-        INNER JOIN tb_clientes c ON c.id_persona = p.id_persona
-        WHERE p.nro_doc = _dni;
-    
-END$$
-
-CREATE PROCEDURE spu_cliente_ruc_buscar(IN _ruc varchar(15))
-BEGIN
-    SELECT e.id_empresa, e.ruc, e.razon_social, e.representante_legal, c.direccion, c.referencia
-        FROM tb_empresas e
-        INNER JOIN tb_clientes c ON c.id_empresa = e.id_empresa
-        WHERE e.ruc = _ruc;
-END$$
