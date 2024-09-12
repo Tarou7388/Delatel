@@ -126,6 +126,7 @@ document.addEventListener("DOMContentLoaded", function () {
     params.append("idempresa", "");
     params.append("idPersona", idPersonar);
     params.append("iduser_create", userid);
+    params.append("coordenadas", txtcoordenadasPersona.value);
 
     const options = {
       method: "POST",
