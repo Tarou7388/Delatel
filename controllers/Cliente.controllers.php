@@ -3,18 +3,29 @@ require_once '../models/Cliente.php';
 
 $cliente = new Cliente();
 
-if(isset($_GET["operacion"])){
-  switch($_GET['operacion']){
-    case 'getByDni':
-      $resultado = $cliente->getByDni(["dni" => $_GET['dni']]);
-      echo json_encode($resultado);
-      break;
-    case 'getByRuc':
-      $resultado = $cliente->getByRuc(["ruc" => $_GET['ruc']]);
-      echo json_encode($resultado);
-      break;
+if (isset($_GET["valor"])) {
+  $valor = $_GET['valor'];
+  
+  // Verificar si el parámetro es un número y tiene una longitud adecuada
+  if ($valor) {
+      if (strlen($valor) == 8) {
+          // Asumir que el valor es un DNI
+          $resultado = $cliente->getByDni(["dni" => $valor]);
+      } elseif (strlen($valor) > 8) {
+          // Asumir que el valor es un RUC
+          $resultado = $cliente->getByRuc(["ruc" => $valor]);
+      } else {
+          // Parámetro no válido
+          $resultado = ["error" => "Valor no válido"];
+      }
+  } else {
+      // Parámetro no es numérico
+      $resultado = ["error" => "Valor debe ser numérico"];
   }
+  
+  echo json_encode($resultado);
 }
+
 
 if (isset($_POST['operacion'])) {
   switch ($_POST['operacion']) {
