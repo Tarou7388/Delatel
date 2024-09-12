@@ -1,3 +1,4 @@
+
 <table style="width: 100%; table-layout: fixed; border-collapse: collapse;">
   <colgroup>
     <col style="width: 50%;">
@@ -22,7 +23,7 @@
             </tbody>
           </table>
 
-          <h3>Reporte Generado el día: ___/___/___</h3>
+          <h3>Reporte Generado el día: <span class="caja-texto3"></span> / <span class="caja-texto3"></span> / <span class="caja-texto3"></span></h3>
 
           <h4><img src="http://localhost/DELATEL/image/list.png" class="icono" alt=""> 1) ¿QUÉ ESTÁS CONTRATANDO?</h4>
           <p><strong>DELAFIBER (DELATEL PERU)</strong>, con domicilio en Calle San Jose 103 – Grocio Prado - Chincha – Ica con RUC; se compromete a prestar el Servicio de acceso a internet fijo Postpago</p>
@@ -30,28 +31,29 @@
           
           <h4><img src="http://localhost/DELATEL/image/user.png" class="icono" alt="">  2) DATOS DEL ABONADO</h4>
           <p>Nombre / Razón Social: </p>
-          <p>_____________________________________________</p>
+          <p><span class="caja-texto2"></span></p>
           <p>Tipo y Número de documento de Identificación:</p>
-          <p>_____________________________________________</p>
+          <p><span class="caja-texto2"></span></p>
           <p>Nacionalidad:</p>
-          <p>_____________________________________________</p>
+          <p><span class="caja-texto2"></span></p>
           <p>Representante legal o apoderado:</p>
-          <p>_____________________________________________</p>
+          <p><span class="caja-texto2"></span></p>
           <p>Tipo y número de documento de identificación <br> del representante legal o apoderado:</p>
-          <p>_____________________________________________</p>
+          <p><span class="caja-texto2"></span></p>
           <p>Correo electrónico para recibir comunicaciones y recibos:</p>
-          <p>_____________________________________________</p>
+          <p><span class="caja-texto2"></span></p>
           <p>Número de contacto:</p>
-          <p>_____________________________________________</p>
+          <p><span class="caja-texto2"></span></p>
           <p>Dirección de Instalación:</p>
-          <p>_____________________________________________</p>
+          <p><span class="caja-texto2"></span></p>
           <p>Dirección de Facturación</p>
-          <p>_____________________________________________</p>
+          <p><span class="caja-texto2"></span></p>
 
+          <br>
           <h4><img src="http://localhost/DELATEL/image/smartphone.png" class="icono" alt="">  3) SERVICIO CONTRATADO</h4>
-          <p>Código de cliente:</p>
-          <p>Nombre del Plan tarifario:</p>
-          <p>Detalle del servicio:</p>
+          <p>Código de cliente:          <span class="caja-texto"></span></p>
+          <p>Nombre del Plan tarifario:  <span class="caja-texto"></span></p>
+          <p>Detalle del servicio:       <span class="caja-texto"></span></p>
           <strong class="radio">Nuevo Servicio <input type="checkbox" class="check"></strong>
           <strong class="radio">Adelantado <input type="checkbox" class="check"></strong>
 
@@ -60,24 +62,23 @@
         <!-- Segundo Contenedor -->
         <td style="vertical-align: top; padding-left: 15px;">
           <h4><img src="http://localhost/DELATEL/image/lupa.png" class="icono" alt="">  4) ¿QUÉ DEBES SABER DE TU PLAN?</h4>
-          <p>Renta Fija <input type="checkbox" class="check"> de....</p>
+          <p>Renta Fija <input type="checkbox" class="check"> de.... <span class="caja-texto"></span></p>
           <p>El pago se realiza por: </p>
           <strong class="radio">Mes Vencido <input type="checkbox" class="check"></strong>
           <strong class="radio">Mes Adelantado <input type="checkbox" class="check"></strong>
-          <p>Costo de reconexión por falta de pago: </p>
-          <p>Último día de pago: </p>
+          <p>Costo de reconexión por falta de pago: <span class="caja-texto"></span></p> </p>
+          <p>Último día de pago: <span class="caja-texto"></span></p></p>
           <p>¿Existe plazo de permanencia?</p>
           <strong class="radio"><input type="checkbox" class="check"> Sí, 6 meses</strong>
           <strong class="radio"><input type="checkbox" class="check"> No</strong>
           <br>
           <strong class="radio">Tarifa de Instalación:</strong>
-          <p>Al contado: $/_________</p>
+          <p>Al contado: S/.<span class="caja-texto"></span></p>
 
           <h4 class="tltplan"><img src="http://localhost/DELATEL/image/check.png" class="icono" alt=""> 5) ¿QUÉ INCLUYE TU PLAN?</h4>
             <p>- Los precios incluyen IGV</p>
             <p>- Velocidad del Internet fijo:</p>
-            <p>- La Velocidad mínima garantizada es el 70% de</p>
-            <p>- La Velocidad máxima</p>
+            <p>- La Velocidad mínima garantizada es el 70% de la Velocidad Máxima</p>
           <table class="tabla" style="width: 100%; border-collapse: collapse;">
             <colgroup>
               <col style="width: 50%;">
@@ -85,18 +86,22 @@
             </colgroup>
             <thead>
               <tr class="bg-info tex-light">
-                <th class="text-center">Bajada (Descarga) Mbp/s <img src="http://localhost/DELATEL/image/flecha_abajo.png" class="icono" alt=""> </th>
-                <th class="text-center">Subida (Carga) Mbp/s <img src="http://localhost/DELATEL/image/flecha_arriba.png" class="icono" alt=""></th>
+                <th colspan="2"  class="text-center">Bajada (Descarga) Mbp/s <img src="http://localhost/DELATEL/image/flecha_abajo.png" class="icono" alt=""> </th>
+                <th colspan="2" class="text-center">Subida (Carga) Mbp/s <img src="http://localhost/DELATEL/image/flecha_arriba.png" class="icono" alt=""></th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td class="text-center">Máxima</td>
-                <td class="text-center">Mínima Garantizada</td>
+              <tr style="border: 1px solid #fff;">
+                <td style="border: 1px solid #fff;" class="text-center">Máxima</td>
+                <td style="border: 1px solid #fff;" class="text-center">Mínima Garantizada</td>
+                <td style="border: 1px solid #fff;" class="text-center">Máxima</td>
+                <td style="border: 1px solid #fff;" class="text-center">Mínima Garantizada</td>
               </tr>
-              <tr>
-                <td class="text-center"><strong>......</strong></td>
-                <td class="text-center"><strong>......</strong></td>
+              <tr style="border: 1px solid #fff;">
+                <td style="border: 1px solid #fff;" class="input"></td>
+                <td style="border: 1px solid #fff;" class="input"></td>
+                <td style="border: 1px solid #fff;" class="input"></td>
+                <td style="border: 1px solid #fff;" class="input"></td>
               </tr>
             </tbody>
           </table>
@@ -144,7 +149,7 @@
               <col style="width: 50%;">
             </colgroup>
             <thead>
-            <tr class="bg-info tex-light">
+            <tr>
               <th class="text-center" colspan="2"><img src="http://localhost/DELATEL/image/telephone.png" class="icono" alt="">11) COMUNICATE CON DELATEL</th>
             </tr>
             </thead>
