@@ -347,26 +347,10 @@ BEGIN
     INSERT INTO tb_roles (rol, permisos,iduser_create) VALUES (p_rol, p_permisos,p_iduser_create);
 END $$
 
-CREATE PROCEDURE sp_buscar_por_dni(
-    IN p_dni VARCHAR(15)
-)
-BEGIN
-    SELECT 
-        p.id_persona,
-        p.nombres,
-        p.apellidos,
-        c.direccion
-    FROM 
-        tb_personas p
-    LEFT JOIN 
-        tb_clientes c ON p.id_persona = c.id_persona
-    WHERE 
-        p.nro_doc = p_dni AND p.tipo_doc = 'DNI';
-END $$
 CREATE PROCEDURE spu_cliente_dni_buscar(IN _dni varchar(15))
 BEGIN
         SELECT 
-        p.id_persona, 
+        p.id_persona AS 'id_cliente', 
         p.nro_doc, 
         p.apellidos, 
         p.nombres, 
@@ -382,16 +366,16 @@ END$$
 CREATE PROCEDURE spu_cliente_ruc_buscar(IN _ruc varchar(15))
 BEGIN
     SELECT 
-    e.id_empresa, 
+    e.id_empresa AS 'id_cliente', 
     e.ruc, 
     e.razon_social, 
     e.representante_legal,
     c.direccion, 
     c.referencia,
     c.coordenadas
-        FROM tb_empresas e
-        INNER JOIN tb_clientes c ON c.id_empresa = e.id_empresa
-        WHERE e.ruc = _ruc;
+    FROM tb_empresas e
+    INNER JOIN tb_clientes c ON c.id_empresa = e.id_empresa
+    WHERE e.ruc = _ruc;
 END$$
 
 CREATE VIEW vw_kardex AS
