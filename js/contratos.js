@@ -3,6 +3,7 @@ import config from "../env.js";
 window.addEventListener("DOMContentLoaded", () => {
 
   const dni = document.querySelector("#txtDni");
+  const nombre = document.querySelector("#txtNombre");
   const fechaInicio = document.querySelector("#txtFechaInicio");
   const fechaFin = document.querySelector("#txtFechaFin");
   const precio = document.querySelector("#txtPrecio");
@@ -12,6 +13,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const coordenada = document.querySelector("#txtCoordenada");
   const slcSector = document.querySelector("#slcSector");
   const slcServicio = document.querySelector("#slcServicio");
+  let precioServicio = 0;
 
   $('#slcSector').select2({
     theme: 'bootstrap-5',
@@ -37,14 +39,12 @@ window.addEventListener("DOMContentLoaded", () => {
   })();
 
   (async () => {
-
     const response = await fetch(`${config.HOST}controllers/paquetes.controllers.php?operacion=getAll`);
     const data = await response.json();
     data.forEach((paquetes) => {
       const option = document.createElement("option");
-
-      const id = paquetes.id + " - " +  paquetes.tipo_paquete;
-      option.value =id;
+      const id = paquetes.id + " - " + paquetes.tipo_paquete + " - " + paquetes.precio;
+      option.value = id;
       option.textContent = paquetes.nombre;
       slcServicio.appendChild(option);
     });
@@ -66,7 +66,7 @@ window.addEventListener("DOMContentLoaded", () => {
         <td>${contrato.fecha_fin}</td>
         <td>
           <button class="btn btn-sm btn-warning">Editar</button>
-          <button class="btn btn-sm btn-danger">Eliminar</button>
+          <button class="btn btn-sm btn-danger btnEliminar" data-idContrato=${contrato.id_contrato}  >Eliminar</button>
           <button class="btn btn-sm btn-primary btnGenerar">PDF</button>
         </td>
       `;
@@ -88,31 +88,88 @@ window.addEventListener("DOMContentLoaded", () => {
       ]
     });
 
-    const botones = document.querySelectorAll(".btnGenerar");
+    const botonesPdf = document.querySelectorAll(".btnGenerar");
+    const botonesEliminar = document.querySelectorAll(".btnEliminar");
 
-    botones.forEach(boton => {
+    botonesEliminar.forEach(boton => {
+      boton.addEventListener("click", (event) => {
+        const idContrato = event.target.getAttribute("data-idContrato");
+        eliminar(parseInt(idContrato));
+      });
+    });
+
+
+    botonesPdf.forEach(boton => {
       boton.addEventListener("click", () => {
         window.open(`../reports/Carpeta-PDF/soporte.php`);
       });
     });
   })();
 
+  function validarFechas() {
+    if (fechaInicio.value > fechaFin.value) {
+      return false;
+    }else {
+      return true;
+    }
+  }
+
+  async function validarCampos() {
+    if (dni.value == "" || nombre.value == "" || fechaInicio.value == "" || fechaFin.value == "" || precio.value == "" || direccion.value == "" || sector.value == "" || referencia.value == "" || coordenada.value == "" || slcSector.value == "0" || slcServicio.value == "0") {
+      return false;
+    }
+    else {
+      return true;
+    }
+  }
+  
   async function fichaInstalacionGpon() {
     const response = await fetch(`${config.HOST}json/FichaGpon.json`);
     const data = await response.json();
     return data;
   }
 
+  async function buscarDocumento() {
+    if (dni.value === "") {
+      alert("Ingrese un número de documento");
+    }
+    else {
+      console.log(dni.value);
+      const response = await fetch(`${config.HOST}controllers/cliente.controllers.php?operacion=getByDoc&doc=${dni.value}`);
+      const data = await response.json();
+      console.log(data);
+      if (data.length > 0) {
+        nombre.value = data[0].apellidos + ", " + data[0].nombres;
+      }
+      else {
+        alert("Cliente no encontrado");
+      }
+    }
+  }
+
   async function resetUI() {
-    $("#txtDni").val("");
-    $("#txtFechaInicio").val("");
-    $("#txtFechaFin").val("");
-    $("#slcServicio").val("");
-    $("#txtPrecio").val("");
-    $("#txtDireccion").val("");
-    $("#slcSector").val("");
-    $("#txtReferencia").val("");
-    $("#txtCoordenada").val("");
+    dni.value = "";
+    nombre.value = "";
+    fechaInicio.value = "";
+    fechaFin.value = "";
+    precio.value = "";
+    direccion.value = "";
+    sector.value = "";
+    referencia.value = "";
+    coordenada.value = "";
+    slcSector.value = "0";
+    slcServicio.value = "0";
+  }
+
+  async function buscarCliente() {
+    const response = await fetch(`${config.HOST}controllers/cliente.controllers.php?operacion=getByDoc&doc=${dni.value}`);
+    const data = await response.json();
+    if (data.length > 0) {
+      nombre.value = data[0].apellidos + ", " + data[0].nombres;
+    }
+    else {
+      alert("Cliente no encontrado");
+    }
   }
 
   async function registrar() {
@@ -122,13 +179,12 @@ window.addEventListener("DOMContentLoaded", () => {
     const operacion = "add";
     const idUsuarioRegistro = user.idRol;
 
-    if (dni.value === "" || fechaInicio.value === "" || fechaFin.value === "" || slcServicio.value === "0" ||
-      precio.value === "" || direccion.value === "" || sector.value === "" || referencia.value === "" ||
-      coordenada.value === "" || slcSector.value === "0") {
+    if (!validarFechas() || !await validarCampos()) {
       alert("Complete todos los campos");
     }
     else {
       const idServicio = parseInt(slcServicio.value.split(" - ")[0]);
+      console.log(idServicio);
       const registro = await fetch(`${config.HOST}controllers/contrato.controllers.php`, {
         method: "POST",
         body: JSON.stringify({
@@ -157,11 +213,38 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  async function eliminar(idContrato) {
+    if (confirm("¿Desea eliminar este contrato?")) {
+      const response = await fetch(`${config.HOST}controllers/contrato.controllers.php`, {
+        method: "PUT",
+        body: JSON.stringify({
+          operacion: "delete",
+          parametros: {
+            id: idContrato
+          }
+        })
+      });
+      const data = await response.json();
+      if (data.eliminado) {
+        alert("Contrato eliminado correctamente");
+        location.reload();
+      }
+    }
+  }
+
   document.querySelector("#btnRegistrar").addEventListener("click", (event) => {
     event.preventDefault();
     registrar();
   })
 
+  document.querySelector("#btnBuscar").addEventListener("click", (event) => {
+    event.preventDefault();
+    buscarDocumento();
+  });
 
+  $('#slcServicio').on('select2:select', function (e) {
+    precioServicio = parseFloat(slcServicio.value.split(" - ")[2]);
+    precio.value = precioServicio;
+  });
 
 });

@@ -12,7 +12,7 @@
             <label for="txtDni" class="form-label">Número de documento</label>
             <div class="input-group">
               <input type="text" class="form-control" id="txtDni" name="documento" required>
-              <button class="btn btn-outline-primary" type="button"><img src="../../image/lupaHTML.png"></button>
+              <button class="btn btn-outline-primary" id="btnBuscar" type="button"><img src="../../image/lupaHTML.png"></button>
             </div>
           </div>
           <div class="col-md-3">
@@ -37,7 +37,7 @@
           </div>
           <div class="col-md-3">
             <label for="txtPrecio" class="form-label">Precio</label>
-            <input type="number" class="form-control" id="txtPrecio" value="2.5" disabled>
+            <input type="number" class="form-control" id="txtPrecio" value="0" disabled>
           </div>
           <div class="col-md-3">
             <label for="txtDireccion" class="form-label">Dirección de Servicio</label>

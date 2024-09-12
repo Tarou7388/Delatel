@@ -97,3 +97,13 @@ BEGIN
     WHERE 
         c.inactive_at IS NULL;
 END $$
+
+CREATE PROCEDURE spu_contratos_eliminar(
+    p_id_contrato INT
+)
+BEGIN
+    UPDATE 
+    tb_contratos 
+    SET inactive_at = NOW() 
+    WHERE id_contrato = p_id_contrato;
+END $$

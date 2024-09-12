@@ -347,34 +347,40 @@ BEGIN
     INSERT INTO tb_roles (rol, permisos,iduser_create) VALUES (p_rol, p_permisos,p_iduser_create);
 END $$
 
-CREATE PROCEDURE spu_cliente_dni_buscar(IN _dni varchar(15))
-BEGIN
-        SELECT 
-        p.id_persona AS 'id_cliente', 
-        p.nro_doc, 
-        p.apellidos, 
-        p.nombres, 
-        c.direccion, 
-        c.referencia,
-        c.coordenadas
-        FROM tb_personas p
-        INNER JOIN tb_clientes c ON c.id_persona = p.id_persona
-        WHERE p.nro_doc = _dni;
-    
-END$$
-
-CREATE PROCEDURE spu_cliente_ruc_buscar(IN _ruc varchar(15))
+CREATE PROCEDURE spu_cliente_persona_buscar(IN p_documento varchar(15))
 BEGIN
     SELECT 
-    e.id_empresa AS 'id_cliente', 
-    e.ruc, 
-    e.razon_social, 
-    e.representante_legal,
-    c.direccion, 
+    c.id_cliente,
+    c.direccion,
     c.referencia,
-    c.coordenadas
-    FROM tb_empresas e
-    INNER JOIN tb_clientes c ON c.id_empresa = e.id_empresa
+    c.coordenadas,
+    p.id_persona,
+    p.tipo_doc,
+    p.nro_doc,
+    p.apellidos,
+    p.nombres
+FROM 
+    tb_clientes c
+LEFT JOIN 
+    tb_personas p ON c.id_persona = p.id_persona
+WHERE 
+    p.nro_doc = p_documento;
+END$$
+
+CREATE PROCEDURE spu_cliente_empresa_buscar(IN _ruc varchar(15))
+BEGIN
+    SELECT 
+    c.id_cliente,
+    c.direccion,
+    c.referencia,
+    c.coordenadas,
+    e.id_empresa,
+    e.ruc,
+    e.nombre_comercial
+FROM 
+    tb_clientes c
+LEFT JOIN
+    tb_empresas e ON e.id_empresa = c.id_empresa
     WHERE e.ruc = _ruc;
 END$$
 
@@ -570,4 +576,3 @@ SELECT
     p.tipo_paquete AS tipo_paquete
 FROM tb_paquetes p
     JOIN tb_servicios s ON p.id_servicio = s.id_servicio;
-

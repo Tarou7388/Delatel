@@ -5,17 +5,12 @@ $cliente = new Cliente();
 
 if (isset($_GET["valor"])) {
   $valor = $_GET['valor'];
-  
-  // Verificar si el parámetro es un número y tiene una longitud adecuada
   if ($valor) {
       if (strlen($valor) == 8) {
-          // Asumir que el valor es un DNI
           $resultado = $cliente->getByDni(["dni" => $valor]);
       } elseif (strlen($valor) > 8) {
-          // Asumir que el valor es un RUC
           $resultado = $cliente->getByRuc(["ruc" => $valor]);
       } else {
-          // Parámetro no válido
           $resultado = ["error" => "Valor no válido"];
       }
   } else {

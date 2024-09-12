@@ -37,3 +37,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       break;
   }
 }
+
+if($_SERVER['REQUEST_METHOD'] === 'PUT'){
+  $json = file_get_contents('php://input');
+  $datos = json_decode($json, true);
+  $operacion = $datos['operacion'];
+  switch($operacion){
+    case 'delete':
+      $resultado = $contrato->delete($datos['parametros']);
+      echo json_encode(["eliminado" => $resultado]);
+      break;
+  }
+}
