@@ -61,16 +61,22 @@
                     </div>
                 </div>
                 <div class="row mb-3">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-floating">
                             <input type="text" class="form-control" id="txtDireccion" name="direccion" placeholder="Dirección" require>
                             <label for="txtDireccion">Dirección</label>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-floating">
                             <input type="text" class="form-control" id="txtReferencia" name="referencia" placeholder="Referencia" require>
                             <label for="txtReferencia">Referencia</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="txtCoordenadas" placeholder="Referencia" require>
+                            <label for="txtCoordenadas">Coordenadas</label>
                         </div>
                     </div>
                 </div>
@@ -142,16 +148,22 @@
                 </div>
 
                 <div class="row mb-3">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-floating">
                             <input type="text" class="form-control" id="txtDireccionPersona" placeholder="Dirección" require>
                             <label for="txtDireccionPersona">Dirección</label>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-floating">
                             <input type="text" class="form-control" id="txtReferenciaPersona" placeholder="Referencia" require>
                             <label for="txtReferenciaPersona">Referencia</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="txtCoordenadasPersona" placeholder="Referencia" require>
+                            <label for="txtCoordenadasPersona">Coordenadas</label>
                         </div>
                     </div>
                 </div>

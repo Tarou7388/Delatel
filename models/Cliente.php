@@ -16,13 +16,14 @@ class Cliente extends Conexion
     public function add($data = [])
     {
         try {
-            $consulta = $this->pdo->prepare("CALL spu_clientes_registrar(?,?,?,?,?)");
+            $consulta = $this->pdo->prepare("CALL spu_clientes_registrar(?,?,?,?,?,?)");
             $status= $consulta->execute(array(
                 $data["idPersona"],
                 $data["idempresa"],
                 $data["direccion"],
                 $data["referencia"],
-                $data["iduser_create"]
+                $data["iduser_create"],
+                $data["coordenadas"]
             ));
             return $status;
         } catch (Exception $e) {
@@ -42,6 +43,7 @@ class Cliente extends Conexion
                 $data["referencia"],
                 $data["iduser_update"],
                 $data["id_cliente"],
+                $data["coordenadas"]
             ));
             return $status;
         } catch (Exception $e) {
@@ -49,18 +51,18 @@ class Cliente extends Conexion
         }
     }
 
-    public function getByDni($params = [])
+    public function getByPersona($params = [])
     {
-        $consulta = $this->pdo->prepare("CALL spu_cliente_dni_buscar (?)");
+        $consulta = $this->pdo->prepare("CALL spu_cliente_persona_buscar (?)");
         $consulta->execute(
-            [$params['dni']]
+            [$params['numDoc']]
         );
         return $consulta->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function getByRuc($params=[]){
-        $consulta = $this->pdo->prepare("CALL spu_cliente_ruc_buscar (?)");
+    public function getByEmpresa($params=[]){
+        $consulta = $this->pdo->prepare("CALL spu_cliente_empresa_buscar(?)");
         $consulta->execute(
-            [$params['ruc']]
+            [$params['numDoc']]
         );
         return $consulta->fetchAll(PDO::FETCH_ASSOC);
     }

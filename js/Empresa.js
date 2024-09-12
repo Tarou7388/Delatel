@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const txtNombreComercial = document.getElementById("txtNombreComercial");
   const txtTelefono = document.getElementById("txtTelefono");
   const txtEmail = document.getElementById("txtEmail");
+  const txtCoordenadas = document.getElementById("txtCoordenadas");
 
   const txtDireccion = document.getElementById("txtDireccion");
   const txtReferencia = document.getElementById("txtReferencia");
@@ -28,13 +29,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const bandera = verificarCampos();
     if(!bandera)
     {
+      if (permisos[0].permisos.personas.crear != 1) {
+        alert("No tienes permiso de registrar");
+      }
       registrarEmpresa();
     }
   });
 
   function registrarEmpresa()
   {
-    if (permisos[0].permisos.personas.crear == 1) {
+  
       const params = new FormData();
       params.append("operacion", "Registrar");
       params.append("ruc", txtRuc.value);
@@ -59,7 +63,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch((e) => {
           console.error(e);
         });
-    }
+    
   }
 
 
@@ -71,6 +75,7 @@ document.addEventListener("DOMContentLoaded", function () {
     params.append("idempresa",idEmpresa)
     params.append("idPersona","");
     params.append("iduser_create", userid);
+    params.append("coordenadas", txtCoordenadas.value);
 
     const options = {
       method: "POST",
@@ -106,10 +111,9 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((data) => {
         txtRazonSocial.value = data.razonSocial;
         txtDireccion.value = data.direccion;
-
       })
       .catch((e) => {
-        console.error(e);
+        alert("Empresa no encontrada, verifique RUC")
       });
   }
 
@@ -117,7 +121,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const campos = [
       txtRuc, txtRepresentanteLegal, txtRazonSocial,
       txtNombreComercial, txtTelefono, txtEmail,
-      txtDireccion, txtReferencia
+      txtDireccion, txtReferencia,txtCoordenadas
     ];
   
     for (let campo of campos) {
