@@ -74,9 +74,8 @@ document.addEventListener("DOMContentLoaded", function () {
       };
 
       fetch(`${config.HOST}controllers/Personas.controlles.php`, options)
-        .then((response) => response.text())
+        .then((response) => response.json())
         .then((data) => {
-          console.log(data);
           if (data.id_persona > 0) {
             alert("Persona registrada correctamente");
             registrarcliente(data.id_persona);
