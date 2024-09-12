@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const txtApellidosPersona = document.getElementById("txtApellidosPersona");
   const txtTelefono = document.getElementById("txtTelefonoPersona");
   const txtEmail = document.getElementById("txtEmailPersona");
+  const txtcoordenadasPersona = document.getElementById("txtCoordenadasPersona");
 
   const txtDireccion = document.getElementById("txtDireccionPersona");
   const txtReferencia = document.getElementById("txtReferenciaPersona");
@@ -45,6 +46,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const bandera = verificarCamposPersona();
     if(!bandera)
     {
+      if (permisos[0].permisos.personas.crear != 1) {
+        alert("No tienes permiso de registrar");
+      }
       registrarpersona();
     }
     
@@ -100,6 +104,7 @@ document.addEventListener("DOMContentLoaded", function () {
     params.append("idempresa", "");
     params.append("idPersona", idPersonar);
     params.append("iduser_create", userid);
+    params.append("coordenadas", txtcoordenadasPersona.value);
 
     const options = {
       method: "POST",
@@ -110,7 +115,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((response) => response.text())
       .then((data) => {
         console.log(data);
-        if (data.Actualizado) {
+        if (data.Guardado) {
           alert("Correcto");
         } else {
           alert("Error: Verifique");
@@ -134,12 +139,13 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((response) => response.json())
       .then((data) => {
 
-        txtNombresPersona.value = data.nombres;
-        txtApellidosPersona.value = data.apellidoPaterno + " " + data.apellidoMaterno;
-
+        txtNombresPersona.value = data.nombres ?? "";
+        txtApellidosPersona.value = (data.apellidoPaterno ?? "") + (data.apellidoMaterno ? " " + data.apellidoMaterno : "");
+        
+        
       })
       .catch((e) => {
-        console.error(e);
+        alert("Persona no encontrada, verifique DNI")
       });
   }
 
@@ -147,7 +153,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const camposPersona = [
       slcTipoDocumento, txtNumDocumentoPersona, txtNombresPersona,
       txtApellidosPersona, txtTelefono, txtEmail,
-      txtDireccion, txtReferencia
+      txtDireccion, txtReferencia,txtcoordenadasPersona
     ];
   
     for (let campo of camposPersona) {

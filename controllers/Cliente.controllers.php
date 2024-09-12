@@ -7,9 +7,11 @@ if (isset($_GET["valor"])) {
   $valor = $_GET['valor'];
   if ($valor) {
       if (strlen($valor) == 8) {
-          $resultado = $cliente->getByDni(["dni" => $valor]);
+          // Asumir que el valor es un DNI
+          $resultado = $cliente->getByPersona(["numDoc" => $valor]);
       } elseif (strlen($valor) > 8) {
-          $resultado = $cliente->getByRuc(["ruc" => $valor]);
+          // Asumir que el valor es un RUC
+          $resultado = $cliente->getByEmpresa(["numDoc" => $valor]);
       } else {
           $resultado = ["error" => "Valor no válido"];
       }
@@ -30,7 +32,8 @@ if (isset($_POST['operacion'])) {
         "idempresa"     => $_POST['idempresa'],
         "direccion"     => $_POST['direccion'],
         "referencia"    => $_POST['referencia'],
-        "iduser_create" => $_POST['iduser_create']
+        "iduser_create" => $_POST['iduser_create'],
+        "coordenadas" => $_POST['coordenadas']
       ];
       $estado = $cliente->add($datos);
       echo json_encode(["Guardado" => $estado]);
@@ -50,6 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
       "referencia"    => $data['referencia'],
       "iduser_update" => $data['iduser_update'],
       "id_cliente"    => $data['id_cliente'],
+      "coordenadas"    => $data['coordenadas']
     ];
 
     $estado = $cliente->update($datos);
