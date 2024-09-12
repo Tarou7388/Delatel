@@ -3,26 +3,25 @@ require_once '../models/Cliente.php';
 
 $cliente = new Cliente();
 
-if (isset($_GET["valor"])) {
-  $valor = $_GET['valor'];
-  if ($valor) {
-      if (strlen($valor) == 8) {
-          // Asumir que el valor es un DNI
+if(isset($_GET['operacion'])){
+  switch ($_GET['operacion']) {
+    case 'getByDoc':
+      $valor = $_GET['numDoc'];
+      if($valor){
+        if(strlen($valor) == 9 || strlen($valor) == 8){
           $resultado = $cliente->getByPersona(["numDoc" => $valor]);
-      } elseif (strlen($valor) > 8) {
-          // Asumir que el valor es un RUC
+        }elseif(strlen($valor) == 11){
           $resultado = $cliente->getByEmpresa(["numDoc" => $valor]);
-      } else {
+        }else{
           $resultado = ["error" => "Valor no válido"];
+        }
+      }else{
+        $resultado = ["error" => "Valor debe ser numérico"];
       }
-  } else {
-      // Parámetro no es numérico
-      $resultado = ["error" => "Valor debe ser numérico"];
+      echo json_encode($resultado);
+      break;
   }
-  
-  echo json_encode($resultado);
 }
-
 
 if (isset($_POST['operacion'])) {
   switch ($_POST['operacion']) {

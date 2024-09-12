@@ -354,11 +354,7 @@ BEGIN
     c.direccion,
     c.referencia,
     c.coordenadas,
-    p.id_persona,
-    p.tipo_doc,
-    p.nro_doc,
-    p.apellidos,
-    p.nombres
+    CONCAT(p.apellidos, ', ', p.nombres) AS "nombre"
 FROM 
     tb_clientes c
 LEFT JOIN 
@@ -374,9 +370,7 @@ BEGIN
     c.direccion,
     c.referencia,
     c.coordenadas,
-    e.id_empresa,
-    e.ruc,
-    e.nombre_comercial
+    e.nombre_comercial AS "nombre"
 FROM 
     tb_clientes c
 LEFT JOIN
