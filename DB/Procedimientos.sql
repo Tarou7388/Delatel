@@ -312,12 +312,13 @@ CREATE PROCEDURE spu_personas_registrar(
     p_apellidos         VARCHAR(30),
     p_nombres           VARCHAR(30),
     p_telefono 		    CHAR(9),
+    p_nacionalidad		VARCHAR(40),
     p_email             VARCHAR(100),
     p_iduser_create		INT
     )
 BEGIN
-    INSERT INTO tb_personas (tipo_doc, nro_doc, apellidos, nombres, telefono, email,iduser_create) 
-    VALUES (p_tipo_doc, p_nro_doc, p_apellidos, p_nombres, p_telefono, p_email,p_iduser_create);
+    INSERT INTO tb_personas (tipo_doc, nro_doc, apellidos, nombres, telefono,nacionalidad, email,iduser_create) 
+    VALUES (p_tipo_doc, p_nro_doc, p_apellidos, p_nombres, p_telefono,p_nacionalidad, p_email,p_iduser_create);
 
     SELECT LAST_INSERT_ID() AS id_persona;
 END $$
@@ -352,6 +353,7 @@ BEGIN
     SELECT 
     c.id_cliente,
     c.direccion,
+    p.nacionalidad,
     c.referencia,
     c.coordenadas,
     CONCAT(p.apellidos, ', ', p.nombres) AS "nombre"
@@ -413,6 +415,7 @@ SELECT
     p.apellidos,
     p.nombres,
     p.telefono,
+    p.nacionalidad,
     p.email,
     p.create_at,
     p.update_at,

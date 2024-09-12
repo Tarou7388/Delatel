@@ -43,6 +43,7 @@ if (isset($_POST["Operacion"])) {
             "apellidos"             => $_POST["apellidos"],
             "nombres"               => $_POST["nombres"],
             "telefono"              => $_POST["telefono"],
+            "nacionalidad"          => $_POST["nacionalidad"],
             "email"                 => $_POST["email"],
             "iduser_create"         => $_POST["iduser_create"]
         ];

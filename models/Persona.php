@@ -11,13 +11,14 @@ class Persona extends Conexion{
 
     public function registrar($data = []){
         try{
-            $consulta = $this->pdo->prepare("CALL spu_personas_registrar(?,?,?,?,?,?,?)");
+            $consulta = $this->pdo->prepare("CALL spu_personas_registrar(?,?,?,?,?,?,?,?)");
             $consulta->execute(array(
                 $data["tipoDoc"],
                 $data["nroDoc"],
                 $data["apellidos"],
                 $data["nombres"],
                 $data["telefono"],
+                $data["nacionalidad"],
                 $data["email"],
                 $data["iduser_create"]
             ));
@@ -26,15 +27,6 @@ class Persona extends Conexion{
         catch(Exception $e){
             die($e->getMessage());
         }
-    }
-    public function listar($params=[]){
-    
-        $consulta = $this->pdo->prepare("CALL sp_buscar_por_dni(?)");
-        $consulta->execute(
-            [$params['dni']]
-        );
-        return $consulta->fetchAll(PDO::FETCH_ASSOC);
-        
     }
 }
 ?>

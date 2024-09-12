@@ -2,17 +2,17 @@ USE Delatel;
 
 
 
-INSERT INTO tb_personas (tipo_doc, nro_doc, apellidos, nombres, telefono, email, create_at, update_at, inactive_at,iduser_create,iduser_update,iduser_inactive) VALUES
-('DNI', '12345678', 'García', 'Luis', '987654321', 'luis.garcia@example.com', NOW(), NULL, NULL,1,NULL,NULL),
-('DNI', '23456789', 'Martínez', 'Ana', '976543210', 'ana.martinez@example.com', NOW(), NULL, NULL,1,NULL,NULL),
-('PAS', 'A12345678', 'Lopez', 'Carlos', '965432109', 'carlos.lopez@example.com', NOW(), NULL, NULL,1,NULL,NULL),
-('DNI', '34567890', 'Pérez', 'María', '954321098', 'maria.perez@example.com', NOW(), NULL, NULL,1,NULL,NULL),
-('DNI', '45678901', 'Fernández', 'José', '943210987', 'jose.fernandez@example.com', NOW(), NULL, NULL,1,NULL,NULL),
-('DNI', '56789012', 'Castro', 'Claudia', '932109876', 'claudia.castro@example.com', NOW(), NULL, NULL,1,NULL,NULL),
-('PAS', 'B23456789', 'Gómez', 'Fernando', '921098765', 'fernando.gomez@example.com', NOW(), NULL, NULL,1,NULL,NULL),
-('DNI', '67890123', 'Mendoza', 'Sofía', '910987654', 'sofia.mendoza@example.com', NOW(), NULL, NULL,1,NULL,NULL),
-('PAS', 'C34567890', 'Vega', 'Alejandro', '909876543', 'alejandro.vega@example.com', NOW(), NULL, NULL,1,NULL,NULL),
-('DNI', '78901234', 'Morales', 'Laura', '898765432', 'laura.morales@example.com', NOW(), NULL, NULL,1,NULL,NULL);
+INSERT INTO tb_personas (tipo_doc, nro_doc, apellidos, nombres, telefono,nacionalidad, email, create_at, update_at, inactive_at,iduser_create,iduser_update,iduser_inactive) VALUES
+('DNI', '12345678', 'García', 'Luis', '987654321','Peruano', 'luis.garcia@example.com', NOW(), NULL, NULL,1,NULL,NULL),
+('DNI', '23456789', 'Martínez', 'Ana', '976543210','Peruano',  'ana.martinez@example.com', NOW(), NULL, NULL,1,NULL,NULL),
+('PAS', 'A12345678', 'Lopez', 'Carlos', '965432109','Venezolano',  'carlos.lopez@example.com', NOW(), NULL, NULL,1,NULL,NULL),
+('DNI', '34567890', 'Pérez', 'María', '954321098','Peruano',  'maria.perez@example.com', NOW(), NULL, NULL,1,NULL,NULL),
+('DNI', '45678901', 'Fernández', 'José', '943210987','Peruano',  'jose.fernandez@example.com', NOW(), NULL, NULL,1,NULL,NULL),
+('DNI', '56789012', 'Castro', 'Claudia', '932109876','Peruano',  'claudia.castro@example.com', NOW(), NULL, NULL,1,NULL,NULL),
+('PAS', 'B23456789', 'Gómez', 'Fernando', '921098765','Venezolano',  'fernando.gomez@example.com', NOW(), NULL, NULL,1,NULL,NULL),
+('DNI', '67890123', 'Mendoza', 'Sofía', '910987654','Peruano',  'sofia.mendoza@example.com', NOW(), NULL, NULL,1,NULL,NULL),
+('PAS', 'C34567890', 'Vega', 'Alejandro', '909876543','Venezolano',  'alejandro.vega@example.com', NOW(), NULL, NULL,1,NULL,NULL),
+('DNI', '78901234', 'Morales', 'Laura', '898765432','Peruano',  'laura.morales@example.com', NOW(), NULL, NULL,1,NULL,NULL);
 
 INSERT INTO tb_usuarios (id_persona, nombre_user, pass,iduser_create) VALUES
 (1, 'lgarcia', '$2y$10$3uS8rP3q14NxWtXEefIi3.7JuG3.xWMOo9UoLS53uK87YEfEIBGHm',1), 

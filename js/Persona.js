@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const txtTelefono = document.getElementById("txtTelefonoPersona");
   const txtEmail = document.getElementById("txtEmailPersona");
   const txtcoordenadasPersona = document.getElementById("txtCoordenadasPersona");
+  const slcNacionalidad = document.getElementById("slcNacionalidad");
 
   const txtDireccion = document.getElementById("txtDireccionPersona");
   const txtReferencia = document.getElementById("txtReferenciaPersona");
@@ -62,7 +63,9 @@ document.addEventListener("DOMContentLoaded", function () {
       params.append("nombres", txtNombresPersona.value);
       params.append("apellidos", txtApellidosPersona.value);
       params.append("telefono", txtTelefono.value);
+      params.append("telefono", txtTelefono.value);
       params.append("email", txtEmail.value);
+      params.append("nacionalidad", slcNacionalidad.value);
       params.append("iduser_create", userid);
 
       const options = {
@@ -71,7 +74,7 @@ document.addEventListener("DOMContentLoaded", function () {
       };
 
       fetch(`${config.HOST}controllers/Personas.controlles.php`, options)
-        .then((response) => response.json())
+        .then((response) => response.text())
         .then((data) => {
           console.log(data);
           if (data.id_persona > 0) {
@@ -88,21 +91,26 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  txtNumDocumentoPersona.addEventListener('input', cambiarslc);
+  (function () {
+    const txtNumDocumentoPersona = document.getElementById("txtNumDocumentoPersona");
+    txtNumDocumentoPersona.addEventListener('input', cambiarslc);
 
-  function cambiarslc() {
-    const length = txtNumDocumentoPersona.value.length;
+    function cambiarslc() {
+      const length = txtNumDocumentoPersona.value.length;
 
-    if (length === 8) {
+      if (length === 8) {
         slcTipoDocumento.value = 'DNI';
-    } else if (length === 12) {
+      } else if (length === 12) {
         slcTipoDocumento.value = 'PAS';
-    } else if (length === 10) {
+      } else if (length === 10) {
         slcTipoDocumento.value = 'CAR';
-    } else {
+      } else {
         slcTipoDocumento.value = '';
+      }
     }
-}
+  })();
+
+
 
   slcChangeRegistro.addEventListener("change", () => {
     const valor = slcChangeRegistro.value;
@@ -119,7 +127,6 @@ document.addEventListener("DOMContentLoaded", function () {
     params.append("idempresa", "");
     params.append("idPersona", idPersonar);
     params.append("iduser_create", userid);
-    params.append("coordenadas", txtcoordenadasPersona.value);
 
     const options = {
       method: "POST",

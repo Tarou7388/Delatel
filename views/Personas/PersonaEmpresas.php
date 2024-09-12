@@ -167,6 +167,21 @@
                         </div>
                     </div>
                 </div>
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <div class="form-floating">
+                            <select class="form-select" id="slcNacionalidad" aria-label="Nacionalidad">
+                                <option selected>Seleccionar Nacionalidad</option>
+                                <option value="Peruano">Peruano</option>
+                                <option value="Venezolano">Venezolano</option>
+                                <option value="Colombiano">Colombiano</option>
+                                <option value="Argentino">Argentino</option>
+                            </select>
+                            <label for="slcNacionalidad">Nacionalidad</label>
+                        </div>
+                    </div>
+                </div>
+
 
                 <div class="d-flex justify-content-end mt-3">
                     <button type="submit" class="btn btn-primary me-2" id="btnRegistrarPersona">Registrar</button>

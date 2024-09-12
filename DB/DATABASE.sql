@@ -79,6 +79,7 @@ CREATE TABLE tb_personas (
     apellidos VARCHAR(30) NOT NULL,
     nombres VARCHAR(30) NOT NULL,
     telefono CHAR(9) NOT NULL,
+	nacionalidad VARCHAR(40) NOT NULL,
     email VARCHAR(100) NULL,
     create_at DATETIME NOT NULL DEFAULT NOW(),
     update_at DATETIME NULL,
