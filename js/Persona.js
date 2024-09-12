@@ -91,23 +91,41 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   (function () {
-    const txtNumDocumentoPersona = document.getElementById("txtNumDocumentoPersona");
+    const peruanoOpcion = new Option('Peruano', 'Peruano');
+    peruanoOpcion.id = 'peruanoOpcion';
+  
     txtNumDocumentoPersona.addEventListener('input', cambiarslc);
-
+  
     function cambiarslc() {
       const length = txtNumDocumentoPersona.value.length;
-
+  
       if (length === 8) {
+        if (![...slcNacionalidad.options].some(option => option.value === 'Peruano')) {
+          slcNacionalidad.add(peruanoOpcion);
+        }
         slcTipoDocumento.value = 'DNI';
-      } else if (length === 12) {
-        slcTipoDocumento.value = 'PAS';
-      } else if (length === 10) {
-        slcTipoDocumento.value = 'CAR';
+        slcTipoDocumento.disabled = true;
+        slcNacionalidad.value = 'Peruano';
+        slcNacionalidad.disabled = true;
       } else {
-        slcTipoDocumento.value = '';
+        if ([...slcNacionalidad.options].some(option => option.value === 'Peruano')) {
+          slcNacionalidad.remove(slcNacionalidad.querySelector('#peruanoOpcion').index);
+        }
+        slcTipoDocumento.disabled = false;
+        if (length === 12) {
+          slcTipoDocumento.value = 'PAS';
+        } else if (length === 10) {
+          slcTipoDocumento.value = 'CAR';
+        } else {
+          slcTipoDocumento.value = '';
+        }
+        slcNacionalidad.disabled = false;
       }
     }
   })();
+  
+  
+
 
 
 

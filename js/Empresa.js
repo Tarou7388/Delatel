@@ -83,11 +83,10 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     fetch(`${config.HOST}controllers/Cliente.controllers.php`, options)
-      .then((response) => response.text())
+      .then((response) => response.json())
       .then((data) => {
-        console.log(data)
         if (data.Guardado) {
-          alert("Correcto");
+          alert("Cliente registrado");
         } else {
           alert("Error: Verifique");
         }

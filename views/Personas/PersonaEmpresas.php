@@ -19,7 +19,7 @@
                     <div class="col-md-6">
                         <div class="input-group">
                             <div class="form-floating flex-fill">
-                                <input type="number" id="txtRuc" class="form-control" placeholder="R.U.C" require>
+                                <input type="number" id="txtRuc" class="form-control" placeholder="R.U.C" require maxlength="11" required>
                                 <label for="txtRuc">RUC</label>
                             </div>
                             <button class="btn btn-primary" type="button" id="btnBuscarEmpresa"><i class="fa-solid fa-magnifying-glass"></i></button>
@@ -27,7 +27,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="txtRepresentanteLegal" name="representante_legal" placeholder="Representante Legal" require>
+                            <input type="text" class="form-control" id="txtRepresentanteLegal" name="representante_legal" placeholder="Representante Legal" required>
                             <label for="txtRepresentanteLegal">Representante Legal</label>
                         </div>
                     </div>
@@ -35,13 +35,13 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="txtRazonSocial" name="razon_social" placeholder="Razón Social" require>
+                            <input type="text" class="form-control" id="txtRazonSocial" name="razon_social" placeholder="Razón Social" required>
                             <label for="txtRazonSocial">Razón Social</label>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="txtNombreComercial" name="nombre_comercial" placeholder="Nombre Comercial" require>
+                            <input type="text" class="form-control" id="txtNombreComercial" name="nombre_comercial" placeholder="Nombre Comercial" required>
                             <label for="txtNombreComercial">Nombre Comercial</label>
                         </div>
                     </div>
@@ -49,13 +49,13 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="txtTelefono" name="telefono" maxlength="11" placeholder="Teléfono" require>
+                            <input type="text" class="form-control" id="txtTelefono" name="telefono" maxlength="9" placeholder="Teléfono" required>
                             <label for="txtTelefono">Teléfono</label>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating">
-                            <input type="email" class="form-control" id="txtEmail" name="email" placeholder="Email" require>
+                            <input type="email" class="form-control" id="txtEmail" name="email" placeholder="Email" required>
                             <label for="txtEmail">Email</label>
                         </div>
                     </div>
@@ -63,19 +63,19 @@
                 <div class="row mb-3">
                     <div class="col-md-4">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="txtDireccion" name="direccion" placeholder="Dirección" require>
+                            <input type="text" class="form-control" id="txtDireccion" name="direccion" placeholder="Dirección" required>
                             <label for="txtDireccion">Dirección</label>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="txtReferencia" name="referencia" placeholder="Referencia" require>
+                            <input type="text" class="form-control" id="txtReferencia" name="referencia" placeholder="Referencia" required>
                             <label for="txtReferencia">Referencia</label>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="txtCoordenadas" placeholder="Referencia" require>
+                            <input type="text" class="form-control" id="txtCoordenadas" placeholder="Referencia" required>
                             <label for="txtCoordenadas">Coordenadas</label>
                         </div>
                     </div>
@@ -112,7 +112,7 @@
                     <div class="col-md-4">
                         <div class="input-group">
                             <div class="form-floating flex-fill">
-                                <input type="number" id="txtNumDocumentoPersona" class="form-control" placeholder="Número de documento" require>
+                                <input type="number" id="txtNumDocumentoPersona" class="form-control" placeholder="Número de documento" required max="20999999999">
                                 <label for="txtNumDocumentoPersona">Número de documento</label>
                             </div>
                             <button class="btn btn-primary" type="button" id="btnBuscar"><i class="fa-solid fa-magnifying-glass"></i></button>
@@ -120,7 +120,7 @@
                     </div>
                     <div class="col-md-4">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="txtTelefonoPersona" maxlength="11" placeholder="Teléfono" require>
+                            <input type="text" class="form-control" id="txtTelefonoPersona" maxlength="9" placeholder="Teléfono" required>
                             <label for="txtTelefonoPersona">Teléfono</label>
                         </div>
                     </div>
@@ -129,19 +129,19 @@
                 <div class="row mb-3">
                     <div class="col-md-4">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="txtNombresPersona" placeholder="Nombres" disabled require>
+                            <input type="text" class="form-control" id="txtNombresPersona" placeholder="Nombres" disabled required>
                             <label for="txtNombresPersona">Nombres</label>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="txtApellidosPersona" placeholder="Apellidos" disabled require>
+                            <input type="text" class="form-control" id="txtApellidosPersona" placeholder="Apellidos" disabled required>
                             <label for="txtApellidosPersona">Apellidos</label>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-floating">
-                            <input type="email" class="form-control" id="txtEmailPersona" placeholder="Email" require>
+                            <input type="email" class="form-control" id="txtEmailPersona" placeholder="Email" required>
                             <label for="txtEmailPersona">Email</label>
                         </div>
                     </div>
@@ -150,19 +150,19 @@
                 <div class="row mb-3">
                     <div class="col-md-4">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="txtDireccionPersona" placeholder="Dirección" require>
+                            <input type="text" class="form-control" id="txtDireccionPersona" placeholder="Dirección" required>
                             <label for="txtDireccionPersona">Dirección</label>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="txtReferenciaPersona" placeholder="Referencia" require>
+                            <input type="text" class="form-control" id="txtReferenciaPersona" placeholder="Referencia" required>
                             <label for="txtReferenciaPersona">Referencia</label>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="txtCoordenadasPersona" placeholder="Referencia" require>
+                            <input type="text" class="form-control" id="txtCoordenadasPersona" placeholder="Referencia" required>
                             <label for="txtCoordenadasPersona">Coordenadas</label>
                         </div>
                     </div>
@@ -172,7 +172,6 @@
                         <div class="form-floating">
                             <select class="form-select" id="slcNacionalidad" aria-label="Nacionalidad">
                                 <option selected>Seleccionar Nacionalidad</option>
-                                <option value="Peruano">Peruano</option>
                                 <option value="Venezolano">Venezolano</option>
                                 <option value="Colombiano">Colombiano</option>
                                 <option value="Argentino">Argentino</option>
