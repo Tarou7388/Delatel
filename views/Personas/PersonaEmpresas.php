@@ -17,9 +17,12 @@
             <form class="form-control" id="frmEmpresas">
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <div class="form-floating">
-                            <input type="text" class="form-control" id="txtRuc" name="ruc" maxlength="11" placeholder="RUC">
-                            <label for="txtRuc">RUC</label>
+                        <div class="input-group">
+                            <div class="form-floating flex-fill">
+                                <input type="number" id="txtRuc" class="form-control" placeholder="R.U.C">
+                                <label for="txtRuc">RUC</label>
+                            </div>
+                            <button class="btn btn-primary" type="button" id="btnBuscarEmpresa"><i class="fa-solid fa-magnifying-glass"></i></button>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -103,8 +106,8 @@
                     <div class="col-md-4">
                         <div class="input-group">
                             <div class="form-floating flex-fill">
-                                <input type="number" id="nDoc" class="form-control" placeholder="Número de documento">
-                                <label for="nDoc">Número de documento</label>
+                                <input type="number" id="txtNumDocumentoPersona" class="form-control" placeholder="Número de documento">
+                                <label for="txtNumDocumentoPersona">Número de documento</label>
                             </div>
                             <button class="btn btn-primary" type="button" id="btnBuscar"><i class="fa-solid fa-magnifying-glass"></i></button>
                         </div>
@@ -120,13 +123,13 @@
                 <div class="row mb-3">
                     <div class="col-md-4">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="txtNombresPersona" placeholder="Nombres">
+                            <input type="text" class="form-control" id="txtNombresPersona" placeholder="Nombres" disabled>
                             <label for="txtNombresPersona">Nombres</label>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="txtApellidosPersona" placeholder="Apellidos">
+                            <input type="text" class="form-control" id="txtApellidosPersona" placeholder="Apellidos" disabled>
                             <label for="txtApellidosPersona">Apellidos</label>
                         </div>
                     </div>

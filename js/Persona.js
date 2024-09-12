@@ -25,6 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const txtReferencia = document.getElementById("txtReferenciaPersona");
 
   const btnCancelarPersona = document.getElementById("btnCancelarPersona");
+  const btnBuscar = document.getElementById("btnBuscar");
 
   function toggleForms(value) {
     if (value === "Persona") {
@@ -85,10 +86,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function registrarcliente(idPersonar) {
     const params = new FormData();
-    params.append("operacion", "add");;
+    params.append("operacion", "add");
     params.append("direccion", txtDireccion.value);
     params.append("referencia", txtReferencia.value);
-    params.append("idempresa","")
+    params.append("idempresa", "");
     params.append("idPersona", idPersonar);
     params.append("iduser_create", userid);
 
@@ -100,12 +101,34 @@ document.addEventListener("DOMContentLoaded", function () {
     fetch(`${config.HOST}controllers/Cliente.controllers.php`, options)
       .then((response) => response.text())
       .then((data) => {
-        console.log(data)
+        console.log(data);
         if (data.Actualizado) {
           alert("Correcto");
         } else {
           alert("Error: Verifique");
         }
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  }
+
+  btnBuscar.addEventListener("click", () => {
+    ObtenerDataDNI(txtNumDocumentoPersona.value);
+  });
+
+  function ObtenerDataDNI(dni) {
+    fetch(
+      `${config.HOST}controllers/Personas.controlles.php?Operacion=getapi&dni=${encodeURIComponent(
+        dni
+      )}`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+
+        txtNombresPersona.value = data.nombres;
+        txtApellidosPersona.value = data.apellidoPaterno + " " + data.apellidoMaterno;
+
       })
       .catch((e) => {
         console.error(e);

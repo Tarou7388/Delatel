@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
   const btnCancelarEmpresa = document.getElementById("btnCancelarEmpresa");
+  const btnBuscarEmpresa = document.getElementById("btnBuscarEmpresa");
 
   frmEmpresas.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -77,6 +78,27 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
           alert("Error: Verifique");
         }
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  }
+
+  btnBuscarEmpresa.addEventListener("click", () => {
+    ObtenerDataRUC(txtRuc.value);
+  });
+
+  function ObtenerDataRUC(ruc) {
+    fetch(
+      `${config.HOST}controllers/Personas.controlles.php?Operacion=getapiruc&ruc=${encodeURIComponent(
+        ruc
+      )}`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        txtRazonSocial.value = data.razonSocial;
+        txtDireccion.value = data.direccion;
+
       })
       .catch((e) => {
         console.error(e);
