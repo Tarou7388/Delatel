@@ -44,18 +44,16 @@ document.addEventListener("DOMContentLoaded", function () {
   frmPersonas.addEventListener("submit", (event) => {
     event.preventDefault();
     const bandera = verificarCamposPersona();
-    if(!bandera)
-    {
+    if (!bandera) {
       if (permisos[0].permisos.personas.crear != 1) {
         alert("No tienes permiso de registrar");
       }
       registrarpersona();
     }
-    
+
   });
 
-  function registrarpersona()
-  {
+  function registrarpersona() {
     if (permisos[0].permisos.personas.crear == 1) {
       const params = new FormData();
       params.append("Operacion", "Registrar");
@@ -75,6 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
       fetch(`${config.HOST}controllers/Personas.controlles.php`, options)
         .then((response) => response.json())
         .then((data) => {
+          console.log(data);
           if (data.id_persona > 0) {
             alert("Persona registrada correctamente");
             registrarcliente(data.id_persona);
@@ -88,6 +87,22 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
   }
+
+  txtNumDocumentoPersona.addEventListener('input', cambiarslc);
+
+  function cambiarslc() {
+    const length = txtNumDocumentoPersona.value.length;
+
+    if (length === 8) {
+        slcTipoDocumento.value = 'DNI';
+    } else if (length === 12) {
+        slcTipoDocumento.value = 'PAS';
+    } else if (length === 10) {
+        slcTipoDocumento.value = 'CAR';
+    } else {
+        slcTipoDocumento.value = '';
+    }
+}
 
   slcChangeRegistro.addEventListener("change", () => {
     const valor = slcChangeRegistro.value;
@@ -112,7 +127,7 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     fetch(`${config.HOST}controllers/Cliente.controllers.php`, options)
-      .then((response) => response.text())
+      .then((response) => response.json())
       .then((data) => {
         console.log(data);
         if (data.Guardado) {
@@ -127,10 +142,10 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   btnBuscar.addEventListener("click", () => {
-    ObtenerDataDNI("getapi",txtNumDocumentoPersona.value);
+    ObtenerDataDNI("getapi", txtNumDocumentoPersona.value);
   });
 
-  function ObtenerDataDNI(operacion,dni) {
+  function ObtenerDataDNI(operacion, dni) {
     fetch(
       `${config.HOST}controllers/Personas.controlles.php?Operacion=${operacion}&dni=${encodeURIComponent(
         dni
@@ -141,8 +156,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         txtNombresPersona.value = data.nombres ?? "";
         txtApellidosPersona.value = (data.apellidoPaterno ?? "") + (data.apellidoMaterno ? " " + data.apellidoMaterno : "");
-        
-        
+
+
       })
       .catch((e) => {
         alert("Persona no encontrada, verifique DNI")
@@ -153,16 +168,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const camposPersona = [
       slcTipoDocumento, txtNumDocumentoPersona, txtNombresPersona,
       txtApellidosPersona, txtTelefono, txtEmail,
-      txtDireccion, txtReferencia,txtcoordenadasPersona
+      txtDireccion, txtReferencia, txtcoordenadasPersona
     ];
-  
+
     for (let campo of camposPersona) {
       if (campo.value.trim() === '') {
         alert('Por favor, complete todos los campos de la persona.');
         return true;
       }
     }
-  
+
     return false;
   }
 });

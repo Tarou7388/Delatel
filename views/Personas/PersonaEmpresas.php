@@ -103,8 +103,8 @@
                             <select class="form-select" id="slcTipoDocumento" aria-label="Tipo de Documento">
                                 <option selected>Seleccionar...</option>
                                 <option value="DNI">DNI</option>
-                                <option value="Pasaporte">Pasaporte</option>
-                                <option value="Carné de Extranjería">Carné de Extranjería</option>
+                                <option value="PAS">Pasaporte</option>
+                                <option value="CAR">Carné de Extranjería</option>
                             </select>
                             <label for="slcTipoDocumento">Tipo de Documento</label>
                         </div>
