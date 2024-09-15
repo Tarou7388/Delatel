@@ -1,5 +1,8 @@
-<img src="http://localhost/Instalacion_WISP/image/fondo-header.png" class="image-header" alt="">
+<?php
+$HOST = "http://localhost/DELATEL"; 
+?>
 
+<img src="<?= $HOST ?>/image/header_avewisp.png" class="image-header" alt="">
 
 <div>
 

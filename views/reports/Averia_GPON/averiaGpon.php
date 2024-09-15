@@ -1,4 +1,8 @@
-<img src="http://localhost/Averia_GPON/image/fondo-header.png" class="image-header">
+<?php
+$HOST = "http://localhost/DELATEL"; 
+?>
+
+<img src="<?= $HOST ?>/image/header_avegpon.png" class="image-header">
 
 <div>
   <table style="margin-bottom:20px;">

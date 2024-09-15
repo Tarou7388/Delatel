@@ -1,3 +1,6 @@
+<?php
+$HOST = "http://localhost/DELATEL"; 
+?>
 
 <table style="width: 100%; table-layout: fixed; border-collapse: collapse;">
   <colgroup>
@@ -7,7 +10,6 @@
   <thead></thead>
   <tbody>
       <tr>
-        <!-- Primer Contenedor -->
         <td style="vertical-align: top; padding-right: 15px;">
           <table>
             <colgroup>
@@ -17,7 +19,7 @@
             <thead></thead>
             <tbody>
               <tr>
-                <td><img src="http://localhost/DELATEL/image/logo.png" class="logo" alt=""></td>
+                <td><img src="<?= $HOST ?>/image/logo.png" class="logo" alt=""></td>
                 <td><h3 style="margin: 10px 0; flex-grow: 1;">CONTRATO DE PRESTACIÓN DEL SERVICIO DE ACCESO A INTERNET FIJO POSTPAGO</h3></td>
               </tr>
             </tbody>
@@ -25,11 +27,11 @@
 
           <h3>Reporte Generado el día: <span class="caja-texto3"></span> / <span class="caja-texto3"></span> / <span class="caja-texto3"></span></h3>
 
-          <h4><img src="http://localhost/DELATEL/image/list.png" class="icono" alt=""> 1) ¿QUÉ ESTÁS CONTRATANDO?</h4>
+          <h4><img src="<?= $HOST ?>/image/list.png" class="icono" alt=""> 1) ¿QUÉ ESTÁS CONTRATANDO?</h4>
           <p><strong>DELAFIBER (DELATEL PERU)</strong>, con domicilio en Calle San Jose 103 – Grocio Prado - Chincha – Ica con RUC; se compromete a prestar el Servicio de acceso a internet fijo Postpago</p>
 
           
-          <h4><img src="http://localhost/DELATEL/image/user.png" class="icono" alt="">  2) DATOS DEL ABONADO</h4>
+          <h4><img src="<?= $HOST ?>/image/user.png" class="icono" alt="">  2) DATOS DEL ABONADO</h4>
           <p>Nombre / Razón Social: </p>
           <p><span class="caja-texto2"></span></p>
           <p>Tipo y Número de documento de Identificación:</p>
@@ -50,7 +52,7 @@
           <p><span class="caja-texto2"></span></p>
 
           <br>
-          <h4><img src="http://localhost/DELATEL/image/smartphone.png" class="icono" alt="">  3) SERVICIO CONTRATADO</h4>
+          <h4><img src="<?= $HOST ?>/image/smartphone.png" class="icono" alt="">  3) SERVICIO CONTRATADO</h4>
           <p>Código de cliente:          <span class="caja-texto"></span></p>
           <p>Nombre del Plan tarifario:  <span class="caja-texto"></span></p>
           <p>Detalle del servicio:       <span class="caja-texto"></span></p>
@@ -61,7 +63,7 @@
 
         <!-- Segundo Contenedor -->
         <td style="vertical-align: top; padding-left: 15px;">
-          <h4><img src="http://localhost/DELATEL/image/lupa.png" class="icono" alt="">  4) ¿QUÉ DEBES SABER DE TU PLAN?</h4>
+          <h4><img src="<?= $HOST ?>/image/lupa.png" class="icono" alt="">  4) ¿QUÉ DEBES SABER DE TU PLAN?</h4>
           <p>Renta Fija <input type="checkbox" class="check"> de.... <span class="caja-texto"></span></p>
           <p>El pago se realiza por: </p>
           <strong class="radio">Mes Vencido <input type="checkbox" class="check"></strong>
@@ -75,7 +77,7 @@
           <strong class="radio">Tarifa de Instalación:</strong>
           <p>Al contado: S/.<span class="caja-texto"></span></p>
 
-          <h4 class="tltplan"><img src="http://localhost/DELATEL/image/check.png" class="icono" alt=""> 5) ¿QUÉ INCLUYE TU PLAN?</h4>
+          <h4 class="tltplan"><img src="<?= $HOST ?>/image/check.png" class="icono" alt=""> 5) ¿QUÉ INCLUYE TU PLAN?</h4>
             <p>- Los precios incluyen IGV</p>
             <p>- Velocidad del Internet fijo:</p>
             <p>- La Velocidad mínima garantizada es el 70% de la Velocidad Máxima</p>
@@ -86,8 +88,8 @@
             </colgroup>
             <thead>
               <tr class="bg-info tex-light">
-                <th colspan="2"  class="text-center">Bajada (Descarga) Mbp/s <img src="http://localhost/DELATEL/image/flecha_abajo.png" class="icono" alt=""> </th>
-                <th colspan="2" class="text-center">Subida (Carga) Mbp/s <img src="http://localhost/DELATEL/image/flecha_arriba.png" class="icono" alt=""></th>
+                <th colspan="2"  class="text-center">Bajada (Descarga) Mbp/s <img src="<?= $HOST ?>/image/flecha_abajo.png" class="icono" alt=""> </th>
+                <th colspan="2" class="text-center">Subida (Carga) Mbp/s <img src="<?= $HOST ?>/image/flecha_arriba.png" class="icono" alt=""></th>
               </tr>
             </thead>
             <tbody>
@@ -118,15 +120,15 @@
 
       <tr>
         <td style="vertical-align: top; padding-right: 15px;">
-          <h4><img src="http://localhost/DELATEL/image/herramienta.png" class="icono" alt="">  6) INSTALACIÓN DEL SERVICIO</h4>
+          <h4><img src="<?= $HOST ?>/image/herramienta.png" class="icono" alt="">  6) INSTALACIÓN DEL SERVICIO</h4>
           <p>En caso el servicio requiera de instalación, se  realiza en el plazo máximo de 15 días hábiles desde la contratación, previa coordinación con el cliente.</p>
-          <h4><img src="http://localhost/DELATEL/image/invoice.png" class="icono" alt="">   7) RECIBO Y PAGO DEL SERVICIO</h4>
+          <h4><img src="<?= $HOST ?>/image/invoice.png" class="icono" alt="">   7) RECIBO Y PAGO DEL SERVICIO</h4>
           <p>- Tu recibo incluye la facturación de: a) Cargo  fijo según tu plan tarifario contratado, b) Consumos adicionales y/o c) Servicios adicionales y equipos adquiridos, de ser el caso.</p>
           <p>- Tus recibos serán emitidos mensualmente por mensajería de acuerdo al plan contratado.</p>
           <p>- Debes efectuar los pagos o cargos por la prestación del servicio, hasta la  fecha de vencimiento indicada de tu servicio en los lugares de pago y/o formas de pagos brindado.</p>
           <p>- Si no pagas a tiempo tu recibo o realizas un  pago parcial, podría cobrar intereses y tu servicio será suspendido, en cuyo caso podrías  pagar un monto por reconexión ya establecido.</p>
 
-          <h4><img src="http://localhost/DELATEL/image/exclamation.png" class="icono" alt="">   8) DERECHOS Y OBLIGACIONES</h4>
+          <h4><img src="<?= $HOST ?>/image/exclamation.png" class="icono" alt="">   8) DERECHOS Y OBLIGACIONES</h4>
           <p>- En la sección “Información Abonados y Usuarios” de la página web delatelperu/información-abonados  encontrarás información sobre tus derechos, el procedimiento de reclamo, casos de uso indebido, indicadores de calidad de DELATEL y otros.</p>
           <p>- Eres responsable por el uso del servicio la cual no se puede comercializar, ni usarlo indebidamente.</p>
           <p>- Si se detecta que empleas el servicio para fines ilícitos o presentaste información falsa, DELATEL podrá suspender el servicio y/o terminar este contrato.</p>
@@ -136,11 +138,11 @@
         <td style="vertical-align: top; padding-left: 15px;">
           <p>- Se te entregara  los equipos de comunicación en perfecto estado y se compromete a devolver en las mismas condiciones, salvo el desgaste que el uso normal del tiempo.</p>
           <p>- Si el equipo se daña por descuido del usuario como son: golpes, caída de agua, cortó circuito y/o manipulaciones EL ARRENDATARIO asumirá el costo de la reparación y/o la totalidad del equipo.</p>
-          <h4><img src="http://localhost/DELATEL/image/registro.png" class="icono" alt="">  9) MODIFICACIÓN DEL CONTRATO</h4>
+          <h4><img src="<?= $HOST ?>/image/registro.png" class="icono" alt="">  9) MODIFICACIÓN DEL CONTRATO</h4>
           <p>- DELATEL solo podrá modificar este contrato por: a)  Aumento o reducción de las tarifas y/o atributos del servicio como datos, velocidad y/u otros y b) Aumento de beneficios.</p>
           <p>- Previamente al aumento de tarifas y/o reducción de atributos del servicio, la empresa te remitirá una comunicación (llamadas telefónicas, mensajes de texto, audio u   otros). Si no estás de acuerdo, podrás solicitar la  terminación de este contrato sin pago de penalidades, ni cobros similares, aún en caso te encuentres dentro del plazo forzoso.</p>
           <p>- Usted no podrá traspasar este contrato ni sub-arrendar todos y/o algunos de los equipos de comunicación en materia del presente del contrato.</p> 
-          <h4><img src="http://localhost/DELATEL/image/dislike.png" class="icono" alt="">   10) BAJA DE TU SERVICIO</h4>
+          <h4><img src="<?= $HOST ?>/image/dislike.png" class="icono" alt="">   10) BAJA DE TU SERVICIO</h4>
           <p>Si deseas dar por terminado este contrato, puedes solicitarlo a DELATEL y la baja se ejecutará en un plazo máximo de 5 días hábiles. También  podrás indicar la fecha en la cual requieres la ejecución de la baja, con 1 mes de anticipación.</p>
 
             <table class="tabla">
@@ -150,7 +152,7 @@
             </colgroup>
             <thead>
             <tr>
-              <th class="text-center" colspan="2"><img src="http://localhost/DELATEL/image/telephone.png" class="icono" alt="">11) COMUNICATE CON DELATEL</th>
+              <th class="text-center" colspan="2"><img src="<?= $HOST ?>/image/telephone.png" class="icono" alt="">11) COMUNICATE CON DELATEL</th>
             </tr>
             </thead>
             <tbody>
@@ -176,13 +178,13 @@
 
         <tr>
           <td style="vertical-align: top; padding-left: 15px;">
-            <h4><img src="http://localhost/DELATEL/image/user.png" class="icono" alt="">   12) USO DE TUS DATOS PERSONALES</h4>
+            <h4><img src="<?= $HOST ?>/image/user.png" class="icono" alt="">   12) USO DE TUS DATOS PERSONALES</h4>
             <p><strong>DELATEL realiza el tratamiento de tus datos personales </strong>para la ejecución y prestación del servicio.
               Para ello, debe informarte sobre las  condiciones para el tratamiento de tus datos personales y debe solicitar tu  consentimiento 
               para  enviarte información comercial, publicidad u otra finalidad.
             </p>
 
-            <h4><img src="http://localhost/DELATEL/image/check(2).png" class="icono" alt="">  13) ACEPTACIÓN DEL CONTRATO</h4>
+            <h4><img src="<?= $HOST ?>/image/check(2).png" class="icono" alt="">  13) ACEPTACIÓN DEL CONTRATO</h4>
             <p>   
               La aceptación de este contrato se realizará con la  firma manuscrita del presente documento, al obtener la información biométrica 
               de tu huella  dactilar o mediante otro tipo de firma digital en la versión digital del presente contrato. <strong>La cartilla y anexo 

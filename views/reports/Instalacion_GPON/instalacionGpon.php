@@ -1,4 +1,8 @@
-<img src="http://localhost/INSTALACION_GPON/image/foto1.png" class="image-header" alt="">
+<?php
+$HOST = "http://localhost/DELATEL"; 
+?>
+
+<img src="<?= $HOST ?>/image/header_instgpon.png" class="image-header" alt="">
 <div class="container">
   <table>
     <tbody>
