@@ -56,47 +56,96 @@ BEGIN
             WHEN cl.id_persona IS NOT NULL THEN p.nro_doc
             ELSE e.ruc
         END AS num_identificacion,
-        s.sector AS nombre_sector,
-        ur_persona.nombres AS nombre_usuario_registro,
-        ut_persona.nombres AS nombre_usuario_tecnico,
         c.direccion_servicio,
         sv.servicio,
-        c.referencia,
-        c.coordenada,
+        t.tipo_paquete,
         c.fecha_inicio,
-        c.fecha_fin,
-        c.fecha_registro,
-        c.ficha_instalacion,
-        c.nota
+        c.fecha_fin
     FROM 
         tb_contratos c
     INNER JOIN 
         tb_clientes cl ON c.id_cliente = cl.id_cliente
     LEFT JOIN 
-        tb_personas p ON cl.id_cliente = p.id_persona
+        tb_personas p ON cl.id_persona = p.id_persona
     LEFT JOIN 
         tb_empresas e ON cl.id_cliente = e.id_empresa
     INNER JOIN 
         tb_paquetes t ON c.id_paquete = t.id_paquete
     INNER JOIN 
-        tb_servicios sv ON t.id_servicio = sv.id_servicio -- Nuevo JOIN para obtener el nombre del servicio
-    INNER JOIN 
-        tb_sectores s ON c.id_sector = s.id_sector
-    INNER JOIN 
-        tb_responsables ur ON c.id_usuario_registro = ur.id_responsable
-    INNER JOIN 
-        tb_usuarios ur_usuario ON ur.id_usuario = ur_usuario.id_usuario
-    INNER JOIN 
-        tb_personas ur_persona ON ur_usuario.id_persona = ur_persona.id_persona
-    LEFT JOIN 
-        tb_responsables ut ON c.id_usuario_tecnico = ut.id_responsable
-    LEFT JOIN 
-        tb_usuarios ut_usuario ON ut.id_usuario = ut_usuario.id_usuario
-    LEFT JOIN 
-        tb_personas ut_persona ON ut_usuario.id_persona = ut_persona.id_persona
+        tb_servicios sv ON t.id_servicio = sv.id_servicio
     WHERE 
         c.inactive_at IS NULL;
 END $$
+
+CREATE PROCEDURE spu_contrato_ficha_tecnica(
+    p_id_contrato INT
+)
+BEGIN
+    SELECT
+        c.id_contrato,
+        CASE
+            WHEN cl.id_persona IS NOT NULL THEN CONCAT(p.nombres, ', ', p.apellidos)
+            ELSE e.razon_social
+        END AS nombre_cliente,
+        CASE
+            WHEN cl.id_persona IS NOT NULL THEN p.nro_doc
+            ELSE e.ruc
+        END AS num_identificacion,
+        sv.servicio,
+        c.ficha_instalacion
+    FROM
+        tb_contratos c
+        INNER JOIN tb_clientes cl ON c.id_cliente = cl.id_cliente
+        LEFT JOIN tb_personas p ON cl.id_persona = p.id_persona
+        LEFT JOIN tb_empresas e ON cl.id_cliente = e.id_empresa
+        INNER JOIN tb_paquetes t ON c.id_paquete = t.id_paquete
+        INNER JOIN tb_servicios sv ON t.id_servicio = sv.id_servicio
+    WHERE c.id_contrato = p_id_contrato AND c.inactive_at IS NULL;
+END$$
+
+CREATE PROCEDURE spu_contrato_buscar(
+    p_id_contrato INT
+)
+BEGIN
+    SELECT
+    c.id_contrato,
+    CASE
+        WHEN cl.id_persona IS NOT NULL THEN p.nombres
+        ELSE e.razon_social
+    END AS nombre_cliente,
+    CASE
+        WHEN cl.id_persona IS NOT NULL THEN p.nro_doc
+        ELSE e.ruc
+    END AS num_identificacion,
+    s.sector AS nombre_sector,
+    ur_persona.nombres AS nombre_usuario_registro,
+    ut_persona.nombres AS nombre_usuario_tecnico,
+    c.direccion_servicio,
+    sv.servicio,
+    t.tipo_paquete,
+    c.referencia,
+    c.coordenada,
+    c.fecha_inicio,
+    c.fecha_fin,
+    c.fecha_registro,
+    c.nota
+FROM
+    tb_contratos c
+    INNER JOIN tb_clientes cl ON c.id_cliente = cl.id_cliente
+    LEFT JOIN tb_personas p ON cl.id_persona = p.id_persona
+    LEFT JOIN tb_empresas e ON cl.id_cliente = e.id_empresa
+    INNER JOIN tb_paquetes t ON c.id_paquete = t.id_paquete
+    INNER JOIN tb_servicios sv ON t.id_servicio = sv.id_servicio -- Nuevo JOIN para obtener el nombre del servicio
+    INNER JOIN tb_sectores s ON c.id_sector = s.id_sector
+    INNER JOIN tb_responsables ur ON c.id_usuario_registro = ur.id_responsable
+    INNER JOIN tb_usuarios ur_usuario ON ur.id_usuario = ur_usuario.id_usuario
+    INNER JOIN tb_personas ur_persona ON ur_usuario.id_persona = ur_persona.id_persona
+    LEFT JOIN tb_responsables ut ON c.id_usuario_tecnico = ut.id_responsable
+    LEFT JOIN tb_usuarios ut_usuario ON ut.id_usuario = ut_usuario.id_usuario
+    LEFT JOIN tb_personas ut_persona ON ut_usuario.id_persona = ut_persona.id_persona
+WHERE
+    c.id_contrato = p_id_contrato AND c.inactive_at IS NULL;
+END$$
 
 CREATE PROCEDURE spu_contratos_eliminar(
     p_id_contrato INT

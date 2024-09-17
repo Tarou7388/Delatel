@@ -9,6 +9,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     case 'getAll':
       echo json_encode($contrato->getAll());
       break;
+    case 'getById':
+      $resultado = $contrato->buscarId(["id" => $_GET['id']]);
+      echo json_encode($resultado);
+      break;
+    case 'obtenerFichaInstalacion':
+      $resultado = $contrato->obtenerFichaInstalacion(["id" => $_GET['id']]);
+      echo json_encode($resultado);
+      break;
   }
 }
 
@@ -38,11 +46,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 }
 
-if($_SERVER['REQUEST_METHOD'] === 'PUT'){
+if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
   $json = file_get_contents('php://input');
   $datos = json_decode($json, true);
   $operacion = $datos['operacion'];
-  switch($operacion){
+  switch ($operacion) {
     case 'delete':
       $resultado = $contrato->delete($datos['parametros']);
       echo json_encode(["eliminado" => $resultado]);

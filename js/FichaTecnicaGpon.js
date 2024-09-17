@@ -1,4 +1,6 @@
-window.addEventListener("DOMContentLoaded", (event) => {
+import config from '../env.js';
+document.addEventListener("DOMContentLoaded", () => {
+
     const txtCantCable = document.getElementById('txtCantCable');
     const txtPrecioCable = document.getElementById('txtPrecioCable');
     const txtCostoCable = document.getElementById('txtCostoCable');
@@ -6,6 +8,13 @@ window.addEventListener("DOMContentLoaded", (event) => {
     const txtCantConector = document.getElementById('txtCantConector');
     const txtPrecioConector = document.getElementById('txtPrecioConector');
     const txtCostoConector = document.getElementById('txtCostoConector');
+
+    (async () => {
+        const response = await fetch(`${config.HOST}controllers/contrato.controllers.php?operacion=obtenerFichaInstalacion&id=${idContrato}`);
+        const data = await response.json();
+        document.getElementById('txtUsuario').value = data.nombre_cliente;
+        document.getElementById('txtPlan').value = data.servicio;
+    })();
 
     function calcularCostos() {
         // Cálculo del costo del cable
@@ -96,6 +105,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
     }
 
     txtCantCable.addEventListener('input', calcularCostos);
+
     txtCantConector.addEventListener('input', calcularCostos);
 
     document.getElementById('btnAñadirSintotizador').addEventListener('click', function () {

@@ -14,6 +14,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const slcSector = document.querySelector("#slcSector");
   const slcServicio = document.querySelector("#slcServicio");
   let precioServicio = 0;
+  let idCliente = 0;
 
   $('#slcSector').select2({
     theme: 'bootstrap-5',
@@ -54,7 +55,6 @@ window.addEventListener("DOMContentLoaded", () => {
     const response = await fetch(`${config.HOST}controllers/contrato.controllers.php?operacion=getAll`);
     const data = await response.json();
     const tbody = document.querySelector("#listarContratos tbody");
-    console.log(data);
     data.forEach((contrato) => {
       const tr = document.createElement("tr");
       tr.innerHTML = `
@@ -66,8 +66,9 @@ window.addEventListener("DOMContentLoaded", () => {
         <td>${contrato.fecha_fin}</td>
         <td>
           <button class="btn btn-sm btn-warning">Editar</button>
-          <button class="btn btn-sm btn-danger btnEliminar" data-idContrato=${contrato.id_contrato}  >Eliminar</button>
-          <button class="btn btn-sm btn-primary btnGenerar">PDF</button>
+          <button class="btn btn-sm btn-danger btnEliminar" data-idContrato=${contrato.id_contrato}>Eliminar</button>
+          <button class="btn btn-sm btn-primary btnGenerar" data-idContrato=${contrato.id_contrato}>PDF</button>
+          <button class="btn btn-sm btn-success btnFicha" data-tipoPaquete=${contrato.tipo_paquete} data-idContrato=${contrato.id_contrato}>Ficha</button>
         </td>
       `;
       tbody.appendChild(tr);
@@ -90,6 +91,23 @@ window.addEventListener("DOMContentLoaded", () => {
 
     const botonesPdf = document.querySelectorAll(".btnGenerar");
     const botonesEliminar = document.querySelectorAll(".btnEliminar");
+    const botonesFicha = document.querySelectorAll(".btnFicha");
+
+    botonesFicha.forEach(boton => {
+      boton.addEventListener("click", (event) => {
+        const idContrato = event.target.getAttribute("data-idContrato");
+        const tipoPaquete = event.target.getAttribute("data-tipoPaquete");
+        if (tipoPaquete == "GPON") {
+          window.location.href = `${config.HOST}views/contratos/FichaTecnicaGpon.php?idContrato=${idContrato}`;
+        }
+        if (tipoPaquete == "WISP") {
+          window.location.href = `${config.HOST}views/contratos/FichaTecnicaWisp.php?idContrato=${idContrato}`;
+        }
+        if (tipoPaquete == "CABl") {
+          window.location.href = `${config.HOST}views/contratos/FichaTecnicaCable.php?idContrato=${idContrato}`;
+        }
+      });
+    });
 
     botonesEliminar.forEach(boton => {
       boton.addEventListener("click", (event) => {
@@ -98,10 +116,10 @@ window.addEventListener("DOMContentLoaded", () => {
       });
     });
 
-
     botonesPdf.forEach(boton => {
       boton.addEventListener("click", () => {
-        window.open(`../reports/Carpeta-PDF/soporte.php`);
+        const idContrato = boton.getAttribute("data-idContrato");
+        window.open(`../reports/Contrato/soporte.php?id=${idContrato}`);
       });
     });
   })();
@@ -109,7 +127,7 @@ window.addEventListener("DOMContentLoaded", () => {
   function validarFechas() {
     if (fechaInicio.value > fechaFin.value) {
       return false;
-    }else {
+    } else {
       return true;
     }
   }
@@ -122,29 +140,11 @@ window.addEventListener("DOMContentLoaded", () => {
       return true;
     }
   }
-  
+
   async function fichaInstalacionGpon() {
     const response = await fetch(`${config.HOST}json/FichaGpon.json`);
     const data = await response.json();
     return data;
-  }
-
-  async function buscarDocumento() {
-    if (dni.value === "") {
-      alert("Ingrese un número de documento");
-    }
-    else {
-      console.log(dni.value);
-      const response = await fetch(`${config.HOST}controllers/cliente.controllers.php?operacion=getByDoc&doc=${dni.value}`);
-      const data = await response.json();
-      console.log(data);
-      if (data.length > 0) {
-        nombre.value = data[0].apellidos + ", " + data[0].nombres;
-      }
-      else {
-        alert("Cliente no encontrado");
-      }
-    }
   }
 
   async function resetUI() {
@@ -162,13 +162,22 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   async function buscarCliente() {
-    const response = await fetch(`${config.HOST}controllers/cliente.controllers.php?operacion=getByDoc&doc=${dni.value}`);
-    const data = await response.json();
-    if (data.length > 0) {
-      nombre.value = data[0].apellidos + ", " + data[0].nombres;
-    }
-    else {
-      alert("Cliente no encontrado");
+    if (dni.value == "") {
+      alert("Ingrese un número de documento");
+    } else {
+      const response = await fetch(`${config.HOST}controllers/cliente.controllers.php?operacion=getByDoc&numDoc=${dni.value}`);
+      const data = await response.json();
+      if (data.length > 0) {
+        nombre.value = data[0].nombre;
+        referencia.value = data[0].referencia;
+        direccion.value = data[0].direccion;
+        coordenada.value = data[0].coordenada;
+        idCliente = data[0].id_cliente;
+        console.log(data);
+      }
+      else {
+        alert("Cliente no encontrado");
+      }
     }
   }
 
@@ -176,39 +185,49 @@ window.addEventListener("DOMContentLoaded", () => {
     const fechaRegistro = new Date().toString();
     const fichaInstalacion = await fichaInstalacionGpon();
     const nota = "";
-    const operacion = "add";
     const idUsuarioRegistro = user.idRol;
-
     if (!validarFechas() || !await validarCampos()) {
       alert("Complete todos los campos");
-    }
-    else {
-      const idServicio = parseInt(slcServicio.value.split(" - ")[0]);
-      console.log(idServicio);
-      const registro = await fetch(`${config.HOST}controllers/contrato.controllers.php`, {
-        method: "POST",
-        body: JSON.stringify({
-          operacion: operacion,
-          parametros: {
-            idCliente: 1,
-            idTarifario: idServicio,
-            idSector: sector.value,
-            idUsuarioRegistro: idUsuarioRegistro,
-            direccion: direccion.value,
-            referencia: referencia.value,
-            coordenada: coordenada.value,
-            fechaInicio: fechaInicio.value,
-            fechaFin: fechaFin.value,
-            fechaRegistro: fechaRegistro,
-            fichaInstalacion: fichaInstalacion,
-            nota: nota
+    } else {
+      try {
+        const idServicio = parseInt(slcServicio.value.split(" - ")[0]);
+        const fichaInstalacionJSON = JSON.stringify(fichaInstalacion);
+        const response = await fetch(`${config.HOST}controllers/contrato.controllers.php`, {
+          method: "POST",
+          body: JSON.stringify({
+            operacion: "add",
+            parametros: {
+              idCliente: idCliente,
+              idTarifario: idServicio,
+              idSector: sector.value,
+              idUsuarioRegistro: idUsuarioRegistro,
+              direccion: direccion.value,
+              referencia: referencia.value,
+              coordenada: coordenada.value,
+              fechaInicio: fechaInicio.value,
+              fechaFin: fechaFin.value,
+              fechaRegistro: fechaRegistro,
+              fichaInstalacion: fichaInstalacionJSON,
+              nota: nota
+            }
+          }),
+          headers: {
+            "Content-Type": "application/json"
           }
-        })
-      });
-      const respuesta = await registro.json();
-      if (respuesta.guardado) {
-        alert("Contrato registrado correctamente");
-        resetUI();
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }else{
+          alert("Contrato registrado correctamente");
+          resetUI();
+        }
+
+        const result = await response.json();
+        console.log(result);
+      } catch (error) {
+        console.error("Error:", error);
+        alert("Ocurrió un error al registrar el contrato. Por favor, inténtelo de nuevo.");
       }
     }
   }
@@ -239,7 +258,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   document.querySelector("#btnBuscar").addEventListener("click", (event) => {
     event.preventDefault();
-    buscarDocumento();
+    buscarCliente();
   });
 
   $('#slcServicio').on('select2:select', function (e) {
