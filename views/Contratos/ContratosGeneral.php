@@ -17,7 +17,7 @@
           </div>
           <div class="col-md-3">
             <label for="txtNombre" class="form-label">Nombre de cliente</label>
-            <input type="text" class="form-control" id="txtNombre" name="nombre" value="JESUS, MATTA RAMOS" required disabled>
+            <input type="text" class="form-control" id="txtNombre" name="nombre" required disabled>
           </div>
           <div class="col-md-3">
             <label for="txtFechaInicio" class="form-label">Fecha de inicio</label>

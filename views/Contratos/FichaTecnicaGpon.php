@@ -1,4 +1,7 @@
 <?php require_once "../../header.php"; ?>
+<?php
+$idContrato = $_GET['idContrato'];
+?>
 <link rel="stylesheet" href="../../css/gpon.css">
 
 
@@ -257,10 +260,12 @@
     </div>
   </div>
 </div>
-<script src="../../js/FichaTecnicaGpon.js"></script>
 
 <?php require_once "../../footer.php"; ?>
-
+<script> 
+    const idContrato = <?= $idContrato ?>;
+</script> 
+<script type="module" src="../../js/FichaTecnicaGpon.js"></script>
 
 </body>
 

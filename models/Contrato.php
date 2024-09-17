@@ -82,4 +82,35 @@ class Contrato extends Conexion
             die($e->getMessage());
         }
     }
+
+    /**
+     * Busca un contrato por su ID.
+     *
+     * @param array $params Un array que contiene los parámetros para la búsqueda.
+     *                      - id: El ID del contrato a buscar.
+     * @return array Un array de contratos que coinciden con el ID dado.
+     * @throws Exception Si ocurre un error al ejecutar la consulta de búsqueda.
+     */
+    public function buscarId($params = []){
+        try {
+            $query = $this->pdo->prepare("CALL spu_contrato_buscar(?)");
+            $query->execute(array(
+                $params["id"]
+            ));
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+    }
+    public function obtenerFichaInstalacion($params = []){
+        try {
+            $query = $this->pdo->prepare("CALL spu_contrato_ficha_tecnica(?)");
+            $query->execute(array(
+                $params["id"]
+            ));
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+    }
 }
