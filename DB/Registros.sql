@@ -99,12 +99,12 @@ INSERT INTO tb_responsables (id_usuario, id_rol,iduser_create) VALUES
 (5, 5,1),
 (6, 5,1);
 
-INSERT INTO tb_clientes (id_persona, id_empresa, direccion, referencia, create_at, update_at, inactive_at,iduser_create) VALUES
-(6, NULL, 'Av. Siempre Viva 123, Springfield', 'Frente al parque central', NOW(), NULL, NULL,1),
-(NULL, 2, 'Calle Falsa 456, Gotham', 'A una cuadra del cine', NOW(), NULL, NULL,1),
-(8, NULL, 'Av. Los Pinos 789, Lima', 'Esquina con Av. Las Flores', NOW(), NULL, NULL,1),
-(NULL, 4, 'Jirón de la Unión 100, Lima', 'A media cuadra de la Plaza Mayor', NOW(), NULL, NULL,1),
-(10, NULL, 'Calle Mayor 101, Barcelona', 'Cerca del mercado central', NOW(), NULL, NULL,1);
+INSERT INTO tb_clientes (id_persona, id_empresa, direccion, referencia, create_at, update_at, inactive_at,iduser_create,coordenadas) VALUES
+(6, NULL, 'Av. Siempre Viva 123, Springfield', 'Frente al parque central', NOW(), NULL, NULL,1,"-1"),
+(NULL, 2, 'Calle Falsa 456, Gotham', 'A una cuadra del cine', NOW(), NULL, NULL,1,"-1"),
+(8, NULL, 'Av. Los Pinos 789, Lima', 'Esquina con Av. Las Flores', NOW(), NULL, NULL,1,"-1"),
+(NULL, 4, 'Jirón de la Unión 100, Lima', 'A media cuadra de la Plaza Mayor', NOW(), NULL, NULL,1,"-1"),
+(10, NULL, 'Calle Mayor 101, Barcelona', 'Cerca del mercado central', NOW(), NULL, NULL,1,"-1");
 
 INSERT INTO tb_contratos (id_cliente, id_paquete, id_sector, id_usuario_registro, id_usuario_tecnico, direccion_servicio, referencia, coordenada, fecha_inicio, fecha_fin, fecha_registro, ficha_instalacion, nota) VALUES 
 (1, 1, 1, 1, NULL, 'Av. Siempre Viva 123, Springfield', 'Cerca de la plaza principal', '12.3456, -65.4321', '2024-01-15', '2024-06-15', '2024-01-01', '{"tipo":"electrico","voltaje":"220V"}', 'Primer contrato con cliente nuevo'),

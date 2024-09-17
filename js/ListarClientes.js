@@ -1,19 +1,16 @@
 import config from "../env.js";
 
 document.addEventListener("DOMContentLoaded", function () {
-    //listarCliente
-
-
-    const ruta = "../../controllers/Productos.controllers.php?operacion=getAll";
+    const ruta = "../controllers/Cliente.controllers.php?operacion=getAll";
     if (permisos[0].permisos.inventariado.leer != 1) {
         window.location.href = `${config.HOST}views`;
     }
     const userid = user['idUsuario'];
     window.tablaProductos = $('#listarCliente').DataTable({
         dom: `
-<"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6 text-end"f>>
-<"row"<"col-sm-12"tr>>
-<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>
+                <"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6 text-end"f>>
+                <"row"<"col-sm-12"tr>>
+                <"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>
 `,
         buttons: [
             {
@@ -60,18 +57,20 @@ document.addEventListener("DOMContentLoaded", function () {
             dataSrc: ''
         },
         columns: [
-            { data: 'marca', title: 'Marca' },
-            { data: 'tipo_producto', title: 'Tipo de Producto' },
-            { data: 'modelo', title: 'Modelo' },
-            { data: 'precio_actual', title: 'Precio Actual' },
-            { data: 'codigo_barra', title: 'Código de Barra' },
+            { data: 'nombre_cliente', title: 'Nombre cliente' },
+            { data: 'representante_cliente', title: 'N° identificador' },
+            { data: 'email_cliente', title: 'Emailr' },
+            { data: 'telefono_cliente', title: 'Teléfono' },
+            { data: 'direccion_cliente', title: 'Dirección' },
+            { data: 'referencia_cliente', title: 'Referencia' },
+            { data: 'coordenadas_cliente', title: 'Coordenadas' },
             {
                 data: null,
                 title: 'Acciones',
                 render: function (data, type, row) {
                     return `
-<button class="btn btn-warning btn-edit" data-id="${row.id_producto}"><i class="fa-regular fa-pen-to-square"></i></button>
-<button class="btn btn-danger btn-delete" data-id="${row.id_producto}"><i class="fa-regular fa-trash-can"></i></button>
+<button class="btn btn-warning btn-edit" data-id="${row.id_cliente}"><i class="fa-regular fa-pen-to-square"></i></button>
+<button class="btn btn-danger btn-delete" data-id="${row.id_cliente}"><i class="fa-regular fa-trash-can"></i></button>
 `;
                 }
             }

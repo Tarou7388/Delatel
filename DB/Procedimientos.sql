@@ -578,8 +578,8 @@ FROM tb_paquetes p
 CREATE VIEW vw_clientes_listar AS
 SELECT
     c.id_cliente,
-    COALESCE(p.nombres, e.nombre_comercial) AS nombre_cliente,
-    COALESCE(p.apellidos, e.representante_legal) AS representante_cliente,
+    COALESCE(CONCAT(p.nombres," ", p.apellidos), e.nombre_comercial) AS nombre_cliente,
+    COALESCE(p.nro_doc,e.ruc) AS codigo_cliente, 
     COALESCE(p.email, e.email) AS email_cliente,
     COALESCE(p.telefono, e.telefono) AS telefono_cliente,
     c.direccion AS direccion_cliente,

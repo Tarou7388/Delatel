@@ -222,7 +222,9 @@
             <table id="listarCliente" class="table table-striped mt-4">
                 <thead>
                     <th>Nombre cliente</th>
-                    <th>Nro identificador</th>
+                    <th>N° identificador</th>
+                    <th>Emailr</th>
+                    <th>Teléfono</th>
                     <th>Dirección</th>
                     <th>Referencia</th>
                     <th>Coordenadas</th>
