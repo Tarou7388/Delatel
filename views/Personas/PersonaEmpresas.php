@@ -7,6 +7,28 @@
     </select>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateModalLabel">Actualizar Cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="updateForm">
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="saveChanges">Guardar cambios</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div class="container-fluid px-4 mt-5">
     <div class="card d-none" id="divEmpresaCard">
         <div class="card-header bg-secondary text-white">
@@ -199,58 +221,16 @@
         <div class="card-body">
             <table id="listarCliente" class="table table-striped mt-4">
                 <thead>
-                    <tr>
-                        <th>N°</th>
-                        <th>Nombres y Apellidos</th>
-                        <th>Tipo Doc.</th>
-                        <th>Numero de Doc.</th>
-                        <th>Telefono</th>
-                        <th>Email</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
-                    </tr>
+                    <th>Nombre cliente</th>
+                    <th>Nro identificador</th>
+                    <th>Dirección</th>
+                    <th>Referencia</th>
+                    <th>Coordenadas</th>
+                    <th>Acciones</th>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>persona 1</td>
-                        <td>DNI</td>
-                        <td>71592495</td>
-                        <td>907520277</td>
-                        <td>example@example.com</td>
-                        <td>Activo</td>
-                        <td>
-                            <button class="btn btn-primary" title="Actualizar" data-bs-toggle="modal" data-bs-target="#updateModal">
-                                <i class="fas fa-sync-alt"></i>
-                            </button>
-                            <button class="btn btn-danger" title="Eliminar">
-                                <i class="fas fa-trash-alt"></i> <!-- Font Awesome icon for delete -->
-                            </button>
-                        </td>
-
-                    </tr>
                 </tbody>
             </table>
-        </div>
-    </div>
-    <!-- Modal -->
-    <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="updateModalLabel">Actualizar Cliente</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="updateForm">
-
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" id="saveChanges">Guardar cambios</button>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -264,6 +244,7 @@
 <?php require_once "../../footer.php"; ?>
 <script type="module" src="../../js/Empresa.js"></script>
 <script type="module" src="../../js/Persona.js"></script>
+<script type="module" src="../../js/ListarClientes.js"></script>
 
 </body>
 

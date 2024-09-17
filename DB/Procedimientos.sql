@@ -561,8 +561,8 @@ FROM
     LEFT JOIN tb_usuarios u2 ON s.iduser_update = u2.id_usuario
     LEFT JOIN tb_usuarios u3 ON s.iduser_inactive = u3.id_usuario;
 
-Create view vw_listar_sectores AS
-Select id_sector, sector
+CREATE VIEW vw_listar_sectores AS
+SELECT id_sector, sector
 FROM tb_sectores;
 
 CREATE VIEW view_paquetes_info AS
@@ -573,3 +573,19 @@ SELECT
     p.tipo_paquete AS tipo_paquete
 FROM tb_paquetes p
     JOIN tb_servicios s ON p.id_servicio = s.id_servicio;
+    
+    
+CREATE VIEW vw_clientes_listar AS
+SELECT
+    c.id_cliente,
+    COALESCE(p.nombres, e.nombre_comercial) AS nombre_cliente,
+    COALESCE(p.apellidos, e.representante_legal) AS representante_cliente,
+    COALESCE(p.email, e.email) AS email_cliente,
+    COALESCE(p.telefono, e.telefono) AS telefono_cliente,
+    c.direccion AS direccion_cliente,
+    c.referencia AS referencia_cliente,
+    c.coordenadas AS coordenadas_cliente
+FROM
+    tb_clientes c
+LEFT JOIN tb_personas p ON c.id_persona = p.id_persona
+LEFT JOIN tb_empresas e ON c.id_empresa = e.id_empresa;

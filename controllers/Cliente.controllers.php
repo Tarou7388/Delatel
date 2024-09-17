@@ -3,21 +3,25 @@ require_once '../models/Cliente.php';
 
 $cliente = new Cliente();
 
-if(isset($_GET['operacion'])){
+if (isset($_GET['operacion'])) {
   switch ($_GET['operacion']) {
     case 'getByDoc':
       $valor = $_GET['numDoc'];
-      if($valor){
-        if(strlen($valor) == 9 || strlen($valor) == 8){
+      if ($valor) {
+        if (strlen($valor) == 9 || strlen($valor) == 8) {
           $resultado = $cliente->getByPersona(["numDoc" => $valor]);
-        }elseif(strlen($valor) == 11){
+        } elseif (strlen($valor) == 11) {
           $resultado = $cliente->getByEmpresa(["numDoc" => $valor]);
-        }else{
+        } else {
           $resultado = ["error" => "Valor no válido"];
         }
-      }else{
+      } else {
         $resultado = ["error" => "Valor debe ser numérico"];
       }
+      echo json_encode($resultado);
+      break;
+    case 'getAll':
+      $resultado = $cliente->getAll();
       echo json_encode($resultado);
       break;
   }

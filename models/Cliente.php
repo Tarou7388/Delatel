@@ -17,7 +17,7 @@ class Cliente extends Conexion
     {
         try {
             $consulta = $this->pdo->prepare("CALL spu_clientes_registrar(?,?,?,?,?,?)");
-            $status= $consulta->execute(array(
+            $status = $consulta->execute(array(
                 $data["idPersona"],
                 $data["idempresa"],
                 $data["direccion"],
@@ -59,11 +59,18 @@ class Cliente extends Conexion
         );
         return $consulta->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function getByEmpresa($params=[]){
+    public function getByEmpresa($params = [])
+    {
         $consulta = $this->pdo->prepare("CALL spu_cliente_empresa_buscar(?)");
         $consulta->execute(
             [$params['numDoc']]
         );
+        return $consulta->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getAll()
+    {
+        $consulta = $this->pdo->prepare(`SELECT * FROM vw_clientes_listar`);
         return $consulta->fetchAll(PDO::FETCH_ASSOC);
     }
 }
