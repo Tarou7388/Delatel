@@ -157,6 +157,7 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log(data);
         if (data.Guardado) {
           alert("Correcto");
+          tablaClientes.ajax.reload();
         } else {
           alert("Error: Verifique");
         }

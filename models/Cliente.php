@@ -70,7 +70,8 @@ class Cliente extends Conexion
 
     public function getAll()
     {
-        $consulta = $this->pdo->prepare(`SELECT * FROM vw_clientes_listar`);
+        $consulta = $this->pdo->prepare("SELECT * FROM vw_clientes_listar");
+        $consulta->execute();
         return $consulta->fetchAll(PDO::FETCH_ASSOC);
     }
 }

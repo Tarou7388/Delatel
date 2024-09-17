@@ -244,9 +244,10 @@
 
 
 <?php require_once "../../footer.php"; ?>
+<script type="module" src="../../js/ListarClientes.js"></script>
 <script type="module" src="../../js/Empresa.js"></script>
 <script type="module" src="../../js/Persona.js"></script>
-<script type="module" src="../../js/ListarClientes.js"></script>
+
 
 </body>
 

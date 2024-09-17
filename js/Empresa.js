@@ -86,6 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((response) => response.json())
       .then((data) => {
         if (data.Guardado) {
+          tablaClientes.ajax.reload();
           alert("Cliente registrado");
         } else {
           alert("Error: Verifique");
