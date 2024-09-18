@@ -37,7 +37,7 @@ BEGIN
 END $$
 
 DELIMITER $$
-CREATE PROCEDURE spu_clientes_actualizar(
+CREATE PROCEDURE spu_clientes_actualizar_old(
     p_id_persona        INT,
     p_id_empresa        INT,
     p_direccion         VARCHAR(50),
@@ -97,3 +97,63 @@ LEFT JOIN
     tb_empresas e ON e.id_empresa = c.id_empresa
     WHERE e.ruc = _ruc;
 END$$
+
+DELIMITER $$
+CREATE PROCEDURE spu_clientes_actualizar(
+    p_identificador VARCHAR(15),
+    p_nombre VARCHAR(100),
+    p_apellidos VARCHAR(30),
+    p_email VARCHAR(100),
+    p_telefono CHAR(9),
+    p_direccion VARCHAR(250),
+    p_referencia VARCHAR(150),
+    p_coordenadas VARCHAR(50)
+)
+BEGIN
+    DECLARE v_tipo_doc CHAR(3);
+    DECLARE v_nro_doc VARCHAR(15);
+
+    IF LENGTH(p_identificador) = 8 THEN
+        SET v_tipo_doc = 'DNI';
+        SET v_nro_doc = p_identificador;
+
+        UPDATE tb_personas
+        SET 
+            nombres = p_nombre,
+            apellidos = p_apellidos,
+            email = p_email,
+            telefono = p_telefono,
+            update_at = NOW()
+        WHERE nro_doc = v_nro_doc AND tipo_doc = v_tipo_doc AND inactive_at IS NULL;
+    
+    ELSEIF LENGTH(p_identificador) = 11 THEN
+        SET v_tipo_doc = 'RUC';
+        SET v_nro_doc = p_identificador;
+
+        UPDATE tb_empresas
+        SET 
+            nombre_comercial = p_nombre,
+            email = p_email,
+            telefono = p_telefono,
+            update_at = NOW()
+        WHERE ruc = v_nro_doc AND inactive_at IS NULL;
+    END IF;
+
+    UPDATE tb_clientes
+    SET 
+        direccion = p_direccion,
+        referencia = p_referencia,
+        coordenadas = p_coordenadas,
+        update_at = NOW()
+    WHERE id_cliente = (
+        SELECT id_cliente
+        FROM tb_clientes
+        WHERE (id_persona IN (
+                SELECT id_persona FROM tb_personas WHERE nro_doc = v_nro_doc AND tipo_doc = v_tipo_doc
+            ) OR id_empresa IN (
+                SELECT id_empresa FROM tb_empresas WHERE ruc = v_nro_doc
+            )) AND inactive_at IS NULL
+    );
+
+END $$
+
