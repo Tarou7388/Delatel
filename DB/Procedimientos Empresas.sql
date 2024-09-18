@@ -41,3 +41,40 @@ BEGIN
     
     SELECT LAST_INSERT_ID() AS id_empresa;
 END $$
+
+
+CREATE PROCEDURE spu_empresas_actualizar(
+    p_ruc                	VARCHAR(11),
+    p_representante_legal 	VARCHAR(70),
+    p_razon_social        	VARCHAR(100),
+    p_nombre_comercial    	VARCHAR(100),
+    p_telefono            	CHAR(9),
+    p_email               	VARCHAR(100),
+    p_iduser_update       	INT,
+    p_id_empresa          	INT
+)
+BEGIN
+    UPDATE tb_empresas
+    SET 
+        ruc = p_ruc,
+        representante_legal = p_representante_legal,
+        razon_social = p_razon_social,
+        nombre_comercial = p_nombre_comercial,
+        telefono = p_telefono,
+        email = p_email,
+        iduser_update = p_iduser_update,
+        update_at = NOW()
+    WHERE id_empresa = p_id_empresa;
+END $$
+
+CREATE PROCEDURE spu_empresas_eliminar(
+    p_id_empresa INT,
+    p_iduser_inactive INT
+)
+BEGIN
+    UPDATE tb_empresas
+    SET 
+        inactive_at = NOW(),
+        iduser_inactive = p_iduser_inactive
+    WHERE id_empresa = p_id_empresa;
+END $$
