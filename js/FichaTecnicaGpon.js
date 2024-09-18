@@ -9,11 +9,28 @@ document.addEventListener("DOMContentLoaded", () => {
     const txtPrecioConector = document.getElementById('txtPrecioConector');
     const txtCostoConector = document.getElementById('txtCostoConector');
 
+    let flagFichaInstalacion = false;
+
     (async () => {
         const response = await fetch(`${config.HOST}controllers/contrato.controllers.php?operacion=obtenerFichaInstalacion&id=${idContrato}`);
         const data = await response.json();
-        document.getElementById('txtUsuario').value = data.nombre_cliente;
-        document.getElementById('txtPlan').value = data.servicio;
+        console.log(data);  
+        document.getElementById('txtUsuario').value = data[0].nombre_cliente;
+        document.getElementById('txtPlan').value = data[0].servicio;
+        if(data[0].ficha_instalacion){
+            flagFichaInstalacion = true;
+        }else{
+            flagFichaInstalacion = false;
+        }
+    })();
+
+    (async () => {
+        const txtSsdi = document.querySelector("#txtSsdi").value
+        const txtSeguridad = document.querySelector("#txtSeguridad").value
+        const txtMarcaModelo = document.querySelector("#txtMarcaModelo").value
+        const slcBanda = document.querySelector("#slcBanda").value;
+        const txtAntenas = document.querySelector("#txtAntenas").value;
+        console.log(txtSsdi, txtSeguridad, txtMarcaModelo, slcBanda, txtAntenas);
     })();
 
     function calcularCostos() {
