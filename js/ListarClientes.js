@@ -85,27 +85,27 @@ $('#listarCliente tbody').on('click', '.btn-edit', function () {
     fetch(`${config.HOST}controllers/cliente.controllers.php?operacion=getByDoc&numDoc=${idcliente}`)
         .then(response => response.json())
         .then(data => {
-            console.log(data);
+            console.log(data[0]);
             if (idcliente.toString().length >= 8 && idcliente.toString().length <= 10) {
-                $('#editNombrePersona').val(data.nombre);
-                // let nombreParts = data.nombre.split(', ');
-                // if (nombreParts.length === 2) {
-                //     $('#editNombrePersona').val(nombreParts[1]);
-                //     $('#editApellidosPersona').val(nombreParts[0]);
-                // }
-                $('#editEmailPersona').val(data.email);
-                $('#editTelefonoPersona').val(data.telefono);
-                $('#editDireccionPersona').val(data.direccion);
-                $('#editReferenciaPersona').val(data.referencia);
-                $('#editCoordenadasPersona').val(data.coordenadas);
+                $('#editNombrePersona').val(data[0].nombre);
+                let nombreParts = data[0].nombre.split(', ');
+                if (nombreParts.length === 2) {
+                    $('#editNombrePersona').val(nombreParts[1]);
+                    $('#editApellidosPersona').val(nombreParts[0]);
+                }
+                $('#editEmailPersona').val(data[0].email);
+                $('#editTelefonoPersona').val(data[0].telefono);
+                $('#editDireccionPersona').val(data[0].direccion);
+                $('#editReferenciaPersona').val(data[0].referencia);
+                $('#editCoordenadasPersona').val(data[0].coordenadas);
                 $('#editPersonaModal').modal('show');
             } else if (idcliente.toString().length == 11) {
-                $('#editNombreEmpresa').val(data.nombre);
-                $('#editEmailEmpresa').val(data.email);
-                $('#editTelefonoEmpresa').val(data.telefono);
-                $('#editDireccionEmpresa').val(data.direccion);
-                $('#editReferenciaEmpresa').val(data.referencia);
-                $('#editCoordenadasEmpresa').val(data.coordenadas);
+                $('#editNombreEmpresa').val(data[0].nombre);
+                $('#editEmailEmpresa').val(data[0].email);
+                $('#editTelefonoEmpresa').val(data[0].telefono);
+                $('#editDireccionEmpresa').val(data[0].direccion);
+                $('#editReferenciaEmpresa').val(data[0].referencia);
+                $('#editCoordenadasEmpresa').val(data[0].coordenadas);
                 $('#editEmpresaModal').modal('show');
             }
         })
