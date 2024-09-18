@@ -24,9 +24,6 @@ window.addEventListener("DOMContentLoaded", () => {
     if (rol.value.trim() === "") {
       btnAgregar.disabled = false;
       btnActualizar.style.display = 'none';
-    } else {
-      btnAgregar.disabled = true;
-      btnActualizar.style.display = 'inline-block';
     }
   }
   rol.addEventListener('input', evaluarCampo); 
