@@ -7,27 +7,102 @@
     </select>
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+<!-- Modal para Empresa -->
+<div class="modal fade" id="editEmpresaModal" tabindex="-1" aria-labelledby="editEmpresaModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="updateModalLabel">Actualizar Cliente</h5>
+                <h5 class="modal-title" id="editEmpresaModalLabel">Editar Empresa</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="updateForm">
-
+                <form id="editEmpresaForm">
+                    <div class="mb-3">
+                        <label for="editNombreEmpresa" class="form-label">Nombre Comercial</label>
+                        <input type="text" class="form-control" id="editNombreEmpresa">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editEmailEmpresa" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="editEmailEmpresa">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editTelefonoEmpresa" class="form-label">Teléfono</label>
+                        <input type="text" class="form-control" id="editTelefonoEmpresa">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editDireccionEmpresa" class="form-label">Dirección</label>
+                        <input type="text" class="form-control" id="editDireccionEmpresa">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editReferenciaEmpresa" class="form-label">Referencia</label>
+                        <input type="text" class="form-control" id="editReferenciaEmpresa">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editCoordenadasEmpresa" class="form-label">Coordenadas</label>
+                        <input type="text" class="form-control" id="editCoordenadasEmpresa">
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" id="saveChanges">Guardar cambios</button>
+                <button type="button" class="btn btn-primary" id="saveEmpresaChanges">Guardar cambios</button>
             </div>
         </div>
     </div>
 </div>
 
+
+<!-- Modal para Persona -->
+<div class="modal fade" id="editPersonaModal" tabindex="-1" aria-labelledby="editPersonaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editPersonaModalLabel">Editar Persona</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editPersonaForm">
+                    <div class="mb-3">
+                        <label for="editNombrePersona" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="editNombrePersona">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editApellidosPersona" class="form-label">Apellidos</label>
+                        <input type="text" class="form-control" id="editApellidosPersona">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editEmailPersona" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="editEmailPersona">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editTelefonoPersona" class="form-label">Teléfono</label>
+                        <input type="text" class="form-control" id="editTelefonoPersona">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editDireccionPersona" class="form-label">Dirección</label>
+                        <input type="text" class="form-control" id="editDireccionPersona">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editReferenciaPersona" class="form-label">Referencia</label>
+                        <input type="text" class="form-control" id="editReferenciaPersona">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editCoordenadasPersona" class="form-label">Coordenadas</label>
+                        <input type="text" class="form-control" id="editCoordenadasPersona">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="savePersonaChanges">Guardar cambios</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Contenido del registro -->
 
 <div class="container-fluid px-4 mt-5">
     <div class="card d-none" id="divEmpresaCard">
@@ -202,7 +277,6 @@
                         </div>
                     </div>
                 </div>
-
 
                 <div class="d-flex justify-content-end mt-3">
                     <button type="submit" class="btn btn-primary me-2" id="btnRegistrarPersona">Registrar</button>
