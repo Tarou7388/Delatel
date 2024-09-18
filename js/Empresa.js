@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
           frmEmpresas.reset();
         })
         .catch((e) => {
-          console.error(e);
+          alert("EMPRESA YA REGISTRADA")
         });
     
   }

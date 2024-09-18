@@ -21,7 +21,7 @@ function actualizar(idcliente) {
       $("#editReferenciaPersona").val() || $("#editReferenciaEmpresa").val(),
     coordenadas:
       $("#editCoordenadasPersona").val() || $("#editCoordenadasEmpresa").val(),
-    iduser_update: userid, // Asumiendo que el ID del usuario está en un objeto llamado user
+    iduser_update: userid,
   };
 
   fetch(
@@ -35,8 +35,8 @@ function actualizar(idcliente) {
     }
   )
     .then((response) => response.json())
-    .then((result) => {
-      if (result.Actualizado) {
+    .then((data) => {
+      if (data.Actualizado) {
         $("#listarCliente").DataTable().ajax.reload();
         $("#editPersonaModal").modal("hide");
         $("#editEmpresaModal").modal("hide");
@@ -44,11 +44,10 @@ function actualizar(idcliente) {
       } else {
         alert(
           "Error al actualizar el cliente: " +
-            (result.error || "Error desconocido")
+          (data.error || "Error desconocido")
         );
       }
-    })
-    .catch((error) => console.error("Error updating client:", error));
+    });
 }
 
 window.tablaClientes = $("#listarCliente").DataTable({
@@ -158,9 +157,65 @@ $("#listarCliente tbody").on("click", ".btn-edit", function () {
         $("#editEmpresaModal").modal("show");
       }
 
-      $("#formActualizarCliente").on("click", function () {
-        actualizar(idcliente);
-      });
+      $("#savePersonaChanges")
+        .off("click")
+        .on("click", function () {
+          actualizar(idcliente);
+        });
+      $("#saveEmpresaChanges")
+        .off("click")
+        .on("click", function () {
+          actualizar(idcliente);
+        });
     })
     .catch((error) => console.error("Error fetching client data:", error));
+});
+
+$("#listarCliente tbody").on("click", ".btn-delete", function () {
+  if (confirm("¿Estás seguro de eliminar este registro? No se podrá volver a registrar nuevamente")) {
+    const idcliente = $(this).data("id");
+    const data = { 
+      id: idcliente,
+      iduser: userid
+    };
+
+    fetch(
+      `${config.HOST}controllers/cliente.controllers.php`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    ).then((response) => response.json())
+      .then((data) => {
+        if (data.eliminado) {
+          $("#listarCliente").DataTable().ajax.reload();
+          alert("Cliente eliminado exitosamente.");
+        } else {
+          alert("Error al eliminar el cliente.");
+        }
+      });
+  }
+});
+
+
+$('#editPersonaModal').on('hidden.bs.modal', function () {
+  $("#editNombrePersona").val('');
+  $("#editApellidosPersona").val('');
+  $("#editEmailPersona").val('');
+  $("#editTelefonoPersona").val('');
+  $("#editDireccionPersona").val('');
+  $("#editReferenciaPersona").val('');
+  $("#editCoordenadasPersona").val('');
+});
+
+$('#editEmpresaModal').on('hidden.bs.modal', function () {
+  $("#editNombreEmpresa").val('');
+  $("#editEmailEmpresa").val('');
+  $("#editTelefonoEmpresa").val('');
+  $("#editDireccionEmpresa").val('');
+  $("#editReferenciaEmpresa").val('');
+  $("#editCoordenadasEmpresa").val('');
 });
