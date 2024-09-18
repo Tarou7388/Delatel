@@ -2,11 +2,34 @@ import config from '../env.js';
 
 window.addEventListener("DOMContentLoaded", () => {
   let idRolActual = -1;
-  const userid= user['idUsuario'];
+  const userid = user['idUsuario'];
   const rol = document.getElementById('nombreRol');
   const form = document.getElementById('frmRol');
   const tbody = document.querySelector("#mostrar");
   const tbodyModal = document.querySelector("#cardBodyTabla");
+
+  btnActualizar.style.display = 'none';
+  btnAgregar.disabled = false; 
+
+  function actualizarBotones() {
+    if (btnActualizar) {
+      btnActualizar.style.display = 'inline-block';
+    }
+    if (btnAgregar) {
+      btnAgregar.disabled = true;
+    }
+  }
+
+  function evaluarCampo() {
+    if (rol.value.trim() === "") {
+      btnAgregar.disabled = false;
+      btnActualizar.style.display = 'none';
+    } else {
+      btnAgregar.disabled = true;
+      btnActualizar.style.display = 'inline-block';
+    }
+  }
+  rol.addEventListener('input', evaluarCampo); 
 
   (async function () {
     try {
@@ -27,7 +50,9 @@ window.addEventListener("DOMContentLoaded", () => {
       ordering: false,
       columnDefs: [
         { width: "30px", targets: 0 },
-        { width: "70px", targets: 1 }
+        { width: "30px", targets: 1 },
+        { width: "20px", targets: 2 },
+        { width: "20px", targets: 3 },
       ],
       autoWidth: false,
       language: {
@@ -42,6 +67,7 @@ window.addEventListener("DOMContentLoaded", () => {
       const thid = document.createElement("td");
       thid.textContent = element.rol;
       tr.appendChild(thid);
+
       tbody.appendChild(tr);
       const tdBoton = document.createElement("td");
       const boton = document.createElement("button");
@@ -50,12 +76,44 @@ window.addEventListener("DOMContentLoaded", () => {
       boton.setAttribute("data-idRol", element.id_rol)
       boton.setAttribute("data-bs-target", "#mdlPermisos")
       boton.textContent = "Permisos";
-
-      tr.appendChild(tdBoton)
       tdBoton.appendChild(boton);
+      tr.appendChild(tdBoton);
+
+      // Nueva Columna para el botón Actualizar
+      const tdBotonActualizar = document.createElement("td");
+      const botonActualizar = document.createElement("button");
+      botonActualizar.setAttribute("class", "btnActualizar btn btn-warning");
+      botonActualizar.setAttribute("data-idRol", element.id_rol);
+
+      const iconoLapiz = document.createElement("i");
+      iconoLapiz.setAttribute("class", "fa-regular fa-pen-to-square");
+      iconoLapiz.style.pointerEvents = 'none';
+
+      botonActualizar.appendChild(iconoLapiz);
+
+      tdBotonActualizar.appendChild(botonActualizar);
+      tr.appendChild(tdBotonActualizar);
+
+      // Nueva columna para el botón de Inhabilitar
+      const tdBotonInhabilitar = document.createElement("td");
+      const botonInhabilitar = document.createElement("button");
+      botonInhabilitar.setAttribute("class", "btnInhabilitar btn btn-danger");
+      botonInhabilitar.setAttribute("data-idRol", element.id_rol);
+
+      const iconodelete = document.createElement("i");
+      iconodelete.setAttribute("class", "fa-regular fa-trash-can");
+      iconodelete.style.pointerEvents = 'none';
+
+      botonInhabilitar.appendChild(iconodelete);
+
+      tdBotonInhabilitar.appendChild(botonInhabilitar);
+      tr.appendChild(tdBotonInhabilitar);
+
       tbody.appendChild(tr);
     });
-    permisosBoton(".btnPermisos")
+    permisosBoton(".btnPermisos");
+    actualizarBoton(".btnActualizar");
+    inhabilitarBoton(".btnInhabilitar")
   }
 
   async function obtenerJsonPermisos() {
@@ -95,6 +153,101 @@ window.addEventListener("DOMContentLoaded", () => {
       });
   }
 
+  function actualizarBoton(clase) {
+    const botones = document.querySelectorAll(clase);
+    botones.forEach((boton) => {
+      boton.addEventListener("click", (event) => {
+        const idRol = parseInt(event.target.dataset.idrol);
+        const fila = event.target.closest("tr");
+        const nombreRol = fila.querySelector("td").textContent;
+        document.getElementById('nombreRol').value = nombreRol;
+        idRolActual = idRol;
+        actualizarBotones();
+      });
+    });
+  }
+
+  async function actualizarRol() {
+    const datosAdicionales = {
+      operacion: 'updateRol'
+    };
+    fetch('../../controllers/Roles.controllers.php', {
+      method: 'PUT',
+      body: JSON.stringify({
+        adicionales: datosAdicionales,
+        id_rol: idRolActual,
+        rol: rol.value,
+        iduser_update: userid
+      })
+    })
+      .then(respuesta => {
+        if (!respuesta.ok) {
+          throw new Error(`Error ${respuesta.status}: ${respuesta.statusText}`);
+        }
+        return respuesta.json();
+      })
+      .then(data => {
+        if(data.Actualizado){
+          console.log("Rol Actualizado Correctamente");
+          form.reset();
+          location.reload();
+        }else{
+          console.log("No se pudo Actualizar el Rol")
+        }
+
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert("No se pudo actualizar el rol");
+      });
+  }
+
+  function inhabilitarBoton(clase) {
+    const botones = document.querySelectorAll(clase);
+    botones.forEach((boton) => {
+      boton.addEventListener("click", (event) => {
+        const idRol = parseInt(event.target.dataset.idrol);
+        idRolActual = idRol;
+        if (confirm("¿Estás seguro de que deseas inhabilitar este rol?")) {
+          inhabilitarRol(idRol, userid);
+        }
+      });
+    });
+  }
+
+  async function inhabilitarRol() {
+    const datosAdicionales = {
+      operacion: 'inhabilitarRol'
+    };
+    fetch('../../controllers/Roles.controllers.php', {
+      method: 'PUT',
+      body: JSON.stringify({
+        adicionales: datosAdicionales,
+        id_rol: idRolActual,
+        iduser_inactive: userid
+      })
+    })
+    .then(respuesta => {
+      if (!respuesta.ok) {
+        throw new Error(`Error ${respuesta.status}: ${respuesta.statusText}`);
+      }
+      return respuesta.json();
+    })
+      .then(data => {
+        if (data.Inhabilitado) {
+          alert("Rol inhabilitado exitosamente.");
+          form.reset();
+          location.reload();
+        } else {
+          alert("Error al inhabilitar el rol.");
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert("No se pudo inhabilitar el rol.");
+      });
+  }
+
   async function rolesPermisos(idRol) {
     const resultado = await fetch(`${config.HOST}controllers/Roles.controllers.php?operacion=getRolPermisos&idRol=${idRol}`)
     const datos = await resultado.json();
@@ -113,19 +266,19 @@ window.addEventListener("DOMContentLoaded", () => {
       moduloCelda.textContent = modulo;
 
       const leerCelda = document.createElement('td');
-      leerCelda.innerHTML = `<input type="checkbox" class="leer" id="${modulo}-leer" ${permisosModulo.leer ? 'checked' : ''}/>`;
+      leerCelda.innerHTML = `<input type="checkbox" class="leer form-check-input" id="${modulo}-leer" ${permisosModulo.leer ? 'checked' : ''}/>`;
       leerCelda.style.textAlign = 'center';
 
       const crearCelda = document.createElement('td');
-      crearCelda.innerHTML = `<input type="checkbox" class="crear" id="${modulo}-crear" ${permisosModulo.crear ? 'checked' : ''}/>`;
+      crearCelda.innerHTML = `<input type="checkbox" class="crear form-check-input" id="${modulo}-crear" ${permisosModulo.crear ? 'checked' : ''}/>`;
       crearCelda.style.textAlign = 'center';
 
       const actualizarCelda = document.createElement('td');
-      actualizarCelda.innerHTML = `<input type="checkbox" class="actualizar" id="${modulo}-actualizar" ${permisosModulo.actualizar ? 'checked' : ''}/>`;
+      actualizarCelda.innerHTML = `<input type="checkbox" class="actualizar form-check-input" id="${modulo}-actualizar" ${permisosModulo.actualizar ? 'checked' : ''}/>`;
       actualizarCelda.style.textAlign = 'center';
 
       const eliminarCelda = document.createElement('td');
-      eliminarCelda.innerHTML = `<input type="checkbox" class="eliminar" id="${modulo}-eliminar" ${permisosModulo.eliminar ? 'checked' : ''}/>`;
+      eliminarCelda.innerHTML = `<input type="checkbox" class="eliminar form-check-input" id="${modulo}-eliminar" ${permisosModulo.eliminar ? 'checked' : ''}/>`;
       eliminarCelda.style.textAlign = 'center';
 
       fila.appendChild(moduloCelda);
@@ -176,15 +329,15 @@ window.addEventListener("DOMContentLoaded", () => {
     const datosAdicionales = {
       operacion: 'updatePermisos',
       idRol: idRolActual
-      
+
     };
 
-    fetch(`${config.HOST}controllers/Roles.controllers.php`, { // Ajusta la ruta a tu script PHP
+    fetch(`${config.HOST}controllers/Roles.controllers.php`, { 
       method: 'PUT',
       body: JSON.stringify({
         permisos: permisosActualizados,
         adicionales: datosAdicionales,
-        iduser_update:userid
+        iduser_update: userid
       })
     })
       .then(respuesta => respuesta.json())
@@ -210,8 +363,15 @@ window.addEventListener("DOMContentLoaded", () => {
 
   form.addEventListener('submit', function (event) {
     event.preventDefault();
-    if (confirm("¿Estás seguro de que quieres registrar el rol?")) {
-      registrarRoles()
+
+    if (idRolActual === -1) { 
+      if (confirm("¿Estás seguro de que quieres registrar el rol?")) {
+        registrarRoles();
+      }
+    } else { 
+      if (confirm("¿Estás seguro de actualizar el rol?")) {
+        actualizarRol();
+      }
     }
   });
 

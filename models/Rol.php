@@ -88,4 +88,32 @@ class Rol extends Conexion
       return $e->getMessage();
     }
   }
+
+  public function updateRol($data = []):bool{
+    try {
+      $query = $this->pdo->prepare("CALL spu_roles_actualizar(?,?,?)");
+      $status = $query->execute([
+        $data["id_rol"],
+        $data["rol"],
+        $data["iduser_update"]
+      ]);
+      return $status;
+    } catch (Exception $e) {
+      error_log($e->getMessage());
+      return false;
+    }
+  }
+
+  public function inhabilitarRol($data = []):bool{
+    try{
+      $query = $this->pdo->prepare("CALL spu_roles_inhabilitar(?,?)");
+      $status = $query->execute([
+        $data["id_rol"],
+        $data["iduser_inactive"]
+      ]);
+      return $status;
+    }catch(Exception $e){
+      return $e->getMessage();
+    }
+  }
 }

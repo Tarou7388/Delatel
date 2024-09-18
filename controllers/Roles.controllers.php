@@ -65,5 +65,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
       $resultado = $rol->updatePermisos($datosEnviar);
       echo json_encode(["guardado" => $resultado]);
       break;
+    case 'updateRol':
+      if (isset($datos['id_rol'])) {
+        $updateData = [
+            "rol" => $datos['rol'],
+            "iduser_update" => $datos['iduser_update'],
+            "id_rol" => $datos['id_rol']
+        ];
+        $estado = $rol->updateRol($updateData);
+        echo json_encode(["Actualizado" => $estado]);
+      } else {
+        echo json_encode(["Actualizado" => false, "error" => "ID de rol no encontrado"]);
+      }
+      break;
+      case 'inhabilitarRol':
+        if (isset($datos['id_rol']) && isset($datos['iduser_inactive'])) {
+            $inhabilitarData = [
+                "id_rol" => $datos['id_rol'],
+                "iduser_inactive" => $datos['iduser_inactive']
+            ];
+            $estado = $rol->inhabilitarRol($inhabilitarData);
+            echo json_encode(["Inhabilitado" => $estado]);
+        } else {
+            echo json_encode(["Inhabilitado" => false, "error" => "ID de rol o usuario no encontrado"]);
+        }
+        break;
   }
 }
