@@ -48,15 +48,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
   $inputData = file_get_contents('php://input');
   $data = json_decode($inputData, true);
 
-  if (isset($data['id_cliente'])) {
+  if (isset($data['identificador'])) {
     $datos = [
-      "idPersona"     => $data['idPersona'],
-      "idempresa"     => $data['idempresa'],
-      "direccion"     => $data['direccion'],
-      "referencia"    => $data['referencia'],
-      "iduser_update" => $data['iduser_update'],
-      "id_cliente"    => $data['id_cliente'],
-      "coordenadas"    => $data['coordenadas']
+      "identificador"   => $data['identificador'],
+      "nombre"         => $data['nombre'],
+      "apellidos"      => $data['apellidos'],
+      "email"          => $data['email'],
+      "telefono"       => $data['telefono'],
+      "direccion"      => $data['direccion'],
+      "referencia"     => $data['referencia'],
+      "coordenadas"    => $data['coordenadas'],
+      "iduser_update"  => $data['iduser_update']
     ];
 
     $estado = $cliente->update($datos);

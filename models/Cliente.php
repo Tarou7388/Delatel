@@ -35,21 +35,25 @@ class Cliente extends Conexion
     {
         $status = false;
         try {
-            $consulta = $this->pdo->prepare("CALL spu_clientes_actualizar(?,?,?,?,?,?)");
+            $consulta = $this->pdo->prepare("CALL spu_clientes_actualizar(?,?,?,?,?,?,?,?,?)");
             $status = $consulta->execute(array(
-                $data["id_persona"],
-                $data["id_empresa"],
+                $data["identificador"],
+                $data["nombre"],
+                $data["apellidos"],
+                $data["email"],
+                $data["telefono"],
                 $data["direccion"],
                 $data["referencia"],
-                $data["iduser_update"],
-                $data["id_cliente"],
-                $data["coordenadas"]
+                $data["coordenadas"],
+                $data["iduser_update"]
             ));
             return $status;
         } catch (Exception $e) {
             die($e->getMessage());
         }
     }
+
+
 
     public function getByPersona($params = [])
     {

@@ -1,5 +1,8 @@
 import config from "../env.js";
 
+const ruta = `${config.HOST}/controllers/Cliente.controllers.php?operacion=getAll`;
+const userid = user["idUsuario"];
+
 if (permisos[0].permisos.inventariado.leer != 1) {
   window.location.href = `${config.HOST}views`;
 }
@@ -18,12 +21,13 @@ function actualizar(idcliente) {
       $("#editReferenciaPersona").val() || $("#editReferenciaEmpresa").val(),
     coordenadas:
       $("#editCoordenadasPersona").val() || $("#editCoordenadasEmpresa").val(),
+    iduser_update: userid, // Asumiendo que el ID del usuario está en un objeto llamado user
   };
 
   fetch(
     `${config.HOST}controllers/cliente.controllers.php?operacion=actualizar`,
     {
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
@@ -32,26 +36,27 @@ function actualizar(idcliente) {
   )
     .then((response) => response.json())
     .then((result) => {
-      if (result.success) {
-        $("#listarCliente").DataTable().ajax.reload(); // Recargar la tabla
-        $("#editPersonaModal").modal("hide"); // Ocultar el modal
+      if (result.Actualizado) {
+        $("#listarCliente").DataTable().ajax.reload();
+        $("#editPersonaModal").modal("hide");
         $("#editEmpresaModal").modal("hide");
         alert("Cliente actualizado exitosamente.");
       } else {
-        alert("Error al actualizar el cliente: " + result.message);
+        alert(
+          "Error al actualizar el cliente: " +
+            (result.error || "Error desconocido")
+        );
       }
     })
     .catch((error) => console.error("Error updating client:", error));
 }
 
-const ruta = `${config.HOST}/controllers/Cliente.controllers.php?operacion=getAll`;
-const userid = user["idUsuario"];
 window.tablaClientes = $("#listarCliente").DataTable({
   dom: `
-                <"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6 text-end"f>>
-                <"row"<"col-sm-12"tr>>
-                <"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>
-`,
+    <"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6 text-end"f>>
+    <"row"<"col-sm-12"tr>>
+    <"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>
+  `,
   buttons: [
     {
       extend: "csv",
@@ -101,7 +106,7 @@ window.tablaClientes = $("#listarCliente").DataTable({
   columns: [
     { data: "nombre_cliente", title: "Nombre cliente" },
     { data: "codigo_cliente", title: "N° identificador" },
-    { data: "email_cliente", title: "Emailr" },
+    { data: "email_cliente", title: "Email" },
     { data: "telefono_cliente", title: "Teléfono" },
     { data: "direccion_cliente", title: "Dirección" },
     { data: "referencia_cliente", title: "Referencia" },
@@ -111,13 +116,14 @@ window.tablaClientes = $("#listarCliente").DataTable({
       title: "Acciones",
       render: function (data, type, row) {
         return `
-<button class="btn btn-warning btn-edit" data-id="${row.codigo_cliente}"><i class="fa-regular fa-pen-to-square"></i></button>
-<button class="btn btn-danger btn-delete" data-id="${row.codigo_cliente}"><i class="fa-regular fa-trash-can"></i></button>
-`;
+          <button class="btn btn-warning btn-edit" data-id="${row.codigo_cliente}"><i class="fa-regular fa-pen-to-square"></i></button>
+          <button class="btn btn-danger btn-delete" data-id="${row.codigo_cliente}"><i class="fa-regular fa-trash-can"></i></button>
+        `;
       },
     },
   ],
 });
+
 $("#listarCliente tbody").on("click", ".btn-edit", function () {
   const idcliente = $(this).data("id");
 
@@ -126,8 +132,6 @@ $("#listarCliente tbody").on("click", ".btn-edit", function () {
   )
     .then((response) => response.json())
     .then((data) => {
-      console.log(data[0]);
-
       if (
         idcliente.toString().length >= 8 &&
         idcliente.toString().length <= 10
@@ -154,7 +158,9 @@ $("#listarCliente tbody").on("click", ".btn-edit", function () {
         $("#editEmpresaModal").modal("show");
       }
 
-      $("#formActualizarCliente").on("click", actualizar(idcliente));
+      $("#formActualizarCliente").on("click", function () {
+        actualizar(idcliente);
+      });
     })
     .catch((error) => console.error("Error fetching client data:", error));
 });

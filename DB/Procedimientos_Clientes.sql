@@ -111,7 +111,8 @@ CREATE PROCEDURE spu_clientes_actualizar(
     p_telefono CHAR(9),
     p_direccion VARCHAR(250),
     p_referencia VARCHAR(150),
-    p_coordenadas VARCHAR(50)
+    p_coordenadas VARCHAR(50),
+    p_iduser_update INT
 )
 BEGIN
     DECLARE v_tipo_doc CHAR(3);
@@ -127,9 +128,10 @@ BEGIN
             apellidos = p_apellidos,
             email = p_email,
             telefono = p_telefono,
-            update_at = NOW()
+            update_at = NOW(),
+            iduser_update=p_iduser_update
         WHERE nro_doc = v_nro_doc AND tipo_doc = v_tipo_doc AND inactive_at IS NULL;
-    
+
     ELSEIF LENGTH(p_identificador) = 11 THEN
         SET v_tipo_doc = 'RUC';
         SET v_nro_doc = p_identificador;
@@ -139,7 +141,8 @@ BEGIN
             nombre_comercial = p_nombre,
             email = p_email,
             telefono = p_telefono,
-            update_at = NOW()
+            update_at = NOW(),
+            iduser_update=p_iduser_update
         WHERE ruc = v_nro_doc AND inactive_at IS NULL;
     END IF;
 
