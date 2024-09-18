@@ -48,7 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
   $inputData = file_get_contents('php://input');
   $data = json_decode($inputData, true);
 
-  if (isset($data['identificador'])) {
+
+  if (isset($data['identificador']) && isset($data['iduser_update'])) {
     $datos = [
       "identificador"   => $data['identificador'],
       "nombre"         => $data['nombre'],
@@ -63,7 +64,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
 
     $estado = $cliente->update($datos);
     echo json_encode(["Actualizado" => $estado]);
-  } else {
-    echo json_encode(["Actualizado" => false, "error" => "ID de cliente no encontrado"]);
+    return;
   }
+
+  if (isset($data['identificador']) && isset($data['iduser_inactive'])) {
+    $datosDelete = [
+      "identificador"   => $data['identificador'],
+      "iduser_inactive" => $data['iduser_inactive']
+    ];
+
+    $estado = $cliente->delete($datosDelete);
+    echo json_encode(["Eliminado" => $estado]);
+    return;
+  }
+
+  echo json_encode(["error" => "Datos insuficientes para la operación"]);
 }

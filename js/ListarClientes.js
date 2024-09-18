@@ -174,9 +174,9 @@ $("#listarCliente tbody").on("click", ".btn-edit", function () {
 $("#listarCliente tbody").on("click", ".btn-delete", function () {
   if (confirm("¿Estás seguro de eliminar este registro? No se podrá volver a registrar nuevamente")) {
     const idcliente = $(this).data("id");
-    const data = { 
-      id: idcliente,
-      iduser: userid
+    const data = {
+      identificador: idcliente,
+      iduser_inactive: userid
     };
 
     fetch(
@@ -190,7 +190,7 @@ $("#listarCliente tbody").on("click", ".btn-delete", function () {
       }
     ).then((response) => response.json())
       .then((data) => {
-        if (data.eliminado) {
+        if (data.Eliminado) {
           $("#listarCliente").DataTable().ajax.reload();
           alert("Cliente eliminado exitosamente.");
         } else {
