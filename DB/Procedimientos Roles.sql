@@ -2,6 +2,26 @@ USE Delatel;
 
 DELIMITER $$
 
+CREATE PROCEDURE spu_roles_registrar(
+    p_rol            VARCHAR(30),
+    p_permisos       JSON,
+    p_iduser_create  INT
+)
+BEGIN
+    INSERT INTO tb_roles (rol, permisos, iduser_create)
+    VALUES (p_rol, p_permisos, p_iduser_create);
+END $$
+
+
+CREATE PROCEDURE spu_registrar_roles(
+    p_rol VARCHAR(30),
+    p_permisos JSON,
+	p_iduser_create INT
+)
+BEGIN
+    INSERT INTO tb_roles (rol, permisos,iduser_create) VALUES (p_rol, p_permisos,p_iduser_create);
+END $$
+
 CREATE PROCEDURE spu_roles_actualizar(
 		p_id_rol INT,
     p_rol VARCHAR(30),
