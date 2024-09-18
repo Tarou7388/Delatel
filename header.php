@@ -91,32 +91,25 @@ if (!isset($_SESSION['login']) || (isset($_SESSION['login']) && !$_SESSION['logi
                 </a>
               </div>
             </div>
+            <a class="nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse5" aria-expanded="false" aria-controls="collapseExample" id=molContratos hidden>
+              <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+              Contactabilidad
+            </a>
+            <div class="collapse" id="collapse5">
+              <div class="ps-4">
+                <a class="nav-link" href="<?= $host; ?>views/Contactabilidad/Contactabilidad.php">
+                  <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                  Contactabilidad
+                </a>
+              </div>
+            </div>
 
-            <a class="nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapseExample" id=molContratos hidden>
+
+            <a class="nav-link" href="<?= $host; ?>views/Contratos/ContratosGeneral.php" id=molContratos>
               <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
               Contratos
             </a>
 
-            <div class="collapse" id="collapse2">
-              <div class="ps-4">
-                <a class="nav-link" href="<?= $host; ?>views/Contratos/FichaTecnicaWisp.php">
-                  <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                  Ficha Instalacion WISP
-                </a>
-                <a class="nav-link" href="<?= $host; ?>views/Contratos/FichaTecnicaGpon.php">
-                  <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                  Ficha Instalacion GPON
-                </a>
-                <a class="nav-link" href="<?= $host; ?>views/Contratos/FichaTecnicaCable.php">
-                  <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                  Ficha Instalacion Cable
-                </a>
-                <a class="nav-link" href="<?= $host; ?>views/Contratos/ContratosGeneral.php">
-                  <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                  Contratos
-                </a>
-              </div>
-            </div>
 
             <a class="nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapseExample" id=molInventariado hidden>
               <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
