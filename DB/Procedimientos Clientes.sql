@@ -3,8 +3,8 @@ USE Delatel;
 CREATE VIEW vw_clientes_listar AS
 SELECT
     c.id_cliente,
-    COALESCE(CONCAT(p.nombres," ", p.apellidos), e.nombre_comercial) AS nombre_cliente,
-    COALESCE(p.nro_doc,e.ruc) AS codigo_cliente, 
+    COALESCE(CONCAT(p.nombres, ", ", p.apellidos), e.nombre_comercial) AS nombre_cliente,
+    COALESCE(p.nro_doc, e.ruc) AS codigo_cliente, 
     COALESCE(p.email, e.email) AS email_cliente,
     COALESCE(p.telefono, e.telefono) AS telefono_cliente,
     c.direccion AS direccion_cliente,
@@ -12,8 +12,10 @@ SELECT
     c.coordenadas AS coordenadas_cliente
 FROM
     tb_clientes c
-LEFT JOIN tb_personas p ON c.id_persona = p.id_persona
-LEFT JOIN tb_empresas e ON c.id_empresa = e.id_empresa;
+LEFT JOIN tb_personas p ON c.id_persona = p.id_persona AND p.inactive_at IS NULL
+LEFT JOIN tb_empresas e ON c.id_empresa = e.id_empresa AND e.inactive_at IS NULL
+WHERE
+    c.inactive_at IS NULL;
 
 DELIMITER $$
 CREATE PROCEDURE spu_clientes_registrar(

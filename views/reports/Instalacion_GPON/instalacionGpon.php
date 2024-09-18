@@ -190,7 +190,7 @@ $HOST = "http://localhost/DELATEL";
       </tr>
       <tr>
         <td class="text-center">PAGO DIGITAL:</td>
-        <td></td>
+        <td colspan="6"></td>
       </tr>
       <tr>
         <td colspan="1" class="text-center">DETALLES: </td>
@@ -241,6 +241,15 @@ $HOST = "http://localhost/DELATEL";
         <td class="text-center">OTROS:</td>
         <td></td>
         <td class="text-center">CATV</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td colspan="4" class="text-center thead-cabecera-5"><h3>CONEXIÓN PLANTA EXTERNA</h3></td>
+      </tr>
+      <tr>
+        <td class="text-center">PUERTO:</td>
+        <td></td>
+        <td class="text-center">CAJA:</td>
         <td></td>
       </tr>
       <tr>
