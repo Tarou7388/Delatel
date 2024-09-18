@@ -294,10 +294,35 @@ window.addEventListener("DOMContentLoaded", () => {
     const checkboxesActualizar = document.querySelectorAll('.actualizar');
     const checkboxesEliminar = document.querySelectorAll('.eliminar');
 
-    function todasActivas(checkboxes) {
-      return Array.from(checkboxes).every(checkbox => checkbox.checked);
-    }
+    // Habilitar o deshabilitar checkboxes de crear, actualizar y eliminar
+    checkboxesLeer.forEach((checkboxLeer, index) => {
+        checkboxLeer.addEventListener('change', () => {
+            const isChecked = checkboxLeer.checked;
+            if(isChecked){
+              checkboxesCrear[index].disabled = false;
+              checkboxesActualizar[index].disabled = false;
+              checkboxesEliminar[index].disabled = false;
+            }else{
+              checkboxesCrear[index].disabled = true;
+              checkboxesActualizar[index].disabled = true;
+              checkboxesEliminar[index].disabled = true;
+              checkboxesCrear[index].checked = false;
+              checkboxesActualizar[index].checked = false;
+              checkboxesEliminar[index].checked = false;
+            }
+            
+        });
+        
+        const isChecked = checkboxLeer.checked;
+        checkboxesCrear[index].disabled = !isChecked;
+        checkboxesActualizar[index].disabled = !isChecked;
+        checkboxesEliminar[index].disabled = !isChecked;
+    });
 
+    function todasActivas(checkboxes) {
+        return Array.from(checkboxes).every(checkbox => checkbox.checked);
+    }
+    
     const leerActivas = todasActivas(checkboxesLeer);
     const crearActivas = todasActivas(checkboxesCrear);
     const actualizarActivas = todasActivas(checkboxesActualizar);
@@ -307,7 +332,12 @@ window.addEventListener("DOMContentLoaded", () => {
     document.querySelector("#chkCrear").checked = crearActivas;
     document.querySelector("#chkEliminar").checked = eliminarActivas;
     document.querySelector("#chkActualizar").checked = actualizarActivas;
+
+    document.querySelector("#chkCrear").disabled = !leerActivas;
+    document.querySelector("#chkActualizar").disabled = !leerActivas;
+    document.querySelector("#chkEliminar").disabled = !leerActivas; 
   }
+
 
   async function actualizarPermisos() {
     const permisosActualizados = {};
@@ -373,11 +403,31 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 
   document.querySelector("#chkLeer").addEventListener('change', (event) => {
+    const crearCheckboxes = document.querySelectorAll('.crear');
+    const actualizarCheckboxes = document.querySelectorAll('.actualizar');
+    const eliminarCheckboxes = document.querySelectorAll('.eliminar');
+
     if (event.target.checked) {
       document.querySelectorAll('.leer').forEach(checkbox => checkbox.checked = true);
+      crearCheckboxes.forEach(checkbox => checkbox.disabled = false);
+      actualizarCheckboxes.forEach(checkbox => checkbox.disabled = false);
+      eliminarCheckboxes.forEach(checkbox => checkbox.disabled = false);
     } else {
       document.querySelectorAll('.leer').forEach(checkbox => checkbox.checked = false);
+      crearCheckboxes.forEach(checkbox => {
+        checkbox.checked = false;
+        checkbox.disabled = true;
+      });
+      actualizarCheckboxes.forEach(checkbox => {
+        checkbox.checked = false;
+        checkbox.disabled = true;
+      });
+      eliminarCheckboxes.forEach(checkbox => {
+        checkbox.checked = false;
+        checkbox.disabled = true;
+      });
     }
+    verificarEstadoCheck();
   });
 
   document.querySelector("#chkCrear").addEventListener('change', (event) => {
@@ -386,6 +436,7 @@ window.addEventListener("DOMContentLoaded", () => {
     } else {
       document.querySelectorAll('.crear').forEach(checkbox => checkbox.checked = false);
     }
+    verificarEstadoCheck();
   });
 
   document.querySelector("#chkActualizar").addEventListener('change', (event) => {
@@ -394,6 +445,7 @@ window.addEventListener("DOMContentLoaded", () => {
     } else {
       document.querySelectorAll('.actualizar').forEach(checkbox => checkbox.checked = false);
     }
+    verificarEstadoCheck();
   });
 
   document.querySelector("#chkEliminar").addEventListener('change', (event) => {
@@ -402,6 +454,7 @@ window.addEventListener("DOMContentLoaded", () => {
     } else {
       document.querySelectorAll('.eliminar').forEach(checkbox => checkbox.checked = false);
     }
+    verificarEstadoCheck();
   });
 
 });

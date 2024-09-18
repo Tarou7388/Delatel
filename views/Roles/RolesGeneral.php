@@ -44,9 +44,11 @@
 
 <div class="container-fluid px-4">
   <h2 class="mt-4 text-center">Roles y Permisos </h2>
+
   <div class="container-fluid d-flex justify-content-center py-4">
     <div class="card w-100" style="max-width: 90%;">
       <div class="card-header text-center">Agregar Rol</div>
+      
       <div class="card-body">
         <div class="d-flex justify-content-center">
           <div class="col-md-6 mb-3">
@@ -63,6 +65,7 @@
       </div>
     </div>
   </div>
+
   <div class="container-fluid d-flex justify-content-center py-4">
     <div class="card w-100" style="max-width: 90%;">
       <div class="card-header">Gestionar Permisos de Rol</div>
@@ -83,6 +86,7 @@
       </div>
     </div>
   </div>
+
 </div>
 <script type="module" src="../../js/Rol.js"></script>
 <?php require_once "../../footer.php"; ?>
