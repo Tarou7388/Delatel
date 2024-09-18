@@ -73,7 +73,9 @@ BEGIN
     p.nacionalidad,
     c.referencia,
     c.coordenadas,
-    CONCAT(p.apellidos, ', ', p.nombres) AS "nombre"
+    CONCAT(p.apellidos, ', ', p.nombres) AS "nombre",
+    p.email,
+    p.telefono
 FROM 
     tb_clientes c
 LEFT JOIN 
@@ -90,7 +92,9 @@ BEGIN
     c.direccion,
     c.referencia,
     c.coordenadas,
-    e.nombre_comercial AS "nombre"
+    e.nombre_comercial AS "nombre",
+    e.email,
+    e.telefono
 FROM 
     tb_clientes c
 LEFT JOIN

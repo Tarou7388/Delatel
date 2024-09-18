@@ -17,6 +17,7 @@
             </div>
             <div class="modal-body">
                 <form id="editEmpresaForm">
+                    <input type="hidden" id="editCodigoEmpresa">
                     <div class="mb-3">
                         <label for="editNombreEmpresa" class="form-label">Nombre Comercial</label>
                         <input type="text" class="form-control" id="editNombreEmpresa">
@@ -51,7 +52,6 @@
     </div>
 </div>
 
-
 <!-- Modal para Persona -->
 <div class="modal fade" id="editPersonaModal" tabindex="-1" aria-labelledby="editPersonaModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -62,6 +62,7 @@
             </div>
             <div class="modal-body">
                 <form id="editPersonaForm">
+                    <input type="hidden" id="editCodigoPersona">
                     <div class="mb-3">
                         <label for="editNombrePersona" class="form-label">Nombre</label>
                         <input type="text" class="form-control" id="editNombrePersona">
@@ -99,7 +100,6 @@
         </div>
     </div>
 </div>
-
 
 
 <!-- Contenido del registro -->
