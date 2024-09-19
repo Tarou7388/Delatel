@@ -1,6 +1,8 @@
 <?php require_once '../../header.php'; ?>
-<div class="container">
+
+<div class="container-fluid px-4">
   <h2 class="mt-3">Contratos</h2>
+
   <div class="card mt-5">
     <div class="card-header">
       <h4>Registrar contratos</h4>
@@ -8,67 +10,97 @@
     <div class="card-body">
       <form action="" class="formularioRegistrarContrato">
         <div class="row">
+
           <div class="col-md-3">
-            <label for="txtDni" class="form-label">Número de documento</label>
             <div class="input-group">
-              <input type="text" class="form-control" id="txtDni" name="documento" required>
-              <button class="btn btn-outline-primary" id="btnBuscar" type="button"><img src="../../image/lupaHTML.png"></button>
+              <div class="form-floating">
+                <input type="text" class="form-control" id="txtDni" name="documento" required>
+                <label for="txtDni floatingInput" class="form-label">Número de documento</label>
+              </div>
+              <button class="btn btn-outline-primary" id="btnBuscar" type="button"><i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
           </div>
+
           <div class="col-md-3">
-            <label for="txtNombre" class="form-label">Nombre de cliente</label>
-            <input type="text" class="form-control" id="txtNombre" name="nombre" required disabled>
+            <div class="form-floating">
+              <input type="text" class="form-control" id="txtNombre" name="nombre" required disabled>
+              <label for="txtNombre" class="form-label">Nombre de cliente</label>
+            </div>
           </div>
+
           <div class="col-md-3">
-            <label for="txtFechaInicio" class="form-label">Fecha de inicio</label>
-            <input type="date" class="form-control" id="txtFechaInicio" name="fechaInicio" required>
+            <div class="form-floating">
+              <input type="date" class="form-control" id="txtFechaInicio" name="fechaInicio" required>
+              <label for="txtFechaInicio" class="form-label">Fecha de inicio</label>
+            </div>
           </div>
+
           <div class="col-md-3">
-            <label for="txtFechaFin" class="form-label">Fecha de fin</label>
-            <input type="date" class="form-control" id="txtFechaFin" name="fechaFin" required>
+            <div class="form-floating">
+              <input type="date" class="form-control" id="txtFechaFin" name="fechaFin" required>
+              <label for="txtFechaFin" class="form-label">Fecha de fin</label>
+            </div>
           </div>
+
         </div>
         <div class="row mt-2">
-          <div class="col-md-3">
-            <label for="slcServicio" class="form-label">Servicio</label>
-            <select class="form-select" id="slcServicio">
-              <option value="0" disabled selected>Selecione</option>
+
+          <div class="col-md-3 mt-2">
+            <select class="form-select select2" id="slcServicio">
+              <option value="0" disabled selected>Servicios</option>
             </select>
           </div>
+
+
           <div class="col-md-3">
-            <label for="txtPrecio" class="form-label">Precio</label>
-            <input type="number" class="form-control" id="txtPrecio" value="0" disabled>
+            <div class="form-floating">
+              <input type="number" class="form-control" id="txtPrecio" value="0" disabled>
+              <label for="txtPrecio" class="form-label">Precio</label>
+            </div>
           </div>
+
           <div class="col-md-3">
-            <label for="txtDireccion" class="form-label">Dirección de Servicio</label>
-            <input type="text" class="form-control" id="txtDireccion">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="txtDireccion">
+              <label for="txtDireccion" class="form-label">Dirección de Servicio</label>
+            </div>
           </div>
-          <div class="col-md-3">
-            <label for="slcSector" class="form-label">Sector</label>
+
+          <div class="col-md-3 mt-2">
             <select class="form-select" id="slcSector">
-              <option value="0" disabled selected>Selecione</option>
+              <option value="0" disabled selected>Sectores</option>
             </select>
           </div>
+
         </div>
         <div class="row mt-2">
+
           <div class="col-md-3">
-            <label for="referencia" class="form-label">Referencia</label>
-            <input type="text" class="form-control" id="txtReferencia" name="referencia">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="txtReferencia" name="referencia">
+              <label for="referencia" class="form-label">Referencia</label>
+            </div>
           </div>
+
           <div class="col-md-3">
-            <label for="coordenada" class="form-label">Coordenada</label>
-            <input type="text" class="form-control" id="txtCoordenada" name="coordenada">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="txtCoordenada" name="coordenada">
+              <label for="coordenada" class="form-label">Coordenada</label>
+            </div>
           </div>
+
         </div>
+
         <div class="row">
-          <div class="col-md-3 mt-3">
+          <div class="col-12 text-center text-md-end mb-3">
             <button class="btn btn-primary" id="btnRegistrar">Registrar</button>
-            <button class="btn btn-secondary" type="reset">Cancelar</button>
+            <button class="btn btn-outline-secondary" type="reset">Cancelar</button>
           </div>
         </div>
       </form>
     </div>
   </div>
+
   <div class="card mt-3">
     <div class="card-header">
       <h4>Listar contratos</h4>
@@ -77,13 +109,13 @@
       <table id="listarContratos" class="table table-striped">
         <thead>
           <tr>
-            <th>Cliente</th>
-            <th>Numero de Doc</th>
-            <th>Servicio</th>
-            <th>Direccion</th>
-            <th>Fecha de inicio</th>
-            <th>Fecha de fin</th>
-            <th>Acciones</th>
+            <th class="text-center">Cliente</th>
+            <th class="text-center">Numero de Doc</th>
+            <th class="text-center">Servicio</th>
+            <th class="text-center">Direccion</th>
+            <th class="text-center">Fecha de inicio</th>
+            <th class="text-center">Fecha de fin</th>
+            <th class="text-center">Acciones</th>
           </tr>
         </thead>
         <tbody>
