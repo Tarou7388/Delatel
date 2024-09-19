@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", function () {
           frmPersonas.reset();
         })
         .catch((e) => {
-          console.error(e);
+          alert("PERSONA YA REGISTRADA")
         });
     }
   }
@@ -125,10 +125,6 @@ document.addEventListener("DOMContentLoaded", function () {
   })();
   
   
-
-
-
-
   slcChangeRegistro.addEventListener("change", () => {
     const valor = slcChangeRegistro.value;
     toggleForms(valor);

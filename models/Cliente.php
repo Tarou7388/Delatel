@@ -53,7 +53,15 @@ class Cliente extends Conexion
         }
     }
 
-
+    public function delete($data = [])
+    {
+        $consulta = $this->pdo->prepare("CALL spu_clientes_eliminar(?,?)");
+        $consulta->execute(array(
+            $data["identificador"],
+            $data["iduser_inactive"]
+        ));
+        return $consulta->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     public function getByPersona($params = [])
     {

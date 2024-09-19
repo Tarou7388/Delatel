@@ -164,3 +164,36 @@ BEGIN
 
 END $$
 
+DELIMITER $$
+CREATE PROCEDURE spu_clientes_eliminar(
+    p_identificador VARCHAR(15),
+    p_iduser_inactive INT
+)
+BEGIN
+    DECLARE v_tipo_doc CHAR(3);
+    DECLARE v_nro_doc VARCHAR(15);
+
+    IF LENGTH(p_identificador) = 8 THEN
+        SET v_tipo_doc = 'DNI';
+        SET v_nro_doc = p_identificador;
+
+    ELSEIF LENGTH(p_identificador) = 11 THEN
+        SET v_tipo_doc = 'RUC';
+        SET v_nro_doc = p_identificador;
+    END IF;
+
+    UPDATE tb_clientes
+    SET 
+        inactive_at = NOW(),
+        iduser_inactive = p_iduser_inactive
+    WHERE id_cliente = (
+        SELECT id_cliente
+        FROM tb_clientes
+        WHERE (id_persona IN (
+                SELECT id_persona FROM tb_personas WHERE nro_doc = v_nro_doc AND tipo_doc = v_tipo_doc
+            ) OR id_empresa IN (
+                SELECT id_empresa FROM tb_empresas WHERE ruc = v_nro_doc
+            )) AND inactive_at IS NULL
+    );
+END $$
+

@@ -107,8 +107,7 @@ CREATE TABLE tb_empresas (
     iduser_create INT NOT NULL,
     iduser_update INT NULL,
     iduser_inactive INT NULL,
-    CONSTRAINT empre_uk_ruc UNIQUE (ruc),
-    CONSTRAINT empre_uk_telefono UNIQUE (telefono)
+    CONSTRAINT empre_uk_ruc UNIQUE (ruc)
 ) ENGINE = InnoDB;
 
 CREATE TABLE tb_usuarios (
