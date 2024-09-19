@@ -123,17 +123,22 @@
           </div>
 
           <div class="col-md">
-            <label>Cable</label>
             <div class="input-group">
-              <input type="text" class="form-control" id="txtCable">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="txtCable" placeholder="Cable">
+                <label>Cable</label>
+              </div>
               <input type="number" class="form-control" id="txtPrecioCable" disabled>
             </div>
           </div>
 
           <div class="col-md">
-            <label>Conectores</label>
+
             <div class="input-group">
-              <input type="number" class="form-control" id="txtConector">
+              <div class="form-floating">
+                <input type="number" class="form-control" id="txtConector" placeholder="Conectores">
+                <label>Conectores</label>
+              </div>
               <input type="number" class="form-control" id="txtPrecioConector" disabled>
             </div>
           </div> <!-- Fin de Tercera Fila -->
