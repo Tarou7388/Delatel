@@ -143,7 +143,7 @@ CREATE TABLE tb_paquetes (
     id_servicio INT NOT NULL,
     precio DECIMAL(7, 2) NOT NULL,
     tipo_paquete CHAR(4) CHECK (
-        tipo_paquete IN ('CABl', 'WISP', 'GPON')
+        tipo_paquete IN ('CABl', 'WISP', 'GPON', 'FIBR')
     ),
     fecha_inicio DATE NOT NULL,
     fecha_fin DATE NOT NULL,

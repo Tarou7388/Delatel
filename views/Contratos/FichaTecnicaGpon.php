@@ -43,6 +43,9 @@ $idContrato = $_GET['idContrato'];
           </div>
         </div>
         <div class="mb-2">
+          <input type="text" class="form-control" id="txtSerieRepetidor" placeholder="Serie">
+        </div>
+        <div class="mb-2">
           <input type="text" class="form-control" id="txtIpRepetidor" placeholder="IP">
         </div>
       </div>
@@ -65,10 +68,10 @@ $idContrato = $_GET['idContrato'];
             <label class="form-label">Datos del servicio</label>
             <div class="row g-3 mb-2">
               <div class="col md-6">
-                <input type="text" class="form-control" id="txtUsuario" placeholder="Usuario"> <!-- Crear de manera automatica -->
+                <input type="text" class="form-control" id="txtUsuario" placeholder="Usuario" disabled=true> <!-- Crear de manera automatica -->
               </div>
               <div class="col md-6">
-                <input type="text" class="form-control" id="txtClaveAcceso" placeholder="Clave de acceso"> <!-- Crear de manera automatica -->
+                <input type="text" class="form-control" id="txtClaveAcceso" disabled=true placeholder="Clave de acceso"> <!-- Crear de manera automatica -->
               </div>
             </div>
             <div class="row g-3 mb-2">
@@ -91,8 +94,11 @@ $idContrato = $_GET['idContrato'];
             <div class="mb-2">
               <div class="input-group">
                 <input type="text" class="form-control" id="txtMarcaModelo" placeholder="Marca - Modelo">
-                <button class="btn btn-outline-primary" type="submit" id="btnEscanearModen">Escanear</button>
+                <button class="btn btn-outline-primary" type="button" id="btnEscanearModen">Escanear</button>
               </div>
+            </div>
+            <div class="mb-2">
+              <input type="text" class="form-control" id="txtSerieModen" placeholder="Serie">
             </div>
             <div class="row g-3 mb-2">
               <div class="col md-6">
@@ -116,14 +122,15 @@ $idContrato = $_GET['idContrato'];
                 <div class="row" id="cardsRow">
                   <!-- Aquí se añadirán las cards -->
                 </div>
+                <button class="btn btn-danger" type="button" id="eliminarRepetidor">Eliminar</button>
               </div>
               <div class="mt-4">
                 <textarea type="text" class="form-control" id="txtaDetallesModen" placeholder="Detalles"></textarea>
               </div>
             </div>
             <div class="mt-4">
-              <button class="btn btn-primary btn-sm" id="btnGuardar">Guardar</button>
-              <button class="btn btn-secondary btn-sm" id="btnCancelar">Cancelar</button>
+              <button class="btn btn-primary btn-sm" type="button" id="btnGuardar">Guardar</button>
+              <button class="btn btn-secondary btn-sm" type="button" id="btnCancelar">Cancelar</button>
             </div>
           </div>
         </div>
@@ -131,7 +138,7 @@ $idContrato = $_GET['idContrato'];
     </form>
   </div>
 </div>
-<div class="container mt-4">
+<div class="container mt-4" id="contenidoCable">
   <!-- Card: Cable -->
   <div class="card mx-auto" style="max-width: 900px;">
     <div class="card-body">
@@ -140,14 +147,13 @@ $idContrato = $_GET['idContrato'];
         <div class="col-md-6">
           <input type="text" class="form-control" id="txtPlanCable" disabled placeholder="Plan">
         </div>
-        <div class="col-md-6">
-          <input type="text" class="form-control" id="txtPagoInst" disabled placeholder="Pago Instalación">
+        <div class="col-md-6 input-group mb-3">
+          <span class="input-group-text">S/.</span>
+          <input type="number" class="form-control" id="txtPagoInst" value=30 min="0" placeholder="Pago Instalación">
+          <span class="input-group-text">.00</span>
         </div>
       </div>
       <div class="row g-3 mb-3">
-        <div class="col-md-6">
-          <input type="text" class="form-control" id="txtPeriodo" disabled placeholder="Período">
-        </div>
         <div class="col-md-6">
           <input type="number" class="form-control" id="txtPotenciaCable" placeholder="Potencia">
         </div>
@@ -161,9 +167,9 @@ $idContrato = $_GET['idContrato'];
       <div class="row g-3 mb-3">
         <div class="form-floating col-md-6">
           <select class="form-select" id="slcTriplexor">
-            <option value="1" selected>No Lleva</option>
-            <option value="2">Pasivo</option>
-            <option value="3">Activo</option>
+            <option value="false,false" selected>No Lleva</option>
+            <option value="true,false">Pasivo</option>
+            <option value="true,true">Activo</option>
           </select>
           <label for="slcTriplexor">Triplexor</label>
         </div>
@@ -186,9 +192,9 @@ $idContrato = $_GET['idContrato'];
             <input type="number" id="txtSpliter" class="form-control" placeholder="Spliter">
             <select class="form-select" id="slcSpliter" aria-label="Selecciona una opción">
               <option selected disabled>Elige una opción</option>
-              <option value="1">1x3</option>
-              <option value="2">1x5</option>
-              <option value="3">1x8</option>
+              <option value="1x3">1x3</option>
+              <option value="1x5">1x5</option>
+              <option value="1x8">1x8</option>
             </select>
           </div>
         </div>
@@ -211,22 +217,30 @@ $idContrato = $_GET['idContrato'];
       <label class="form-label mt-2">Costos</label>
       <div class="row g-3 mb-3">
         <div class="col-md-6 form-floating">
-          <input type="text" class="form-control" id="txtCantSintotizador" disabled>
+          <input type="text" class="form-control" value=0 id="txtPagoAdelantado">
+          <label for="txtPagoAdelantado">Pago</label>
+        </div>
+        <div class="col-md-6 form-floating">
+          <input type="text" class="form-control" value=0 id="txtCantSintotizador" disabled>
           <label for="txtCantSintotizador">Cantidad Sintotizador</label>
         </div>
         <div class="col-md-6 form-floating">
-          <input type="number" class="form-control" id="txtCostoAlquiler" disabled>
+          <input type="number" class="form-control" value=0 id="txtCostoAlquiler" disabled>
           <label for="txtCostoAlquiler">Costo Alquiler</label>
         </div>
       </div>
       <div class="row g-3 mb-3">
         <div class="col-md-6 form-floating">
-          <input type="number" class="form-control" id="txtCostoCable" disabled>
+          <input type="number" class="form-control" value=0 id="txtCostoCable" disabled>
           <label for="txtCostoCable">Costo Cable</label>
         </div>
         <div class="col-md-6 form-floating">
-          <input type="number" class="form-control" id="txtCostoConector" disabled>
+          <input type="number" class="form-control" value=0 id="txtCostoConector" disabled>
           <label for="txtCostoConector">Costo Conector</label>
+        </div>
+        <div class="col-md-6 form-floating">
+          <input type="text" class="form-control" value=0 id="txtDescuento">
+          <label for="txtDescuento">Descuento</label>
         </div>
       </div>
       <label class="form-label mt-2">Medición en caja NAP</label>
@@ -263,9 +277,9 @@ $idContrato = $_GET['idContrato'];
 </div>
 
 <?php require_once "../../footer.php"; ?>
-<script> 
-    const idContrato = <?= $idContrato ?>;
-</script> 
+<script>
+  const idContrato = <?= $idContrato ?>;
+</script>
 <script type="module" src="../../js/FichaTecnicaGpon.js"></script>
 
 </body>
