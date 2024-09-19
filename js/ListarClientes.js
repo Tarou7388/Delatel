@@ -84,8 +84,9 @@ window.tablaClientes = $("#listarCliente").DataTable({
       filename: "Clientes",
       title: "Clientes",
       orientation: "landscape",
+      pageSize: "LEGAL",
       exportOptions: {
-        columns: [0, 1, 2, 3, 4],
+        columns: [0, 1, 2, 3, 4, 5, 6],
       },
     },
     {
@@ -121,7 +122,19 @@ window.tablaClientes = $("#listarCliente").DataTable({
       },
     },
   ],
+  columnDefs: [
+    { targets: 0, width: '10%' }, 
+    { targets: 1, width: '12%' }, 
+    { targets: 2, width: '15%' }, 
+    { targets: 3, width: '10%' }, 
+    { targets: 4, width: '15%' }, 
+    { targets: 5, width: '15%' }, 
+    { targets: 6, width: '15%' },
+    { targets: 7, width: '10%' }
+  ],
+  autoWidth: false
 });
+
 
 $("#listarCliente tbody").on("click", ".btn-edit", function () {
   const idcliente = $(this).data("id");
