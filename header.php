@@ -136,7 +136,7 @@ if (!isset($_SESSION['login']) || (isset($_SESSION['login']) && !$_SESSION['logi
 
             <div class="collapse" id="collapse4">
               <div class="ps-4">
-                <a class="nav-link" href="<?= $host; ?>views/Personas/UsuariosGeneral.php">
+                <a class="nav-link" href="<?= $host; ?>views/Usuarios/">
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                   Usuarios
                 </a>

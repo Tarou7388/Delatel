@@ -1,13 +1,17 @@
 USE Delatel;
 
 CREATE VIEW vw_usuarios AS
-SELECT pe.apellidos, pe.nombres, us.nombre_user, ro.rol as "Cargo", us.create_at, us.inactive_at
+SELECT 
+COALESCE(CONCAT(pe.nombres, ", ", pe.apellidos)) AS nombre,
+ us.nombre_user,
+ ro.rol as "Cargo",
+ us.create_at,
+ us.inactive_at
 FROM
     tb_responsables res
     INNER JOIN tb_usuarios us ON res.id_usuario = us.id_usuario
     INNER JOIN tb_personas pe ON us.id_persona = pe.id_persona
-    INNER JOIN tb_roles ro ON res.id_rol = ro.id_rol;
-
+    INNER JOIN tb_roles ro ON res.id_rol = ro.id_rol WHERE us.inactive_at IS NULL;
 
 DELIMITER $$
 

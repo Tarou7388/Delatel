@@ -25,12 +25,12 @@ class Usuario extends Conexion
       die($e->getMessage());
     }
   }
-  public function registrar($data = []):bool
+  public function registrar($data = []): bool
   {
     try {
-      $status=false;
+      $status = false;
       $consulta = $this->pdo->prepare("CALL spu_usuarios_registrar(?,?,?,?)");
-      $status=$consulta->execute(
+      $status = $consulta->execute(
         array(
           $data['idPersona'],
           $data['nombreUser'],
@@ -43,13 +43,13 @@ class Usuario extends Conexion
       die($e->getMessage());
     }
   }
-  public function getUser(){
-    try{
-      $consulta = $this->pdo->prepare("CALL vw_usuarios");
+  public function getUser()
+  {
+    try {
+      $consulta = $this->pdo->prepare("SELECT * FROM vw_usuarios");
       $consulta->execute();
       return $consulta->fetchAll(PDO::FETCH_ASSOC);
-    }
-    catch(Exception $e){
+    } catch (Exception $e) {
       return $e->getMessage();
     }
   }
