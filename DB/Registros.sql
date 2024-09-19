@@ -127,9 +127,9 @@ INSERT INTO tb_soporte (id_contrato, id_tipo_soporte, id_tecnico, fecha_hora_sol
 (4, 1, 4, '2024-04-26 14:00:00', '2024-04-26 15:30:00', 'Falla en el sistema de alarma.', 'Sustitución de los sensores defectuosos realizada.', 'Baja', '{"monto":"40.00","metodo":"tarjeta","fecha":"2024-04-27"}', NOW(),1),
 (5, 2, 5, '2024-05-31 13:00:00', '2024-05-31 14:30:00', 'Sistema de climatización ineficiente.', 'Ajuste y mantenimiento del sistema completado.', 'Media', '{"monto":"120.00","metodo":"cheque","fecha":"2024-06-01"}', NOW(),1);
 
-INSERT INTO tb_productos (marca, tipo_producto, modelo, precio_actual, codigo_barra,iduser_create) VALUES 
-("ASUS", "Router A", "RT-AX88U", 25.00, "12345678901234567890123456789012345",1),
-("Linksys", "Router B", "E8450", 26.00, "12345678901234567890123456789012346",1),
-("Huawei", "Router C", "WS5200", 27.00, "12345678901234567890123456789012347",1),
-("Netgear", "Router D", "Nighthawk X6", 28.00, "12345678901234567890123456789012348",1),
-("Cisco", "Router E", "ISR4331", 29.00, "12345678901234567890123456789012349",1);
+INSERT INTO tb_productos (marca, tipo_producto, modelo, precio_actual, codigo_barra, iduser_create) VALUES 
+("ASUS", "Router A", "RT-AX88U", 25.00, "123456789012345", 1),
+("Linksys", "Router B", "E8450", 26.00, "234567890123456", 1),
+("Huawei", "Router C", "WS5200", 27.00, "345678901234567", 1),
+("Netgear", "Router D", "Nighthawk X6", 28.00, "456789012345678", 1),
+("Cisco", "Router E", "ISR4331", 29.00, "567890123456789", 1);

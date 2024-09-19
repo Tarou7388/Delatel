@@ -99,6 +99,7 @@ $idContrato = $_GET['idContrato'];
                 <select type="text" class="form-select" id="slcBanda" placeholder="Banda">
                   <option value="2G">2G</option>
                   <option value="5G" selected>5G</option>
+                  <option value="2G,5G">5G-2G</option>
                 </select>
               </div>
               <div class="col md-6">

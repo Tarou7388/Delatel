@@ -24,14 +24,40 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     })();
 
-    (async () => {
+    function eu() {
+        const txtUsuario = document.querySelector("#txtUsuario").value
+        const txtPlan = document.querySelector("#txtPlan").value
+        const txtClaveAcceso = document.querySelector("#txtClaveAcceso").value
+        const txtPotencia = document.querySelector("#txtPotenciaFibra").value
         const txtSsdi = document.querySelector("#txtSsdi").value
         const txtSeguridad = document.querySelector("#txtSeguridad").value
         const txtMarcaModelo = document.querySelector("#txtMarcaModelo").value
         const slcBanda = document.querySelector("#slcBanda").value;
         const txtAntenas = document.querySelector("#txtAntenas").value;
-        console.log(txtSsdi, txtSeguridad, txtMarcaModelo, slcBanda, txtAntenas);
-    })();
+        const chkCatv = document.querySelector("#chkCatv").checked;
+        const txtaDetallesModen = document.querySelector("#txtaDetallesModen").value;
+
+        const jsonData = {
+            fibraoptica: {
+              usuario: txtUsuario,
+              claveacceso: txtClaveAcceso,
+              plan: txtPlan,
+              potencia: parseInt(txtPotencia),
+              moden: {
+                ssid: txtSsdi,
+                seguridad: txtSeguridad,
+                marca: txtMarcaModelo,
+                banda: slcBanda.split(','), // Asumiendo que slcBanda es una cadena separada por comas
+                numeroantena: parseInt(txtAntenas),
+                catv: chkCatv
+              },
+              repetidor: {},
+              detalles: txtaDetallesModen
+            }
+          };
+          
+          console.log(JSON.stringify(jsonData, null, 2));
+    };
 
     function calcularCostos() {
         // Cálculo del costo del cable
@@ -126,10 +152,11 @@ document.addEventListener("DOMContentLoaded", () => {
     txtCantConector.addEventListener('input', calcularCostos);
 
     document.getElementById('btnAñadirSintotizador').addEventListener('click', function () {
-        AgregarSintotizador();
+        //AgregarSintotizador();
     });
 
     document.getElementById("btnAñadirRepetidor").addEventListener("click", function () {
-        AgregarRepetidor();
+        eu();
+        //AgregarRepetidor();
     });
 });

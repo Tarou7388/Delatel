@@ -1,5 +1,4 @@
 USE Delatel;
-
 DELIMITER $$
 CREATE PROCEDURE spu_paquetes_registrar(
     p_id_servicio     INT,
