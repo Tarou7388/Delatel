@@ -201,7 +201,7 @@
                                 <option selected>Seleccionar...</option>
                                 <option value="DNI">DNI</option>
                                 <option value="PAS">Pasaporte</option>
-                                <option value="CAR">Carné de Extranjería</option>
+                                <option value="CAR">Carnét de Extranjería</option>
                             </select>
                             <label for="slcTipoDocumento">Tipo de Documento</label>
                         </div>
