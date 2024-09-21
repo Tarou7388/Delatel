@@ -113,12 +113,12 @@ INSERT INTO tb_contratos (id_cliente, id_paquete, id_sector, id_usuario_registro
 (4, 4, 4, 5, NULL, 'Jirón de la Unión 100, Lima', 'Frente a la Plaza Mayor', '45.6789, -43.2109', '2024-04-01', '2024-09-01', '2024-04-01', 'Descuento aplicado por contrato anual'),
 (5, 5, 5, 4, NULL, 'Calle Mayor 101, Barcelona', 'Cerca del mercado central', '56.7890, -32.1098', '2024-05-01', '2024-10-01', '2024-05-01', 'Contrato especial por volumen');
 
-INSERT INTO tb_contactabilidad (id_persona, id_paquete, fecha_hora_contacto, direccion_servicio, dias_vigencia, nota,iduser_create) VALUES
-(1, 1, '2024-01-10 14:30:00', 'Av. Siempre Viva 123, Springfield', 30, 'Contacto inicial realizado con éxito.',1),
-(2, 2, '2024-02-15 10:00:00', 'Calle Falsa 456, Gotham', 15, 'Se acordó la fecha para la instalación.',1),
-(3, 3, '2024-03-20 16:45:00', 'Av. Los Pinos 789, Lima', 45, 'Cliente solicitó información adicional sobre el servicio.',1),
-(4, 4, '2024-04-25 11:00:00', 'Jirón de la Unión 100, Lima', 60, 'Se discutieron los términos del contrato y se acordó una revisión futura.',1),
-(5, 5, '2024-05-30 09:30:00', 'Calle Mayor 101, Barcelona', 30, 'Se completó la verificación del servicio y se envió confirmación.',1); 
+INSERT INTO tb_contactabilidad (id_persona, id_paquete, fecha_hora_contacto, direccion_servicio, nota,iduser_create) VALUES
+(1, 1, '2024-01-10 14:30:00', 'Av. Siempre Viva 123, Springfield', 'Contacto inicial realizado con éxito.',1),
+(2, 2, '2024-02-15 10:00:00', 'Calle Falsa 456, Gotham', 'Se acordó la fecha para la instalación.',1),
+(3, 3, '2024-03-20 16:45:00', 'Av. Los Pinos 789, Lima', 'Cliente solicitó información adicional sobre el servicio.',1),
+(4, 4, '2024-04-25 11:00:00', 'Jirón de la Unión 100, Lima', 'Se discutieron los términos del contrato y se acordó una revisión futura.',1),
+(5, 5, '2024-05-30 09:30:00', 'Calle Mayor 101, Barcelona', 'Se completó la verificación del servicio y se envió confirmación.',1); 
 
 INSERT INTO tb_soporte (id_contrato, id_tipo_soporte, id_tecnico, fecha_hora_solicitud, fecha_hora_asistencia, descripcion_problema, descripcion_solucion, prioridad, soporte, create_at,iduser_create) VALUES 
 (1, 1, 1, '2024-01-10 15:00:00', '2024-01-10 16:00:00', 'Problema con el voltaje en el área principal.', 'Reemplazo del regulador de voltaje realizado.', 'Alta', '{"monto":"50.00","metodo":"tarjeta","fecha":"2024-01-11"}', NOW(),1),
