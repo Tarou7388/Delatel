@@ -43,7 +43,7 @@
           <div class="col-md-4 mb-3">
             <div class="form-floating">
               <input type="number" class="form-control" id="txtNumeroContactabilidad" placeholder="Número de Celular">
-              <label for="lblCelularContactabilidad">Numero de Celular</label>
+              <label for="lblCelularContactabilidad">Número de Celular</label>
             </div>
           </div>
           <div class="col-md-4">

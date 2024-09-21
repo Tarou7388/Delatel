@@ -15,26 +15,25 @@ BEGIN
 	VALUES (p_id_persona, p_id_paquete, p_direccion_servicio, p_nota, p_iduser_create, p_fecha_limite);
 	SELECT LAST_INSERT_ID() AS id_contactabilidad;
 END $$
-DELIMITER ;
+
 
 -- Procedimiento para inhabilitar registros cuando se supera la fecha límite --
 DELIMITER $$
-CREATE PROCEDURE spu_contactabilidad_inhabilitar(
-    p_iduser_create INT
-)
+CREATE PROCEDURE spu_contactabilidad_inhabilitar()
 BEGIN
-    IF p_iduser_create IS NOT NULL THEN
         UPDATE tb_contactabilidad
         SET inactive_at = NOW(),
-            iduser_inactive = p_iduser_create
+            iduser_inactive = iduser_create
         WHERE fecha_limite <= NOW() AND inactive_at IS NULL;
-    END IF;
 END $$
 
 DELIMITER $$
 CREATE EVENT ev_inhabilitar_contactos
-ON SCHEDULE EVERY 1 MINUTE
+ON SCHEDULE EVERY 10 SECOND 
 DO
 BEGIN
-    CALL spu_contactabilidad_inhabilitar(1); 
+    CALL spu_contactabilidad_inhabilitar(); 
 END $$
+
+SET GLOBAL event_scheduler = ON;
+SHOW VARIABLES LIKE 'event_scheduler';
