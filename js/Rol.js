@@ -205,6 +205,12 @@ window.addEventListener("DOMContentLoaded", () => {
       boton.addEventListener("click", (event) => {
         const idRol = parseInt(event.target.dataset.idrol);
         idRolActual = idRol;
+
+        if(idRol == userid){
+          alert("No puedes inhabilitar tu propio rol");
+          return;
+        }
+
         if (confirm("¿Estás seguro de que deseas inhabilitar este rol?")) {
           inhabilitarRol(idRol, userid);
         }
