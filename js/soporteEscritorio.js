@@ -3,6 +3,9 @@ window.addEventListener('DOMContentLoaded', function () {
   if (permisos[0].permisos.soporte.leer != 1) {
     window.location.href = `${config.HOST}views`;
   }
+  var today = new Date().toISOString().split('T')[0];
+  document.getElementById('txtFecha').value = today;
+  
   const dropdownItems = document.querySelectorAll('.list-group-item');
   const dropdownButton = document.getElementById('btnModal');
 
