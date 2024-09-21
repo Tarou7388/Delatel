@@ -69,17 +69,23 @@
               <label for="">Planes</label>
             </div>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-2">
+            <div class="form-floating">
+              <input type="number" class="form-control" id="txtPrecioContactabilidad" placeholder="Precio" disabled>
+              <label for="">Precio</label>
+            </div>
+          </div>
+          <div class="col-md-3">
             <div class="form-group">
               <div class="input-group">
                 <div class="form-floating">
-                  <input type="datetime-local" class="form-control" id="fecha" name="fecha" required>
-                  <label for="fecha">Fecha:</label>
+                  <input type="datetime-local" class="form-control" id="txtFechaContactabilidad" name="fecha" required>
+                  <label for="fecha">Fecha</label>
                 </div>
               </div>
             </div>
           </div>
-          <div class="col-md-5">
+          <div class="col-md-4">
             <div class="form-floating">
               <input type="text" id="txtDireccionActual" class="form-control" placeholder="Dirección">
               <label for="">Dirección actual</label>
@@ -105,3 +111,4 @@
   </div>
 </div>
 <?php require_once "../../footer.php"; ?>
+<script type="module" src="../../js/Contactabilidad.js"></script>
