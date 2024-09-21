@@ -92,6 +92,7 @@ BEGIN
             ELSE e.ruc
         END AS num_identificacion,
         sv.servicio,
+        t.tipo_paquete,
         c.ficha_instalacion
     FROM
         tb_contratos c

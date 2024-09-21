@@ -35,7 +35,6 @@
   "otros": {
 		"num_sintonizador": 2,
 		"costo_alquiler": 80.0,
-		"formapago": "yape",
 		"cable": 45,
 		"conect": 4,
 		"medicion_caja": {

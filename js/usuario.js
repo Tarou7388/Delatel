@@ -1,22 +1,55 @@
 import config from '../env.js';
-window.addEventListener("DOMContentLoaded", event => {
-  if (permisos[0].permisos.personas.leer != 1) {
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (permisos[0].permisos.personas.leer !== 1) {
     window.location.href = `${config.HOST}views`;
   }
-  $(document).ready(function () {
-    $('#listarUsuarios').DataTable({
-      language: {
-        url: "//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json"
-      },
-      columnDefs: [
-        { width: "5%", targets: 0 },
-        { width: "15%", targets: 1 },
-        { width: "20%", targets: 2 },
-        { width: "15%", targets: 3 },
-        { width: "15%", targets: 4 },
-        { width: "15%", targets: 5 },
-        { width: "15%", targets: 6 }
-      ]
-    });
+
+  const table = $('#listarUsuarios').DataTable({
+    language: {
+      url: "//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json"
+    },
+    ajax: {
+      url: `${config.HOST}controllers/Usuarios.controllers.php?Operacion=getAll`,
+      dataSrc: ''
+    },
+    columns: [
+      { data: "nombre", title: "Nombre" },
+      { data: "usuario", title: "Usuario" },
+      { data: "rol", title: "Rol" },
+      {
+        data: null,
+        title: "Acciones",
+        render: function (data, type, row) {
+          return `<button class="update-btn btn btn-primary" 
+                    data-id="${row.id}" 
+                    data-apellidos="${row.apellidos}" 
+                    data-nombres="${row.nombres}" 
+                    data-telefono="${row.telefono}">Editar</button>`;
+        }
+      }
+    ],
+    columnDefs: [
+      { width: "30%", targets: 0 },
+      { width: "30%", targets: 1 },
+      { width: "20%", targets: 2 },
+      { width: "20%", targets: 3 }
+    ]
+  });
+
+  $('.card-body').on('click', '.update-btn', function () {
+    const id = $(this).data('id');
+    const apellidos = $(this).data('apellidos');
+    const nombres = $(this).data('nombres');
+    const telefono = $(this).data('telefono');
+    openEditModal(id, apellidos, nombres, telefono);
   });
 });
+
+export function openEditModal(id, apellidos, nombres, telefono) {
+  $('#userId').val(id);
+  $('#txtApe').val(apellidos);
+  $('#txtNombre').val(nombres);
+  $('#txtTelPrincipal').val(telefono);
+  $('#editModal').modal('show');
+}

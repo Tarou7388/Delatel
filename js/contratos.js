@@ -112,6 +112,9 @@ window.addEventListener("DOMContentLoaded", () => {
         if (tipoPaquete == "CABl") {
           window.location.href = `${config.HOST}views/contratos/FichaTecnicaCable.php?idContrato=${idContrato}`;
         }
+        if (tipoPaquete == "FIBR") {
+          window.location.href = `${config.HOST}views/contratos/FichaTecnicaGpon.php?idContrato=${idContrato}`;
+        }
       });
     });
 
