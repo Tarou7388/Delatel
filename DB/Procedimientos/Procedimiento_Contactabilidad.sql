@@ -22,8 +22,12 @@ DELIMITER $$
 CREATE PROCEDURE spu_contactabilidad_inhabilitar()
 BEGIN
         UPDATE tb_contactabilidad
-        SET inactive_at = NOW(),
-            iduser_inactive = iduser_create
+        SET 
+        inactive_at = NOW(),
+        iduser_inactive = CASE 
+            WHEN iduser_update IS NOT NULL THEN iduser_update 
+            ELSE iduser_create 
+        END
         WHERE fecha_limite <= NOW() AND inactive_at IS NULL;
 END $$
 
@@ -34,10 +38,6 @@ DO
 BEGIN
     CALL spu_contactabilidad_inhabilitar(); 
 END $$
-
-SET GLOBAL event_scheduler = ON;
-SHOW VARIABLES LIKE 'event_scheduler';
-
 
 -- Procedimiento para Actualizar -- 
 DELIMITER $$
@@ -78,3 +78,7 @@ BEGIN
 	WHERE
 		id_contactabilidad = p_id_contactabilidad;
 END $$
+
+
+SET GLOBAL event_scheduler = ON;
+SHOW VARIABLES LIKE 'event_scheduler';
