@@ -17,7 +17,7 @@ BEGIN
 END $$
 
 
--- Procedimiento para inhabilitar registros cuando se supera la fecha límite --
+-- Procedimiento para inhabilitar Automaticamente--
 DELIMITER $$
 CREATE PROCEDURE spu_contactabilidad_inhabilitar()
 BEGIN
@@ -37,3 +37,44 @@ END $$
 
 SET GLOBAL event_scheduler = ON;
 SHOW VARIABLES LIKE 'event_scheduler';
+
+
+-- Procedimiento para Actualizar -- 
+DELIMITER $$
+CREATE PROCEDURE spu_contactabilidad_actualizar(
+	p_id_contactabilidad INT,
+	p_id_persona INT,
+    p_id_paquete INT,
+    p_direccion_servicio VARCHAR(250),
+    p_nota TEXT,
+    p_fecha_limite DATETIME,
+    p_iduser_update INT
+)
+BEGIN
+	UPDATE tb_contactabilidad
+		SET
+        id_persona = p_id_persona,
+        id_paquete = p_id_paquete,
+        direccion_servicio = p_direccion_servicio,
+        nota = p_nota,
+        fecha_limite = p_fecha_limite,
+        iduser_update = p_iduser_update,
+        update_at = NOW()
+	WHERE 
+		id_contactabilidad = p_id_contactabilidad; 
+END $$
+
+-- Procedimiento para inhabilitar Manualmente -- 
+DELIMITER $$
+CREATE PROCEDURE spu_contactabilidad_inhabilitar_manualmente(
+	p_id_contactabilidad INT,
+    p_iduser_inactive INT
+)
+BEGIN
+	UPDATE tb_contactabilidad
+		SET
+		inactive_at = NOW(),
+        iduser_inactive = p_iduser_inactive
+	WHERE
+		id_contactabilidad = p_id_contactabilidad;
+END $$
