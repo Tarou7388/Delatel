@@ -110,7 +110,7 @@ window.addEventListener("DOMContentLoaded", () => {
     });
     permisosBoton(".btnPermisos");
     actualizarBoton(".btnActualizar");
-    inhabilitarBoton(".btnInhabilitar")
+    inhabilitarBoton(".btnInhabilitar");
   }
 
   async function obtenerJsonPermisos() {
@@ -140,9 +140,19 @@ window.addEventListener("DOMContentLoaded", () => {
         return respuesta.json();
       })
       .then(data => {
-        alert("Rol agregado exitosamente.");
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          text: "El rol se ha agregado exitosamente.",
+          showConfirmButton: false,
+          timer: 1500
+        });
         form.reset();
-        location.reload();
+
+        setTimeout(function() {
+            location.reload();
+        }, 1500);
+
       })
       .catch(error => {
         console.error('Error:', error);
@@ -185,9 +195,19 @@ window.addEventListener("DOMContentLoaded", () => {
       })
       .then(data => {
         if(data.Actualizado){
-          console.log("Rol Actualizado Correctamente");
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            text: "El rol se ha actualizado exitosamente.",
+            showConfirmButton: false,
+            timer: 1500
+          });
           form.reset();
-          location.reload();
+
+          setTimeout(function() {
+            location.reload();
+          }, 1500);
+
         }else{
           console.log("No se pudo Actualizar el Rol")
         }
@@ -207,7 +227,10 @@ window.addEventListener("DOMContentLoaded", () => {
         idRolActual = idRol;
 
         if(idRol == userid){
-          alert("No puedes inhabilitar tu propio rol");
+          Swal.fire({
+            icon: "error",
+            text: "No puedes inhabilitar tu propio rol.",
+          });
           return;
         }
 
@@ -238,9 +261,19 @@ window.addEventListener("DOMContentLoaded", () => {
     })
       .then(data => {
         if (data.Inhabilitado) {
-          alert("Rol inhabilitado exitosamente.");
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            text: "El rol se ha eliminado exitosamente.",
+            showConfirmButton: false,
+            timer: 1500
+          });
           form.reset();
-          location.reload();
+
+          setTimeout(function() {
+            location.reload();
+          }, 1500);
+
         } else {
           alert("Error al inhabilitar el rol.");
         }
@@ -375,7 +408,13 @@ window.addEventListener("DOMContentLoaded", () => {
     })
       .then(respuesta => respuesta.json())
       .then(datos => {
-        alert("Rol actualizado exitosamente.");
+        Swal.fire({
+          position: "top",
+          icon: "success",
+          text: "Permisos actualizados correctamente.",
+          showConfirmButton: false,
+          timer: 1500
+        });
       })
   }
 

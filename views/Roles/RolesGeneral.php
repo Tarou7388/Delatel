@@ -88,6 +88,7 @@
   </div>
 
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script type="module" src="../../js/Rol.js"></script>
 <?php require_once "../../footer.php"; ?>
 </body>
