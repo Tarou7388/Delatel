@@ -8,5 +8,8 @@ if($_SERVER['REQUEST_METHOD']==='GET'){
     case 'getPlanes':
       echo json_encode($contactabilidad->getPlanes());
       break;
+    case 'getPersonas':
+      echo json_encode($contactabilidad->getPersonas());
+      break;
   }
 }

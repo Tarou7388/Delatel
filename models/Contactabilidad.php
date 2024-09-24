@@ -19,4 +19,14 @@ class Contactabilidad extends Conexion
       die($e->getMessage());
     }
   }
+  public function getPersonas(){
+    try{
+      $query = $this->pdo->prepare("SELECT * FROM vw_contactabilidad_listar");
+      $query->execute();
+      return $query->fetchAll(PDO::FETCH_ASSOC);
+    }
+    catch(Exception $e){
+      die($e->getMessage());
+    }
+  }
 }
