@@ -109,6 +109,28 @@
       </form>
     </div>
   </div>
+  <div class="card mt-4">
+    <div class="card-header">
+      <h2>Personas Contactadas</h2>
+    </div>
+    <div class="card-body">
+      <table class="table table-striped" id="listarPersonasContactabilidad">
+        <thead>
+          <tr>
+            <th class="text-center">#</th>
+            <th class="text-center">Persona</th>
+            <th class="text-center">Telefono</th>
+            <th class="text-center">Fecha y hora de contacto</th>
+            <th class="text-center">Dirección de servicio</th>
+            <th>Detalles</th>
+          </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 <?php require_once "../../footer.php"; ?>
 <script type="module" src="../../js/Contactabilidad.js"></script>
