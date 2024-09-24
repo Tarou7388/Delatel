@@ -1,7 +1,7 @@
 import config from '../env.js';
 
 document.addEventListener("DOMContentLoaded", () => {
-  if (permisos[0].permisos.personas.leer !== 1) {
+  if (!permisos[0].permisos.personas.leer) {
     window.location.href = `${config.HOST}views`;
   }
 
@@ -15,8 +15,8 @@ document.addEventListener("DOMContentLoaded", () => {
     },
     columns: [
       { data: "nombre", title: "Nombre" },
-      { data: "usuario", title: "Usuario" },
-      { data: "rol", title: "Rol" },
+      { data: "nombre_user", title: "Usuario" },
+      { data: "Cargo", title: "Rol" },
       {
         data: null,
         title: "Acciones",

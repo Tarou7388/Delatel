@@ -3,7 +3,7 @@ import config from "../env.js";
 document.addEventListener("DOMContentLoaded", function () {
   const userid = JSON.stringify(user["idUsuario"]);
 
-  if (permisos[0].permisos.personas.leer != 1) {
+  if (!permisos[0].permisos.personas.leer) {
     window.location.href = `${config.HOST}views`;
   }
 

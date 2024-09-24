@@ -1,6 +1,6 @@
 import config from '../env.js';
 document.addEventListener("DOMContentLoaded", () => {
-  if (permisos[0].permisos.inventariado.leer != 1) {
+  if (!permisos[0].permisos.personas.leer) {
     window.location.href = `${config.HOST}views`;
   }
   const userid= user['idUsuario'];
