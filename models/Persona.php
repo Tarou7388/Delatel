@@ -1,16 +1,19 @@
-<?php 
+<?php
 
 require_once "Conexion.php";
 
-class Persona extends Conexion{
+class Persona extends Conexion
+{
     private $pdo;
 
-    public function __CONSTRUCT(){
+    public function __CONSTRUCT()
+    {
         $this->pdo = parent::getConexion();
     }
 
-    public function registrar($data = []){
-        try{
+    public function registrar($data = [])
+    {
+        try {
             $consulta = $this->pdo->prepare("CALL spu_personas_registrar(?,?,?,?,?,?,?,?)");
             $consulta->execute(array(
                 $data["tipoDoc"],
@@ -23,10 +26,19 @@ class Persona extends Conexion{
                 $data["iduser_create"]
             ));
             return $consulta->fetch(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            die($e->getMessage());
         }
-        catch(Exception $e){
+    }
+
+    public function VerificarRegs($nroDoc)
+    {
+        try {
+            $consulta = $this->pdo->prepare("CALL spu_personas_buscar_por_dni(?)");
+            $consulta->execute(array($nroDoc));
+            return $consulta->fetch(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
             die($e->getMessage());
         }
     }
 }
-?>

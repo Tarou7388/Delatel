@@ -48,7 +48,8 @@ window.tablaProductos = $('#TbProductos').DataTable({
                 columns: ':not(:last-child)'
             }
         }
-    ], ajax: {
+    ],
+    ajax: {
         url: ruta,
         type: 'GET',
         dataSrc: ''
@@ -72,30 +73,32 @@ window.tablaProductos = $('#TbProductos').DataTable({
     ]
 });
 
-
-$('#TbProductos tbody').on('click', '.btn-edit', function () {
+$('#TbProductos tbody').on('click', '.btn-edit', async function () {
     const idProducto = $(this).data('id');
 
-    fetch(`../../controllers/Productos.controllers.php?operacion=getById&id_producto=` + idProducto)
-        .then(response => response.json())
-        .then(producto => {
-            $('#txtIdProducto').val(producto.id_producto);
-            $('#slcEditarTipoProducto').val(producto.tipo_producto);
-            $('#slcEditarMarca').val(producto.marca);
-            $('#txtEditarModelo').val(producto.modelo);
-            $('#txtEditarPrecioActual').val(producto.precio_actual);
-            $('#txtEditarCodigoBarras').val(producto.codigo_barra);
+    try {
+        const response = await fetch(`../../controllers/Productos.controllers.php?operacion=getById&id_producto=` + idProducto);
+        const producto = await response.json();
+        $('#txtIdProducto').val(producto.id_producto);
+        $('#slcEditarTipoProducto').val(producto.tipo_producto);
+        $('#slcEditarMarca').val(producto.marca);
+        $('#txtEditarModelo').val(producto.modelo);
+        $('#txtEditarPrecioActual').val(producto.precio_actual);
+        $('#txtEditarCodigoBarras').val(producto.codigo_barra);
 
-            $('#modalEditarProducto').modal('show');
-        })
-        .catch(error => console.error('Error fetching product:', error));
+        $('#modalEditarProducto').modal('show');
+    } catch (error) {
+        console.error('Error fetching product:', error);
+    }
 });
 
-$('#form-editar-producto').on('submit', function (e) {
+$('#form-editar-producto').on('submit', async function (e) {
+    e.preventDefault();
+
     if (permisos[0].permisos.inventariado.crear != 1) {
         alert("No tienes permiso para esta acción");
+        return;
     }
-    e.preventDefault();
 
     const datosProducto = {
         id_producto: $('#txtIdProducto').val(),
@@ -104,24 +107,27 @@ $('#form-editar-producto').on('submit', function (e) {
         modelo: $('#txtEditarModelo').val(),
         precio_actual: $('#txtEditarPrecioActual').val(),
         codigo_barra: $('#txtEditarCodigoBarras').val(),
-        iduser_update: (userid)
+        iduser_update: userid
     };
 
-    fetch(`../../controllers/Productos.controllers.php?operacion=update`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(datosProducto)
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.Actualizado) {
-                tablaProductos.ajax.reload();
-                alert('Actualizado Correctamente.');
-                $('#modalEditarProducto').modal('hide');
-            } else {
-                alert('Error al actualizar el producto.');
-            }
-        })
+    try {
+        const response = await fetch(`../../controllers/Productos.controllers.php?operacion=update`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(datosProducto)
+        });
+        const data = await response.json();
+
+        if (data.Actualizado) {
+            tablaProductos.ajax.reload();
+            alert('Actualizado Correctamente.');
+            $('#modalEditarProducto').modal('hide');
+        } else {
+            alert('Error al actualizar el producto.');
+        }
+    } catch (error) {
+        console.error('Error updating product:', error);
+    }
 });

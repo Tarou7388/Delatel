@@ -39,16 +39,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   $('.card-body').on('click', '.update-btn', function () {
     const id = $(this).data('id');
-    const apellidos = $(this).data('apellidos');
     const nombres = $(this).data('nombres');
     const telefono = $(this).data('telefono');
-    openEditModal(id, apellidos, nombres, telefono);
+    openEditModal(id, nombres, telefono);
   });
 });
 
-export function openEditModal(id, apellidos, nombres, telefono) {
+export function openEditModal(id, nombres, telefono) {
   $('#userId').val(id);
-  $('#txtApe').val(apellidos);
   $('#txtNombre').val(nombres);
   $('#txtTelPrincipal').val(telefono);
   $('#editModal').modal('show');
