@@ -157,3 +157,14 @@ BEGIN
     SET inactive_at = NOW() 
     WHERE id_contrato = p_id_contrato;
 END $$
+
+CREATE PROCEDURE spu_guardar_ficha_tecnica(
+    p_id_contrato INT,
+    p_ficha_instalacion JSON
+)
+BEGIN
+    UPDATE 
+    tb_contratos 
+    SET ficha_instalacion = p_ficha_instalacion 
+    WHERE id_contrato = p_id_contrato;
+END $$

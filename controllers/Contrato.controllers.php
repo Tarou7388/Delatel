@@ -55,5 +55,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
       $resultado = $contrato->delete($datos['parametros']);
       echo json_encode(["eliminado" => $resultado]);
       break;
+    case 'guardarFichaInstalacion':
+      $data = [
+        "id" => $datos['id'],
+        "fichaInstalacion" => json_encode($datos['fichaInstalacion'])
+      ];
+      $resultado = $contrato->guardarFichaInstalacion($data);
+      echo json_encode(["guardado" => $resultado]);
+      break;
   }
 }
