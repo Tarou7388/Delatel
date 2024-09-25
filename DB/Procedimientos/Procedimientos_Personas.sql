@@ -84,3 +84,13 @@ BEGIN
 END $$
 
 
+CREATE PROCEDURE spu_personas_buscar_por_dni(
+    IN p_dni VARCHAR(15)
+)
+BEGIN
+    SELECT id_persona,tipo_doc, nro_doc, apellidos, nombres, telefono,nacionalidad, email
+    FROM vw_personas_listar
+    WHERE nro_doc = p_dni;
+END $$
+
+

@@ -1,54 +1,134 @@
+import config from '../env.js';
+
 document.addEventListener("DOMContentLoaded", function () {
 
-  // Función para obtener un elemento por su ID
   function $(id) {
     return document.getElementById(id);
   }
 
+  // Funcionalidad del input de DNI -> Al detectar 8 caracteres actualiza. 
   (function () {
-    // Obtener elementos del DOM
     const slcNacionalidad = $("slcNacionalidad");
     const slcDocumento = $("slcDocumento");
-    
-    // Crear opción para nacionalidad peruana
+
     const peruanoOpcion = new Option('Peruano', 'Peruano');
     peruanoOpcion.id = 'peruanoOpcion';
 
-    // Añadir evento de entrada al campo de número de documento
     $("txtNumDocumentoPersona").addEventListener('input', cambiarslc);
 
-    // Función para manejar cambios en el campo de número de documento
     function cambiarslc() {
       const length = $("txtNumDocumentoPersona").value.length;
 
-      // Si el número de dígitos es 8
       if (length === 8) {
-        // Agregar la opción 'Peruano' si no existe
         if (![...slcNacionalidad.options].some(option => option.value === 'Peruano')) {
           slcNacionalidad.add(peruanoOpcion);
         }
-        // Establecer tipo de documento como 'DNI'
         slcDocumento.value = 'DNI';
-        slcDocumento.disabled = true; // Deshabilitar selección de tipo de documento
-        slcNacionalidad.value = 'Peruano'; // Establecer nacionalidad
-        slcNacionalidad.disabled = true; // Deshabilitar selección de nacionalidad
+        slcDocumento.disabled = true;
+        slcNacionalidad.value = 'Peruano';
+        slcNacionalidad.disabled = true;
       } else {
-        // Si ya hay una opción 'Peruano', removerla
         if ([...slcNacionalidad.options].some(option => option.value === 'Peruano')) {
           slcNacionalidad.remove(slcNacionalidad.querySelector('#peruanoOpcion').index);
         }
-        slcDocumento.disabled = false; // Habilitar selección de tipo de documento
+        slcDocumento.disabled = false;
 
-        // Asignar tipo de documento según el número de caracteres
         if (length === 12) {
-          slcDocumento.value = 'PAS'; // Pasaporte
+          slcDocumento.value = 'PAS';
         } else if (length === 10) {
-          slcDocumento.value = 'CAR'; // Carnet de extranjería
+          slcDocumento.value = 'CAR';
         } else {
-          slcDocumento.value = ''; // Restablecer el valor si no se cumplen las condiciones
+          slcDocumento.value = '';
         }
-        slcNacionalidad.disabled = false; // Habilitar selección de nacionalidad
+        slcNacionalidad.disabled = false;
       }
     }
   })();
+
+  //Verificar la existencia de una persona.
+  $("btnBuscar").addEventListener("click", async () => {
+    const dni = $("txtNumDocumentoPersona").value;
+
+    await fetch(`${config.HOST}/controllers/Personas.controlles.php?Operacion=siExiste&DNI=${dni}`)
+      .then(respuesta => respuesta.json())
+      .then(data => {
+        if (!data) {
+          BuscarPersonaAPI("getapi", txtNumDocumentoPersona.value);
+        } else {
+          PersonaEncontrada(data);
+        }
+      });
+  });
+
+  //Funcion de obtencion de los Roles
+  (async function () {
+    await fetch(`${config.HOST}/controllers/Roles.controllers.php?operacion=getAllRol`)
+      .then(respuesta => respuesta.json())
+      .then(data => {
+        data.forEach(element => {
+          const option = new Option(element.rol, element.id);
+          $("slcRol").add(option);
+        });
+      });
+  }());
+
+
+  async function PersonaEncontrada(value) {
+    $("txtNombre").value = await value.nombres;
+    $("txtApe").value = await value.apellidos;
+    $("slcNacionalidad").value = value.nacionalidad;
+    $("txtEmail").value = await value.email;
+
+    $("txtNombre").disabled = true;
+    $("txtApe").disabled = true;
+    $("txtEmail").disabled = true;
+
+    console.log(value);
+  }
+
+  //En proceso
+  function BuscarPersonaAPI(operacion, dni) {
+    fetch(
+      `${config.HOST}controllers/Personas.controlles.php?Operacion=${operacion}&dni=${encodeURIComponent(
+        dni
+      )}`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+
+        txtNombresPersona.value = data.nombres ?? "";
+        txtApellidosPersona.value = (data.apellidoPaterno ?? "") + (data.apellidoMaterno ? " " + data.apellidoMaterno : "");
+      })
+      .catch((e) => {
+        alert("Persona no encontrada, verifique DNI")
+      });
+  }
+
+  $("confirmRegister").addEventListener("click", async () => {
+    const form = document.getElementById("registerForm");
+    const formData = new FormData(form);
+    await RegistrarUsuario(formData);
+  });
+
+  async function RegistrarUsuario(formData) {
+    await fetch(`${config.HOST}/controllers/RegistrarUsuario.controller.php`, {
+      method: 'POST',
+      body: formData
+    })
+      .then(respuesta => respuesta.json())
+      .then(data => {
+        if (data.success) {
+          alert("Usuario registrado con éxito");
+          window.location.href = "index.php";
+        } else {
+          alert("Error al registrar el usuario: " + data.message);
+        }
+      });
+  }
+
+  //Complementacion si la persona no ha sido registrada.
+  function Traerinputs() {
+
+  }
+
 });

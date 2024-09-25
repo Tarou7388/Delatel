@@ -30,6 +30,13 @@ if (isset($_GET["Operacion"])) {
             }
             break;
 
+        case 'siExiste':
+            if (!empty($_GET['DNI'])) {
+                $resultado = $persona->VerificarRegs(['DNI' => $_GET['DNI']]);
+                echo json_encode($resultado);
+            }
+            break;
+
         default:
             echo json_encode(['error' => 'Operación no válida']);
     }

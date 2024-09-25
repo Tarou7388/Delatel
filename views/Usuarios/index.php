@@ -1,22 +1,25 @@
 <?php require_once '../../header.php'; ?>
 
 <div class="container-fluid d-flex justify-content-center py-4">
-    <div class="card w-100" style="max-width: 90%;">
-        <div class="card-header">Gestionar Usuarios</div>
-        <div class="card-body">
-            <table id="listarUsuarios" name="listarUsuarios" class="display">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Usuarios</th>
-                        <th>Rol</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
+  <div class="card w-100" style="max-width: 90%;">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <span>Gestionar Usuarios</span>
+      <a href="registrar.php" class="btn btn-success">Registrar Usuario</a>
     </div>
+    <div class="card-body">
+      <table id="listarUsuarios" class="display">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Usuarios</th>
+            <th>Rol</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
 <!-- Modal -->
@@ -30,14 +33,17 @@
       <div class="modal-body">
         <form id="editForm" action="actualizar_usuario_action.php" method="POST">
           <input type="hidden" id="userId" name="userId">
+
           <div class="form-floating mb-3">
             <input type="text" id="txtNombre" name="nombre" class="form-control" required>
             <label for="txtNombre">Nombre</label>
           </div>
+
           <div class="form-floating mb-3">
             <input type="text" id="txtUsuario" name="usuario" class="form-control" required>
             <label for="txtUsuario">Usuario</label>
           </div>
+
           <div class="form-floating mb-3">
             <select id="txtRol" name="rol" class="form-select" required>
               <option value="">Seleccione un rol</option>
@@ -46,6 +52,7 @@
             </select>
             <label for="txtRol">Rol</label>
           </div>
+
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
             <button type="submit" class="btn btn-primary">Actualizar</button>

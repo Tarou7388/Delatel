@@ -31,11 +31,11 @@ class Persona extends Conexion
         }
     }
 
-    public function VerificarRegs($nroDoc)
+    public function VerificarRegs($data = [])
     {
         try {
             $consulta = $this->pdo->prepare("CALL spu_personas_buscar_por_dni(?)");
-            $consulta->execute(array($nroDoc));
+            $consulta->execute(array($data["DNI"]));
             return $consulta->fetch(PDO::FETCH_ASSOC);
         } catch (Exception $e) {
             die($e->getMessage());
