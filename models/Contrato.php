@@ -113,4 +113,16 @@ class Contrato extends Conexion
             die($e->getMessage());
         }
     }
+    public function guardarFichaInstalacion($params = []){
+        try {
+            $query = $this->pdo->prepare("CALL spu_guardar_ficha_tecnica(?,?)");
+            $query->execute(array(
+                $params["id"],
+                $params["fichaInstalacion"]
+            ));
+            return true;
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+    }
 }

@@ -128,10 +128,6 @@ $idContrato = $_GET['idContrato'];
                 <textarea type="text" class="form-control" id="txtaDetallesModen" placeholder="Detalles"></textarea>
               </div>
             </div>
-            <div class="mt-4">
-              <button class="btn btn-primary btn-sm" type="button" id="btnGuardar">Guardar</button>
-              <button class="btn btn-secondary btn-sm" type="button" id="btnCancelar">Cancelar</button>
-            </div>
           </div>
         </div>
       </div>

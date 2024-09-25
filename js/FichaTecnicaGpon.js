@@ -38,11 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     tipoPaquete = data[0].tipo_paquete;
 
-    if (data[0].ficha_instalacion) {
-      flagFichaInstalacion = true;
-    } else {
-      flagFichaInstalacion = false;
-    }
+
   })();
 
   async function fibraOptica() {
@@ -62,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (txtUsuario === "" || txtPlan === "" || txtClaveAcceso === "" || txtPotencia === "" || txtSsdi === "" || txtSeguridad === "" || txtMarcaModelo === "" || slcBanda === "" || txtAntenas === "") {
         alert("Por favor, llene todos los campos.");
       } else {
-        jsonData = JSON.stringify({
+        jsonData = {
           fibraoptica: {
             usuario: txtUsuario,
             claveacceso: txtClaveAcceso,
@@ -77,10 +73,10 @@ document.addEventListener("DOMContentLoaded", () => {
               numeroantena: parseInt(txtAntenas),
               catv: chkCatv,
             },
-            repetidor: [],
             detalles: txtaDetallesModen,
           },
-        });
+        };
+        console.log("Hola");
       }
     }
   }
@@ -91,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const slcTriplexor = document.querySelector("#slcTriplexor").value.split(',');
     const txtCantConector = document.querySelector("#txtCantConector").value;
     const txtPrecioConector = document.querySelector("#txtPrecioConector").value;
-    const txtSpliter = document.querySelector("#txtCantSpliter").value;
+    const txtSpliter = document.querySelector("#txtSpliter").value;
     const slcSpliter = document.querySelector("#slcSpliter").value;
     const txtCantCable = document.querySelector("#txtCantCable").value;
     const txtPrecioCable = document.querySelector("#txtPrecioCable").value;
@@ -99,7 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (txtPagoInst === "" || txtPotencia === "" || slcTriplexor === "" || txtCantConector === "" || txtPrecioConector === "" || txtSpliter === "" || slcSpliter === "" || txtCantCable === "" || txtPrecioCable === "") {
       alert("Por favor, llene todos los campos del Cable.");
     } else {
-      jsonCable = JSON.stringify({
+      jsonCable = {
         pagoinstalacion: parseFloat(txtPagoInst),
         potencia: txtPotencia,
         sintonizador: {},
@@ -121,7 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
           metrosadicionales: parseInt(txtCantCable),
           preciometro: parseFloat(txtPrecioCable)
         }
-      });
+      };
     }
   }
 
@@ -129,22 +125,36 @@ document.addEventListener("DOMContentLoaded", () => {
     const txtPagoAdelantado = document.querySelector("#txtPagoAdelantado").value;
     const txtCantSintotizador = document.querySelector("#txtCantSintotizador").value;
     const txtCostoAlquiler = document.querySelector("#txtCostoAlquiler").value;
+    const txtDescuento = document.querySelector("#txtDescuento").value;
+    const txtGponNap = document.querySelector("#txtGponNap").value;
+    const txtCatvNap = document.querySelector("#txtCatvNap").value;
+    const txtGponCasa = document.querySelector("#txtGponCasa").value;
+    const txtCatvCasa = document.querySelector("#txtCatvCasa").value;
 
-    if(tipoPaquete == "GPON") {
-      const jsonCostoClable = {
+    jsonCosto = {
+      pagoAdelantado: txtPagoAdelantado,
+      descuento: txtDescuento,
+      nap: {
+        gpon: txtGponNap,
+        catv: txtCatvNap
+      },
+      casa: {
+        gpon: txtGponCasa,
+        catv: txtCatvCasa
+      }
+    };
+
+    if (tipoPaquete == "GPON") {
+      const jsonCostoCable = {
         numerosintotizadores: parseInt(txtCantSintotizador),
-        costoAlquiler: parseFloat(txtCostoAlquiler),
-        cantidadCable: txtCantCable,
-        precioCable: txtPrecioCable,
-        precioConector: txtPrecioConector,
-        cantidadConector: txtCantConector,
-
+        costoAlquilerSintotizador: parseFloat(txtCostoAlquiler),
+        cantidadCable: txtCantCable.value,
+        precioCable: txtPrecioCable.value,
+        precioConector: txtPrecioConector.value,
+        cantidadConector: txtCantConector.value
       };
+      jsonCosto.cableCosto = jsonCostoCable;
     }
-
-    jsonCosto = JSON.stringify({
-      
-    });
   }
 
   function calcularCostos() {
@@ -217,6 +227,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("txtContraseniaRepetidor").value = "";
       document.getElementById("txtMarcaModeloRepetidor").value = "";
       document.getElementById("txtIpRepetidor").value = "";
+      document.getElementById("txtSerieRepetidor").value = "";
       $("#mdlRepetidor").modal("hide");
     }
   }
@@ -231,7 +242,6 @@ document.addEventListener("DOMContentLoaded", () => {
       serie: serie
     }
     jsonSintotizador.push(jsonSintotizadorNuevo);
-    console.log(jsonSintotizador);
     const card = document.createElement("div");
     card.className = "card mt-2";
     card.innerHTML = `
@@ -255,6 +265,33 @@ document.addEventListener("DOMContentLoaded", () => {
     await ActualizarCantidadSintotizador();
   }
 
+  async function guardar() {
+    await fibraOptica();
+    await cable();
+    await costos();
+    if (numeroRepetidores > 0) {
+      console.log(jsonData);
+      jsonData.fibraoptica.repetidores = jsonRepetidor;
+    }
+    if (tipoPaquete == "GPON") {
+      if (numeroSintotizadores > 0) {
+        jsonCable.sintonizadores = jsonSintotizador;
+      }
+      jsonData.cable = jsonCable;
+    }
+    const data = {
+      operacion: "guardarFichaInstalacion",
+      fichaInstalacion: jsonData,
+      id: idContrato
+    };
+    const response = await fetch(`${config.HOST}controllers/contrato.controllers.php`, {
+      method: "PUT",
+      body: JSON.stringify(data)
+    });
+    const datos = await response.json();
+    console.log(datos);
+  }
+
   txtCantCable.addEventListener("input", calcularCostos);
 
   txtCantConector.addEventListener("input", calcularCostos);
@@ -272,9 +309,19 @@ document.addEventListener("DOMContentLoaded", () => {
     card.remove();
     numeroRepetidores--;
     jsonRepetidor.pop();
-    console.log(jsonRepetidor);
     if (numeroRepetidores === 0) {
       document.getElementById("cardContainer").hidden = true;
     }
   });
+
+  document.getElementById("btnGuardar").addEventListener("click", async () => {
+    if(permisos[0].permisos.contratos.crear){
+      if(!flagFichaInstalacion){
+        await guardar();
+      }else{
+        alert("La ficha de instalación ya ha sido guardada.");
+      }
+    }
+  });
+
 });
