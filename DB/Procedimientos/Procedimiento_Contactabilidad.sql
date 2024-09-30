@@ -16,8 +16,6 @@ BEGIN
 	SELECT LAST_INSERT_ID() AS id_contactabilidad;
 END $$
 
-
--- Procedimiento para inhabilitar Automaticamente--
 DELIMITER $$
 CREATE PROCEDURE spu_contactabilidad_inhabilitar()
 BEGIN

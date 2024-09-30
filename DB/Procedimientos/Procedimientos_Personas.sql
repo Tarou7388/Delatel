@@ -83,7 +83,6 @@ BEGIN
     WHERE id_persona = p_id_persona;
 END $$
 
-
 CREATE PROCEDURE spu_personas_buscar_por_dni(
     IN p_dni VARCHAR(15)
 )
@@ -92,5 +91,3 @@ BEGIN
     FROM vw_personas_listar
     WHERE nro_doc = p_dni;
 END $$
-
-

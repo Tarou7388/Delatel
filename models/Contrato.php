@@ -73,11 +73,12 @@ class Contrato extends Conexion
      */
     public function delete($params = []){
         try {
+            $status = false;
             $query = $this->pdo->prepare("CALL spu_contratos_eliminar(?)");
-            $query->execute(array(
+            $status = $query->execute(array(
                 $params["id"]
             ));
-            return true;
+            return $status;
         } catch (Exception $e) {
             die($e->getMessage());
         }
@@ -115,12 +116,13 @@ class Contrato extends Conexion
     }
     public function guardarFichaInstalacion($params = []){
         try {
+            $status = false;
             $query = $this->pdo->prepare("CALL spu_guardar_ficha_tecnica(?,?)");
-            $query->execute(array(
+            $status = $query->execute(array(
                 $params["id"],
                 $params["fichaInstalacion"]
             ));
-            return true;
+            return $status;
         } catch (Exception $e) {
             die($e->getMessage());
         }

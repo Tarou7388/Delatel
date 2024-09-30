@@ -117,7 +117,6 @@ SELECT
 FROM tb_paquetes p
     JOIN tb_servicios s ON p.id_servicio = s.id_servicio;
 
-
 CREATE VIEW vw_contactabilidad_listar AS 
 SELECT 
 	c.id_contactabilidad,

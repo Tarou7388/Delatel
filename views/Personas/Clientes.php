@@ -276,6 +276,14 @@
                             <label for="slcNacionalidad">Nacionalidad</label>
                         </div>
                     </div>
+                    <div class="col-md-4">
+                        <div class="form-floating">
+                            <select class="form-select select2 select2me" id="slcServicio" aria-label="Servicios">
+                                <option value="0" disabled selected>Seleciona</option>
+                            </select>
+                            <label for="slcServicio">Servicios</label>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="d-flex justify-content-end mt-3">
