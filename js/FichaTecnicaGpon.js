@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const txtaDetallesModen = document.querySelector("#txtaDetallesModen").value;
     if (!flagFichaInstalacion) {
       if (txtUsuario === "" || txtPlan === "" || txtClaveAcceso === "" || txtPotencia === "" || txtSsdi === "" || txtSeguridad === "" || txtMarcaModelo === "" || slcBanda === "" || txtAntenas === "") {
-        alert("Por favor, llene todos los campos.");
+        showToast("Por favor, llene todos los campos.", "WARNING");
       } else {
         jsonData = {
           fibraoptica: {
@@ -75,7 +75,6 @@ document.addEventListener("DOMContentLoaded", () => {
             detalles: txtaDetallesModen,
           },
         };
-        console.log("Hola");
       }
     }
   }
@@ -92,7 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const txtPrecioCable = document.querySelector("#txtPrecioCable").value;
 
     if (txtPagoInst === "" || txtPotencia === "" || slcTriplexor === "" || txtCantConector === "" || txtPrecioConector === "" || txtSpliter === "" || slcSpliter === "" || txtCantCable === "" || txtPrecioCable === "") {
-      alert("Por favor, llene todos los campos del Cable.");
+      showToast("Por favor, llene todos los campos del Cable.", "WARNING");
     } else {
       jsonCable = {
         pagoinstalacion: parseFloat(txtPagoInst),
@@ -184,7 +183,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const ip = document.getElementById("txtIpRepetidor").value;
 
     if (ssid === "" || contrasenia === "" || marcaModelo === "" || ip === "") {
-      alert("Por favor, llene todos los campos.");
+      showToast("Por favor, llene todos los campos.", "WARNING");
     } else {
       numeroRepetidores++;
       const repetidor = {
@@ -317,14 +316,24 @@ document.addEventListener("DOMContentLoaded", () => {
     if(permisos[0].permisos.contratos.crear){
       if(!flagFichaInstalacion){
         await guardar();
+        showToast("Ficha de Instalación Guardarda Correctamente", "SUCCESS");
+        limpiarCampos();
+        alert("Hola");
+        window.location.href = "../views/Contratos/ContratosGeneral.php";
       }else{
-        alert("La ficha de instalación ya ha sido guardada.");
+        showToast("La ficha de instalación ya ha sido guardada.", "WARNING");
       }
     }
   });
 
+  function limpiarCampos(){
+    document.querySelectorAll('input[type="text"]').forEach(input => input.value = "");
+    document.querySelectorAll('input[type="number"]').forEach(input => input.value = "");
+    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => checkbox.checked = false);
+    document.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+    document.querySelectorAll('textarea').forEach(textarea => textarea.value = "");
+  }
 });
-
 
 window.addEventListener('DOMContentLoaded', function () {
   var today = new Date().toISOString().split('T')[0];
