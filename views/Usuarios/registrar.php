@@ -41,16 +41,22 @@
                 </div>
 
                 <div class="row mb-3">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-floating">
                             <input type="text" id="txtNombre" name="nombres" class="form-control" disabled>
                             <label for="txtNombre">Nombre</label>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-floating">
                             <input type="text" id="txtApe" name="apellidos" class="form-control" disabled>
                             <label for="txtApe">Apellido</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-floating">
+                            <input type="text" id="txtTelefono" name="txtTelefono" class="form-control">
+                            <label for="txtTelefono">Telefono</label>
                         </div>
                     </div>
                 </div>
