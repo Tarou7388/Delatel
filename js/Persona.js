@@ -123,15 +123,15 @@ document.addEventListener("DOMContentLoaded", function () {
         .then((response) => response.json())
         .then((data) => {
           if (data.id_persona > 0) {
-            alert("Persona registrada correctamente");
+            showToast("Persona registrada correctamente", "SUCCESS");
             registrarcontacto(data.id_persona);
           } else {
-            alert("Error: Verifique los datos ingresados");
+            showToast("Verifique los datos ingresados", "ERROR");
           }
           frmPersonas.reset();
         })
         .catch((e) => {
-          alert("PERSONA YA REGISTRADA")
+          showToast("PERSONA YA REGISTRADA", "WARNING")
         });
     }
   }
@@ -172,7 +172,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       })
       .catch((e) => {
-        alert("Persona no encontrada, verifique DNI")
+        showToast("Persona no encontrada, verifique DNI","ERROR")
       });
   }
 
@@ -185,7 +185,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     for (let campo of camposPersona) {
       if (campo.value.trim() === '') {
-        alert('Por favor, complete todos los campos de la persona.');
+        showToast('Por favor, complete todos los campos de la persona.',"WARNING");
         return true;
       }
     }
@@ -203,7 +203,7 @@ frmPersonas.addEventListener("submit", (event) => {
   const bandera = verificarCamposPersona();
   if (!bandera) {
     if (permisos[0].permisos.personas.crear != 1) {
-      alert("No tienes permiso de registrar");
+      showToast("No tienes permiso de registrar", "ERROR");
     }
     registrarpersona();
   }

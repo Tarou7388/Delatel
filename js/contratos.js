@@ -196,7 +196,6 @@ window.addEventListener("DOMContentLoaded", () => {
         direccion.value = data[0].direccion;
         coordenada.value = data[0].coordenadas;
         idCliente = data[0].id_cliente;
-        console.log(data);
       } else {
         showToast("Cliente no encontrado", "INFO");
       }
@@ -249,9 +248,7 @@ window.addEventListener("DOMContentLoaded", () => {
         }
 
         const result = await response.json();
-        console.log(result);
       } catch (error) {
-        console.error("Error:", error);
         showToast("Ocurrió un error al registrar el contrato. Por favor, inténtelo de nuevo.", "ERROR");
       }
       
