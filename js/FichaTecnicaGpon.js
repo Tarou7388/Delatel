@@ -23,20 +23,40 @@ document.addEventListener("DOMContentLoaded", () => {
       `${config.HOST}app/controllers/contrato.controllers.php?operacion=obtenerFichaInstalacion&id=${idContrato}`
     );
     const data = await response.json();
+    const installationData = JSON.parse(data[0].ficha_instalacion);
+    const fibra = installationData.fibraoptica;
+    const cable = installationData.cable;
+    
     const usuario = (data[0].nombre_cliente.split(", ")[0].substring(0, 3) + data[0].nombre_cliente.split(", ")[1].substring(0, 3)).toUpperCase() + idContrato;
     const contrasenia = "@" + usuario;
     document.getElementById("txtUsuario").value = usuario;
     document.getElementById("txtClaveAcceso").value = contrasenia;
     document.getElementById("txtPlan").value = data[0].servicio;
+    document.getElementById("txtPotenciaFibra").value = fibra.potencia; 
+    document.getElementById("txtSsdi").value = fibra.moden.ssid;
+    document.getElementById("txtSeguridad").value = fibra.moden.seguridad;
+    document.getElementById("txtMarcaModelo").value = fibra.moden.marca;
+    document.getElementById("txtSerieModen").value = fibra.moden.serie; 
+    document.getElementById("slcBanda").value = fibra.moden.banda;
+    document.getElementById("txtAntenas").value = fibra.moden.numeroantena;
+    document.getElementById("chkCatv").checked = fibra.moden.catv;
 
     if (data[0].tipo_paquete == "FIBR") {
       document.querySelector("#contenidoCable").setAttribute("hidden", "");
     } else {
       document.getElementById("txtPlanCable").value = data[0].servicio;
+      document.getElementById("txtPotenciaCable").value = cable.potencia;
+      document.getElementById("slcTriplexor").value = cable.sintonizador;
+      document.getElementById("txtCantConector").value = cable.conector.numeroconector;
+      document.getElementById("txtPrecioConector").value = cable.conector.precio; 
+      document.getElementById("txtSpliter").value = cable.spliter[0].cantidad;
+      document.getElementById("slcSpliter").value = cable.spliter[0].tipo;
+      document.getElementById("txtCantCable").value = cable.cable.metrosadicionales;
+      document.getElementById("txtPrecioCable").value = cable.cable.preciometro;
+      document.getElementById("txtCantSintotizador").value = cable.sintonizadores[0].numero;
     }
 
     tipoPaquete = data[0].tipo_paquete;
-
 
   })();
 
@@ -56,6 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!flagFichaInstalacion) {
       if (txtUsuario === "" || txtPlan === "" || txtClaveAcceso === "" || txtPotencia === "" || txtSsdi === "" || txtSeguridad === "" || txtMarcaModelo === "" || slcBanda === "" || txtAntenas === "") {
         showToast("Por favor, llene todos los campos.", "WARNING");
+        return;
       } else {
         jsonData = {
           fibraoptica: {
@@ -92,6 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (txtPagoInst === "" || txtPotencia === "" || slcTriplexor === "" || txtCantConector === "" || txtPrecioConector === "" || txtSpliter === "" || slcSpliter === "" || txtCantCable === "" || txtPrecioCable === "") {
       showToast("Por favor, llene todos los campos del Cable.", "WARNING");
+      return;
     } else {
       jsonCable = {
         pagoinstalacion: parseFloat(txtPagoInst),
@@ -184,6 +206,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (ssid === "" || contrasenia === "" || marcaModelo === "" || ip === "") {
       showToast("Por favor, llene todos los campos.", "WARNING");
+      return; 
     } else {
       numeroRepetidores++;
       const repetidor = {
@@ -244,9 +267,9 @@ document.addEventListener("DOMContentLoaded", () => {
     card.className = "card mt-2";
     card.innerHTML = `
             <div class="card-body">
-                <h5 class="card-title">Sintetizador</h5>
-                <p class="card-text"><strong>Marca y Modelo:</strong></p>
-                <p class="card-text"><strong>Serie:</strong></p>
+                <h5 class="card-title">Sintonizador</h5>
+                <p class="card-text"><strong>Marca y Modelo:</strong> ${marcaModelo}</p>
+                <p class="card-text"><strong>Serie:</strong> ${serie}</p>
                 <button class="btn btn-danger btn-sm mt-2 btnEliminar">Eliminar</button>
             </div>
         `;
@@ -317,22 +340,12 @@ document.addEventListener("DOMContentLoaded", () => {
       if(!flagFichaInstalacion){
         await guardar();
         showToast("Ficha de Instalación Guardarda Correctamente", "SUCCESS");
-        limpiarCampos();
-        alert("Hola");
-        window.location.href = "../views/Contratos/ContratosGeneral.php";
+        window.location.href = "../Contratos/ContratosGeneral.php";
       }else{
         showToast("La ficha de instalación ya ha sido guardada.", "WARNING");
       }
     }
   });
-
-  function limpiarCampos(){
-    document.querySelectorAll('input[type="text"]').forEach(input => input.value = "");
-    document.querySelectorAll('input[type="number"]').forEach(input => input.value = "");
-    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => checkbox.checked = false);
-    document.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
-    document.querySelectorAll('textarea').forEach(textarea => textarea.value = "");
-  }
 });
 
 window.addEventListener('DOMContentLoaded', function () {
