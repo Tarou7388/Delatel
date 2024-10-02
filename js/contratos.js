@@ -12,11 +12,10 @@ const referencia = document.querySelector("#txtReferencia");
 const coordenada = document.querySelector("#txtCoordenada");
 const slcSector = document.querySelector("#slcSector");
 const slcServicio = document.querySelector("#slcServicio");
-const botonesPdf = document.querySelectorAll(".btnGenerar");
-const botonesEliminar = document.querySelectorAll(".btnEliminar");
-const botonesFicha = document.querySelectorAll(".btnFicha");
+
 let precioServicio = 0;
 let idCliente = 0;
+
 
 // 2. Funciones externas
 const fetchSectores = async () => {
@@ -62,7 +61,7 @@ async function registrar() {
   const fichaInstalacion = await fichaInstalacionGpon();
   const nota = "";
   const idUsuarioRegistro = user.idRol;
-  
+
   if (!validarFechas() || !(await validarCampos())) {
     showToast("¡Complete los campos!", "INFO");
   } else {
@@ -108,7 +107,7 @@ async function registrar() {
 }
 
 async function eliminar(idContrato) {
-  if (confirm("¿Desea eliminar este contrato?")) {
+  if (ask("¿Desea eliminar este contrato?")) {
     const response = await fetch(`${config.HOST}app/controllers/contrato.controllers.php`, {
       method: "PUT",
       body: JSON.stringify({
@@ -147,7 +146,7 @@ async function eliminar(idContrato) {
 
   const dataContratos = await fetchContratos();
   const tbody = document.querySelector("#listarContratos tbody");
-  
+
   dataContratos.forEach((contrato) => {
     const tr = document.createElement("tr");
     tr.innerHTML = `
@@ -181,6 +180,9 @@ async function eliminar(idContrato) {
       { width: "14%", targets: 6 },
     ],
   });
+  const botonesPdf = document.querySelectorAll(".btnGenerar");
+  const botonesEliminar = document.querySelectorAll(".btnEliminar");
+  const botonesFicha = document.querySelectorAll(".btnFicha");
 
   botonesFicha.forEach((boton) => {
     boton.addEventListener("click", (event) => {
