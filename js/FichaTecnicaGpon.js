@@ -19,45 +19,62 @@ document.addEventListener("DOMContentLoaded", () => {
   let flagFichaInstalacion = false;
 
   (async () => {
-    const response = await fetch(
-      `${config.HOST}app/controllers/contrato.controllers.php?operacion=obtenerFichaInstalacion&id=${idContrato}`
-    );
-    const data = await response.json();
-    const installationData = JSON.parse(data[0].ficha_instalacion);
-    const fibra = installationData.fibraoptica;
-    const cable = installationData.cable;
-    
-    const usuario = (data[0].nombre_cliente.split(", ")[0].substring(0, 3) + data[0].nombre_cliente.split(", ")[1].substring(0, 3)).toUpperCase() + idContrato;
-    const contrasenia = "@" + usuario;
-    document.getElementById("txtUsuario").value = usuario;
-    document.getElementById("txtClaveAcceso").value = contrasenia;
-    document.getElementById("txtPlan").value = data[0].servicio;
-    document.getElementById("txtPotenciaFibra").value = fibra.potencia; 
-    document.getElementById("txtSsdi").value = fibra.moden.ssid;
-    document.getElementById("txtSeguridad").value = fibra.moden.seguridad;
-    document.getElementById("txtMarcaModelo").value = fibra.moden.marca;
-    document.getElementById("txtSerieModen").value = fibra.moden.serie; 
-    document.getElementById("slcBanda").value = fibra.moden.banda;
-    document.getElementById("txtAntenas").value = fibra.moden.numeroantena;
-    document.getElementById("chkCatv").checked = fibra.moden.catv;
+    try {
+      const response = await fetch(
+        `${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerFichaInstalacion&id=${idContrato}`
+      );
+      const data = await response.json();
+  
+      const usuario = (
+        data[0].nombre_cliente.split(", ")[0].substring(0, 3) +
+        data[0].nombre_cliente.split(", ")[1].substring(0, 3)
+      ).toUpperCase() + idContrato;
+      
+      const contrasenia = "@" + usuario;
 
-    if (data[0].tipo_paquete == "FIBR") {
-      document.querySelector("#contenidoCable").setAttribute("hidden", "");
-    } else {
+      document.getElementById("txtUsuario").value = usuario;
+      document.getElementById("txtClaveAcceso").value = contrasenia;
+      document.getElementById("txtPlan").value = data[0].servicio;
       document.getElementById("txtPlanCable").value = data[0].servicio;
-      document.getElementById("txtPotenciaCable").value = cable.potencia;
-      document.getElementById("slcTriplexor").value = cable.sintonizador;
-      document.getElementById("txtCantConector").value = cable.conector.numeroconector;
-      document.getElementById("txtPrecioConector").value = cable.conector.precio; 
-      document.getElementById("txtSpliter").value = cable.spliter[0].cantidad;
-      document.getElementById("slcSpliter").value = cable.spliter[0].tipo;
-      document.getElementById("txtCantCable").value = cable.cable.metrosadicionales;
-      document.getElementById("txtPrecioCable").value = cable.cable.preciometro;
-      document.getElementById("txtCantSintotizador").value = cable.sintonizadores[0].numero;
+  
+      // Verificar si existe ficha_instalacion
+      if (data[0].ficha_instalacion) {
+        const installationData = JSON.parse(data[0].ficha_instalacion);
+        const fibra = installationData.fibraoptica;
+        const cable = installationData.cable;
+  
+        if (data[0].tipo_paquete == "FIBR" && fibra) {
+          // Datos de Fibra
+          document.querySelector("#contenidoCable").setAttribute("hidden", "");
+          document.getElementById("txtPotenciaFibra").value = fibra.potencia || ""; 
+          document.getElementById("txtSsdi").value = fibra.moden?.ssid || "";
+          document.getElementById("txtSeguridad").value = fibra.moden?.seguridad || "";
+          document.getElementById("txtMarcaModelo").value = fibra.moden?.marca || "";
+          document.getElementById("txtSerieModen").value = fibra.moden?.serie || ""; 
+          document.getElementById("slcBanda").value = fibra.moden?.banda || "";
+          document.getElementById("txtAntenas").value = fibra.moden?.numeroantena || "";
+          document.getElementById("chkCatv").checked = fibra.moden?.catv || false;
+        } else if (cable) {
+          // Datos de Cable
+          document.getElementById("txtPotenciaCable").value = cable.potencia || "";
+          document.getElementById("slcTriplexor").value = cable.triplexor?.[0]?.requerido || "";
+          document.getElementById("txtCantConector").value = cable.conector?.numeroconector || "";
+          document.getElementById("txtPrecioConector").value = cable.conector?.precio || ""; 
+          document.getElementById("txtSpliter").value = cable.spliter?.[0]?.cantidad || "";
+          document.getElementById("slcSpliter").value = cable.spliter?.[0]?.tipo || "";
+          document.getElementById("txtCantCable").value = cable.cable?.metrosadicionales || "";
+          document.getElementById("txtPrecioCable").value = cable.cable?.preciometro || "";
+          document.getElementById("txtCantSintotizador").value = cable.sintonizadores?.[0]?.numero || "";
+        }
+      } else {
+        console.warn("No hay datos en ficha_instalacion.");
+      }
+  
+      tipoPaquete = data[0].tipo_paquete;
+  
+    } catch (error) {
+      console.error("Error al obtener los datos de la ficha de instalación:", error);
     }
-
-    tipoPaquete = data[0].tipo_paquete;
-
   })();
 
   async function fibraOptica() {
