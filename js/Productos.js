@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
       event.preventDefault();
 
       if (permisos[0].permisos.inventariado.crear != 1) {
-        alert("No tienes permiso para esta acción");
+        showToast("No tienes permiso para esta acción","ERROR");
       }
       const params = new FormData();
       params.append("operacion", "add");
@@ -36,9 +36,9 @@ document.addEventListener("DOMContentLoaded", () => {
         .then((response) => response.json())
         .then((data) => {
           if (data.Guardado) {
-            alert("Se ha guardado correctamente");
+            showToast("Se ha guardado correctamente","SUCCESS");
           } else {
-            alert("Error: Verfique que se haya hecho bien la operacion");
+            showToast("Verfique que se haya hecho bien la operacion","ERROR");
           }
           document.querySelector("#form-productos").reset();
 

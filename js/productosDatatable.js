@@ -1,4 +1,7 @@
-const ruta = "../../controllers/Productos.controllers.php?operacion=getAll";
+
+import config from '../env.js';
+
+const ruta = `${config.HOST}controllers/Productos.controllers.php?operacion=getAll`;
 if (permisos[0].permisos.inventariado.leer != 1) {
     window.location.href = `${config.HOST}views`;
 }
@@ -55,14 +58,14 @@ window.tablaProductos = $('#TbProductos').DataTable({
         dataSrc: ''
     },
     columns: [
-        { data: 'marca', title: 'Marca' },
-        { data: 'tipo_producto', title: 'Tipo de Producto' },
-        { data: 'modelo', title: 'Modelo' },
-        { data: 'precio_actual', title: 'Precio Actual' },
-        { data: 'codigo_barra', title: 'Código de Barra' },
+        { data: 'marca', title: 'Marca', className: 'text-center' },
+        { data: 'tipo_producto', title: 'Tipo de Producto', className: 'text-center' },
+        { data: 'modelo', title: 'Modelo', className: 'text-center' },
+        { data: 'precio_actual', title: 'Precio Actual', className: 'text-center' },
+        { data: 'codigo_barra', title: 'Código de Barra', className: 'text-center' },
         {
             data: null,
-            title: 'Acciones',
+            title: 'Acciones', className: 'text-center',
             render: function (data, type, row) {
                 return `
                     <button class="btn btn-warning btn-edit" data-id="${row.id_producto}"><i class="fa-regular fa-pen-to-square"></i></button>
@@ -96,7 +99,7 @@ $('#form-editar-producto').on('submit', async function (e) {
     e.preventDefault();
 
     if (permisos[0].permisos.inventariado.crear != 1) {
-        alert("No tienes permiso para esta acción");
+        showToast("No tienes permiso para esta acción","ERROR");
         return;
     }
 
@@ -122,10 +125,10 @@ $('#form-editar-producto').on('submit', async function (e) {
 
         if (data.Actualizado) {
             tablaProductos.ajax.reload();
-            alert('Actualizado Correctamente.');
+            showToast('Actualizado Correctamente.',"SUCCESS")
             $('#modalEditarProducto').modal('hide');
         } else {
-            alert('Error al actualizar el producto.');
+            showToast('Error al actualizar el producto.',"ERROR");
         }
     } catch (error) {
         console.error('Error updating product:', error);

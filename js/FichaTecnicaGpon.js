@@ -308,7 +308,6 @@ document.addEventListener("DOMContentLoaded", () => {
     await cable();
     await costos();
     if (numeroRepetidores > 0) {
-      console.log(jsonData);
       jsonData.fibraoptica.repetidores = jsonRepetidor;
     }
     if (tipoPaquete == "GPON") {
@@ -327,7 +326,6 @@ document.addEventListener("DOMContentLoaded", () => {
       body: JSON.stringify(data)
     });
     const datos = await response.json();
-    console.log(datos);
   }
 
   txtCantCable.addEventListener("input", calcularCostos);
