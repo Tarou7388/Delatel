@@ -29,7 +29,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   (async () => {
     const response = await fetch(
-      `${config.HOST}controllers/sectores.controllers.php?operacion=getAll`
+      `${config.HOST}app/controllers/sectores.controllers.php?operacion=getAll`
     );
     const data = await response.json();
     data.forEach((sector) => {
@@ -42,7 +42,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   (async () => {
     const response = await fetch(
-      `${config.HOST}controllers/paquetes.controllers.php?operacion=getAll`
+      `${config.HOST}app/controllers/paquetes.controllers.php?operacion=getAll`
     );
     const data = await response.json();
     data.forEach((paquetes) => {
@@ -57,7 +57,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   (async () => {
     const response = await fetch(
-      `${config.HOST}controllers/contrato.controllers.php?operacion=getAll`
+      `${config.HOST}app/controllers/contrato.controllers.php?operacion=getAll`
     );
     const data = await response.json();
     const tbody = document.querySelector("#listarContratos tbody");
@@ -186,7 +186,7 @@ window.addEventListener("DOMContentLoaded", () => {
       alert("Ingrese un número de documento");
     } else {
       const response = await fetch(
-        `${config.HOST}controllers/cliente.controllers.php?operacion=getByDoc&numDoc=${dni.value}`
+        `${config.HOST}app/controllers/cliente.controllers.php?operacion=getByDoc&numDoc=${dni.value}`
       );
       const data = await response.json();
       if (data.length > 0) {
@@ -214,7 +214,7 @@ window.addEventListener("DOMContentLoaded", () => {
         const idServicio = parseInt(slcServicio.value.split(" - ")[0]);
         const fichaInstalacionJSON = JSON.stringify(fichaInstalacion);
         const response = await fetch(
-          `${config.HOST}controllers/contrato.controllers.php`,
+          `${config.HOST}app/controllers/contrato.controllers.php`,
           {
             method: "POST",
             body: JSON.stringify({
@@ -261,7 +261,7 @@ window.addEventListener("DOMContentLoaded", () => {
   async function eliminar(idContrato) {
     if (confirm("¿Desea eliminar este contrato?")) {
       const response = await fetch(
-        `${config.HOST}controllers/contrato.controllers.php`,
+        `${config.HOST}app/controllers/contrato.controllers.php`,
         {
           method: "PUT",
           body: JSON.stringify({

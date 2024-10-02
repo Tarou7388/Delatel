@@ -25,7 +25,7 @@ function actualizar(idcliente) {
   };
 
   fetch(
-    `${config.HOST}controllers/cliente.controllers.php?operacion=actualizar`,
+    `${config.HOST}app/controllers/cliente.controllers.php?operacion=actualizar`,
     {
       method: "PUT",
       headers: {
@@ -140,7 +140,7 @@ $("#listarCliente tbody").on("click", ".btn-edit", function () {
   const idcliente = $(this).data("id");
 
   fetch(
-    `${config.HOST}controllers/cliente.controllers.php?operacion=getByDoc&numDoc=${idcliente}`
+    `${config.HOST}app/controllers/cliente.controllers.php?operacion=getByDoc&numDoc=${idcliente}`
   )
     .then((response) => response.json())
     .then((data) => {
@@ -193,7 +193,7 @@ $("#listarCliente tbody").on("click", ".btn-delete", function () {
     };
 
     fetch(
-      `${config.HOST}controllers/cliente.controllers.php`,
+      `${config.HOST}app/controllers/cliente.controllers.php`,
       {
         method: "PUT",
         headers: {

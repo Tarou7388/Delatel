@@ -6,7 +6,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
   (async () => {
     const respuesta = await fetch(
-      `${config.HOST}controllers/Contactabilidad.controllers.php?operacion=getPlanes`
+      `${config.HOST}app/controllers/Contactabilidad.controllers.php?operacion=getPlanes`
     );
     const data = await respuesta.json();
 
@@ -20,7 +20,7 @@ window.addEventListener('DOMContentLoaded', function () {
   })();
 
   (async()=>{
-    const response = await fetch(`${config.HOST}controllers/Contactabilidad.controllers.php?operacion=getPersonas`);
+    const response = await fetch(`${config.HOST}app/controllers/Contactabilidad.controllers.php?operacion=getPersonas`);
     const data = await response.json();
     const tbody = document.querySelector("#listarPersonasContactabilidad tbody");
     data.forEach((personas)=>{

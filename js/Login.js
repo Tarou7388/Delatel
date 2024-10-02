@@ -8,7 +8,7 @@ window.addEventListener("DOMContentLoaded", event => {
     const user = $("#NomUser").value;
     const pass = $("#PassUser").value;
     if (user != "" && pass != "") {
-      const respuesta = await fetch(`${config.HOST}controllers/Usuarios.controllers.php?Operacion=Login&nombreUser=${user}&pass=${pass}`)
+      const respuesta = await fetch(`${config.HOST}app/controllers/Usuarios.controllers.php?Operacion=Login&nombreUser=${user}&pass=${pass}`)
       const datos = await respuesta.json();
       if (datos.estado) {
         await getPermisos(datos.idRol);
@@ -20,7 +20,7 @@ window.addEventListener("DOMContentLoaded", event => {
     }
   }
   async function getPermisos(idRol){
-    await fetch(`${config.HOST}controllers/roles.controllers.php?operacion=getPermisos&rol=${idRol}`);
+    await fetch(`${config.HOST}app/controllers/roles.controllers.php?operacion=getPermisos&rol=${idRol}`);
   }
 
   $("#PassUser").addEventListener("keydown", (event) => {

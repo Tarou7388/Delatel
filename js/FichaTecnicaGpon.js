@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   (async () => {
     const response = await fetch(
-      `${config.HOST}controllers/contrato.controllers.php?operacion=obtenerFichaInstalacion&id=${idContrato}`
+      `${config.HOST}app/controllers/contrato.controllers.php?operacion=obtenerFichaInstalacion&id=${idContrato}`
     );
     const data = await response.json();
     const usuario = (data[0].nombre_cliente.split(", ")[0].substring(0, 3) + data[0].nombre_cliente.split(", ")[1].substring(0, 3)).toUpperCase() + idContrato;
@@ -282,7 +282,7 @@ document.addEventListener("DOMContentLoaded", () => {
       fichaInstalacion: jsonData,
       id: idContrato
     };
-    const response = await fetch(`${config.HOST}controllers/contrato.controllers.php`, {
+    const response = await fetch(`${config.HOST}app/controllers/contrato.controllers.php`, {
       method: "PUT",
       body: JSON.stringify(data)
     });

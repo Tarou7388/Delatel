@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
       url: "//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json"
     },
     ajax: {
-      url: `${config.HOST}controllers/Usuarios.controllers.php?Operacion=getAll`,
+      url: `${config.HOST}app/controllers/Usuarios.controllers.php?Operacion=getAll`,
       dataSrc: ''
     },
     columns: [

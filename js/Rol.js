@@ -285,7 +285,7 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   async function rolesPermisos(idRol) {
-    const resultado = await fetch(`${config.HOST}controllers/Roles.controllers.php?operacion=getRolPermisos&idRol=${idRol}`)
+    const resultado = await fetch(`${config.HOST}app/controllers/Roles.controllers.php?operacion=getRolPermisos&idRol=${idRol}`)
     const datos = await resultado.json();
     return datos;
   }
@@ -398,7 +398,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
     };
 
-    fetch(`${config.HOST}controllers/Roles.controllers.php`, { 
+    fetch(`${config.HOST}app/controllers/Roles.controllers.php`, { 
       method: 'PUT',
       body: JSON.stringify({
         permisos: permisosActualizados,

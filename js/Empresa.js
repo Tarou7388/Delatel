@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
         body: params,
       };
 
-      fetch(`${config.HOST}controllers/Empresas.controllers.php`, options)
+      fetch(`${config.HOST}app/controllers/Empresas.controllers.php`, options)
         .then((response) => response.json())
         .then((data) => {
           registrarcliente(data.id_empresa);
@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", function () {
       body: params,
     };
 
-    fetch(`${config.HOST}controllers/Cliente.controllers.php`, options)
+    fetch(`${config.HOST}app/controllers/Cliente.controllers.php`, options)
       .then((response) => response.json())
       .then((data) => {
         if (data.Guardado) {
@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function ObtenerDataRUC(operacion,ruc) {
     fetch(
-      `${config.HOST}controllers/Personas.controlles.php?Operacion=${operacion}&ruc=${encodeURIComponent(
+      `${config.HOST}app/controllers/Personas.controlles.php?Operacion=${operacion}&ruc=${encodeURIComponent(
         ruc
       )}`
     )
