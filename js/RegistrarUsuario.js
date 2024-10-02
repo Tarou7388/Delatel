@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
     return document.getElementById(id);
   }
 
-  // Funcionalidad del input de DNI: actualiza los dropdowns según la longitud de la entrada
+  // 1. Funcionalidad del input de DNI: actualiza los dropdowns según la longitud de la entrada
   (function () {
     const slcNacionalidad = $("slcNacionalidad");
     const slcDocumento = $("slcDocumento");
@@ -48,12 +48,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
   let idPersonaEncontrada = null; // Variable para almacenar el id_persona
 
-  // Búsqueda de persona
+  // 2. Búsqueda de persona
   $("btnBuscar").addEventListener("click", async () => {
     const dni = $("txtNumDocumentoPersona").value;
 
     if (!dni) {
-      showToast("Debes ingresar un número de documento válido.","WARNING");
+      showToast("Debes ingresar un número de documento válido.", "WARNING");
       return;
     }
 
@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (data.id_persona) {
         idPersonaEncontrada = data.id_persona;
-        showToast("Persona encontrada en la base de datos.","SUCCESS");
+        showToast("Persona encontrada en la base de datos.", "SUCCESS");
       } else {
         const persona = await BuscarPersonaAPI('getapi', dni);
         if (persona) {
@@ -82,18 +82,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
           // Registrar persona en la base de datos para obtener id_persona
           idPersonaEncontrada = await RegistrarPersona(dni);
-          showToast("Persona registrada desde la API.","INFO");
+          showToast("Persona registrada desde la API.", "INFO");
         } else {
-          showToast("No se encontraron datos en la API externa.","INFO");
+          showToast("No se encontraron datos en la API externa.", "INFO");
         }
       }
     } catch (error) {
       console.error("Error al buscar persona:", error);
-      showToast("Ocurrió un error al buscar la persona.","ERROR");
+      showToast("Ocurrió un error al buscar la persona.", "ERROR");
     }
   });
 
-  // Obtener todos los roles
+  // 3. Obtener todos los roles
   (async function () {
     try {
       const respuesta = await fetch(`${config.HOST}/controllers/Roles.controllers.php?operacion=getAllRol`);
@@ -110,7 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   })();
 
-  // Buscar datos de una persona en la API externa
+  // 4. Buscar datos de una persona en la API externa
   async function BuscarPersonaAPI(operacion, dni) {
     try {
       const respuesta = await fetch(`${config.HOST}/controllers/Personas.controlles.php?Operacion=${operacion}&dni=${dni}`);
@@ -124,7 +124,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Registrar persona en la base de datos
+  // 5. Registrar persona en la base de datos
   async function RegistrarPersona(dni) {
     try {
       const formData = new FormData();
@@ -152,7 +152,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Registrar usuario
+  // 6. Registrar usuario
   async function RegistrarUsuario(idPersona) {
     try {
       const formData = new FormData();
@@ -161,18 +161,18 @@ document.addEventListener("DOMContentLoaded", function () {
       formData.append('contrasena', $("txtContrasena").value);
       formData.append('rol', $("slcRol").value);
       formData.append('iduser_create', userid);
-    
+
       const respuesta = await fetch(`${config.HOST}/controllers/Usuario.controller.php`, {
         method: 'POST',
         body: formData
       });
-    
+
       if (!respuesta.ok) {
         throw new Error("Error al registrar el usuario.");
       }
-    
+
       const data = await respuesta.json();
-    
+
       if (data.success) {
         showToast("Usuario registrado con éxito", "SUCCESS");
       } else {
@@ -182,15 +182,14 @@ document.addEventListener("DOMContentLoaded", function () {
       console.error("Error al registrar usuario:", error);
       showToast("Ocurrió un error: " + error.message, "ERROR");
     }
-    
   }
 
-  // Envío del formulario de registro
+  // 7. Envío del formulario de registro
   $("registerForm").addEventListener("submit", async (event) => {
     event.preventDefault();
 
     if (!idPersonaEncontrada) {
-      showToast("Debes buscar una persona primero.","WARNING");
+      showToast("Debes buscar una persona primero.", "WARNING");
       return;
     }
 
@@ -198,7 +197,7 @@ document.addEventListener("DOMContentLoaded", function () {
       await RegistrarUsuario(idPersonaEncontrada);
     } catch (error) {
       console.error("Error al registrar usuario:", error);
-      showToast("Ocurrió un error al registrar el usuario.","ERROR");
+      showToast("Ocurrió un error al registrar el usuario.", "ERROR");
     }
   });
 });

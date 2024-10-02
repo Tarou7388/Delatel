@@ -184,8 +184,8 @@ $("#listarCliente tbody").on("click", ".btn-edit", function () {
     .catch((error) => console.error("Error fetching client data:", error));
 });
 
-$("#listarCliente tbody").on("click", ".btn-delete", function () {
-  ask("¿Estás seguro de eliminar este registro? ")
+$("#listarCliente tbody").on("click", ".btn-delete",async function () {
+  await ask("¿Estás seguro de eliminar este registro? ")
   .then((isConfirmed) => {
     if (isConfirmed) {
       const idcliente = $(this).data("id");
@@ -207,9 +207,9 @@ $("#listarCliente tbody").on("click", ".btn-delete", function () {
         .then((data) => {
           if (data.Eliminado) {
             $("#listarCliente").DataTable().ajax.reload();
-            alert("Cliente eliminado exitosamente.");
+            showToast("Cliente eliminado exitosamente.","SUCCESS");
           } else {
-            alert("Error al eliminar el cliente.");
+            showToast("Error al eliminar el cliente.","ERROR");
           }
         });
     }

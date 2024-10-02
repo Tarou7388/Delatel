@@ -1,13 +1,19 @@
 import config from '../env.js';
 
 document.addEventListener("DOMContentLoaded", function () {
-  if (permisos[0].permisos.inventariado.leer != 1) {
-    window.location.href = `${config.HOST}views`;
-  }
-  
+
+  // 1. Variables locales
   const userid = user['idUsuario'];
   const tipoMovimientoSelect = document.getElementById("slcTipomovimiento");
   const motivoSelect = document.getElementById("txtaMotivo");
+  const idproductoField = document.querySelector("#idproducto");
+  const stockactualField = document.querySelector("#txtStockactual");
+  const tipomovimientoField = document.querySelector("#slcTipomovimiento");
+  const cantidadField = document.querySelector("#txtCantidad");
+  const motivoField = document.querySelector("#txtaMotivo");
+  const txtvalorhistorico = document.querySelector("#txtValorunitario");
+  const fecha = document.querySelector("#txtfecha");
+  const date = new Date().toISOString().split("T")[0];
 
   const opcionesEntrada = `
         <optgroup label="Entrada">
@@ -28,6 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
         </optgroup>
     `;
 
+  // 2. Funciones externas
   function actualizarMotivo() {
     const valor = tipoMovimientoSelect.value;
     motivoSelect.innerHTML =
@@ -37,54 +44,6 @@ document.addEventListener("DOMContentLoaded", function () {
           ? opcionesSalida
           : '<option value="">Seleccione</option>';
   }
-
-  tipoMovimientoSelect.addEventListener("change", actualizarMotivo);
-
-  // Inicializar estado
-  actualizarMotivo();
-
-  const idproductoField = document.querySelector("#idproducto");
-  const stockactualField = document.querySelector("#txtStockactual");
-  const tipomovimientoField = document.querySelector("#slcTipomovimiento");
-  const cantidadField = document.querySelector("#txtCantidad");
-  const motivoField = document.querySelector("#txtaMotivo");
-  const txtvalorhistorico = document.querySelector("#txtValorunitario");
-  const fecha = document.querySelector("#txtfecha");
-  const date = new Date().toISOString().split("T")[0];
-
-  (() => {
-    fetch(`${config.HOST}app/controllers/Productos.controllers.php?operacion=getAll`)
-      .then((response) => response.json())
-      .then((data) => {
-        const tipoProducto = document.querySelector("#idproducto");
-        data.forEach((row) => {
-          const tagOption = document.createElement("option");
-          tagOption.value = row.id_producto;
-          tagOption.innerHTML = `${row.marca} ${row.modelo} ${row.tipo_producto}`;
-          tipoProducto.appendChild(tagOption);
-        });
-      })
-      .catch((e) => {
-        console.error("Error al obtener productos:", e);
-        showToast("Ocurrió un error al cargar los productos. Por favor, inténtelo de nuevo.", "ERROR");
-      });
-  })();
-
-  idproductoField.addEventListener("change", () => {
-    const idproducto = idproductoField.value;
-
-    if (idproducto) {
-      MostrarStockActual(idproducto);
-      cantidadField.value = "";
-      tablaKardex.ajax
-        .url(
-          `${config.HOST}app/controllers/kardex.controllers.php?operacion=obtenerProducto&id_producto=${idproducto}`
-        )
-        .load();
-    } else {
-      cantidadField.value = 0;
-    }
-  });
 
   async function MostrarStockActual(idproducto) {
     try {
@@ -108,13 +67,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  //Función para guardar el registro de kardex
   function GuardarKardex() {
     if (permisos[0].permisos.inventariado.crear != 1) {
       showToast("No tienes permiso para esta acción", "WARNING");
       return;
     }
-    
+
     const params = new FormData();
     params.append("operacion", "add");
     params.append("idproducto", idproductoField.value);
@@ -147,14 +105,60 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-  // Manejar el evento submit del formulario
+  // 3. Autoejecutables
+  (() => {
+    fetch(`${config.HOST}app/controllers/Productos.controllers.php?operacion=getAll`)
+      .then((response) => response.json())
+      .then((data) => {
+        const tipoProducto = document.querySelector("#idproducto");
+        data.forEach((row) => {
+          const tagOption = document.createElement("option");
+          tagOption.value = row.id_producto;
+          tagOption.innerHTML = `${row.marca} ${row.modelo} ${row.tipo_producto}`;
+          tipoProducto.appendChild(tagOption);
+        });
+      })
+      .catch((e) => {
+        console.error("Error al obtener productos:", e);
+        showToast("Ocurrió un error al cargar los productos. Por favor, inténtelo de nuevo.", "ERROR");
+      });
+  })();
+
+  // 4. Funciones
+  tipoMovimientoSelect.addEventListener("change", actualizarMotivo);
+
+  // Inicializar estado
+  actualizarMotivo();
+
+  idproductoField.addEventListener("change", () => {
+    const idproducto = idproductoField.value;
+
+    if (idproducto) {
+      MostrarStockActual(idproducto);
+      cantidadField.value = "";
+      tablaKardex.ajax
+        .url(
+          `${config.HOST}app/controllers/kardex.controllers.php?operacion=obtenerProducto&id_producto=${idproducto}`
+        )
+        .load();
+    } else {
+      cantidadField.value = 0;
+    }
+  });
+
+  // 5. Eventos
   document
     .querySelector("#form-validaciones-kardex")
-    .addEventListener("submit",async (event) => {
+    .addEventListener("submit", async (event) => {
       event.preventDefault();
 
       if (await ask("¿Estás seguro de realizar esta actualización?")) {
         GuardarKardex();
       }
     });
+
+  // Redirigir si no tiene permiso
+  if (permisos[0].permisos.inventariado.leer != 1) {
+    window.location.href = `${config.HOST}views`;
+  }
 });

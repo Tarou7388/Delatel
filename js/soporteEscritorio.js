@@ -1,14 +1,15 @@
 import config from '../env.js';
 window.addEventListener('DOMContentLoaded', function () {
+  const wisp = document.getElementById('lstWisp');
+  const gpon = document.getElementById('lstGpon');
+  const cable = document.getElementById('lstCable');
+  var today = new Date().toISOString().split('T')[0];
+  document.getElementById('txtFecha').value = today;
+  const dropdownItems = document.querySelectorAll('.list-group-item');
+  const dropdownButton = document.getElementById('btnModal');
   if (permisos[0].permisos.soporte.leer != 1) {
     window.location.href = `${config.HOST}views`;
   }
-  var today = new Date().toISOString().split('T')[0];
-  document.getElementById('txtFecha').value = today;
-  
-  const dropdownItems = document.querySelectorAll('.list-group-item');
-  const dropdownButton = document.getElementById('btnModal');
-
   dropdownItems.forEach(function (item) {
     item.addEventListener('click', function () {
       const value = this.getAttribute('data-value');
@@ -28,10 +29,6 @@ window.addEventListener('DOMContentLoaded', function () {
   });
 
   function updateSections(value) {
-    const wisp = document.getElementById('lstWisp');
-    const gpon = document.getElementById('lstGpon');
-    const cable = document.getElementById('lstCable');
-
     // Ocultar todas las secciones primero
     wisp.setAttribute('hidden', true);
     gpon.setAttribute('hidden', true);

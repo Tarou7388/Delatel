@@ -1,6 +1,7 @@
 import config from "../env.js";
 
 document.addEventListener("DOMContentLoaded", function () {
+  // 1. Variables locales
   const userid = JSON.stringify(user['idUsuario']);
   if (permisos[0].permisos.personas.leer != 1) {
     window.location.href = `${config.HOST}views`;
@@ -16,27 +17,30 @@ document.addEventListener("DOMContentLoaded", function () {
   const txtTelefono = document.getElementById("txtTelefono");
   const txtEmail = document.getElementById("txtEmail");
   const txtCoordenadas = document.getElementById("txtCoordenadas");
-
   const txtDireccion = document.getElementById("txtDireccion");
   const txtReferencia = document.getElementById("txtReferencia");
-
 
   const btnCancelarEmpresa = document.getElementById("btnCancelarEmpresa");
   const btnBuscarEmpresa = document.getElementById("btnBuscarEmpresa");
 
-  frmEmpresas.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const bandera = verificarCampos();
-    if (!bandera) {
-      if (permisos[0].permisos.personas.crear != 1) {
-        showToast("¡No tienes permisos de registrar!", "WARNING");
+  // 2. Funciones externas
+  const verificarCampos = () => {
+    const campos = [
+      txtRuc, txtRepresentanteLegal, txtRazonSocial,
+      txtNombreComercial, txtTelefono, txtEmail,
+      txtDireccion, txtReferencia, txtCoordenadas
+    ];
+
+    for (let campo of campos) {
+      if (campo.value.trim() === '') {
+        showToast("¡Por favor complete todos los campos!", "INFO");
+        return true;
       }
-      registrarEmpresa();
     }
-  });
+    return false;
+  };
 
-  function registrarEmpresa() {
-
+  const registrarEmpresa = () => {
     const params = new FormData();
     params.append("operacion", "Registrar");
     params.append("ruc", txtRuc.value);
@@ -53,24 +57,22 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     fetch(`${config.HOST}app/controllers/Empresas.controllers.php`, options)
-      .then((response) => response.json())
-      .then((data) => {
+      .then(response => response.json())
+      .then(data => {
         registrarcliente(data.id_empresa);
         frmEmpresas.reset();
       })
-      .catch((e) => {
+      .catch(() => {
         showToast("Empresa ya registrada", "WARNING");
       });
+  };
 
-  }
-
-
-  function registrarcliente(idEmpresa) {
+  const registrarcliente = (idEmpresa) => {
     const params = new FormData();
-    params.append("operacion", "add");;
+    params.append("operacion", "add");
     params.append("direccion", txtDireccion.value);
     params.append("referencia", txtReferencia.value);
-    params.append("idempresa", idEmpresa)
+    params.append("idempresa", idEmpresa);
     params.append("idPersona", "");
     params.append("iduser_create", userid);
     params.append("coordenadas", txtCoordenadas.value);
@@ -81,8 +83,8 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     fetch(`${config.HOST}app/controllers/Cliente.controllers.php`, options)
-      .then((response) => response.json())
-      .then((data) => {
+      .then(response => response.json())
+      .then(data => {
         if (data.Guardado) {
           tablaClientes.ajax.reload();
           showToast("¡Cliente registrado!", "SUCCESS");
@@ -90,48 +92,38 @@ document.addEventListener("DOMContentLoaded", function () {
           showToast("¡Error Verifique!", "ERROR");
         }
       })
-      .catch((e) => {
+      .catch(e => {
         console.error("Error al registrar el cliente:", e.message);
         console.error("Detalles del error:", e);
       });
+  };
 
-  }
+  const ObtenerDataRUC = (operacion, ruc) => {
+    fetch(`${config.HOST}app/controllers/Personas.controlles.php?Operacion=${operacion}&ruc=${encodeURIComponent(ruc)}`)
+      .then(response => response.json())
+      .then(data => {
+        txtRazonSocial.value = data.razonSocial;
+        txtDireccion.value = data.direccion;
+      })
+      .catch(e => {
+        showToast("¡Empresa no encontrada, verifique RUC!", "INFO");
+        console.error("Detalles del error:", e);
+      });
+  };
+
+  // 3. Eventos
+  frmEmpresas.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!verificarCampos()) {
+      if (permisos[0].permisos.personas.crear != 1) {
+        showToast("¡No tienes permisos de registrar!", "WARNING");
+      } else {
+        registrarEmpresa();
+      }
+    }
+  });
 
   btnBuscarEmpresa.addEventListener("click", () => {
     ObtenerDataRUC("getapiruc", txtRuc.value);
   });
-
-  function ObtenerDataRUC(operacion, ruc) {
-    fetch(
-      `${config.HOST}app/controllers/Personas.controlles.php?Operacion=${operacion}&ruc=${encodeURIComponent(
-        ruc
-      )}`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        txtRazonSocial.value = data.razonSocial;
-        txtDireccion.value = data.direccion;
-      })
-      .catch((e) => {
-        showToast("¡Empresa no encontrada, verifique RUC!", "INFO");
-        console.error("Detalles del error:", e);
-      });
-  }
-
-  function verificarCampos() {
-    const campos = [
-      txtRuc, txtRepresentanteLegal, txtRazonSocial,
-      txtNombreComercial, txtTelefono, txtEmail,
-      txtDireccion, txtReferencia, txtCoordenadas
-    ];
-
-    for (let campo of campos) {
-      if (campo.value.trim() === '') {
-        showToast("¡Por favor complete todos los campos!", "INFO");
-        return true;
-      }
-    }
-
-    return false;
-  }
 });
