@@ -8,7 +8,7 @@ $idContrato = $_GET['idContrato'];
   <div class="modal-dialog modal-dialog-centered w-50">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Añadir Sintotizador</h1>
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Añadir Sintonizador</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" id="mdlSintotizadorBody">
@@ -21,6 +21,7 @@ $idContrato = $_GET['idContrato'];
     </div>
   </div>
 </div>
+
 <div class="modal fade" id="mdlRepetidor" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered w-50">
     <div class="modal-content">
@@ -233,7 +234,7 @@ $idContrato = $_GET['idContrato'];
         <label class="form-label mt-2">Cantidad de implementos</label>
         <div class="mb-3">
           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mdlSintotizador">
-            Añadir Sintotizador
+            Añadir Sintonizador
           </button>
         </div>
         <div class="row g-3 mb-3">
@@ -266,12 +267,15 @@ $idContrato = $_GET['idContrato'];
                 <input type="number" id="txtSpliter" class="form-control" placeholder="Spliter">
                 <label for="lblSpliter">Spliter</label>
               </div>
-              <select class="form-select" id="slcSpliter" aria-label="Selecciona una opción">
-                <option selected disabled>Elige una opción</option>
-                <option value="1x3">1x3</option>
-                <option value="1x5">1x5</option>
-                <option value="1x8">1x8</option>
-              </select>
+              <div class="form-floating">
+                <select class="form-select" id="slcSpliter" aria-label="Selecciona una opción">
+                  <option selected disabled>Elige una opción</option>
+                  <option value="1x3">1x3</option>
+                  <option value="1x5">1x5</option>
+                  <option value="1x8">1x8</option>
+                </select>
+                <label for="slcSpliter">Tipo</label>
+              </div>
             </div>
           </div>
           <div class="col-md">
@@ -312,7 +316,7 @@ $idContrato = $_GET['idContrato'];
           <div class="col-md">
             <div class="form-floating">
               <input type="text" class="form-control" value=0 id="txtCantSintotizador" placeholder="Cantidad Sintonizador" disabled>
-              <label for="lblCantSintotizador">Cantidad Sintotizador</label>
+              <label for="lblCantSintotizador">Cantidad de Sintonizador</label>
             </div>
           </div>
           <div class="col-md">
@@ -383,8 +387,6 @@ $idContrato = $_GET['idContrato'];
     </div>
   </div>
 </div>
-
-<?php require_once "../../footer.php"; ?>
 <script>
   const idContrato = <?= $idContrato ?>;
 </script>
@@ -393,3 +395,5 @@ $idContrato = $_GET['idContrato'];
 </body>
 
 </html>
+
+<?php require_once "../../footer.php"; ?>
