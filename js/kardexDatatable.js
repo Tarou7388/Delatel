@@ -1,5 +1,5 @@
 
-const ruta = `../../controllers/kardex.controllers.php?operacion=getAll`;
+const ruta = `../../app/controllers/kardex.controllers.php?operacion=getAll`;
 
 window.tablaKardex = $('#TbKardex').DataTable({
     dom: `
@@ -53,11 +53,11 @@ window.tablaKardex = $('#TbKardex').DataTable({
         dataSrc: ''
     },
     columnDefs: [
-        { targets: 0, width: '30%' }, // Producto
+        { targets: 0, width: '20%' }, // Producto
         { targets: 1, width: '10%' }, // Fecha
-        { targets: 2, width: '10%' }, // Tipo Operación
-        { targets: 3, width: '15%' }, // Motivo
-        { targets: 4, width: '15%' }, // Cantidad
+        { targets: 2, width: '20%' }, // Tipo Operación
+        { targets: 3, width: '20%' }, // Motivo
+        { targets: 4, width: '10%' }, // Cantidad
         { targets: 5, width: '10%' }, // Saldo Total
         { targets: 6, width: '10%' }  // Valor Único Histórico
     ],
@@ -67,14 +67,14 @@ window.tablaKardex = $('#TbKardex').DataTable({
             render: function (data, type, row) {
                 return `${row.tipo_producto} ${row.modelo}`;
             },
-            title: 'Producto'
+            title: 'Producto', className: 'text-center' 
         },
-        { data: 'fecha' },
-        { data: 'tipo_operacion' },
-        { data: 'motivo' },
-        { data: 'cantidad' },
-        { data: 'saldo_total' },
-        { data: 'valor_unico_historico' }
+        { data: 'fecha', className: 'text-center' },
+        { data: 'tipo_operacion', className: 'text-center'  },
+        { data: 'motivo', className: 'text-center' },
+        { data: 'cantidad', className: 'text-center' },
+        { data: 'saldo_total', className: 'text-center' },
+        { data: 'valor_unico_historico', className: 'text-center' }
     ],
     order: [[1, 'desc']],
     language: {

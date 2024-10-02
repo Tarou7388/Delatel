@@ -124,7 +124,7 @@ document.addEventListener("DOMContentLoaded", function () {
           method: "POST",
           body: params,
         };
-        fetch(`../../controllers/kardex.controllers.php`, options)
+        fetch(`${config.HOST}app/controllers/kardex.controllers.php`, options)
           .then((response) => response.json())
           .then((data) => {
             if (data.Guardado) {

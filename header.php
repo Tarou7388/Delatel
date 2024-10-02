@@ -57,7 +57,7 @@ if (!isset($_SESSION['login']) || (isset($_SESSION['login']) && !$_SESSION['logi
           <li>
             <hr class="dropdown-divider" />
           </li>
-          <li><a class="dropdown-item" href="<?= $host ?>/controllers/Usuarios.controllers.php?Operacion=CerrarSesion">Cerrar Sesion</a></li>
+          <li><a class="dropdown-item" href="<?= $host ?>app/controllers/Usuarios.controllers.php?Operacion=CerrarSesion">Cerrar Sesion</a></li>
         </ul>
       </li>
     </ul>
@@ -97,7 +97,7 @@ if (!isset($_SESSION['login']) || (isset($_SESSION['login']) && !$_SESSION['logi
             </a>
             <div class="collapse" id="collapse5">
               <div class="ps-4">
-                <a class="nav-link" href="<?= $host; ?>views/Contactabilidad/Contactabilidad.php">
+                <a class="nav-link" href="<?= $host; ?>views/Contactabilidad/">
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                   Contactabilidad
                 </a>
@@ -105,7 +105,7 @@ if (!isset($_SESSION['login']) || (isset($_SESSION['login']) && !$_SESSION['logi
             </div>
 
 
-            <a class="nav-link" href="<?= $host; ?>views/Contratos/ContratosGeneral.php" id=molContratos>
+            <a class="nav-link" href="<?= $host; ?>views/Contratos/" id=molContratos>
               <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
               Contratos
             </a>
@@ -118,7 +118,7 @@ if (!isset($_SESSION['login']) || (isset($_SESSION['login']) && !$_SESSION['logi
 
             <div class="collapse" id="collapse3">
               <div class="ps-4">
-                <a class="nav-link" href="<?= $host; ?>views/Inventariado/Kardex.php">
+                <a class="nav-link" href="<?= $host; ?>views/Inventariado/">
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                   Kardex
                 </a>
@@ -140,14 +140,14 @@ if (!isset($_SESSION['login']) || (isset($_SESSION['login']) && !$_SESSION['logi
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                   Usuarios
                 </a>
-                <a class="nav-link" href="<?= $host; ?>views/Personas/Clientes.php">
+                <a class="nav-link" href="<?= $host; ?>views/Personas/">
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                   Clientes
                 </a>
               </div>
             </div>
 
-            <a class="nav-link" href="<?= $host; ?>views/Roles/RolesGeneral.php" id=molRoles hidden>
+            <a class="nav-link" href="<?= $host; ?>views/Roles/" id=molRoles hidden>
               <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
               Roles
             </a>

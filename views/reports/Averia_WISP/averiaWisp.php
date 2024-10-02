@@ -2,7 +2,7 @@
 $HOST = "http://localhost/DELATEL"; 
 ?>
 
-<img src="<?= $HOST ?>/image/header_avewisp.png" class="image-header" alt="">
+<img src="<?= $HOST ?>/image/headerAveriaWisp.png" class="image-header" alt="">
 
 <div>
 

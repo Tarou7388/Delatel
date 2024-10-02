@@ -2,7 +2,7 @@
 $HOST = "http://localhost/DELATEL"; 
 ?>
 
-<img src="<?= $HOST ?>/image/header_instgpon.png" class="image-header" alt="">
+<img src="<?= $HOST ?>/image/headerInstalacionGpon.png" class="image-header" alt="">
 <div class="container">
   <table>
     <tbody>
