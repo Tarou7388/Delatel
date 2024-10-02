@@ -22,9 +22,7 @@ window.addEventListener("DOMContentLoaded", event => {
     });
   });
   document.getElementById('saveChanges').addEventListener('click', function () {
-    // Lógica para guardar cambios
-    alert('Cambios guardados');
-    // Puedes cerrar el modal manualmente si lo deseas
+    showToast("Cambios guardados", "SUCCESS");
     var modal = new bootstrap.Modal(document.getElementById('updateModal'));
     modal.hide();
   });

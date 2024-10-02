@@ -30,7 +30,12 @@ document.addEventListener("DOMContentLoaded", function () {
     if(!bandera)
     {
       if (permisos[0].permisos.personas.crear != 1) {
-        alert("No tienes permiso de registrar");
+        Swal.fire({
+          icon: 'error',
+          title: '¡No tienes permisos de registrar!',
+          showConfirmButton: false,
+          timer: 1500
+        });
       }
       registrarEmpresa();
     }
@@ -61,7 +66,12 @@ document.addEventListener("DOMContentLoaded", function () {
           frmEmpresas.reset();
         })
         .catch((e) => {
-          alert("EMPRESA YA REGISTRADA")
+          Swal.fire({
+            icon: 'error',
+            title: '¡Empresa ya registrada!',
+            showConfirmButton: false,
+            timer: 1500
+          });
         });
     
   }
@@ -87,9 +97,9 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((data) => {
         if (data.Guardado) {
           tablaClientes.ajax.reload();
-          alert("Cliente registrado");
+          showToast("¡Cliente registrado!", "SUCCESS");
         } else {
-          alert("Error: Verifique");
+          showToast("¡Error Verifique!", "ERROR");
         }
       })
       .catch((e) => {
@@ -113,7 +123,7 @@ document.addEventListener("DOMContentLoaded", function () {
         txtDireccion.value = data.direccion;
       })
       .catch((e) => {
-        alert("Empresa no encontrada, verifique RUC")
+        showToast("¡Empresa no encontrada, verifique RUC!", "INFO");
       });
   }
 
@@ -126,7 +136,7 @@ document.addEventListener("DOMContentLoaded", function () {
   
     for (let campo of campos) {
       if (campo.value.trim() === '') {
-        alert('Por favor, complete todos los campos.');
+        showToast("¡Por favor complete todos los campos!", "INFO");
         return true;
       }
     }

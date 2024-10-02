@@ -12,6 +12,9 @@ window.addEventListener("DOMContentLoaded", () => {
   const coordenada = document.querySelector("#txtCoordenada");
   const slcSector = document.querySelector("#slcSector");
   const slcServicio = document.querySelector("#slcServicio");
+  const botonesPdf = document.querySelectorAll(".btnGenerar");
+  const botonesEliminar = document.querySelectorAll(".btnEliminar");
+  const botonesFicha = document.querySelectorAll(".btnFicha");
   let precioServicio = 0;
   let idCliente = 0;
 
@@ -95,9 +98,7 @@ window.addEventListener("DOMContentLoaded", () => {
       ],
     });
 
-    const botonesPdf = document.querySelectorAll(".btnGenerar");
-    const botonesEliminar = document.querySelectorAll(".btnEliminar");
-    const botonesFicha = document.querySelectorAll(".btnFicha");
+
 
     botonesFicha.forEach((boton) => {
       boton.addEventListener("click", (event) => {
@@ -183,7 +184,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   async function buscarCliente() {
     if (dni.value == "") {
-      alert("Ingrese un número de documento");
+      showToast("¡Ingrese numero de documento!", "INFO");
     } else {
       const response = await fetch(
         `${config.HOST}app/controllers/cliente.controllers.php?operacion=getByDoc&numDoc=${dni.value}`
@@ -197,7 +198,7 @@ window.addEventListener("DOMContentLoaded", () => {
         idCliente = data[0].id_cliente;
         console.log(data);
       } else {
-        alert("Cliente no encontrado");
+        showToast("Cliente no encontrado", "INFO");
       }
     }
   }
@@ -208,7 +209,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const nota = "";
     const idUsuarioRegistro = user.idRol;
     if (!validarFechas() || !(await validarCampos())) {
-      alert("Complete todos los campos");
+      showToast("¡Complete los campos!", "INFO");
     } else {
       try {
         const idServicio = parseInt(slcServicio.value.split(" - ")[0]);
@@ -243,7 +244,7 @@ window.addEventListener("DOMContentLoaded", () => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         } else {
-          alert("Contrato registrado correctamente");
+          showToast("¡Contrato registrado correctamente!", "SUCCESS");
           resetUI();
         }
 
@@ -251,13 +252,12 @@ window.addEventListener("DOMContentLoaded", () => {
         console.log(result);
       } catch (error) {
         console.error("Error:", error);
-        alert(
-          "Ocurrió un error al registrar el contrato. Por favor, inténtelo de nuevo."
-        );
+        showToast("Ocurrió un error al registrar el contrato. Por favor, inténtelo de nuevo.", "ERROR");
       }
+      
     }
   }
-
+  
   async function eliminar(idContrato) {
     if (confirm("¿Desea eliminar este contrato?")) {
       const response = await fetch(
@@ -274,11 +274,12 @@ window.addEventListener("DOMContentLoaded", () => {
       );
       const data = await response.json();
       if (data.eliminado) {
-        alert("Contrato eliminado correctamente");
+        showToast("¡Contrato eliminado correctamente!", "SUCCESS");
         location.reload();
       }
     }
   }
+  
 
   document.querySelector("#btnRegistrar").addEventListener("click", (event) => {
     event.preventDefault();
