@@ -42,18 +42,18 @@ document.addEventListener("DOMContentLoaded", () => {
         const installationData = JSON.parse(data[0].ficha_instalacion);
         const fibra = installationData.fibraoptica;
         const cable = installationData.cable;
+        document.getElementById("txtPotenciaFibra").value = fibra.potencia || ""; 
+        document.getElementById("txtSsdi").value = fibra.moden?.ssid || "";
+        document.getElementById("txtSeguridad").value = fibra.moden?.seguridad || "";
+        document.getElementById("txtMarcaModelo").value = fibra.moden?.marca || "";
+        document.getElementById("txtSerieModen").value = fibra.moden?.serie || ""; 
+        document.getElementById("slcBanda").value = fibra.moden?.banda || "";
+        document.getElementById("txtAntenas").value = fibra.moden?.numeroantena || "";
+        document.getElementById("chkCatv").checked = fibra.moden?.catv || false;
   
         if (data[0].tipo_paquete == "FIBR" && fibra) {
           // Datos de Fibra
           document.querySelector("#contenidoCable").setAttribute("hidden", "");
-          document.getElementById("txtPotenciaFibra").value = fibra.potencia || ""; 
-          document.getElementById("txtSsdi").value = fibra.moden?.ssid || "";
-          document.getElementById("txtSeguridad").value = fibra.moden?.seguridad || "";
-          document.getElementById("txtMarcaModelo").value = fibra.moden?.marca || "";
-          document.getElementById("txtSerieModen").value = fibra.moden?.serie || ""; 
-          document.getElementById("slcBanda").value = fibra.moden?.banda || "";
-          document.getElementById("txtAntenas").value = fibra.moden?.numeroantena || "";
-          document.getElementById("chkCatv").checked = fibra.moden?.catv || false;
         } else if (cable) {
           // Datos de Cable
           document.getElementById("txtPotenciaCable").value = cable.potencia || "";
@@ -308,7 +308,6 @@ document.addEventListener("DOMContentLoaded", () => {
     await cable();
     await costos();
     if (numeroRepetidores > 0) {
-      console.log(jsonData);
       jsonData.fibraoptica.repetidores = jsonRepetidor;
     }
     if (tipoPaquete == "GPON") {
@@ -327,7 +326,6 @@ document.addEventListener("DOMContentLoaded", () => {
       body: JSON.stringify(data)
     });
     const datos = await response.json();
-    console.log(datos);
   }
 
   txtCantCable.addEventListener("input", calcularCostos);

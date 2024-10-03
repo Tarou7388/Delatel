@@ -184,33 +184,37 @@ $("#listarCliente tbody").on("click", ".btn-edit", function () {
     .catch((error) => console.error("Error fetching client data:", error));
 });
 
-$("#listarCliente tbody").on("click", ".btn-delete", function () {
-  if (confirm("¿Estás seguro de eliminar este registro? No se podrá volver a registrar nuevamente")) {
-    const idcliente = $(this).data("id");
-    const data = {
-      identificador: idcliente,
-      iduser_inactive: userid
-    };
+$("#listarCliente tbody").on("click", ".btn-delete",async function () {
+  await ask("¿Estás seguro de eliminar este registro? ")
+  .then((isConfirmed) => {
+    if (isConfirmed) {
+      const idcliente = $(this).data("id");
+      const data = {
+        identificador: idcliente,
+        iduser_inactive: userid
+      };
 
-    fetch(
-      `${config.HOST}app/controllers/cliente.controllers.php`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }
-    ).then((response) => response.json())
-      .then((data) => {
-        if (data.Eliminado) {
-          $("#listarCliente").DataTable().ajax.reload();
-          alert("Cliente eliminado exitosamente.");
-        } else {
-          alert("Error al eliminar el cliente.");
+      fetch(
+        `${config.HOST}app/controllers/cliente.controllers.php`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
         }
-      });
-  }
+      ).then((response) => response.json())
+        .then((data) => {
+          if (data.Eliminado) {
+            $("#listarCliente").DataTable().ajax.reload();
+            showToast("Cliente eliminado exitosamente.","SUCCESS");
+          } else {
+            showToast("Error al eliminar el cliente.","ERROR");
+          }
+        });
+    }
+  });
+
 });
 
 

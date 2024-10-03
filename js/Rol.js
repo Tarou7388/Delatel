@@ -140,13 +140,7 @@ window.addEventListener("DOMContentLoaded", () => {
         return respuesta.json();
       })
       .then(data => {
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          text: "El rol se ha agregado exitosamente.",
-          showConfirmButton: false,
-          timer: 1500
-        });
+        showToast("El rol se ha agregado exitosamente","SUCCESS")
         form.reset();
 
         setTimeout(function() {
@@ -156,7 +150,7 @@ window.addEventListener("DOMContentLoaded", () => {
       })
       .catch(error => {
         console.error('Error:', error);
-        alert("No se pudo agregar el rol.");
+        showToast("No se pudo agregar el rol","ERROR");
       });
   }
 
@@ -195,13 +189,7 @@ window.addEventListener("DOMContentLoaded", () => {
       })
       .then(data => {
         if(data.Actualizado){
-          Swal.fire({
-            position: "center",
-            icon: "success",
-            text: "El rol se ha actualizado exitosamente.",
-            showConfirmButton: false,
-            timer: 1500
-          });
+          showToast("El rol se ha actualizado exitosamente","SUCCESS")
           form.reset();
 
           setTimeout(function() {
@@ -215,7 +203,7 @@ window.addEventListener("DOMContentLoaded", () => {
       })
       .catch(error => {
         console.error('Error:', error);
-        alert("No se pudo actualizar el rol");
+        showToast("No se pudo actualizar el rol","ERROR");
       });
   }
 
@@ -227,14 +215,11 @@ window.addEventListener("DOMContentLoaded", () => {
         idRolActual = idRol;
 
         if(idRol == userid){
-          Swal.fire({
-            icon: "error",
-            text: "No puedes inhabilitar tu propio rol.",
-          });
+          showToast("No puedes inhabilitar tu propio rol","ERROR")
           return;
         }
 
-        if (confirm("¿Estás seguro de que deseas inhabilitar este rol?")) {
+        if (ask("¿Estás seguro de que deseas inhabilitar este rol?")) {
           inhabilitarRol(idRol, userid);
         }
       });
@@ -261,13 +246,7 @@ window.addEventListener("DOMContentLoaded", () => {
     })
       .then(data => {
         if (data.Inhabilitado) {
-          Swal.fire({
-            position: "center",
-            icon: "success",
-            text: "El rol se ha eliminado exitosamente.",
-            showConfirmButton: false,
-            timer: 1500
-          });
+          showToast("El rol se ha eliminado exitosamente", "SUCCESS");
           form.reset();
 
           setTimeout(function() {
@@ -275,12 +254,12 @@ window.addEventListener("DOMContentLoaded", () => {
           }, 1500);
 
         } else {
-          alert("Error al inhabilitar el rol.");
+          showToast("Error al inhabilitar el rol","ERROR")
         }
       })
       .catch(error => {
         console.error('Error:', error);
-        alert("No se pudo inhabilitar el rol.");
+        showToast("No se pudo inhabilitar el rol", "ERROR");
       });
   }
 
@@ -408,13 +387,7 @@ window.addEventListener("DOMContentLoaded", () => {
     })
       .then(respuesta => respuesta.json())
       .then(datos => {
-        Swal.fire({
-          position: "top",
-          icon: "success",
-          text: "Permisos actualizados correctamente.",
-          showConfirmButton: false,
-          timer: 1500
-        });
+        showToast("Permisos actualizados correctamente.", "SUCCESS");
       })
   }
 
@@ -437,11 +410,11 @@ window.addEventListener("DOMContentLoaded", () => {
     event.preventDefault();
 
     if (idRolActual === -1) { 
-      if (confirm("¿Estás seguro de que quieres registrar el rol?")) {
+      if (ask("¿Estás seguro de que quieres registrar el rol?")) {
         registrarRoles();
       }
     } else { 
-      if (confirm("¿Estás seguro de actualizar el rol?")) {
+      if (ask("¿Estás seguro de actualizar el rol?")) {
         actualizarRol();
       }
     }

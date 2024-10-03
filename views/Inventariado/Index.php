@@ -87,7 +87,7 @@
                 <!-- Botones -->
                 <div class="text-end mt-2">
                     <button type="submit" id="btnRegistrar" class="btn btn-primary btn-sm">Actualizar Kardex</button>
-                    <button type="reset" id="btnCancelar" class="btn btn-secondary btn-sm">Cancelar Proceso</button>
+                    <button type="reset" id="btnCancelar" class="btn btn-outline-secondary btn-sm">Cancelar Proceso</button>
                 </div>
 
             </form>

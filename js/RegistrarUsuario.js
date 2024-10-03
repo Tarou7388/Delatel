@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
     return document.getElementById(id);
   }
 
-  // Funcionalidad del input de DNI: actualiza los dropdowns según la longitud de la entrada
+  // 1. Funcionalidad del input de DNI: actualiza los dropdowns según la longitud de la entrada
   (function () {
     const slcNacionalidad = $("slcNacionalidad");
     const slcDocumento = $("slcDocumento");
@@ -48,17 +48,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
   let idPersonaEncontrada = null; // Variable para almacenar el id_persona
 
-  // Búsqueda de persona
+  // 2. Búsqueda de persona
   $("btnBuscar").addEventListener("click", async () => {
     const dni = $("txtNumDocumentoPersona").value;
 
     if (!dni) {
-      alert("Debes ingresar un número de documento válido.");
+      showToast("Debes ingresar un número de documento válido.", "WARNING");
       return;
     }
 
     try {
-      const respuesta = await fetch(`${config.HOST}/controllers/Personas.controlles.php?Operacion=siExiste&DNI=${dni}`);
+      const respuesta = await fetch(`${config.HOST}app/controllers/Personas.controlles.php?Operacion=siExiste&DNI=${dni}`);
       if (!respuesta.ok) {
         throw new Error("Error en la solicitud al servidor.");
       }
@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (data.id_persona) {
         idPersonaEncontrada = data.id_persona;
-        alert("Persona encontrada en la base de datos.");
+        showToast("Persona encontrada en la base de datos.", "SUCCESS");
       } else {
         const persona = await BuscarPersonaAPI('getapi', dni);
         if (persona) {
@@ -82,21 +82,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
           // Registrar persona en la base de datos para obtener id_persona
           idPersonaEncontrada = await RegistrarPersona(dni);
-          alert("Persona registrada desde la API.");
+          showToast("Persona registrada desde la API.", "INFO");
         } else {
-          alert("No se encontraron datos en la API externa.");
+          showToast("No se encontraron datos en la API externa.", "INFO");
         }
       }
     } catch (error) {
       console.error("Error al buscar persona:", error);
-      alert("Ocurrió un error al buscar la persona.");
+      showToast("Ocurrió un error al buscar la persona.", "ERROR");
     }
   });
 
-  // Obtener todos los roles
+  // 3. Obtener todos los roles
   (async function () {
     try {
-      const respuesta = await fetch(`${config.HOST}/controllers/Roles.controllers.php?operacion=getAllRol`);
+      const respuesta = await fetch(`${config.HOST}app/controllers/Roles.controllers.php?operacion=getAllRol`);
       if (!respuesta.ok) {
         throw new Error("Error al obtener los roles.");
       }
@@ -110,10 +110,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   })();
 
-  // Buscar datos de una persona en la API externa
+  // 4. Buscar datos de una persona en la API externa
   async function BuscarPersonaAPI(operacion, dni) {
     try {
-      const respuesta = await fetch(`${config.HOST}/controllers/Personas.controlles.php?Operacion=${operacion}&dni=${dni}`);
+      const respuesta = await fetch(`${config.HOST}app/controllers/Personas.controlles.php?Operacion=${operacion}&dni=${dni}`);
       if (!respuesta.ok) {
         throw new Error("Error al conectarse a la API externa.");
       }
@@ -124,7 +124,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Registrar persona en la base de datos
+  // 5. Registrar persona en la base de datos
   async function RegistrarPersona(dni) {
     try {
       const formData = new FormData();
@@ -137,7 +137,7 @@ document.addEventListener("DOMContentLoaded", function () {
       formData.append('email', $("txtEmail").value);
       formData.append('iduser_create', userid);
 
-      const respuesta = await fetch(`${config.HOST}/controllers/Personas.controlles.php`, {
+      const respuesta = await fetch(`${config.HOST}app/controllers/Personas.controlles.php`, {
         method: 'POST',
         body: formData
       });
@@ -152,7 +152,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Registrar usuario
+  // 6. Registrar usuario
   async function RegistrarUsuario(idPersona) {
     try {
       const formData = new FormData();
@@ -166,27 +166,30 @@ document.addEventListener("DOMContentLoaded", function () {
         method: 'POST',
         body: formData
       });
+
       if (!respuesta.ok) {
         throw new Error("Error al registrar el usuario.");
       }
+
       const data = await respuesta.json();
 
       if (data.success) {
-        alert("Usuario registrado con éxito");
+        showToast("Usuario registrado con éxito", "SUCCESS");
       } else {
-        alert("Error al registrar el usuario: " + data.message);
+        showToast("Error al registrar el usuario: " + data.message, "ERROR");
       }
     } catch (error) {
       console.error("Error al registrar usuario:", error);
+      showToast("Ocurrió un error: " + error.message, "ERROR");
     }
   }
 
-  // Envío del formulario de registro
+  // 7. Envío del formulario de registro
   $("registerForm").addEventListener("submit", async (event) => {
     event.preventDefault();
 
     if (!idPersonaEncontrada) {
-      alert("Debes buscar una persona primero.");
+      showToast("Debes buscar una persona primero.", "WARNING");
       return;
     }
 
@@ -194,7 +197,7 @@ document.addEventListener("DOMContentLoaded", function () {
       await RegistrarUsuario(idPersonaEncontrada);
     } catch (error) {
       console.error("Error al registrar usuario:", error);
-      alert("Ocurrió un error al registrar el usuario.");
+      showToast("Ocurrió un error al registrar el usuario.", "ERROR");
     }
   });
 });

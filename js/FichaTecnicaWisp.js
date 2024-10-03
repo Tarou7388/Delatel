@@ -57,7 +57,6 @@ window.addEventListener("DOMContentLoaded", () => {
     };
 
     const jsonData = JSON.stringify(data);
-    console.log(jsonData);
     try {
       const response = await fetch('url_del_servidor', {
         method: 'POST',

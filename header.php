@@ -122,7 +122,7 @@ if (!isset($_SESSION['login']) || (isset($_SESSION['login']) && !$_SESSION['logi
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                   Kardex
                 </a>
-                <a class="nav-link" href="<?= $host; ?>views/Inventariado/Productos.php">
+                <a class="nav-link" href="<?= $host; ?>views/Productos/">
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                   Productos
                 </a>
