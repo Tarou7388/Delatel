@@ -93,14 +93,14 @@
                   </div>
                 </div>
 
-                <div class="col md-6">
+                <div class="col-md">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="txtIp" placeholder="IP" required>
                     <label for="lblIp">IP</label>
                   </div>
                 </div>
 
-                <div class="col md-6">
+                <div class="col-md">
                   <div class="form-floating">
                     <input type="number" class="form-control" id="txtSenial" placeholder="Señal" required>
                     <label for="lblSenial">Señal</label>
@@ -130,14 +130,14 @@
                   </div>
                 </div>
 
-                <div class="col md-6">
+                <div class="col-md">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="txtIp" placeholder="Nuevo IP">
                     <label for="lblIp">Nuevo IP</label>
                   </div>
                 </div>
 
-                <div class="col md-6">
+                <div class="col-md">
                   <div class="form-floating">
                     <input type="number" class="form-control" id="txtSenial" placeholder="Señal">
                     <label for="lblSenial">Señal</label>
@@ -177,9 +177,12 @@
                   </div>
                 </div>
 
-                <div class="col-md-4 form-check form-switch d-flex align-items-center ">
-                  <input class="form-check-input ms-5" type="checkbox" id="chkCatv1">
-                  <label class="form-check-label" for="chkCatv1">CATV</label>
+                <div class="col-md-4 d-flex flex-column align-items-start justify-content-end">
+                  <label class="form-check-label mb-1" for="chkCatv1">CATV</label>
+                  <div class="form-check form-switch d-flex align-items-center">
+                    <input class="form-check-input" type="checkbox" id="chkCatv1">
+                    <span id="checkboxText1" class="ms-2">No</span>
+                  </div>
                 </div>
 
               </div>
@@ -193,14 +196,14 @@
                   </div>
                 </div>
 
-                <div class="col md-6">
+                <div class="col-md">
                   <div class="form-floating">
                     <input type="number" class="form-control" id="txtVlan" placeholder="Vlan" required>
                     <label for="lblVlan">VLAN</label>
                   </div>
                 </div>
 
-                <div class="col md-6">
+                <div class="col-md">
                   <div class="form-floating">
                     <input type="number" class="form-control" id="txtPotencia" placeholder="Potencia" required>
                     <label for="lblPotencia">Potencia</label>
@@ -262,9 +265,12 @@
                   </div>
                 </div>
 
-                <div class="col-md-4 form-check form-switch d-flex align-items-center ">
-                  <input class="form-check-input ms-5" type="checkbox" id="chkCatv">
-                  <label class="form-check-label" for="chkCatv">CATV</label>
+                <div class="col-md-4 d-flex flex-column align-items-start justify-content-end">
+                  <label class="form-check-label mb-1" for="chkCatv2">CATV</label>
+                  <div class="form-check form-switch d-flex align-items-center">
+                    <input class="form-check-input" type="checkbox" id="chkCatv2">
+                    <span id="checkboxText2" class="ms-2">No</span>
+                  </div>
                 </div>
 
               </div>
@@ -278,14 +284,14 @@
                   </div>
                 </div>
 
-                <div class="col md-6">
+                <div class="col-md">
                   <div class="form-floating">
                     <input type="number" class="form-control" id="txtVlan" placeholder="VLAN" required>
                     <label for="lblVlan">VLAN</label>
                   </div>
                 </div>
 
-                <div class="col md-6">
+                <div class="col-md">
                   <div class="form-floating">
                     <input type="number" class="form-control" id="txtPotencia" placeholder="Potencia" required>
                     <label for="lblPotencia">Potencia</label>
@@ -567,11 +573,14 @@
 
         <div class="row">
           <div class="col-12 text-center text-md-end mb-3">
-            <button type="button" id="btnCodigoBarra" class="btn btn-warning">Verificar Código</button>
-            <button type="submit" id="btnRegistrarSoporte" class="btn btn-primary">Registrar Soporte</button>
-            <button type="reset" id="btnCancelar" class="btn btn-outline-secondary">Cancelar Proceso</button>
+            <div class="d-flex flex-column flex-md-row justify-content-center justify-content-md-end">
+              <button type="button" id="btnCodigoBarra" class="btn btn-warning mb-2 me-md-2">Verificar Código</button>
+              <button type="submit" id="btnRegistrarSoporte" class="btn btn-primary mb-2 me-md-2">Registrar Soporte</button>
+              <button type="reset" id="btnCancelar" class="btn btn-outline-secondary mb-2">Cancelar Proceso</button>
+            </div>
           </div>
         </div>
+
 
       </form>
     </div>
@@ -580,7 +589,13 @@
 <?php require_once "../../footer.php"; ?>
 
 <script type="module" src="../../js/soporteEscritorio.js"></script>
-
+<script>
+  function updateText(checkboxId, textId) {
+    const checkbox = document.getElementById(checkboxId);
+    const text = document.getElementById(textId);
+    text.textContent = checkbox.checked ? 'Sí' : 'No';
+  }
+</script>
 </body>
 
 </html>

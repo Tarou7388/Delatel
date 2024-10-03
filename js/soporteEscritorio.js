@@ -3,6 +3,7 @@ window.addEventListener('DOMContentLoaded', function () {
   const wisp = document.getElementById('lstWisp');
   const gpon = document.getElementById('lstGpon');
   const cable = document.getElementById('lstCable');
+
   var today = new Date().toISOString().split('T')[0];
   document.getElementById('txtFecha').value = today;
   const dropdownItems = document.querySelectorAll('.list-group-item');
@@ -26,6 +27,19 @@ window.addEventListener('DOMContentLoaded', function () {
       // Llama a la función para actualizar las secciones basadas en el valor seleccionado
       updateSections(value);
     });
+  });
+
+  const checkbox1 = document.getElementById('chkCatv1');
+  const checkboxText1 = document.getElementById('checkboxText1');
+  const checkbox2 = document.getElementById('chkCatv2');
+  const checkboxText2 = document.getElementById('checkboxText2');
+
+  checkbox1.addEventListener('change', function () {
+    checkboxText1.textContent = this.checked ? 'Sí' : 'No';
+  });
+
+  checkbox2.addEventListener('change', function () {
+    checkboxText2.textContent = this.checked ? 'Sí' : 'No';
   });
 
   function updateSections(value) {
