@@ -8,9 +8,9 @@ window.addEventListener('DOMContentLoaded', function () {
   document.getElementById('txtFecha').value = today;
   const dropdownItems = document.querySelectorAll('.list-group-item');
   const dropdownButton = document.getElementById('btnModal');
-  if (permisos[0].permisos.soporte.leer != 1) {
-    window.location.href = `${config.HOST}views`;
-  }
+  // if (permisos[0].permisos.soporte.leer != 1) {
+  //   window.location.href = `${config.HOST}views`;
+  // }
   dropdownItems.forEach(function (item) {
     item.addEventListener('click', function () {
       const value = this.getAttribute('data-value');

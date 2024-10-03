@@ -1,11 +1,11 @@
 import config from "../env.js";
 
 document.addEventListener("DOMContentLoaded", function () {
-  // 1. Variables locales
+
   const userid = JSON.stringify(user['idUsuario']);
-  if (permisos[0].permisos.personas.leer != 1) {
-    window.location.href = `${config.HOST}views`;
-  }
+  // if (permisos[0].permisos.personas.leer != 1) {
+  //   window.location.href = `${config.HOST}views`;
+  // }
 
   const divEmpresaCard = document.getElementById("divEmpresaCard");
   const frmEmpresas = document.getElementById("frmEmpresas");
@@ -23,7 +23,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const btnCancelarEmpresa = document.getElementById("btnCancelarEmpresa");
   const btnBuscarEmpresa = document.getElementById("btnBuscarEmpresa");
 
-  // 2. Funciones externas
   const verificarCampos = () => {
     const campos = [
       txtRuc, txtRepresentanteLegal, txtRazonSocial,
@@ -111,7 +110,6 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   };
 
-  // 3. Eventos
   frmEmpresas.addEventListener("submit", (event) => {
     event.preventDefault();
     if (!verificarCampos()) {

@@ -1,9 +1,9 @@
 import config from '../env.js';
 
 document.addEventListener("DOMContentLoaded", () => {
-  if (!permisos[0].permisos.personas.leer) {
-    window.location.href = `${config.HOST}views`;
-  }
+  // if (!permisos[0].permisos.personas.leer) {
+  //   window.location.href = `${config.HOST}views`;
+  // }
 
   const table = $('#listarUsuarios').DataTable({
     language: {

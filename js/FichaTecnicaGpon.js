@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
           document.getElementById("txtCantCable").value = cable.cable?.metrosadicionales || "";
           document.getElementById("txtPrecioCable").value = cable.cable?.preciometro || "";
           document.getElementById("txtCantSintotizador").value = cable.sintonizadores?.[0]?.numero || "";
-        }
+        } 
       } else {
         console.warn("No hay datos en ficha_instalacion.");
       }

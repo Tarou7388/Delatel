@@ -22,9 +22,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const btnBuscar = document.getElementById("btnBuscar");
 
   // 2. Comprobación de permisos
-  if (!permisos[0].permisos.personas.leer) {
-    window.location.href = `${config.HOST}views`;
-  }
+  // if (!permisos[0].permisos.personas.leer) {
+  //   window.location.href = `${config.HOST}views`;
+  // }
 
   // 3. Funciones externas
   function toggleForms(value) {
