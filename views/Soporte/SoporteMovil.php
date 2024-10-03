@@ -1,7 +1,7 @@
 <?php require_once '../../header.php'; ?>
 
 <div class="container-fluid px-4">
-  <h1 class="mt-4">Soporte Vista Móvil</h1>
+  <h1 class="mt-4">Ficha de Control de Averías</h1>
 
   <div class="row g-2 mb-2 justify-content-end">
     <div class="col-sm-1">
@@ -85,21 +85,21 @@
               <!-- Primera Fila -->
               <h5>Parámetros Wireless</h5>
               <div class="row g-2 mb-2">
+
                 <div class="col-md">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="txtBase" placeholder="Base" required>
                     <label for="lblBase">Base</label>
                   </div>
                 </div>
-              </div>
 
-              <div class="row g-2 mb-2">
                 <div class="col md-6">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="txtIp" placeholder="IP" required>
                     <label for="lblIp">IP</label>
                   </div>
                 </div>
+
                 <div class="col md-6">
                   <div class="form-floating">
                     <input type="number" class="form-control" id="txtSenial" placeholder="Señal" required>
@@ -129,8 +129,7 @@
                     <label for="lblNuevaBase">Nueva Base</label>
                   </div>
                 </div>
-              </div>
-              <div class="row g-2 mb-2">
+
                 <div class="col md-6">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="txtIp" placeholder="Nuevo IP">
@@ -170,20 +169,19 @@
                     <label for="lblPppoe">PPPoE</label>
                   </div>
                 </div>
-              </div>
 
-              <div class="row g-2 mb-2">
-                <div class="col md-6">
+                <div class="col-md">
                   <div class="form-floating">
                     <input type="number" class="form-control" id="txtPotencia" placeholder="Potencia" required>
                     <label for="lblPotencia">Potencia</label>
                   </div>
                 </div>
 
-                <div class="col md-6 form-check form-switch d-flex align-items-center">
-                  <input class="form-check-input ms-4" type="checkbox" id="chkCatv">
-                  <label class="form-check-label" for="chkCatv">CATV</label>
+                <div class="col-md-4 form-check form-switch d-flex align-items-center ">
+                  <input class="form-check-input ms-5" type="checkbox" id="chkCatv1">
+                  <label class="form-check-label" for="chkCatv1">CATV</label>
                 </div>
+
               </div>
 
               <div class="row g-2 mb-2">
@@ -194,9 +192,7 @@
                     <label for="lblClave">Clave</label>
                   </div>
                 </div>
-              </div>
 
-              <div class="row g-2 mb-2">
                 <div class="col md-6">
                   <div class="form-floating">
                     <input type="number" class="form-control" id="txtVlan" placeholder="Vlan" required>
@@ -210,9 +206,8 @@
                     <label for="lblPotencia">Potencia</label>
                   </div>
                 </div>
+
               </div>
-
-
 
               <div class="row g-2 mb-2">
 
@@ -260,32 +255,29 @@
                   </div>
                 </div>
 
-              </div>
-
-              <div class="row g-2 mb-2">
-                <div class="col md-6">
+                <div class="col-md">
                   <div class="form-floating">
                     <input type="number" class="form-control" id="txtPotencia" placeholder="Potencia" required>
                     <label for="lblPotencia">Potencia</label>
                   </div>
                 </div>
 
-                <div class="col md-6 form-check form-switch d-flex align-items-center">
-                  <input class="form-check-input ms-4" type="checkbox" id="chkCatv">
+                <div class="col-md-4 form-check form-switch d-flex align-items-center ">
+                  <input class="form-check-input ms-5" type="checkbox" id="chkCatv">
                   <label class="form-check-label" for="chkCatv">CATV</label>
                 </div>
+
               </div>
 
               <div class="row g-2 mb-2">
+
                 <div class="col-md">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="txtClave" placeholder="Clave" required>
                     <label for="lblClave">Clave</label>
                   </div>
                 </div>
-              </div>
 
-              <div class="row g-2 mb-2">
                 <div class="col md-6">
                   <div class="form-floating">
                     <input type="number" class="form-control" id="txtVlan" placeholder="VLAN" required>
@@ -299,6 +291,7 @@
                     <label for="lblPotencia">Potencia</label>
                   </div>
                 </div>
+
               </div>
 
               <div class="row g-2 mb-2">
@@ -574,9 +567,9 @@
 
         <div class="row">
           <div class="col-12 text-center text-md-end mb-3">
-            <button type="button" id="btnCodigoBarra" class="btn btn-warning btn-sm me-2 mb-2 mb-md-0">Verificar Código</button>
-            <button type="submit" id="btnRegistrarSoporte" class="btn btn-primary btn-sm me-2 mb-2 mb-md-0">Registrar Soporte</button>
-            <button type="reset" id="btnCancelar" class="btn btn-secondary btn-sm mb-2 mb-md-0">Cancelar Proceso</button>
+            <button type="button" id="btnCodigoBarra" class="btn btn-warning">Verificar Código</button>
+            <button type="submit" id="btnRegistrarSoporte" class="btn btn-primary">Registrar Soporte</button>
+            <button type="reset" id="btnCancelar" class="btn btn-outline-secondary">Cancelar Proceso</button>
           </div>
         </div>
 
