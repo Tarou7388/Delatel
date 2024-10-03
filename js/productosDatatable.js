@@ -2,9 +2,9 @@ import config from '../env.js';
 
 document.addEventListener("DOMContentLoaded", function () {
     // 1. Comprobación de permisos
-    if (permisos[0].permisos.inventariado.leer != 1) {
-        window.location.href = `${config.HOST}views`;
-    }
+    // if (permisos[0].permisos.inventariado.leer != 1) {
+    //     window.location.href = `${config.HOST}views`;
+    // }
 
     const userid = user['idUsuario'];
     const ruta = `${config.HOST}controllers/Productos.controllers.php?operacion=getAll`;
