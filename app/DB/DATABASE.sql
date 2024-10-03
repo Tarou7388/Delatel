@@ -2,6 +2,27 @@ CREATE DATABASE Delatel;
 
 USE Delatel;
 
+CREATE TABLE tb_departamentos (
+    id_departamento INT PRIMARY KEY NOT NULL,
+    departamento VARCHAR(45) NOT NULL
+) ENGINE=InnoDB;
+
+CREATE TABLE tb_provincias (
+    id_provincia INT PRIMARY KEY NOT NULL,
+    provincia VARCHAR(45) NOT NULL,
+    id_departamento INT NOT NULL,
+    CONSTRAINT provi_fk_id_departamento FOREIGN KEY (id_departamento) REFERENCES tb_departamentos(id_departamento)
+) ENGINE=InnoDB;
+
+CREATE TABLE tb_distritos (
+    id_distrito INT PRIMARY KEY NOT NULL,
+    distrito VARCHAR(45) DEFAULT NULL,
+    id_provincia INT DEFAULT NULL,
+    id_departamento INT DEFAULT NULL,
+    CONSTRAINT distr_fk_id_provincia FOREIGN KEY (id_provincia) REFERENCES tb_provincias(id_provincia),
+    CONSTRAINT distr_fk_id_departamento FOREIGN KEY (id_departamento) REFERENCES tb_departamentos(id_departamento)
+) ENGINE=InnoDB;
+
 CREATE TABLE tb_tipo_soporte (
     id_tipo_soporte INT AUTO_INCREMENT PRIMARY KEY,
     tipo_soporte VARCHAR(50) NOT NULL,
@@ -14,24 +35,7 @@ CREATE TABLE tb_tipo_soporte (
     CONSTRAINT tiposopor_uk_tipo_soporte UNIQUE (tipo_soporte)
 ) ENGINE = InnoDB;
 
-CREATE TABLE tb_departamentos (
-    id_departamento INT PRIMARY KEY AUTO_INCREMENT,
-    departamento VARCHAR(50) NOT NULL
-) ENGINE = InnoDB;
 
-CREATE TABLE tb_provincias (
-    id_provincia INT PRIMARY KEY AUTO_INCREMENT,
-    provincia VARCHAR(50) NOT NULL,
-    id_departamento INT NOT NULL,
-    CONSTRAINT provi_fk_id_departamento FOREIGN KEY (id_departamento) REFERENCES tb_departamentos (id_departamento)
-) ENGINE = InnoDB;
-
-CREATE TABLE tb_distritos (
-    id_distrito INT PRIMARY KEY AUTO_INCREMENT,
-    distrito VARCHAR(50) NOT NULL,
-    id_provincia INT NOT NULL,
-    CONSTRAINT distr_fk_id_provincia FOREIGN KEY (id_provincia) REFERENCES tb_provincias (id_provincia)
-) ENGINE = InnoDB;
 
 CREATE TABLE tb_roles (
     id_rol INT AUTO_INCREMENT PRIMARY KEY,
