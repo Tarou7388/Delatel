@@ -81,9 +81,9 @@ if (!isset($_SESSION['login']) || (isset($_SESSION['login']) && !$_SESSION['logi
 
             <div class="collapse" id="collapse1">
               <div class="ps-4">
-                <a class="nav-link" href="<?= $host; ?>views/Soporte/SoporteMovil.php">
+                <a class="nav-link" href="<?= $host; ?>views/Soporte/index.php">
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                  Ficha Soporte Movil
+                  Ficha de Soporte
                 </a>
                 <a class="nav-link" href="<?= $host; ?>views/Soporte/SoporteEscritorio.php">
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
