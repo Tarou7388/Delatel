@@ -1,6 +1,9 @@
 USE Delatel;
 
-CREATE VIEW vw_kardex AS
+DELIMITER $$
+
+DROP VIEW IF EXISTS vw_kardex_listar$$
+CREATE VIEW vw_kardex_listar AS
 SELECT
     k.id_kardex,
     p.id_producto,
@@ -19,7 +22,7 @@ FROM tb_productos p
     JOIN tb_kardex k ON p.id_producto = k.id_producto
 ORDER BY k.create_at DESC;
 
-DELIMITER $$
+DROP PROCEDURE IF EXISTS spu_kardex_registrar$$
 CREATE PROCEDURE spu_kardex_registrar(
     IN p_id_producto INT,
     IN p_fecha DATE,
@@ -79,8 +82,8 @@ BEGIN
     );
 END $$
 
-DELIMITER $$
-CREATE PROCEDURE spu_kardex_filtrar(
+DROP PROCEDURE IF EXISTS spu_kardex_buscar$$
+CREATE PROCEDURE spu_kardex_buscar(
 	IN p_idproducto INT
 )
 BEGIN

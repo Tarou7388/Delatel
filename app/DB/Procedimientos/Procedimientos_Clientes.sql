@@ -1,6 +1,7 @@
 USE Delatel;
 
-CREATE VIEW vw_clientes_listar AS
+DROP VIEW IF EXISTS vw_clientes_obtener;
+CREATE VIEW vw_clientes_obtener AS
 SELECT
     c.id_cliente,
     COALESCE(CONCAT(p.nombres, ", ", p.apellidos), e.nombre_comercial) AS nombre_cliente,
@@ -18,32 +19,14 @@ WHERE
     c.inactive_at IS NULL;
 
 DELIMITER $$
+
+DROP PROCEDURE IF EXISTS spu_clientes_registrar$$
 CREATE PROCEDURE spu_clientes_registrar(
     p_id_persona        INT,
     p_id_empresa        INT,
     p_direccion         VARCHAR(50),
     p_referencia        VARCHAR(150),
-	p_iduser_create INT,
-    p_coordenadas       VARCHAR(50)
-)
-BEGIN
-    IF p_id_empresa = '' THEN
-        SET p_id_empresa = NULL;
-	ELSEIF p_id_persona = '' THEN
-        SET p_id_persona = NULL;
-    END IF;
-    INSERT INTO tb_clientes(id_persona, id_empresa, direccion, referencia,iduser_create,coordenadas) 
-    VALUES (p_id_persona, p_id_empresa, p_direccion, p_referencia,p_iduser_create,p_coordenadas);
-END $$
-
-DELIMITER $$
-CREATE PROCEDURE spu_clientes_actualizar_old(
-    p_id_persona        INT,
-    p_id_empresa        INT,
-    p_direccion         VARCHAR(50),
-    p_referencia        VARCHAR(150),
-    p_iduser_update     INT,
-    p_id_cliente        INT,
+    p_iduser_create     INT,
     p_coordenadas       VARCHAR(50)
 )
 BEGIN
@@ -52,58 +35,52 @@ BEGIN
     ELSEIF p_id_persona = '' THEN
         SET p_id_persona = NULL;
     END IF;
-    
-    UPDATE tb_clientes SET
-        id_persona = p_id_persona,
-        id_empresa = p_id_empresa,
-        direccion = p_direccion,
-        referencia = p_referencia,
-        iduser_update = p_iduser_update,
-        coordenadas = p_coordenadas
-    WHERE id_cliente = p_id_cliente;
-    
+    INSERT INTO tb_clientes(id_persona, id_empresa, direccion, referencia, iduser_create, coordenadas) 
+    VALUES (p_id_persona, p_id_empresa, p_direccion, p_referencia, p_iduser_create, p_coordenadas);
 END $$
 
 DELIMITER $$
-CREATE PROCEDURE spu_cliente_persona_buscar(IN p_documento varchar(15))
+DROP PROCEDURE IF EXISTS spu_cliente_buscar_nrodoc$$
+CREATE PROCEDURE spu_cliente_buscar_nrodoc(IN p_documento VARCHAR(15))
 BEGIN
-    SELECT 
-    c.id_cliente,
-    c.direccion,
-    p.nacionalidad,
-    c.referencia,
-    c.coordenadas,
-    CONCAT(p.apellidos, ', ', p.nombres) AS "nombre",
-    p.email,
-    p.telefono
-FROM 
-    tb_clientes c
-LEFT JOIN 
-    tb_personas p ON c.id_persona = p.id_persona
-WHERE 
-    p.nro_doc = p_documento;
-END$$
+    IF LENGTH(p_documento) IN (8, 9, 12) THEN
+        SELECT 
+            c.id_cliente,
+            c.direccion,
+            p.nacionalidad,
+            c.referencia,
+            c.coordenadas,
+            CONCAT(p.apellidos, ', ', p.nombres) AS nombre,
+            p.email,
+            p.telefono
+        FROM 
+            tb_clientes c
+        LEFT JOIN 
+            tb_personas p ON c.id_persona = p.id_persona
+        WHERE 
+            p.nro_doc = p_documento;
+
+    ELSEIF LENGTH(p_documento) = 11 THEN
+        SELECT 
+            c.id_cliente,
+            c.direccion,
+            c.referencia,
+            c.coordenadas,
+            e.nombre_comercial AS nombre,
+            e.email,
+            e.telefono
+        FROM 
+            tb_clientes c
+        LEFT JOIN 
+            tb_empresas e ON e.id_empresa = c.id_empresa
+        WHERE 
+            e.ruc = p_documento;
+    END IF;
+END $$
 
 DELIMITER $$
-CREATE PROCEDURE spu_cliente_empresa_buscar(IN _ruc varchar(15))
-BEGIN
-    SELECT 
-    c.id_cliente,
-    c.direccion,
-    c.referencia,
-    c.coordenadas,
-    e.nombre_comercial AS "nombre",
-    e.email,
-    e.telefono
-FROM 
-    tb_clientes c
-LEFT JOIN
-    tb_empresas e ON e.id_empresa = c.id_empresa
-    WHERE e.ruc = _ruc;
-END$$
-
-DELIMITER $$
-CREATE PROCEDURE spu_clientes_actualizar(
+DROP PROCEDURE IF EXISTS spu_clientesPersonas_actualizar$$
+CREATE PROCEDURE spu_clientesPersonas_actualizar(
     p_identificador VARCHAR(15),
     p_nombre VARCHAR(100),
     p_apellidos VARCHAR(30),
@@ -129,7 +106,7 @@ BEGIN
             email = p_email,
             telefono = p_telefono,
             update_at = NOW(),
-            iduser_update=p_iduser_update
+            iduser_update = p_iduser_update
         WHERE nro_doc = v_nro_doc AND tipo_doc = v_tipo_doc AND inactive_at IS NULL;
 
     ELSEIF LENGTH(p_identificador) = 11 THEN
@@ -142,7 +119,7 @@ BEGIN
             email = p_email,
             telefono = p_telefono,
             update_at = NOW(),
-            iduser_update=p_iduser_update
+            iduser_update = p_iduser_update
         WHERE ruc = v_nro_doc AND inactive_at IS NULL;
     END IF;
 
@@ -165,6 +142,7 @@ BEGIN
 END $$
 
 DELIMITER $$
+DROP PROCEDURE IF EXISTS spu_clientes_eliminar$$
 CREATE PROCEDURE spu_clientes_eliminar(
     p_identificador VARCHAR(15),
     p_iduser_inactive INT
@@ -197,3 +175,4 @@ BEGIN
     );
 END $$
 
+DELIMITER ;

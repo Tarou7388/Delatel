@@ -1,5 +1,7 @@
 USE Delatel;
+DELIMITER $$
 
+DROP VIEW IF EXISTS vw_empresas_listar$$
 CREATE VIEW vw_empresas_listar AS
 SELECT
     e.id_empresa,
@@ -13,19 +15,12 @@ SELECT
     e.update_at,
     e.inactive_at,
     e.iduser_create,
-    u1.nombre_user AS usuario_creador,
     e.iduser_update,
-    u2.nombre_user AS usuario_modificador,
-    e.iduser_inactive,
-    u3.nombre_user AS usuario_inactivador
+    e.iduser_inactive
 FROM
-    tb_empresas e
-    LEFT JOIN tb_usuarios u1 ON e.iduser_create = u1.id_usuario
-    LEFT JOIN tb_usuarios u2 ON e.iduser_update = u2.id_usuario
-    LEFT JOIN tb_usuarios u3 ON e.iduser_inactive = u3.id_usuario;
+    tb_empresas e;
     
-DELIMITER $$
-
+DROP PROCEDURE IF EXISTS spu_empresas_registrar$$
 CREATE PROCEDURE spu_empresas_registrar(
     p_ruc                VARCHAR(11),
     p_representante_legal VARCHAR(70),
@@ -42,7 +37,7 @@ BEGIN
     SELECT LAST_INSERT_ID() AS id_empresa;
 END $$
 
-
+DROP PROCEDURE IF EXISTS spu_empresas_actualizar$$
 CREATE PROCEDURE spu_empresas_actualizar(
     p_ruc                	VARCHAR(11),
     p_representante_legal 	VARCHAR(70),
@@ -67,6 +62,7 @@ BEGIN
     WHERE id_empresa = p_id_empresa;
 END $$
 
+DROP PROCEDURE IF EXISTS spu_empresas_eliminar$$
 CREATE PROCEDURE spu_empresas_eliminar(
     p_id_empresa INT,
     p_iduser_inactive INT

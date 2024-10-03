@@ -20,7 +20,6 @@ CREATE PROCEDURE spu_registrar_fichasoporte(
     IN p_descripcion_problema TEXT,
     IN p_descripcion_solucion TEXT,
     IN p_prioridad VARCHAR(50),
-    IN p_pagos JSON,
     IN p_soporte JSON,
 	IN p_iduser_create INT
 )
@@ -34,7 +33,6 @@ BEGIN
         descripcion_problema,
         descripcion_solucion,
         prioridad,
-        pagos,
         soporte,
         create_at,
         iduser_create
@@ -48,7 +46,6 @@ BEGIN
         p_descripcion_problema,
         p_descripcion_solucion,
         p_prioridad,
-        p_pagos,
         p_soporte,
         NOW(),
         p_iduser_create
