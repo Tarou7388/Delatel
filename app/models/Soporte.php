@@ -10,29 +10,41 @@ class Soporte extends Conexion
     $this->pdo = parent::getConexion();
   }
 
-  public function addSoporte($params = []): bool
+  /**
+   * Registra un registro de soporte en la base de datos.
+   *
+   * Este método llama a un procedimiento almacenado para insertar un nuevo registro de soporte.
+   *
+   * @param array $params Un array asociativo que contiene las siguientes claves:
+   *  - id_contrato (int): El ID del contrato.
+   *  - id_tipo_soporte (int): El ID del tipo de soporte.
+   *  - id_tecnico (int): El ID del técnico.
+   *  - fecha_hora_solicitud (string): La fecha y hora de la solicitud.
+   *  - fecha_hora_asistencia (string): La fecha y hora de la asistencia.
+   *  - descripcion_problema (string): La descripción del problema.
+   *  - descripcion_solucion (string): La descripción de la solución.
+   *  - prioridad (string): La prioridad del soporte.
+   *  - soporte (array): Un array que contiene información adicional de soporte.
+   *  - iduser_create (int): El ID del usuario que creó el registro.
+   *
+   * @return bool El resultado sera verdadero si se realiza o falso si falla.
+   */
+  public function registrarSoporte($params = [])
   {
-    try {
-      $status = false;
-      $query = $this->pdo->prepare("CALL spu_registrar_fichasoporte(?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)");
-      $pagosJson = json_encode($params['pagos']);
-      $soporteJson = json_encode($params['soporte']);
-      $status = $query->execute([
-        $params['id_contrato'],
-        $params['id_tipo_soporte'],
-        $params['id_tecnico'],
-        $params['fecha_hora_solicitud'],
-        $params['fecha_hora_asistencia'],
-        $params['descripcion_problema'],
-        $params['descripcion_solucion'],
-        $params['prioridad'],
-        $pagosJson,
-        $soporteJson,
-        $params["iduser_create"]
-      ]);
-      return $status;
-    } catch (Exception $e) {
-      return $e->getMessage();
-    }
+    $sql = "CALL spu_registrar_fichasoporte(?,?,?,?,?,?,?,?,?,?)";
+    $soporteJson = json_encode($params['soporte']);
+    $values = array(
+      $params['idContrato'],
+      $params['idTipoSoporte'],
+      $params['idTecnico'],
+      $params['fechaHoraSolicitud'],
+      $params['fechaHoraAsistencia'],
+      $params['descripcionProblema'],
+      $params['descripcionSolucion'],
+      $params['prioridad'],
+      $soporteJson,
+      $params['idUsuario']
+    );
+    return $this->registrar($sql, $values);
   }
 }

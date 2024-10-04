@@ -10,29 +10,41 @@ class Sector extends Conexion
     $this->pdo = parent::getConexion();
   }
 
-  public function add($params = [])
+  /**
+   * Registra un nuevo sector en la base de datos.
+   *
+   * Este método llama a un procedimiento almacenado para insertar un nuevo registro de sector.
+   *
+   * @param array $params Un array asociativo que contiene las siguientes claves:
+   *                      - 'id_distrito' (int): El ID del distrito.
+   *                      - 'sector' (string): El nombre del sector.
+   *                      - 'iduser_create' (int): El ID del usuario que crea el sector.
+   *
+   * @return bool El resultado sera verdadero si se realiza o falso si falla.
+   */
+  public function registrarSector($params = [])
   {
-    try {
-      $consulta = $this->pdo->prepare("CALL spu_sectores_registrar(?,?,?)");
-      $consulta->execute(array(
-        $params["id_distrito"],
-        $params["sector"],
-        $params["iduser_create"]
-      ));
-      return $consulta->fetch(PDO::FETCH_ASSOC);
-    } catch (Exception $e) {
-      die($e->getMessage());
-    }
+    $sql = "CALL spu_sectores_registrar(?,?,?)";
+    $values = array(
+      $params['id_distrito'],
+      $params['sector'],
+      $params['iduser_create']
+    );
+    return $this->registrar($sql, $values);
   }
 
-  public function getAll()
+  /**
+   * Listar todos los sectores.
+   *
+   * Este método ejecuta una consulta SQL para seleccionar todos los registros
+   * de la vista 'vw_listar_sectores' y devuelve los datos obtenidos.
+   *
+   * @return array Un array con los datos de los sectores.
+   */
+  public function listarSectores()
   {
-    try {
-      $query = $this->pdo->prepare("SELECT * FROM vw_listar_sectores");
-      $query->execute();
-      return $query->fetchAll(PDO::FETCH_ASSOC);
-    } catch (Exception $e) {
-      die($e->getMessage());
-    }
+    $sql = "SELECT * FROM vw_sectores_listar";
+    return $this->listarDatos($sql);
   }
+
 }

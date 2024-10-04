@@ -13,118 +13,136 @@ class Contrato extends Conexion
     }
 
     /**
-     * Agrega un nuevo contrato a la base de datos.
+     * Registra un nuevo contrato en la base de datos llamando a un procedimiento almacenado.
      *
-     * @param array $datos Los datos del contrato.
-     * @return bool Retorna true si el contrato se agregó correctamente, false en caso contrario.
-     */
-    public function add($datos = []): bool
-    {
-        try {
-            $status = false;
-            $query = "CALL spu_contratos_registrar(?,?,?,?,?,?,?,?,?,?,?,?)";
-            $cmd = $this->pdo->prepare($query);
-            $status = $cmd->execute(
-                array(
-                    $datos["idCliente"],
-                    $datos["idTarifario"],
-                    $datos["idSector"],
-                    $datos["idUsuarioRegistro"],
-                    $datos["direccion"],
-                    $datos["referencia"],
-                    $datos["coordenada"],
-                    $datos["fechaInicio"],
-                    $datos["fechaFin"],
-                    $datos["fechaRegistro"],
-                    $datos["fichaInstalacion"],
-                    $datos["nota"]
-                )
-            );
-            return $status;
-        } catch (Exception $e) {
-            die($e->getMessage());
-        }
-    }
-    
-    /**
-     * Obtiene todos los contratos de la base de datos.
+     * @param array $params Un array asociativo que contiene las siguientes claves:
+     *                      - 'idCliente' (int): El ID del cliente.
+     *                      - 'idTarifario' (int): El ID del tarifario.
+     *                      - 'idSector' (int): El ID del sector.
+     *                      - 'idUsuarioRegistro' (int): El ID del usuario que registra el contrato.
+     *                      - 'direccion' (string): La dirección del contrato.
+     *                      - 'referencia' (string): Una referencia para la dirección.
+     *                      - 'coordenada' (string): Las coordenadas de la ubicación.
+     *                      - 'fechaInicio' (string): La fecha de inicio del contrato.
+     *                      - 'fechaFin' (string): La fecha de fin del contrato.
+     *                      - 'fechaRegistro' (string): La fecha de registro del contrato.
+     *                      - 'fichaInstalacion' (string): El registro de instalación.
+     *                      - 'nota' (string): Cualquier nota adicional.
+     *                      - 'idUsuario' (int): El ID del usuario asociado con el contrato.
      *
-     * @return array Un array que contiene todos los contratos como arrays asociativos.
-     * @throws Exception Si ocurre un error al obtener los contratos.
+     * @return bool El resultado sera verdadero si se realiza o falso si falla.
      */
-    public function getAll(): array
+    public function registrarContrato($params = [])
     {
-        try {
-            $query = $this->pdo->prepare("CALL spu_contratos_listar()");
-            $query->execute();
-            return $query->fetchAll(PDO::FETCH_ASSOC);
-        } catch (Exception $e) {
-            die($e->getMessage());
-        }
+        $sql = "CALL spu_contratos_registrar(?,?,?,?,?,?,?,?,?,?,?,?)";
+        $values = array(
+            $params['idCliente'],
+            $params['idTarifario'],
+            $params['idSector'],
+            $params['direccion'],
+            $params['referencia'],
+            $params['coordenada'],
+            $params['fechaInicio'],
+            $params['fechaFin'],
+            $params['fechaRegistro'],
+            $params['fichaInstalacion'],
+            $params['nota'],
+            $params['idUsuario']
+        );
+        return $this->registrar($sql, $values);
     }
 
     /**
-     * Elimina de manera logica un contrato de la base de datos.
+     * Lista todos los contratos llamando al procedimiento almacenado 'vw_contratos_listar'.
      *
-     * @param array $params Los parámetros para eliminar el contrato.
-     *                      - id: El ID del contrato a eliminar.
-     * @return bool Retorna true si el contrato se elimina correctamente, false en caso contrario.
-     * @throws Exception Si ocurre un error al eliminar el contrato.
+     * @return array El conjunto de resultados de la ejecución del procedimiento almacenado.
      */
-    public function delete($params = []){
-        try {
-            $status = false;
-            $query = $this->pdo->prepare("CALL spu_contratos_eliminar(?)");
-            $status = $query->execute(array(
-                $params["id"]
-            ));
-            return $status;
-        } catch (Exception $e) {
-            die($e->getMessage());
-        }
+    public function listarContratos()
+    {
+        $sql = "SELECT * FROM vw_contratos_listar";
+        return $this->listarDatos($sql);
+    }
+
+    /**
+     * Elimina un contrato de la base de datos.
+     *
+     * Este método llama a un procedimiento almacenado para inactivar un contrato
+     * específico basado en los parámetros proporcionados.
+     *
+     * @param array $params Arreglo asociativo que contiene los siguientes elementos:
+     *                      - 'id' (int): El ID del contrato a eliminar.
+     *                      - 'idUsuario' (int): El ID del usuario que realiza la eliminación.
+     * @return mixed El resultado de la consulta a la base de datos.
+     */
+    public function eliminarContrato($params = [])
+    {
+        $sql = "CALL spu_contratos_eliminar(?,?)";
+        $values = array(
+            $params['id'],
+            $params['idUsuario']
+        );
+        return $this->registrar($sql, $values);
     }
 
     /**
      * Busca un contrato por su ID.
      *
-     * @param array $params Un array que contiene los parámetros para la búsqueda.
-     *                      - id: El ID del contrato a buscar.
-     * @return array Un array de contratos que coinciden con el ID dado.
-     * @throws Exception Si ocurre un error al ejecutar la consulta de búsqueda.
+     * Esta función ejecuta un procedimiento almacenado para buscar un contrato
+     * en la base de datos utilizando el ID proporcionado en los parámetros.
+     *
+     * @param array $params Un arreglo asociativo que contiene el ID del contrato a buscar.
+     *                      Ejemplo: ['id' => 123]
+     * @return mixed El resultado de la consulta a la base de datos.
      */
-    public function buscarId($params = []){
-        try {
-            $query = $this->pdo->prepare("CALL spu_contrato_buscar(?)");
-            $query->execute(array(
-                $params["id"]
-            ));
-            return $query->fetchAll(PDO::FETCH_ASSOC);
-        } catch (Exception $e) {
-            die($e->getMessage());
-        }
+    public function buscarContratoId($params = [])
+    {
+        $sql = "CALL spu_contrato_buscar_id(?)";
+        $values = array(
+            $params['id']
+        );
+        return $this->consultaParametros($sql, $values);
     }
-    public function obtenerFichaInstalacion($params = []){
-        try {
-            $query = $this->pdo->prepare("CALL spu_contrato_ficha_tecnica(?)");
-            $query->execute(array(
-                $params["id"]
-            ));
-            return $query->fetchAll(PDO::FETCH_ASSOC);
-        } catch (Exception $e) {
-            die($e->getMessage());
-        }
+
+    /**
+     * Busca la ficha de instalación por ID.
+     *
+     * Este método ejecuta un procedimiento almacenado para obtener la ficha técnica
+     * de un contrato basado en el ID proporcionado en los parámetros.
+     *
+     * @param array $params Un array asociativo que contiene el ID de la ficha de instalación.
+     *                      Ejemplo: ['id' => 123]
+     * @return mixed El resultado de la consulta ejecutada.
+     */
+    public function buscarFichaInstalacionId($params = [])
+    {
+        $sql = "CALL spu_fichatecnica_buscar_id(?)";
+        $values = array(
+            $params['id']
+        );
+        return $this->consultaParametros($sql, $values);
     }
-    public function guardarFichaInstalacion($params = []){
-        try {
-            $status = false;
-            $query = $this->pdo->prepare("CALL spu_guardar_ficha_tecnica(?,?)");
-            $status = $query->execute(array(
-                $params["id"],
-                $params["fichaInstalacion"]
-            ));
-            return $status;
-        } catch (Exception $e) {
-            die($e->getMessage());
-        }
+
+    /**
+     * Guarda la ficha de instalación en la base de datos.
+     *
+     * Este método ejecuta un procedimiento almacenado para guardar la ficha técnica de instalación
+     * en la base de datos utilizando los parámetros proporcionados.
+     *
+     * @param array $params Arreglo asociativo que contiene los siguientes elementos:
+     *                      - 'id' (int): El ID del contrato.
+     *                      - 'fichaInstalacion' (string): La ficha técnica de instalación.
+     *                      - 'idUsuario' (int): El ID del usuario que realiza la operación.
+     *
+     * @return mixed El resultado de la consulta a la base de datos.
+     */
+    public function guardarFichaInstalacion($params = [])
+    {
+        $sql = "CALL spu_ficha_tecnica_registrar(?,?,?)";
+        $values = array(
+            $params['id'],
+            $params['fichaInstalacion'],
+            $params['idUsuario']
+        );
+        return $this->registrar($sql, $values);
     }
 }

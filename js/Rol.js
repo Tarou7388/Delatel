@@ -30,7 +30,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   (async function () {
     try {
-      const respuesta = await fetch('../../controllers/Roles.controllers.php?operacion=getAllRol');
+      const respuesta = await fetch(`${config.HOST}app/controllers/Roles.controllers.php?operacion=getAllRol`);
       const datos = await respuesta.json();
       listarRol(datos);
       tabla();
@@ -125,7 +125,7 @@ window.addEventListener("DOMContentLoaded", () => {
       operacion: 'add',
       rol: rol.value
     };
-    fetch('../../controllers/Roles.controllers.php', {
+    fetch(`${config.HOST}app/controllers/Roles.controllers.php`, {
       method: 'POST',
       body: JSON.stringify({
         permisos: json,
@@ -391,10 +391,6 @@ window.addEventListener("DOMContentLoaded", () => {
       })
   }
 
-  document.querySelector("#btnCambiosPermisos").addEventListener('click', () => {
-    actualizarPermisos();
-  })
-
   function permisosBoton(clase) {
     const botones = document.querySelectorAll(clase);
     botones.forEach((boton) => {
@@ -405,6 +401,9 @@ window.addEventListener("DOMContentLoaded", () => {
       });
     });
   }
+  document.querySelector("#btnCambiosPermisos").addEventListener('click', () => {
+    actualizarPermisos();
+  })
 
   form.addEventListener('submit', function (event) {
     event.preventDefault();

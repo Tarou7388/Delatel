@@ -1,5 +1,8 @@
 import config from '../env.js';
 window.addEventListener('DOMContentLoaded', function () {
+  // if (permisos[0].permisos.soporte.leer != 1) {
+  //   window.location.href = `${config.HOST}views`;
+  // }
   const wisp = document.getElementById('lstWisp');
   const gpon = document.getElementById('lstGpon');
   const cable = document.getElementById('lstCable');
@@ -8,9 +11,7 @@ window.addEventListener('DOMContentLoaded', function () {
   document.getElementById('txtFecha').value = today;
   const dropdownItems = document.querySelectorAll('.list-group-item');
   const dropdownButton = document.getElementById('btnModal');
-  // if (permisos[0].permisos.soporte.leer != 1) {
-  //   window.location.href = `${config.HOST}views`;
-  // }
+  
   dropdownItems.forEach(function (item) {
     item.addEventListener('click', function () {
       const value = this.getAttribute('data-value');
@@ -34,14 +35,6 @@ window.addEventListener('DOMContentLoaded', function () {
   const checkbox2 = document.getElementById('chkCatv2');
   const checkboxText2 = document.getElementById('checkboxText2');
 
-  checkbox1.addEventListener('change', function () {
-    checkboxText1.textContent = this.checked ? 'Sí' : 'No';
-  });
-
-  checkbox2.addEventListener('change', function () {
-    checkboxText2.textContent = this.checked ? 'Sí' : 'No';
-  });
-
   function updateSections(value) {
     // Ocultar todas las secciones primero
     wisp.setAttribute('hidden', true);
@@ -57,4 +50,11 @@ window.addEventListener('DOMContentLoaded', function () {
       cable.removeAttribute('hidden');
     }
   }
+  checkbox1.addEventListener('change', function () {
+    checkboxText1.textContent = this.checked ? 'Sí' : 'No';
+  });
+
+  checkbox2.addEventListener('change', function () {
+    checkboxText2.textContent = this.checked ? 'Sí' : 'No';
+  });
 });
