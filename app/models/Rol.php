@@ -52,7 +52,7 @@ class Rol extends Conexion
    * @param array $params Parámetros para la consulta, debe incluir 'idRol'.
    * @return array Lista de permisos con los datos decodificados en formato de arreglo.
    */
-  public function listarPermisos($params = [])
+  public function listarPermisosIdRol($params = [])
   {
     $sql = "CALL spu_permisos_listar_id(?)";
     $values = array(

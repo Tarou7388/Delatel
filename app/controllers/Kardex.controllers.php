@@ -5,23 +5,21 @@ $kardex = new Kardex();
 
 if (isset($_POST['operacion'])) {
   switch ($_POST['operacion']) {
-
-    case 'add':
+    case 'registrarKardex':
       $datos = [
-        "id_producto"            => $_POST['idproducto'],
+        "idProducto"            => $_POST['idProducto'],
         "fecha"                  => $_POST['fecha'],
-        "tipo_operacion"         => $_POST['tipooperacion'],
+        "tipoOperacion"         => $_POST['tipoOperacion'],
         "motivo"                 => $_POST['motivo'],
         "cantidad"               => $_POST['cantidad'],
-        "valor_unitario_historico" => $_POST['valorunitariohistorico'],
-        "iduser_create"         => $_POST["iduser_create"]
+        "valorUnitarioHistorico" => $_POST['valorUnitarioHistorico'],
+        "idUsuario"         => $_POST["idUsuario"]
       ];
-      $estado = $kardex->add($datos);
+      $estado = $kardex->registrarKardex($datos);
       echo json_encode(["Guardado" => $estado]);
       break;
   }
 }
-
 
 if (isset($_GET["operacion"])) {
   switch ($_GET['operacion']) {
