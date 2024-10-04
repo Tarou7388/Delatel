@@ -10,19 +10,24 @@ class Servicio extends Conexion
     $this->pdo = parent::getConexion();
   }
 
-  public function add($params = [])
+  /**
+   * Registra un nuevo servicio en la base de datos.
+   *
+   * Este método llama a un procedimiento almacenado para registrar un nuevo servicio con los parámetros proporcionados.
+   *
+   * @param array $params Un array asociativo que contiene:
+   *                      - 'servicio' (string): El nombre del servicio a registrar.
+   *                      - 'idUsuario' (int): El ID del usuario que registra el servicio.
+   * @return bool El resultado sera verdadero si se realiza o falso si falla.
+   */
+  public function registrarServicio($params = [])
   {
-    try {
-      $consulta = $this->pdo->prepare("CALL spu_servicios_registrar(?,?)");
-      $consulta->execute(array(
-        $params["servicio"],
-        $params["iduser_create"]
-      ));
-      return $consulta->fetch(PDO::FETCH_ASSOC);
-    } catch (Exception $e) {
-      die($e->getMessage());
-    }
+    $sql = "CALL spu_servicio_registrar(?,?)";
+    $values = array(
+      $params['servicio'],
+      $params['idUsuario']
+    );
+    return $this->registrar($sql, $values);
   }
 
-  public function getAll() {}
 }
