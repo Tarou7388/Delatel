@@ -39,14 +39,14 @@ if (isset($_SESSION['login']) && $_SESSION['login']['estado']) {
                             <div class="card shadow-lg border-0 rounded-lg custom-margin">
                                 <div class="card-body">
                                     <div class="text-center mb-4">
-                                        <img src="./Image/Logotipo.png" class="Logo" alt="Logo">
+                                        <img src="./image/Logotipo.png" class="Logo" alt="Logo">
                                         <h3 class="mt-3 fw-normal">Iniciar sesión</h3>
                                     </div>
                                     <form id="frmLogin">
                                         <div class="form-floating mb-3">
                                             <i class="bi bi-person"></i>
                                             <input type="text" class="form-control ps-5" id="txtNomUser" placeholder="Nombre Usuario">
-                                            <label for="lblNomUser">Nombre Usuario</label>
+                                            <label for="lblNomUser">Nombre de Usuario</label>
                                         </div>
                                         <div class="form-floating mb-3 position-relative">
                                             <i class="bi bi-lock"></i>
