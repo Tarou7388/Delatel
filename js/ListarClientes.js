@@ -1,6 +1,6 @@
 import config from "../env.js";
 
-const ruta = `${config.HOST}/controllers/Cliente.controllers.php?operacion=getAll`;
+const ruta = `${config.HOST}app/controllers/Cliente.controllers.php?operacion=getAll`;
 const userid = user["idUsuario"];
 
 // if (permisos[0].permisos.inventariado.leer != 1) {

@@ -208,9 +208,6 @@ window.addEventListener("DOMContentLoaded", () => {
       });
     });
   }
-  (async () => {
-    await cargarDatos();
-  })();
 
   function validarFechas() {
     return fechaInicio.value <= fechaFin.value;
@@ -233,6 +230,9 @@ window.addEventListener("DOMContentLoaded", () => {
     slcSector.value = "0";
     slcServicio.value = "0";
   }
+  (async () => {
+    await cargarDatos();
+  })();
 
   document.querySelector("#btnRegistrar").addEventListener("click", (event) => {
     event.preventDefault();

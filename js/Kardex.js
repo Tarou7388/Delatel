@@ -1,7 +1,9 @@
 import config from '../env.js';
 
 document.addEventListener("DOMContentLoaded", function () {
-
+  if (permisos[0].permisos.inventariado.leer != 1) {
+    window.location.href = `${config.HOST}views`;
+  }
   // 1. Variables locales
   const userid = user['idUsuario'];
   const tipoMovimientoSelect = document.getElementById("slcTipomovimiento");
@@ -34,7 +36,6 @@ document.addEventListener("DOMContentLoaded", function () {
         </optgroup>
     `;
 
-  // 2. Funciones externas
   function actualizarMotivo() {
     const valor = tipoMovimientoSelect.value;
     motivoSelect.innerHTML =
@@ -105,8 +106,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-  // 3. Autoejecutables
-  (() => {
+  function cargarProductos() {
     fetch(`${config.HOST}app/controllers/Productos.controllers.php?operacion=getAll`)
       .then((response) => response.json())
       .then((data) => {
@@ -122,14 +122,13 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error("Error al obtener productos:", e);
         showToast("Ocurrió un error al cargar los productos. Por favor, inténtelo de nuevo.", "ERROR");
       });
+  }
+  (() => {
+    cargarProductos();
+    actualizarMotivo();
   })();
 
-  // 4. Funciones
   tipoMovimientoSelect.addEventListener("change", actualizarMotivo);
-
-  // Inicializar estado
-  actualizarMotivo();
-
   idproductoField.addEventListener("change", () => {
     const idproducto = idproductoField.value;
 
@@ -146,7 +145,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // 5. Eventos
   document
     .querySelector("#form-validaciones-kardex")
     .addEventListener("submit", async (event) => {
@@ -157,8 +155,4 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
 
-  // Redirigir si no tiene permiso
-  if (permisos[0].permisos.inventariado.leer != 1) {
-    window.location.href = `${config.HOST}views`;
-  }
 });

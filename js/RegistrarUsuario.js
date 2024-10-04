@@ -7,47 +7,6 @@ document.addEventListener("DOMContentLoaded", function () {
   function $(id) {
     return document.getElementById(id);
   }
-
-  // 1. Funcionalidad del input de DNI: actualiza los dropdowns según la longitud de la entrada
-  (function () {
-    const slcNacionalidad = $("slcNacionalidad");
-    const slcDocumento = $("slcDocumento");
-    const peruanoOpcion = new Option('Peruano', 'Peruano');
-    peruanoOpcion.id = 'peruanoOpcion';
-
-    $("txtNumDocumentoPersona").addEventListener('input', cambiarslc);
-
-    function cambiarslc() {
-      const length = $("txtNumDocumentoPersona").value.length;
-
-      if (length === 8) {
-        if (![...slcNacionalidad.options].some(option => option.value === 'Peruano')) {
-          slcNacionalidad.add(peruanoOpcion);
-        }
-        slcDocumento.value = 'DNI';
-        slcDocumento.disabled = true;
-        slcNacionalidad.value = 'Peruano';
-        slcNacionalidad.disabled = true;
-      } else {
-        if ([...slcNacionalidad.options].some(option => option.value === 'Peruano')) {
-          slcNacionalidad.remove(slcNacionalidad.querySelector('#peruanoOpcion').index);
-        }
-        slcDocumento.disabled = false;
-
-        if (length === 12) {
-          slcDocumento.value = 'PAS';
-        } else if (length === 10) {
-          slcDocumento.value = 'CAR';
-        } else {
-          slcDocumento.value = '';
-        }
-        slcNacionalidad.disabled = false;
-      }
-    }
-  })();
-
-  let idPersonaEncontrada = null; // Variable para almacenar el id_persona
-
   // 2. Búsqueda de persona
   $("btnBuscar").addEventListener("click", async () => {
     const dni = $("txtNumDocumentoPersona").value;
@@ -93,7 +52,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // 3. Obtener todos los roles
   (async function () {
     try {
       const respuesta = await fetch(`${config.HOST}app/controllers/Roles.controllers.php?operacion=getAllRol`);
@@ -110,7 +68,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   })();
 
-  // 4. Buscar datos de una persona en la API externa
   async function BuscarPersonaAPI(operacion, dni) {
     try {
       const respuesta = await fetch(`${config.HOST}app/controllers/Personas.controlles.php?Operacion=${operacion}&dni=${dni}`);
@@ -123,8 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
       return null;
     }
   }
-
-  // 5. Registrar persona en la base de datos
+  
   async function RegistrarPersona(dni) {
     try {
       const formData = new FormData();
@@ -152,7 +108,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // 6. Registrar usuario
   async function RegistrarUsuario(idPersona) {
     try {
       const formData = new FormData();
@@ -183,6 +138,42 @@ document.addEventListener("DOMContentLoaded", function () {
       showToast("Ocurrió un error: " + error.message, "ERROR");
     }
   }
+  (function () {
+    const slcNacionalidad = $("slcNacionalidad");
+    const slcDocumento = $("slcDocumento");
+    const peruanoOpcion = new Option('Peruano', 'Peruano');
+    peruanoOpcion.id = 'peruanoOpcion';
+
+    $("txtNumDocumentoPersona").addEventListener('input', cambiarslc);
+
+    function cambiarslc() {
+      const length = $("txtNumDocumentoPersona").value.length;
+
+      if (length === 8) {
+        if (![...slcNacionalidad.options].some(option => option.value === 'Peruano')) {
+          slcNacionalidad.add(peruanoOpcion);
+        }
+        slcDocumento.value = 'DNI';
+        slcDocumento.disabled = true;
+        slcNacionalidad.value = 'Peruano';
+        slcNacionalidad.disabled = true;
+      } else {
+        if ([...slcNacionalidad.options].some(option => option.value === 'Peruano')) {
+          slcNacionalidad.remove(slcNacionalidad.querySelector('#peruanoOpcion').index);
+        }
+        slcDocumento.disabled = false;
+
+        if (length === 12) {
+          slcDocumento.value = 'PAS';
+        } else if (length === 10) {
+          slcDocumento.value = 'CAR';
+        } else {
+          slcDocumento.value = '';
+        }
+        slcNacionalidad.disabled = false;
+      }
+    }
+  })();
 
   // 7. Envío del formulario de registro
   $("registerForm").addEventListener("submit", async (event) => {
