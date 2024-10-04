@@ -39,7 +39,7 @@ $idContrato = $_GET['idContrato'];
         <div class="mb-2">
           <div class="form-floating">
             <input type="text" class="form-control" id="txtContraseniaRepetidor" placeholder="Contraseña">
-            <label for="lblContraseña">Contraseña</label>
+            <label for="lblContraseniaRepetidor">Contraseña</label>
           </div>
         </div>
         <div class="mb-2">

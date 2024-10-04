@@ -9,8 +9,8 @@ function $(id) {
 }
 
 async function logear() {
-  const user = $("#NomUser").value;
-  const pass = $("#PassUser").value;
+  const user = $("#txtNomUser").value;
+  const pass = $("#txtPassUser").value;
 
   if (user != "" && pass != "") {
     const respuesta = await fetch(`${HOST}app/controllers/Usuarios.controllers.php?Operacion=Login&nombreUser=${user}&pass=${pass}`);
@@ -35,7 +35,7 @@ async function getPermisos(idRol) {
 // 3. Autoejecutables
 window.addEventListener("DOMContentLoaded", event => {
   // 4. Eventos
-  $("#PassUser").addEventListener("keydown", (event) => {
+  $("#txtPassUser").addEventListener("keydown", (event) => {
     if (event.keyCode === 13) {
       logear();
     }
