@@ -5,8 +5,8 @@ $contactabilidad = new Contactabilidad();
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   switch ($_GET['operacion']) {
-    case 'getPersonas':
-      echo json_encode($contactabilidad->getPersonas());
+    case 'obtenerContactos':
+      echo json_encode($contactabilidad->obtenerContactos());
       break;
   }
 }
@@ -16,8 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $datos = json_decode($json, true);
   $operacion = $datos['operacion'];
   switch ($operacion) {
-    case 'add':
-      $respuesta = $contactabilidad->add([
+    case 'registrarContacto':
+      $respuesta = $contactabilidad->registrarContacto([
         'idPersona' => $datos['idPersona'],
         'idPaquete' => $datos['idPaquete'],
         'direccion' => $datos['direccion'],

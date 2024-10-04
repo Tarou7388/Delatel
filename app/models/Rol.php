@@ -10,6 +10,14 @@ class Rol extends Conexion
     $this->pdo = parent::getConexion();
   }
 
+  /**
+   * Lista todos los roles disponibles.
+   *
+   * Esta función ejecuta una consulta SQL para obtener una lista de roles
+   * desde la vista 'vw_roles_listar'. Retorna los datos obtenidos de la consulta.
+   *
+   * @return array Lista de roles.
+   */
   public function listarRoles()
   {
     $sql = "SELECT id_rol, rol from vw_roles_listar";
@@ -58,22 +66,6 @@ class Rol extends Conexion
       }
     }
     return $resultado;
-  }
-
-  /**
-   * Busca un rol por su ID.
-   *
-   * Esta función ejecuta un procedimiento almacenado para listar los permisos
-   * asociados a un rol específico identificado por su ID.
-   *
-   * @param array $params Un arreglo asociativo que contiene el ID del rol con la clave 'idRol'.
-   * @return mixed El resultado de la consulta a la base de datos.
-   */
-  public function buscarRolId($params = [])
-  {
-    $sql = "CALL spu_permisos_listar_id(?)";
-    $value = array($params['idRol']);
-    return $this->consultaParametros($sql, $value);
   }
 
   /**

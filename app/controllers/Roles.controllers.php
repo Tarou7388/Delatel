@@ -9,21 +9,17 @@ $rol = new Rol();
 if (isset($_GET["operacion"])) {
   switch ($_GET["operacion"]) {
     case 'getAllRol':
-      $resultado  = $rol->getAllRol();
+      $resultado  = $rol->listarRoles();
       echo json_encode($resultado);
       break;
-    case 'getPermisos':
+    case 'listarPermisosIdRol':
       $datos = [
-        "rol" => $_GET['rol']
+        "idRol" => $_GET['idRol']
       ];
-      $resultado = $rol->getPermisos($datos);
-      $_SESSION['permisos'] = $resultado;
-      break;
-    case 'getRolPermisos':
-      $datos = [
-        "idRol" => $_GET["idRol"]
-      ];
-      echo json_encode($resultado = $rol->getRolPermisos($datos));
+      $resultado = $rol->listarPermisosIdRol($datos);
+      if(!isset($_SESSION['permisos'])){
+        $_SESSION['permisos'] = $resultado;
+      }
       break;
   }
 }
@@ -31,18 +27,15 @@ if (isset($_GET["operacion"])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $json = file_get_contents('php://input');
   $datos = json_decode($json, true);
-  $operacion = $datos['adicionales']['operacion'];
+  $operacion = $datos['operacion'];
   switch ($operacion) {
-    case 'add':
-      $rolDato = $datos['adicionales']['rol'];
-      $permisos = $datos['permisos'];
-      $iduser_create =$datos['iduser_create'];
+    case 'registrarRoles':
       $datosEnviar = [
-        "rol" => $rolDato,
-        "permisos" => $permisos,
-        "iduser_create" => $iduser_create
+        "rol" => $datos['rol'],
+        "permisos" => $datos['permisos'],
+        "idUsuario" => $datos['idUsuario']
       ];
-      $resultado = $rol->addRol($datosEnviar);
+      $resultado = $rol->registrarRoles($datosEnviar);
       echo json_encode(["guardado" => $resultado]);
       break;
   }
@@ -51,40 +44,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
   $json = file_get_contents('php://input');
   $datos = json_decode($json, true);
-  $operacion = $datos['adicionales']['operacion'];
+  $operacion = $datos['operacion'];
   switch ($operacion) {
-    case 'updatePermisos':
-      $rolDato = $datos['adicionales']['idRol'];
-      $permisos = $datos['permisos'];
-      $iduser_update =$datos['iduser_update'];
+    case 'actualizarPermisos':
       $datosEnviar = [
-        "idRol" => $rolDato,
-        "permisos" => $permisos,
-        "iduser_update" => $iduser_update
+        "idRol" => $datos['idRol'],
+        "permisos" => $datos['permisos'],
+        "idUsuario" => $datos['idUsuario']
       ];
-      $resultado = $rol->updatePermisos($datosEnviar);
+      $resultado = $rol->actualizarPermisos($datosEnviar);
       echo json_encode(["guardado" => $resultado]);
       break;
-    case 'updateRol':
+    case 'actualizarRol':
       if (isset($datos['id_rol'])) {
         $updateData = [
             "rol" => $datos['rol'],
             "iduser_update" => $datos['iduser_update'],
             "id_rol" => $datos['id_rol']
         ];
-        $estado = $rol->updateRol($updateData);
+        $estado = $rol->actualizarRol($updateData);
         echo json_encode(["Actualizado" => $estado]);
       } else {
         echo json_encode(["Actualizado" => false, "error" => "ID de rol no encontrado"]);
       }
       break;
-      case 'inhabilitarRol':
+      case 'eliminarRol':
         if (isset($datos['id_rol']) && isset($datos['iduser_inactive'])) {
             $inhabilitarData = [
                 "id_rol" => $datos['id_rol'],
                 "iduser_inactive" => $datos['iduser_inactive']
             ];
-            $estado = $rol->inhabilitarRol($inhabilitarData);
+            $estado = $rol->eliminarRol($inhabilitarData);
             echo json_encode(["Inhabilitado" => $estado]);
         } else {
             echo json_encode(["Inhabilitado" => false, "error" => "ID de rol o usuario no encontrado"]);

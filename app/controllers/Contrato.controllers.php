@@ -6,15 +6,15 @@ $contrato = new Contrato();
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   switch ($_GET['operacion']) {
-    case 'getAll':
-      echo json_encode($contrato->getAll());
+    case 'listarContratos':
+      echo json_encode($contrato->listarContratos());
       break;
-    case 'getById':
-      $resultado = $contrato->buscarId(["id" => $_GET['id']]);
+    case 'buscarContratoId':
+      $resultado = $contrato->buscarContratoId(["id" => $_GET['id']]);
       echo json_encode($resultado);
       break;
     case 'obtenerFichaInstalacion':
-      $resultado = $contrato->obtenerFichaInstalacion(["id" => $_GET['id']]);
+      $resultado = $contrato->buscarFichaInstalacionId(["id" => $_GET['id']]);
       echo json_encode($resultado);
       break;
   }
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $datos = json_decode($json, true);
   $operacion = $datos['operacion'];
   switch ($operacion) {
-    case 'add':
+    case 'registrarContrato':
       $datosEnviar = [
         "idCliente"           => $datos['parametros']['idCliente'],
         "idTarifario"         => $datos['parametros']['idTarifario'],
@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         "fichaInstalacion"    => json_encode($datos['parametros']['fichaInstalacion']),
         "nota"                => $datos['parametros']['nota']
       ];
-      $resultado = $contrato->add($datosEnviar);
+      $resultado = $contrato->registrarContrato($datosEnviar);
       echo json_encode(["guardado" => $resultado]);
       break;
   }
@@ -51,8 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
   $datos = json_decode($json, true);
   $operacion = $datos['operacion'];
   switch ($operacion) {
-    case 'delete':
-      $resultado = $contrato->delete($datos['parametros']);
+    case 'eliminarContrato':
+      $resultado = $contrato->eliminarContrato($datos['parametros']);
       echo json_encode(["eliminado" => $resultado]);
       break;
     case 'guardarFichaInstalacion':

@@ -1,13 +1,12 @@
 <?php
 session_start();
 
-
-require_once '../Models/Usuarios.php';
+require_once '../models/Usuarios.php';
 
 $usuario = new Usuario();
 
 if (isset($_GET["Operacion"])) {
-    if ($_GET["Operacion"] == "Login") {
+    if ($_GET["Operacion"] == "login") {
         $resultado = $usuario->login(["nombreUser" => $_GET["nombreUser"]]);
         $Login = [
             "estado" => false,
@@ -31,20 +30,20 @@ if (isset($_GET["Operacion"])) {
         $response = $Login;
         echo json_encode($response);
     }
-    if ($_GET["Operacion"] == "CerrarSesion") {
+    if ($_GET["Operacion"] == "cerrarSesion") {
         session_unset();
         session_destroy();
-        header("Location: http://localhost/delatel");
+        header("Location: http://localhost/Delatel");
     }
 
-    if ($_GET["Operacion"] == "getAll") {
-        $resultado = $usuario->getUser();
+    if ($_GET["Operacion"] == "listarUsuarios") {
+        $resultado = $usuario->listarUsuarios();
         echo json_encode($resultado);
     }
 }
 
 if (isset($_POST["Operacion"])) {
-    if ($_POST["Operacion"] == "Registrar") {
+    if ($_POST["Operacion"] == "registrarUsuarios") {
         $contrasenia = password_hash($_POST["pass"], PASSWORD_BCRYPT);
         $data = [
             "idPersona" => $_POST["idPersona"],
@@ -52,32 +51,9 @@ if (isset($_POST["Operacion"])) {
             "pass" => $contrasenia,
             "iduser_create"         => $_POST["iduser_create"]
         ];
-        $resultado = $usuario->registrar($data);
+        $resultado = $usuario->registrarUsuarios($data);
         echo json_encode(["guardado" => $resultado]);
     }
 }
 
-//EN TESTEO
-if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
-    $inputData = file_get_contents('php://input');
-    $data = json_decode($inputData, true);
-
-
-    if (isset($data['identificador']) && isset($data['iduser_update'])) {
-        $datos = [
-            "identificador"   => $data['identificador'],
-            "nombre"         => $data['nombre'],
-            "apellidos"      => $data['apellidos'],
-            "email"          => $data['email'],
-            "telefono"       => $data['telefono'],
-            "direccion"      => $data['direccion'],
-            "referencia"     => $data['referencia'],
-            "coordenadas"    => $data['coordenadas'],
-            "iduser_update"  => $data['iduser_update']
-        ];
-
-        $estado = $cliente->update($datos);
-        echo json_encode(["Actualizado" => $estado]);
-        return;
-    }
-}
+?>

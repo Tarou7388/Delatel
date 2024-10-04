@@ -5,13 +5,13 @@ $cliente = new Cliente();
 
 if (isset($_GET['operacion'])) {
   switch ($_GET['operacion']) {
-    case 'getByDoc':
+    case 'buscarClienteDoc':
       $valor = $_GET['numDoc'];
       if ($valor) {
         if (strlen($valor) == 9 || strlen($valor) == 8) {
-          $resultado = $cliente->getByPersona(["numDoc" => $valor]);
+          $resultado = $cliente->buscarClienteNumdoc(["numDoc" => $valor]);
         } elseif (strlen($valor) == 11) {
-          $resultado = $cliente->getByEmpresa(["numDoc" => $valor]);
+          $resultado = $cliente->buscarCLienteRuc(["numDoc" => $valor]);
         } else {
           $resultado = ["error" => "Valor no válido"];
         }
@@ -21,7 +21,7 @@ if (isset($_GET['operacion'])) {
       echo json_encode($resultado);
       break;
     case 'getAll':
-      $resultado = $cliente->getAll();
+      $resultado = $cliente->listarClientes();
       echo json_encode($resultado);
       break;
   }
@@ -29,54 +29,51 @@ if (isset($_GET['operacion'])) {
 
 if (isset($_POST['operacion'])) {
   switch ($_POST['operacion']) {
-    case 'add':
+    case 'registrarCliente':
       $datos = [
         "idPersona"     => $_POST['idPersona'],
-        "idempresa"     => $_POST['idempresa'],
+        "idEmpresa"     => $_POST['idEmpresa'],
         "direccion"     => $_POST['direccion'],
         "referencia"    => $_POST['referencia'],
-        "iduser_create" => $_POST['iduser_create'],
-        "coordenadas" => $_POST['coordenadas']
+        "idUsuario"     => $_POST['idUsuario'],
+        "coordenadas"   => $_POST['coordenadas']
       ];
-      $estado = $cliente->add($datos);
+      $estado = $cliente->registrarCliente($datos);
       echo json_encode(["Guardado" => $estado]);
       break;
   }
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
-  $inputData = file_get_contents('php://input');
-  $data = json_decode($inputData, true);
+  $json = file_get_contents('php://input');
+  $datos = json_decode($json, true);
+  $operacion = $datos['operacion'];
 
+  switch ($operacion) {
+    case 'actualizarCliente':
+      $datos = [
+        "identificador"   => $datos['identificador'],
+        "nombre"          => $datos['nombre'],
+        "apellidos"       => $datos['apellidos'],
+        "email"           => $datos['email'],
+        "telefono"        => $datos['telefono'],
+        "direccion"       => $datos['direccion'],
+        "referencia"      => $datos['referencia'],
+        "coordenadas"     => $datos['coordenadas'],
+        "idUsuario"       => $datos['idUsuario']
+      ];
 
-  if (isset($data['identificador']) && isset($data['iduser_update'])) {
-    $datos = [
-      "identificador"   => $data['identificador'],
-      "nombre"         => $data['nombre'],
-      "apellidos"      => $data['apellidos'],
-      "email"          => $data['email'],
-      "telefono"       => $data['telefono'],
-      "direccion"      => $data['direccion'],
-      "referencia"     => $data['referencia'],
-      "coordenadas"    => $data['coordenadas'],
-      "iduser_update"  => $data['iduser_update']
-    ];
+      $estado = $cliente->actualizarClienteNumdoc($datos);
+      echo json_encode(["Actualizado" => $estado]);
+      break;
+    case 'eliminarCliente':
+      $datosDelete = [
+        "idCliente"   => $datos['idCliente'],
+        "idUsuario" => $datos['idUsuario']
+      ];
 
-    $estado = $cliente->update($datos);
-    echo json_encode(["Actualizado" => $estado]);
-    return;
+      $estado = $cliente->eliminarClienteNumdoc($datosDelete);
+      echo json_encode(["Eliminado" => $estado]);
+      break;
   }
-
-  if (isset($data['identificador']) && isset($data['iduser_inactive'])) {
-    $datosDelete = [
-      "identificador"   => $data['identificador'],
-      "iduser_inactive" => $data['iduser_inactive']
-    ];
-
-    $estado = $cliente->delete($datosDelete);
-    echo json_encode(["Eliminado" => $estado]);
-    return;
-  }
-
-  echo json_encode(["error" => "Datos insuficientes para la operación"]);
 }
