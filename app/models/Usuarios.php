@@ -12,45 +12,59 @@ class Usuario extends Conexion
     $this->pdo = parent::getConexion();
   }
 
-  public function login($data = [])
+  /**
+   * Inicia sesión de un usuario.
+   *
+   * Este método llama al procedimiento almacenado `spu_usuarios_login` 
+   * para autenticar a un usuario basado en el nombre de usuario proporcionado.
+   *
+   * @param array $params Arreglo asociativo que contiene el nombre de usuario 
+   *                      bajo la clave 'nombreUser'.
+   * @return mixed El resultado de la consulta al procedimiento almacenado.
+   */
+  public function login($params = [])
   {
-    try {
-      $consulta = $this->pdo->prepare("CALL spu_login_usuarios(?)");
-      $consulta->execute(
-        array($data['nombreUser'])
-      );
+    $sql = "CALL spu_usuarios_login(?)";
+    $values = array($params['nombreUser']);
+    return $this->consultaParametros($sql, $values);
+  }
 
-      return $consulta->fetch(PDO::FETCH_ASSOC);
-    } catch (Exception $e) {
-      die($e->getMessage());
-    }
-  }
-  public function registrar($data = []): bool
+  /**
+   * Registra un nuevo usuario en la base de datos.
+   *
+   * Este método llama al procedimiento almacenado `spu_usuarios_registrar` para registrar un nuevo usuario.
+   *
+   * @param array $params Arreglo asociativo con los siguientes índices:
+   *                      - 'idPersona' (int): ID de la persona.
+   *                      - 'nombreUser' (string): Nombre de usuario.
+   *                      - 'pass' (string): Contraseña del usuario.
+   *                      - 'iduser_create' (int): ID del usuario que crea el nuevo registro.
+   * @return bool El resultado sera verdadero si se realiza o falso si falla.
+   */
+  public function registrarUsuarios($params = [])
   {
-    try {
-      $status = false;
-      $consulta = $this->pdo->prepare("CALL spu_usuarios_registrar(?,?,?,?)");
-      $status = $consulta->execute(
-        array(
-          $data['idPersona'],
-          $data['nombreUser'],
-          $data['pass'],
-          $data["iduser_create"]
-        )
-      );
-      return $status;
-    } catch (Exception $e) {
-      die($e->getMessage());
-    }
+    $sql = "CALL spu_usuarios_registrar(?,?,?,?)";
+    $values = array(
+      $params['idPersona'],
+      $params['nombreUser'],
+      $params['pass'],
+      $params['iduser_create']
+    );
+    return $this->registrar($sql, $values);
   }
-  public function getUser()
+
+  /**
+   * Método para listar todos los usuarios.
+   *
+   * Este método ejecuta una consulta SQL para obtener todos los registros
+   * de la vista 'vw_usuarios_listar' y devuelve los datos obtenidos.
+   *
+   * @return array Un arreglo con los datos de los usuarios.
+   */
+  public function listarUsuarios()
   {
-    try {
-      $consulta = $this->pdo->prepare("SELECT * FROM vw_usuarios");
-      $consulta->execute();
-      return $consulta->fetchAll(PDO::FETCH_ASSOC);
-    } catch (Exception $e) {
-      return $e->getMessage();
-    }
+    $sql = "SELECT * FROM vw_usuarios_listar";
+    return $this->listarDatos($sql);
   }
+
 }
