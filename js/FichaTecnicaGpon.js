@@ -8,6 +8,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const txtPrecioConector = document.getElementById("txtPrecioConector");
   const txtCostoConector = document.getElementById("txtCostoConector");
 
+  var today = new Date().toISOString().split('T')[0];
+
   let tipoPaquete = "";
   let numeroSintotizadores = 0;
   let numeroRepetidores = 0;
@@ -361,9 +363,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   });
-});
-
-window.addEventListener('DOMContentLoaded', function () {
-  var today = new Date().toISOString().split('T')[0];
   document.getElementById('txtFecha').value = today;
 });
+
