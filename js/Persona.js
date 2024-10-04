@@ -21,10 +21,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const slcNacionalidad = document.getElementById("slcNacionalidad");
   const txtDireccion = document.getElementById("txtDireccionPersona");
   const txtReferencia = document.getElementById("txtReferenciaPersona");
-  const btnCancelarPersona = document.getElementById("btnCancelarPersona");
   const btnBuscar = document.getElementById("btnBuscar");
 
-  
 
   // 3. Funciones externas
   function toggleForms(value) {

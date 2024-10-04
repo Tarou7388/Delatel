@@ -26,19 +26,29 @@ window.addEventListener("DOMContentLoaded", () => {
       btnActualizar.style.display = 'none';
     }
   }
+  
+  function permisosBoton(clase) {
+    const botones = document.querySelectorAll(clase);
+    botones.forEach((boton) => {
+      boton.addEventListener("click", async (event) => {
+        const idRol = Number(event.target.dataset.idrol);
+        tablaModal(idRol);
+        idRolActual = idRol;
+      });
+    });
+  }
   rol.addEventListener('input', evaluarCampo); 
 
-  (async function () {
+  const obtenerRoles = async () => {
     try {
       const respuesta = await fetch(`${config.HOST}app/controllers/Roles.controllers.php?operacion=getAllRol`);
       const datos = await respuesta.json();
-      listarRol(datos);
-      tabla();
+      listarRol(datos);  // Función que procesa y muestra los roles
+      tabla();           // Función que inicializa la tabla
+    } catch (e) { 
+      console.error(e);
     }
-    catch (e) {
-      console.error(e)
-    }
-  })();
+  };
 
   async function tabla() {
     $(tablaRol).DataTable({
@@ -356,7 +366,6 @@ window.addEventListener("DOMContentLoaded", () => {
     document.querySelector("#chkEliminar").disabled = !leerActivas; 
   }
 
-
   async function actualizarPermisos() {
     const permisosActualizados = {};
     const checkboxes = tbodyModal.querySelectorAll('input[type="checkbox"]');
@@ -391,16 +400,10 @@ window.addEventListener("DOMContentLoaded", () => {
       })
   }
 
-  function permisosBoton(clase) {
-    const botones = document.querySelectorAll(clase);
-    botones.forEach((boton) => {
-      boton.addEventListener("click", async (event) => {
-        const idRol = Number(event.target.dataset.idrol);
-        tablaModal(idRol);
-        idRolActual = idRol;
-      });
-    });
-  }
+  (async function iniciarAplicacionRoles() {
+    await obtenerRoles();
+  })();
+  
   document.querySelector("#btnCambiosPermisos").addEventListener('click', () => {
     actualizarPermisos();
   })

@@ -1,9 +1,9 @@
 import config from '../env.js';
+
 window.addEventListener('DOMContentLoaded', function () {
   const slcPlanes = document.querySelector("#slcPlanes");
   const txtPrecio = document.querySelector("#txtPrecioContactabilidad");
 
-  // 2. Funciones externas
   const fetchPlanes = async () => {
     const respuesta = await fetch(`${config.HOST}app/controllers/Contactabilidad.controllers.php?operacion=getPlanes`);
     return await respuesta.json();
@@ -14,8 +14,7 @@ window.addEventListener('DOMContentLoaded', function () {
     return await response.json();
   };
 
-  // 3. Autoejecutables
-  (async () => {
+  const cargarPlanes = async () => {
     const dataPlanes = await fetchPlanes();
     dataPlanes.forEach((paquete) => {
       const option = document.createElement("option");
@@ -24,9 +23,9 @@ window.addEventListener('DOMContentLoaded', function () {
       option.textContent = paquete.nombre;
       slcPlanes.appendChild(option);
     });
-  })();
+  };
 
-  (async () => {
+  const cargarPersonas = async () => {
     const dataPersonas = await fetchPersonas();
     const tbody = document.querySelector("#listarPersonasContactabilidad tbody");
 
@@ -58,15 +57,24 @@ window.addEventListener('DOMContentLoaded', function () {
         { width: "10%", targets: 5 },
       ]
     });
-  })();
+  };
 
-  slcPlanes.addEventListener("change", function () {
-    const selectedValue = slcPlanes.value;
-    if (selectedValue) {
-      const [id, tipo_paquete, precio] = selectedValue.split("-");
-      txtPrecio.value = precio;
-    } else {
-      txtPrecio.value = "";
-    }
-  });
+  const gestionarCambioPlan = () => {
+    slcPlanes.addEventListener("change", function () {
+      const selectedValue = slcPlanes.value;
+      if (selectedValue) {
+        const [id, tipo_paquete, precio] = selectedValue.split("-");
+        txtPrecio.value = precio;
+      } else {
+        txtPrecio.value = "";
+      }
+    });
+  };
+
+  // Función autoejecutable principal que llama a las otras funciones
+  (async function iniciarAplicacion() {
+    await cargarPlanes();
+    await cargarPersonas();
+    gestionarCambioPlan();
+  })();
 });

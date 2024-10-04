@@ -121,6 +121,7 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     }
   }
+  
   async function cargarDatos() {
     const dataSectores = await fetchSectores();
     dataSectores.forEach((sector) => {
@@ -209,10 +210,6 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  function validarFechas() {
-    return fechaInicio.value <= fechaFin.value;
-  }
-
   async function validarCampos() {
     return !(dni.value === "" || nombre.value === "" || fechaInicio.value === "" || fechaFin.value === "" || precio.value === "" || direccion.value === "" || sector.value === "" || referencia.value === "" || coordenada.value === "" || slcSector.value === "0" || slcServicio.value === "0");
   }
@@ -230,6 +227,11 @@ window.addEventListener("DOMContentLoaded", () => {
     slcSector.value = "0";
     slcServicio.value = "0";
   }
+
+  function validarFechas() {
+    return fechaInicio.value <= fechaFin.value;
+  }
+
   (async () => {
     await cargarDatos();
   })();

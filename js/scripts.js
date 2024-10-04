@@ -11,7 +11,7 @@ window.addEventListener('DOMContentLoaded', event => {
     }
 
      const togglePassword = document.getElementById('togglePassword');
-     const passwordInput = document.getElementById('PassUser');
+     const passwordInput = document.getElementById('txtPassUser');
      const eyeIcon = document.getElementById('eyeIcon');
 
      togglePassword.addEventListener('click', function () {

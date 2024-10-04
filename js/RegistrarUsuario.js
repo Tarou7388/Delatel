@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  (async function () {
+  const obtenerRoles = async () => {
     try {
       const respuesta = await fetch(`${config.HOST}app/controllers/Roles.controllers.php?operacion=getAllRol`);
       if (!respuesta.ok) {
@@ -61,12 +61,12 @@ document.addEventListener("DOMContentLoaded", function () {
       const data = await respuesta.json();
       data.forEach(element => {
         const option = new Option(element.rol, element.id);
-        $("slcRol").add(option);
+        $("slcRol").add(option); // Agregar opciones al select de roles
       });
     } catch (error) {
       console.error("Error al cargar los roles:", error);
     }
-  })();
+  };
 
   async function BuscarPersonaAPI(operacion, dni) {
     try {
@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
       return null;
     }
   }
-  
+
   async function RegistrarPersona(dni) {
     try {
       const formData = new FormData();
@@ -138,7 +138,8 @@ document.addEventListener("DOMContentLoaded", function () {
       showToast("Ocurrió un error: " + error.message, "ERROR");
     }
   }
-  (function () {
+  
+  const configurarSelectsDocumento = () => {
     const slcNacionalidad = $("slcNacionalidad");
     const slcDocumento = $("slcDocumento");
     const peruanoOpcion = new Option('Peruano', 'Peruano');
@@ -173,9 +174,13 @@ document.addEventListener("DOMContentLoaded", function () {
         slcNacionalidad.disabled = false;
       }
     }
+  };
+
+  (async function iniciarAplicacion() {
+    await obtenerRoles();          
+    configurarSelectsDocumento();  
   })();
 
-  // 7. Envío del formulario de registro
   $("registerForm").addEventListener("submit", async (event) => {
     event.preventDefault();
 
