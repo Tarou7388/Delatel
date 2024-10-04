@@ -1,6 +1,6 @@
 
 const config = {
-    HOST: "http://localhost/DELATEL/"
+    HOST: "http://localhost/Delatel/"
 };
 
 export default config;

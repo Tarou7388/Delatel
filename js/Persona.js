@@ -1,7 +1,10 @@
 import config from "../env.js";
 
 document.addEventListener("DOMContentLoaded", function () {
-  // 1. Variables locales
+  // if (!permisos[0].permisos.personas.leer) {
+  //   window.location.href = `${config.HOST}views`;
+  // }
+
   const userid = JSON.stringify(user["idUsuario"]);
   const slcServicio = document.getElementById("slcServicio");
   const slcChangeRegistro = document.getElementById("slcChangeRegistro");
@@ -21,10 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const btnCancelarPersona = document.getElementById("btnCancelarPersona");
   const btnBuscar = document.getElementById("btnBuscar");
 
-  // 2. Comprobación de permisos
-  // if (!permisos[0].permisos.personas.leer) {
-  //   window.location.href = `${config.HOST}views`;
-  // }
+  
 
   // 3. Funciones externas
   function toggleForms(value) {
@@ -125,10 +125,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // 4. Inicialización
   toggleForms(slcChangeRegistro.value);
 
-  (async () => {
+  function manejarDocumentoNacionalidad() {
     const peruanoOpcion = new Option('Peruano', 'Peruano');
     peruanoOpcion.id = 'peruanoOpcion';
 
@@ -160,9 +159,8 @@ document.addEventListener("DOMContentLoaded", function () {
         slcNacionalidad.disabled = false;
       }
     }
-  })();
-
-  (async () => {
+  }
+  async function cargarPaquetes() {
     const response = await fetch(`${config.HOST}app/controllers/paquetes.controllers.php?operacion=getAll`);
     const data = await response.json();
     data.forEach((paquetes) => {
@@ -172,6 +170,14 @@ document.addEventListener("DOMContentLoaded", function () {
       option.textContent = paquetes.nombre;
       slcServicio.appendChild(option);
     });
+  }
+
+  (() => {
+    manejarDocumentoNacionalidad();
+  })();
+
+  (async () => {
+    await cargarPaquetes();
   })();
 
   $(".select2me").select2({
@@ -179,12 +185,10 @@ document.addEventListener("DOMContentLoaded", function () {
     placeholder: "Seleccione Servicio",
     allowClear: true,
   });
-
   $('.select2me').parent('div').children('span').children('span').children('span').css('height', ' calc(3.5rem + 2px)');
   $('.select2me').parent('div').children('span').children('span').children('span').children('span').css('margin-top', '18px');
   $('.select2me').parent('div').find('label').css('z-index', '1');
 
-  // 5. Eventos
   slcChangeRegistro.addEventListener("change", () => {
     const valor = slcChangeRegistro.value;
     toggleForms(valor);

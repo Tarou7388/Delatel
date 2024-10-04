@@ -391,10 +391,6 @@ window.addEventListener("DOMContentLoaded", () => {
       })
   }
 
-  document.querySelector("#btnCambiosPermisos").addEventListener('click', () => {
-    actualizarPermisos();
-  })
-
   function permisosBoton(clase) {
     const botones = document.querySelectorAll(clase);
     botones.forEach((boton) => {
@@ -405,6 +401,9 @@ window.addEventListener("DOMContentLoaded", () => {
       });
     });
   }
+  document.querySelector("#btnCambiosPermisos").addEventListener('click', () => {
+    actualizarPermisos();
+  })
 
   form.addEventListener('submit', function (event) {
     event.preventDefault();
