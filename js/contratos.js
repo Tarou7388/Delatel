@@ -16,17 +16,17 @@ window.addEventListener("DOMContentLoaded", () => {
   let idCliente = 0;
 
   const fetchSectores = async () => {
-    const response = await fetch(`${config.HOST}app/controllers/sectores.controllers.php?operacion=getAll`);
+    const response = await fetch(`${config.HOST}app/controllers/Sectores.controllers.php?operacion=getAll`);
     return await response.json();
   };
 
   const fetchPaquetes = async () => {
-    const response = await fetch(`${config.HOST}app/controllers/paquetes.controllers.php?operacion=getAll`);
+    const response = await fetch(`${config.HOST}app/controllers/Paquetes.controllers.php?operacion=getAll`);
     return await response.json();
   };
 
   const fetchContratos = async () => {
-    const response = await fetch(`${config.HOST}app/controllers/contrato.controllers.php?operacion=getAll`);
+    const response = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=getAll`);
     return await response.json();
   };
 
