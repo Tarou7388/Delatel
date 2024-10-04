@@ -104,8 +104,8 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   async function eliminar(idContrato) {
-    if (ask("¿Desea eliminar este contrato?")) {
-      const response = await fetch(`${config.HOST}app/controllers/contrato.controllers.php`, {
+    if (await ask("¿Desea eliminar este contrato?")) {
+      const response = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php`, {
         method: "PUT",
         body: JSON.stringify({
           operacion: "delete",
@@ -249,7 +249,6 @@ window.addEventListener("DOMContentLoaded", () => {
     precio.value = precioServicio;
   });
 
-  // Inicialización de Select2
   $("#slcSector").select2({
     theme: "bootstrap-5",
     placeholder: "Seleccione Sectores",
