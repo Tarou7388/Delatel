@@ -6,22 +6,26 @@ require_once "../models/Sector.php";
 
 $sectores = new Sector();
 
-if (isset($_POST["operacion"]) && $_POST["operacion"] == "add") {
-    $datos = [
-        "id_distrito"   => $_POST["id_distrito"],
-        "sector"        => $_POST["sector"],
-        "iduser_create" => $_POST["iduser_create"]
-    ];
+if (isset($_POST["operacion"])) {
+	switch ($_POST["operacion"]) {
+		case "registrarSector":
+			$datos = [
+				"id_distrito"   => $_POST["id_distrito"],
+				"sector"        => $_POST["sector"],
+				"iduser_create" => $_POST["iduser_create"]
+			];
 
-    $resultado = $sectores->add($datos);
-    echo json_encode(["guardado" => $resultado]);
-    exit;
+			$resultado = $sectores->registrarSector($datos);
+			echo json_encode(["guardado" => $resultado]);
+			break;
+	}
 }
 
 if (isset($_GET["operacion"])) {
-    if ($_GET["operacion"] == "getAll") {
-        $resultado = $sectores->getAll();
-        echo json_encode($resultado);
-        exit;
-    }
+	switch ($_GET["operacion"]) {
+		case "listarSectores":
+			$resultado = $sectores->listarSectores();
+			echo json_encode($resultado);
+			break;
+	}
 }

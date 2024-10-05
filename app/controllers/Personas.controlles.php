@@ -5,11 +5,10 @@ require_once '../models/Persona.php';
 $persona = new Persona();
 $token = 'apis-token-10446.A9VxJVP7d-7yqW4oWAqbRdhIus9mMsfb';
 
-if (isset($_GET["Operacion"])) {
-    switch ($_GET['Operacion']) {
-        case 'getapi':
+if (isset($_GET["operacion"])) {
+    switch ($_GET['operacion']) {
+        case 'obtenerDni':
             if (!empty($_GET['dni'])) {
-
                 $dni = urlencode($_GET['dni']);
                 $url = "https://api.apis.net.pe/v2/reniec/dni?numero=$dni";
                 $context = stream_context_create(['http' => ['header' => "Authorization: Bearer $token"]]);
@@ -18,8 +17,7 @@ if (isset($_GET["Operacion"])) {
                 echo json_encode(['error' => 'Número de DNI no proporcionado']);
             }
             break;
-
-        case 'getapiruc':
+        case 'obtenerRuc':
             if (!empty($_GET['ruc'])) {
                 $ruc = urlencode($_GET['ruc']);
                 $url = "https://api.apis.net.pe/v2/sunat/ruc/full?numero=$ruc";
@@ -29,21 +27,20 @@ if (isset($_GET["Operacion"])) {
                 echo json_encode(['error' => 'RUC incorrecto']);
             }
             break;
-
-        case 'siExiste':
-            if (!empty($_GET['DNI'])) {
-                $resultado = $persona->VerificarRegs(['DNI' => $_GET['DNI']]);
+        case 'buscarPersonaDni':
+            if (!empty($_GET['dni'])) {
+                $resultado = $persona->buscarPersonaDni(['dni' => $_GET['dni']]);
                 echo json_encode($resultado);
             }
             break;
-
         default:
             echo json_encode(['error' => 'Operación no válida']);
+            break;
     }
 }
 
-if (isset($_POST["Operacion"])) {
-    if ($_POST["Operacion"] == "Registrar") {
+if (isset($_POST["operacion"])) {
+    if ($_POST["operacion"] == "registrarPersona") {
         $datos = [
             "tipoDoc"               => $_POST["tipoDoc"],
             "nroDoc"                => $_POST["nroDoc"],
@@ -52,9 +49,9 @@ if (isset($_POST["Operacion"])) {
             "telefono"              => $_POST["telefono"],
             "nacionalidad"          => $_POST["nacionalidad"],
             "email"                 => $_POST["email"],
-            "iduser_create"         => $_POST["iduser_create"]
+            "idUsuario"         => $_POST["idUsuario"]
         ];
-        $resultado = $persona->registrar($datos);
+        $resultado = $persona->registrarPersona($datos);
         echo json_encode($resultado);
     }
 }

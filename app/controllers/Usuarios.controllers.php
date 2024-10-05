@@ -5,8 +5,8 @@ require_once '../models/Usuarios.php';
 
 $usuario = new Usuario();
 
-if (isset($_GET["Operacion"])) {
-    if ($_GET["Operacion"] == "login") {
+if (isset($_GET["operacion"])) {
+    if ($_GET["operacion"] == "login") {
         $resultado = $usuario->login(["nombreUser" => $_GET["nombreUser"]]);
         $Login = [
             "estado" => false,
@@ -27,29 +27,28 @@ if (isset($_GET["Operacion"])) {
         } else {
             $Login["mensaje"] = "No existe";
         }
-        $response = $Login;
-        echo json_encode($response);
+        echo json_encode($Login);
     }
-    if ($_GET["Operacion"] == "cerrarSesion") {
+    if ($_GET["operacion"] == "cerrarSesion") {
         session_unset();
         session_destroy();
         header("Location: http://localhost/Delatel");
     }
 
-    if ($_GET["Operacion"] == "listarUsuarios") {
+    if ($_GET["operacion"] == "listarUsuarios") {
         $resultado = $usuario->listarUsuarios();
         echo json_encode($resultado);
     }
 }
 
-if (isset($_POST["Operacion"])) {
-    if ($_POST["Operacion"] == "registrarUsuarios") {
-        $contrasenia = password_hash($_POST["pass"], PASSWORD_BCRYPT);
+if (isset($_POST["operacion"])) {
+    if ($_POST["operacion"] == "registrarUsuarios") {
+        $clave = password_hash($_POST["clave"], PASSWORD_BCRYPT);
         $data = [
             "idPersona" => $_POST["idPersona"],
-            "nombreUser" => $_POST["nombreUser"],
-            "pass" => $contrasenia,
-            "iduser_create"         => $_POST["iduser_create"]
+            "nombreUsuario" => $_POST["nombreUsuario"],
+            "clave" => $clave,
+            "idUsuario"         => $_POST["idUsuario"]
         ];
         $resultado = $usuario->registrarUsuarios($data);
         echo json_encode(["guardado" => $resultado]);

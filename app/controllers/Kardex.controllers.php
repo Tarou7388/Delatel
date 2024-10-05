@@ -23,17 +23,17 @@ if (isset($_POST['operacion'])) {
 
 if (isset($_GET["operacion"])) {
   switch ($_GET['operacion']) {
-    case "getAll":
-      $resultado = $kardex->getAll();
+    case "listarKardex":
+      $resultado = $kardex->listarKardex();
       echo json_encode($resultado);
       break;
 
-    case "obtenerStock":
-      echo json_encode($kardex->getStockById(["id_producto" => $_GET['id_producto']]));
+    case "buscarStockId":
+      echo json_encode($kardex->buscarStockId(["idProducto" => $_GET['idProducto']]));
       break;
 
     case "obtenerProducto":
-      echo json_encode($kardex->getbyidProducto(["id_producto" => $_GET['id_producto']]));
+      echo json_encode($kardex->buscarProductoId(["id_producto" => $_GET['id_producto']]));
       break;
   }
 }

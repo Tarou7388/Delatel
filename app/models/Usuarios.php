@@ -47,8 +47,8 @@ class Usuario extends Conexion
     $values = array(
       $params['idPersona'],
       $params['nombreUser'],
-      $params['pass'],
-      $params['iduser_create']
+      $params['clave'],
+      $params['idUsuario']
     );
     return $this->registrar($sql, $values);
   }
