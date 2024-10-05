@@ -14,7 +14,7 @@
 
   <div class="card mb-4">
     <div class="card-header">
-      Complete los Datos
+      <i class="fas fa-table me-1"></i> Complete los Datos del Soporte 
     </div>
     <div class="card-body">
       <form action="" id="frmSoporteMovil" autocomplete="off">
@@ -25,22 +25,22 @@
             <div class="input-group">
               <div class="form-floating">
                 <input type="tel" class="form-control" maxlength="11" minlength="11" pattern="[0-11]+" id="txtNrodocumento" placeholder="Número de Documento" autofocus required>
-                <label for="lblNrodocumento">Número de Documento</label>
+                <label for="txtNrodocumento">Número de Documento</label>
               </div>
-              <button class="input-group-text btn btn-secondary" type="button" id="btnNrodocumento"><i class="fa-solid fa-magnifying-glass"></i></button>
+              <button class="input-group-text btn btn-primary" type="button" id="btnNrodocumento"><i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
           </div>
 
           <div class="col-md">
             <div class="form-floating">
               <input type="text" class="form-control" id="txtCliente" placeholder="Cliente" disabled>
-              <label for="lblCliente">Cliente</label>
+              <label for="txtCliente">Cliente</label>
             </div>
           </div>
 
           <div class="col-md">
             <div class="form-floating">
-              <button id="btnModal" type="button" class="btn btn-primary w-100 py-3" data-bs-toggle="modal" data-bs-target="#exampleModal">Seleccionar</button>
+              <button id="btnModal" type="button" class="btn btn-info w-100 py-3" data-bs-toggle="modal" data-bs-target="#exampleModal">Seleccionar</button>
             </div>
           </div>
 
@@ -89,21 +89,21 @@
                 <div class="col-md">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="txtBase" placeholder="Base" required>
-                    <label for="lblBase">Base</label>
+                    <label for="txtBase">Base</label>
                   </div>
                 </div>
 
                 <div class="col-md">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="txtIp" placeholder="IP" required>
-                    <label for="lblIp">IP</label>
+                    <label for="txtIp">IP</label>
                   </div>
                 </div>
 
                 <div class="col-md">
                   <div class="form-floating">
                     <input type="number" class="form-control" id="txtSenial" placeholder="Señal" required>
-                    <label for="lblSenial">Señal</label>
+                    <label for="txtSenial">Señal</label>
                   </div>
                 </div>
               </div>
@@ -113,7 +113,7 @@
                 <div class="col-md">
                   <div class="form-floating">
                     <textarea type="text" class="form-control" id="txtaEstadoInicial" placeholder="Estado Inicial" style="height: 100px" required></textarea>
-                    <label for="lblEstadoInicial">Estado Inicial</label>
+                    <label for="txtEstadoInicial">Estado Inicial</label>
                   </div>
                 </div>
               </div> <!-- Fin de Segunda Fila -->
@@ -126,21 +126,21 @@
                 <div class="col-md">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="txtBase" placeholder="Nueva Base">
-                    <label for="lblNuevaBase">Nueva Base</label>
+                    <label for="txtNuevaBase">Nueva Base</label>
                   </div>
                 </div>
 
                 <div class="col-md">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="txtIp" placeholder="Nuevo IP">
-                    <label for="lblIp">Nuevo IP</label>
+                    <label for="txtIp">Nuevo IP</label>
                   </div>
                 </div>
 
                 <div class="col-md">
                   <div class="form-floating">
                     <input type="number" class="form-control" id="txtSenial" placeholder="Señal">
-                    <label for="lblSenial">Señal</label>
+                    <label for="txtSenial">Señal</label>
                   </div>
                 </div>
               </div> <!-- Fin de la Tercera Fila -->
@@ -150,7 +150,7 @@
                 <div class="col-md">
                   <div class="form-floating">
                     <textarea type="text" class="form-control" id="txtProcedimiento" style="height: 100px" placeholder="Procedimiento de Solución" required></textarea>
-                    <label for="lblProcedimiento">Procedimiento de Solución</label>
+                    <label for="txtProcedimiento">Procedimiento de Solución</label>
                   </div>
                 </div>
               </div> <!-- Fin de la Cuarta Fila -->
@@ -166,14 +166,14 @@
                 <div class="col-md">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="txtPppoe" placeholder="PPPoE" required>
-                    <label for="lblPppoe">PPPoE</label>
+                    <label for="txtPppoe">PPPoE</label>
                   </div>
                 </div>
 
                 <div class="col-md">
                   <div class="form-floating">
                     <input type="number" class="form-control" id="txtPotencia" placeholder="Potencia" required>
-                    <label for="lblPotencia">Potencia</label>
+                    <label for="txtPotencia">Potencia</label>
                   </div>
                 </div>
 
@@ -192,21 +192,21 @@
                 <div class="col-md">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="txtClave" placeholder="Clave" required>
-                    <label for="lblClave">Clave</label>
+                    <label for="txtClave">Clave</label>
                   </div>
                 </div>
 
                 <div class="col-md">
                   <div class="form-floating">
                     <input type="number" class="form-control" id="txtVlan" placeholder="Vlan" required>
-                    <label for="lblVlan">VLAN</label>
+                    <label for="txtVlan">VLAN</label>
                   </div>
                 </div>
 
                 <div class="col-md">
                   <div class="form-floating">
                     <input type="number" class="form-control" id="txtPotencia" placeholder="Potencia" required>
-                    <label for="lblPotencia">Potencia</label>
+                    <label for="txtPotencia">Potencia</label>
                   </div>
                 </div>
 
@@ -217,21 +217,21 @@
                 <div class="col-md">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="txtSsid" placeholder="SSID" required>
-                    <label for="lblSsid">SSID</label>
+                    <label for="txtSsid">SSID</label>
                   </div>
                 </div>
 
                 <div class="col-md">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="txtPassword" placeholder="Password" required>
-                    <label for="lblPassword">Password</label>
+                    <label for="txtPassword">Password</label>
                   </div>
                 </div>
 
                 <div class="col-md">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="txtOtros" placeholder="Otros" required>
-                    <label for="lblOtros">Otros</label>
+                    <label for="txtOtros">Otros</label>
                   </div>
                 </div>
 
@@ -241,7 +241,7 @@
                 <div class="col-md">
                   <div class="form-floating">
                     <textarea type="text" class="form-control" id="txtaEstadoInicial" placeholder="Estado Inicial" required></textarea>
-                    <label for="lblEstadoInicial">Estado Inicial</label>
+                    <label for="txtEstadoInicial">Estado Inicial</label>
                   </div>
                 </div>
               </div>
@@ -254,14 +254,14 @@
                 <div class="col-md">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="txtPppoe" placeholder="PPPoE" required>
-                    <label for="lblPppoe">PPPoE</label>
+                    <label for="txtPppoe">PPPoE</label>
                   </div>
                 </div>
 
                 <div class="col-md">
                   <div class="form-floating">
                     <input type="number" class="form-control" id="txtPotencia" placeholder="Potencia" required>
-                    <label for="lblPotencia">Potencia</label>
+                    <label for="txtPotencia">Potencia</label>
                   </div>
                 </div>
 
@@ -280,21 +280,21 @@
                 <div class="col-md">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="txtClave" placeholder="Clave" required>
-                    <label for="lblClave">Clave</label>
+                    <label for="txtClave">Clave</label>
                   </div>
                 </div>
 
                 <div class="col-md">
                   <div class="form-floating">
                     <input type="number" class="form-control" id="txtVlan" placeholder="VLAN" required>
-                    <label for="lblVlan">VLAN</label>
+                    <label for="txtVlan">VLAN</label>
                   </div>
                 </div>
 
                 <div class="col-md">
                   <div class="form-floating">
                     <input type="number" class="form-control" id="txtPotencia" placeholder="Potencia" required>
-                    <label for="lblPotencia">Potencia</label>
+                    <label for="txtPotencia">Potencia</label>
                   </div>
                 </div>
 
@@ -305,21 +305,21 @@
                 <div class="col-md">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="txtSsid" placeholder="SSID" required>
-                    <label for="lblSsid">SSID</label>
+                    <label for="txtSsid">SSID</label>
                   </div>
                 </div>
 
                 <div class="col-md">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="txtPassword" placeholder="Password" required>
-                    <label for="lblPassword">Password</label>
+                    <label for="txtPassword">Password</label>
                   </div>
                 </div>
 
                 <div class="col-md">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="txtOtros" placeholder="Otros" required>
-                    <label for="lblOtros">Otros</label>
+                    <label for="txtOtros">Otros</label>
                   </div>
                 </div>
 
@@ -329,7 +329,7 @@
                 <div class="col-md">
                   <div class="form-floating">
                     <textarea type="text" class="form-control" id="txtaProcedimiento" placeholder="Procedimiento de Solución" required></textarea>
-                    <label for="lblProcedimiento">Procedimiento de Solución</label>
+                    <label for="txtProcedimiento">Procedimiento de Solución</label>
                   </div>
                 </div>
               </div>
@@ -350,7 +350,7 @@
                       <option value="1">Mensual</option>
                       <option value="2">Contado</option>
                     </select>
-                    <label for="lblPeriodo">Periodo</label>
+                    <label for="slcPeriodo">Periodo</label>
                   </div>
                 </div>
 
@@ -360,14 +360,14 @@
                 <div class="col md-6">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="txtPotencia" placeholder="Potencia" required>
-                    <label for="lblPotencia">Potencia</label>
+                    <label for="txtPotencia">Potencia</label>
                   </div>
                 </div>
 
                 <div class="col md-6">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="txtSintonizador" placeholder="Sintonizador">
-                    <label for="lblSintonizador">Sintonizador</label>
+                    <label for="txtSintonizador">Sintonizador</label>
                   </div>
                 </div>
 
@@ -375,7 +375,7 @@
                   <div class="input-group">
                     <div class="form-floating">
                       <input type="text" id="txtNumTriplexor" placeholder="N° Triplexor" class="form-control">
-                      <label for="lblTriplexor">N° Triplexor</label>
+                      <label for="txtTriplexor">N° Triplexor</label>
                     </div>
                     <div class="form-floating">
                       <select class="form-select" id="slcTriplexor" aria-label="Selecciona una opción">
@@ -384,7 +384,7 @@
                         <option value="2">Activo</option>
                         <option value="3">Pasivo</option>
                       </select>
-                      <label for="lblTriplexor">Triplexor</label>
+                      <label for="slcTriplexor">Triplexor</label>
                     </div>
                   </div>
                 </div>
@@ -400,7 +400,7 @@
                   <div class="input-group">
                     <div class="form-floating">
                       <input type="text" id="txtNumSpliter" class="form-control" placeholder="N° Spliter">
-                      <label for="lblSpliter">N° Spliter</label>
+                      <label for="txtSpliter">N° Spliter</label>
                     </div>
                     <div class="form-floating">
                       <select class="form-select" id="slcSpliter" aria-label="Selecciona una opción">
@@ -409,7 +409,7 @@
                         <option value="2">1x5</option>
                         <option value="3">1x8</option>
                       </select>
-                      <label for="lblSpliter">Spliter</label>
+                      <label for="slcSpliter">Spliter</label>
                     </div>
                   </div>
                 </div>
@@ -418,11 +418,11 @@
                   <div class="input-group">
                     <div class="form-floating">
                       <input type="text" class="form-control" id="txtCable" placeholder="Cable">
-                      <label for="lblCable">Cable</label>
+                      <label for="txtCable">Cable</label>
                     </div>
                     <div class="form-floating">
                       <input type="number" class="form-control" id="txtPrecioCable" placeholder="Precio del Cable" disabled>
-                      <label for="lblPrecioCable">Precio del Cable</label>
+                      <label for="txtPrecioCable">Precio del Cable</label>
                     </div>
                   </div>
                 </div>
@@ -431,11 +431,11 @@
                   <div class="input-group">
                     <div class="form-floating">
                       <input type="number" class="form-control" id="txtConector" placeholder="Conectores">
-                      <label for="lblConectores">Conectores</label>
+                      <label for="txtConectores">Conectores</label>
                     </div>
                     <div class="form-floating">
                       <input type="number" class="form-control" id="txtPrecioConector" placeholder="Precio del Conector" disabled>
-                      <label for="lblPrecioConector">Precio del Conector</label>
+                      <label for="txtPrecioConector">Precio del Conector</label>
                     </div>
                   </div>
                 </div>
@@ -446,7 +446,7 @@
                 <div class="col-md">
                   <div class="form-floating">
                     <textarea type="text" class="form-control" id="txtaEstadoInicial" placeholder="Estado Inicial" required></textarea>
-                    <label for="lblEstadoInicial">Estado Inicial</label>
+                    <label for="txtEstadoInicial">Estado Inicial</label>
                   </div>
                 </div>
               </div>
@@ -463,7 +463,7 @@
                       <option value="1">Mensual</option>
                       <option value="2">Contado</option>
                     </select>
-                    <label>Periodo</label>
+                    <label for="slcPeriodo">Periodo</label>
                   </div>
                 </div>
 
@@ -473,14 +473,14 @@
                 <div class="col md-6">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="txtPotencia" placeholder="Potencia" required>
-                    <label for="lblPotencia">Potencia</label>
+                    <label for="txtPotencia">Potencia</label>
                   </div>
                 </div>
 
                 <div class="col md-6">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="txtSintonizador" placeholder="Sintonizador">
-                    <label for="lblSintonizador">Sintonizador</label>
+                    <label for="txtSintonizador">Sintonizador</label>
                   </div>
                 </div>
 
@@ -488,7 +488,7 @@
                   <div class="input-group">
                     <div class="form-floating">
                       <input type="text" id="txtNumTriplexor" class="form-control" placeholder="N° Triplexor">
-                      <label for="lblTriplexor">N° Triplexor</label>
+                      <label for="txtTriplexor">N° Triplexor</label>
                     </div>
                     <div class="form-floating">
                       <select class="form-select" id="slcTriplexor" aria-label="Selecciona una opción">
@@ -497,7 +497,7 @@
                         <option value="2">Activo</option>
                         <option value="3">Pasivo</option>
                       </select>
-                      <label for="lblTriplexor">Triplexor</label>
+                      <label for="slcTriplexor">Triplexor</label>
                     </div>
                   </div>
                 </div>
@@ -511,7 +511,7 @@
                   <div class="input-group">
                     <div class="form-floating">
                       <input type="text" id="txtNumSpliter" class="form-control" placeholder="N° Spliter">
-                      <label for="lblSpliter">N° Spliter</label>
+                      <label for="txtNumSpliter">N° Spliter</label>
                     </div>
                     <div class="form-floating">
                       <select class="form-select" id="slcSpliter" aria-label="Selecciona una opción">
@@ -520,7 +520,7 @@
                         <option value="2">1x5</option>
                         <option value="3">1x8</option>
                       </select>
-                      <label for="lblSpliter">Spliter</label>
+                      <label for="slcSpliter">Spliter</label>
                     </div>
                   </div>
                 </div>
@@ -529,11 +529,11 @@
                   <div class="input-group">
                     <div class="form-floating">
                       <input type="text" class="form-control" id="txtCable" placeholder="Cable">
-                      <label for="lblCable">Cable</label>
+                      <label for="txtCable">Cable</label>
                     </div>
                     <div class="form-floating">
                       <input type="number" class="form-control" id="txtPrecioCable" placeholder="Precio del Cable" disabled>
-                      <label for="lblPrecioCable">Precio del Cable</label>
+                      <label for="txtPrecioCable">Precio del Cable</label>
                     </div>
                   </div>
                 </div>
@@ -542,11 +542,11 @@
                   <div class="input-group">
                     <div class="form-floating">
                       <input type="number" class="form-control" id="txtConector" placeholder="Conectores">
-                      <label for="lblConectores">Conectores</label>
+                      <label for="txtConector">Conectores</label>
                     </div>
                     <div class="form-floating">
                       <input type="number" class="form-control" id="txtPrecioConector" placeholder="Precio del Conector" disabled>
-                      <label for="lblPrecioConector">Precio del Conector</label>
+                      <label for="txtPrecioConector">Precio del Conector</label>
                     </div>
                   </div>
                 </div>
@@ -556,8 +556,8 @@
               <div>
                 <div class="col-md">
                   <div class="form-floating">
-                    <textarea type="text" class="form-control" id="txtaProcedimiento" placeholder="Procedimiento de Solución"></textarea>
-                    <label for="lblProcedimiento">Procedimiento de Solución</label>
+                    <textarea type="text" class="form-control" id="txtProcedimiento" placeholder="Procedimiento de Solución"></textarea>
+                    <label for="txtProcedimiento">Procedimiento de Solución</label>
                   </div>
                 </div>
               </div>
@@ -575,8 +575,8 @@
           <div class="col-12 text-center text-md-end mb-3">
             <div class="d-flex flex-column flex-md-row justify-content-center justify-content-md-end">
               <button type="button" id="btnCodigoBarra" class="btn btn-warning mb-2 me-md-2">Verificar Código</button>
-              <button type="submit" id="btnRegistrarSoporte" class="btn btn-primary mb-2 me-md-2">Registrar Soporte</button>
-              <button type="reset" id="btnCancelar" class="btn btn-outline-secondary mb-2">Cancelar Proceso</button>
+              <button type="submit" id="btnRegistrarSoporte" class="btn btn-success mb-2 me-md-2">Registrar Soporte</button>
+              <button type="reset" id="btnCancelar" class="btn btn-secondary mb-2">Cancelar Proceso</button>
             </div>
           </div>
         </div>
@@ -589,13 +589,6 @@
 <?php require_once "../../footer.php"; ?>
 
 <script type="module" src="../../js/soporteEscritorio.js"></script>
-<script>
-  function updateText(checkboxId, textId) {
-    const checkbox = document.getElementById(checkboxId);
-    const text = document.getElementById(textId);
-    text.textContent = checkbox.checked ? 'Sí' : 'No';
-  }
-</script>
 </body>
 
 </html>

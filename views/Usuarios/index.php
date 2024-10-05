@@ -1,19 +1,23 @@
 <?php require_once '../../header.php'; ?>
 
-<div class="container-fluid d-flex justify-content-center py-4">
-  <div class="card w-100" style="max-width: 90%;">
+<div class="container-fluid px-4">
+  <h1 class="mt-4">Usuarios</h1>
+
+  <div class="card mb-4">
     <div class="card-header d-flex justify-content-between align-items-center">
-      <span>Gestionar Usuarios</span>
-      <a href="registrar.php" class="btn btn-success">Registrar Usuario</a>
+      <div>
+        <i class="fas fa-table me-1"></i> Gestionar Usuarios
+      </div>
+      <a href="registrar.php" class="btn btn-primary">Registrar Usuario</a>
     </div>
     <div class="card-body">
-      <table id="listarUsuarios" class="display">
+      <table id="tblUsuarios" class="display">
         <thead>
           <tr>
-            <th>Nombre</th>
-            <th>Usuarios</th>
-            <th>Rol</th>
-            <th>Acciones</th>
+            <th class="text-center">Nombre</th>
+            <th class="text-center">Usuarios</th>
+            <th class="text-center">Rol</th>
+            <th class="text-center">Acciones</th>
           </tr>
         </thead>
         <tbody></tbody>

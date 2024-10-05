@@ -27,29 +27,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Ayuda con Registro de Llamadas Soporte</td>
-                            <td>Maria71</td>
-                            <td>01/01/24</td>
-                            <td>01/01/24</td>
-                            <td>
-                                <button class="btn btn-sm btn-primary"><i class="fa-solid fa-pen"></i></button>
-                                <button class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Actualizar registro de cliente</td>
-                            <td>Yazuri69</td>
-                            <td>01/01/24</td>
-                            <td>01/01/24</td>
-                            <td>
-                                <button class="btn btn-sm btn-primary"><i class="fa-solid fa-pen"></i></button>
-                                <button class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
-                            </td>
-                        </tr>
-                        <!-- Más filas de ejemplo -->
+                        <!-- En Construcción... -->
                     </tbody>
                 </table>
             </div>

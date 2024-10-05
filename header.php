@@ -60,12 +60,12 @@ $host = $_ENV['HOST'];
           <div class="nav">
             <div class="sb-sidenav-menu-heading">Inicio</div>
             <a class="nav-link" href="<?= $host; ?>dashboard.php">
-              <div class="sb-nav-link-icon"><i class="fa-solid fa-house"></i></div>
-              Dashboard
+              <div class="sb-nav-link-icon"><i class="fa-solid fa-chart-line"></i></div>
+              Actividades
             </a>
             <div class="sb-sidenav-menu-heading">Módulos</div>
 
-            <a class="nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="false" aria-controls="collapseExample" id=molSoporte >
+            <a class="nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="false" aria-controls="collapseExample" id=molSoporte>
               <div class="sb-nav-link-icon"><i class="fa-solid fa-wrench"></i></div>
               Soporte Tecnico
             </a>
@@ -73,27 +73,28 @@ $host = $_ENV['HOST'];
             <div class="collapse" id="collapse1">
               <div class="ps-4">
                 <a class="nav-link" href="<?= $host; ?>views/Soporte/index.php">
-                  <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                  <div class="sb-nav-link-icon"><i class="fa-solid fa-wrench"></i></div>
                   Ficha de Soporte
                 </a>
-                <a class="nav-link" href="<?= $host; ?>views/Soporte/SoporteEscritorio.php">
+                <!-- <a class="nav-link" href="<?= $host; ?>views/Soporte/SoporteEscritorio.php">
                   <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                   Ficha Soporte Escritorio
-                </a>
+                </a> -->
               </div>
             </div>
-            <a class="nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse5" aria-expanded="false" aria-controls="collapseExample" id=molContratos >
-              <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+            <a class="nav-link" href="<?= $host; ?>views/Contactabilidad/">
+              <div class="sb-nav-link-icon"><i class="fa-solid fa-phone"></i></div>
               Contactabilidad
             </a>
-            <div class="collapse" id="collapse5">
+            <!-- <a class="nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse5" aria-expanded="false" aria-controls="collapseExample" id=molContratos >
+              <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+              Contactabilidad
+            </a> -->
+            <!-- <div class="collapse" id="collapse5">
               <div class="ps-4">
-                <a class="nav-link" href="<?= $host; ?>views/Contactabilidad/">
-                  <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                  Contactabilidad
-                </a>
+                
               </div>
-            </div>
+            </div> -->
 
 
             <a class="nav-link" href="<?= $host; ?>views/Contratos/" id=molContratos>
@@ -102,52 +103,52 @@ $host = $_ENV['HOST'];
             </a>
 
 
-            <a class="nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapseExample" id=molInventariado >
-              <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+            <a class="nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapseExample" id=molInventariado>
+              <div class="sb-nav-link-icon"><i class="fa-solid fa-warehouse"></i></div>
               Inventariado
             </a>
 
             <div class="collapse" id="collapse3">
               <div class="ps-4">
                 <a class="nav-link" href="<?= $host; ?>views/Inventariado/">
-                  <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                  <div class="sb-nav-link-icon"><i class="fa-solid fa-cart-flatbed"></i></div>
                   Kardex
                 </a>
                 <a class="nav-link" href="<?= $host; ?>views/Productos/">
-                  <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                  <div class="sb-nav-link-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
                   Productos
                 </a>
               </div>
             </div>
 
-            <a class="nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapseExample" id=molPersonas >
-              <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+
+            <a class="nav-link" href="<?= $host; ?>views/Usuarios/">
+              <div class="sb-nav-link-icon"><i class="fa-solid fa-users"></i></div>
+              Usuarios
+            </a>
+            <a class="nav-link" href="<?= $host; ?>views/Personas/">
+              <div class="sb-nav-link-icon"><i class="fa-solid fa-user"></i></div>
+              Clientes
+            </a>
+            <!-- <a class="nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapseExample" id=molPersonas>
+              <div class="sb-nav-link-icon"><i class="fa-solid fa-person"></i></div>
               Personas
             </a>
 
             <div class="collapse" id="collapse4">
               <div class="ps-4">
-                <a class="nav-link" href="<?= $host; ?>views/Usuarios/">
-                  <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                  Usuarios
-                </a>
-                <a class="nav-link" href="<?= $host; ?>views/Personas/">
-                  <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                  Clientes
-                </a>
+                
               </div>
-            </div>
+            </div> -->
 
-            <a class="nav-link" href="<?= $host; ?>views/Roles/" id=molRoles >
-              <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+            <a class="nav-link" href="<?= $host; ?>views/Roles/" id=molRoles>
+              <div class="sb-nav-link-icon"><i class="fa-regular fa-address-card"></i></div>
               Roles
             </a>
 
           </div>
         </div>
         <div class="sb-sidenav-footer">
-          <div class="small">Logged in as:</div>
-          Start Bootstrap
         </div>
       </nav>
     </div>

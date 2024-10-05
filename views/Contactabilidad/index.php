@@ -1,12 +1,16 @@
 <?php require_once '../../header.php'; ?>
-<div class="container">
-  <div class="card mt-4">
+
+<div class="container-fluid px-4">
+  <h1 class="mt-4">Contactabilidad</h1>
+
+  <div class="card mb-4">
     <div class="card-header">
-      <h2>Contactabilidad</h2>
+      <i class="fas fa-table me-1"></i> Complete los Datos
     </div>
     <div class="card-body">
-      <form action="" class="form-control" id="frmContactabilidad">
-        <div class="row mb-2 mt-3">
+      <form action="" id="frmContactabilidad">
+        <div class="row">
+
           <div class="col-md-2 mb-3 mt-2">
             <div class="form-floating">
               <select name="" id="slcTipoDoc" class="form-select">
@@ -102,7 +106,7 @@
         </div>
         <div class="row">
           <div class="col text-end">
-            <button type="submit" class="btn btn-primary"> Guardar</button>
+            <button type="submit" class="btn btn-success"> Guardar</button>
             <button type="reset" class="btn btn-secondary"> Cancelar</button>
           </div>
         </div>
@@ -111,7 +115,7 @@
   </div>
   <div class="card mt-4">
     <div class="card-header">
-      <h2>Personas Contactadas</h2>
+      <i class="fas fa-table me-1"></i> Listado de Personas Contactadas
     </div>
     <div class="card-body">
       <table class="table table-striped" id="listarPersonasContactabilidad">
