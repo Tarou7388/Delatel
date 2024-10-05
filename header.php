@@ -10,10 +10,10 @@ $dotenv->load();
 
 $host = $_ENV['HOST'];
 
-/* if (!isset($_SESSION['login']) || (isset($_SESSION['login']) && !$_SESSION['login']['estado'])) {
+ if (!isset($_SESSION['login']) || (isset($_SESSION['login']) && !$_SESSION['login']['estado'])) {
   //Te vas a tu casa...
   header("Location: $host");
-} */
+}
 
 
 ?>

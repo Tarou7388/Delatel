@@ -3,9 +3,9 @@ import config from "../env.js";
 document.addEventListener("DOMContentLoaded", function () {
 
   const userid = JSON.stringify(user['idUsuario']);
-  // if (permisos[0].permisos.personas.leer != 1) {
-  //   window.location.href = `${config.HOST}views`;
-  // }
+  if (permisos[0].permisos.personas.leer != 1) {
+    window.location.href = `${config.HOST}views`;
+  }
 
   const divEmpresaCard = document.getElementById("divEmpresaCard");
   const frmEmpresas = document.getElementById("frmEmpresas");

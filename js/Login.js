@@ -1,48 +1,46 @@
 import config from '../env.js';
 
-// 1. Variables locales
-const HOST = config.HOST;
-
-// 2. Funciones externas
-function $(id) {
-  return document.querySelector(id);
-}
-
-async function logear() {
-  const user = $("#txtNomUser").value;
-  const pass = $("#txtPassUser").value;
-
-  if (user != "" && pass != "") {
-    const respuesta = await fetch(`${HOST}app/controllers/Usuarios.controllers.php?Operacion=Login&nombreUser=${user}&pass=${pass}`);
-    const datos = await respuesta.json();
-
-    if (datos.estado) {
-      await getPermisos(datos.idRol);
-      showToast(datos.mensaje, "SUCCESS");
-      window.location.href = `${HOST}views`;
-    } else {
-      showToast(datos.mensaje, "ERROR");
-    }
-  } else {
-    showToast("Por favor, completa todos los campos.", "WARNING");
-  }
-}
-
-async function getPermisos(idRol) {
-  await fetch(`${HOST}app/controllers/roles.controllers.php?operacion=getPermisos&rol=${idRol}`);
-}
-
-// 3. Autoejecutables
 window.addEventListener("DOMContentLoaded", event => {
-  // 4. Eventos
-  $("#txtPassUser").addEventListener("keydown", (event) => {
+
+  const HOST = config.HOST;
+
+  function $(id) {
+    return document.querySelector(id);
+  }
+
+  async function logear() {
+    const user = $("#txtNomUser").value;
+    const pass = $("#txtPassUser").value;
+
+    if (user != "" && pass != "") {
+      const respuesta = await fetch(`${HOST}app/controllers/Usuarios.controllers.php?operacion=login&nombreUser=${user}&pass=${pass}`);
+      const datos = await respuesta.json();
+      console.log(datos)
+      if (datos.estado) {
+        await getPermisos(datos.idRol);
+        showToast(datos.mensaje, "SUCCESS");
+        window.location.href = `${HOST}views`;
+      } else {
+        showToast(datos.mensaje, "ERROR");
+      }
+    } else {
+      showToast("Por favor, completa todos los campos.", "WARNING");
+    }
+  }
+
+  async function getPermisos(idRol) {
+    await fetch(`${HOST}app/controllers/roles.controllers.php?operacion=getPermisos&rol=${idRol}`);
+  }
+
+
+  $("#txtPassUser").addEventListener("keydown", async (event) => {
     if (event.keyCode === 13) {
-      logear();
+      await logear();
     }
   });
 
-  $("#btnIniciar").addEventListener("click", (event) => {
+  $("#btnIniciar").addEventListener("click",async (event) => {
     event.preventDefault();
-    logear();
+    await logear();
   });
 });

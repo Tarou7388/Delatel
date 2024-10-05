@@ -13,7 +13,6 @@ async function ask(pregunta = ``, modulo = `Delatel`){
     confirmButtonText: 'Aceptar',
     cancelButtonText: 'Cancelar',
     confirmButtonColor: '#3498db',
-    footer: 'Lino Fino Ver. 1.0'
   });
 
   return respuesta.isConfirmed;

@@ -1,9 +1,9 @@
 import config from "../env.js";
 
 document.addEventListener("DOMContentLoaded", function () {
-  // if (!permisos[0].permisos.personas.leer) {
-  //   window.location.href = `${config.HOST}views`;
-  // }
+  if (!permisos[0].permisos.personas.leer) {
+    window.location.href = `${config.HOST}views`;
+  }
 
   const userid = JSON.stringify(user["idUsuario"]);
   const slcServicio = document.getElementById("slcServicio");
