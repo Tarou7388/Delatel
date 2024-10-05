@@ -26,7 +26,7 @@ class Usuario extends Conexion
   {
     $sql = "CALL spu_usuarios_login(?)";
     $values = array($params['nombreUser']);
-    return $this->consultaParametros($sql, $values);
+    return $this->buscarObjeto($sql, $values);
   }
 
   /**
@@ -46,7 +46,7 @@ class Usuario extends Conexion
     $sql = "CALL spu_usuarios_registrar(?,?,?,?)";
     $values = array(
       $params['idPersona'],
-      $params['nombreUser'],
+      $params['nombreUsuario'],
       $params['clave'],
       $params['idUsuario']
     );

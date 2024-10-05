@@ -10,7 +10,7 @@ if (isset($_GET["operacion"])) {
         $resultado = $usuario->login(["nombreUser" => $_GET["nombreUser"]]);
         $Login = [
             "estado" => false,
-            "idrol" => -1,
+            "idRol" => -1,
             "idUsuario" => -1,
             "mensaje" => ""
         ];

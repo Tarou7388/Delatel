@@ -100,5 +100,22 @@ class Conexion
       die($e->getMessage());
     }
   }
+
+  public function buscarObjeto($sql, $params = [])
+  {
+    try {
+      $conexion = $this->getConexion();
+      $consulta = $conexion->prepare($sql);
+
+      foreach ($params as $index => $value) {
+        $consulta->bindValue($index + 1, $value);
+      }
+
+      $consulta->execute();
+      return $consulta->fetch(PDO::FETCH_ASSOC);
+    } catch (Exception $e) {
+      die($e->getMessage());
+    }
+  }
   
 }
