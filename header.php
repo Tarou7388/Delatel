@@ -10,8 +10,7 @@ $dotenv->load();
 
 $host = $_ENV['HOST'];
 
- if (!isset($_SESSION['login']) || (isset($_SESSION['login']) && !$_SESSION['login']['estado'])) {
-  //Te vas a tu casa...
+if (!isset($_SESSION['login']) || (isset($_SESSION['login']) && !$_SESSION['login']['estado'])) {
   header("Location: $host");
 }
 
@@ -19,7 +18,7 @@ $host = $_ENV['HOST'];
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
   <meta charset="utf-8" />
@@ -48,7 +47,7 @@ $host = $_ENV['HOST'];
         <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i>
         </a>
         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-          <li><a class="dropdown-item" href="<?= $host ?>app/controllers/Usuarios.controllers.php?Operacion=CerrarSesion"><i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión</a></li>
+          <li><a class="dropdown-item" href="<?= $host ?>app/controllers/Usuarios.controllers.php?operacion=cerrarSesion"><i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión</a></li>
         </ul>
       </li>
     </ul>
@@ -82,7 +81,7 @@ $host = $_ENV['HOST'];
                 </a> -->
               </div>
             </div>
-            <a class="nav-link" href="<?= $host; ?>views/Contactabilidad/">
+            <a class="nav-link" href="<?= $host; ?>views/Contactabilidad/" id=molContratos>
               <div class="sb-nav-link-icon"><i class="fa-solid fa-phone"></i></div>
               Contactabilidad
             </a>
@@ -122,11 +121,11 @@ $host = $_ENV['HOST'];
             </div>
 
 
-            <a class="nav-link" href="<?= $host; ?>views/Usuarios/">
+            <a class="nav-link" href="<?= $host; ?>views/Usuarios/" id=molPersonas>
               <div class="sb-nav-link-icon"><i class="fa-solid fa-users"></i></div>
               Usuarios
             </a>
-            <a class="nav-link" href="<?= $host; ?>views/Personas/">
+            <a class="nav-link" href="<?= $host; ?>views/Personas/" id=molPersonas>
               <div class="sb-nav-link-icon"><i class="fa-solid fa-user"></i></div>
               Clientes
             </a>
@@ -154,8 +153,8 @@ $host = $_ENV['HOST'];
     </div>
     <div id="layoutSidenav_content">
       <main>
-        <!-- <script>
+        <script>
           const permisos = <?php echo json_encode($permisos); ?>;
           const user = <?php echo json_encode($_SESSION['login']); ?>;
-        </script> -->
+        </script>
         <script src="<?= $host ?>js/Header.js"></script>
