@@ -11,9 +11,6 @@
         <div class="container">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">
-                Permisos
-              </h5>
               <div class="card-text">
                 <table class="table" id="tablaPermisos">
                   <thead>
@@ -89,9 +86,9 @@
     </div>
   </div>
 </div>
+<?php require_once "../../footer.php"; ?>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script type="module" src="../../js/Rol.js"></script>
-<?php require_once "../../footer.php"; ?>
 </body>
 
 </html>
