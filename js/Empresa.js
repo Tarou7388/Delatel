@@ -3,9 +3,9 @@ import config from "../env.js";
 document.addEventListener("DOMContentLoaded", function () {
 
   const userid = JSON.stringify(user['idUsuario']);
-  if (permisos[0].permisos.personas.leer != 1) {
-    window.location.href = `${config.HOST}views`;
-  }
+  // if (permisos[0].permisos.personas.leer != 1) {
+  //   window.location.href = `${config.HOST}views`;
+  // }
 
   const divEmpresaCard = document.getElementById("divEmpresaCard");
   const frmEmpresas = document.getElementById("frmEmpresas");
@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const registrarEmpresa = () => {
     const params = new FormData();
-    params.append("operacion", "Registrar");
+    params.append("operacion", "registrarEmpresa");
     params.append("ruc", txtRuc.value);
     params.append("representante_legal", txtRepresentanteLegal.value);
     params.append("razon_social", txtRazonSocial.value);
@@ -68,11 +68,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const registrarcliente = (idEmpresa) => {
     const params = new FormData();
-    params.append("operacion", "add");
+    params.append("operacion", "registrarCliente");
+    params.append("idPersona", "");
+    params.append("idEmpresa", idEmpresa);
     params.append("direccion", txtDireccion.value);
     params.append("referencia", txtReferencia.value);
-    params.append("idempresa", idEmpresa);
-    params.append("idPersona", "");
     params.append("iduser_create", userid);
     params.append("coordenadas", txtCoordenadas.value);
 
@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   const ObtenerDataRUC = (operacion, ruc) => {
-    fetch(`${config.HOST}app/controllers/Personas.controlles.php?Operacion=${operacion}&ruc=${encodeURIComponent(ruc)}`)
+    fetch(`${config.HOST}app/controllers/Personas.controlles.php?operacion=${operacion}&ruc=${encodeURIComponent(ruc)}`)
       .then(response => response.json())
       .then(data => {
         txtRazonSocial.value = data.razonSocial;

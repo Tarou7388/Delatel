@@ -14,11 +14,11 @@ document.addEventListener("DOMContentLoaded", () => {
     .addEventListener("submit", (event) => {
       event.preventDefault();
 
-      // if (permisos[0].permisos.inventariado.crear != 1) {
-      //   showToast("No tienes permiso para esta acción","ERROR");
-      // }
+      if (permisos[0].permisos.inventariado.crear != 1) {
+        showToast("No tienes permiso para esta acción","ERROR");
+      }
       const params = new FormData();
-      params.append("operacion", "add");
+      params.append("operacion", "registrarProducto");
       params.append("tipo_producto", tipoProducto.value);
       params.append("marca", marca.value);
       params.append("precio_actual", precioActual.value);

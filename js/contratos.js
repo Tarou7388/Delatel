@@ -16,17 +16,17 @@ window.addEventListener("DOMContentLoaded", () => {
   let idCliente = 0;
 
   const fetchSectores = async () => {
-    const response = await fetch(`${config.HOST}app/controllers/Sectores.controllers.php?operacion=getAll`);
+    const response = await fetch(`${config.HOST}app/controllers/Sectores.controllers.php?operacion=listarSectores`);
     return await response.json();
   };
 
   const fetchPaquetes = async () => {
-    const response = await fetch(`${config.HOST}app/controllers/Paquetes.controllers.php?operacion=getAll`);
+    const response = await fetch(`${config.HOST}app/controllers/Paquetes.controllers.php?operacion=listarPaquetes`);
     return await response.json();
   };
 
   const fetchContratos = async () => {
-    const response = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=getAll`);
+    const response = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=listarContratos`);
     return await response.json();
   };
 
@@ -39,7 +39,7 @@ window.addEventListener("DOMContentLoaded", () => {
     if (dni.value == "") {
       showToast("¡Ingrese numero de documento!", "INFO");
     } else {
-      const response = await fetch(`${config.HOST}app/controllers/cliente.controllers.php?operacion=getByDoc&numDoc=${dni.value}`);
+      const response = await fetch(`${config.HOST}app/controllers/cliente.controllers.php?operacion=buscarClienteDoc&numDoc=${dni.value}`);
       const data = await response.json();
       if (data.length > 0) {
         nombre.value = data[0].nombre;
@@ -108,7 +108,7 @@ window.addEventListener("DOMContentLoaded", () => {
       const response = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php`, {
         method: "PUT",
         body: JSON.stringify({
-          operacion: "delete",
+          operacion: "eliminarContrato",
           parametros: {
             id: idContrato,
           },
@@ -205,7 +205,7 @@ window.addEventListener("DOMContentLoaded", () => {
     botonesPdf.forEach((boton) => {
       boton.addEventListener("click", () => {
         const idContrato = boton.getAttribute("data-idContrato");
-        window.open(`../reports/Contrato/soporte.php?id=${idContrato}`);
+        window.open(`${config.HOST}/views/reports/Contrato/soporte.php?id=${idContrato}`);
       });
     });
   }

@@ -1,9 +1,9 @@
 import config from "../env.js";
 
 document.addEventListener("DOMContentLoaded", function () {
-  if (!permisos[0].permisos.personas.leer) {
-    window.location.href = `${config.HOST}views`;
-  }
+  // if (!permisos[0].permisos.personas.leer) {
+  //   window.location.href = `${config.HOST}views`;
+  // }
 
   const userid = JSON.stringify(user["idUsuario"]);
   const slcServicio = document.getElementById("slcServicio");
@@ -24,7 +24,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const btnBuscar = document.getElementById("btnBuscar");
 
 
-  // 3. Funciones externas
   function toggleForms(value) {
     if (value === "Persona") {
       divPersonaCard.classList.remove("d-none");
@@ -38,12 +37,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  async function registrarcontacto(idPersona) {
+  async function registrarContacto(idPersona) {
     const Paquete = slcServicio.value.split(" - ")[0];
     const fecha = new Date();
     fecha.setDate(fecha.getDate() + 14);
     const datos = {
-      operacion: "add",
+      operacion: "registrarContacto",
       idPersona: idPersona,
       idPaquete: Paquete,
       direccion: txtDireccion.value,
@@ -60,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function ObtenerDataDNI(operacion, dni) {
-    fetch(`${config.HOST}app/controllers/Personas.controlles.php?Operacion=${operacion}&dni=${encodeURIComponent(dni)}`)
+    fetch(`${config.HOST}app/controllers/Personas.controlles.php?operacion=${operacion}&dni=${encodeURIComponent(dni)}`)
       .then((response) => response.json())
       .then((data) => {
         txtNombresPersona.value = data.nombres ?? "";
@@ -88,10 +87,10 @@ document.addEventListener("DOMContentLoaded", function () {
     return false;
   }
 
-  function registrarpersona() {
+  function registrarPersona() {
     if (permisos[0].permisos.personas.crear == 1) {
       const params = new FormData();
-      params.append("Operacion", "Registrar");
+      params.append("operacion", "registrarPersona");
       params.append("tipoDoc", slcTipoDocumento.value);
       params.append("nroDoc", txtNumDocumentoPersona.value);
       params.append("nombres", txtNombresPersona.value);
@@ -111,7 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .then((data) => {
           if (data.id_persona > 0) {
             showToast("Persona registrada correctamente", "SUCCESS");
-            registrarcontacto(data.id_persona);
+            registrarContacto(data.id_persona);
           } else {
             showToast("Verifique los datos ingresados", "ERROR");
           }
@@ -159,7 +158,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
   async function cargarPaquetes() {
-    const response = await fetch(`${config.HOST}app/controllers/paquetes.controllers.php?operacion=getAll`);
+    const response = await fetch(`${config.HOST}app/controllers/Paquetes.controllers.php?operacion=listarPaquetes`);
     const data = await response.json();
     data.forEach((paquetes) => {
       const option = document.createElement("option");
@@ -199,7 +198,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (permisos[0].permisos.personas.crear != 1) {
         showToast("No tienes permiso de registrar", "ERROR");
       }
-      registrarpersona();
+      registrarPersona();
     }
   });
 

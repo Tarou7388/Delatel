@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const userid = user['idUsuario'];
-    const ruta = `${config.HOST}controllers/Productos.controllers.php?operacion=getAll`;
+    const ruta = `${config.HOST}app/controllers/Productos.controllers.php?operacion=listarProductos`;
 
     // 2. Inicialización de la tabla de productos
     window.tablaProductos = $('#TbProductos').DataTable({
@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const idProducto = $(this).data('id');
 
         try {
-            const response = await fetch(`../../controllers/Productos.controllers.php?operacion=getById&id_producto=` + idProducto);
+            const response = await fetch(`${config.HOST}app/controllers/Productos.controllers.php?operacion=buscarProductoId&id_producto=` + idProducto);
             const producto = await response.json();
             $('#txtIdProducto').val(producto.id_producto);
             $('#slcEditarTipoProducto').val(producto.tipo_producto);
@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", function () {
         };
 
         try {
-            const response = await fetch(`../../controllers/Productos.controllers.php?operacion=update`, {
+            const response = await fetch(`${config.HOST}app/controllers/Productos.controllers.php?operacion=update`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

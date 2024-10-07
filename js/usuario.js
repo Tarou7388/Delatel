@@ -1,16 +1,16 @@
 import config from '../env.js';
 
 document.addEventListener("DOMContentLoaded", () => {
-  if (!permisos[0].permisos.personas.leer) {
-    window.location.href = `${config.HOST}views`;
-  }
+  // if (!permisos[0].permisos.personas.leer) {
+  //   window.location.href = `${config.HOST}views`;
+  // }
 
   const table = $('#listarUsuarios').DataTable({
     language: {
       url: "//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json"
     },
     ajax: {
-      url: `${config.HOST}app/controllers/Usuarios.controllers.php?Operacion=getAll`,
+      url: `${config.HOST}app/controllers/Usuarios.controllers.php?operacion=listarUsuarios`,
       dataSrc: ''
     },
     columns: [

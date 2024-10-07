@@ -58,7 +58,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
     const jsonData = JSON.stringify(data);
     try {
-      const response = await fetch('url_del_servidor', {
+      const response = await fetch(`${config.HOST}app/controllers/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

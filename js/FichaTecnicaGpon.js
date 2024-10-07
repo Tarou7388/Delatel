@@ -323,7 +323,7 @@ document.addEventListener("DOMContentLoaded", () => {
       fichaInstalacion: jsonData,
       id: idContrato
     };
-    const response = await fetch(`${config.HOST}app/controllers/contrato.controllers.php`, {
+    const response = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php`, {
       method: "PUT",
       body: JSON.stringify(data)
     });
@@ -357,7 +357,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if(!flagFichaInstalacion){
         await guardar();
         showToast("Ficha de Instalación Guardarda Correctamente", "SUCCESS");
-        window.location.href = "../Contratos/ContratosGeneral.php";
+        window.location.href = `${config.HOST}/views/Contratos/ContratosGeneral.php`;
       }else{
         showToast("La ficha de instalación ya ha sido guardada.", "WARNING");
       }

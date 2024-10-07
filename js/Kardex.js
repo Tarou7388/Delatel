@@ -1,9 +1,9 @@
 import config from '../env.js';
 
 document.addEventListener("DOMContentLoaded", function () {
-  if (permisos[0].permisos.inventariado.leer != 1) {
-    window.location.href = `${config.HOST}views`;
-  }
+  // if (permisos[0].permisos.inventariado.leer != 1) {
+  //   window.location.href = `${config.HOST}views`;
+  // }
   // 1. Variables locales
   const userid = user['idUsuario'];
   const tipoMovimientoSelect = document.getElementById("slcTipomovimiento");
@@ -49,11 +49,11 @@ document.addEventListener("DOMContentLoaded", function () {
   async function MostrarStockActual(idproducto) {
     try {
       const response = await fetch(
-        `${config.HOST}app/controllers/kardex.controllers.php?operacion=obtenerStock&id_producto=${idproducto}`
+        `${config.HOST}app/controllers/Kardex.controllers.php?operacion=buscarStockId&idProducto=${idproducto}`
       );
       const data = await response.json();
       const response2 = await fetch(
-        `${config.HOST}app/controllers/Productos.controllers.php?operacion=getById&id_producto=${idproducto}`
+        `${config.HOST}app/controllers/Productos.controllers.php?operacion=buscarProductoId&id_producto=${idproducto}`
       );
       const data2 = await response2.json();
       stockactualField.value =
@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const params = new FormData();
-    params.append("operacion", "add");
+    params.append("operacion", "registrarKardex");
     params.append("idproducto", idproductoField.value);
     params.append("fecha", fecha.value);
     params.append("tipooperacion", tipomovimientoField.value);
@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", function () {
       body: params,
     };
 
-    fetch(`${config.HOST}app/controllers/kardex.controllers.php`, options)
+    fetch(`${config.HOST}app/controllers/Kardex.controllers.php`, options)
       .then((response) => response.json())
       .then((data) => {
         if (data.Guardado) {
@@ -137,7 +137,7 @@ document.addEventListener("DOMContentLoaded", function () {
       cantidadField.value = "";
       tablaKardex.ajax
         .url(
-          `${config.HOST}app/controllers/kardex.controllers.php?operacion=obtenerProducto&id_producto=${idproducto}`
+          `${config.HOST}app/controllers/Kardex.controllers.php?operacion=obtenerProducto&id_producto=${idproducto}`
         )
         .load();
     } else {

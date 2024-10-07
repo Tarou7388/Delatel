@@ -1,8 +1,8 @@
 import config from '../env.js';
 window.addEventListener('DOMContentLoaded', function () {
-  if (permisos[0].permisos.soporte.leer != 1) {
-    window.location.href = `${config.HOST}views`;
-  }
+  // if (permisos[0].permisos.soporte.leer != 1) {
+  //   window.location.href = `${config.HOST}views`;
+  // }
   const wisp = document.getElementById('lstWisp');
   const gpon = document.getElementById('lstGpon');
   const cable = document.getElementById('lstCable');

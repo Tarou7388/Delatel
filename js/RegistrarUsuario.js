@@ -1,13 +1,11 @@
 import config from '../env.js';
 
 document.addEventListener("DOMContentLoaded", function () {
-  const userid = JSON.stringify(user["idUsuario"]); // Suponiendo que el ID de usuario ya está disponible
+  const userid = JSON.stringify(user["idUsuario"]); 
 
-  // Función utilitaria para obtener elementos por ID
   function $(id) {
     return document.getElementById(id);
   }
-  // 2. Búsqueda de persona
   $("btnBuscar").addEventListener("click", async () => {
     const dni = $("txtNumDocumentoPersona").value;
 
@@ -17,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     try {
-      const respuesta = await fetch(`${config.HOST}app/controllers/Personas.controlles.php?Operacion=siExiste&DNI=${dni}`);
+      const respuesta = await fetch(`${config.HOST}app/controllers/Personas.controlles.php?operacion=buscarPersonaDni&dni=${dni}`);
       if (!respuesta.ok) {
         throw new Error("Error en la solicitud al servidor.");
       }
@@ -29,7 +27,6 @@ document.addEventListener("DOMContentLoaded", function () {
       } else {
         const persona = await BuscarPersonaAPI('getapi', dni);
         if (persona) {
-          // Llenar los campos con los datos obtenidos de la API
           $("txtNombre").value = persona.nombres;
           $("txtApe").value = `${persona.apellidoPaterno} ${persona.apellidoMaterno}`;
           $("txtNombre").disabled = true;
@@ -39,7 +36,6 @@ document.addEventListener("DOMContentLoaded", function () {
           $("txtContrasena").disabled = false;
           $("slcRol").disabled = false;
 
-          // Registrar persona en la base de datos para obtener id_persona
           idPersonaEncontrada = await RegistrarPersona(dni);
           showToast("Persona registrada desde la API.", "INFO");
         } else {
@@ -61,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const data = await respuesta.json();
       data.forEach(element => {
         const option = new Option(element.rol, element.id);
-        $("slcRol").add(option); // Agregar opciones al select de roles
+        $("slcRol").add(option);
       });
     } catch (error) {
       console.error("Error al cargar los roles:", error);
@@ -70,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   async function BuscarPersonaAPI(operacion, dni) {
     try {
-      const respuesta = await fetch(`${config.HOST}app/controllers/Personas.controlles.php?Operacion=${operacion}&dni=${dni}`);
+      const respuesta = await fetch(`${config.HOST}app/controllers/Personas.controlles.php?operacion=${operacion}&dni=${dni}`);
       if (!respuesta.ok) {
         throw new Error("Error al conectarse a la API externa.");
       }
@@ -117,7 +113,7 @@ document.addEventListener("DOMContentLoaded", function () {
       formData.append('rol', $("slcRol").value);
       formData.append('iduser_create', userid);
 
-      const respuesta = await fetch(`${config.HOST}/controllers/Usuario.controller.php`, {
+      const respuesta = await fetch(`${config.HOST}app/controllers/Usuario.controller.php`, {
         method: 'POST',
         body: formData
       });
