@@ -2,7 +2,7 @@
 
 session_start();
 
-$permisos = $_SESSION['permisos'];
+/* $permisos = $_SESSION['permisos']; */
 
 require __DIR__ . '/vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
@@ -130,7 +130,7 @@ if (!isset($_SESSION['login']) || (isset($_SESSION['login']) && !$_SESSION['logi
     <div id="layoutSidenav_content">
       <main>
         <script>
-          const permisos = <?php echo json_encode($permisos); ?>;
+          /* const permisos = <?php echo json_encode($permisos); ?>; */
           const user = <?php echo json_encode($_SESSION['login']); ?>;
         </script>
-        <script src="<?= $host ?>js/Header.js"></script>
+        <!-- <script src="<?= $host ?>js/Header.js"></script> -->
