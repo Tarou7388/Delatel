@@ -41,7 +41,7 @@ class Rol extends Conexion
     $values = array(
       $params['rol'],
       $permisosJson,
-      $params['isUsuario']
+      $params['idUsuario'] 
     );
     return $this->registrar($sql, $values);
   }

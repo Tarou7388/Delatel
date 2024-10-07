@@ -15,7 +15,6 @@ window.addEventListener("DOMContentLoaded", event => {
     if (user != "" && pass != "") {
       const respuesta = await fetch(`${HOST}app/controllers/Usuarios.controllers.php?operacion=login&nombreUser=${user}&pass=${pass}`);
       const datos = await respuesta.json();
-      console.log(datos)
       if (datos.estado) {
         await getPermisos(datos.idRol);
         showToast(datos.mensaje, "SUCCESS");
@@ -29,7 +28,7 @@ window.addEventListener("DOMContentLoaded", event => {
   }
 
   async function getPermisos(idRol) {
-    await fetch(`${HOST}app/controllers/roles.controllers.php?operacion=getPermisos&rol=${idRol}`);
+    await fetch(`${HOST}app/controllers/roles.controllers.php?operacion=listarPermisosIdRol&idRol=${idRol}`);
   }
 
 
@@ -42,5 +41,17 @@ window.addEventListener("DOMContentLoaded", event => {
   $("#btnIniciar").addEventListener("click",async (event) => {
     event.preventDefault();
     await logear();
+  });
+
+  const mostrarPassword = document.getElementById("mostrarPassword");
+  const passwordInput = document.getElementById("txtPassUser");
+  const eyeIcon = document.getElementById("eyeIcon");
+
+  mostrarPassword.addEventListener("click", function () {
+    const type =
+      passwordInput.getAttribute("type") === "password" ? "text" : "password";
+    passwordInput.setAttribute("type", type);
+    eyeIcon.classList.toggle("bi-eye");
+    eyeIcon.classList.toggle("bi-eye-slash");
   });
 });

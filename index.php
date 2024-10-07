@@ -50,7 +50,7 @@ if (isset($_SESSION['login']) && $_SESSION['login']['estado']) {
 										<div class="form-floating mb-3 position-relative">
 											<input type="password" class="form-control" id="txtPassUser" placeholder="Clave de Acceso">
 											<label for="lblPassUser"><i class="bi bi-lock"></i> Clave de Acceso</label>
-											<button type="button" class="btn position-absolute end-0 top-0 mt-2 me-3" id="togglePassword">
+											<button type="button" class="btn position-absolute end-0 top-0 mt-2 me-3" id="mostrarPassword">
 												<i class="bi bi-eye" id="eyeIcon"></i>
 											</button>
 										</div>

@@ -58,7 +58,7 @@ if (!isset($_SESSION['login']) || (isset($_SESSION['login']) && !$_SESSION['logi
         <div class="sb-sidenav-menu">
           <div class="nav">
             <div class="sb-sidenav-menu-heading">Inicio</div>
-            <a class="nav-link" href="<?= $host; ?>dashboard.php">
+            <a class="nav-link" href="<?= $host; ?>index.php">
               <div class="sb-nav-link-icon"><i class="fa-solid fa-chart-line"></i></div>
               Actividades
             </a>
@@ -75,26 +75,12 @@ if (!isset($_SESSION['login']) || (isset($_SESSION['login']) && !$_SESSION['logi
                   <div class="sb-nav-link-icon"><i class="fa-solid fa-wrench"></i></div>
                   Ficha de Soporte
                 </a>
-                <!-- <a class="nav-link" href="<?= $host; ?>views/Soporte/SoporteEscritorio.php">
-                  <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                  Ficha Soporte Escritorio
-                </a> -->
               </div>
             </div>
             <a class="nav-link" href="<?= $host; ?>views/Contactabilidad/" id=molContratos>
               <div class="sb-nav-link-icon"><i class="fa-solid fa-phone"></i></div>
               Contactabilidad
             </a>
-            <!-- <a class="nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse5" aria-expanded="false" aria-controls="collapseExample" id=molContratos >
-              <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-              Contactabilidad
-            </a> -->
-            <!-- <div class="collapse" id="collapse5">
-              <div class="ps-4">
-                
-              </div>
-            </div> -->
-
 
             <a class="nav-link" href="<?= $host; ?>views/Contratos/" id=molContratos>
               <div class="sb-nav-link-icon"><i class="fa-solid fa-file-contract"></i></div>
@@ -121,24 +107,14 @@ if (!isset($_SESSION['login']) || (isset($_SESSION['login']) && !$_SESSION['logi
             </div>
 
 
-            <a class="nav-link" href="<?= $host; ?>views/Usuarios/" id=molPersonas>
+            <a class="nav-link" href="<?= $host; ?>views/Usuarios/" id=molUsuarios>
               <div class="sb-nav-link-icon"><i class="fa-solid fa-users"></i></div>
               Usuarios
             </a>
-            <a class="nav-link" href="<?= $host; ?>views/Personas/" id=molPersonas>
+            <a class="nav-link" href="<?= $host; ?>views/Personas/" id=molClientes>
               <div class="sb-nav-link-icon"><i class="fa-solid fa-user"></i></div>
               Clientes
             </a>
-            <!-- <a class="nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapseExample" id=molPersonas>
-              <div class="sb-nav-link-icon"><i class="fa-solid fa-person"></i></div>
-              Personas
-            </a>
-
-            <div class="collapse" id="collapse4">
-              <div class="ps-4">
-                
-              </div>
-            </div> -->
 
             <a class="nav-link" href="<?= $host; ?>views/Roles/" id=molRoles>
               <div class="sb-nav-link-icon"><i class="fa-regular fa-address-card"></i></div>
