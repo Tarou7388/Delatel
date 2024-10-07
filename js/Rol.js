@@ -6,7 +6,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const rol = document.getElementById("txtRol");
   const form = document.getElementById("frmRol");
   const tbody = document.querySelector("#mostrar");
-  const tbodyModal = document.querySelector("#mdlPermisos");
+  const tbodyModal = document.querySelector("#cardBodyTabla");
 
   btnActualizar.style.display = "none";
   btnAgregar.disabled = false;
@@ -276,7 +276,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   async function rolesPermisos(idRol) {
     const resultado = await fetch(
-      `${config.HOST}app/controllers/Roles.controllers.php?operacion=listarPermisosIdRol=${idRol}`
+      `${config.HOST}app/controllers/Roles.controllers.php?operacion=listarPermisosIdRol&idRol=${idRol}`
     );
     const datos = await resultado.json();
     return datos;
