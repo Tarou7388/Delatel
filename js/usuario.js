@@ -1,27 +1,19 @@
 import config from '../env.js';
+import { inicializarDataTable} from './tools.js';
 
 document.addEventListener("DOMContentLoaded", () => {
-  // if (!permisos[0].permisos.personas.leer) {
-  //   window.location.href = `${config.HOST}views`;
-  // }
-
-  const table = $('#listarUsuarios').DataTable({
-    language: {
-      url: "//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json"
-    },
-    ajax: {
-      url: `${config.HOST}app/controllers/Usuarios.controllers.php?operacion=listarUsuarios`,
-      dataSrc: ''
-    },
-    columns: [
-      { data: "nombre", title: "Nombre" },
-      { data: "nombre_user", title: "Usuario" },
-      { data: "Cargo", title: "Rol" },
+  const table = inicializarDataTable('#tblUsuarios', 
+    `${config.HOST}app/controllers/Usuarios.controllers.php?operacion=listarUsuarios`, 
+    [
+      { data: "nombre", title: "Nombre", className: 'text-center' },
+      { data: "nombre_user", title: "Usuario", className: 'text-center' },
+      { data: "Cargo", title: "Rol", className: 'text-center' },
       {
         data: null,
         title: "Acciones",
+        className: 'text-center',
         render: function (data, type, row) {
-          return `<button class="update-btn btn btn-primary" 
+          return `<button class="btnActualizar btn btn-primary" 
                     data-id="${row.id}" 
                     data-apellidos="${row.apellidos}" 
                     data-nombres="${row.nombres}" 
@@ -29,25 +21,25 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
     ],
-    columnDefs: [
+    [
       { width: "30%", targets: 0 },
       { width: "30%", targets: 1 },
       { width: "20%", targets: 2 },
       { width: "20%", targets: 3 }
     ]
-  });
+  );
 
-  $('.card-body').on('click', '.update-btn', function () {
+  $('.card-body').on('click', '.btnActualizar', function () {
     const id = $(this).data('id');
     const nombres = $(this).data('nombres');
-    const telefono = $(this).data('telefono');
-    openEditModal(id, nombres, telefono);
+    const usuario = $(this).data('nombre_user');
+    abrirModal(id, nombres, usuario);
   });
 });
 
-export function openEditModal(id, nombres, telefono) {
+export function abrirModal(id, nombres, usuario) {
   $('#userId').val(id);
   $('#txtNombre').val(nombres);
-  $('#txtTelPrincipal').val(telefono);
+  $('#txtUsuario').val(usuario);
   $('#editModal').modal('show');
 }

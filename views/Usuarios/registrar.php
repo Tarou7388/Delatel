@@ -89,8 +89,8 @@
 					</div>
 					<div class="col-md-6">
 						<div class="form-floating">
-							<input type="password" id="txtContrasena" name="contrasena" class="form-control" placeholder="Contraseña" required>
-							<label for="txtContrasena">Contraseña</label>
+							<input type="password" id="txtContrasenia" name="contrasena" class="form-control" placeholder="Contraseña" required>
+							<label for="txtContrasenia">Contraseña</label>
 						</div>
 					</div>
 				</div>

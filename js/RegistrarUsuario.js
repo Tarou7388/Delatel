@@ -1,11 +1,14 @@
-import config from '../env.js';
+import config from "../env.js";
 
 document.addEventListener("DOMContentLoaded", function () {
-  const userid = JSON.stringify(user["idUsuario"]); 
+  const userid = JSON.stringify(user["idUsuario"]);
 
   function $(id) {
     return document.getElementById(id);
   }
+
+  let idPersonaEncontrada = null;
+
   $("btnBuscar").addEventListener("click", async () => {
     const dni = $("txtNumDocumentoPersona").value;
 
@@ -15,7 +18,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     try {
-      const respuesta = await fetch(`${config.HOST}app/controllers/Personas.controlles.php?operacion=buscarPersonaDni&dni=${dni}`);
+      const respuesta = await fetch(
+        `${config.HOST}app/controllers/Personas.controlles.php?operacion=buscarPersonaDni=${dni}`
+      );
       if (!respuesta.ok) {
         throw new Error("Error en la solicitud al servidor.");
       }
@@ -23,17 +28,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (data.id_persona) {
         idPersonaEncontrada = data.id_persona;
+        console.log(idPersonaEncontrada);
         showToast("Persona encontrada en la base de datos.", "SUCCESS");
       } else {
-        const persona = await BuscarPersonaAPI('getapi', dni);
+        const persona = await BuscarPersonaAPI("obtenerDni", dni);
         if (persona) {
           $("txtNombre").value = persona.nombres;
-          $("txtApe").value = `${persona.apellidoPaterno} ${persona.apellidoMaterno}`;
+          $(
+            "txtApe"
+          ).value = `${persona.apellidoPaterno} ${persona.apellidoMaterno}`;
           $("txtNombre").disabled = true;
           $("txtApe").disabled = true;
           $("txtEmail").disabled = false;
           $("txtUsuario").disabled = false;
-          $("txtContrasena").disabled = false;
+          $("txtContrasenia").disabled = false;
           $("slcRol").disabled = false;
 
           idPersonaEncontrada = await RegistrarPersona(dni);
@@ -50,12 +58,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const obtenerRoles = async () => {
     try {
-      const respuesta = await fetch(`${config.HOST}app/controllers/Roles.controllers.php?operacion=getAllRol`);
+      const respuesta = await fetch(
+        `${config.HOST}app/controllers/Roles.controllers.php?operacion=getAllRol`
+      );
       if (!respuesta.ok) {
         throw new Error("Error al obtener los roles.");
       }
       const data = await respuesta.json();
-      data.forEach(element => {
+      data.forEach((element) => {
         const option = new Option(element.rol, element.id);
         $("slcRol").add(option);
       });
@@ -66,7 +76,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   async function BuscarPersonaAPI(operacion, dni) {
     try {
-      const respuesta = await fetch(`${config.HOST}app/controllers/Personas.controlles.php?operacion=${operacion}&dni=${dni}`);
+      const respuesta = await fetch(
+        `${config.HOST}app/controllers/Personas.controlles.php?operacion=${operacion}&dni=${dni}`
+      );
       if (!respuesta.ok) {
         throw new Error("Error al conectarse a la API externa.");
       }
@@ -80,19 +92,22 @@ document.addEventListener("DOMContentLoaded", function () {
   async function RegistrarPersona(dni) {
     try {
       const formData = new FormData();
-      formData.append('nacionalidad', $("slcNacionalidad").value);
-      formData.append('tipo_doc', $("slcDocumento").value);
-      formData.append('nro_doc', dni);
-      formData.append('nombres', $("txtNombre").value);
-      formData.append('apellidos', $("txtApe").value);
-      formData.append('telefono', $("txtTelefono").value);
-      formData.append('email', $("txtEmail").value);
-      formData.append('iduser_create', userid);
+      formData.append("nacionalidad", $("slcNacionalidad").value);
+      formData.append("tipo_doc", $("slcDocumento").value);
+      formData.append("nro_doc", dni);
+      formData.append("nombres", $("txtNombre").value);
+      formData.append("apellidos", $("txtApe").value);
+      formData.append("telefono", $("txtTelefono").value);
+      formData.append("email", $("txtEmail").value);
+      formData.append("iduser_create", userid);
 
-      const respuesta = await fetch(`${config.HOST}app/controllers/Personas.controlles.php`, {
-        method: 'POST',
-        body: formData
-      });
+      const respuesta = await fetch(
+        `${config.HOST}app/controllers/Personas.controlles.php`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
       if (!respuesta.ok) {
         throw new Error("Error al registrar la persona.");
       }
@@ -107,16 +122,19 @@ document.addEventListener("DOMContentLoaded", function () {
   async function RegistrarUsuario(idPersona) {
     try {
       const formData = new FormData();
-      formData.append('id_persona', idPersona);
-      formData.append('usuario', $("txtUsuario").value);
-      formData.append('contrasena', $("txtContrasena").value);
-      formData.append('rol', $("slcRol").value);
-      formData.append('iduser_create', userid);
+      formData.append("id_persona", idPersona);
+      formData.append("usuario", $("txtUsuario").value);
+      formData.append("contrasena", $("txtContrasena").value);
+      formData.append("rol", $("slcRol").value);
+      formData.append("iduser_create", userid);
 
-      const respuesta = await fetch(`${config.HOST}app/controllers/Usuario.controller.php`, {
-        method: 'POST',
-        body: formData
-      });
+      const respuesta = await fetch(
+        `${config.HOST}app/controllers/Usuario.controller.php`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       if (!respuesta.ok) {
         throw new Error("Error al registrar el usuario.");
@@ -134,38 +152,48 @@ document.addEventListener("DOMContentLoaded", function () {
       showToast("Ocurrió un error: " + error.message, "ERROR");
     }
   }
-  
+
   const configurarSelectsDocumento = () => {
     const slcNacionalidad = $("slcNacionalidad");
     const slcDocumento = $("slcDocumento");
-    const peruanoOpcion = new Option('Peruano', 'Peruano');
-    peruanoOpcion.id = 'peruanoOpcion';
+    const peruanoOpcion = new Option("Peruano", "Peruano");
+    peruanoOpcion.id = "peruanoOpcion";
 
-    $("txtNumDocumentoPersona").addEventListener('input', cambiarslc);
+    $("txtNumDocumentoPersona").addEventListener("input", cambiarslc);
 
     function cambiarslc() {
       const length = $("txtNumDocumentoPersona").value.length;
 
       if (length === 8) {
-        if (![...slcNacionalidad.options].some(option => option.value === 'Peruano')) {
+        if (
+          ![...slcNacionalidad.options].some(
+            (option) => option.value === "Peruano"
+          )
+        ) {
           slcNacionalidad.add(peruanoOpcion);
         }
-        slcDocumento.value = 'DNI';
+        slcDocumento.value = "DNI";
         slcDocumento.disabled = true;
-        slcNacionalidad.value = 'Peruano';
+        slcNacionalidad.value = "Peruano";
         slcNacionalidad.disabled = true;
       } else {
-        if ([...slcNacionalidad.options].some(option => option.value === 'Peruano')) {
-          slcNacionalidad.remove(slcNacionalidad.querySelector('#peruanoOpcion').index);
+        if (
+          [...slcNacionalidad.options].some(
+            (option) => option.value === "Peruano"
+          )
+        ) {
+          slcNacionalidad.remove(
+            slcNacionalidad.querySelector("#peruanoOpcion").index
+          );
         }
         slcDocumento.disabled = false;
 
         if (length === 12) {
-          slcDocumento.value = 'PAS';
+          slcDocumento.value = "PAS";
         } else if (length === 10) {
-          slcDocumento.value = 'CAR';
+          slcDocumento.value = "CAR";
         } else {
-          slcDocumento.value = '';
+          slcDocumento.value = "";
         }
         slcNacionalidad.disabled = false;
       }
@@ -173,8 +201,8 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   (async function iniciarAplicacion() {
-    await obtenerRoles();          
-    configurarSelectsDocumento();  
+    await obtenerRoles();
+    configurarSelectsDocumento();
   })();
 
   $("registerForm").addEventListener("submit", async (event) => {

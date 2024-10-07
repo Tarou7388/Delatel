@@ -39,12 +39,12 @@
           <input type="hidden" id="userId" name="userId">
 
           <div class="form-floating mb-3">
-            <input type="text" id="txtNombre" name="nombre" class="form-control" required>
+            <input type="text" id="txtNombre" name="nombre" class="form-control" placeholder="Nombre" required>
             <label for="txtNombre">Nombre</label>
           </div>
 
           <div class="form-floating mb-3">
-            <input type="text" id="txtUsuario" name="usuario" class="form-control" required>
+            <input type="text" id="txtUsuario" name="usuario" class="form-control" placeholder="Usuario" required>
             <label for="txtUsuario">Usuario</label>
           </div>
 
