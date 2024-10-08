@@ -18,14 +18,6 @@ async function ask(pregunta = ``, modulo = `Delatel`){
   return respuesta.isConfirmed;
 }
 
-//Implementarlo así:
-/*
-document.querySelector("#btn1").addEventListener("click", async () => {
-  if (await ask("¿Por qué siempre pierde la selección?")){
-    console.log("Porque no hay inversión")
-  }
-})
-*/
 
 //Puede ser de 4 tipos: INFO, WARNING, ERROR, SUCCESS
 function showToast(message = ``, type = `INFO`, duration = 2500, url = null){

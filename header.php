@@ -2,8 +2,6 @@
 
 session_start();
 
-/* $permisos = $_SESSION['permisos']; */
-
 require __DIR__ . '/vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
@@ -47,7 +45,7 @@ if (!isset($_SESSION['login']) || (isset($_SESSION['login']) && !$_SESSION['logi
         <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i>
         </a>
         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-          <li><a class="dropdown-item" href="<?= $host ?>app/controllers/Usuarios.controllers.php?operacion=cerrarSesion"><i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión</a></li>
+          <li><a class="dropdown-item" href="<?= $host ?>app/controllers/Usuario.controllers.php?operacion=cerrarSesion"><i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión</a></li>
         </ul>
       </li>
     </ul>
@@ -130,7 +128,5 @@ if (!isset($_SESSION['login']) || (isset($_SESSION['login']) && !$_SESSION['logi
     <div id="layoutSidenav_content">
       <main>
         <script>
-          /* const permisos = <?php echo json_encode($permisos); ?>; */
           const user = <?php echo json_encode($_SESSION['login']); ?>;
         </script>
-        <!-- <script src="<?= $host ?>js/Header.js"></script> -->

@@ -353,14 +353,12 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.getElementById("btnGuardar").addEventListener("click", async () => {
-    if(permisos[0].permisos.contratos.crear){
-      if(!flagFichaInstalacion){
-        await guardar();
-        showToast("Ficha de Instalación Guardarda Correctamente", "SUCCESS");
-        window.location.href = `${config.HOST}/views/Contratos/Index.php`;
-      }else{
-        showToast("La ficha de instalación ya ha sido guardada.", "WARNING");
-      }
+    if(!flagFichaInstalacion){
+      await guardar();
+      showToast("Ficha de Instalación Guardarda Correctamente", "SUCCESS");
+      window.location.href = `${config.HOST}/views/Contratos/Index.php`;
+    }else{
+      showToast("La ficha de instalación ya ha sido guardada.", "WARNING");
     }
   });
   document.getElementById('txtFecha').value = today;

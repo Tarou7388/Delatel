@@ -8,7 +8,7 @@
 			<i class="fas fa-table me-1"></i> Complete los Campos
 		</div>
 		<div class="card-body">
-			<form id="registerForm" action="registrar_usuario_action.php" method="POST">
+			<form id="registerForm" action="" method="POST">
 				<div class="row mb-3">
 					<div class="col-md-4">
 						<div class="input-group">
@@ -89,14 +89,14 @@
 					</div>
 					<div class="col-md-6">
 						<div class="form-floating">
-							<input type="password" id="txtContrasenia" name="contrasena" class="form-control" placeholder="Contraseña" required>
+							<input type="text" id="txtContrasenia" name="contrasena" class="form-control" placeholder="Contraseña" required>
 							<label for="txtContrasenia">Contraseña</label>
 						</div>
 					</div>
 				</div>
 
 				<div class="text-end">
-					<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmModal">Registrar</button>
+					<button type="submit" class="btn btn-success">Registrar</button>
 					<a href="index.php" class="btn btn-secondary">Cancelar</a>
 				</div>
 			</form>
@@ -105,7 +105,7 @@
 </div>
 
 <!-- Modal de Confirmación -->
-<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+<!-- <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -122,7 +122,7 @@
 		</div>
 	</div>
 </div>
-
+ -->
 <?php require_once "../../footer.php"; ?>
 
 <script src="../../js/RegistrarUsuario.js" type="module"></script>

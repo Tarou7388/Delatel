@@ -3,7 +3,7 @@ import { inicializarDataTable} from './tools.js';
 
 document.addEventListener("DOMContentLoaded", () => {
   const table = inicializarDataTable('#tblUsuarios', 
-    `${config.HOST}app/controllers/Usuarios.controllers.php?operacion=listarUsuarios`, 
+    `${config.HOST}app/controllers/Usuario.controllers.php?operacion=listarUsuarios`, 
     [
       { data: "nombre", title: "Nombre", className: 'text-center' },
       { data: "nombre_user", title: "Usuario", className: 'text-center' },

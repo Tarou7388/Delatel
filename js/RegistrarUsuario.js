@@ -19,16 +19,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     try {
       const respuesta = await fetch(
-        `${config.HOST}app/controllers/Persona.controlles.php?operacion=buscarPersonaDni=${dni}`
+        `${config.HOST}app/controllers/Persona.controlles.php?operacion=buscarPersonaDni&dni=${dni}`
       );
       if (!respuesta.ok) {
         throw new Error("Error en la solicitud al servidor.");
       }
       const data = await respuesta.json();
-
       if (data.id_persona) {
         idPersonaEncontrada = data.id_persona;
-        console.log(idPersonaEncontrada);
+        console.log("Persona:" + idPersonaEncontrada);
         showToast("Persona encontrada en la base de datos.", "SUCCESS");
       } else {
         const persona = await BuscarPersonaAPI("obtenerDni", dni);
