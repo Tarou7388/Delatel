@@ -1,4 +1,4 @@
-
+USE Delatel;
 
 INSERT INTO `tb_departamentos` (`id_departamento`, `departamento`) VALUES
 ('01', 'Amazonas'),

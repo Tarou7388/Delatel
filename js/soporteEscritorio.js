@@ -6,12 +6,25 @@ window.addEventListener('DOMContentLoaded', function () {
   const wisp = document.getElementById('lstWisp');
   const gpon = document.getElementById('lstGpon');
   const cable = document.getElementById('lstCable');
+  const botonbuscar = document.getElementById('btnNrodocumento');
+
+
+
+  async function BuscarcontratoNDoc(numdocumento) {
+
+    const respuesta = await fetch(`${config.HOST}/app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${numdocumento}`);
+
+    const data = await respuesta.json();
+
+    console.log(data);
+
+  };
 
   var today = new Date().toISOString().split('T')[0];
   document.getElementById('txtFecha').value = today;
   const dropdownItems = document.querySelectorAll('.list-group-item');
   const dropdownButton = document.getElementById('btnModal');
-  
+
   dropdownItems.forEach(function (item) {
     item.addEventListener('click', function () {
       const value = this.getAttribute('data-value');
@@ -57,4 +70,10 @@ window.addEventListener('DOMContentLoaded', function () {
   checkbox2.addEventListener('change', function () {
     checkboxText2.textContent = this.checked ? 'Sí' : 'No';
   });
+
+  botonbuscar.addEventListener("click", async () => {
+    const dni = document.getElementById('txtNrodocumento').value;
+    await BuscarcontratoNDoc(dni);
+  });
+
 });

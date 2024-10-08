@@ -35,8 +35,6 @@ CREATE TABLE tb_tipo_soporte (
     CONSTRAINT tiposopor_uk_tipo_soporte UNIQUE (tipo_soporte)
 ) ENGINE = InnoDB;
 
-
-
 CREATE TABLE tb_roles (
     id_rol INT AUTO_INCREMENT PRIMARY KEY,
     rol VARCHAR(30) NOT NULL,
