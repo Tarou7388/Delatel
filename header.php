@@ -47,7 +47,7 @@ if (!isset($_SESSION['login']) || (isset($_SESSION['login']) && !$_SESSION['logi
         <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i>
         </a>
         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-          <li><a class="dropdown-item" href="<?= $host ?>app/controllers/Usuarios.controllers.php?operacion=cerrarSesion"><i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión</a></li>
+          <li><a class="dropdown-item" href="<?= $host ?>app/controllers/Usuario.controllers.php?operacion=cerrarSesion"><i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión</a></li>
         </ul>
       </li>
     </ul>
