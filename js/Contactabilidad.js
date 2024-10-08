@@ -71,7 +71,6 @@ window.addEventListener('DOMContentLoaded', function () {
     });
   };
 
-  // Función autoejecutable principal que llama a las otras funciones
   (async function iniciarAplicacion() {
     await cargarPlanes();
     await cargarPersonas();

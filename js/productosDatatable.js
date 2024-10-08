@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", function () {
         };
 
         try {
-            const response = await fetch(`${config.HOST}app/controllers/Productos.controllers.php?operacion=update`, {
+            const response = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=actualizarProducto`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

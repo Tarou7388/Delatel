@@ -16,12 +16,12 @@ window.addEventListener("DOMContentLoaded", () => {
   let idCliente = 0;
 
   const fetchSectores = async () => {
-    const response = await fetch(`${config.HOST}app/controllers/Sectores.controllers.php?operacion=listarSectores`);
+    const response = await fetch(`${config.HOST}app/controllers/Sector.controllers.php?operacion=listarSectores`);
     return await response.json();
   };
 
   const fetchPaquetes = async () => {
-    const response = await fetch(`${config.HOST}app/controllers/Paquetes.controllers.php?operacion=listarPaquetes`);
+    const response = await fetch(`${config.HOST}app/controllers/Paquete.controllers.php?operacion=listarPaquetes`);
     return await response.json();
   };
 
@@ -39,7 +39,7 @@ window.addEventListener("DOMContentLoaded", () => {
     if (dni.value == "") {
       showToast("¡Ingrese numero de documento!", "INFO");
     } else {
-      const response = await fetch(`${config.HOST}app/controllers/cliente.controllers.php?operacion=buscarClienteDoc&numDoc=${dni.value}`);
+      const response = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&numDoc=${dni.value}`);
       const data = await response.json();
       if (data.length > 0) {
         nombre.value = data[0].nombre;

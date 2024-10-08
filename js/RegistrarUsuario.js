@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     try {
       const respuesta = await fetch(
-        `${config.HOST}app/controllers/Personas.controlles.php?operacion=buscarPersonaDni=${dni}`
+        `${config.HOST}app/controllers/Persona.controlles.php?operacion=buscarPersonaDni=${dni}`
       );
       if (!respuesta.ok) {
         throw new Error("Error en la solicitud al servidor.");
@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const obtenerRoles = async () => {
     try {
       const respuesta = await fetch(
-        `${config.HOST}app/controllers/Roles.controllers.php?operacion=getAllRol`
+        `${config.HOST}app/controllers/Rol.controllers.php?operacion=listarRoles`
       );
       if (!respuesta.ok) {
         throw new Error("Error al obtener los roles.");
@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
   async function BuscarPersonaAPI(operacion, dni) {
     try {
       const respuesta = await fetch(
-        `${config.HOST}app/controllers/Personas.controlles.php?operacion=${operacion}&dni=${dni}`
+        `${config.HOST}app/controllers/Persona.controlles.php?operacion=${operacion}&dni=${dni}`
       );
       if (!respuesta.ok) {
         throw new Error("Error al conectarse a la API externa.");
@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", function () {
       formData.append("iduser_create", userid);
 
       const respuesta = await fetch(
-        `${config.HOST}app/controllers/Personas.controlles.php`,
+        `${config.HOST}app/controllers/Persona.controlles.php`,
         {
           method: "POST",
           body: formData,

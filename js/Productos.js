@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
       params.append("Codigo_Barras", CodigoBarras.value);
       params.append("iduser_create", userid);
 
-      fetch(`${config.HOST}app/controllers/Productos.controllers.php`, {
+      fetch(`${config.HOST}app/controllers/Producto.controllers.php`, {
         method: "POST",
         body: params,
       })

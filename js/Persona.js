@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function ObtenerDataDNI(operacion, dni) {
-    fetch(`${config.HOST}app/controllers/Personas.controlles.php?operacion=${operacion}&dni=${encodeURIComponent(dni)}`)
+    fetch(`${config.HOST}app/controllers/Persona.controlles.php?operacion=${operacion}&dni=${encodeURIComponent(dni)}`)
       .then((response) => response.json())
       .then((data) => {
         txtNombresPersona.value = data.nombres ?? "";
@@ -105,7 +105,7 @@ document.addEventListener("DOMContentLoaded", function () {
         body: params,
       };
 
-      fetch(`${config.HOST}app/controllers/Personas.controlles.php`, options)
+      fetch(`${config.HOST}app/controllers/Persona.controlles.php`, options)
         .then((response) => response.json())
         .then((data) => {
           if (data.id_persona > 0) {
@@ -158,7 +158,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
   async function cargarPaquetes() {
-    const response = await fetch(`${config.HOST}app/controllers/Paquetes.controllers.php?operacion=listarPaquetes`);
+    const response = await fetch(`${config.HOST}app/controllers/Paquete.controllers.php?operacion=listarPaquetes`);
     const data = await response.json();
     data.forEach((paquetes) => {
       const option = document.createElement("option");

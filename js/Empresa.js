@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {
       body: params,
     };
 
-    fetch(`${config.HOST}app/controllers/Empresas.controllers.php`, options)
+    fetch(`${config.HOST}app/controllers/Empresa.controllers.php`, options)
       .then(response => response.json())
       .then(data => {
         registrarcliente(data.id_empresa);
@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   const ObtenerDataRUC = (operacion, ruc) => {
-    fetch(`${config.HOST}app/controllers/Personas.controlles.php?operacion=${operacion}&ruc=${encodeURIComponent(ruc)}`)
+    fetch(`${config.HOST}app/controllers/Persona.controlles.php?operacion=${operacion}&ruc=${encodeURIComponent(ruc)}`)
       .then(response => response.json())
       .then(data => {
         txtRazonSocial.value = data.razonSocial;

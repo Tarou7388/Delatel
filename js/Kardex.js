@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
       );
       const data = await response.json();
       const response2 = await fetch(
-        `${config.HOST}app/controllers/Productos.controllers.php?operacion=buscarProductoId&id_producto=${idproducto}`
+        `${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoId&id_producto=${idproducto}`
       );
       const data2 = await response2.json();
       stockactualField.value =

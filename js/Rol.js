@@ -45,7 +45,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const obtenerRoles = async () => {
     try {
       const respuesta = await fetch(
-        `${config.HOST}app/controllers/Roles.controllers.php?operacion=getAllRol`
+        `${config.HOST}app/controllers/Rol.controllers.php?operacion=listarRoles`
       );
       const datos = await respuesta.json();
       listarRol(datos); // Función que procesa y muestra los roles
@@ -140,7 +140,7 @@ window.addEventListener("DOMContentLoaded", () => {
       operacion: "registrarRoles",
       rol: rol.value,
     };
-    fetch(`${config.HOST}app/controllers/Roles.controllers.php`, {
+    fetch(`${config.HOST}app/controllers/Rol.controllers.php`, {
       method: "POST",
       body: JSON.stringify({
         permisos: json,
@@ -186,7 +186,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const datosAdicionales = {
       operacion: "actualizarRol",
     };
-    fetch("../../app/controllers/Roles.controllers.php", {
+    fetch(`${config.HOST}app/controllers/Rol.controllers.php`, {
       method: "PUT",
       body: JSON.stringify({
         adicionales: datosAdicionales,
@@ -242,7 +242,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const datosAdicionales = {
       operacion: "eliminarRol",
     };
-    fetch("../../app/controllers/Roles.controllers.php", {
+    fetch(`${config.HOST}app/controllers/Rol.controllers.php`, {
       method: "PUT",
       body: JSON.stringify({
         adicionales: datosAdicionales,
@@ -276,7 +276,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   async function rolesPermisos(idRol) {
     const resultado = await fetch(
-      `${config.HOST}app/controllers/Roles.controllers.php?operacion=listarPermisosIdRol&idRol=${idRol}`
+      `${config.HOST}app/controllers/Rol.controllers.php?operacion=listarPermisosIdRol&idRol=${idRol}`
     );
     const datos = await resultado.json();
     return datos;
@@ -395,7 +395,7 @@ window.addEventListener("DOMContentLoaded", () => {
       idRol: idRolActual,
     };
 
-    fetch(`${config.HOST}app/controllers/Roles.controllers.php`, {
+    fetch(`${config.HOST}app/controllers/Rol.controllers.php`, {
       method: "PUT",
       body: JSON.stringify({
         permisos: permisosActualizados,

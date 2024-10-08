@@ -13,7 +13,7 @@ window.addEventListener("DOMContentLoaded", event => {
     const pass = $("#txtPassUser").value;
 
     if (user != "" && pass != "") {
-      const respuesta = await fetch(`${HOST}app/controllers/Usuarios.controllers.php?operacion=login&nombreUser=${user}&pass=${pass}`);
+      const respuesta = await fetch(`${HOST}app/controllers/Usuario.controllers.php?operacion=login&nombreUser=${user}&pass=${pass}`);
       const datos = await respuesta.json();
       if (datos.estado) {
         await getPermisos(datos.idRol);
@@ -28,7 +28,7 @@ window.addEventListener("DOMContentLoaded", event => {
   }
 
   async function getPermisos(idRol) {
-    await fetch(`${HOST}app/controllers/roles.controllers.php?operacion=listarPermisosIdRol&idRol=${idRol}`);
+    await fetch(`${HOST}app/controllers/Rol.controllers.php?operacion=listarPermisosIdRol&idRol=${idRol}`);
   }
 
 

@@ -357,7 +357,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if(!flagFichaInstalacion){
         await guardar();
         showToast("Ficha de Instalación Guardarda Correctamente", "SUCCESS");
-        window.location.href = `${config.HOST}/views/Contratos/ContratosGeneral.php`;
+        window.location.href = `${config.HOST}/views/Contratos/Index.php`;
       }else{
         showToast("La ficha de instalación ya ha sido guardada.", "WARNING");
       }
