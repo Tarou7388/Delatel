@@ -1,5 +1,5 @@
 import config from '../env.js';
-const ruta = `${config.HOST}app/controllers/kardex.controllers.php?operacion=listarKardex`;
+const ruta = `${config.HOST}app/controllers/Kardex.controllers.php?operacion=listarKardex`;
 
 window.tablaKardex = $('#TbKardex').DataTable({
     dom: `
