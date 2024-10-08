@@ -55,7 +55,7 @@ class Persona extends Conexion
     {
         $sql = "CALL spu_personas_buscar_dni(?)";
         $values = array(
-            $params['nroDoc']
+            $params['dni']
         );
         return $this->consultaParametros($sql, $values);
     }
