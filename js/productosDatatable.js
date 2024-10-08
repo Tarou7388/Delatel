@@ -1,10 +1,6 @@
 import config from '../env.js';
 
 document.addEventListener("DOMContentLoaded", function () {
-    if (permisos[0].permisos.inventariado.leer != 1) {
-        window.location.href = `${config.HOST}views`;
-    }
-
     const userid = user['idUsuario'];
     const ruta = `${config.HOST}app/controllers/Productos.controllers.php?operacion=listarProductos`;
 
@@ -102,11 +98,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // 4. Evento para enviar el formulario de edición
     $('#form-editar-producto').on('submit', async function (e) {
         e.preventDefault();
-
-        if (permisos[0].permisos.inventariado.crear != 1) {
-            showToast("No tienes permiso para esta acción", "ERROR");
-            return;
-        }
 
         const datosProducto = {
             id_producto: $('#txtIdProducto').val(),

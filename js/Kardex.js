@@ -1,9 +1,6 @@
 import config from '../env.js';
 
 document.addEventListener("DOMContentLoaded", function () {
-  // if (permisos[0].permisos.inventariado.leer != 1) {
-  //   window.location.href = `${config.HOST}views`;
-  // }
   // 1. Variables locales
   const userid = user['idUsuario'];
   const tipoMovimientoSelect = document.getElementById("slcTipomovimiento");
@@ -69,11 +66,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function GuardarKardex() {
-    if (permisos[0].permisos.inventariado.crear != 1) {
-      showToast("No tienes permiso para esta acción", "WARNING");
-      return;
-    }
-
     const params = new FormData();
     params.append("operacion", "registrarKardex");
     params.append("idproducto", idproductoField.value);

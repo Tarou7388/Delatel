@@ -3,9 +3,6 @@ import config from "../env.js";
 document.addEventListener("DOMContentLoaded", function () {
 
   const userid = JSON.stringify(user['idUsuario']);
-  // if (permisos[0].permisos.personas.leer != 1) {
-  //   window.location.href = `${config.HOST}views`;
-  // }
 
   const divEmpresaCard = document.getElementById("divEmpresaCard");
   const frmEmpresas = document.getElementById("frmEmpresas");
@@ -113,11 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
   frmEmpresas.addEventListener("submit", (event) => {
     event.preventDefault();
     if (!verificarCampos()) {
-      if (permisos[0].permisos.personas.crear != 1) {
-        showToast("¡No tienes permisos de registrar!", "WARNING");
-      } else {
         registrarEmpresa();
-      }
     }
   });
 
