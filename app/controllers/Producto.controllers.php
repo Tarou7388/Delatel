@@ -14,11 +14,11 @@ if (isset($_POST['operacion'])) {
     case 'registrarProducto':
       $datos = [
         "marca"             => Herramientas::sanitizarEntrada($_POST['marca']),
-        "tipo_producto"     => Herramientas::sanitizarEntrada($_POST['tipo_producto']),
+        "tipo_producto"     => Herramientas::sanitizarEntrada($_POST['tipoProducto']),
         "modelo"            => Herramientas::sanitizarEntrada($_POST['modelo']),
-        "precio_actual"     => Herramientas::sanitizarEntrada($_POST['precio_actual']),
-        "Codigo_Barras"     => Herramientas::sanitizarEntrada($_POST['Codigo_Barras']),
-        "iduser_create"     => Herramientas::sanitizarEntrada($_POST["iduser_create"])
+        "precio_actual"     => Herramientas::sanitizarEntrada($_POST['precioActual']),
+        "Codigo_Barras"     => Herramientas::sanitizarEntrada($_POST['codigoBarra']),
+        "iduser_create"     => Herramientas::sanitizarEntrada($_POST["idUsuario"])
       ];
       $estado = $producto->registrarProducto($datos);
       echo json_encode(["Guardado" => $estado]);

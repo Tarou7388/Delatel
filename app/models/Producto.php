@@ -29,7 +29,7 @@ class Producto extends Conexion
   }
   
   /**
-   * Listar todos los productos.
+   * Lista todos los productos.
    *
    * Esta función ejecuta una consulta SQL para obtener todos los productos
    * de la tabla 'tb_productos' ordenados por 'id_producto' en orden descendente.
@@ -49,24 +49,24 @@ class Producto extends Conexion
    *
    * @param array $params Un array asociativo que contiene las siguientes claves:
    *                      - 'marca' (string): La marca del producto.
-   *                      - 'tipo_producto' (string): El tipo de producto.
+   *                      - 'tipoProducto' (string): El tipo de producto.
    *                      - 'modelo' (string): El modelo del producto.
-   *                      - 'precio_actual' (float): El precio actual del producto.
-   *                      - 'codigo_barra' (string): El código de barras del producto.
-   *                      - 'iduser_create' (int): El ID del usuario que está creando el producto.
+   *                      - 'precioActual' (float): El precio actual del producto.
+   *                      - 'codigoBarra' (string): El código de barras del producto.
+   *                      - 'idUsuario' (int): El ID del usuario que está creando el producto.
    *
-   * @return bool El resultado sera verdadero si se realiza o falso si falla.
+   * @return bool El resultado será verdadero si se realiza correctamente o falso si falla.
    */
   public function registrarProducto($params = [])
   {
     $sql = "CALL spu_productos_registrar(?,?,?,?,?,?)";
     $values = array(
       $params['marca'],
-      $params['tipo_producto'],
+      $params['tipoProducto'],
       $params['modelo'],
-      $params['precio_actual'],
-      $params['codigo_barra'],
-      $params['iduser_create']
+      $params['precioActual'],
+      $params['codigoBarra'],
+      $params['idUsuario']
     );
     return $this->registrar($sql, $values);
   }
@@ -78,15 +78,15 @@ class Producto extends Conexion
    * los detalles del producto en la base de datos.
    *
    * @param array $params Un array asociativo que contiene las siguientes claves:
-   *  - 'id_producto' (int): El ID del producto a actualizar.
+   *  - 'idProducto' (int): El ID del producto a actualizar.
    *  - 'marca' (string): La marca del producto.
-   *  - 'tipo_producto' (string): El tipo de producto.
+   *  - 'tipoProducto' (string): El tipo de producto.
    *  - 'modelo' (string): El modelo del producto.
-   *  - 'precio_actual' (float): El precio actual del producto.
-   *  - 'codigo_barra' (string): El código de barras del producto.
-   *  - 'iduser_update' (int): El ID del usuario que realiza la actualización.
+   *  - 'precioActual' (float): El precio actual del producto.
+   *  - 'codigoBarra' (string): El código de barras del producto.
+   *  - 'idUsuario' (int): El ID del usuario que realiza la actualización.
    *
-   * @return bool El resultado sera verdadero si se realiza o falso si falla.
+   * @return bool El resultado será verdadero si se realiza correctamente o falso si falla.
    */
   public function actualizarProducto($params = [])
   {
