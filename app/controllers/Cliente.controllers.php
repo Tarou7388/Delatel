@@ -1,12 +1,17 @@
 <?php
+
+use App\Controllers\Herramientas;
+
 require_once '../models/Cliente.php';
+require_once './Heramientas.php';
+
 
 $cliente = new Cliente();
 
 if (isset($_GET['operacion'])) {
   switch ($_GET['operacion']) {
     case 'buscarClienteDoc':
-      $valor = $_GET['numDoc'];
+      $valor = Herramientas::sanitizarEntrada($_GET['valor']);
       if ($valor) {
         if (strlen($valor) == 9 || strlen($valor) == 8) {
           $resultado = $cliente->buscarClienteNumdoc(["numDoc" => $valor]);
@@ -52,15 +57,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
   switch ($operacion) {
     case 'actualizarCliente':
       $datos = [
-        "identificador"   => $datos['identificador'],
-        "nombre"          => $datos['nombre'],
-        "apellidos"       => $datos['apellidos'],
-        "email"           => $datos['email'],
-        "telefono"        => $datos['telefono'],
-        "direccion"       => $datos['direccion'],
-        "referencia"      => $datos['referencia'],
-        "coordenadas"     => $datos['coordenadas'],
-        "idUsuario"       => $datos['idUsuario']
+        "identificador"   => Herramientas::formatearFecha($datos['identificador']),
+        "nombre"          => Herramientas::sanitizarEntrada($datos['nombre']),
+        "apellidos"       => Herramientas::sanitizarEntrada($datos['apellidos']),
+        "email"           => Herramientas::sanitizarEntrada($datos['email']),
+        "telefono"        => Herramientas::sanitizarEntrada($datos['telefono']),
+        "direccion"       => Herramientas::sanitizarEntrada($datos['direccion']),
+        "referencia"      => Herramientas::sanitizarEntrada($datos['referencia']),
+        "coordenadas"     => Herramientas::sanitizarEntrada($datos['coordenadas']),
+        "idUsuario"       => Herramientas::sanitizarEntrada($datos['idUsuario'])
       ];
 
       $estado = $cliente->actualizarClienteNumdoc($datos);
@@ -68,8 +73,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
       break;
     case 'eliminarCliente':
       $datosDelete = [
-        "idCliente"   => $datos['idCliente'],
-        "idUsuario" => $datos['idUsuario']
+        "idCliente"   => Herramientas::sanitizarEntrada($datos['idCliente']),
+        "idUsuario" => Herramientas::sanitizarEntrada($datos['idUsuario'])
       ];
 
       $estado = $cliente->eliminarClienteNumdoc($datosDelete);

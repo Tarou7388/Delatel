@@ -1,13 +1,20 @@
 <?php
+
+use App\Controllers\Herramientas;
+
 session_start();
 
 require_once '../models/Usuarios.php';
+require_once './Herramientas.php';
 
 $usuario = new Usuario();
 
 if (isset($_GET["operacion"])) {
-    if ($_GET["operacion"] == "login") {
-        $resultado = $usuario->login(["nombreUser" => $_GET["nombreUser"]]);
+    $operacion = Herramientas::sanitizarEntrada($_GET["operacion"]);
+    if ($operacion == "login") {
+        $nombreUser = Herramientas::sanitizarEntrada($_GET["nombreUser"]);
+        $pass = Herramientas::sanitizarEntrada($_GET["pass"]);
+        $resultado = $usuario->login(["nombreUser" => $nombreUser]);
         $Login = [
             "estado" => false,
             "idRol" => -1,
@@ -15,7 +22,7 @@ if (isset($_GET["operacion"])) {
             "mensaje" => ""
         ];
         if ($resultado != false) {
-            if (password_verify($_GET['pass'], $resultado["pass"])) {
+            if (password_verify($pass, $resultado["pass"])) {
                 $Login['estado'] = true;
                 $Login['idRol'] = $resultado['id_rol'];
                 $Login['idUsuario'] = $resultado['id_usuario'];
@@ -29,30 +36,33 @@ if (isset($_GET["operacion"])) {
         }
         echo json_encode($Login);
     }
-    if ($_GET["operacion"] == "cerrarSesion") {
+    if ($operacion == "cerrarSesion") {
         session_unset();
         session_destroy();
         header("Location: http://localhost/Delatel");
     }
 
-    if ($_GET["operacion"] == "listarUsuarios") {
+    if ($operacion == "listarUsuarios") {
         $resultado = $usuario->listarUsuarios();
         echo json_encode($resultado);
     }
 }
 
 if (isset($_POST["operacion"])) {
-    if ($_POST["operacion"] == "registrarUsuarios") {
+    $operacion = Herramientas::sanitizarEntrada($_POST["operacion"]);
+    if ($operacion == "registrarUsuarios") {
+        $idPersona = Herramientas::sanitizarEntrada($_POST["idPersona"]);
+        $nombreUsuario = Herramientas::sanitizarEntrada($_POST["nombreUsuario"]);
         $clave = password_hash($_POST["clave"], PASSWORD_BCRYPT);
+        $idUsuario = Herramientas::sanitizarEntrada($_POST["idUsuario"]);
         $data = [
-            "idPersona" => $_POST["idPersona"],
-            "nombreUsuario" => $_POST["nombreUsuario"],
+            "idPersona" => $idPersona,
+            "nombreUsuario" => $nombreUsuario,
             "clave" => $clave,
-            "idUsuario"         => $_POST["idUsuario"]
+            "idUsuario" => $idUsuario
         ];
         $resultado = $usuario->registrarUsuarios($data);
         echo json_encode(["guardado" => $resultado]);
     }
 }
-
 ?>

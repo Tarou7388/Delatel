@@ -1,18 +1,21 @@
 <?php
 
+use App\Controllers\Herramientas;
+
 require_once '../models/Empresa.php';
+require_once './Herramientas.php';
 
 $empresa = new Empresa();
 
 if ($_POST["operacion"] == "registrarEmpresa") {
     $datos = [
-        "ruc"                   => $_POST["ruc"],
-        "representante_legal"   => $_POST["representanteLegal"],
-        "razon_social"          => $_POST["razonSocial"],
-        "nombre_comercial"      => $_POST["nombreComercial"],
-        "telefono"              => $_POST["telefono"],
-        "email"                 => $_POST["email"],
-        "iduser_create"         => $_POST["idUsuario"]
+        "ruc"                   => Herramientas::sanitizarEntrada($_POST["ruc"]),
+        "representanteLegal"   => Herramientas::sanitizarEntrada($_POST["representanteLegal"]),
+        "razonSocial"          => Herramientas::sanitizarEntrada($_POST["razonSocial"]),
+        "nombreComercial"      => Herramientas::sanitizarEntrada($_POST["nombreComercial"]),
+        "telefono"              => Herramientas::sanitizarEntrada($_POST["telefono"]),
+        "email"                 => Herramientas::sanitizarEntrada($_POST["email"]),
+        "idUsuario"         => Herramientas::sanitizarEntrada($_POST["idUsuario"])
     ];
     
     $resultado = $empresa->registrarEmpresa($datos);

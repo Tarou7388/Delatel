@@ -111,7 +111,7 @@ class Rol extends Conexion
     $values = array(
       $params['idRol'],
       $params['rol'],
-      $params['iduser_update']
+      $params['idUsuario']
     );
     return $this->registrar($sql, $values);
   }

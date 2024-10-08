@@ -26,9 +26,9 @@ class Sector extends Conexion
   {
     $sql = "CALL spu_sectores_registrar(?,?,?)";
     $values = array(
-      $params['id_distrito'],
+      $params['idDistrito'],
       $params['sector'],
-      $params['iduser_create']
+      $params['idUsuario']
     );
     return $this->registrar($sql, $values);
   }

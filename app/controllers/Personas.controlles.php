@@ -1,15 +1,20 @@
 <?php
 
+use App\Controllers\Herramientas;
+
 require_once '../models/Persona.php';
+require_once './Herramientas.php'; // Asegúrate de incluir la clase Herramientas
+
 
 $persona = new Persona();
 $token = 'apis-token-10446.A9VxJVP7d-7yqW4oWAqbRdhIus9mMsfb';
 
 if (isset($_GET["operacion"])) {
-    switch ($_GET['operacion']) {
+    $operacion = Herramientas::sanitizarEntrada($_GET['operacion']);
+    switch ($operacion) {
         case 'obtenerDni':
             if (!empty($_GET['dni'])) {
-                $dni = urlencode($_GET['dni']);
+                $dni = urlencode(Herramientas::sanitizarEntrada($_GET['dni']));
                 $url = "https://api.apis.net.pe/v2/reniec/dni?numero=$dni";
                 $context = stream_context_create(['http' => ['header' => "Authorization: Bearer $token"]]);
                 echo file_get_contents($url, false, $context);
@@ -19,7 +24,7 @@ if (isset($_GET["operacion"])) {
             break;
         case 'obtenerRuc':
             if (!empty($_GET['ruc'])) {
-                $ruc = urlencode($_GET['ruc']);
+                $ruc = urlencode(Herramientas::sanitizarEntrada($_GET['ruc']));
                 $url = "https://api.apis.net.pe/v2/sunat/ruc/full?numero=$ruc";
                 $context = stream_context_create(['http' => ['header' => "Authorization: Bearer $token"]]);
                 echo file_get_contents($url, false, $context);
@@ -29,7 +34,8 @@ if (isset($_GET["operacion"])) {
             break;
         case 'buscarPersonaDni':
             if (!empty($_GET['dni'])) {
-                $resultado = $persona->buscarPersonaDni(['dni' => $_GET['dni']]);
+                $dni = Herramientas::sanitizarEntrada($_GET['dni']);
+                $resultado = $persona->buscarPersonaDni(['dni' => $dni]);
                 echo json_encode($resultado);
             }
             break;
@@ -40,16 +46,17 @@ if (isset($_GET["operacion"])) {
 }
 
 if (isset($_POST["operacion"])) {
-    if ($_POST["operacion"] == "registrarPersona") {
+    $operacion = Herramientas::sanitizarEntrada($_POST['operacion']);
+    if ($operacion == "registrarPersona") {
         $datos = [
-            "tipoDoc"               => $_POST["tipoDoc"],
-            "nroDoc"                => $_POST["nroDoc"],
-            "apellidos"             => $_POST["apellidos"],
-            "nombres"               => $_POST["nombres"],
-            "telefono"              => $_POST["telefono"],
-            "nacionalidad"          => $_POST["nacionalidad"],
-            "email"                 => $_POST["email"],
-            "idUsuario"         => $_POST["idUsuario"]
+            "tipoDoc"       => Herramientas::sanitizarEntrada($_POST["tipoDoc"]),
+            "nroDoc"        => Herramientas::sanitizarEntrada($_POST["nroDoc"]),
+            "apellidos"     => Herramientas::sanitizarEntrada($_POST["apellidos"]),
+            "nombres"       => Herramientas::sanitizarEntrada($_POST["nombres"]),
+            "telefono"      => Herramientas::sanitizarEntrada($_POST["telefono"]),
+            "nacionalidad"  => Herramientas::sanitizarEntrada($_POST["nacionalidad"]),
+            "email"         => Herramientas::sanitizarEntrada($_POST["email"]),
+            "idUsuario"     => Herramientas::sanitizarEntrada($_POST["idUsuario"])
         ];
         $resultado = $persona->registrarPersona($datos);
         echo json_encode($resultado);

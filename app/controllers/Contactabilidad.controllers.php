@@ -1,5 +1,9 @@
 <?php
+
+use App\Controllers\Herramientas;
+
 require_once '../models/Contactabilidad.php';
+require_once './Herramientas.php';
 
 $contactabilidad = new Contactabilidad();
 
@@ -10,20 +14,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
       break;
   }
 }
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $json = file_get_contents('php://input');
   $datos = json_decode($json, true);
-  $operacion = $datos['operacion'];
+  $operacion = Herramientas::sanitizarEntrada($datos['operacion']);
   switch ($operacion) {
     case 'registrarContacto':
       $respuesta = $contactabilidad->registrarContacto([
-        'idPersona' => $datos['idPersona'],
-        'idPaquete' => $datos['idPaquete'],
-        'direccion' => $datos['direccion'],
-        'nota' => $datos['nota'],
-        'idUsuario' => $datos['idUsuario'],
-        'fechaLimite' => $datos['fechaLimite']
+        'idPersona' => Herramientas::sanitizarEntrada($datos['idPersona']),
+        'idPaquete' => Herramientas::sanitizarEntrada($datos['idPaquete']),
+        'direccion' => Herramientas::sanitizarEntrada($datos['direccion']),
+        'nota' => Herramientas::sanitizarEntrada($datos['nota']),
+        'idUsuario' => Herramientas::sanitizarEntrada($datos['idUsuario']),
+        'fechaLimite' => Herramientas::sanitizarEntrada($datos['fechaLimite'])
       ]);
       echo json_encode(["guardado" => $respuesta]);
       break;
