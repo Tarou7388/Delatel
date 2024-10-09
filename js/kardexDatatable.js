@@ -10,7 +10,7 @@ window.tablaKardex = $('#TbKardex').DataTable({
     buttons: [
         {
             extend: 'csv',
-            text: '<i class="bi bi-file-earmark-csv"></i> Exportar CSV',
+            text: '<i class="fa-solid fa-file-csv"></i>',
             className: 'btn btn-primary me-2',
             filename: function () {
                 return getFileName('CSV');
@@ -21,7 +21,7 @@ window.tablaKardex = $('#TbKardex').DataTable({
         },
         {
             extend: 'excel',
-            text: '<i class="bi bi-file-earmark-excel"></i> Exportar Excel',
+            text: '<i class="fa-solid fa-file-excel"></i>',
             className: 'btn btn-success me-2',
             filename: function () {
                 return getFileName('Excel');
@@ -32,7 +32,7 @@ window.tablaKardex = $('#TbKardex').DataTable({
         },
         {
             extend: 'pdf',
-            text: '<i class="bi bi-file-earmark-pdf"></i> Exportar PDF',
+            text: '<i class="fa-solid fa-file-pdf"></i>',
             className: 'btn btn-danger me-2',
             filename: function () {
                 return getFileName('PDF');
@@ -43,7 +43,7 @@ window.tablaKardex = $('#TbKardex').DataTable({
         },
         {
             extend: 'print',
-            text: '<i class="bi bi-printer"></i> Imprimir',
+            text: '<i class="fa-solid fa-print"></i>',
             className: 'btn btn-secondary me-2'
         }
     ],

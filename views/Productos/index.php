@@ -11,14 +11,14 @@
         <form id="form-editar-producto">
           <input type="hidden" id="txtIdProducto" name="id_producto">
 
-          <div class="form-floating">
+          <div class="form-floating mb-2">
             <input type="text" class="form-control" id="slcEditarTipoProducto" name="modelo" placeholder="Tipo Producto" disabled>
             <label for="slcEditarTipoProducto">Tipo Producto</label>
           </div>
 
           <div class="form-group">
-            <div class="form-floating">
-              <select class="form-control" id="slcEditarMarca" name="marca" required>
+            <div class="form-floating mb-2">
+              <select class="form-select" id="slcEditarMarca" name="marca" required>
                 <option value="" disabled selected>Seleccione Marca</option>
                 <option value="Huawei">Huawei</option>
                 <option value="Netgear">Netgear</option>
@@ -33,26 +33,28 @@
             </div>
           </div>
 
-            <div class="form-floating">
+            <div class="form-floating mb-2">
               <input type="text" class="form-control" id="txtEditarModelo" name="modelo" placeholder="Modelo" required>
               <label for="txtEditarModelo">Modelo</label>
             </div>
 
           <div class="row">
             <div class="col-6">
-              <div class="form-floating">
+              <div class="form-floating mb-2">
                 <input type="number" class="form-control" id="txtEditarPrecioActual" placeholder="Precio" name="precio_actual" step="0.01" required>
                 <label for="txtEditarPrecioActual">Precio</label>
               </div>
             </div>
             <div class="col-6">
-              <div class="form-floating">
+              <div class="form-floating mb-2">
                 <input type="text" class="form-control" id="txtEditarCodigoBarras" placeholder="Código de Barras" name="codigo_barra" required>
                 <label for="txtEditarCodigoBarras">Código Barras</label>
               </div>
             </div>
           </div>
-          <button type="submit" class="btn btn-success mt-3">Guardar Cambios</button>
+          <div class="text-end mt-2">
+            <button type="submit" class="btn btn-success">Guardar Cambios</button>
+          </div>
         </form>
       </div>
     </div>

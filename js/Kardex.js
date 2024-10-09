@@ -1,8 +1,8 @@
-import config from '../env.js';
+import config from "../env.js";
 
 document.addEventListener("DOMContentLoaded", function () {
   // 1. Variables locales
-  const userid = user['idUsuario'];
+  const userid = user["idUsuario"];
   const tipoMovimientoSelect = document.getElementById("slcTipomovimiento");
   const motivoSelect = document.getElementById("txtaMotivo");
   const idproductoField = document.querySelector("#idproducto");
@@ -39,8 +39,8 @@ document.addEventListener("DOMContentLoaded", function () {
       valor === "ENTRADA"
         ? opcionesEntrada
         : valor === "SALIDA"
-          ? opcionesSalida
-          : '<option value="">Seleccione</option>';
+        ? opcionesSalida
+        : '<option value="">Seleccione</option>';
   }
 
   async function MostrarStockActual(idproducto) {
@@ -50,31 +50,45 @@ document.addEventListener("DOMContentLoaded", function () {
       );
       const data = await response.json();
       const response2 = await fetch(
-        `${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoId&id_producto=${idproducto}`
+        `${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoId&idProducto=${idproducto}`
       );
       const data2 = await response2.json();
+
+      const stockData = Array.isArray(data) && data.length > 0 ? data[0] : null;
       stockactualField.value =
-        data.saldo_total !== undefined ? data.saldo_total : 0;
+        stockData && stockData.saldo_total !== undefined
+          ? stockData.saldo_total
+          : 0;
+
+      // Manejo del producto
+      const productoData =
+        Array.isArray(data2) && data2.length > 0 ? data2[0] : null;
       txtvalorhistorico.value =
-        data2.precio_actual !== undefined ? data2.precio_actual : 0;
+        productoData && productoData.precio_actual !== undefined
+          ? productoData.precio_actual
+          : 0;
+
       fecha.value = date;
     } catch (error) {
       console.error("Error al obtener el stock actual:", error);
       stockactualField.value = 0;
-      showToast("Error al obtener el stock actual. Por favor, inténtelo de nuevo.", "ERROR");
+      showToast(
+        "Error al obtener el stock actual. Por favor, inténtelo de nuevo.",
+        "ERROR"
+      );
     }
   }
 
   function GuardarKardex() {
     const params = new FormData();
     params.append("operacion", "registrarKardex");
-    params.append("idproducto", idproductoField.value);
+    params.append("idProducto", idproductoField.value);
     params.append("fecha", fecha.value);
-    params.append("tipooperacion", tipomovimientoField.value);
+    params.append("tipoOperacion", tipomovimientoField.value);
     params.append("motivo", motivoField.value);
     params.append("cantidad", cantidadField.value);
-    params.append("valorunitariohistorico", txtvalorhistorico.value);
-    params.append("iduser_create", userid);
+    params.append("valorUnitarioHistorico", txtvalorhistorico.value);
+    params.append("idUsuario", userid);
 
     const options = {
       method: "POST",
@@ -94,12 +108,17 @@ document.addEventListener("DOMContentLoaded", function () {
       })
       .catch((e) => {
         console.error("Error al guardar el kardex:", e);
-        showToast("Ocurrió un error al guardar el kardex. Por favor, inténtelo de nuevo.", "ERROR");
+        showToast(
+          "Ocurrió un error al guardar el kardex. Por favor, inténtelo de nuevo.",
+          "ERROR"
+        );
       });
   }
 
   function cargarProductos() {
-    fetch(`${config.HOST}app/controllers/Productos.controllers.php?operacion=getAll`)
+    fetch(
+      `${config.HOST}app/controllers/Producto.controllers.php?operacion=listarProductos`
+    )
       .then((response) => response.json())
       .then((data) => {
         const tipoProducto = document.querySelector("#idproducto");
@@ -112,7 +131,10 @@ document.addEventListener("DOMContentLoaded", function () {
       })
       .catch((e) => {
         console.error("Error al obtener productos:", e);
-        showToast("Ocurrió un error al cargar los productos. Por favor, inténtelo de nuevo.", "ERROR");
+        showToast(
+          "Ocurrió un error al cargar los productos. Por favor, inténtelo de nuevo.",
+          "ERROR"
+        );
       });
   }
   (() => {
@@ -129,7 +151,7 @@ document.addEventListener("DOMContentLoaded", function () {
       cantidadField.value = "";
       tablaKardex.ajax
         .url(
-          `${config.HOST}app/controllers/Kardex.controllers.php?operacion=obtenerProducto&id_producto=${idproducto}`
+          `${config.HOST}app/controllers/Kardex.controllers.php?operacion=buscarStockId&idProducto=${idproducto}`
         )
         .load();
     } else {
@@ -146,5 +168,4 @@ document.addEventListener("DOMContentLoaded", function () {
         GuardarKardex();
       }
     });
-
 });
