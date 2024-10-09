@@ -14,6 +14,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   let precioServicio = 0;
   let idCliente = 0;
+  let idServicio = 0;
 
   const fetchSectores = async () => {
     const response = await fetch(`${config.HOST}app/controllers/Sector.controllers.php?operacion=listarSectores`);
@@ -55,11 +56,9 @@ window.addEventListener("DOMContentLoaded", () => {
 
   async function registrar() {
     const fechaRegistro = new Date().toISOString().split('T')[0];
-    console.log(fechaRegistro);
     const fichaInstalacion = await fichaInstalacionGpon();
     const nota = "";
     const idUsuarioRegistro = user.idRol;
-    const idServicio = slcServicio.value.split(" - ")[0]
 
 
     if (!validarFechas() || !(await validarCampos())) {
@@ -80,16 +79,15 @@ window.addEventListener("DOMContentLoaded", () => {
               coordenada: coordenada.value,
               fechaInicio: fechaInicio.value,
               fechaFin: fechaFin.value,
-              fechaRegistro: fechaRegistro
+              fechaRegistro: fechaRegistro,
+              nota: nota,
+              idUsuario: 1
             },
-            nota: nota,
-            idUsuario: 1
           }),
           headers: {
             "Content-Type": "application/json",
           },
         });
-        
         const result = await response.json();
         console.log(await result);  
         if (!response.ok) {
@@ -137,7 +135,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const dataPaquetes = await fetchPaquetes();
     dataPaquetes.forEach((paquete) => {
       const option = document.createElement("option");
-      const id = `${paquete.id} - ${paquete.tipo_paquete} - ${paquete.precio}`;
+      const id = `${paquete.id_servicio} - ${paquete.precio}`;
       option.value = id;
       option.textContent = paquete.servicio;
       slcServicio.appendChild(option);
@@ -250,8 +248,10 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 
   $("#slcServicio").on("select2:select", function () {
-    precioServicio = parseFloat(slcServicio.value.split(" - ")[2]);
+    idServicio = parseInt(slcServicio.value.split((" - ")[0]))
+    precioServicio = parseFloat(slcServicio.value.split(" - ")[1]);
     precio.value = precioServicio;
+    slcServicio.value = idServicio;
   });
 
   $("#slcSector").select2({
