@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const idProducto = $(this).data('id');
 
         try {
-            const response = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoId&id_producto=` + idProducto);
+            const response = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoId&idProducto=` + idProducto);
             const producto = await response.json();
             $('#txtIdProducto').val(producto[0].id_producto);
             $('#slcEditarTipoProducto').val(producto[0].tipo_producto);
