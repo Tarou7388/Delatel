@@ -73,7 +73,7 @@ BEGIN
         p_fecha_inicio,
         p_fecha_fin,
         p_fecha_registro,
-        p_ficha_instalacion,
+        NULLIF(p_ficha_instalacion,""),
         p_nota,
         p_iduser_create
     );

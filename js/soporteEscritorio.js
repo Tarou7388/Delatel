@@ -101,4 +101,21 @@ window.addEventListener('DOMContentLoaded', function () {
     });
   })();
 
+  function formatoIPinput(event) {
+    let input = event.target.value.replace(/[^0-9.]/g, '');
+
+    // Dividir en octetos y filtrar vacíos
+    let octets = input.split('.').filter(octet => octet);
+
+    // Limitar a 4 octetos y asegurarse de que cada octeto no exceda 255
+    octets = octets.slice(0, 4).map(octet => Math.min(255, octet).toString());
+
+    // Unir octetos y actualizar el valor del input
+    event.target.value = octets.join('.').slice(0, 15); // Limitar a 15 caracteres
+  }
+
+  $('#txtIpWisp, #txtCambiosIpWisp').on('input', function () {
+    $(this).val(formatoIPinput($(this).val()));
+  });
+
 });
