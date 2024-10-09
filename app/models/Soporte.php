@@ -31,7 +31,7 @@ class Soporte extends Conexion
    */
   public function registrarSoporte($params = [])
   {
-    $sql = "CALL spu_registrar_fichasoporte(?,?,?,?,?,?,?,?,?,?)";
+    $sql = "CALL spu_registrar_fichasoporte(?,?,?,?,?,?,?,?)";
     $soporteJson = json_encode($params['soporte']);
     $values = array(
       $params['idContrato'],
@@ -39,12 +39,16 @@ class Soporte extends Conexion
       $params['idTecnico'],
       $params['fechaHoraSolicitud'],
       $params['fechaHoraAsistencia'],
-      $params['descripcionProblema'],
-      $params['descripcionSolucion'],
       $params['prioridad'],
       $soporteJson,
       $params['idUsuario']
     );
     return $this->registrar($sql, $values);
+  }
+
+  public function listarTipoSoporte()
+  {
+    $sql = "SELECT * FROM vw_tiposoporte_listar";
+    return $this->listarDatos($sql);
   }
 }

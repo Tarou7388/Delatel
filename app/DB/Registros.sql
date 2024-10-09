@@ -203,16 +203,16 @@ INSERT INTO tb_paquetes (id_servicio, precio, tipo_paquete, fecha_inicio, fecha_
 (1, 100.00, 'CABl', '2023-01-01', '2023-12-31', 1),
 (2, 150.00, 'GPON', '2023-02-01', '2023-11-30', 1),
 (3, 200.00, 'WISP', '2023-03-01', '2023-10-31', 1),
-(4, 120.00, 'CABl', '2023-04-01', '2023-09-30', 1),
+(4, 120.00, 'FIBR', '2023-04-01', '2023-09-30', 1),
 (5, 180.00, 'GPON', '2023-05-01', '2023-08-31', 1),
 (6, 220.00, 'WISP', '2023-06-01', '2023-07-31', 1),
-(7, 130.00, 'CABl', '2023-07-01', '2023-12-31', 1),
+(7, 130.00, 'FIBR', '2023-07-01', '2023-12-31', 1),
 (8, 160.00, 'GPON', '2023-08-01', '2023-11-30', 1),
 (9, 210.00, 'WISP', '2023-09-01', '2023-10-31', 1),
 (10, 140.00, 'CABl', '2023-10-01', '2023-09-30', 1),
 (11, 170.00, 'GPON', '2023-11-01', '2023-08-31', 1),
 (12, 230.00, 'WISP', '2023-12-01', '2023-07-31', 1),
-(13, 100.00, 'CABl', '2023-01-02', '2023-12-30', 1),
+(13, 100.00, 'FIBR', '2023-01-02', '2023-12-30', 1),
 (14, 150.00, 'GPON', '2023-02-02', '2023-11-29', 1),
 (15, 200.00, 'WISP', '2023-03-02', '2023-10-30', 1),
 (16, 120.00, 'CABl', '2023-04-02', '2023-09-29', 1),
@@ -234,12 +234,12 @@ INSERT INTO tb_paquetes (id_servicio, precio, tipo_paquete, fecha_inicio, fecha_
 (32, 165.00, 'GPON', '2023-08-03', '2023-11-28', 1),
 (33, 215.00, 'WISP', '2023-09-03', '2023-10-29', 1),
 (34, 145.00, 'CABl', '2023-10-03', '2023-09-28', 1),
-(35, 175.00, 'GPON', '2023-11-03', '2023-08-29', 1),
+(35, 175.00, 'FIBR', '2023-11-03', '2023-08-29', 1),
 (36, 235.00, 'WISP', '2023-12-03', '2023-07-29', 1),
 (37, 115.00, 'CABl', '2023-01-04', '2023-12-28', 1),
 (38, 157.00, 'GPON', '2023-02-04', '2023-11-27', 1),
 (39, 207.00, 'WISP', '2023-03-04', '2023-10-28', 1),
-(40, 127.00, 'CABl', '2023-04-04', '2023-09-27', 1);
+(40, 127.00, 'FIBR', '2023-04-04', '2023-09-27', 1);
 
 
 INSERT INTO tb_sectores (id_distrito, sector, iduser_create) VALUES
@@ -355,10 +355,11 @@ INSERT INTO tb_clientes (id_persona, id_empresa, direccion, referencia, iduser_c
 (24, NULL, 'Calle de la Creatividad 567, Santiago', 'Cerca del centro cultural', 1, '-1'),
 (25, NULL, 'Calle de los Recuerdos 890, Madrid', 'A una cuadra del teatro', 1, '-1');
 
-
 INSERT INTO tb_contratos (id_cliente, id_paquete, id_sector, id_usuario_registro, id_usuario_tecnico, direccion_servicio, referencia, coordenada, fecha_inicio, fecha_fin, fecha_registro, nota) VALUES 
 (1, 1, 1, 1, NULL, 'Av. Siempre Viva 123, Springfield', 'Cerca de la plaza principal', '12.3456, -65.4321', '2024-01-15', '2024-06-15', '2024-01-01', 'Primer contrato con cliente nuevo'),
-(2, 2, 2, 1, NULL, 'Calle Falsa 456, Gotham', 'Cerca del cine local', '34.5678, -76.5432', '2024-02-01', '2024-07-01', '2024-02-01', 'Instalación programada'),
+(2, 3, 2, 1, NULL, 'Calle Falsa 456, Gotham', 'Cerca del cine local', '34.5678, -76.5432', '2024-02-01', '2024-07-01', '2024-02-01', 'Instalación programada'),
+(2, 4, 2, 1, NULL, 'Calle Falsa 456, Gotham', 'Cerca del cine local', '34.5678, -76.5432', '2024-02-01', '2024-07-01', '2024-02-01', 'Instalación programada'),
+(2, 1, 2, 1, NULL, 'Calle Falsa 456, Gotham', 'Cerca del cine local', '34.5678, -76.5432', '2024-02-01', '2024-07-01', '2024-02-01', 'Instalación programada'),
 (3, 3, 3, 1, NULL, 'Av. Los Pinos 789, Lima', 'Esquina con Av. Las Flores', '23.4567, -54.3210', '2024-03-01', '2024-08-01', '2024-03-01', 'Revisión mensual incluida'),
 (4, 4, 4, 1, NULL, 'Jirón de la Unión 100, Lima', 'Frente a la Plaza Mayor', '45.6789, -43.2109', '2024-04-01', '2024-09-01', '2024-04-01', 'Descuento aplicado por contrato anual'),
 (5, 5, 5, 1, NULL, 'Calle Mayor 101, Barcelona', 'Cerca del mercado central', '56.7890, -32.1098', '2024-05-01', '2024-10-01', '2024-05-01', 'Contrato especial por volumen'),
@@ -376,7 +377,7 @@ INSERT INTO tb_contactabilidad (id_persona, id_paquete, fecha_hora_contacto, dir
 (5, 5, '2024-05-30 09:30:00', 'Calle Mayor 101, Barcelona', 'Se completó la verificación del servicio y se envió confirmación.',1); 
 
 INSERT INTO tb_soporte (id_contrato, id_tipo_soporte, id_tecnico, fecha_hora_solicitud, fecha_hora_asistencia, prioridad, soporte,iduser_create) VALUES 
-(1, 1, 1, '2024-01-10 15:00:00', '2024-01-10 16:00:00', 'Alta', '{"parametroscable":{"periodo":["mensual","contado"],"potencia":4,"sintonizador":2,"triplexor":{"requiere":true,"cantidad":1,"tipo":["activo","pasivo"]},"spliter":[{"cantidad":1,"tipo":"1x3"},{"cantidad":1,"tipo":"1x5"},{"cantidad":1,"tipo":"1x8"}],"cable":10,"conectores":1,"estadoinicial":""},"cambioscable":{"periodo":["mensual","contado"],"potencia":4,"sintonizador":2,"triplexor":{"requiere":true,"cantidad":1,"tipo":["activo","pasivo"]},"spliter":[{"cantidad":1,"tipo":"1x3"},{"cantidad":1,"tipo":"1x5"},{"cantidad":1,"tipo":"1x8"}],"cable":10,"conectores":1,"procedimientosolucion":""}}',1),
+(1, 1, 1, '2024-01-10 15:00:00', '2024-10-09 17:05:29', 'Alta', '{"parametroscable":{"periodo":["mensual","contado"],"potencia":4,"sintonizador":2,"triplexor":{"requiere":true,"cantidad":1,"tipo":["activo","pasivo"]},"spliter":[{"cantidad":1,"tipo":"1x3"},{"cantidad":1,"tipo":"1x5"},{"cantidad":1,"tipo":"1x8"}],"cable":10,"conectores":1,"estadoinicial":""},"cambioscable":{"periodo":["mensual","contado"],"potencia":4,"sintonizador":2,"triplexor":{"requiere":true,"cantidad":1,"tipo":["activo","pasivo"]},"spliter":[{"cantidad":1,"tipo":"1x3"},{"cantidad":1,"tipo":"1x5"},{"cantidad":1,"tipo":"1x8"}],"cable":10,"conectores":1,"procedimientosolucion":""}}',1),
 (2, 2, 2, '2024-02-16 11:00:00', '2024-02-16 12:30:00','Media', '{"monto":"100.00","metodo":"efectivo","fecha":"2024-02-17"}',1),
 (3, 3, 3, '2024-03-21 09:30:00', '2024-03-21 10:00:00','Alta', '{"monto":"75.00","metodo":"transferencia","fecha":"2024-03-22"}',1),
 (4, 1, 4, '2024-04-26 14:00:00', '2024-04-26 15:30:00','Baja', '{"monto":"40.00","metodo":"tarjeta","fecha":"2024-04-27"}',1),

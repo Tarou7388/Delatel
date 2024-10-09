@@ -20,6 +20,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
       $resultado = $contrato->buscarFichaInstalacionId(["id" => Herramientas::sanitizarEntrada($_GET['id'])]);
       echo json_encode($resultado);
       break;
+    case 'obtenerContratoPorCliente':
+      $resultado = $contrato->buscarContratoporClienteId(["id" => Herramientas::sanitizarEntrada($_GET['id'])]);
+      echo json_encode($resultado);
+      break;
   }
 }
 

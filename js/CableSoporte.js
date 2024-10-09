@@ -17,28 +17,34 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log(JsonCable);
     console.log($("#txtPotencia").value);
 
-    const params = new FormData();
-        params.append('operacion', 'registrarSoporte');
-        params.append('id_contrato', '');
-        params.append('id_tipo_soporte', '');
-        params.append('id_tecnico', '');
-        params.append('fecha_hora_solicitud', '');
-        params.append('fecha_hora_asistencia', '');
-        params.append('prioridad', '');
-        params.append('soporte', JsonCable);
-        params.append('iduser_create', 1);
-    
-        const respuesta = await fetch(`${config.HOST}/app/controllers/Soporte.controllers.php`,
-          { method: 'POST', body: params });
-    
-        const data = await respuesta.json();
-    
-        if (data) {
-          alert("Correcto");
-        }
-        else {
-          alert("Error")
-        };
+    const params = {
+      operacion: 'registrarSoporte',
+      idContrato: $("#slcContratos").value,
+      idTipoSoporte: $("#slcTipoSoporte").value,
+      idTecnico: 1, // A cambiar
+      fechaHoraSolicitud: new Date().toISOString().slice(0, 19).replace('T', ' '),//2024-05-31 13:00:00 EJEMPLO
+      fechaHoraAsistencia: new Date().toISOString().slice(0, 19).replace('T', ' '),
+      prioridad: $("#slcPrioridad").value,
+      soporte: JsonCable,
+      idUsuario: 1 // A espera de un nuevo método
+    };
+
+    const respuesta = await fetch(`${config.HOST}/app/controllers/Soporte.controllers.php`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(params)
+    });
+
+    const data = await respuesta.json();
+
+    if (data) {
+      alert("Correcto");
+    }
+    else {
+      alert("Error")
+    };
   }
 
   $("#Form-FichaCable").addEventListener("submit", async (event) => {
@@ -95,10 +101,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     registrarCable(JsonCable);
   });
-
-
-
-
 
 
 });

@@ -8,14 +8,12 @@ window.addEventListener('DOMContentLoaded', function () {
   const cable = document.getElementById('lstCable');
   const botonbuscar = document.getElementById('btnNrodocumento');
 
-
-
   async function BuscarcontratoNDoc(numdocumento) {
     const respuesta = await fetch(`${config.HOST}/app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${numdocumento}`);
     const data = await respuesta.json();
-    console.log(data.id_cliente);
-
-    await obtenerContratosCliente(data.id_cliente);
+    //console.log(data[0].nombre);
+    $("#txtCliente").val(data[0].nombre);
+    await obtenerContratosCliente(data[0].id_cliente);
   };
 
   var today = new Date().toISOString().split('T')[0];
@@ -28,15 +26,12 @@ window.addEventListener('DOMContentLoaded', function () {
       const value = this.getAttribute('data-value');
       const name = this.getAttribute('data-name');
 
-      // Actualiza el texto del botón con el data-name
       dropdownButton.textContent = name;
       dropdownButton.setAttribute('data-value', value);
 
-      // Oculta el modal
       const modal = bootstrap.Modal.getInstance(document.getElementById('exampleModal'));
       modal.hide();
 
-      // Llama a la función para actualizar las secciones basadas en el valor seleccionado
       updateSections(value);
     });
   });
@@ -75,9 +70,35 @@ window.addEventListener('DOMContentLoaded', function () {
   });
 
   async function obtenerContratosCliente(data) {
-    const respuesta = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=&id=${data}`);
+    const respuesta = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerContratoPorCliente&id=${data}`);
     const datos = await respuesta.json();
-    return datos;
+
+    const selectContratos = $("#slcContratos");
+    selectContratos.empty();
+
+    datos.forEach((element) => {
+      //console.log(element.tipo_paquete);
+      const option = new Option(
+        `${element.servicio} - ${element.tipo_paquete}`,
+        element.id_contrato
+      );
+      selectContratos.append(option);
+    });
   };
+
+  (async () => {
+    const respuesta = await fetch(`${config.HOST}/app/controllers/Soporte.controllers.php?operacion=listarTipoSoporte`);
+    const datos = await respuesta.json();
+
+    const selectTpSoporte = $("#slcTipoSoporte");
+    selectTpSoporte.empty();
+    datos.forEach((element) => {
+      const option = new Option(
+        `${element.tipo_soporte}`,
+        element.id_tipo_soporte
+      );
+      selectTpSoporte.append(option);
+    });
+  })();
 
 });

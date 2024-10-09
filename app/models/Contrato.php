@@ -145,4 +145,24 @@ class Contrato extends Conexion
         );
         return $this->registrar($sql, $values);
     }
+
+
+    /**
+     * Busca los contratos asociados a un cliente por el por ID del cliente.
+     *
+     * Este método ejecuta un procedimiento almacenado para obtener el contrato 
+     * mediante el ID del cliente proporcionado por el parametro
+     *
+     * @param array $params Un array asociativo que contiene el ID de la ficha de instalación.
+     *                      Ejemplo: ['id' => 123]
+     * @return mixed El resultado de la consulta ejecutada.
+     */
+    public function buscarContratoporClienteId($params = [])
+    {
+        $sql = "CALL buscar_contrato_por_cliente(?)";
+        $values = array(
+            $params['id']
+        );
+        return $this->consultaParametros($sql, $values);
+    }
 }

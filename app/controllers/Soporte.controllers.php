@@ -9,6 +9,14 @@ require_once './Herramientas.php';
 
 $soporte = new Soporte();
 
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+  switch (Herramientas::sanitizarEntrada($_GET['operacion'])) {
+    case 'listarTipoSoporte':
+      echo json_encode($soporte->listarTipoSoporte());
+      break;
+  }
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $Json = file_get_contents('php://input');
   $datos = json_decode($Json, true);
@@ -19,10 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'idContrato' => Herramientas::sanitizarEntrada($datos['idContrato']),
         'idTipoSoporte' => Herramientas::sanitizarEntrada($datos['idTipoSoporte']),
         'idTecnico' => Herramientas::sanitizarEntrada($datos['idTecnico']),
-        'fechahoraSolictud' => Herramientas::sanitizarEntrada($datos['fechahoraSolictud']),
-        'fechahoraAsistencia' => Herramientas::sanitizarEntrada($datos['fechahoraAsistencia']),
-        'descripcionProblema' => Herramientas::sanitizarEntrada($datos['descripcionProblema']),
-        'descripcionSolucion' => Herramientas::sanitizarEntrada($datos['descripcionSolucion']),
+        'fechaHoraSolicitud' => Herramientas::sanitizarEntrada($datos['fechaHoraSolicitud']),
+        'fechaHoraAsistencia' => Herramientas::sanitizarEntrada($datos['fechaHoraAsistencia']),
         'prioridad' => Herramientas::sanitizarEntrada($datos['prioridad']),
         'soporte' => Herramientas::sanitizarEntrada($datos['soporte']),
         'idUsuario' => Herramientas::sanitizarEntrada($datos['idUsuario'])
