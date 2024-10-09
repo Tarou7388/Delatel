@@ -11,13 +11,11 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
   async function BuscarcontratoNDoc(numdocumento) {
-
     const respuesta = await fetch(`${config.HOST}/app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${numdocumento}`);
-
     const data = await respuesta.json();
+    console.log(data.id_cliente);
 
-    console.log(data);
-
+    await obtenerContratosCliente(data.id_cliente);
   };
 
   var today = new Date().toISOString().split('T')[0];
@@ -75,5 +73,11 @@ window.addEventListener('DOMContentLoaded', function () {
     const dni = document.getElementById('txtNrodocumento').value;
     await BuscarcontratoNDoc(dni);
   });
+
+  async function obtenerContratosCliente(data) {
+    const respuesta = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=&id=${data}`);
+    const datos = await respuesta.json();
+    return datos;
+  };
 
 });

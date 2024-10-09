@@ -179,4 +179,25 @@ BEGIN
     WHERE id_contrato = p_id_contrato;
 END $$
 
+DROP PROCEDURE IF EXISTS buscar_contrato_por_cliente$$
+CREATE PROCEDURE buscar_contrato_por_cliente(IN p_id_cliente INT)
+BEGIN
+    SELECT 
+        c.id_contrato, 
+        p.tipo_paquete, 
+        s.sector, 
+        sv.servicio,
+        c.id_usuario_registro
+    FROM 
+        tb_contratos c
+    JOIN 
+        tb_paquetes p ON c.id_paquete = p.id_paquete
+    JOIN 
+        tb_sectores s ON c.id_sector = s.id_sector
+    JOIN 
+        tb_servicios sv ON p.id_servicio = sv.id_servicio
+    WHERE 
+        c.id_cliente = p_id_cliente;
+END$$
+
 

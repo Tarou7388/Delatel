@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log($("#txtPotencia").value);
 
     const params = new FormData();
-        params.append('operacion', '');
+        params.append('operacion', 'registrarSoporte');
         params.append('id_contrato', '');
         params.append('id_tipo_soporte', '');
         params.append('id_tecnico', '');
