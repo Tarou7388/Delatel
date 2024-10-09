@@ -33,7 +33,7 @@ if (isset($_GET['operacion'])) {
       echo json_encode($estado);
       break;
     case "buscarProductoId":
-      $resultado = $producto->buscarProductoId(["idProducto" => Herramientas::sanitizarEntrada($_GET['id_producto'])]);
+      $resultado = $producto->buscarProductoId(["idProducto" => Herramientas::sanitizarEntrada($_GET['idProducto'])]);
       echo json_encode($resultado);
       break;
   }
