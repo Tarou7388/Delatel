@@ -33,19 +33,23 @@
             </div>
           </div>
 
-          <div class="form-group">
-            <label for="txtEditarModelo">Modelo</label>
-            <input type="text" class="form-control" id="txtEditarModelo" name="modelo" required>
-          </div>
+            <div class="form-floating">
+              <input type="text" class="form-control" id="txtEditarModelo" name="modelo" placeholder="Modelo" required>
+              <label for="txtEditarModelo">Modelo</label>
+            </div>
 
           <div class="row">
-            <div class="form-group col-6">
-              <label for="txtEditarPrecioActual">Precio</label>
-              <input type="number" class="form-control" id="txtEditarPrecioActual" name="precio_actual" step="0.01" required>
+            <div class="col-6">
+              <div class="form-floating">
+                <input type="number" class="form-control" id="txtEditarPrecioActual" placeholder="Precio" name="precio_actual" step="0.01" required>
+                <label for="txtEditarPrecioActual">Precio</label>
+              </div>
             </div>
-            <div class="form-group col-6">
-              <label for="txtEditarCodigoBarras">Codigo Barras</label>
-              <input type="text" class="form-control" id="txtEditarCodigoBarras" name="codigo_barra" required>
+            <div class="col-6">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="txtEditarCodigoBarras" placeholder="Código de Barras" name="codigo_barra" required>
+                <label for="txtEditarCodigoBarras">Código Barras</label>
+              </div>
             </div>
           </div>
           <button type="submit" class="btn btn-success mt-3">Guardar Cambios</button>
@@ -161,7 +165,7 @@
 <?php require_once "../../footer.php"; ?>
 
 <script type="module" src="../../js/Productos.js"></script>
-<script src="../../js/ProductosDatatable.js"></script>
+<script type="module" src="../../js/ProductosDatatable.js"></script>
 
 </body>
 

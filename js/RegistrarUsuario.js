@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
     return document.getElementById(id);
   }
 
-  let idPersonaEncontrada = null;
+  let idPersonaEncontrada = null; 
 
   $("btnBuscar").addEventListener("click", async () => {
     const dni = $("txtNumDocumentoPersona").value;
@@ -25,17 +25,29 @@ document.addEventListener("DOMContentLoaded", function () {
         throw new Error("Error en la solicitud al servidor.");
       }
       const data = await respuesta.json();
-      if (data.id_persona) {
-        idPersonaEncontrada = data.id_persona;
-        console.log("Persona:" + idPersonaEncontrada);
+      console.log(data);
+
+      if (data.length > 0 && data[0].id_persona) {
+        const persona = data[0];
+        idPersonaEncontrada = persona.id_persona;
+
+        $("txtNombre").value = persona.nombres;
+        $("txtApe").value = persona.apellidos; 
+        $("txtEmail").value = persona.email; 
+        $("txtTelefono").value = persona.telefono; 
+        $("txtNombre").disabled = true;
+        $("txtApe").disabled = true;
+        $("txtEmail").disabled = false;
+        $("txtUsuario").disabled = false;
+        $("txtContrasenia").disabled = false;
+        $("slcRol").disabled = false;
+
         showToast("Persona encontrada en la base de datos.", "SUCCESS");
       } else {
         const persona = await BuscarPersonaAPI("obtenerDni", dni);
         if (persona) {
           $("txtNombre").value = persona.nombres;
-          $(
-            "txtApe"
-          ).value = `${persona.apellidoPaterno} ${persona.apellidoMaterno}`;
+          $("txtApe").value = `${persona.apellidoPaterno} ${persona.apellidoMaterno}`;
           $("txtNombre").disabled = true;
           $("txtApe").disabled = true;
           $("txtEmail").disabled = false;
@@ -43,8 +55,8 @@ document.addEventListener("DOMContentLoaded", function () {
           $("txtContrasenia").disabled = false;
           $("slcRol").disabled = false;
 
-          idPersonaEncontrada = await RegistrarPersona(dni);
           showToast("Persona registrada desde la API.", "INFO");
+          idPersonaEncontrada = await RegistrarPersona(dni);
         } else {
           showToast("No se encontraron datos en la API externa.", "INFO");
         }
@@ -91,12 +103,12 @@ document.addEventListener("DOMContentLoaded", function () {
   async function RegistrarPersona(dni) {
     try {
       const formData = new FormData();
-      formData.append("nacionalidad", $("slcNacionalidad").value);
       formData.append("tipo_doc", $("slcDocumento").value);
       formData.append("nro_doc", dni);
-      formData.append("nombres", $("txtNombre").value);
       formData.append("apellidos", $("txtApe").value);
+      formData.append("nombres", $("txtNombre").value);
       formData.append("telefono", $("txtTelefono").value);
+      formData.append("nacionalidad", $("slcNacionalidad").value);
       formData.append("email", $("txtEmail").value);
       formData.append("iduser_create", userid);
 
@@ -111,6 +123,7 @@ document.addEventListener("DOMContentLoaded", function () {
         throw new Error("Error al registrar la persona.");
       }
       const data = await respuesta.json();
+      console.log("Respuesta de búsqueda:", data);
       return data.id_persona;
     } catch (error) {
       console.error("Error al registrar persona:", error);
@@ -122,13 +135,12 @@ document.addEventListener("DOMContentLoaded", function () {
     try {
       const formData = new FormData();
       formData.append("id_persona", idPersona);
-      formData.append("usuario", $("txtUsuario").value);
-      formData.append("contrasena", $("txtContrasena").value);
-      formData.append("rol", $("slcRol").value);
+      formData.append("nombre_user", $("txtUsuario").value);
+      formData.append("pass", $("txtContrasenia").value);
       formData.append("iduser_create", userid);
 
       const respuesta = await fetch(
-        `${config.HOST}app/controllers/Usuario.controller.php`,
+        `${config.HOST}app/controllers/Usuario.controllers.php`,
         {
           method: "POST",
           body: formData,
