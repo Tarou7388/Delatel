@@ -71,18 +71,20 @@
       <i class="fas fa-table me-1"></i> Gestión de Permisos de Rol
     </div>
     <div class="card-body">
-      <table id="tablaRol" class="display">
-        <thead>
-          <tr>
-            <th class="text-center">Rol</th>
-            <th class="text-center">Permisos</th>
-            <th class="text-center">Actualizar</th>
-            <th class="text-center">Inhabilitar</th>
-          </tr>
-        </thead>
-        <tbody id="mostrar">
-        </tbody>
-      </table>
+      <div class="table-responsive">
+        <table id="tablaRol" class="display">
+          <thead>
+            <tr>
+              <th class="text-center">Rol</th>
+              <th class="text-center">Permisos</th>
+              <th class="text-center">Actualizar</th>
+              <th class="text-center">Inhabilitar</th>
+            </tr>
+          </thead>
+          <tbody id="mostrar">
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>

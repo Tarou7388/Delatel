@@ -99,22 +99,24 @@
 			<i class="fas fa-table me-1"></i> Gestionar Kardex
 		</div>
 		<div class="card-body">
-			<table id="TbKardex" name="TbKardex" class="display">
-				<thead>
-					<tr>
-						<th class="text-center">ID Producto</th>
-						<th class="text-center">Fecha</th>
-						<th class="text-center">Tipo de Operación</th>
-						<th class="text-center">Motivo</th>
-						<th class="text-center">Cantidad</th>
-						<th class="text-center">Saldo Total</th>
-						<th class="text-center">Valor Único Histórico</th>
-					</tr>
-				</thead>
-				<tbody>
-
-				</tbody>
-			</table>
+			<div class="table-responsive">
+				<table id="TbKardex" name="TbKardex" class="display">
+					<thead>
+						<tr>
+							<th class="text-center">ID Producto</th>
+							<th class="text-center">Fecha</th>
+							<th class="text-center">Tipo de Operación</th>
+							<th class="text-center">Motivo</th>
+							<th class="text-center">Cantidad</th>
+							<th class="text-center">Saldo Total</th>
+							<th class="text-center">Valor Único Histórico</th>
+						</tr>
+					</thead>
+					<tbody>
+	
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 </div>

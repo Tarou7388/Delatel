@@ -33,10 +33,10 @@
             </div>
           </div>
 
-            <div class="form-floating mb-2">
-              <input type="text" class="form-control" id="txtEditarModelo" name="modelo" placeholder="Modelo" required>
-              <label for="txtEditarModelo">Modelo</label>
-            </div>
+          <div class="form-floating mb-2">
+            <input type="text" class="form-control" id="txtEditarModelo" name="modelo" placeholder="Modelo" required>
+            <label for="txtEditarModelo">Modelo</label>
+          </div>
 
           <div class="row">
             <div class="col-6">
@@ -73,7 +73,7 @@
       <form action="" method="" id="form-productos">
 
         <div class="row g-2 mb-2">
-        
+
           <div class="col-md">
             <div class="form-floating">
               <select class="form-select" id="slcTipoProducto" name="slcTipoProducto" required>
@@ -136,30 +136,33 @@
       </form>
     </div>
   </div>
+</div>
 
+<div class="container-fluid px-4">
   <!-- Tabla de Registros -->
-  <div class="card mt-4">
+  <div class="card mt-3">
     <div class="card-header">
       <i class="fas fa-table me-1"></i> Administrar Productos
     </div>
     <div class="card-body">
-      <table id="tblProductos" name="tblProductos" class="display">
-        <thead>
-          <tr>
-            <th class="text-center">Marca</th>
-            <th class="text-center">Tipo de Producto</th>
-            <th class="text-center">Modelo</th>
-            <th class="text-center">Precio Actual</th>
-            <th class="text-center">Código de Barra</th>
-            <th class="text-center">Acciones</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+      <div class="table-responsive">
+        <table id="tblProductos" name="tblProductos" class="table table-striped">
+          <thead>
+            <tr>
+              <th class="text-center">Marca</th>
+              <th class="text-center">Tipo de Producto</th>
+              <th class="text-center">Modelo</th>
+              <th class="text-center">Precio Actual</th>
+              <th class="text-center">Código de Barra</th>
+              <th class="text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>
-
 
 
 

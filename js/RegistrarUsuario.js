@@ -103,14 +103,15 @@ document.addEventListener("DOMContentLoaded", function () {
   async function RegistrarPersona(dni) {
     try {
       const formData = new FormData();
-      formData.append("tipo_doc", $("slcDocumento").value);
-      formData.append("nro_doc", dni);
+      formData.append("operacion", "registrarPersona");
+      formData.append("tipoDoc", $("slcDocumento").value);
+      formData.append("nroDoc", dni);
       formData.append("apellidos", $("txtApe").value);
       formData.append("nombres", $("txtNombre").value);
       formData.append("telefono", $("txtTelefono").value);
       formData.append("nacionalidad", $("slcNacionalidad").value);
       formData.append("email", $("txtEmail").value);
-      formData.append("iduser_create", userid);
+      formData.append("idUsuario", userid);
 
       const respuesta = await fetch(
         `${config.HOST}app/controllers/Persona.controlles.php`,
@@ -124,7 +125,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       const data = await respuesta.json();
       console.log("Respuesta de búsqueda:", data);
-      return data.id_persona;
+      return data.idPersona;
     } catch (error) {
       console.error("Error al registrar persona:", error);
       return null;
@@ -134,10 +135,11 @@ document.addEventListener("DOMContentLoaded", function () {
   async function RegistrarUsuario(idPersona) {
     try {
       const formData = new FormData();
-      formData.append("id_persona", idPersona);
-      formData.append("nombre_user", $("txtUsuario").value);
-      formData.append("pass", $("txtContrasenia").value);
-      formData.append("iduser_create", userid);
+      formData.append("operacion", "registrarUsuario");
+      formData.append("idPersona", idPersona);
+      formData.append("nombreUsuario", $("txtUsuario").value);
+      formData.append("clave", $("txtContrasenia").value);
+      formData.append("idUsuario", userid);
 
       const respuesta = await fetch(
         `${config.HOST}app/controllers/Usuario.controllers.php`,
@@ -218,7 +220,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   $("registerForm").addEventListener("submit", async (event) => {
     event.preventDefault();
-
+    console.log(idPersonaEncontrada); 
     if (!idPersonaEncontrada) {
       showToast("Debes buscar una persona primero.", "WARNING");
       return;

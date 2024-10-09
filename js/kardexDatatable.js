@@ -78,11 +78,12 @@ window.tablaKardex = $('#TbKardex').DataTable({
     ],
     order: [[1, 'desc']],
     language: {
-        "url": "../../json/es-ES.json"
+        url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
     },
     paging: true,
     searching: true,
-    info: false
+    info: false,
+    lengthChange: false
 });
 
 function getFileName(type) {

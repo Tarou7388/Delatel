@@ -174,6 +174,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
   }
+  
   async function cargarPaquetes() {
     const response = await fetch(`${config.HOST}app/controllers/Paquete.controllers.php?operacion=listarPaquetes`);
     const data = await response.json();
