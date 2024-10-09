@@ -17,11 +17,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const params = new FormData();
       params.append("operacion", "registrarProducto");
       params.append("marca", marca.value);
-      params.append("tipo_producto", tipoProducto.value);
+      params.append("tipoProducto", tipoProducto.value);
       params.append("modelo", Modelo.value);
-      params.append("precio_actual", precioActual.value);
-      params.append("codigo_barra", CodigoBarras.value);
-      params.append("iduser_create", userid);
+      params.append("precioActual", precioActual.value);
+      params.append("codigoBarra", CodigoBarras.value);
+      params.append("idUsuario", userid);
 
       fetch(`${config.HOST}app/controllers/Producto.controllers.php`, {
         method: "POST",

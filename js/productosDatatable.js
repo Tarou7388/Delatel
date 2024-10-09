@@ -109,7 +109,6 @@ document.addEventListener("DOMContentLoaded", function () {
             codigoBarra:$('#txtEditarCodigoBarras').val(),
             idUsuario:userid
         };
-        console.log(datosProducto);
 
         try {
             const response = await fetch(`${config.HOST}app/controllers/Producto.controllers.php`, {
