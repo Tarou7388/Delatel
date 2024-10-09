@@ -54,11 +54,12 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   async function registrar() {
-    const fechaRegistro = new Date().toString();
+    const fechaRegistro = new Date().toISOString().split('T')[0];
+    console.log(fechaRegistro);
     const fichaInstalacion = await fichaInstalacionGpon();
     const nota = "";
     const idUsuarioRegistro = user.idRol;
-    const idServicio = parseInt(slcServicio.value.split(" - ")[0]);
+    const idServicio = slcServicio.value.split(" - ")[0]
 
 
     if (!validarFechas() || !(await validarCampos())) {
@@ -79,20 +80,18 @@ window.addEventListener("DOMContentLoaded", () => {
               coordenada: coordenada.value,
               fechaInicio: fechaInicio.value,
               fechaFin: fechaFin.value,
-              fechaRegistro: fechaRegistro,
-              fichaInstalacion: fichaInstalacionJSON
+              fechaRegistro: fechaRegistro
             },
             nota: nota,
-            idUsuario: idUsuario
+            idUsuario: 1
           }),
           headers: {
             "Content-Type": "application/json",
           },
         });
-
+        
         const result = await response.json();
-        console.log(result);  // Añade este log para ver la respuesta completa
-
+        console.log(await result);  
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         } else {
