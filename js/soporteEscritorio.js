@@ -102,20 +102,64 @@ window.addEventListener('DOMContentLoaded', function () {
   })();
 
   function formatoIPinput(event) {
-    let input = event.target.value.replace(/[^0-9.]/g, '');
+    // Obtener el valor del input
+    let input = event.target.value.replace(/[^0-9.]/g, ''); // Solo números y puntos
 
-    // Dividir en octetos y filtrar vacíos
-    let octets = input.split('.').filter(octet => octet);
+    // Agrupar en segmentos de 3
+    let formattedInput = '';
+    let count = 0; // Contador de dígitos
 
-    // Limitar a 4 octetos y asegurarse de que cada octeto no exceda 255
-    octets = octets.slice(0, 4).map(octet => Math.min(255, octet).toString());
+    for (let i = 0; i < input.length; i++) {
+      if (input[i] !== '.') {
+        formattedInput += input[i];
+        count++;
+        // Agregar punto después de cada 3 dígitos, pero solo si no es el final
+        if (count % 3 === 0 && i < input.length - 1 && input[i + 1] !== '.') {
+          formattedInput += '.';
+        }
+      } else {
+        // Reiniciar el contador al encontrar un punto
+        if (formattedInput[formattedInput.length - 1] !== '.') {
+          formattedInput += '.'; // Agregar el punto si no está presente al final
+        }
+        count = 0; // Reiniciar el contador
+      }
+    }
 
-    // Unir octetos y actualizar el valor del input
-    event.target.value = octets.join('.').slice(0, 15); // Limitar a 15 caracteres
+    // Limitar el valor a 15 caracteres
+    event.target.value = formattedInput.slice(0, 15);
+  };
+
+  // Agregar evento de input a los inputs
+  $('#txtIpWisp, #txtCambiosIpWisp').on('input', function (event) {
+    formatoIPinput(event); // Pasar el evento completo
+  });
+
+  function CalcularEntradaPrecio(cantidad, precio) {
+
+    let PrecioTotal = cantidad * precio;
+
+    if (PrecioTotal == 0 || PrecioTotal < 0) {
+      return PrecioTotal;
+    }
+    else {
+      showToast("No se puede calcular esta cantidad", "ERROR");
+    };
+
+    return { precio: PrecioTotal };
   }
 
-  $('#txtIpWisp, #txtCambiosIpWisp').on('input', function () {
-    $(this).val(formatoIPinput($(this).val()));
+  $('#txtPrecioCable').on('input', function (event) {
+    CalcularEntradaPrecio(event);
+  });
+  $('#txtConectorCable').on('input', function (event) {
+    CalcularEntradaPrecio(event);
+  });
+  $('#txtCambiosPrecioCable').on('input', function (event) {
+    CalcularEntradaPrecio(event);
+  });
+  $('#txtCambiosConectorCable').on('input', function (event) {
+    CalcularEntradaPrecio(event);
   });
 
 });

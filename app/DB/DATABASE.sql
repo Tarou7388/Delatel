@@ -188,7 +188,6 @@ CREATE TABLE tb_contratos (
     fecha_inicio DATE NULL,
     fecha_fin DATE NULL,
     fecha_registro DATE NOT NULL,
-    ficha_instalacion JSON NULL,
     nota TEXT NULL,
     create_at DATETIME NOT NULL DEFAULT NOW(),
     update_at DATETIME NULL,

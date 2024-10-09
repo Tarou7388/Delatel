@@ -45,7 +45,6 @@ CREATE PROCEDURE spu_contratos_registrar(
     IN p_fecha_inicio DATE,
     IN p_fecha_fin DATE,
     IN p_fecha_registro DATE,
-    IN p_ficha_instalacion JSON,
     IN p_nota TEXT,
     IN p_iduser_create INT
 )
@@ -60,7 +59,6 @@ BEGIN
         fecha_inicio,
         fecha_fin,
         fecha_registro,
-        ficha_instalacion,
         nota,
         id_usuario_registro
     ) VALUES (
@@ -73,7 +71,6 @@ BEGIN
         p_fecha_inicio,
         p_fecha_fin,
         p_fecha_registro,
-        NULLIF(p_ficha_instalacion,""),
         p_nota,
         p_iduser_create
     );
@@ -95,8 +92,7 @@ BEGIN
             ELSE e.ruc
         END AS num_identificacion,
         sv.servicio,
-        t.tipo_paquete,
-        c.ficha_instalacion
+        t.tipo_paquete
     FROM
         tb_contratos c
         INNER JOIN tb_clientes cl ON c.id_cliente = cl.id_cliente
@@ -165,6 +161,7 @@ BEGIN
     WHERE id_contrato = p_id_contrato;
 END $$
 
+/**
 DROP PROCEDURE IF EXISTS spu_ficha_tecnica_registrar$$
 CREATE PROCEDURE spu_ficha_tecnica_registrar(
     p_id_contrato INT,
@@ -178,6 +175,7 @@ BEGIN
     id_usuario_registro = p_id_usuario_registro
     WHERE id_contrato = p_id_contrato;
 END $$
+**/
 
 DROP PROCEDURE IF EXISTS buscar_contrato_por_cliente$$
 CREATE PROCEDURE buscar_contrato_por_cliente(IN p_id_cliente INT)

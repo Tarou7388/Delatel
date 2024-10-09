@@ -489,8 +489,8 @@
                       <label for="txtCable">Cable</label>
                     </div>
                     <div class="form-floating">
-                      <input type="number" class="form-control" id="txtPrecioCable" placeholder="Precio del Cable" disabled>
-                      <label for="txtPrecioCable">Precio del Cable</label>
+                      <input type="number" class="form-control" id="txtPrecioCable" placeholder="1.50" disabled>
+                      <label for="txtPrecioCable">1.50</label>
                     </div>
                   </div>
                 </div>
@@ -502,8 +502,8 @@
                       <label for="txtConectorCable">Conectores</label>
                     </div>
                     <div class="form-floating">
-                      <input type="number" class="form-control" id="txtPrecioConectorCable" placeholder="Precio del Conector" disabled>
-                      <label for="txtPrecioConectorCable">Precio del Conector</label>
+                      <input type="number" class="form-control" id="txtPrecioConectorCable" placeholder="1.50" disabled>
+                      <label for="txtPrecioConectorCable">1.50</label>
                     </div>
                   </div>
                 </div>
