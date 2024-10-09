@@ -41,7 +41,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         "fechaFin"            => Herramientas::sanitizarEntrada($datos['parametros']['fechaFin']),
         "fechaRegistro"       => Herramientas::sanitizarEntrada($datos['parametros']['fechaRegistro']),
         "fichaInstalacion"    => json_encode($datos['parametros']['fichaInstalacion']),
-        "nota"                => Herramientas::sanitizarEntrada($datos['parametros']['nota'])
+        "nota"                => Herramientas::sanitizarEntrada($datos['parametros']['nota']),
+        "idUsuario"           => Herramientas::sanitizarEntrada($datos['parametros']['idUsuario'])
       ];
       $resultado = $contrato->registrarContrato($datosEnviar);
       echo json_encode(["guardado" => $resultado]);

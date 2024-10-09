@@ -37,36 +37,24 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  async function registrarContacto(idPersona) {
-    const Paquete = slcServicio.value.split(" - ")[0];
-    const fecha = new Date();
-    fecha.setDate(fecha.getDate() + 14);
-    const datos = {
-      operacion: "registrarContacto",
-      idPersona: idPersona,
-      idPaquete: Paquete,
-      direccion: txtDireccion.value,
-      nota: "Para llamar",
-      idUsuario: userid,
-      fechaLimite: fecha.toISOString().slice(0, 10),
-    };
-    const response = await fetch(`${config.HOST}app/controllers/Contactabilidad.controllers.php`, {
-      method: "POST",
-      body: JSON.stringify(datos),
-    });
-    const data = await response.json();
-    console.log(data);
-  }
-
   function ObtenerDataDNI(operacion, dni) {
     fetch(`${config.HOST}app/controllers/Persona.controlles.php?operacion=${operacion}&dni=${encodeURIComponent(dni)}`)
-      .then((response) => response.json())
-      .then((data) => {
-        txtNombresPersona.value = data.nombres ?? "";
-        txtApellidosPersona.value = (data.apellidoPaterno ?? "") + (data.apellidoMaterno ? " " + data.apellidoMaterno : "");
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Error al obtener la información');
+        }
+        return response.json();
       })
-      .catch((e) => {
-        showToast("Persona no encontrada, verifique DNI", "ERROR");
+      .then((data) => {
+        if (data && data.nombres && data.apellidoPaterno) {
+          txtNombresPersona.value = data.nombres;
+          txtApellidosPersona.value = `${data.apellidoPaterno} ${data.apellidoMaterno || ''}`.trim();
+        } else {
+          showToast('No se encontraron datos para el DNI proporcionado', 'WARNING');
+        }
+      })
+      .catch((error) => {
+        showToast('Error al obtener la información de la persona: ' + error.message, 'ERROR');
       });
   }
 
@@ -88,38 +76,67 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function registrarPersona() {
-    if (permisos[0].permisos.personas.crear == 1) {
-      const params = new FormData();
-      params.append("operacion", "registrarPersona");
-      params.append("tipoDoc", slcTipoDocumento.value);
-      params.append("nroDoc", txtNumDocumentoPersona.value);
-      params.append("nombres", txtNombresPersona.value);
-      params.append("apellidos", txtApellidosPersona.value);
-      params.append("telefono", txtTelefono.value);
-      params.append("email", txtEmail.value);
-      params.append("nacionalidad", slcNacionalidad.value);
-      params.append("iduser_create", userid);
+    // if (permisos[0].permisos.personas.crear == 1) {
 
-      const options = {
-        method: "POST",
-        body: params,
-      };
+    // }
+    const params = new FormData();
+    params.append("operacion", "registrarPersona");
+    params.append("tipoDoc", slcTipoDocumento.value);
+    params.append("nroDoc", txtNumDocumentoPersona.value);
+    params.append("nombres", txtNombresPersona.value);
+    params.append("apellidos", txtApellidosPersona.value);
+    params.append("telefono", txtTelefono.value);
+    params.append("email", txtEmail.value);
+    params.append("nacionalidad", slcNacionalidad.value);
+    params.append("idUsuario", userid);
 
-      fetch(`${config.HOST}app/controllers/Persona.controlles.php`, options)
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.id_persona > 0) {
-            showToast("Persona registrada correctamente", "SUCCESS");
-            registrarContacto(data.id_persona);
-          } else {
-            showToast("Verifique los datos ingresados", "ERROR");
-          }
-          frmPersonas.reset();
-        })
-        .catch((e) => {
-          showToast("PERSONA YA REGISTRADA", "WARNING");
-        });
-    }
+    const options = {
+      method: "POST",
+      body: params
+    };
+
+    fetch(`${config.HOST}app/controllers/Persona.controlles.php`, options)
+      .then((response) => {
+        console.log(response)
+        if (!response.ok) {
+          throw new Error('Error en la solicitud al registrar persona');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data)
+        if (data.id_persona > 0) {
+          showToast("Persona registrada correctamente", "SUCCESS");
+          registrarContacto(data.id_persona);
+        } else {
+          showToast("Verifique los datos ingresados", "ERROR");
+        }
+        frmPersonas.reset();
+      })
+      .catch((e) => {
+        console.log(e)
+        showToast("PERSONA YA REGISTRADA", "WARNING");
+      });
+  }
+  async function registrarContacto(idPersona) {
+    const Paquete = slcServicio.value.split(" - ")[0];
+    const fecha = new Date();
+    fecha.setDate(fecha.getDate() + 14);
+    const datos = {
+      operacion: "registrarContacto",
+      idPersona: idPersona,
+      idPaquete: Paquete,
+      direccion: txtDireccion.value,
+      nota: "Para llamar",
+      idUsuario: userid,
+      fechaLimite: fecha.toISOString().slice(0, 10),
+    };
+    const response = await fetch(`${config.HOST}app/controllers/Contactabilidad.controllers.php`, {
+      method: "POST",
+      body: JSON.stringify(datos),
+    });
+    const data = await response.json();
+    console.log(data);
   }
 
   toggleForms(slcChangeRegistro.value);
@@ -164,7 +181,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const option = document.createElement("option");
       const id = paquetes.id + " - " + paquetes.tipo_paquete + " - " + paquetes.precio;
       option.value = id;
-      option.textContent = paquetes.nombre;
+      option.textContent = paquetes.servicio;
       slcServicio.appendChild(option);
     });
   }
@@ -195,14 +212,14 @@ document.addEventListener("DOMContentLoaded", function () {
     event.preventDefault();
     const bandera = verificarCamposPersona();
     if (!bandera) {
-      if (permisos[0].permisos.personas.crear != 1) {
-        showToast("No tienes permiso de registrar", "ERROR");
-      }
+      // if (permisos[0].permisos.personas.crear != 1) {
+      //   showToast("No tienes permiso de registrar", "ERROR");
+      // }
       registrarPersona();
     }
   });
 
   btnBuscar.addEventListener("click", () => {
-    ObtenerDataDNI("getapi", txtNumDocumentoPersona.value);
+    ObtenerDataDNI("obtenerDni", txtNumDocumentoPersona.value);
   });
 });

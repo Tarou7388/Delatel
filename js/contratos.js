@@ -39,7 +39,7 @@ window.addEventListener("DOMContentLoaded", () => {
     if (dni.value == "") {
       showToast("¡Ingrese numero de documento!", "INFO");
     } else {
-      const response = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&numDoc=${dni.value}`);
+      const response = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${dni.value}`);
       const data = await response.json();
       if (data.length > 0) {
         nombre.value = data[0].nombre;
@@ -58,17 +58,17 @@ window.addEventListener("DOMContentLoaded", () => {
     const fichaInstalacion = await fichaInstalacionGpon();
     const nota = "";
     const idUsuarioRegistro = user.idRol;
+    const idServicio = parseInt(slcServicio.value.split(" - ")[0]);
+
 
     if (!validarFechas() || !(await validarCampos())) {
       showToast("¡Complete los campos!", "INFO");
     } else {
       try {
-        const idServicio = parseInt(slcServicio.value.split(" - ")[0]);
-        const fichaInstalacionJSON = JSON.stringify(fichaInstalacion);
-        const response = await fetch(`${config.HOST}app/controllers/contrato.controllers.php`, {
+        const response = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php`, {
           method: "POST",
           body: JSON.stringify({
-            operacion: "add",
+            operacion: "registrarContrato",
             parametros: {
               idCliente: idCliente,
               idTarifario: idServicio,
@@ -80,14 +80,18 @@ window.addEventListener("DOMContentLoaded", () => {
               fechaInicio: fechaInicio.value,
               fechaFin: fechaFin.value,
               fechaRegistro: fechaRegistro,
-              fichaInstalacion: fichaInstalacionJSON,
-              nota: nota,
+              fichaInstalacion: fichaInstalacionJSON
             },
+            nota: nota,
+            idUsuario: idUsuario
           }),
           headers: {
             "Content-Type": "application/json",
           },
         });
+
+        const result = await response.json();
+        console.log(result);  // Añade este log para ver la respuesta completa
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -95,11 +99,11 @@ window.addEventListener("DOMContentLoaded", () => {
           showToast("¡Contrato registrado correctamente!", "SUCCESS");
           resetUI();
         }
-
-        await response.json();
       } catch (error) {
+        console.error(error);  // Añade este log para depurar el error
         showToast("Ocurrió un error al registrar el contrato. Por favor, inténtelo de nuevo.", "ERROR");
       }
+
     }
   }
 
@@ -121,7 +125,7 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     }
   }
-  
+
   async function cargarDatos() {
     const dataSectores = await fetchSectores();
     dataSectores.forEach((sector) => {
@@ -130,19 +134,19 @@ window.addEventListener("DOMContentLoaded", () => {
       option.textContent = sector.sector;
       slcSector.appendChild(option);
     });
-  
+
     const dataPaquetes = await fetchPaquetes();
     dataPaquetes.forEach((paquete) => {
       const option = document.createElement("option");
       const id = `${paquete.id} - ${paquete.tipo_paquete} - ${paquete.precio}`;
       option.value = id;
-      option.textContent = paquete.nombre;
+      option.textContent = paquete.servicio;
       slcServicio.appendChild(option);
     });
-  
+
     const dataContratos = await fetchContratos();
     const tbody = document.querySelector("#listarContratos tbody");
-  
+
     dataContratos.forEach((contrato) => {
       const tr = document.createElement("tr");
       tr.innerHTML = `
@@ -161,7 +165,7 @@ window.addEventListener("DOMContentLoaded", () => {
       `;
       tbody.appendChild(tr);
     });
-  
+
     var tabla = new DataTable("#listarContratos", {
       language: {
         url: `${config.HOST}Json/es-Es.json`,
@@ -176,11 +180,11 @@ window.addEventListener("DOMContentLoaded", () => {
         { width: "14%", targets: 6 },
       ],
     });
-    
+
     const botonesPdf = document.querySelectorAll(".btnGenerar");
     const botonesEliminar = document.querySelectorAll(".btnEliminar");
     const botonesFicha = document.querySelectorAll(".btnFicha");
-  
+
     botonesFicha.forEach((boton) => {
       boton.addEventListener("click", (event) => {
         const idContrato = event.target.getAttribute("data-idContrato");
@@ -194,14 +198,14 @@ window.addEventListener("DOMContentLoaded", () => {
         window.location.href = `${config.HOST}views/contratos/${tipoFicha[tipoPaquete]}.php?idContrato=${idContrato}`;
       });
     });
-  
+
     botonesEliminar.forEach((boton) => {
       boton.addEventListener("click", (event) => {
         const idContrato = event.target.getAttribute("data-idContrato");
         eliminar(parseInt(idContrato));
       });
     });
-  
+
     botonesPdf.forEach((boton) => {
       boton.addEventListener("click", () => {
         const idContrato = boton.getAttribute("data-idContrato");
@@ -241,9 +245,9 @@ window.addEventListener("DOMContentLoaded", () => {
     registrar();
   });
 
-  document.querySelector("#btnBuscar").addEventListener("click", (event) => {
+  document.querySelector("#btnBuscar").addEventListener("click", async (event) => {
     event.preventDefault();
-    buscarCliente();
+    await buscarCliente();
   });
 
   $("#slcServicio").on("select2:select", function () {

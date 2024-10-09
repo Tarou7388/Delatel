@@ -3,7 +3,7 @@
 use App\Controllers\Herramientas;
 
 require_once '../models/Cliente.php';
-require_once './Heramientas.php';
+require_once './Herramientas.php';
 
 
 $cliente = new Cliente();
