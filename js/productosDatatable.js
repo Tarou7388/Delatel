@@ -2,10 +2,10 @@ import config from '../env.js';
 
 document.addEventListener("DOMContentLoaded", function () {
     const userid = user['idUsuario'];
-    const ruta = `${config.HOST}app/controllers/Productos.controllers.php?operacion=listarProductos`;
+    const ruta = `${config.HOST}app/controllers/Producto.controllers.php?operacion=listarProductos`;
 
     // 2. Inicialización de la tabla de productos
-    window.tablaProductos = $('#TbProductos').DataTable({
+    window.tablaProductos = $('#tblProductos').DataTable({
         dom: `
         <"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6 text-end"f>>
         <"row"<"col-sm-12"tr>>
@@ -76,18 +76,18 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // 3. Evento para editar un producto
-    $('#TbProductos tbody').on('click', '.btn-edit', async function () {
+    $('#tblProductos tbody').on('click', '.btn-edit', async function () {
         const idProducto = $(this).data('id');
 
         try {
-            const response = await fetch(`${config.HOST}app/controllers/Productos.controllers.php?operacion=buscarProductoId&id_producto=` + idProducto);
+            const response = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoId&idProducto=` + idProducto);
             const producto = await response.json();
-            $('#txtIdProducto').val(producto.id_producto);
-            $('#slcEditarTipoProducto').val(producto.tipo_producto);
-            $('#slcEditarMarca').val(producto.marca);
-            $('#txtEditarModelo').val(producto.modelo);
-            $('#txtEditarPrecioActual').val(producto.precio_actual);
-            $('#txtEditarCodigoBarras').val(producto.codigo_barra);
+            $('#txtIdProducto').val(producto[0].id_producto);
+            $('#slcEditarTipoProducto').val(producto[0].tipo_producto);
+            $('#slcEditarMarca').val(producto[0].marca);
+            $('#txtEditarModelo').val(producto[0].modelo);
+            $('#txtEditarPrecioActual').val(producto[0].precio_actual);
+            $('#txtEditarCodigoBarras').val(producto[0].codigo_barra);
 
             $('#modalEditarProducto').modal('show');
         } catch (error) {
@@ -100,17 +100,18 @@ document.addEventListener("DOMContentLoaded", function () {
         e.preventDefault();
 
         const datosProducto = {
-            id_producto: $('#txtIdProducto').val(),
-            tipo_producto: $('#slcEditarTipoProducto').val(),
-            marca: $('#slcEditarMarca').val(),
-            modelo: $('#txtEditarModelo').val(),
-            precio_actual: $('#txtEditarPrecioActual').val(),
-            codigo_barra: $('#txtEditarCodigoBarras').val(),
-            iduser_update: userid
+            operacion: 'actualizarProducto',
+            idProducto:$('#txtIdProducto').val(),
+            marca:$('#slcEditarMarca').val(),
+            tipoProducto:$('#slcEditarTipoProducto').val(),
+            modelo:$('#txtEditarModelo').val(),
+            precioActual:$('#txtEditarPrecioActual').val(),
+            codigoBarra:$('#txtEditarCodigoBarras').val(),
+            idUsuario:userid
         };
 
         try {
-            const response = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=actualizarProducto`, {
+            const response = await fetch(`${config.HOST}app/controllers/Producto.controllers.php`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

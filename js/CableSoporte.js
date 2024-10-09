@@ -1,5 +1,5 @@
 import config from '../env.js';
-import { inicializarDataTable } from './tools.js';
+import { inicializarDataTable } from './Herramientas.js';
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -49,49 +49,49 @@ document.addEventListener("DOMContentLoaded", () => {
     const JsonCable = await obtenerJsonCable();
 
     // Parámetros del Cable
-    JsonCable.parametroscable.periodo = $("#slcPeriodo").value;
+    JsonCable.parametroscable.periodo = $("#slcPeriodoCable").value;
     JsonCable.parametroscable.potencia = potencia;
-    JsonCable.parametroscable.sintonizador = $("#txtSintonizador").value;
+    JsonCable.parametroscable.sintonizador = $("#txtSintonizadorCable").value;
     JsonCable.parametroscable.triplexor = {
-      "requiere": ($("#slcTriplexor").value !== "1"),  // "1" es "No"
-      "cantidad": $("#txtNumTriplexor").value,
-      "tipo": ($("#slcTriplexor").value === "2") ? "activo" : "pasivo"
+      "requiere": ($("#slcTriplexorCable").value !== "1"),  // "1" es "No"
+      "cantidad": $("#txtNumTriplexorCable").value,
+      "tipo": ($("#slcTriplexorCable").value === "2") ? "activo" : "pasivo"
     };
 
     // Asignación de splitter (que puede ser más de uno)
     JsonCable.parametroscable.spliter = [
       {
-        "cantidad": $("#txtNumSpliter").value,
-        "tipo": $("#slcSpliter").value === "1" ? "1x3" :
-          $("#slcSpliter").value === "2" ? "1x5" : "1x8"
+        "cantidad": $("#txtNumSpliterCable").value,
+        "tipo": $("#slcSpliterCable").value === "1" ? "1x3" :
+          $("#slcSpliterCable").value === "2" ? "1x5" : "1x8"
       }
     ];
 
     JsonCable.parametroscable.cable = $("#txtCable").value;
-    JsonCable.parametroscable.conectores = $("#txtConector").value;
-    JsonCable.parametroscable.estadoinicial = $("#txtaEstadoInicialCable").value;
+    JsonCable.parametroscable.conectores = $("#txtConectorCable").value;
+    JsonCable.parametroscable.estadoinicial = $("#txtEstadoInicialCable").value;
 
     // Cambios en el Cable
-    JsonCable.cambioscable.periodo = $("#slcCambiosPeriodo").value;
+    JsonCable.cambioscable.periodo = $("#slcCambiosPeriodoCable").value;
     JsonCable.cambioscable.potencia = Cambiopotencia;
-    JsonCable.cambioscable.sintonizador = $("#txtCambiosSintonizador").value;
+    JsonCable.cambioscable.sintonizador = $("#txtCambiosSintonizadorCable").value;
     JsonCable.cambioscable.triplexor = {
-      "requiere": ($("#slcCambiosTriplexor").value !== "1"),  // 1 significa NO, si pueden cambienlo
-      "cantidad": $("#txtCambiosNumTriplexor").value,
-      "tipo": ($("#slcCambiosTriplexor").value === "2") ? "activo" : "pasivo"
+      "requiere": ($("#slcCambiosTriplexorCable").value !== "1"),  // 1 significa NO, si pueden cambienlo
+      "cantidad": $("#txtCambiosNumTriplexorCable").value,
+      "tipo": ($("#slcCambiosTriplexorCable").value === "2") ? "activo" : "pasivo"
     };
 
     JsonCable.cambioscable.spliter = [
       {
-        "cantidad": $("#txtCambiosNumSpliter").value,
-        "tipo": $("#slcCambiosSpliter").value === "1" ? "1x3" :
-          $("#slcCambiosSpliter").value === "2" ? "1x5" : "1x8"
+        "cantidad": $("#txtCambiosNumSpliterCable").value,
+        "tipo": $("#slcCambiosSpliterCable").value === "1" ? "1x3" :
+          $("#slcCambiosSpliterCable").value === "2" ? "1x5" : "1x8"
       }
     ];
 
     JsonCable.cambioscable.cable = $("#txtCambiosCable").value;
-    JsonCable.cambioscable.conectores = $("#txtCambiosConector").value;
-    JsonCable.cambioscable.procedimientosolucion = $("#txtProcedimiento").value;
+    JsonCable.cambioscable.conectores = $("#txtCambiosConectorCable").value;
+    JsonCable.cambioscable.procedimientosolucion = $("#txtProcedimientoCable").value;
 
     registrarCable(JsonCable);
   });

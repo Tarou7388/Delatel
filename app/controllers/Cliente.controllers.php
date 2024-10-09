@@ -25,7 +25,7 @@ if (isset($_GET['operacion'])) {
       }
       echo json_encode($resultado);
       break;
-    case 'getAll':
+    case 'listarClientes':
       $resultado = $cliente->listarClientes();
       echo json_encode($resultado);
       break;

@@ -14,17 +14,14 @@ document.addEventListener("DOMContentLoaded", () => {
     .addEventListener("submit", (event) => {
       event.preventDefault();
 
-      if (permisos[0].permisos.inventariado.crear != 1) {
-        showToast("No tienes permiso para esta acción","ERROR");
-      }
       const params = new FormData();
       params.append("operacion", "registrarProducto");
-      params.append("tipo_producto", tipoProducto.value);
       params.append("marca", marca.value);
-      params.append("precio_actual", precioActual.value);
+      params.append("tipoProducto", tipoProducto.value);
       params.append("modelo", Modelo.value);
-      params.append("Codigo_Barras", CodigoBarras.value);
-      params.append("iduser_create", userid);
+      params.append("precioActual", precioActual.value);
+      params.append("codigoBarra", CodigoBarras.value);
+      params.append("idUsuario", userid);
 
       fetch(`${config.HOST}app/controllers/Producto.controllers.php`, {
         method: "POST",

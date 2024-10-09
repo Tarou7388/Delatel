@@ -1,5 +1,5 @@
 import config from '../env.js';
-import { inicializarDataTable} from './tools.js';
+import { inicializarDataTable} from './Herramientas.js';
 
 document.addEventListener("DOMContentLoaded", () => {
   const table = inicializarDataTable('#tblUsuarios', 

@@ -14,11 +14,11 @@ if (isset($_POST['operacion'])) {
     case 'registrarProducto':
       $datos = [
         "marca"             => Herramientas::sanitizarEntrada($_POST['marca']),
-        "tipo_producto"     => Herramientas::sanitizarEntrada($_POST['tipoProducto']),
+        "tipoProducto"     => Herramientas::sanitizarEntrada($_POST['tipoProducto']),
         "modelo"            => Herramientas::sanitizarEntrada($_POST['modelo']),
-        "precio_actual"     => Herramientas::sanitizarEntrada($_POST['precioActual']),
-        "Codigo_Barras"     => Herramientas::sanitizarEntrada($_POST['codigoBarra']),
-        "iduser_create"     => Herramientas::sanitizarEntrada($_POST["idUsuario"])
+        "precioActual"     => Herramientas::sanitizarEntrada($_POST['precioActual']),
+        "codigoBarra"     => Herramientas::sanitizarEntrada($_POST['codigoBarra']),
+        "idUsuario"     => Herramientas::sanitizarEntrada($_POST["idUsuario"])
       ];
       $estado = $producto->registrarProducto($datos);
       echo json_encode(["Guardado" => $estado]);
@@ -33,7 +33,7 @@ if (isset($_GET['operacion'])) {
       echo json_encode($estado);
       break;
     case "buscarProductoId":
-      $resultado = $producto->buscarProductoId(["id_producto" => Herramientas::sanitizarEntrada($_GET['id_producto'])]);
+      $resultado = $producto->buscarProductoId(["idProducto" => Herramientas::sanitizarEntrada($_GET['idProducto'])]);
       echo json_encode($resultado);
       break;
   }
