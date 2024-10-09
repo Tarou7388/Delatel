@@ -1,5 +1,5 @@
 import config from '../env.js';
-import { inicializarDataTable } from './tools.js';
+import { inicializarDataTable } from './Herramientas.js';
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -9,15 +9,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function ResetWisp() {
     //Antiguos
-    $("#txtBase").value = "";
-    $("#txtIp").value = "";
-    $("#txtSenial").value = "";
-    $("#txtaEstadoInicial").value = "";
+    $("#txtBaseWisp").value = "";
+    $("#txtIpWisp").value = "";
+    $("#txtSenialWisp").value = "";
+    $("#txtEstadoInicialWisp").value = "";
     //Nuevos
-    $("#txtNuevaBase").value = "";
-    $("#txtNuevoIp").value = "";
-    $("#txtNuevoSenial").value = "";
-    $("#txtNuevoProcedimiento").value = "";
+    $("#txtCambiosBaseWisp").value = "";
+    $("#txtCambiosIpWisp").value = "";
+    $("#txtCambiosSenialWisp").value = "";
+    $("#txtProcedimientoWisp").value = "";
   }
 
   async function obtenerJsonWisp() {
@@ -62,15 +62,15 @@ document.addEventListener("DOMContentLoaded", () => {
     event.preventDefault();
     const JsonWisp = await obtenerJsonWisp();
 
-    JsonWisp.parametros.base = $("#txtBase").value;
-    JsonWisp.parametros.ip = $("#txtIp").value;
-    JsonWisp.parametros.señal = $("#txtSenial").value;
-    JsonWisp.parametros.estadoInicial = $("#txtaEstadoInicial").value;
+    JsonWisp.parametros.base = $("#txtBaseWisp").value;
+    JsonWisp.parametros.ip = $("#txtIpWisp").value;
+    JsonWisp.parametros.señal = $("#txtSenialWisp").value;
+    JsonWisp.parametros.estadoInicial = $("#txtEstadoInicialWisp").value;
 
-    JsonWisp.cambios.nuevaBase = $("#txtNuevaBase").value;
-    JsonWisp.cambios.nuevoIP = $("#txtNuevoIp").value;
-    JsonWisp.cambios.señal = $("#txtNuevoSenial").value;
-    JsonWisp.cambios.procedimiento = $("#txtNuevoProcedimiento").value;
+    JsonWisp.cambios.nuevaBase = $("#txtCambiosBaseWisp").value;
+    JsonWisp.cambios.nuevoIP = $("#txtCambiosIpWisp").value;
+    JsonWisp.cambios.señal = $("#txtCambiosSenialWisp").value;
+    JsonWisp.cambios.procedimiento = $("#txtProcedimientoWisp").value;
 
     registrarWisp(JsonWisp);
   });

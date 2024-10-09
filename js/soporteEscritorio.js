@@ -43,10 +43,10 @@ window.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  const checkbox1 = document.getElementById('chkCatv1');
-  const checkboxText1 = document.getElementById('checkboxText1');
-  const checkbox2 = document.getElementById('chkCatv2');
-  const checkboxText2 = document.getElementById('checkboxText2');
+  const checkboxCatvGpon = document.getElementById('chkCatvGpon');
+  const checkboxTextGpon = document.getElementById('checkboxTextGpon');
+  const checkboxCambiosCatvGpon = document.getElementById('chkCambiosCatvGpon');
+  const checkboxTextCambiosCatvGpon = document.getElementById('checkboxTextCambiosCatv');
 
   function updateSections(value) {
     // Ocultar todas las secciones primero
@@ -63,12 +63,12 @@ window.addEventListener('DOMContentLoaded', function () {
       cable.removeAttribute('hidden');
     }
   }
-  checkbox1.addEventListener('change', function () {
-    checkboxText1.textContent = this.checked ? 'Sí' : 'No';
+  checkboxCatvGpon.addEventListener('change', function () {
+    checkboxTextGpon.textContent = this.checked ? 'Sí' : 'No';
   });
 
-  checkbox2.addEventListener('change', function () {
-    checkboxText2.textContent = this.checked ? 'Sí' : 'No';
+  checkboxCambiosCatvGpon.addEventListener('change', function () {
+    checkboxTextCambiosCatvGpon.textContent = this.checked ? 'Sí' : 'No';
   });
 
   botonbuscar.addEventListener("click", async () => {

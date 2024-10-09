@@ -1,5 +1,5 @@
 import config from '../env.js';
-import { inicializarDataTable } from './tools.js';
+import { inicializarDataTable } from './Herramientas.js';
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -44,27 +44,27 @@ document.addEventListener("DOMContentLoaded", () => {
     event.preventDefault();
     const JsonGpon = await obtenerJsonGpon();
 
-    JsonGpon.parametrosgpon.pppoe = $("#txtPppoe").value;
-    JsonGpon.parametrosgpon.potecia = $("#txtPotencia").value;
-    JsonGpon.parametrosgpon.catv = $("#chkCatv1").checked ? true : false;
-    JsonGpon.parametrosgpon.clave = $("#txtClave").value;
-    JsonGpon.parametrosgpon.vlan = $("#txtVlan").value;
-    JsonGpon.parametrosgpon.potencia = $("#txtPotencia").value;
-    JsonGpon.parametrosgpon.ssid = $("#txtSsid").value;
-    JsonGpon.parametrosgpon.password = $("#txtPassword").value;
-    JsonGpon.parametrosgpon.otros = $("#txtOtros").value;
-    JsonGpon.parametrosgpon.estadoinicial = $("#txtaEstadoInicial").value;
+    JsonGpon.parametrosgpon.pppoe = $("#txtPppoeGpon").value;
+    JsonGpon.parametrosgpon.potecia = $("#txtPotenciaGpon").value;
+    JsonGpon.parametrosgpon.catv = $("#chkCatvGpon").checked ? true : false;
+    JsonGpon.parametrosgpon.clave = $("#txtClaveGpon").value;
+    JsonGpon.parametrosgpon.vlan = $("#txtVlanGpon").value;
+    JsonGpon.parametrosgpon.potencia = $("#txtPotenciaGpon").value;
+    JsonGpon.parametrosgpon.ssid = $("#txtSsidGpon").value;
+    JsonGpon.parametrosgpon.password = $("#txtPasswordGpon").value;
+    JsonGpon.parametrosgpon.otros = $("#txtOtrosGpon").value;
+    JsonGpon.parametrosgpon.estadoinicial = $("#txtEstadoInicialGpon").value;
 
-    JsonGpon.cambiosgpon.pppoe = $("#txtCambiosPppoe").value;
-    JsonGpon.cambiosgpon.potecia = $("#txtCambiosPotencia").value;
-    JsonGpon.cambiosgpon.catv = $("#chkCatv2").checked ? true : false;
-    JsonGpon.cambiosgpon.clave = $("#txtCambiosClave").value;
-    JsonGpon.cambiosgpon.vlan = $("#txtCambiosVlan").value;
-    JsonGpon.cambiosgpon.potencia = $("#txtCambiosPotencia").value;
-    JsonGpon.cambiosgpon.ssid = $("#txtCambiosSsid").value;
-    JsonGpon.cambiosgpon.password = $("#txtCambiosPassword").value;
-    JsonGpon.cambiosgpon.otros = $("#txtCambiosOtros").value;
-    JsonGpon.cambiosgpon.procedimientosolucion = $("#txtaCambiosProcedimiento").value;
+    JsonGpon.cambiosgpon.pppoe = $("#txtCambiosPppoeGpon").value;
+    JsonGpon.cambiosgpon.potecia = $("#txtCambiosPotenciaGpon").value;
+    JsonGpon.cambiosgpon.catv = $("#chkCambiosCatvGpon").checked ? true : false;
+    JsonGpon.cambiosgpon.clave = $("#txtCambiosClaveGpon").value;
+    JsonGpon.cambiosgpon.vlan = $("#txtCambiosVlanGpon").value;
+    JsonGpon.cambiosgpon.potencia = $("#txtCambiosPotenciaGpon").value;
+    JsonGpon.cambiosgpon.ssid = $("#txtCambiosSsidGpon").value;
+    JsonGpon.cambiosgpon.password = $("#txtCambiosPasswordGpon").value;
+    JsonGpon.cambiosgpon.otros = $("#txtCambiosOtrosGpon").value;
+    JsonGpon.cambiosgpon.procedimientosolucion = $("#txtCambiosProcedimientoGpon").value;
 
 
     registrarGpon(JsonGpon);
