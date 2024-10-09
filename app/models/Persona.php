@@ -24,7 +24,7 @@ class Persona extends Conexion
      *                      - 'email' (string): La dirección de correo electrónico de la persona.
      *                      - 'idUsuario' (int): El ID de usuario asociado con la persona.
      *
-     * @return bool El resultado sera verdadero si se realiza o falso si falla.
+     * @return bool El resultado sera un ID de la persona si se realiza correctamente
      */
     public function registrarPersona($params = [])
     {
@@ -39,7 +39,7 @@ class Persona extends Conexion
             $params['email'],
             $params['idUsuario']
         );
-        return $this->registrar($sql, $values);
+        return $this->registroValorDevolvido($sql, $values);
     }
 
     /**

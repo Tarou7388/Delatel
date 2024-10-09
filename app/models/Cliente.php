@@ -40,7 +40,7 @@ class Cliente extends Conexion
             $params['idUsuario'],
             $params['coordenadas']
         );
-        return $this->registrar($sql, $values);
+        return $this->registroValorDevolvido($sql, $values);
     }
 
     /**
