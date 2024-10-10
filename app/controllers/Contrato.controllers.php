@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
   $operacion = Herramientas::sanitizarEntrada($datos['operacion']);
   switch ($operacion) {
     case 'eliminarContrato':
-      $resultado = $contrato->eliminarContrato(Herramientas::sanitizarEntrada($datos['parametros']));
+      $resultado = $contrato->eliminarContrato($datos['parametros']);
       echo json_encode(["eliminado" => $resultado]);
       break;
     case 'guardarFichaInstalacion':

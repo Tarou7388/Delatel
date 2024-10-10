@@ -47,13 +47,18 @@ window.addEventListener("DOMContentLoaded", () => {
       const respuesta = await fetch(
         `${config.HOST}app/controllers/Rol.controllers.php?operacion=listarRoles`
       );
-      const datos = await respuesta.json();
+
+      const texto = await respuesta.text(); // Obtener la respuesta como texto
+      console.log(texto); // Imprimir la respuesta en la consola
+
+      const datos = JSON.parse(texto); // Convertir el texto a JSON
       listarRol(datos); // Función que procesa y muestra los roles
       tabla(); // Función que inicializa la tabla
     } catch (e) {
       console.error(e);
     }
   };
+
 
   async function tabla() {
     $(tablaRol).DataTable({
@@ -242,37 +247,35 @@ window.addEventListener("DOMContentLoaded", () => {
     const datosAdicionales = {
       operacion: "eliminarRol",
     };
-    fetch(`${config.HOST}app/controllers/Rol.controllers.php`, {
-      method: "PUT",
-      body: JSON.stringify({
-        adicionales: datosAdicionales,
-        id_rol: idRolActual,
-        iduser_inactive: userid
-      }),
-    })
-      .then((respuesta) => {
-        if (!respuesta.ok) {
-          throw new Error(`Error ${respuesta.status}: ${respuesta.statusText}`);
-        }
-        return respuesta.json();
-      })
-      .then((data) => {
-        if (data.Inhabilitado) {
-          showToast("El rol se ha eliminado exitosamente", "SUCCESS");
-          form.reset();
-
-          setTimeout(function () {
-            location.reload();
-          }, 1500);
-        } else {
-          showToast("Error al inhabilitar el rol", "ERROR");
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        showToast("No se pudo inhabilitar el rol", "ERROR");
+    try {
+      const respuesta = await fetch(`${config.HOST}app/controllers/Rol.controllers.php`, {
+        method: "PUT",
+        body: JSON.stringify({
+          adicionales: datosAdicionales,
+          id_rol: idRolActual,
+          iduser_inactive: userid
+        }),
       });
+
+      const texto = await respuesta.text(); // Obtener la respuesta como texto
+      console.log(texto); // Imprimir la respuesta en la consola
+      const data = JSON.parse(texto); // Convertir el texto a JSON
+
+      if (data.Inhabilitado) {
+        showToast("El rol se ha eliminado exitosamente", "SUCCESS");
+        form.reset();
+        setTimeout(() => {
+          location.reload();
+        }, 1500);
+      } else {
+        showToast("Error al inhabilitar el rol", "ERROR");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      showToast("No se pudo inhabilitar el rol", "ERROR");
+    }
   }
+
 
   async function rolesPermisos(idRol) {
     const resultado = await fetch(
@@ -294,27 +297,23 @@ window.addEventListener("DOMContentLoaded", () => {
       moduloCelda.textContent = modulo;
 
       const leerCelda = document.createElement("td");
-      leerCelda.innerHTML = `<input type="checkbox" class="leer form-check-input" id="${modulo}-leer" ${
-        permisosModulo.leer ? "checked" : ""
-      }/>`;
+      leerCelda.innerHTML = `<input type="checkbox" class="leer form-check-input" id="${modulo}-leer" ${permisosModulo.leer ? "checked" : ""
+        }/>`;
       leerCelda.style.textAlign = "center";
 
       const crearCelda = document.createElement("td");
-      crearCelda.innerHTML = `<input type="checkbox" class="crear form-check-input" id="${modulo}-crear" ${
-        permisosModulo.crear ? "checked" : ""
-      }/>`;
+      crearCelda.innerHTML = `<input type="checkbox" class="crear form-check-input" id="${modulo}-crear" ${permisosModulo.crear ? "checked" : ""
+        }/>`;
       crearCelda.style.textAlign = "center";
 
       const actualizarCelda = document.createElement("td");
-      actualizarCelda.innerHTML = `<input type="checkbox" class="actualizar form-check-input" id="${modulo}-actualizar" ${
-        permisosModulo.actualizar ? "checked" : ""
-      }/>`;
+      actualizarCelda.innerHTML = `<input type="checkbox" class="actualizar form-check-input" id="${modulo}-actualizar" ${permisosModulo.actualizar ? "checked" : ""
+        }/>`;
       actualizarCelda.style.textAlign = "center";
 
       const eliminarCelda = document.createElement("td");
-      eliminarCelda.innerHTML = `<input type="checkbox" class="eliminar form-check-input" id="${modulo}-eliminar" ${
-        permisosModulo.eliminar ? "checked" : ""
-      }/>`;
+      eliminarCelda.innerHTML = `<input type="checkbox" class="eliminar form-check-input" id="${modulo}-eliminar" ${permisosModulo.eliminar ? "checked" : ""
+        }/>`;
       eliminarCelda.style.textAlign = "center";
 
       fila.appendChild(moduloCelda);
@@ -413,11 +412,9 @@ window.addEventListener("DOMContentLoaded", () => {
     await obtenerRoles();
   })();
 
-  document
-    .querySelector("#btnCambiosPermisos")
-    .addEventListener("click", () => {
-      actualizarPermisos();
-    });
+  document.querySelector("#btnCambiosPermisos").addEventListener("click", () => {
+    actualizarPermisos();
+  });
 
   form.addEventListener("submit", function (event) {
     event.preventDefault();
@@ -446,9 +443,7 @@ window.addEventListener("DOMContentLoaded", () => {
       actualizarCheckboxes.forEach((checkbox) => (checkbox.disabled = false));
       eliminarCheckboxes.forEach((checkbox) => (checkbox.disabled = false));
     } else {
-      document
-        .querySelectorAll(".leer")
-        .forEach((checkbox) => (checkbox.checked = false));
+      document.querySelectorAll(".leer").forEach((checkbox) => (checkbox.checked = false));
       crearCheckboxes.forEach((checkbox) => {
         checkbox.checked = false;
         checkbox.disabled = true;
@@ -478,20 +473,18 @@ window.addEventListener("DOMContentLoaded", () => {
     verificarEstadoCheck();
   });
 
-  document
-    .querySelector("#chkActualizar")
-    .addEventListener("change", (event) => {
-      if (event.target.checked) {
-        document
-          .querySelectorAll(".actualizar")
-          .forEach((checkbox) => (checkbox.checked = true));
-      } else {
-        document
-          .querySelectorAll(".actualizar")
-          .forEach((checkbox) => (checkbox.checked = false));
-      }
-      verificarEstadoCheck();
-    });
+  document.querySelector("#chkActualizar").addEventListener("change", (event) => {
+    if (event.target.checked) {
+      document
+        .querySelectorAll(".actualizar")
+        .forEach((checkbox) => (checkbox.checked = true));
+    } else {
+      document
+        .querySelectorAll(".actualizar")
+        .forEach((checkbox) => (checkbox.checked = false));
+    }
+    verificarEstadoCheck();
+  });
 
   document.querySelector("#chkEliminar").addEventListener("change", (event) => {
     if (event.target.checked) {

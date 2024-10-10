@@ -104,7 +104,7 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  async function eliminar(idContrato) {
+  async function eliminar(idContrato,idUsuario) {
     if (await ask("¿Desea eliminar este contrato?")) {
       const response = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php`, {
         method: "PUT",
@@ -112,10 +112,12 @@ window.addEventListener("DOMContentLoaded", () => {
           operacion: "eliminarContrato",
           parametros: {
             id: idContrato,
+            idUsuario: idUsuario
           },
         }),
       });
       const data = await response.json();
+      console.log("Respuesta del servidor:", data);
       if (data.eliminado) {
         showToast("¡Contrato eliminado correctamente!", "SUCCESS");
         location.reload();
@@ -199,7 +201,7 @@ window.addEventListener("DOMContentLoaded", () => {
     botonesEliminar.forEach((boton) => {
       boton.addEventListener("click", (event) => {
         const idContrato = event.target.getAttribute("data-idContrato");
-        eliminar(parseInt(idContrato));
+        eliminar(idContrato,1);//el uno se reemplaza por el IdUsuario
       });
     });
 
@@ -236,12 +238,6 @@ window.addEventListener("DOMContentLoaded", () => {
   (async () => {
     await cargarDatos();
   })();
-  botonesEditar.forEach((boton) => {
-    boton.addEventListener("click", async (event) => {
-      const idContrato = event.target.getAttribute("data-idContrato");
-      await cargarContrato(idContrato);
-    });
-  });
   
 
   document.querySelector("#btnRegistrar").addEventListener("click", (event) => {
