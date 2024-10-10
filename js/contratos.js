@@ -236,6 +236,13 @@ window.addEventListener("DOMContentLoaded", () => {
   (async () => {
     await cargarDatos();
   })();
+  botonesEditar.forEach((boton) => {
+    boton.addEventListener("click", async (event) => {
+      const idContrato = event.target.getAttribute("data-idContrato");
+      await cargarContrato(idContrato);
+    });
+  });
+  
 
   document.querySelector("#btnRegistrar").addEventListener("click", (event) => {
     event.preventDefault();
