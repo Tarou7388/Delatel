@@ -107,7 +107,7 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log(data)
         if (data.id_persona > 0) {
           showToast("Persona registrada correctamente", "SUCCESS");
-          registrarContacto(data.id_persona);
+          registrarContacto(data.idPersona);
         } else {
           showToast("Verifique los datos ingresados", "ERROR");
         }
@@ -174,7 +174,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
   }
-  
+
   async function cargarPaquetes() {
     const response = await fetch(`${config.HOST}app/controllers/Paquete.controllers.php?operacion=listarPaquetes`);
     const data = await response.json();

@@ -125,7 +125,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       const data = await respuesta.json();
       console.log("Respuesta de búsqueda:", data);
-      return data.idPersona;
+      return data.id_persona;
     } catch (error) {
       console.error("Error al registrar persona:", error);
       return null;
@@ -220,7 +220,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   $("registerForm").addEventListener("submit", async (event) => {
     event.preventDefault();
-    console.log(idPersonaEncontrada); 
+    console.log(idPersonaEncontrada);
     if (!idPersonaEncontrada) {
       showToast("Debes buscar una persona primero.", "WARNING");
       return;

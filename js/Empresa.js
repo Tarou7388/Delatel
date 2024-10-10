@@ -40,12 +40,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const params = new FormData();
     params.append("operacion", "registrarEmpresa");
     params.append("ruc", txtRuc.value);
-    params.append("representante_legal", txtRepresentanteLegal.value);
-    params.append("razon_social", txtRazonSocial.value);
-    params.append("nombre_comercial", txtNombreComercial.value);
+    params.append("representanteLegal", txtRepresentanteLegal.value);
+    params.append("razonSocial", txtRazonSocial.value);
+    params.append("nombreComercial", txtNombreComercial.value);
     params.append("telefono", txtTelefono.value);
     params.append("email", txtEmail.value);
-    params.append("iduser_create", userid);
+    params.append("idUsuario", userid);
 
     const options = {
       method: "POST",
@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {
     fetch(`${config.HOST}app/controllers/Empresa.controllers.php`, options)
       .then(response => response.json())
       .then(data => {
-        registrarcliente(data.id_empresa);
+        registrarcliente(data.idEmpresa);
         frmEmpresas.reset();
       })
       .catch(() => {
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
     params.append("idEmpresa", idEmpresa);
     params.append("direccion", txtDireccion.value);
     params.append("referencia", txtReferencia.value);
-    params.append("iduser_create", userid);
+    params.append("idUsuario", userid);
     params.append("coordenadas", txtCoordenadas.value);
 
     const options = {
