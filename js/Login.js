@@ -47,7 +47,7 @@ window.addEventListener("DOMContentLoaded", event => {
   const passwordInput = document.getElementById("txtPassUser");
   const eyeIcon = document.getElementById("eyeIcon");
 
-  mostrarPassword.addEventListener("click", function () {
+  mostrarPassword.addEventListener("click", function () { 
     const type = passwordInput.getAttribute("type") == "password" ? "text" : "password";
     passwordInput.setAttribute("type", type);
     eyeIcon.classList.toggle("bi-eye");

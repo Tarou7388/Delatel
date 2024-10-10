@@ -32,13 +32,13 @@
           </div>
           <div class="col-md-3 mb-3 mt-2">
             <div class="form-floating">
-              <input type="text" class="form-control" id="txtNombreContactabilidad" placeholder="Nombre">
-              <label for="lblNombreContactabilidad">Nombre</label>
+              <input type="text" class="form-control" id="txtNombreContactabilidad" placeholder="Nombres" disabled>
+              <label for="lblNombreContactabilidad">Nombres</label>
             </div>
           </div>
           <div class="col-md-3 mb-3 mt-2">
             <div class="form-floating">
-              <input type="text" class="form-control" id="txtApellidosContactabilidad" placeholder="Apellidos">
+              <input type="text" class="form-control" id="txtApellidosContactabilidad" placeholder="Apellidos" disabled>
               <label for="lblApellidosContactabilidad">Apellidos</label>
             </div>
           </div>
@@ -84,7 +84,7 @@
               <div class="input-group">
                 <div class="form-floating">
                   <input type="datetime-local" class="form-control" id="txtFechaContactabilidad" name="fecha" required>
-                  <label for="fecha">Fecha</label>
+                  <label for="fecha">Fecha Limite</label>
                 </div>
               </div>
             </div>
@@ -113,26 +113,30 @@
       </form>
     </div>
   </div>
-  <div class="card mt-4">
+</div>
+
+<div class="container-fluid px-4">
+  <div class="card mt-3">
     <div class="card-header">
       <i class="fas fa-table me-1"></i> Listado de Personas Contactadas
     </div>
     <div class="card-body">
-      <table class="table table-striped" id="listarPersonasContactabilidad">
-        <thead>
-          <tr>
-            <th class="text-center">#</th>
-            <th class="text-center">Persona</th>
-            <th class="text-center">Telefono</th>
-            <th class="text-center">Fecha y hora de contacto</th>
-            <th class="text-center">Dirección de servicio</th>
-            <th>Detalles</th>
-          </tr>
-        </thead>
-        <tbody>
-
-        </tbody>
-      </table>
+      <div class="table-responsive">
+        <table class="table table-striped" id="listarPersonasContactabilidad">
+          <thead>
+            <tr>
+              <th class="text-center">#</th>
+              <th class="text-center">Persona</th>
+              <th class="text-center">Telefono</th>
+              <th class="text-center">Fecha y hora de contacto</th>
+              <th class="text-center">Dirección de servicio</th>
+              <th>Detalles</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>

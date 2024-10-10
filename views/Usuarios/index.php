@@ -11,17 +11,19 @@
       <a href="registrar.php" class="btn btn-primary">Registrar Usuario</a>
     </div>
     <div class="card-body">
-      <table id="tblUsuarios" class="display">
-        <thead>
-          <tr>
-            <th class="text-center">Nombre</th>
-            <th class="text-center">Usuarios</th>
-            <th class="text-center">Rol</th>
-            <th class="text-center">Acciones</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+      <div class="table-responsive">
+        <table id="tblUsuarios" class="display">
+          <thead>
+            <tr>
+              <th class="text-center">Nombre</th>
+              <th class="text-center">Usuarios</th>
+              <th class="text-center">Rol</th>
+              <th class="text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>

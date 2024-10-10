@@ -1,12 +1,12 @@
 import config from "../env.js";
-window.addEventListener("DOMContentLoaded", ()=>{
-  const ruta = `${config.HOST}app/controllers/Cliente.controllers.php?operacion=getAll`;
+window.addEventListener("DOMContentLoaded", () => {
+  const ruta = `${config.HOST}app/controllers/Cliente.controllers.php?operacion=listarClientes`;
   const userid = user["idUsuario"];
-  
+
   // if (permisos[0].permisos.inventariado.leer != 1) {
   //   window.location.href = `${config.HOST}views`;
   // }
-  
+
   function actualizar(idcliente) {
     const data = {
       identificador: idcliente,
@@ -20,10 +20,11 @@ window.addEventListener("DOMContentLoaded", ()=>{
       referencia:
         $("#editReferenciaPersona").val() || $("#editReferenciaEmpresa").val(),
       coordenadas:
-        $("#editCoordenadasPersona").val() || $("#editCoordenadasEmpresa").val(),
+        $("#editCoordenadasPersona").val() ||
+        $("#editCoordenadasEmpresa").val(),
       iduser_update: userid,
     };
-  
+
     fetch(
       `${config.HOST}app/controllers/Cliente.controllers.php?operacion=actualizarCliente`,
       {
@@ -44,12 +45,12 @@ window.addEventListener("DOMContentLoaded", ()=>{
         } else {
           alert(
             "Error al actualizar el cliente: " +
-            (data.error || "Error desconocido")
+              (data.error || "Error desconocido")
           );
         }
       });
   }
-  
+
   window.tablaClientes = $("#listarCliente").DataTable({
     dom: `
       <"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6 text-end"f>>
@@ -59,7 +60,7 @@ window.addEventListener("DOMContentLoaded", ()=>{
     buttons: [
       {
         extend: "csv",
-        text: '<i class="bi bi-file-earmark-csv"></i> Exportar CSV',
+        text: '<i class="fa-solid fa-file-csv"></i>',
         className: "btn btn-primary me-2",
         filename: "Clientes",
         title: "Clientes",
@@ -69,7 +70,7 @@ window.addEventListener("DOMContentLoaded", ()=>{
       },
       {
         extend: "excel",
-        text: '<i class="bi bi-file-earmark-excel"></i> Exportar Excel',
+        text: '<i class="fa-solid fa-file-excel"></i>',
         className: "btn btn-success me-2",
         filename: "Clientes",
         title: "Clientes",
@@ -79,7 +80,7 @@ window.addEventListener("DOMContentLoaded", ()=>{
       },
       {
         extend: "pdf",
-        text: '<i class="bi bi-file-earmark-pdf"></i> Exportar PDF',
+        text: '<i class="fa-solid fa-file-pdf"></i>',
         className: "btn btn-danger me-2",
         filename: "Clientes",
         title: "Clientes",
@@ -91,7 +92,7 @@ window.addEventListener("DOMContentLoaded", ()=>{
       },
       {
         extend: "print",
-        text: '<i class="bi bi-printer"></i> Imprimir',
+        text: '<i class="fa-solid fa-print"></i>',
         className: "btn btn-secondary me-2",
         exportOptions: {
           columns: ":not(:last-child)",
@@ -123,22 +124,27 @@ window.addEventListener("DOMContentLoaded", ()=>{
       },
     ],
     columnDefs: [
-      { targets: 0, width: '10%' }, 
-      { targets: 1, width: '12%' }, 
-      { targets: 2, width: '15%' }, 
-      { targets: 3, width: '10%' }, 
-      { targets: 4, width: '15%' }, 
-      { targets: 5, width: '15%' }, 
-      { targets: 6, width: '15%' },
-      { targets: 7, width: '10%' }
+      { targets: 0, width: "10%" },
+      { targets: 1, width: "12%" },
+      { targets: 2, width: "15%" },
+      { targets: 3, width: "10%" },
+      { targets: 4, width: "15%" },
+      { targets: 5, width: "15%" },
+      { targets: 6, width: "15%" },
+      { targets: 7, width: "10%" },
     ],
-    autoWidth: false
+    language: {
+      url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json",
+    },
+    paging: true,
+    searching: true,
+    info: true,
+    lengthChange: false,
   });
-  
-  
+
   $("#listarCliente tbody").on("click", ".btn-edit", function () {
     const idcliente = $(this).data("id");
-  
+
     fetch(
       `${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&numDoc=${idcliente}`
     )
@@ -169,7 +175,7 @@ window.addEventListener("DOMContentLoaded", ()=>{
           $("#editCoordenadasEmpresa").val(data[0].coordenadas);
           $("#editEmpresaModal").modal("show");
         }
-  
+
         $("#savePersonaChanges")
           .off("click")
           .on("click", function () {
@@ -183,58 +189,54 @@ window.addEventListener("DOMContentLoaded", ()=>{
       })
       .catch((error) => console.error("Error fetching client data:", error));
   });
-  
-  $("#listarCliente tbody").on("click", ".btn-delete",async function () {
-    await ask("¿Estás seguro de eliminar este registro? ")
-    .then((isConfirmed) => {
-      if (isConfirmed) {
-        const idcliente = $(this).data("id");
-        const data = {
-          identificador: idcliente,
-          iduser_inactive: userid
-        };
-  
-        fetch(
-          `${config.HOST}app/controllers/Cliente.controllers.php`,
-          {
+
+  $("#listarCliente tbody").on("click", ".btn-delete", async function () {
+    await ask("¿Estás seguro de eliminar este registro? ").then(
+      (isConfirmed) => {
+        if (isConfirmed) {
+          const idcliente = $(this).data("id");
+          const data = {
+            identificador: idcliente,
+            iduser_inactive: userid,
+          };
+
+          fetch(`${config.HOST}app/controllers/Cliente.controllers.php`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify(data),
-          }
-        ).then((response) => response.json())
-          .then((data) => {
-            if (data.Eliminado) {
-              $("#listarCliente").DataTable().ajax.reload();
-              showToast("Cliente eliminado exitosamente.","SUCCESS");
-            } else {
-              showToast("Error al eliminar el cliente.","ERROR");
-            }
-          });
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.Eliminado) {
+                $("#listarCliente").DataTable().ajax.reload();
+                showToast("Cliente eliminado exitosamente.", "SUCCESS");
+              } else {
+                showToast("Error al eliminar el cliente.", "ERROR");
+              }
+            });
+        }
       }
-    });
-  
+    );
   });
-  
-  
-  $('#editPersonaModal').on('hidden.bs.modal', function () {
-    $("#editNombrePersona").val('');
-    $("#editApellidosPersona").val('');
-    $("#editEmailPersona").val('');
-    $("#editTelefonoPersona").val('');
-    $("#editDireccionPersona").val('');
-    $("#editReferenciaPersona").val('');
-    $("#editCoordenadasPersona").val('');
+
+  $("#editPersonaModal").on("hidden.bs.modal", function () {
+    $("#editNombrePersona").val("");
+    $("#editApellidosPersona").val("");
+    $("#editEmailPersona").val("");
+    $("#editTelefonoPersona").val("");
+    $("#editDireccionPersona").val("");
+    $("#editReferenciaPersona").val("");
+    $("#editCoordenadasPersona").val("");
   });
-  
-  $('#editEmpresaModal').on('hidden.bs.modal', function () {
-    $("#editNombreEmpresa").val('');
-    $("#editEmailEmpresa").val('');
-    $("#editTelefonoEmpresa").val('');
-    $("#editDireccionEmpresa").val('');
-    $("#editReferenciaEmpresa").val('');
-    $("#editCoordenadasEmpresa").val('');
+
+  $("#editEmpresaModal").on("hidden.bs.modal", function () {
+    $("#editNombreEmpresa").val("");
+    $("#editEmailEmpresa").val("");
+    $("#editTelefonoEmpresa").val("");
+    $("#editDireccionEmpresa").val("");
+    $("#editReferenciaEmpresa").val("");
+    $("#editCoordenadasEmpresa").val("");
   });
-  
-})
+});

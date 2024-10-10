@@ -25,7 +25,6 @@ class Contrato extends Conexion
      *                      - 'coordenada' (string): Las coordenadas de la ubicación.
      *                      - 'fechaInicio' (string): La fecha de inicio del contrato.
      *                      - 'fechaFin' (string): La fecha de fin del contrato.
-     *                      - 'fechaRegistro' (string): La fecha de registro del contrato.
      *                      - 'fichaInstalacion' (string): El registro de instalación.
      *                      - 'nota' (string): Cualquier nota adicional.
      *                      - 'idUsuario' (int): El ID del usuario asociado con el contrato.
@@ -34,7 +33,7 @@ class Contrato extends Conexion
      */
     public function registrarContrato($params = [])
     {
-        $sql = "CALL spu_contratos_registrar(?,?,?,?,?,?,?,?,?,?,?,?)";
+        $sql = "CALL spu_contratos_registrar(?,?,?,?,?,?,?,?,?,?,?)";
         $values = array(
             $params['idCliente'],
             $params['idTarifario'],
@@ -45,7 +44,6 @@ class Contrato extends Conexion
             $params['fechaInicio'],
             $params['fechaFin'],
             $params['fechaRegistro'],
-            $params['fichaInstalacion'],
             $params['nota'],
             $params['idUsuario']
         );

@@ -15,7 +15,7 @@
 
         <div class="card-body">
             <div class="table-responsive">
-            <table id="listarActividades" class="table table-striped">
+                <table id="listarActividades" class="table table-striped">
                     <thead>
                         <tr>
                             <th>N°</th>
