@@ -1,5 +1,6 @@
 USE Delatel;
 
+-- Vista vw_soporte_detalle actualizada
 DROP VIEW IF EXISTS vw_soporte_detalle;
 CREATE VIEW vw_soporte_detalle AS
 SELECT 
@@ -8,6 +9,8 @@ SELECT
     s.fecha_hora_asistencia,
     s.prioridad,
     s.soporte,
+    s.descripcion_problema,      -- Se agrega descripcion_problema
+    s.descripcion_solucion,      -- Se agrega descripcion_solucion
     ts.tipo_soporte,
     c.id_cliente,
     c.direccion_servicio,
@@ -27,6 +30,8 @@ JOIN
 JOIN 
     tb_personas p ON u.id_persona = p.id_persona;
 
+
+-- Procedimientos almacenados (sin cambios)
 
 DELIMITER $$
 DROP PROCEDURE IF EXISTS spu_tipo_soporte_registrar$$
@@ -49,7 +54,9 @@ CREATE PROCEDURE spu_registrar_fichasoporte(
     IN p_fecha_hora_asistencia DATETIME,
     IN p_prioridad VARCHAR(50),
     IN p_soporte JSON,
-	IN p_iduser_create INT
+    IN p_descripcion_problema TEXT,
+    IN p_descripcion_solucion TEXT,
+    IN p_iduser_create INT
 )
 BEGIN
     INSERT INTO tb_soporte (
@@ -60,6 +67,8 @@ BEGIN
         fecha_hora_asistencia,
         prioridad,
         soporte,
+        descripcion_problema,
+        descripcion_solucion,
         create_at,
         iduser_create
     )
@@ -71,10 +80,13 @@ BEGIN
         p_fecha_hora_asistencia,
         p_prioridad,
         p_soporte,
+        p_descripcion_problema,
+        NULLIF(p_descripcion_solucion,""),
         NOW(),
         p_iduser_create
     );
 END $$
+
 
 DELIMITER $$
 DROP PROCEDURE IF EXISTS spu_soporte_actualizar$$
@@ -86,6 +98,7 @@ CREATE PROCEDURE spu_soporte_actualizar(
     IN p_fecha_hora_asistencia DATETIME,
     IN p_prioridad VARCHAR(50),
     IN p_soporte JSON,
+    IN p_descripcion_solucion TEXT,
     IN p_iduser_update INT
 )
 BEGIN
@@ -97,17 +110,21 @@ BEGIN
         fecha_hora_asistencia = p_fecha_hora_asistencia,
         prioridad = p_prioridad,
         soporte = p_soporte,
+        descripcion_solucion = p_descripcion_solucion,
         update_at = NOW(),
         iduser_update = p_iduser_update
     WHERE id_soporte = p_id_soporte;
 END $$
 
+-- Vista vw_soporte_detalle_incompleto actualizada
 DROP VIEW IF EXISTS vw_soporte_detalle_incompleto;
 CREATE VIEW vw_soporte_detalle_incompleto AS
 SELECT 
     s.id_soporte,
     s.prioridad,
     s.soporte,
+    s.descripcion_problema,      -- Se agrega descripcion_problema
+    s.descripcion_solucion,      -- Se agrega descripcion_solucion
     ts.tipo_soporte,
     c.id_cliente,
     CONCAT(p_cliente.nombres, ' ', p_cliente.apellidos) AS nombre_cliente,
@@ -131,7 +148,3 @@ JOIN
 JOIN 
     tb_personas p_cliente ON cl.id_persona = p_cliente.id_persona
 ORDER BY s.id_soporte DESC;
-
-
-
-

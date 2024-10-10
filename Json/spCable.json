@@ -1,48 +1,54 @@
 {
-  "parametroscable":{
-    "periodo":["mensual","contado"],
-    "potencia":4,
-    "sintonizador":2,
-    "triplexor":{
-      "requiere":true,
-      "cantidad":1,
-      "tipo":["activo","pasivo"]
+  "parametroscable": {
+    "periodo": ["mensual", "contado"],
+    "potencia": 4,
+    "sintonizador": 2,
+    "triplexor": {
+      "requiere": true,
+      "cantidad": 1,
+      "tipo": ["activo", "pasivo"]
     },
-    "spliter": [{
-			"cantidad": 1,
-			"tipo": "1x3"
-		}, {
-			"cantidad": 1,
-			"tipo": "1x5"
-		},{
-      "cantidad":1,
-      "tipo":"1x8"
-    }],
-    "cable":10,
-    "conectores":1,
-    "estadoinicial":""
+    "spliter": [
+      {
+        "cantidad": 1,
+        "tipo": "1x3"
+      },
+      {
+        "cantidad": 1,
+        "tipo": "1x5"
+      },
+      {
+        "cantidad": 1,
+        "tipo": "1x8"
+      }
+    ],
+    "cable": 10,
+    "conectores": 1
   },
-  "cambioscable":{
-    "periodo":["mensual","contado"],
-    "potencia":4,
-    "sintonizador":2,
-    "triplexor":{
-      "requiere":true,
-      "cantidad":1,
-      "tipo":["activo","pasivo"]
+  "cambioscable": {
+    "periodo": ["mensual", "contado"],
+    "potencia": 4,
+    "sintonizador": 2,
+    "triplexor": {
+      "requiere": true,
+      "cantidad": 1,
+      "tipo": ["activo", "pasivo"]
     },
-    "spliter": [{
-			"cantidad": 1,
-			"tipo": "1x3"
-		}, {
-			"cantidad": 1,
-			"tipo": "1x5"
-		},{
-      "cantidad":1,
-      "tipo":"1x8"
-    }],
-    "cable":10,
-    "conectores":1,
-    "procedimientosolucion":""
+    "spliter": [
+      {
+        "cantidad": 1,
+        "tipo": "1x3"
+      },
+      {
+        "cantidad": 1,
+        "tipo": "1x5"
+      },
+      {
+        "cantidad": 1,
+        "tipo": "1x8"
+      }
+    ],
+    "cable": 10,
+    "conectores": 1
   }
 }

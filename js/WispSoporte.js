@@ -28,21 +28,17 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function registrarWisp(jsondata) {
-    console.log(new Date().toISOString().slice(0, 19).replace('T', ' '));
-
-
-    console.log(jsondata);
 
     const params = {
       operacion: 'registrarSoporte',
       idContrato: $("#slcContratos").value,
       idTipoSoporte: $("#slcTipoSoporte").value,
-      idTecnico: 1, // A cambiar
-      fechaHoraSolicitud: new Date().toISOString().slice(0, 19).replace('T', ' '),//2024-05-31 13:00:00 EJEMPLO
-      fechaHoraAsistencia: new Date().toISOString().slice(0, 19).replace('T', ' '),
+      idTecnico: 1, // Este valor debe ser actualizado dinámicamente si es necesario
+      fechaHoraSolicitud: "", // Puedes generar la fecha y hora aquí si es necesario
+      fechaHoraAsistencia: `${$("#txtFecha").value} ${new Date().toISOString().slice(11, 19)}`, // Concatenación de strings para mayor claridad
       prioridad: $("#slcPrioridad").value,
-      soporte: jsondata, // Asegúrate de que jsondata esté bien definido
-      idUsuario: 1 // A espera de un nuevo método
+      soporte: jsondata, // Asegúrate de que jsondata esté definido antes de usarlo
+      idUsuario: 1 // Actualizar este valor según sea necesario
     };
 
     const respuesta = await fetch(`${config.HOST}/app/controllers/Soporte.controllers.php`, {
@@ -77,6 +73,8 @@ document.addEventListener("DOMContentLoaded", () => {
     JsonWisp.cambios.nuevoIP = $("#txtCambiosIpWisp").value;
     JsonWisp.cambios.señal = $("#txtCambiosSenialWisp").value;
     JsonWisp.cambios.procedimiento = $("#txtProcedimientoWisp").value;
+
+    console.log(JsonWisp);
 
     registrarWisp(JsonWisp);
   });

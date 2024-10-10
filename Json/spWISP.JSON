@@ -2,13 +2,11 @@
   "parametros": {
     "base": "",
     "ip": "",
-    "señal": "",
-    "estadoInicial": ""
+    "senal": ""
   },
   "cambios": {
     "nuevaBase": "",
     "nuevoIP": "",
-    "señal": "",
-    "procedimiento": ""
+    "senal": ""
   }
 }

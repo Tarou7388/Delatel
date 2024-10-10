@@ -8,8 +8,7 @@
     "potencia": 15,
     "ssid": "familialopez",
     "password": "contraseña",
-    "otros": "",
-    "estadoinicial": ""
+    "otros": ""
   },
   "cambiosgpon": {
     "pppoe": "",
@@ -20,7 +19,6 @@
     "potencia": 15,
     "ssid": "familialopez",
     "password": "contraseña",
-    "otros": "",
-    "procedimientosolucion": ""
+    "otros": ""
   }
 }
