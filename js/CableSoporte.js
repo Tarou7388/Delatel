@@ -14,8 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function registrarCable(JsonCable) {
-    console.log(JsonCable);
-    console.log($("#txtPotencia").value);
+    console.log(JsonCable);;
 
     const params = {
       operacion: 'registrarSoporte',

@@ -16,15 +16,17 @@ document.addEventListener("DOMContentLoaded", () => {
   async function registrarGpon(jsonGpon) {
     console.log(jsonGpon);
 
+    const solicitud = new Date().toISOString().slice(0, 19).replace('T', ' ');
+    console.log(solicitud);
     const params = {
       operacion: 'registrarSoporte',
       idContrato: $("#slcContratos").value,
       idTipoSoporte: $("#slcTipoSoporte").value,
       idTecnico: 1, // A cambiar
-      fechaHoraSolicitud: new Date().toISOString().slice(0, 19).replace('T', ' '),//2024-05-31 13:00:00 EJEMPLO
+      fechaHoraSolicitud: solicitud,//2024-05-31 13:00:00 EJEMPLO
       fechaHoraAsistencia: new Date().toISOString().slice(0, 19).replace('T', ' '),
       prioridad: $("#slcPrioridad").value,
-      soporte: jsonGpon, 
+      soporte: jsonGpon,
       idUsuario: 1 // A espera de un nuevo método
     };
 
@@ -75,8 +77,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
     registrarGpon(JsonGpon);
   });
-
-
-
 
 });

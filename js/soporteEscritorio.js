@@ -130,36 +130,38 @@ window.addEventListener('DOMContentLoaded', function () {
     event.target.value = formattedInput.slice(0, 15);
   };
 
-  // Agregar evento de input a los inputs
   $('#txtIpWisp, #txtCambiosIpWisp').on('input', function (event) {
-    formatoIPinput(event); // Pasar el evento completo
+    formatoIPinput(event);
   });
 
-  function CalcularEntradaPrecio(cantidad, precio) {
-
-    let PrecioTotal = cantidad * precio;
-
-    if (PrecioTotal == 0 || PrecioTotal < 0) {
-      return PrecioTotal;
+  async function CalcularYActualizarPrecio(txtSalida, cantidad, precio) {
+    if (cantidad < 0) {
+      await showToast("La cantidad debe ser mayor o igual a 0", "ERROR");
+      $(txtSalida).val(""); // Limpia el campo de salida en caso de error
+      return;
     }
-    else {
-      showToast("No se puede calcular esta cantidad", "ERROR");
-    };
-
-    return { precio: PrecioTotal };
+    let PrecioTotal = cantidad * precio;
+    $(txtSalida).val(PrecioTotal.toFixed(2)); // Formatea a dos decimales
   }
 
-  $('#txtPrecioCable').on('input', function (event) {
-    CalcularEntradaPrecio(event);
-  });
-  $('#txtConectorCable').on('input', function (event) {
-    CalcularEntradaPrecio(event);
-  });
-  $('#txtCambiosPrecioCable').on('input', function (event) {
-    CalcularEntradaPrecio(event);
-  });
-  $('#txtCambiosConectorCable').on('input', function (event) {
-    CalcularEntradaPrecio(event);
-  });
+  function ManejodeInputs(txtInput, txtSalida, precio) {
+    $(txtInput).on('input', async function () {
+      let cantidad = parseFloat($(this).val());
 
+      // Ajusta la cantidad a 0 si es negativa o no es un número
+      if (isNaN(cantidad) || cantidad < 0) {
+        cantidad = 0;
+        $(this).val(""); // Actualiza el input a 0
+      }
+
+      // Realiza el cálculo
+      await CalcularYActualizarPrecio(txtSalida, cantidad, precio);
+    });
+  }
+
+  // NO MUEVAN ESTO, ES NECESARIO PARA EL CALCULO DE LOS INPUTS
+  ManejodeInputs('#txtCable', '#txtPrecioCable', 4.25);
+  ManejodeInputs('#txtConectorCable', '#txtPrecioConectorCable', 6.25);
+  ManejodeInputs('#txtCambiosCable', '#txtCambiosPrecioCable', 4.25);
+  ManejodeInputs('#txtCambiosConectorCable', '#txtCambiosPrecioConectorCable', 6.25);
 });

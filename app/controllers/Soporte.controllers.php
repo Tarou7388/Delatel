@@ -14,6 +14,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     case 'listarTipoSoporte':
       echo json_encode($soporte->listarTipoSoporte());
       break;
+    case 'listarSoportesIncompletos':
+      echo json_encode($soporte->listarSoportesIncompletos());
+      break;
   }
 }
 
@@ -27,8 +30,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'idContrato' => Herramientas::sanitizarEntrada($datos['idContrato']),
         'idTipoSoporte' => Herramientas::sanitizarEntrada($datos['idTipoSoporte']),
         'idTecnico' => Herramientas::sanitizarEntrada($datos['idTecnico']),
-        'fechaHoraSolicitud' => Herramientas::sanitizarEntrada($datos['fechaHoraSolicitud']),
-        'fechaHoraAsistencia' => Herramientas::sanitizarEntrada($datos['fechaHoraAsistencia']),
+        'fechaHoraSolicitud' => $datos['fechaHoraSolicitud'],
+        'fechaHoraAsistencia' => $datos['fechaHoraAsistencia'],
         'prioridad' => Herramientas::sanitizarEntrada($datos['prioridad']),
         'soporte' => $datos['soporte'],
         'idUsuario' => Herramientas::sanitizarEntrada($datos['idUsuario'])

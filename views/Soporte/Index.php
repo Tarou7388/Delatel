@@ -3,14 +3,22 @@
 <div class="container-fluid px-4">
   <h1 class="mt-4">Ficha de Control de Averías</h1>
 
-  <div class="row g-2 mb-2 justify-content-end">
-    <div class="col-sm-1">
-      <input type="text" class="form-control text-center" id="txtNumFicha" placeholder="N°" disabled>
+  <div class="row g-2 mb-2">
+    <div class="col text-start">
+      <a href="./ListarSoporteIn.php" type="button" class="btn btn-primary mt-2"> Dirigirse a Listar</a>
     </div>
-    <div class="col-sm-2">
-      <input type="date" class="form-control text-center" id="txtFecha" placeholder="Fecha" disabled>
+    <div class="col text-end">
+      <div class="row g-2 justify-content-end">
+        <div class="col-sm-1">
+          <input type="text" class="form-control text-center" id="txtNumFicha" placeholder="N°" disabled>
+        </div>
+        <div class="col-sm-2">
+          <input type="date" class="form-control text-center" id="txtFecha" placeholder="Fecha" disabled>
+        </div>
+      </div>
     </div>
   </div>
+
 
   <div class="card mb-4">
     <div class="card-header">
@@ -37,7 +45,6 @@
             <div class="form-floating">
               <select class="form-select" id="slcTipoSoporte" required>
                 <option selected disabled>Seleccione Tipo Soporte</option>
-                <!-- Opciones para el tipo de soporte deberían ir aquí -->
               </select>
               <label for="slcTipoSoporte">Tipo Soporte:</label>
             </div>
@@ -47,7 +54,6 @@
             <div class="form-floating">
               <select class="form-select" id="slcContratos" required>
                 <option selected disabled>Seleccione</option>
-                <!-- Opciones para los contratos deberían ir aquí -->
               </select>
               <label for="slcContratos">Contratos:</label>
             </div>
@@ -57,9 +63,9 @@
             <div class="form-floating">
               <select class="form-select" id="slcPrioridad" required>
                 <option selected disabled>Seleccione la Prioridad</option>
-                <option value="1">ALTA</option>
-                <option value="2">MEDIA</option>
-                <option value="3">BAJA</option>
+                <option value="Alta">Alta</option>
+                <option value="Media">Media</option>
+                <option value="Baja">Baja</option>
               </select>
               <label for="slcPrioridad">Prioridad:</label>
             </div>
@@ -127,21 +133,21 @@
 
                 <div class="col-md">
                   <div class="form-floating">
-                    <input type="text" class="form-control" id="txtBaseWisp" placeholder="Base" required>
+                    <input type="text" class="form-control" id="txtBaseWisp" placeholder="Base"> <!-- required -->
                     <label for="txtBaseWisp">Base</label>
                   </div>
                 </div>
 
                 <div class="col-md">
                   <div class="form-floating">
-                    <input type="text" class="form-control" id="txtIpWisp" placeholder="IP" required>
+                    <input type="text" class="form-control" id="txtIpWisp" placeholder="IP"> <!-- required -->
                     <label for="txtIpWisp">IP</label>
                   </div>
                 </div>
 
                 <div class="col-md">
                   <div class="form-floating">
-                    <input type="number" class="form-control" id="txtSenialWisp" placeholder="Señal" required>
+                    <input type="number" class="form-control" id="txtSenialWisp" placeholder="Señal"> <!-- required -->
                     <label for="txtSenialWisp">Señal</label>
                   </div>
                 </div>
@@ -151,7 +157,7 @@
               <div>
                 <div class="col-md">
                   <div class="form-floating">
-                    <textarea type="text" class="form-control" id="txtEstadoInicialWisp" placeholder="Estado Inicial" style="height: 100px" required></textarea>
+                    <textarea type="text" class="form-control" id="txtEstadoInicialWisp" placeholder="Estado Inicial" style="height: 100px"></textarea> <!-- required -->
                     <label for="txtEstadoInicialWisp">Estado Inicial</label>
                   </div>
                 </div>
@@ -187,7 +193,7 @@
               <div>
                 <div class="col-md">
                   <div class="form-floating">
-                    <textarea type="text" class="form-control" id="txtProcedimientoWisp" style="height: 100px" placeholder="Procedimiento de Solución" required></textarea>
+                    <textarea type="text" class="form-control" id="txtProcedimientoWisp" style="height: 100px" placeholder="Procedimiento de Solución"></textarea> <!-- required -->
                     <label for="txtProcedimientoWisp">Procedimiento de Solución</label>
                   </div>
                 </div>
@@ -218,14 +224,14 @@
 
                 <div class="col-md">
                   <div class="form-floating">
-                    <input type="text" class="form-control" id="txtPppoeGpon" placeholder="PPPoE" required>
+                    <input type="text" class="form-control" id="txtPppoeGpon" placeholder="PPPoE"> <!-- required -->
                     <label for="txtPppoeGpon">PPPoE</label>
                   </div>
                 </div>
 
                 <div class="col-md">
                   <div class="form-floating">
-                    <input type="number" class="form-control" id="txtPotenciaGpon" placeholder="Potencia" required>
+                    <input type="number" class="form-control" id="txtPotenciaGpon" placeholder="Potencia"> <!-- required -->
                     <label for="txtPotenciaGpon">Potencia</label>
                   </div>
                 </div>
@@ -244,21 +250,21 @@
 
                 <div class="col-md">
                   <div class="form-floating">
-                    <input type="text" class="form-control" id="txtClaveGpon" placeholder="Clave" required>
+                    <input type="text" class="form-control" id="txtClaveGpon" placeholder="Clave"> <!-- required -->
                     <label for="txtClaveGpon">Clave</label>
                   </div>
                 </div>
 
                 <div class="col-md">
                   <div class="form-floating">
-                    <input type="number" class="form-control" id="txtVlanGpon" placeholder="Vlan" required>
+                    <input type="number" class="form-control" id="txtVlanGpon" placeholder="Vlan"> <!-- required -->
                     <label for="txtVlanGpon">VLAN</label>
                   </div>
                 </div>
 
                 <div class="col-md">
                   <div class="form-floating">
-                    <input type="number" class="form-control" id="txtPotenciaGpon" placeholder="Potencia" required>
+                    <input type="number" class="form-control" id="txtPotenciaGpon" placeholder="Potencia"> <!-- required -->
                     <label for="txtPotenciaGpon">Potencia</label>
                   </div>
                 </div>
@@ -269,21 +275,21 @@
 
                 <div class="col-md">
                   <div class="form-floating">
-                    <input type="text" class="form-control" id="txtSsidGpon" placeholder="SSID" required>
+                    <input type="text" class="form-control" id="txtSsidGpon" placeholder="SSID"> <!-- required -->
                     <label for="txtSsidGpon">SSID</label>
                   </div>
                 </div>
 
                 <div class="col-md">
                   <div class="form-floating">
-                    <input type="text" class="form-control" id="txtPasswordGpon" placeholder="Password" required>
+                    <input type="text" class="form-control" id="txtPasswordGpon" placeholder="Password"> <!-- required -->
                     <label for="txtPasswordGpon">Password</label>
                   </div>
                 </div>
 
                 <div class="col-md">
                   <div class="form-floating">
-                    <input type="text" class="form-control" id="txtOtrosGpon" placeholder="Otros" required>
+                    <input type="text" class="form-control" id="txtOtrosGpon" placeholder="Otros"> <!-- required -->
                     <label for="txtOtrosGpon">Otros</label>
                   </div>
                 </div>
@@ -293,7 +299,7 @@
               <div>
                 <div class="col-md">
                   <div class="form-floating">
-                    <textarea type="text" class="form-control" id="txtEstadoInicialGpon" placeholder="Estado Inicial" required></textarea>
+                    <textarea type="text" class="form-control" id="txtEstadoInicialGpon" placeholder="Estado Inicial"></textarea> <!-- required -->
                     <label for="txtEstadoInicialGpon">Estado Inicial</label>
                   </div>
                 </div>
@@ -306,14 +312,14 @@
 
                 <div class="col-md">
                   <div class="form-floating">
-                    <input type="text" class="form-control" id="txtCambiosPppoeGpon" placeholder="PPPoE" required>
+                    <input type="text" class="form-control" id="txtCambiosPppoeGpon" placeholder="PPPoE"> <!-- required -->
                     <label for="txtCambiosPppoeGpon">PPPoE</label>
                   </div>
                 </div>
 
                 <div class="col-md">
                   <div class="form-floating">
-                    <input type="number" class="form-control" id="txtCambiosPotenciaGpon" placeholder="Potencia" required>
+                    <input type="number" class="form-control" id="txtCambiosPotenciaGpon" placeholder="Potencia"> <!-- required -->
                     <label for="txtCambiosPotenciaGpon">Potencia</label>
                   </div>
                 </div>
@@ -332,21 +338,21 @@
 
                 <div class="col-md">
                   <div class="form-floating">
-                    <input type="text" class="form-control" id="txtCambiosClaveGpon" placeholder="Clave" required>
+                    <input type="text" class="form-control" id="txtCambiosClaveGpon" placeholder="Clave"> <!-- required -->
                     <label for="txtCambiosClaveGpon">Clave</label>
                   </div>
                 </div>
 
                 <div class="col-md">
                   <div class="form-floating">
-                    <input type="number" class="form-control" id="txtCambiosVlanGpon" placeholder="VLAN" required>
+                    <input type="number" class="form-control" id="txtCambiosVlanGpon" placeholder="VLAN"> <!-- required -->
                     <label for="txtCambiosVlanGpon">VLAN</label>
                   </div>
                 </div>
 
                 <div class="col-md">
                   <div class="form-floating">
-                    <input type="number" class="form-control" id="txtCambiosPotenciaGpon" placeholder="Potencia" required>
+                    <input type="number" class="form-control" id="txtCambiosPotenciaGpon" placeholder="Potencia"> <!-- required -->
                     <label for="txtCambiosPotenciaGpon">Potencia</label>
                   </div>
                 </div>
@@ -357,21 +363,21 @@
 
                 <div class="col-md">
                   <div class="form-floating">
-                    <input type="text" class="form-control" id="txtCambiosSsidGpon" placeholder="SSID" required>
+                    <input type="text" class="form-control" id="txtCambiosSsidGpon" placeholder="SSID"> <!-- required -->
                     <label for="txtCambiosSsidGpon">SSID</label>
                   </div>
                 </div>
 
                 <div class="col-md">
                   <div class="form-floating">
-                    <input type="text" class="form-control" id="txtCambiosPasswordGpon" placeholder="Password" required>
+                    <input type="text" class="form-control" id="txtCambiosPasswordGpon" placeholder="Password"> <!-- required -->
                     <label for="txtCambiosPasswordGpon">Password</label>
                   </div>
                 </div>
 
                 <div class="col-md">
                   <div class="form-floating">
-                    <input type="text" class="form-control" id="txtCambiosOtrosGpon" placeholder="Otros" required>
+                    <input type="text" class="form-control" id="txtCambiosOtrosGpon" placeholder="Otros"> <!-- required -->
                     <label for="txtCambiosOtrosGpon">Otros</label>
                   </div>
                 </div>
@@ -381,7 +387,7 @@
               <div>
                 <div class="col-md">
                   <div class="form-floating">
-                    <textarea type="text" class="form-control" id="txtCambiosProcedimientoGpon" placeholder="Procedimiento de Solución" required></textarea>
+                    <textarea type="text" class="form-control" id="txtCambiosProcedimientoGpon" placeholder="Procedimiento de Solución"></textarea> <!-- required -->
                     <label for="txtCambiosProcedimientoGpon">Procedimiento de Solución</label>
                   </div>
                 </div>
@@ -427,14 +433,14 @@
               <div class="row g-2 mb-2">
                 <div class="col md-6">
                   <div class="form-floating">
-                    <input type="text" class="form-control" id="txtPotenciaCable" placeholder="Potencia" required>
+                    <input type="text" class="form-control" id="txtPotenciaCable" placeholder="Potencia"> <!-- required -->
                     <label for="txtPotenciaCable">Potencia</label>
                   </div>
                 </div>
 
                 <div class="col md-6">
                   <div class="form-floating">
-                    <input type="text" class="form-control" id="txtSintonizadorCable" placeholder="Sintonizador">
+                    <input type="text" class="form-control" id="txtSintonizadorCable" placeholder="Sintonizador"> <!-- required -->
                     <label for="txtSintonizadorCable">Sintonizador</label>
                   </div>
                 </div>
@@ -442,7 +448,7 @@
                 <div class="col-md">
                   <div class="input-group">
                     <div class="form-floating">
-                      <input type="text" id="txtNumTriplexorCable" placeholder="N° Triplexor" class="form-control">
+                      <input type="text" id="txtNumTriplexorCable" placeholder="N° Triplexor" class="form-control"> <!-- required -->
                       <label for="txtNumTriplexorCable">N° Triplexor</label>
                     </div>
                     <div class="form-floating">
@@ -490,7 +496,7 @@
                     </div>
                     <div class="form-floating">
                       <input type="number" class="form-control" id="txtPrecioCable" placeholder="1.50" disabled>
-                      <label for="txtPrecioCable">1.50</label>
+                      <label for="txtPrecioCable">Precio del Cable</label>
                     </div>
                   </div>
                 </div>
@@ -503,7 +509,7 @@
                     </div>
                     <div class="form-floating">
                       <input type="number" class="form-control" id="txtPrecioConectorCable" placeholder="1.50" disabled>
-                      <label for="txtPrecioConectorCable">1.50</label>
+                      <label for="txtPrecioConectorCable">Precio del Conector</label>
                     </div>
                   </div>
                 </div>
@@ -513,7 +519,7 @@
               <div>
                 <div class="col-md">
                   <div class="form-floating">
-                    <textarea type="text" class="form-control" id="txtEstadoInicialCable" placeholder="Estado Inicial" required></textarea>
+                    <textarea type="text" class="form-control" id="txtEstadoInicialCable" placeholder="Estado Inicial"></textarea> <!-- required -->
                     <label for="txtEstadoInicialCable">Estado Inicial</label>
                   </div>
                 </div>
@@ -540,7 +546,7 @@
               <div class="row g-2 mb-2">
                 <div class="col md-6">
                   <div class="form-floating">
-                    <input type="text" class="form-control" id="txtCambiosPotenciaCable" placeholder="Potencia" required>
+                    <input type="text" class="form-control" id="txtCambiosPotenciaCable" placeholder="Potencia"> <!-- required -->
                     <label for="txtCambiosPotenciaCable">Potencia</label>
                   </div>
                 </div>

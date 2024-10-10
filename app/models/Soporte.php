@@ -46,9 +46,29 @@ class Soporte extends Conexion
     return $this->registrar($sql, $values);
   }
 
+  /**
+   * Método para el listado de los tipos de soporte en la tabla
+   *
+   * Este método llama a un procedimiento almacenado para hacer el listado 
+   * en la tabla de tipo_soporte
+   * 
+   */
   public function listarTipoSoporte()
   {
     $sql = "SELECT * FROM vw_tiposoporte_listar";
+    return $this->listarDatos($sql);
+  }
+
+  /**
+   * Método para el listado de Soportes Imcompletos en campos
+   *
+   * Este método llama a un procedimiento almacenado para hacer el listado 
+   * en la tabla de soporte
+   * 
+   */
+  public function listarSoportesIncompletos()
+  {
+    $sql = "SELECT * FROM vw_soporte_detalle_incompleto";
     return $this->listarDatos($sql);
   }
 }
