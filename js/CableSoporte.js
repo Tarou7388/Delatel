@@ -1,75 +1,143 @@
-import config from '../env.js';
-import { inicializarDataTable } from './Herramientas.js';
+import config from "../env.js";
+import { inicializarDataTable } from "./Herramientas.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-
   function $(object = null) {
     return document.querySelector(object);
   }
 
   async function obtenerJsonCable() {
-    const respuesta = await fetch(`${config.HOST}Json/spCable.json`);
-    const datos = await respuesta.json();
+    const datos = {
+      parametroscable: {
+        periodo: [],
+        potencia: 0,
+        sintonizador: 0,
+        triplexor: {
+          requiere: false,
+          cantidad: 0,
+          tipo: [],
+        },
+        spliter: [
+          {
+            cantidad: 0,
+            tipo: "",
+          },
+          {
+            cantidad: 0,
+            tipo: "",
+          },
+          {
+            cantidad: 0,
+            tipo: "",
+          },
+        ],
+        cable: 0,
+        conectores: 0,
+      },
+      cambioscable: {
+        periodo: [],
+        potencia: 0,
+        sintonizador: 0,
+        triplexor: {
+          requiere: false,
+          cantidad: 0,
+          tipo: [],
+        },
+        spliter: [
+          {
+            cantidad: 0,
+            tipo: "",
+          },
+          {
+            cantidad: 0,
+            tipo: "",
+          },
+          {
+            cantidad: 0,
+            tipo: "",
+          },
+        ],
+        cable: 0,
+        conectores: 0,
+      },
+    };
     return datos;
   }
 
   async function registrarCable(JsonCable) {
-    console.log(JsonCable);;
+    //console.log(JsonCable);
 
     const params = {
-      operacion: 'registrarSoporte',
+      operacion: "registrarSoporte",
       idContrato: $("#slcContratos").value,
       idTipoSoporte: $("#slcTipoSoporte").value,
       idTecnico: 1, // A cambiar
-      fechaHoraSolicitud: new Date().toISOString().slice(0, 19).replace('T', ' '),//2024-05-31 13:00:00 EJEMPLO
-      fechaHoraAsistencia: new Date().toISOString().slice(0, 19).replace('T', ' '),
+      fechaHoraSolicitud: new Date()
+        .toISOString()
+        .slice(0, 19)
+        .replace("T", " "), //2024-05-31 13:00:00 EJEMPLO
+      fechaHoraAsistencia: new Date()
+        .toISOString()
+        .slice(0, 19)
+        .replace("T", " "),
       prioridad: $("#slcPrioridad").value,
       soporte: JsonCable,
-      idUsuario: 1 // A espera de un nuevo método
+      idUsuario: 1, // A espera de un nuevo método
     };
 
-    const respuesta = await fetch(`${config.HOST}/app/controllers/Soporte.controllers.php`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(params)
-    });
+    const respuesta = await fetch(
+      `${config.HOST}/app/controllers/Soporte.controllers.php`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(params),
+      }
+    );
 
     const data = await respuesta.json();
 
     if (data) {
       alert("Correcto");
+    } else {
+      alert("Error");
     }
-    else {
-      alert("Error")
-    };
   }
 
   $("#Form-FichaCable").addEventListener("submit", async (event) => {
     event.preventDefault();
-    const potencia = $("#txtPotenciaCable").value;
-    const Cambiopotencia = $("#txtCambiosPotenciaCable").value;
+    if (
+      $("#txtNrodocumento").value === "" ||
+      $("#txtNrodocumento").value.length < 9 ||
+      $("#txtNrodocumento").value.length > 11
+    ) {
+      await showToast("Ingrese un documento válido", "ERROR");
+    };
 
     const JsonCable = await obtenerJsonCable();
 
     // Parámetros del Cable
     JsonCable.parametroscable.periodo = $("#slcPeriodoCable").value;
-    JsonCable.parametroscable.potencia = potencia;
+    JsonCable.parametroscable.potencia = $("#txtPotenciaCable").value;
     JsonCable.parametroscable.sintonizador = $("#txtSintonizadorCable").value;
     JsonCable.parametroscable.triplexor = {
-      "requiere": ($("#slcTriplexorCable").value !== "1"),  // "1" es "No"
-      "cantidad": $("#txtNumTriplexorCable").value,
-      "tipo": ($("#slcTriplexorCable").value === "2") ? "activo" : "pasivo"
+      requiere: $("#slcTriplexorCable").value !== "1", // "1" es "No"
+      cantidad: $("#txtNumTriplexorCable").value,
+      tipo: $("#slcTriplexorCable").value === "2" ? "activo" : "pasivo",
     };
 
     // Asignación de splitter (que puede ser más de uno)
     JsonCable.parametroscable.spliter = [
       {
-        "cantidad": $("#txtNumSpliterCable").value,
-        "tipo": $("#slcSpliterCable").value === "1" ? "1x3" :
-          $("#slcSpliterCable").value === "2" ? "1x5" : "1x8"
-      }
+        cantidad: $("#txtNumSpliterCable").value,
+        tipo:
+          $("#slcSpliterCable").value === "1"
+            ? "1x3"
+            : $("#slcSpliterCable").value === "2"
+            ? "1x5"
+            : "1x8",
+      },
     ];
 
     JsonCable.parametroscable.cable = $("#txtCable").value;
@@ -78,28 +146,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Cambios en el Cable
     JsonCable.cambioscable.periodo = $("#slcCambiosPeriodoCable").value;
-    JsonCable.cambioscable.potencia = Cambiopotencia;
-    JsonCable.cambioscable.sintonizador = $("#txtCambiosSintonizadorCable").value;
+    JsonCable.cambioscable.potencia = $("#txtCambiosPotenciaCable").value;
+    JsonCable.cambioscable.sintonizador = $(
+      "#txtCambiosSintonizadorCable"
+    ).value;
     JsonCable.cambioscable.triplexor = {
-      "requiere": ($("#slcCambiosTriplexorCable").value !== "1"),  // 1 significa NO, si pueden cambienlo
-      "cantidad": $("#txtCambiosNumTriplexorCable").value,
-      "tipo": ($("#slcCambiosTriplexorCable").value === "2") ? "activo" : "pasivo"
+      requiere: $("#slcCambiosTriplexorCable").value !== "1", // 1 significa NO, si pueden cambienlo
+      cantidad: $("#txtCambiosNumTriplexorCable").value,
+      tipo: $("#slcCambiosTriplexorCable").value === "2" ? "activo" : "pasivo",
     };
 
     JsonCable.cambioscable.spliter = [
       {
-        "cantidad": $("#txtCambiosNumSpliterCable").value,
-        "tipo": $("#slcCambiosSpliterCable").value === "1" ? "1x3" :
-          $("#slcCambiosSpliterCable").value === "2" ? "1x5" : "1x8"
-      }
+        cantidad: $("#txtCambiosNumSpliterCable").value,
+        tipo:
+          $("#slcCambiosSpliterCable").value === "1"
+            ? "1x3"
+            : $("#slcCambiosSpliterCable").value === "2"
+            ? "1x5"
+            : "1x8",
+      },
     ];
 
     JsonCable.cambioscable.cable = $("#txtCambiosCable").value;
     JsonCable.cambioscable.conectores = $("#txtCambiosConectorCable").value;
-    JsonCable.cambioscable.procedimientosolucion = $("#txtProcedimientoCable").value;
+    JsonCable.cambioscable.procedimientosolucion = $(
+      "#txtProcedimientoCable"
+    ).value;
 
+    //console.log(JsonCable);
     registrarCable(JsonCable);
   });
-
-
 });
