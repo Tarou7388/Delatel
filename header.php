@@ -24,7 +24,7 @@ if (!isset($_SESSION['login']) || (isset($_SESSION['login']) && !$_SESSION['logi
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
   <meta name="description" content="" />
   <meta name="author" content="" />
-  <title>Dashboard - SB Admin</title>
+  <title>Delafiber</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
@@ -35,7 +35,7 @@ if (!isset($_SESSION['login']) || (isset($_SESSION['login']) && !$_SESSION['logi
 <body class="sb-nav-fixed">
 
   <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-    <a class="navbar-brand ps-3" href="<?= $host; ?>dashboard.php">DELAFIBER</a>
+    <a class="navbar-brand ps-3" href="<?= $host; ?>views/">DELAFIBER</a>
     <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
 
     <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
@@ -74,11 +74,7 @@ if (!isset($_SESSION['login']) || (isset($_SESSION['login']) && !$_SESSION['logi
                   Ficha de Soporte
                 </a>
               </div>
-            </div>
-            <a class="nav-link" href="<?= $host; ?>views/Contactabilidad/" id=molContratos>
-              <div class="sb-nav-link-icon"><i class="fa-solid fa-phone"></i></div>
-              Contactabilidad
-            </a>
+            </div>  
 
             <a class="nav-link" href="<?= $host; ?>views/Contratos/" id=molContratos>
               <div class="sb-nav-link-icon"><i class="fa-solid fa-file-contract"></i></div>

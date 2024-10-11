@@ -4,7 +4,7 @@ use App\Controllers\Herramientas;
 
 session_start();
 
-require_once '../Models/Soporte.php';
+require_once '../models/Soporte.php';
 require_once './Herramientas.php';
 
 $soporte = new Soporte();
