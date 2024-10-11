@@ -30,6 +30,7 @@ if (!isset($_SESSION['login']) || (isset($_SESSION['login']) && !$_SESSION['logi
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
   <link href="https://cdn.datatables.net/v/dt/dt-2.1.3/datatables.min.css" rel="stylesheet">
   <link href="<?= $host ?>/css/styles.css" rel="stylesheet" />
+  <link rel="stylesheet" href="<?= $host ?>/css/estilos.css">
 </head>
 
 <body class="sb-nav-fixed">
