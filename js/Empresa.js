@@ -95,7 +95,7 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   const ObtenerDataRUC = (operacion, ruc) => {
-    fetch(`${config.HOST}app/controllers/Persona.controlles.php?operacion=${operacion}&ruc=${encodeURIComponent(ruc)}`)
+    fetch(`${config.HOST}app/controllers/Persona.controllers.php?operacion=${operacion}&ruc=${encodeURIComponent(ruc)}`)
       .then(response => response.json())
       .then(data => {
         txtRazonSocial.value = data.razonSocial;

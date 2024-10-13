@@ -35,16 +35,27 @@ if (isset($_GET['operacion'])) {
 if (isset($_POST['operacion'])) {
   switch ($_POST['operacion']) {
     case 'registrarCliente':
+      $idPersona = null;
+      $idEmpresa = null;
+      if(isset($_POST['idEmpresa']) && $_POST['idEmpresa'] !== ''){
+        $idEmpresa = $_POST['idEmpresa'];
+        $idPersona = null;
+      }
+      if(isset($_POST['idPersona']) && $_POST['idPersona'] !== ''){
+        $idPersona = $_POST['idPersona'];
+        $idEmpresa = null;
+      }
+
       $datos = [
-        "idPersona"     => $_POST['idPersona'],
-        "idEmpresa"     => $_POST['idEmpresa'],
+        "idPersona"     => $idPersona,
+        "idEmpresa"     => $idEmpresa,
         "direccion"     => $_POST['direccion'],
         "referencia"    => $_POST['referencia'],
         "idUsuario"     => $_POST['idUsuario'],
         "coordenadas"   => $_POST['coordenadas']
       ];
-      $estado = $cliente->registrarCliente($datos);
-      echo json_encode(["Guardado" => $estado]);
+      $respuesta = $cliente->registrarCliente($datos);
+      echo json_encode($respuesta);
       break;
   }
 }

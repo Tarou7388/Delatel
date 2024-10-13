@@ -9,7 +9,7 @@ CREATE PROCEDURE spu_contactabilidad_registrar(
     p_direccion_servicio VARCHAR(250),
     p_nota TEXT,
     p_iduser_create INT,
-    p_fecha_limite DATETIME
+    p_fecha_limite DATE
 )
 BEGIN
     INSERT INTO tb_contactabilidad (id_persona, id_paquete, direccion_servicio, nota, iduser_create, fecha_limite)

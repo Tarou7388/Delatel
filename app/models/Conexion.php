@@ -72,7 +72,19 @@ class Conexion
       $status = $consulta->execute();
       return $status;
     } catch (Exception $e) {
-      die($e->getMessage());
+      switch ($e->getCode()) {
+        case 23000:
+          return ['error' => 'Duplicado'];
+          break;
+        case 22007:
+          return ['error' => 'Formato Incorrecto'];
+          break;
+        case 22001:
+          return ['error' => 'Largo'];
+          break;
+        default:
+          die($e->getMessage());
+      }
     }
   }
 
@@ -131,7 +143,19 @@ class Conexion
       $consulta->execute();
       return $consulta->fetchAll(PDO::FETCH_ASSOC);
     } catch (Exception $e) {
-      die($e->getMessage());
+      switch ($e->getCode()) {
+        case 23000:
+          return ['error' => 'Duplicado'];
+          break;
+        case 22007:
+          return ['error' => 'Formato incorrecto'];
+          break;
+        case 22001:
+          return ['error' => 'Largo'];
+          break;
+        default:
+          die($e->getMessage());
+      }
     }
   }
 }

@@ -100,7 +100,7 @@ window.addEventListener("DOMContentLoaded", function () {
     fetch(
       `${
         config.HOST
-      }app/controllers/Persona.controlles.php?operacion=${operacion}&dni=${encodeURIComponent(
+      }app/controllers/Persona.controllers.php?operacion=${operacion}&dni=${encodeURIComponent(
         dni
       )}`
     )

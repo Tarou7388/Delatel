@@ -59,4 +59,14 @@ class Persona extends Conexion
         );
         return $this->consultaParametros($sql, $values);
     }
+
+    public function buscarPersonaClienteDni($params = [])
+    {
+        $sql = "CALL spu_persona_cliente_existencia(?)";
+        $values = array(
+            $params['dni']
+        );
+        return $this->consultaParametros($sql, $values);
+    }
+
 }

@@ -96,4 +96,15 @@ BEGIN
     WHERE nro_doc = p_dni;
 END $$
 
+DROP PROCEDURE IF EXISTS spu_persona_cliente_existencia$$
+CREATE PROCEDURE spu_persona_cliente_existencia(
+    IN p_dni VARCHAR(15)
+)
+BEGIN
+    SELECT p.id_persona, p.nombres, p.apellidos, c.id_cliente FROM
+    tb_personas p LEFT JOIN tb_clientes c ON p.id_persona = c.id_persona
+    WHERE p.nro_doc = p_dni;
+END $$
+
 DELIMITER ;
+

@@ -15,51 +15,80 @@ window.addEventListener("DOMContentLoaded", () => {
   let precioServicio = 0;
   let idCliente = 0;
   let idServicio = 0;
+  let idPersona = null;
 
-  const fetchSectores = async () => {
+  async function getQueryParams() {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+
+    const params = Object.fromEntries(urlParams.entries());
+    if (params.dni) {
+      dni.value = params.dni;
+      dni.disabled = true;
+    }
+  }
+
+  async function fetchSectores() {
     const response = await fetch(`${config.HOST}app/controllers/Sector.controllers.php?operacion=listarSectores`);
-    return await response.json();
-  };
-
-  const fetchPaquetes = async () => {
-    const response = await fetch(`${config.HOST}app/controllers/Paquete.controllers.php?operacion=listarPaquetes`);
-    return await response.json();
-  };
-
-  const fetchContratos = async () => {
-    const response = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=listarContratos`);
-    return await response.json();
-  };
-
-  async function fichaInstalacionGpon() {
-    const response = await fetch(`${config.HOST}json/FichaGpon.json`);
     return await response.json();
   }
 
-  async function buscarCliente() {
-    if (dni.value == "") {
+  async function fetchPaquetes() {
+    const response = await fetch(`${config.HOST}app/controllers/Paquete.controllers.php?operacion=listarPaquetes`);
+    return await response.json();
+  }
+
+  async function fetchContratos() {
+    const response = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=listarContratos`);
+    return await response.json();
+  }
+
+  async function buscarCliente(dni) {
+    if (dni == "") {
       showToast("¡Ingrese numero de documento!", "INFO");
     } else {
-      const response = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${dni.value}`);
+      const response = await fetch(`${config.HOST}app/controllers/Persona.controllers.php?operacion=buscarPersonaClienteDni&dni=${dni}`);
       const data = await response.json();
-      if (data.length > 0) {
+      if (data[0].id_cliente == null) {
+        idPersona = data[0].id_persona;
+        nombre.value = data[0].nombres;
+      }else{
+        const response = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${dni}`);
+        const data = await response.json();
         nombre.value = data[0].nombre;
-        referencia.value = data[0].referencia;
         direccion.value = data[0].direccion;
-        coordenada.value = data[0].coordenadas;
+        coordenada.value = data[0].coordenada;
+        referencia.value = data[0].referencia;
+        idPersona = null;
         idCliente = data[0].id_cliente;
-      } else {
-        showToast("Cliente no encontrado", "INFO");
       }
     }
   }
 
-  async function registrar() {
+  async function registrarCliente() {
+    const params = new FormData();
+    params.append("operacion", "registrarCliente");
+    params.append("idPersona", idPersona);
+    params.append("idEmpresa", '');
+    params.append("direccion", direccion.value);
+    params.append("referencia", referencia.value);
+    params.append("idUsuario", user.idUsuario);
+    params.append("coordenadas", coordenada.value);
+
+    const response = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php`, {
+      method: "POST",
+      body: params,
+    })
+    const data = await response.json();
+    console.log(data);
+    idCliente = data[0].id_cliente;
+    registrarContrato();
+  }
+
+  async function registrarContrato() {
     const fechaRegistro = new Date().toISOString().split('T')[0];
-    const fichaInstalacion = await fichaInstalacionGpon();
     const nota = "";
     const idUsuarioRegistro = user.idRol;
-
 
     if (!validarFechas() || !(await validarCampos())) {
       showToast("¡Complete los campos!", "INFO");
@@ -81,7 +110,7 @@ window.addEventListener("DOMContentLoaded", () => {
               fechaFin: fechaFin.value,
               fechaRegistro: fechaRegistro,
               nota: nota,
-              idUsuario: 1
+              idUsuario: user.idUsuario,
             },
           }),
           headers: {
@@ -89,7 +118,6 @@ window.addEventListener("DOMContentLoaded", () => {
           },
         });
         const result = await response.json();
-        console.log(await result);  
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         } else {
@@ -100,11 +128,10 @@ window.addEventListener("DOMContentLoaded", () => {
         console.error(error);  // Añade este log para depurar el error
         showToast("Ocurrió un error al registrar el contrato. Por favor, inténtelo de nuevo.", "ERROR");
       }
-
     }
   }
 
-  async function eliminar(idContrato,idUsuario) {
+  async function eliminar(idContrato, idUsuario) {
     if (await ask("¿Desea eliminar este contrato?")) {
       const response = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php`, {
         method: "PUT",
@@ -167,7 +194,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
     var tabla = new DataTable("#listarContratos", {
       language: {
-        url: `${config.HOST}Json/es-Es.json`,
+        url: `https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json`,
       },
       columnDefs: [
         { width: "12.5%", targets: 0 },
@@ -201,7 +228,7 @@ window.addEventListener("DOMContentLoaded", () => {
     botonesEliminar.forEach((boton) => {
       boton.addEventListener("click", (event) => {
         const idContrato = event.target.getAttribute("data-idContrato");
-        eliminar(idContrato,1);//el uno se reemplaza por el IdUsuario
+        eliminar(idContrato, 1); //el uno se reemplaza por el IdUsuario
       });
     });
 
@@ -236,18 +263,23 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   (async () => {
+    await getQueryParams();
     await cargarDatos();
   })();
-  
 
-  document.querySelector("#btnRegistrar").addEventListener("click", (event) => {
+  document.querySelector("#btnRegistrar").addEventListener("click", async (event) => {
     event.preventDefault();
-    registrar();
+    console.log(idPersona);
+    if (idPersona > 0) {
+      console.log("Hola");
+      await registrarCliente();
+    }
+    //await registrarContrato();
   });
 
   document.querySelector("#btnBuscar").addEventListener("click", async (event) => {
     event.preventDefault();
-    await buscarCliente();
+    await buscarCliente(dni.value);
   });
 
   $("#slcServicio").on("select2:select", function () {
@@ -268,6 +300,4 @@ window.addEventListener("DOMContentLoaded", () => {
     placeholder: "Seleccione Servicio",
     allowClear: true,
   });
-  //
-
-})
+});

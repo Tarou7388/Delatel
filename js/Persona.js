@@ -22,7 +22,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const txtDireccion = document.getElementById("txtDireccionPersona");
   const txtReferencia = document.getElementById("txtReferenciaPersona");
   const btnBuscar = document.getElementById("btnBuscar");
-
+  let dniActual = null;
+  let idPersona = null;
 
   function toggleForms(value) {
     if (value === "Persona") {
@@ -38,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function ObtenerDataDNI(operacion, dni) {
-    fetch(`${config.HOST}app/controllers/Persona.controlles.php?operacion=${operacion}&dni=${encodeURIComponent(dni)}`)
+    fetch(`${config.HOST}app/controllers/Persona.controllers.php?operacion=${operacion}&dni=${encodeURIComponent(dni)}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error('Error al obtener la información');
@@ -47,10 +48,12 @@ document.addEventListener("DOMContentLoaded", function () {
       })
       .then((data) => {
         if (data && data.nombres && data.apellidoPaterno) {
+          dniActual = dni;
           txtNombresPersona.value = data.nombres;
           txtApellidosPersona.value = `${data.apellidoPaterno} ${data.apellidoMaterno || ''}`.trim();
         } else {
           showToast('No se encontraron datos para el DNI proporcionado', 'WARNING');
+          dniActual = null;
         }
       })
       .catch((error) => {
@@ -75,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function () {
     return false;
   }
 
-  function registrarPersona() {
+  async function registrarPersona() {
     // if (permisos[0].permisos.personas.crear == 1) {
 
     // }
@@ -83,11 +86,11 @@ document.addEventListener("DOMContentLoaded", function () {
     params.append("operacion", "registrarPersona");
     params.append("tipoDoc", slcTipoDocumento.value);
     params.append("nroDoc", txtNumDocumentoPersona.value);
-    params.append("nombres", txtNombresPersona.value);
     params.append("apellidos", txtApellidosPersona.value);
+    params.append("nombres", txtNombresPersona.value);
     params.append("telefono", txtTelefono.value);
-    params.append("email", txtEmail.value);
     params.append("nacionalidad", slcNacionalidad.value);
+    params.append("email", txtEmail.value);
     params.append("idUsuario", userid);
 
     const options = {
@@ -95,31 +98,25 @@ document.addEventListener("DOMContentLoaded", function () {
       body: params
     };
 
-    fetch(`${config.HOST}app/controllers/Persona.controlles.php`, options)
-      .then((response) => {
-        console.log(response)
-        if (!response.ok) {
-          throw new Error('Error en la solicitud al registrar persona');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data)
-        if (data.id_persona > 0) {
-          showToast("Persona registrada correctamente", "SUCCESS");
-          registrarContacto(data.idPersona);
-        } else {
-          showToast("Verifique los datos ingresados", "ERROR");
-        }
-        frmPersonas.reset();
-      })
-      .catch((e) => {
-        console.log(e)
-        showToast("PERSONA YA REGISTRADA", "WARNING");
-      });
+    const response = await fetch(`${config.HOST}app/controllers/Persona.controllers.php`, options);
+    const data = await response.json();
+    if (data.error) {
+      switch (data.error) {
+        case 'Duplicado':
+          showToast("Persona ya registrada", "WARNING");
+          break;
+        default:
+          showToast("Error al registrar persona", "ERROR");
+          break;
+      }
+    } else {
+      idPersona = data[0].id_persona;
+      registrarContacto(data[0].id_persona);
+    }
   }
+
   async function registrarContacto(idPersona) {
-    const Paquete = slcServicio.value.split(" - ")[0];
+    const Paquete = slcServicio.value;
     const fecha = new Date();
     fecha.setDate(fecha.getDate() + 14);
     const datos = {
@@ -136,7 +133,13 @@ document.addEventListener("DOMContentLoaded", function () {
       body: JSON.stringify(datos),
     });
     const data = await response.json();
-    console.log(data);
+    if (data.guardado) {
+      await showToast("Persona registrada correctamente", "SUCCESS");
+      frmPersonas.reset();
+      if (await ask("¿Desea registrar un contrato?")) {
+        window.location.href = `${config.HOST}views/Contratos/?dni=${dniActual}&idPersona=${idPersona}`;
+      }
+    }
   }
 
   toggleForms(slcChangeRegistro.value);
@@ -180,7 +183,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const data = await response.json();
     data.forEach((paquetes) => {
       const option = document.createElement("option");
-      const id = paquetes.id + " - " + paquetes.tipo_paquete + " - " + paquetes.precio;
+      const id = paquetes.id_paquete;
       option.value = id;
       option.textContent = paquetes.servicio;
       slcServicio.appendChild(option);

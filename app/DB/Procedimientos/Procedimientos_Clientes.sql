@@ -37,6 +37,7 @@ BEGIN
     END IF;
     INSERT INTO tb_clientes(id_persona, id_empresa, direccion, referencia, iduser_create, coordenadas) 
     VALUES (p_id_persona, p_id_empresa, p_direccion, p_referencia, p_iduser_create, p_coordenadas);
+    SELECT LAST_INSERT_ID() AS id_cliente;
 END $$
 
 DELIMITER $$
