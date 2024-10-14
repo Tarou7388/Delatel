@@ -50,7 +50,7 @@ class Usuario extends Conexion
       $params['clave'],
       $params['idUsuario']
     );
-    return $this->registrar($sql, $values);
+    return $this->registroValorDevolvido($sql, $values);
   }
 
   /**
@@ -67,4 +67,48 @@ class Usuario extends Conexion
     return $this->listarDatos($sql);
   }
 
+  /**
+   * Método para actualizar a un usuario.
+   * 
+   * @param array $params Arreglo asociativo con los siguientes índices:
+   *                      - 'nombreUsuario' (string): Nombre de usuario.
+   *                      - 'clave' (string): Contraseña del usuario.
+   *                      - 'idUsuarioUpdate' (int): ID del usuario que actualiza el registro.
+   *                      - 'idUsuario' (int): ID del usuario que se está actualizando.
+   * 
+   * @return bool El resultado será verdadero si la operación se realiza con éxito o falso si falla.
+   */
+  public function actualizarUsuarios($params = [])
+  {
+    $sql = "CALL spu_usuario_actualizar(?,?,?,?)";
+    $values = array(
+      $params['nombreUsuario'],
+      $params['clave'],
+      $params['idUsuarioUpdate'],
+      $params['idUsuario']
+    );
+    return $this->registrar($sql, $values);
+  }
+
+  /**
+   * Método para eliminar lógicamente a un usuario.
+   * 
+   * Este método inhabilita un usuario en lugar de eliminarlo físicamente, actualizando los campos
+   * `inactive_at` y `iduser_inactive` en la base de datos.
+   * 
+   * @param array $params Arreglo asociativo con los siguientes índices:
+   *                      - 'idUsuario' (int): ID del usuario que se está inhabilitando.
+   *                      - 'idUsuarioInactive' (int): ID del usuario que realiza la inhabilitación.
+   * 
+   * @return bool El resultado será verdadero si la operación se realiza con éxito o falso si falla.
+   */
+  public function eliminarUsuario($params = [])
+  {
+    $sql = "CALL sp_usuario_eliminar(?,?)";
+    $values = array(
+      $params['idUsuario'],
+      $params['idUsuarioInactive'],
+    );
+    return $this->registrar($sql, $values);
+  }
 }

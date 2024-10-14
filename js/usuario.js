@@ -1,9 +1,9 @@
 import config from '../env.js';
-import { inicializarDataTable} from './Herramientas.js';
+import { inicializarDataTable } from './Herramientas.js';
 
 document.addEventListener("DOMContentLoaded", () => {
-  const table = inicializarDataTable('#tblUsuarios', 
-    `${config.HOST}app/controllers/Usuario.controllers.php?operacion=listarUsuarios`, 
+  const table = inicializarDataTable('#tblUsuarios',
+    `${config.HOST}app/controllers/Usuario.controllers.php?operacion=listarUsuarios`,
     [
       { data: "nombre", title: "Nombre", className: 'text-center' },
       { data: "nombre_user", title: "Usuario", className: 'text-center' },

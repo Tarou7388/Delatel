@@ -57,7 +57,7 @@
 					</div>
 					<div class="col-md-4 mt-2">
 						<div class="form-floating">
-							<input type="text" id="txtTelefono" name="txtTelefono" placeholder="Teléfono" class="form-control">
+							<input type="text" id="txtTelefono" name="txtTelefono" placeholder="Teléfono" class="form-control" maxlength="9" minlength="9" required disabled>
 							<label for="txtTelefono">Teléfono</label>
 						</div>
 					</div>
@@ -83,7 +83,7 @@
 				<div class="row mb-3 mt-2">
 					<div class="col-md-6">
 						<div class="form-floating">
-							<input type="email" id="txtEmail" name="email" class="form-control" placeholder="Correo Electrónico" required>
+							<input type="email" id="txtEmail" name="email" class="form-control" placeholder="Correo Electrónico" required disabled>
 							<label for="txtEmail">Correo Electrónico</label>
 						</div>
 					</div>

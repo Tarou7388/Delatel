@@ -62,7 +62,34 @@ if (isset($_POST["operacion"])) {
             "idUsuario" => $idUsuario
         ];
         $resultado = $usuario->registrarUsuarios($data);
-        echo json_encode(["guardado" => $resultado]);
+        echo json_encode($resultado);
     }
 }
-?>
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+    $json = file_get_contents('php://input');
+    $datos = json_decode($json, true);
+    $operacion = Herramientas::sanitizarEntrada($datos['operacion']);
+    switch ($operacion) {
+        case 'actualizarUsuario':
+            $parametros = [
+                "nombreUsuario" => Herramientas::sanitizarEntrada($datos['parametros']['nombreUsuario']),
+                "clave" => password_hash($_POST["clave"], PASSWORD_BCRYPT),
+                "idUsuarioUpdate" => Herramientas::sanitizarEntrada($datos['parametros']['idUsuarioUpdate']),
+                "idUsuario" => Herramientas::sanitizarEntrada($datos['parametros']['idUsuario'])
+            ];
+
+            $resultado = $usuario->actualizarUsuarios($parametros);
+            echo json_encode(["actualizado" => $resultado]);
+            break;
+        case 'eliminarUsuario':
+            $data = [
+                "idUsuario" => Herramientas::sanitizarEntrada($datos['idUsuario']),
+                "idUsuarioInactive" => Herramientas::sanitizarEntrada($datos['idUsuarioInactive'])
+            ];
+            $resultado = $usuario->eliminarUsuario($data);
+            echo json_encode(["eliminado" => $resultado]);
+            break;
+    }
+}

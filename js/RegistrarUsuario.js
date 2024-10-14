@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
     return document.getElementById(id);
   }
 
-  let idPersonaEncontrada = null; 
+  let idPersonaEncontrada = null;
 
   $("btnBuscar").addEventListener("click", async () => {
     const dni = $("txtNumDocumentoPersona").value;
@@ -21,42 +21,39 @@ document.addEventListener("DOMContentLoaded", function () {
       const respuesta = await fetch(
         `${config.HOST}app/controllers/Persona.controllers.php?operacion=buscarPersonaDni&dni=${dni}`
       );
-      if (!respuesta.ok) {
-        throw new Error("Error en la solicitud al servidor.");
-      }
+
       const data = await respuesta.json();
-      console.log(data);
 
       if (data.length > 0 && data[0].id_persona) {
         const persona = data[0];
         idPersonaEncontrada = persona.id_persona;
 
         $("txtNombre").value = persona.nombres;
-        $("txtApe").value = persona.apellidos; 
-        $("txtEmail").value = persona.email; 
-        $("txtTelefono").value = persona.telefono; 
+        $("txtApe").value = persona.apellidos;
+        $("txtEmail").value = persona.email;
+        $("txtTelefono").value = persona.telefono;
         $("txtNombre").disabled = true;
         $("txtApe").disabled = true;
-        $("txtEmail").disabled = false;
+        $("txtEmail").disabled = true;
+        $("txtTelefono").disabled = true;
         $("txtUsuario").disabled = false;
         $("txtContrasenia").disabled = false;
         $("slcRol").disabled = false;
 
         showToast("Persona encontrada en la base de datos.", "SUCCESS");
       } else {
-        const persona = await BuscarPersonaAPI("obtenerDni", dni);
-        if (persona) {
-          $("txtNombre").value = persona.nombres;
-          $("txtApe").value = `${persona.apellidoPaterno} ${persona.apellidoMaterno}`;
-          $("txtNombre").disabled = true;
-          $("txtApe").disabled = true;
+        const personaAPI = await BuscarPersonaAPI("obtenerDni", dni);
+
+        if (personaAPI) {
+          $("txtNombre").value = personaAPI.nombres;
+          $("txtApe").value = personaAPI.apellidos;
           $("txtEmail").disabled = false;
+          $("txtTelefono").disabled = false;
           $("txtUsuario").disabled = false;
           $("txtContrasenia").disabled = false;
           $("slcRol").disabled = false;
 
-          showToast("Persona registrada desde la API.", "INFO");
-          idPersonaEncontrada = await RegistrarPersona(dni);
+          showToast("Persona encontrada en la API externa. Completa los campos restantes EMAIL - TELEFONO", "INFO");
         } else {
           showToast("No se encontraron datos en la API externa.", "INFO");
         }
@@ -67,33 +64,24 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  const obtenerRoles = async () => {
-    try {
-      const respuesta = await fetch(
-        `${config.HOST}app/controllers/Rol.controllers.php?operacion=listarRoles`
-      );
-      if (!respuesta.ok) {
-        throw new Error("Error al obtener los roles.");
-      }
-      const data = await respuesta.json();
-      data.forEach((element) => {
-        const option = new Option(element.rol, element.id);
-        $("slcRol").add(option);
-      });
-    } catch (error) {
-      console.error("Error al cargar los roles:", error);
-    }
-  };
-
   async function BuscarPersonaAPI(operacion, dni) {
     try {
       const respuesta = await fetch(
         `${config.HOST}app/controllers/Persona.controllers.php?operacion=${operacion}&dni=${dni}`
       );
-      if (!respuesta.ok) {
-        throw new Error("Error al conectarse a la API externa.");
-      }
-      return await respuesta.json();
+
+      const data = await respuesta.json();
+
+      return {
+        tipoDoc: data.tipoDocumento,
+        nroDoc: data.numeroDocumento,
+        apellidos: `${data.apellidoPaterno} ${data.apellidoMaterno}`,
+        nombres: data.nombres,
+        telefono: $("txtTelefono").value,
+        nacionalidad: $("slcNacionalidad").value,
+        email: $("txtEmail").value,
+        idUsuario: userid
+      };
     } catch (error) {
       console.error("Error en BuscarPersonaAPI:", error);
       return null;
@@ -125,7 +113,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       const data = await respuesta.json();
       console.log("Respuesta de búsqueda:", data);
-      return data.id_persona;
+      return data[0].id_persona;
     } catch (error) {
       console.error("Error al registrar persona:", error);
       return null;
@@ -135,7 +123,7 @@ document.addEventListener("DOMContentLoaded", function () {
   async function RegistrarUsuario(idPersona) {
     try {
       const formData = new FormData();
-      formData.append("operacion", "registrarUsuario");
+      formData.append("operacion", "registrarUsuarios");
       formData.append("idPersona", idPersona);
       formData.append("nombreUsuario", $("txtUsuario").value);
       formData.append("clave", $("txtContrasenia").value);
@@ -149,22 +137,76 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       );
 
-      if (!respuesta.ok) {
-        throw new Error("Error al registrar el usuario.");
-      }
-
       const data = await respuesta.json();
-
-      if (data.success) {
+      //console.log(data.id_usuario);
+      if (data) {
         showToast("Usuario registrado con éxito", "SUCCESS");
-      } else {
-        showToast("Error al registrar el usuario: " + data.message, "ERROR");
+        //console.log(data[0].id_usuario);
+        return data[0].id_usuario;
       }
+      else { showToast("Usuario ya registrado", "ERROR"); }
+
     } catch (error) {
-      console.error("Error al registrar usuario:", error);
-      showToast("Ocurrió un error: " + error.message, "ERROR");
+      showToast("Error al registrar usuario:" + error, "ERROR");
     }
+
+
   }
+
+  async function registrarResponsable(idUsuarioR) {
+    const formData = new FormData();
+    formData.append("operacion", "registrarResponsable");
+    formData.append("idUsuario", idUsuarioR);
+    formData.append("idRol", $("slcRol").value);
+    formData.append("FechaInicio", new Date().toISOString().slice(0, 19).replace('T', ' '));
+    formData.append("idUsuarioCreador", userid);
+
+    const respuesta = await fetch(
+      `${config.HOST}app/controllers/Responsable.controllers.php`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+    const data = await respuesta.json();
+    console.log(data);
+
+    if (data.guardado == false) {
+      showToast("Error en asignar Rol", "ERROR");
+    }
+
+  }
+
+  $("registerForm").addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    // Verificar si ya se encontró una persona.
+    if (!idPersonaEncontrada) {
+      const dni = $("txtNumDocumentoPersona").value;
+      if (!dni) {
+        showToast("Debes buscar una persona primero.", "WARNING");
+        return;
+      }
+
+      const idNuevaPersona = await RegistrarPersona(dni);
+
+      if (!idNuevaPersona) {
+        showToast("No se pudo registrar la persona.", "ERROR");
+        return;
+      }
+
+      idPersonaEncontrada = idNuevaPersona;
+    }
+
+
+    const usuarioregistrado = await RegistrarUsuario(idPersonaEncontrada);
+    console.log(usuarioregistrado);
+
+    await registrarResponsable(usuarioregistrado);
+
+
+  });
+
 
   const configurarSelectsDocumento = () => {
     const slcNacionalidad = $("slcNacionalidad");
@@ -213,24 +255,30 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   };
 
+  const obtenerRoles = async () => {
+    try {
+      const respuesta = await fetch(
+        `${config.HOST}app/controllers/Rol.controllers.php?operacion=listarRoles`
+      );
+      if (!respuesta.ok) {
+        throw new Error("Error al obtener los roles.");
+      }
+      const data = await respuesta.json();
+      data.forEach((element) => {
+        const option = new Option(element.rol, element.id_rol);
+        document.getElementById("slcRol").add(option);
+      });
+    } catch (error) {
+      console.error("Error al cargar los roles:", error);
+    }
+  };
+
+
+
   (async function iniciarAplicacion() {
     await obtenerRoles();
     configurarSelectsDocumento();
   })();
 
-  $("registerForm").addEventListener("submit", async (event) => {
-    event.preventDefault();
-    console.log(idPersonaEncontrada);
-    if (!idPersonaEncontrada) {
-      showToast("Debes buscar una persona primero.", "WARNING");
-      return;
-    }
 
-    try {
-      await RegistrarUsuario(idPersonaEncontrada);
-    } catch (error) {
-      console.error("Error al registrar usuario:", error);
-      showToast("Ocurrió un error al registrar el usuario.", "ERROR");
-    }
-  });
 });
