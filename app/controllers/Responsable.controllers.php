@@ -16,7 +16,7 @@ if (isset($_POST['operacion'])) {
       $datos = [
         "idUsuario"                   => Herramientas::sanitizarEntrada($_POST['idUsuario']),
         "idRol"                       => Herramientas::sanitizarEntrada($_POST['idRol']),
-        "FechaInicio"                 => Herramientas::sanitizarEntrada($_POST['FechaInicio']),
+        "FechaInicio"                 => $_POST['FechaInicio'],
         "idUsuarioCreador"            => Herramientas::sanitizarEntrada($_POST['idUsuarioCreador']),
       ];
       $estado = $responsable->RegistrarResponsable($datos);

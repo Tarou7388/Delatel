@@ -38,7 +38,6 @@
       </div>
       <div class="modal-body">
         <form id="editForm" action="actualizar_usuario_action.php" method="POST">
-          <input type="hidden" id="userId" name="userId">
 
           <div class="form-floating mb-3">
             <input type="text" id="txtNombre" name="nombre" class="form-control" placeholder="Nombre" required>
@@ -51,13 +50,20 @@
           </div>
 
           <div class="form-floating mb-3">
-            <select id="txtRol" name="rol" class="form-select" required>
-              <option value="">Seleccione un rol</option>
-              <option value="admin">Administrador</option>
-              <option value="user">Usuario</option>
+            <select id="slcRol" name="rol" class="form-select" required>
             </select>
-            <label for="txtRol">Rol</label>
+            <label for="slcRol">Rol</label>
           </div>
+
+          <div class="form-floating mb-3">
+            <input type="text" id="txtPassword" name="usuario" class="form-control" placeholder="******" required>
+            <label for="txtPassword">Clave Nueva</label>
+          </div>
+
+          <!-- NO SE USARA          <div class="form-floating mb-3">
+            <input type="text" id="txtPassword" name="usuario" class="form-control" placeholder="Usuario" required>
+            <label for="txtPassword">Clave</label>
+          </div> -->
 
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

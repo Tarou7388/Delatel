@@ -5,6 +5,7 @@ DELIMITER $$
 DROP VIEW IF EXISTS vw_usuarios_listar$$
 CREATE VIEW vw_usuarios_listar AS
 SELECT 
+	us.id_usuario,
     COALESCE(CONCAT(pe.nombres, ", ", pe.apellidos)) AS nombre,
     us.nombre_user,
     ro.rol AS "Cargo",

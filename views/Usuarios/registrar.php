@@ -4,10 +4,14 @@
 	<h1 class="mt-4">Registrar Nuevo Usuario</h1>
 
 	<div class="card mb-4">
-		<div class="card-header">
-			<i class="fas fa-table me-1"></i> Complete los Campos
+		<div class="card-header d-flex justify-content-between align-items-center">
+			<div>
+				<i class="fas fa-table me-1"></i> Gestionar Usuarios
+			</div>
+			<a href="index.php" class="btn btn-primary">Listado de Usuario</a>
 		</div>
 		<div class="card-body">
+
 			<form id="registerForm" action="" method="POST">
 				<div class="row mb-3">
 					<div class="col-md-4">
