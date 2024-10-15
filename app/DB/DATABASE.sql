@@ -204,7 +204,8 @@ CREATE TABLE tb_contratos (
 
 CREATE TABLE tb_contactabilidad (
     id_contactabilidad INT PRIMARY KEY AUTO_INCREMENT,
-    id_persona INT NOT NULL,
+    id_persona INT NULL,
+    id_empresa INT NULL,
     id_paquete INT NOT NULL,
     fecha_hora_contacto DATETIME NOT NULL DEFAULT NOW(),
     direccion_servicio VARCHAR(250) NOT NULL,
@@ -216,8 +217,9 @@ CREATE TABLE tb_contactabilidad (
     iduser_create INT NOT NULL,
     iduser_update INT NULL,
     iduser_inactive INT NULL,
-    CONSTRAINT conta_fk_id_persona FOREIGN KEY (id_persona) REFERENCES tb_personas (id_persona),
-    CONSTRAINT conta_fk_id_tarifario FOREIGN KEY (id_paquete) REFERENCES tb_paquetes (id_paquete)
+    CONSTRAINT contac_fk_id_persona FOREIGN KEY (id_persona) REFERENCES tb_personas (id_persona),
+    CONSTRAINT contac_fk_id_tarifario FOREIGN KEY (id_paquete) REFERENCES tb_paquetes (id_paquete),
+    CONSTRAINT contac_fk_id_empresa FOREIGN KEY (id_empresa) REFERENCES tb_empresas (id_empresa)
 ) ENGINE = InnoDB;
 
 CREATE TABLE tb_soporte (
