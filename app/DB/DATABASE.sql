@@ -124,7 +124,8 @@ CREATE TABLE tb_usuarios (
     iduser_update INT NULL,
     iduser_inactive INT NULL,
     CONSTRAINT usuar_fk_id_persona FOREIGN KEY (id_persona) REFERENCES tb_personas (id_persona),
-    CONSTRAINT usuar_uk_nombre_user UNIQUE (nombre_user)
+    CONSTRAINT usuar_uk_nombre_user UNIQUE (nombre_user),
+    CONSTRAINT usuar_uk_id_persona UNIQUE (id_persona)
 ) ENGINE = InnoDB;
 
 CREATE TABLE tb_responsables (

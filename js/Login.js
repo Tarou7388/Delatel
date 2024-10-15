@@ -1,46 +1,42 @@
-import config from '../env.js';
-
-window.addEventListener("DOMContentLoaded", event => {
-
-  const HOST = config.HOST;
-
-  function $(id) {
-    return document.querySelector(id);
+import config from "../env.js";
+document.addEventListener("DOMContentLoaded", () => {
+  function $(object = null) {
+    return document.querySelector(object);
   }
 
-  async function logear() {
-    const user = $("#txtNomUser").value;
+  async function login() {
+    const nomUser = $("#txtNomUser").value;
     const pass = $("#txtPassUser").value;
 
-    if (user != "" && pass != "") {
-      const respuesta = await fetch(`${HOST}app/controllers/Usuario.controllers.php?operacion=login&nombreUser=${user}&pass=${pass}`);
-      const datos = await respuesta.json();
-      if (datos.estado) {
-        await getPermisos(datos.idRol);
-        showToast(datos.mensaje, "SUCCESS");
-        window.location.href = `${HOST}views`;
+    if (!nomUser || !pass) {
+      showToast("Por favor, complete todos los campos.", "WARNING");
+      return;
+    }
+
+    const parametros = new FormData();
+    parametros.append("operacion", "login");
+    parametros.append("nombreUser", nomUser);
+    parametros.append("pass", pass);
+
+    const response = await fetch(
+      `${config.HOST}/app/controllers/Usuario.controllers.php`, {
+        method: "POST",
+        body: parametros,
+      });
+
+      const data = await response.json();
+      
+      if (data.login) { 
+        showToast(data.mensaje, "SUCCESS", 2500);
+        window.location.href = `${config.HOST}views/`; 
       } else {
-        showToast(datos.mensaje, "ERROR");
+        showToast(data.mensaje, "ERROR");
       }
-    } else {
-      showToast("Por favor, completa todos los campos.", "WARNING");
-    }
   }
 
-  async function getPermisos(idRol) {
-    await fetch(`${HOST}app/controllers/Rol.controllers.php?operacion=listarPermisosIdRol&idRol=${idRol}`);
-  }
-
-
-  $("#txtPassUser").addEventListener("keydown", async (event) => {
-    if (event.keyCode === 13) {
-      await logear();
-    }
-  });
-
-  $("#btnIniciar").addEventListener("click",async (event) => {
+  $("#frmLogin").addEventListener("submit", async (event) => {
     event.preventDefault();
-    await logear();
+    await login();
   });
 
   const mostrarPassword = document.getElementById("mostrarPassword");

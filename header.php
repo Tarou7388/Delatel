@@ -8,11 +8,37 @@ $dotenv->load();
 
 $host = $_ENV['HOST'];
 
-if (!isset($_SESSION['login']) || (isset($_SESSION['login']) && !$_SESSION['login']['estado'])) {
+if (!isset($_SESSION['login']) || $_SESSION['login']['estado'] == false) {
   header("Location: $host");
+  exit();
+} else {
+  $url = $_SERVER['REQUEST_URI'];
+  $rutaCompleta = explode("/", $url);
+  $rutaCompleta = array_filter($rutaCompleta);
+  $totalElementos = count($rutaCompleta);
+
+  $vistaActual = $rutaCompleta[$totalElementos]; // Obtener el último elemento del array
+  $listaAcceso = $_SESSION['login']['accesos'];
+  $nombreUser = $_SESSION['login']['nombreUser'];
+  $cargo = $_SESSION['login']['Cargo'];
+
+  $encontrado = false;
+  $i = 0;
+
+  //Permite el bloqueo de los usuario que no tienen permiso para navegar por esa ruta, pero a lo que si lo tienen también.
+  while (($i < count($listaAcceso)) && !$encontrado) {
+    if ($listaAcceso[$i]['ruta'] == $vistaActual) {
+      $encontrado = true;
+    }
+    $i++;
+  }
+
+  // Validamos si se encontró..
+  if (!$encontrado) {
+    header("Location: $host");
+    exit();
+  }
 }
-
-
 ?>
 
 <!DOCTYPE html>
@@ -24,19 +50,18 @@ if (!isset($_SESSION['login']) || (isset($_SESSION['login']) && !$_SESSION['logi
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
   <meta name="description" content="" />
   <meta name="author" content="" />
-  <title>Delafiber</title>
+  <title>Dashboard - SB Admin</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
   <link href="https://cdn.datatables.net/v/dt/dt-2.1.3/datatables.min.css" rel="stylesheet">
   <link href="<?= $host ?>/css/styles.css" rel="stylesheet" />
-  <link rel="stylesheet" href="<?= $host ?>/css/estilos.css">
 </head>
 
 <body class="sb-nav-fixed">
 
   <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-    <a class="navbar-brand ps-3" href="<?= $host; ?>views/">DELAFIBER</a>
+    <a class="navbar-brand ps-3" href="<?= $host; ?>dashboard.php">DELAFIBER</a>
     <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
 
     <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
@@ -44,6 +69,7 @@ if (!isset($_SESSION['login']) || (isset($_SESSION['login']) && !$_SESSION['logi
     <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i>
+          <?= $nombreUser ?> (<?= $cargo ?>)
         </a>
         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
           <li><a class="dropdown-item" href="<?= $host ?>app/controllers/Usuario.controllers.php?operacion=cerrarSesion"><i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión</a></li>
@@ -57,65 +83,32 @@ if (!isset($_SESSION['login']) || (isset($_SESSION['login']) && !$_SESSION['logi
         <div class="sb-sidenav-menu">
           <div class="nav">
             <div class="sb-sidenav-menu-heading">Inicio</div>
-            <a class="nav-link" href="<?= $host; ?>index.php">
-              <div class="sb-nav-link-icon"><i class="fa-solid fa-chart-line"></i></div>
-              Actividades
-            </a>
+            <?php
+            foreach ($listaAcceso as $acceso) {
+              if (strpos($acceso['ruta'], 'views') !== false) {
+                echo "
+                <a class='nav-link' href='http://localhost/Delatel/{$acceso['ruta']}'>
+                  <div class='sb-nav-link-icon'><i class='fa-solid {$acceso['icono']}'></i></div>
+                  {$acceso['texto']}
+                </a>
+                ";
+              }
+            }
+            ?>
             <div class="sb-sidenav-menu-heading">Módulos</div>
 
-            <a class="nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="false" aria-controls="collapseExample" id=molSoporte>
-              <div class="sb-nav-link-icon"><i class="fa-solid fa-wrench"></i></div>
-              Soporte Tecnico
-            </a>
-
-            <div class="collapse" id="collapse1">
-              <div class="ps-4">
-                <a class="nav-link" href="<?= $host; ?>views/Soporte/index.php">
-                  <div class="sb-nav-link-icon"><i class="fa-solid fa-wrench"></i></div>
-                  Ficha de Soporte
-                </a>
-              </div>
-            </div>  
-
-            <a class="nav-link" href="<?= $host; ?>views/Contratos/" id=molContratos>
-              <div class="sb-nav-link-icon"><i class="fa-solid fa-file-contract"></i></div>
-              Contratos
-            </a>
-
-
-            <a class="nav-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapseExample" id=molInventariado>
-              <div class="sb-nav-link-icon"><i class="fa-solid fa-warehouse"></i></div>
-              Inventariado
-            </a>
-
-            <div class="collapse" id="collapse3">
-              <div class="ps-4">
-                <a class="nav-link" href="<?= $host; ?>views/Inventariado/">
-                  <div class="sb-nav-link-icon"><i class="fa-solid fa-cart-flatbed"></i></div>
-                  Kardex
-                </a>
-                <a class="nav-link" href="<?= $host; ?>views/Productos/">
-                  <div class="sb-nav-link-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
-                  Productos
-                </a>
-              </div>
-            </div>
-
-
-            <a class="nav-link" href="<?= $host; ?>views/Usuarios/" id=molUsuarios>
-              <div class="sb-nav-link-icon"><i class="fa-solid fa-users"></i></div>
-              Usuarios
-            </a>
-            <a class="nav-link" href="<?= $host; ?>views/Personas/" id=molClientes>
-              <div class="sb-nav-link-icon"><i class="fa-solid fa-user"></i></div>
-              Clientes
-            </a>
-
-            <a class="nav-link" href="<?= $host; ?>views/Roles/" id=molRoles>
-              <div class="sb-nav-link-icon"><i class="fa-regular fa-address-card"></i></div>
-              Roles
-            </a>
-
+            <?php
+            foreach ($listaAcceso as $acceso) {
+              if (strpos($acceso['ruta'], 'views') === false) {
+                echo "
+              <a class='nav-link' href='http://localhost/Delatel/views/{$acceso['ruta']}'>
+                <div class='sb-nav-link-icon'><i class='fa-solid {$acceso['icono']}'></i></div>
+                {$acceso['texto']}
+              </a>
+              ";
+              }
+            }
+            ?>
           </div>
         </div>
         <div class="sb-sidenav-footer">

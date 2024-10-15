@@ -159,44 +159,15 @@ INSERT INTO tb_usuarios (id_persona, nombre_user, pass, iduser_create) VALUES
 (7, 'Cfernandez', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
 (8, 'Dmartinez', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
 (9, 'Egarcia', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
-(10, 'Frojas', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
-(11, 'Glopez', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
-(12, 'Hrodriguez', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
-(13, 'Ihidalgo', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
-(14, 'Jtorres', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
-(15, 'Kvelasquez', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
-(16, 'Lcampos', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
-(17, 'Mrojas', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
-(18, 'Ncontreras', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
-(19, 'Obernal', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
-(20, 'Pguerrero', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
-(21, 'Qalvarado', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
-(22, 'Rpeña', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
-(23, 'Sanchez', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
-(24, 'Tgonzalez', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
-(25, 'Ualmeida', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
-(26, 'Vtapia', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
-(27, 'Wcardenas', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
-(28, 'Xvillanueva', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
-(29, 'Ygarcia', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
-(30, 'Zmontoya', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
-(31, 'Aflores', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
-(32, 'Bperalta', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
-(33, 'Camarillo', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
-(34, 'Dzambrano', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
-(35, 'Egonzalez', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
-(36, 'Hbenavides', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
-(37, 'Irodriguez', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
-(38, 'Jgarcia', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
-(39, 'Kvidal', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
-(40, 'Lserrano', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1);
+(10, 'Frojas', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1);
+
 
 INSERT INTO tb_roles (rol, permisos, iduser_create) VALUES
-('Administrador', '{"soporte": {"crear": true, "leer": true, "actualizar": true, "eliminar": true}, "contratos": {"crear": true, "leer": true, "actualizar": true, "eliminar": true}, "inventariado": {"crear": true, "leer": true, "actualizar": true, "eliminar": true}, "personas": {"crear": true, "leer": true, "actualizar": true, "eliminar": true}, "roles": {"crear": true, "leer": true, "actualizar": true, "eliminar": true}}',1),
-('Tecnico Oficina', '{"soporte": {"crear": true, "leer": true, "actualizar": true, "eliminar": true}, "contratos": {}, "inventariado": {}, "personas": { "leer": true}, "roles": {}}',1),
-('Oficina', '{"soporte": { "leer": true}, "contratos": {"crear": true, "leer": true, "actualizar": true, "eliminar": true}, "inventariado": {}, "personas": {"crear": true, "leer": true, "actualizar": true, "eliminar": true}, "roles": {}}',1),
-('Tecnico Campo', '{"soporte": {"crear": true, "leer": true, "actualizar": true, "eliminar": true}, "contratos": { "leer": true}, "inventariado": {}, "personas": { "leer": true}, "roles": {}}',1),
-('Almacen - Tecnico', '{"soporte": {"crear": true, "leer": true, "actualizar": true, "eliminar": true}, "contratos": { "leer": true}, "inventariado": {"crear": true, "leer": true, "actualizar": true, "eliminar": true}, "personas": { "leer": true}, "roles": {}}',1);
+('Administrador', '{"actividades":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"soporte":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"contratos":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"inventariado":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"productos":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"personas":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"roles":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"usuarios":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"}}',1),
+('Tecnico Oficina', '{"actividades":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"soporte":[],"contratos":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"inventariado":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"productos":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"personas":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"roles":[],"usuarios":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"}}',1),
+('Oficina', '{"actividades":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"soporte":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"contratos":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"inventariado":[],"productos":[],"personas":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"roles":[],"usuarios":[]}',1),
+('Tecnico Campo', '{"actividades":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"soporte":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"contratos":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"inventariado":[],"productos":[],"personas":[],"roles":[],"usuarios":[]}',1),
+('Almacen - Tecnico', '{"actividades":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"soporte":[],"contratos":[],"inventariado":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"productos":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"personas":[],"roles":[],"usuarios":[]}',1);
 
 
 INSERT INTO tb_paquetes (id_servicio, precio, tipo_paquete, fecha_inicio, fecha_fin, iduser_create) VALUES
@@ -382,3 +353,4 @@ INSERT INTO tb_soporte (id_contrato, id_tipo_soporte, id_tecnico, fecha_hora_sol
 (3, 3, 3, '2024-03-21 09:30:00', '2024-03-21 10:00:00',"Daño X",null,'Alta', '{"parametros":{"base":"","ip":"","senal":""},"cambios":{"nuevaBase":"","nuevoIP":"","senal":""}}',1),
 (4, 1, 4, '2024-04-26 14:00:00', '2024-04-26 15:30:00',"Daño Y",null,'Baja', '{"parametros":{"base":"","ip":"","senal":""},"cambios":{"nuevaBase":"","nuevoIP":"","senal":""}}',1),
 (5, 2, 5, '2024-05-31 13:00:00', '2024-05-31 14:30:00',"Daño Z",null,'Media', '{"parametros":{"base":"","ip":"","senal":""},"cambios":{"nuevaBase":"","nuevoIP":"","senal":""}}',1);
+ 

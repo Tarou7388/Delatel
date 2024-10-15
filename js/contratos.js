@@ -185,9 +185,9 @@ window.addEventListener("DOMContentLoaded", () => {
         <td class="text-center">${contrato.fecha_inicio}</td>
         <td class="text-center">${contrato.fecha_fin}</td>
         <td>
-          <button class="btn btn-sm btn-warning">Editar</button>
-          <button class="btn btn-sm btn-danger btnEliminar" data-idContrato=${contrato.id_contrato}>Eliminar</button>
-          <button class="btn btn-sm btn-primary btnGenerar" data-idContrato=${contrato.id_contrato}>PDF</button>
+          <button class="btn btn-sm btn-warning"><i class="fa-regular fa-pen-to-square"></i></button>
+          <button class="btn btn-sm btn-danger btnEliminar" data-idContrato=${contrato.id_contrato}><i class="fa-regular fa-trash-can"></i></button>
+          <button class="btn btn-sm btn-primary btnGenerar" data-idContrato=${contrato.id_contrato}><i class="fa-solid fa-file-pdf"></i></button>
           <button class="btn btn-sm btn-success btnFicha" data-tipoPaquete=${contrato.tipo_paquete} data-idContrato=${contrato.id_contrato}>Ficha</button>
         </td>
       `;
@@ -223,7 +223,7 @@ window.addEventListener("DOMContentLoaded", () => {
           "CABl": "FichaTecnicaCable",
           "FIBR": "FichaTecnicaGpon",
         };
-        window.location.href = `${config.HOST}views/contratos/${tipoFicha[tipoPaquete]}.php?idContrato=${idContrato}`;
+        window.location.href = `${config.HOST}//views/contratos/${tipoFicha[tipoPaquete]}.php?idContrato=${idContrato}`;
       });
     });
 
@@ -237,7 +237,7 @@ window.addEventListener("DOMContentLoaded", () => {
     botonesPdf.forEach((boton) => {
       boton.addEventListener("click", () => {
         const idContrato = boton.getAttribute("data-idContrato");
-        window.open(`${config.HOST}/views/reports/Contrato/soporte.php?id=${idContrato}`);
+        window.open(`${config.HOST}views/reports/Contrato/soporte.php?id=${idContrato}`);
       });
     });
   }
