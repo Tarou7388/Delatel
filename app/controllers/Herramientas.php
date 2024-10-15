@@ -14,6 +14,10 @@ class Herramientas
     // Método para sanitizar entradas de usuario
     public static function sanitizarEntrada($entrada)
     {
+        if (is_array($entrada)) {
+            return array_map([self::class, 'sanitizarEntrada'], $entrada);
+        }
+
         $entrada = trim($entrada);
         $entrada = stripslashes($entrada);
         $entrada = htmlspecialchars($entrada);

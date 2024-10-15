@@ -1,4 +1,5 @@
 <?php require_once '../../header.php'; ?>
+<?php $host = $_ENV['HOST']; ?>
 
 <div class="container-fluid px-4">
   <h1 class="mt-4">Usuarios</h1>
@@ -8,7 +9,7 @@
       <div>
         <i class="fas fa-table me-1"></i> Gestionar Usuarios
       </div>
-      <a href="registrar.php" class="btn btn-primary">Registrar Usuario</a>
+      <a href="<?= $host ?>/views/Usuarios/registrar.php" class="btn btn-primary">Registrar Usuario</a>
     </div>
     <div class="card-body">
       <div class="table-responsive">

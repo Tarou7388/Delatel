@@ -1,0 +1,12 @@
+RewriteEngine On 
+
+# URL amigables 
+RewriteCond %{REQUEST_FILENAME} !-d 
+RewriteCond %{REQUEST_FILENAME}.php -f 
+RewriteRule ^(.*)$ $1.php [L] 
+
+# Manejo de excepciones en el servidor 404
+ErrorDocument 400 /Delatel/unauthorized.php
+ErrorDocument 401 /Delatel/unauthorized.php
+ErrorDocument 403 /Delatel/unauthorized.php
+ErrorDocument 404 /Delatel/404.php

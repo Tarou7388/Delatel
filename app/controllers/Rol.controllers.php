@@ -17,15 +17,18 @@ if (isset($_GET["operacion"])) {
       $resultado  = $rol->listarRoles();
       echo json_encode($resultado);
       break;
-    case 'listarPermisosIdRol':
-      $datos = [
-        "idRol" => Herramientas::sanitizarEntrada($_GET['idRol'])
-      ];
-      $resultado = $rol->listarPermisosIdRol($datos);
-      if(!isset($_SESSION['permisos'])){
-        $_SESSION['permisos'] = $resultado;
-      }
-      break;
+      case 'listarPermisosIdRol':
+        $datos = [
+          "idRol" => Herramientas::sanitizarEntrada($_GET['idRol'])
+        ];
+        $resultado = $rol->listarPermisosIdRol($datos);
+        
+        if ($resultado) {
+            echo json_encode(["permisos" => $resultado]);
+        } else {
+            echo json_encode(["error" => "No se encontraron permisos"]);
+        }
+        break;     
   }
 }
 
@@ -36,13 +39,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   switch ($operacion) {
     case 'registrarRoles':
       $datosEnviar = [
-        "rol" => Herramientas::sanitizarEntrada($datos['rol']),
-        "permisos" => Herramientas::sanitizarEntrada($datos['permisos']),
-        "idUsuario" => Herramientas::sanitizarEntrada($datos['idUsuario'])
+          "rol" => Herramientas::sanitizarEntrada($datos['rol']),
+          "permisos" => Herramientas::sanitizarEntrada($datos['permisos']), // Permisos puede ser un array
+          "idUsuario" => Herramientas::sanitizarEntrada($datos['idUsuario'])
       ];
       $resultado = $rol->registrarRoles($datosEnviar);
       echo json_encode(["guardado" => $resultado]);
-      break;
+      break;   
   }
 }
 
@@ -61,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
       echo json_encode(["guardado" => $resultado]);
       break;
     case 'actualizarRol':
-      if (isset($datos['id_rol'])) {
+      if (isset($datos['idRol'])) {
         $updateData = [
             "idRol" => Herramientas::sanitizarEntrada($datos['idRol']),
             "rol" => Herramientas::sanitizarEntrada($datos['rol']),
@@ -74,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
       }
       break;
     case 'eliminarRol':
-      if (isset($datos['id_rol']) && isset($datos['iduser_inactive'])) {
+      if (isset($datos['idRol']) && isset($datos['idUsuario'])) {
         $inhabilitarData = [
             "idRol" => Herramientas::sanitizarEntrada($datos['idRol']),
             "idUsuario" => Herramientas::sanitizarEntrada($datos['idUsuario'])

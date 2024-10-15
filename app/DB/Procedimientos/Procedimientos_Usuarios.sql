@@ -21,22 +21,25 @@ WHERE
 
 DROP PROCEDURE IF EXISTS spu_usuarios_login$$
 CREATE PROCEDURE spu_usuarios_login(
-    p_nombre_user VARCHAR(100)
-)
-BEGIN
-    SELECT 
-        u.nombre_user,
-        u.id_usuario,
-        r.id_responsable AS id_usuario,
-        u.pass,
-        r.id_rol
-    FROM 
-        tb_usuarios u
-    JOIN 
-        tb_responsables r ON u.id_usuario = r.id_usuario
-    WHERE 
-        nombre_user = p_nombre_user AND u.inactive_at IS NULL;
-END $$
+        p_nombre_user VARCHAR(100)
+    )
+    BEGIN
+        SELECT 
+            u.nombre_user,
+            u.id_usuario,
+            r.id_responsable AS id_usuario,
+            u.pass,
+            r.id_rol,
+            ro.rol AS "Cargo"
+        FROM 
+            tb_usuarios u
+        JOIN 
+            tb_responsables r ON u.id_usuario = r.id_usuario
+        JOIN 
+            tb_roles ro ON r.id_rol = ro.id_rol
+        WHERE 
+            nombre_user = p_nombre_user AND u.inactive_at IS NULL;
+    END $$
 
 DROP PROCEDURE IF EXISTS spu_usuarios_registrar$$
 CREATE PROCEDURE spu_usuarios_registrar(

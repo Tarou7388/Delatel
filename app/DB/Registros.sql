@@ -163,11 +163,11 @@ INSERT INTO tb_usuarios (id_persona, nombre_user, pass, iduser_create) VALUES
 
 
 INSERT INTO tb_roles (rol, permisos, iduser_create) VALUES
-('Administrador', '{"soporte": {"crear": true, "leer": true, "actualizar": true, "eliminar": true}, "contratos": {"crear": true, "leer": true, "actualizar": true, "eliminar": true}, "inventariado": {"crear": true, "leer": true, "actualizar": true, "eliminar": true}, "personas": {"crear": true, "leer": true, "actualizar": true, "eliminar": true}, "roles": {"crear": true, "leer": true, "actualizar": true, "eliminar": true}}',1),
-('Tecnico Oficina', '{"soporte": {"crear": true, "leer": true, "actualizar": true, "eliminar": true}, "contratos": {}, "inventariado": {}, "personas": { "leer": true}, "roles": {}}',1),
-('Oficina', '{"soporte": { "leer": true}, "contratos": {"crear": true, "leer": true, "actualizar": true, "eliminar": true}, "inventariado": {}, "personas": {"crear": true, "leer": true, "actualizar": true, "eliminar": true}, "roles": {}}',1),
-('Tecnico Campo', '{"soporte": {"crear": true, "leer": true, "actualizar": true, "eliminar": true}, "contratos": { "leer": true}, "inventariado": {}, "personas": { "leer": true}, "roles": {}}',1),
-('Almacen - Tecnico', '{"soporte": {"crear": true, "leer": true, "actualizar": true, "eliminar": true}, "contratos": { "leer": true}, "inventariado": {"crear": true, "leer": true, "actualizar": true, "eliminar": true}, "personas": { "leer": true}, "roles": {}}',1);
+('Administrador', '{"actividades":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"soporte":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"contratos":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"inventariado":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"productos":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"personas":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"roles":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"usuarios":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"}}',1),
+('Tecnico Oficina', '{"actividades":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"soporte":[],"contratos":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"inventariado":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"productos":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"personas":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"roles":[],"usuarios":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"}}',1),
+('Oficina', '{"actividades":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"soporte":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"contratos":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"inventariado":[],"productos":[],"personas":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"roles":[],"usuarios":[]}',1),
+('Tecnico Campo', '{"actividades":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"soporte":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"contratos":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"inventariado":[],"productos":[],"personas":[],"roles":[],"usuarios":[]}',1),
+('Almacen - Tecnico', '{"actividades":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"soporte":[],"contratos":[],"inventariado":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"productos":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"personas":[],"roles":[],"usuarios":[]}',1);
 
 
 INSERT INTO tb_paquetes (id_servicio, precio, tipo_paquete, fecha_inicio, fecha_fin, iduser_create) VALUES
@@ -353,3 +353,4 @@ INSERT INTO tb_soporte (id_contrato, id_tipo_soporte, id_tecnico, fecha_hora_sol
 (3, 3, 3, '2024-03-21 09:30:00', '2024-03-21 10:00:00',"Daño X",null,'Alta', '{"parametros":{"base":"","ip":"","senal":""},"cambios":{"nuevaBase":"","nuevoIP":"","senal":""}}',1),
 (4, 1, 4, '2024-04-26 14:00:00', '2024-04-26 15:30:00',"Daño Y",null,'Baja', '{"parametros":{"base":"","ip":"","senal":""},"cambios":{"nuevaBase":"","nuevoIP":"","senal":""}}',1),
 (5, 2, 5, '2024-05-31 13:00:00', '2024-05-31 14:30:00',"Daño Z",null,'Media', '{"parametros":{"base":"","ip":"","senal":""},"cambios":{"nuevaBase":"","nuevoIP":"","senal":""}}',1);
+ 
