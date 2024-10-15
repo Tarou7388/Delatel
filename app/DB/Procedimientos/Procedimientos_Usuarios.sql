@@ -1,6 +1,5 @@
 USE Delatel;
 
-
 DELIMITER $$
 DROP VIEW IF EXISTS vw_usuarios_listar$$
 CREATE VIEW vw_usuarios_listar AS
@@ -83,24 +82,3 @@ BEGIN
     WHERE id_usuario = p_id_usuario;
 END $$
 
-DROP PROCEDURE IF EXISTS spu_responsables_registrar$$
-CREATE PROCEDURE spu_responsables_registrar (
-    IN p_id_usuario INT,
-    IN p_id_rol INT,
-    IN p_fecha_inicio DATETIME,
-    IN p_iduser_create INT
-)
-BEGIN
-    INSERT INTO tb_responsables (
-        id_usuario, 
-        id_rol, 
-        fecha_inicio, 
-        iduser_create
-    )
-    VALUES (
-        p_id_usuario, 
-        p_id_rol, 
-        p_fecha_inicio, 
-        p_iduser_create
-    );
-END $$

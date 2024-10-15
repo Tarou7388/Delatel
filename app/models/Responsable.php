@@ -21,4 +21,28 @@ class Responsable extends Conexion
     );
     return $this->registrar($sql, $values);
   }
+
+  public function actualizarResponsable($params = [])
+  {
+    $sql = "CALL spu_responsables_actualizar(?,?,?,?)";
+    $values = array(
+      $params['idUsuario'],
+      $params['idRol'],
+      $params['FechaInicio'],
+      $params['idUsuarioCreador']
+    );
+    return $this->registrar($sql, $values);
+  }
+
+  public function eliminarResponsable($params = [])
+  {
+    $sql = "CALL spu_responsables_eliminar(?,?,?,?)";
+    $values = array(
+      $params['idUsuario'],
+      $params['idRol'],
+      $params['idUsuarioEliminador'],
+      $params['idUsuarioEliminador']
+    );
+    return $this->registrar($sql, $values);
+  }
 }
