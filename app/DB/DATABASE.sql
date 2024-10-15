@@ -229,6 +229,7 @@ CREATE TABLE tb_soporte (
     id_tecnico INT NOT NULL,
     fecha_hora_solicitud DATETIME NOT NULL,
     fecha_hora_asistencia DATETIME NOT NULL,
+    ficha_instalacion JSON NULL,
     descripcion_problema TEXT NOT NULL,
     descripcion_solucion TEXT NULL,
     prioridad VARCHAR(50) NOT NULL,
