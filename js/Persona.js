@@ -79,9 +79,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   async function registrarPersona() {
-    // if (permisos[0].permisos.personas.crear == 1) {
-
-    // }
     const params = new FormData();
     params.append("operacion", "registrarPersona");
     params.append("tipoDoc", slcTipoDocumento.value);
@@ -134,11 +131,13 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     const data = await response.json();
     if (data.guardado) {
-      await showToast("Persona registrada correctamente", "SUCCESS");
-      frmPersonas.reset();
-      if (await ask("¿Desea registrar un contrato?")) {
-        window.location.href = `${config.HOST}views/Contratos/?dni=${dniActual}&idPersona=${idPersona}`;
-      }
+      await showToast("Persona registrada correctamente", "SUCCESS", 650);
+      setTimeout(async () => {
+        frmPersonas.reset();
+        if (await ask("¿Desea registrar un contrato?")) {
+          window.location.href = `${config.HOST}views/Contratos/?dni=${dniActual}&idPersona=${idPersona}`;
+        }
+      }, 650);
     }
   }
 
@@ -198,11 +197,7 @@ document.addEventListener("DOMContentLoaded", function () {
     await cargarPaquetes();
   })();
 
-  $(".select2me").select2({
-    theme: "bootstrap-5",
-    placeholder: "Seleccione Servicio",
-    allowClear: true,
-  });
+  $(".select2me").select2({theme: "bootstrap-5", placeholder: "Seleccione Servicio", allowClear: true});
   $('.select2me').parent('div').children('span').children('span').children('span').css('height', ' calc(3.5rem + 2px)');
   $('.select2me').parent('div').children('span').children('span').children('span').children('span').css('margin-top', '18px');
   $('.select2me').parent('div').find('label').css('z-index', '1');

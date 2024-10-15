@@ -11,6 +11,8 @@
       <form action="" class="formularioRegistrarContrato">
         <div class="row">
 
+          <span class="text-end invisible" id="infoFecha">a</span>
+
           <div class="col-md-3">
             <div class="input-group">
               <div class="form-floating">
@@ -37,8 +39,8 @@
 
           <div class="col-md-3">
             <div class="form-floating">
-              <input type="date" class="form-control" id="txtFechaFin" name="fechaFin" required>
-              <label for="txtFechaFin" class="form-label">Fecha de fin</label>
+              <input type="number" class="form-control" id="txtFechaFin" name="fechaFin" max=24 min=3 required>
+              <label for="txtFechaFin" class="form-label">Fecha de fin (Meses)</label>
             </div>
           </div>
 

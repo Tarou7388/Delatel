@@ -3,7 +3,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const dni = document.querySelector("#txtDni");
   const nombre = document.querySelector("#txtNombre");
   const fechaInicio = document.querySelector("#txtFechaInicio");
-  const fechaFin = document.querySelector("#txtFechaFin");
+  const txtfechaFin = document.querySelector("#txtFechaFin");
   const precio = document.querySelector("#txtPrecio");
   const direccion = document.querySelector("#txtDireccion");
   const sector = document.querySelector("#slcSector");
@@ -12,6 +12,8 @@ window.addEventListener("DOMContentLoaded", () => {
   const slcSector = document.querySelector("#slcSector");
   const slcServicio = document.querySelector("#slcServicio");
 
+
+  let fechaFin = null;
   let precioServicio = 0;
   let idCliente = 0;
   let idServicio = 0;
@@ -52,7 +54,7 @@ window.addEventListener("DOMContentLoaded", () => {
       if (data[0].id_cliente == null) {
         idPersona = data[0].id_persona;
         nombre.value = data[0].nombres;
-      }else{
+      } else {
         const response = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${dni}`);
         const data = await response.json();
         nombre.value = data[0].nombre;
@@ -90,7 +92,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const nota = "";
     const idUsuarioRegistro = user.idRol;
 
-    if (!validarFechas() || !(await validarCampos())) {
+    if (!(await validarCampos())) {
       showToast("¡Complete los campos!", "INFO");
     } else {
       try {
@@ -107,7 +109,7 @@ window.addEventListener("DOMContentLoaded", () => {
               referencia: referencia.value,
               coordenada: coordenada.value,
               fechaInicio: fechaInicio.value,
-              fechaFin: fechaFin.value,
+              fechaFin: fechaFin,
               fechaRegistro: fechaRegistro,
               nota: nota,
               idUsuario: user.idUsuario,
@@ -241,14 +243,14 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   async function validarCampos() {
-    return !(dni.value === "" || nombre.value === "" || fechaInicio.value === "" || fechaFin.value === "" || precio.value === "" || direccion.value === "" || sector.value === "" || referencia.value === "" || coordenada.value === "" || slcSector.value === "0" || slcServicio.value === "0");
+    return !(dni.value === "" || nombre.value === "" || fechaInicio.value === "" || txtfechaFin.value === "" || precio.value === "" || direccion.value === "" || sector.value === "" || referencia.value === "" || coordenada.value === "" || slcSector.value === "0" || slcServicio.value === "0");
   }
 
   async function resetUI() {
     dni.value = "";
     nombre.value = "";
     fechaInicio.value = "";
-    fechaFin.value = "";
+    txtfechaFin.value = "";
     precio.value = "";
     direccion.value = "";
     sector.value = "";
@@ -256,10 +258,6 @@ window.addEventListener("DOMContentLoaded", () => {
     coordenada.value = "";
     slcSector.value = "0";
     slcServicio.value = "0";
-  }
-
-  function validarFechas() {
-    return fechaInicio.value <= fechaFin.value;
   }
 
   (async () => {
@@ -280,6 +278,30 @@ window.addEventListener("DOMContentLoaded", () => {
   document.querySelector("#btnBuscar").addEventListener("click", async (event) => {
     event.preventDefault();
     await buscarCliente(dni.value);
+  });
+
+  document.querySelector('#txtFechaFin').addEventListener('input', () => {
+    const span = document.querySelector('#infoFecha');
+    const fechaInicioValue = document.querySelector('#txtFechaInicio').value;
+    const txtFechaFinValue = document.querySelector('#txtFechaFin').value;
+  
+    if (fechaInicioValue && txtFechaFinValue >= 3) {
+      const dateFechaInicio = new Date(fechaInicioValue);
+      const meses = parseInt(txtFechaFinValue, 10);
+  
+      // Sumar los meses a la fecha de inicio
+      dateFechaInicio.setMonth(dateFechaInicio.getMonth() + meses);
+  
+      // Formatear la nueva fecha
+      const opciones = { year: 'numeric', month: '2-digit', day: '2-digit' };
+      fechaFin = dateFechaInicio.toLocaleDateString('es-ES', opciones);
+  
+      span.textContent = `La fecha de fin es: ${fechaFin}`;
+      span.classList.remove('invisible');
+    } else {
+      span.textContent = "La fecha de fin debe ser mayor a 3 meses";
+      span.classList.remove('invisible');
+    }
   });
 
   $("#slcServicio").on("select2:select", function () {
