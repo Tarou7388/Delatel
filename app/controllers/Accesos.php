@@ -33,61 +33,19 @@ function obtenerAccesosFiltrados($idRol, $permissions)
 {
     // Definir accesos basados en permisos
     $accesosV2 = [
-        1 => [
-            ["ruta" => "views", "texto" => "Actividades", "icono" => "fa-solid fa-chart-line"],
-            ["ruta" => "Contratos", "texto" => "Contratos", "icono" => "fa-solid fa-file-contract"],
-            ["ruta" => "Inventariado", "texto" => "Inventariado", "icono" => "fa-solid fa-warehouse"],
-            ["ruta" => "Personas", "texto" => "Personas", "icono" => "fa-solid fa-user"],
-            ["ruta" => "Productos", "texto" => "Productos", "icono" => "fa-solid fa-boxes-stacked"],
-            ["ruta" => "Roles", "texto" => "Roles", "icono" => "fa-regular fa-address-card"],
-            ["ruta" => "Soporte", "texto" => "Soporte", "icono" => "fa-solid fa-wrench"],
-            ["ruta" => 'Usuarios', "texto" => "Usuarios", "icono" => "fa-solid fa-users"]
-        ],
-        2 => [
-            ["ruta" => "views", "texto" => "Actividades", "icono" => "fa-solid fa-chart-line"],
-            ["ruta" => "Contratos", "texto" => "Contratos", "icono" => "fa-solid fa-file-contract"],
-            ["ruta" => "Inventariado", "texto" => "Inventariado", "icono" => "fa-solid fa-warehouse"],
-            ["ruta" => "Personas", "texto" => "Personas", "icono" => "fa-solid fa-user"],
-            ["ruta" => "Productos", "texto" => "Productos", "icono" => "fa-solid fa-boxes-stacked"],
-            ["ruta" => "Roles", "texto" => "Roles", "icono" => "fa-regular fa-address-card"],
-            ["ruta" => "Soporte", "texto" => "Soporte", "icono" => "fa-solid fa-wrench"],
-            ["ruta" => "Usuarios", "texto" => "Usuarios", "icono" => "fa-solid fa-users"]
-        ],
-        3 => [
-            ["ruta" => "views", "texto" => "Actividades", "icono" => "fa-solid fa-chart-line"],
-            ["ruta" => "Contratos", "texto" => "Contratos", "icono" => "fa-solid fa-file-contract"],
-            ["ruta" => "Inventariado", "texto" => "Inventariado", "icono" => "fa-solid fa-warehouse"],
-            ["ruta" => "Personas", "texto" => "Personas", "icono" => "fa-solid fa-user"],
-            ["ruta" => "Productos", "texto" => "Productos", "icono" => "fa-solid fa-boxes-stacked"],
-            ["ruta" => "Roles", "texto" => "Roles", "icono" => "fa-regular fa-address-card"],
-            ["ruta" => "Soporte", "texto" => "Soporte", "icono" => "fa-solid fa-wrench"],
-            ["ruta" => "Usuarios", "texto" => "Usuarios", "icono" => "fa-solid fa-users"]
-        ],
-        4 => [
-            ["ruta" => "views", "texto" => "Actividades", "icono" => "fa-solid fa-chart-line"],
-            ["ruta" => "Contratos", "texto" => "Contratos", "icono" => "fa-solid fa-file-contract"],
-            ["ruta" => "Inventariado", "texto" => "Inventariado", "icono" => "fa-solid fa-warehouse"],
-            ["ruta" => "Personas", "texto" => "Personas", "icono" => "fa-solid fa-user"],
-            ["ruta" => "Productos", "texto" => "Productos", "icono" => "fa-solid fa-boxes-stacked"],
-            ["ruta" => "Roles", "texto" => "Roles", "icono" => "fa-regular fa-address-card"],
-            ["ruta" => "Soporte", "texto" => "Soporte", "icono" => "fa-solid fa-wrench"],
-            ["ruta" => "Usuarios", "texto" => "Usuarios", "icono" => "fa-solid fa-users"]
-        ],
-        5 => [
-            ["ruta" => "views", "texto" => "Actividades", "icono" => "fa-solid fa-chart-line"],
-            ["ruta" => "Contratos", "texto" => "Contratos", "icono" => "fa-solid fa-file-contract"],
-            ["ruta" => "Inventariado", "texto" => "Inventariado", "icono" => "fa-solid fa-warehouse"],
-            ["ruta" => "Personas", "texto" => "Personas", "icono" => "fa-solid fa-user"],
-            ["ruta" => "Productos", "texto" => "Productos", "icono" => "fa-solid fa-boxes-stacked"],
-            ["ruta" => "Roles", "texto" => "Roles", "icono" => "fa-regular fa-address-card"],
-            ["ruta" => "Soporte", "texto" => "Soporte", "icono" => "fa-solid fa-wrench"],
-            ["ruta" => "Usuarios", "texto" => "Usuarios", "icono" => "fa-solid fa-users"]
-        ],
+        ["ruta" => "views", "texto" => "Actividades", "icono" => "fa-solid fa-chart-line"],
+        ["ruta" => "Contratos", "texto" => "Contratos", "icono" => "fa-solid fa-file-contract"],
+        ["ruta" => "Inventariado", "texto" => "Inventariado", "icono" => "fa-solid fa-warehouse"],
+        ["ruta" => "Personas", "texto" => "Personas", "icono" => "fa-solid fa-user"],
+        ["ruta" => "Productos", "texto" => "Productos", "icono" => "fa-solid fa-boxes-stacked"],
+        ["ruta" => "Roles", "texto" => "Roles", "icono" => "fa-regular fa-address-card"],
+        ["ruta" => "Soporte", "texto" => "Soporte", "icono" => "fa-solid fa-wrench"],
+        ["ruta" => 'Usuarios', "texto" => "Usuarios", "icono" => "fa-solid fa-users"]
     ];
 
     // Filtrar accesos basados en permisos
     $accesosFiltrados = [];
-    foreach ($accesosV2[$idRol] as $acceso) {
+    foreach ($accesosV2 as $acceso) {
         $modulo = strtolower($acceso['texto']);
         if (isset($permissions[$modulo]) && isset($permissions[$modulo]['leer']) && $permissions[$modulo]['leer']) {
             $accesosFiltrados[] = $acceso;
