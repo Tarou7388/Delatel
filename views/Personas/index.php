@@ -90,8 +90,8 @@
 					</div>
 					<div class="mb-3">
 						<div class="form-floating">
-							<input type="text" class="form-control" id="txteditApellidosPersona" placeholder="Apellidos">
-							<label for="txteditApellidosPersona" class="form-label">Apellidos</label>
+							<inputxtDirecciont type="text" class="form-control" id="txteditApellidosPersona" placeholder="Apellidos">
+								<label for="txteditApellidosPersona" class="form-label">Apellidos</label>
 						</div>
 					</div>
 					<div class="mb-3">
@@ -178,13 +178,21 @@
 					</div>
 				</div>
 				<div class="row mb-3">
-					<div class="col-md-6">
+					<div class="col-md 3">
+						<div class="form-floating">
+							<select class="form-select select2 select2me" id="slcServicioEmpresa" aria-label="Servicios">
+								<option value="0" disabled selected>Seleciona</option>
+							</select>
+							<label for="slcServicio">Servicios</label>
+						</div>
+					</div>
+					<div class="col-md-3">
 						<div class="form-floating">
 							<input type="text" class="form-control" id="txtTelefono" name="telefono" maxlength="9" placeholder="Teléfono" required>
 							<label for="txtTelefono">Teléfono</label>
 						</div>
 					</div>
-					<div class="col-md-6">
+					<div class="col-md-3">
 						<div class="form-floating">
 							<input type="email" class="form-control" id="txtEmail" name="email" placeholder="Email" required>
 							<label for="txtEmail">Email</label>

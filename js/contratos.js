@@ -12,7 +12,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const slcSector = document.querySelector("#slcSector");
   const slcServicio = document.querySelector("#slcServicio");
 
-
+  
   let fechaFin = null;
   let precioServicio = 0;
   let idCliente = 0;
@@ -272,7 +272,7 @@ window.addEventListener("DOMContentLoaded", () => {
       console.log("Hola");
       await registrarCliente();
     }
-    //await registrarContrato();
+    await registrarContrato();
   });
 
   document.querySelector("#btnBuscar").addEventListener("click", async (event) => {
@@ -288,11 +288,9 @@ window.addEventListener("DOMContentLoaded", () => {
     if (fechaInicioValue && txtFechaFinValue >= 3) {
       const dateFechaInicio = new Date(fechaInicioValue);
       const meses = parseInt(txtFechaFinValue, 10);
-  
-      // Sumar los meses a la fecha de inicio
+
       dateFechaInicio.setMonth(dateFechaInicio.getMonth() + meses);
-  
-      // Formatear la nueva fecha
+
       const opciones = { year: 'numeric', month: '2-digit', day: '2-digit' };
       fechaFin = dateFechaInicio.toLocaleDateString('es-ES', opciones);
   

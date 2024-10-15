@@ -27,9 +27,10 @@ class Contactabilidad extends Conexion
    */
   public function registrarContacto($params)
   {
-    $sql = "CALL spu_contactabilidad_registrar(?, ?, ?, ?, ?, ?)";
+    $sql = "CALL spu_contactabilidad_registrar(?, ?, ?, ?, ?, ?, ?)";
     $values = array(
       $params['idPersona'],
+      $params['idEmpresa'],
       $params['idPaquete'],
       $params['direccion'],
       $params['nota'],

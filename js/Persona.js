@@ -119,6 +119,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const datos = {
       operacion: "registrarContacto",
       idPersona: idPersona,
+      idEmpresa: '',
       idPaquete: Paquete,
       direccion: txtDireccion.value,
       nota: "Para llamar",
