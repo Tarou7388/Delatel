@@ -13,13 +13,13 @@ window.addEventListener("DOMContentLoaded", () => {
   const slcSector = document.querySelector("#slcSector");
   const slcServicio = document.querySelector("#slcServicio");
 
-  
+
   let fechaFin = null;
   let precioServicio = 0;
   let idCliente = null;
   let idServicio = 0;
-  let idPersona = null;
-  let idEmpresa = null;
+  let idPersona = '';
+  let idEmpresa = '';
 
   async function getQueryParams() {
     const queryString = window.location.search;
@@ -51,27 +51,32 @@ window.addEventListener("DOMContentLoaded", () => {
     if (nroDoc == "") {
       showToast("¡Ingrese numero de documento!", "INFO");
     } else {
-      const response = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteExistensia&nroDoc=${nroDoc}`);
+      const response = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteExistencia&nroDoc=${nroDoc}`);
       const data = await response.json();
-      if (data[0].id_cliente == null) {
-        if(!data[0].id_empresa){
-          idPersona = data.id_persona;
-          idCliente = data.id_empresa;
-        }else if(!data[0].id_persona){
-          idCliente = null;
-          idObjeto = data[0].id_persona;
-        }
-        nombre.value = data[0].nombres;
+      console.log(data);
+      if (data == []) {
+        showToast("No existe la persona", "WARNING");
       } else {
-        const response = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${nroDoc}`);
-        const data = await response.json();
-        nombre.value = data[0].nombre;
-        direccion.value = data[0].direccion;
-        coordenada.value = data[0].coordenada;
-        referencia.value = data[0].referencia;
-        
-        idObjeto = null;
-        idCliente = data[0].id_cliente;
+        if (data[0].id_cliente == null) {
+          if (!data[0].id_empresa) {
+            idPersona = data[0].id_persona;
+            idEmpresa = '';
+          } else if (!data[0].id_persona) {
+            idPersona = '';
+            idEmpresa = data[0].id_empresa;
+          }
+          nombre.value = data[0].nombres;
+        } else {
+          const response = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${nroDoc}`);
+          const data2 = await response.json();
+          nombre.value = data2[0].nombre;
+          direccion.value = data2[0].direccion;
+          coordenada.value = data2[0].coordenada;
+          referencia.value = data2[0].referencia;
+          idPersona = '';
+          idEmpresa = '';
+          idCliente = data2[0].id_cliente;
+        }
       }
     }
   }
@@ -80,11 +85,15 @@ window.addEventListener("DOMContentLoaded", () => {
     const params = new FormData();
     params.append("operacion", "registrarCliente");
     params.append("idPersona", idPersona);
-    params.append("idEmpresa", '');
+    params.append("idEmpresa", idEmpresa);
     params.append("direccion", direccion.value);
     params.append("referencia", referencia.value);
     params.append("idUsuario", user.idUsuario);
     params.append("coordenadas", coordenada.value);
+
+    for (var pair of params.entries()) {
+      console.log(pair[0] + ", " + pair[1]);
+    }
 
     const response = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php`, {
       method: "POST",
@@ -93,7 +102,6 @@ window.addEventListener("DOMContentLoaded", () => {
     const data = await response.json();
     console.log(data);
     idCliente = data[0].id_cliente;
-    registrarContrato();
   }
 
   async function registrarContrato() {
@@ -113,7 +121,6 @@ window.addEventListener("DOMContentLoaded", () => {
               idCliente: idCliente,
               idTarifario: idServicio,
               idSector: sector.value,
-              idUsuarioRegistro: idUsuarioRegistro,
               direccion: direccion.value,
               referencia: referencia.value,
               coordenada: coordenada.value,
@@ -128,15 +135,17 @@ window.addEventListener("DOMContentLoaded", () => {
             "Content-Type": "application/json",
           },
         });
-        const result = await response.json();
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+        const data = await response.json();
+        console.log(data);
+        if (data.error) {
+          console.log(data.error);
         } else {
           showToast("¡Contrato registrado correctamente!", "SUCCESS");
+          nroDoc.disabled = false;
           resetUI();
         }
       } catch (error) {
-        console.error(error);  // Añade este log para depurar el error
+        console.log(error);  // Añade este log para depurar el error
         showToast("Ocurrió un error al registrar el contrato. Por favor, inténtelo de nuevo.", "ERROR");
       }
     }
@@ -277,8 +286,7 @@ window.addEventListener("DOMContentLoaded", () => {
   document.querySelector("#btnRegistrar").addEventListener("click", async (event) => {
     event.preventDefault();
     console.log(idPersona);
-    if (idPersona > 0) {
-      console.log("Hola");
+    if (idCliente == null) {
       await registrarCliente();
     }
     await registrarContrato();
@@ -293,7 +301,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const span = document.querySelector('#infoFecha');
     const fechaInicioValue = document.querySelector('#txtFechaInicio').value;
     const txtFechaFinValue = document.querySelector('#txtFechaFin').value;
-  
+
     if (fechaInicioValue && txtFechaFinValue >= 3) {
       const dateFechaInicio = new Date(fechaInicioValue);
       const meses = parseInt(txtFechaFinValue, 10);
@@ -302,9 +310,11 @@ window.addEventListener("DOMContentLoaded", () => {
 
       const opciones = { year: 'numeric', month: '2-digit', day: '2-digit' };
       fechaFin = dateFechaInicio.toLocaleDateString('es-ES', opciones);
-  
+
       span.textContent = `La fecha de fin es: ${fechaFin}`;
       span.classList.remove('invisible');
+      const partesFecha = fechaFin.split('/');
+      fechaFin = `${partesFecha[2]}-${partesFecha[1]}-${partesFecha[0]}`;
     } else {
       span.textContent = "La fecha de fin debe ser mayor a 3 meses";
       span.classList.remove('invisible');

@@ -37,7 +37,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         "idCliente"           => Herramientas::sanitizarEntrada($datos['parametros']['idCliente']),
         "idTarifario"         => Herramientas::sanitizarEntrada($datos['parametros']['idTarifario']),
         "idSector"            => Herramientas::sanitizarEntrada($datos['parametros']['idSector']),
-        "idUsuarioRegistro"   => Herramientas::sanitizarEntrada($datos['parametros']['idUsuarioRegistro']),
         "direccion"           => Herramientas::sanitizarEntrada($datos['parametros']['direccion']),
         "referencia"          => Herramientas::sanitizarEntrada($datos['parametros']['referencia']),
         "coordenada"          => Herramientas::sanitizarEntrada($datos['parametros']['coordenada']),

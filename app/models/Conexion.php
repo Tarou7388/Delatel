@@ -76,25 +76,29 @@ class Conexion
         case 23000:
           return ['error' => [
             'message' => 'Duplicado',
-            'code' => $e->getCode()
+            'code' => $e->getCode(),
+            'mensaje' => $e->getMessage()
           ]];
           break;
         case 22007:
           return ['error' => [
             'message' => 'Formato incorrecto',
-            'code' => $e->getCode()
+            'code' => $e->getCode(),
+            'mensaje' => $e->getMessage()
           ]];
           break;
         case 22001:
           return ['error' => [
             'message' => 'Largo',
-            'code' => $e->getCode()
+            'code' => $e->getCode(),
+            'mensaje' => $e->getMessage()
           ]];
           break;
         case 42000:
           return ['error' => [
             'message' => 'Sintaxis',
-            'code' => $e->getCode()
+            'code' => $e->getCode(),
+            'mensaje' => $e->getMessage()
           ]];
           break;
         default:
@@ -145,25 +149,29 @@ class Conexion
         case 23000:
           return ['error' => [
             'message' => 'Duplicado',
-            'code' => $e->getCode()
+            'code' => $e->getCode(),
+            'mensaje' => $e->getMessage()
           ]];
           break;
         case 22007:
           return ['error' => [
             'message' => 'Formato incorrecto',
-            'code' => $e->getCode()
+            'code' => $e->getCode(),
+            'mensaje' => $e->getMessage()
           ]];
           break;
         case 22001:
           return ['error' => [
             'message' => 'Largo',
-            'code' => $e->getCode()
+            'code' => $e->getCode(),
+            'mensaje' => $e->getMessage()
           ]];
           break;
         case 42000:
           return ['error' => [
             'message' => 'Sintaxis',
-            'code' => $e->getCode()
+            'code' => $e->getCode(),
+            'mensaje' => $e->getMessage()
           ]];
           break;
         default:

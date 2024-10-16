@@ -51,11 +51,11 @@ if (isset($_POST['operacion'])) {
     case 'registrarCliente':
       $idPersona = null;
       $idEmpresa = null;
-      if(isset($_POST['idEmpresa']) && $_POST['idEmpresa'] !== ''){
+      if(isset($_POST['idEmpresa']) && $_POST['idEmpresa'] != ''){
         $idEmpresa = $_POST['idEmpresa'];
         $idPersona = null;
       }
-      if(isset($_POST['idPersona']) && $_POST['idPersona'] !== ''){
+      if(isset($_POST['idPersona']) && $_POST['idPersona'] != ''){
         $idPersona = $_POST['idPersona'];
         $idEmpresa = null;
       }
