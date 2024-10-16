@@ -185,7 +185,12 @@ BEGIN
         p.tipo_paquete, 
         s.sector, 
         sv.servicio,
-        c.id_usuario_registro
+        c.id_usuario_registro,
+        c.referencia,
+        c.fecha_inicio,
+        c.fecha_fin,
+        c.nota,
+        c.direccion_servicio
     FROM 
         tb_contratos c
     JOIN 

@@ -12,6 +12,7 @@
 		</div>
 		<div class="card-body">
 
+
 			<form id="registerForm" action="" method="POST">
 				<div class="row mb-3">
 					<div class="col-md-4">
@@ -25,7 +26,7 @@
 							</button>
 						</div>
 					</div>
-					<div class="col-md-4 mt-2">
+					<div class="col-md-4">
 						<div class="form-floating">
 							<select id="slcNacionalidad" name="nacionalidad" class="form-select" disabled>
 								<option value="" disabled selected>Seleccione Nacionalidad</option>
@@ -33,7 +34,7 @@
 							<label for="slcNacionalidad">Nacionalidad</label>
 						</div>
 					</div>
-					<div class="col-md-4 mt-2">
+					<div class="col-md-4">
 						<div class="form-floating">
 							<select id="slcDocumento" name="documento" class="form-select" disabled>
 								<option value="" disabled selected>Seleccione Documento</option>
@@ -53,13 +54,13 @@
 							<label for="txtNombre">Nombres</label>
 						</div>
 					</div>
-					<div class="col-md-4 mt-2">
+					<div class="col-md-4">
 						<div class="form-floating">
 							<input type="text" id="txtApe" name="apellidos" class="form-control" placeholder="Apellidos" disabled>
 							<label for="txtApe">Apellidos</label>
 						</div>
 					</div>
-					<div class="col-md-4 mt-2">
+					<div class="col-md-4">
 						<div class="form-floating">
 							<input type="text" id="txtTelefono" name="txtTelefono" placeholder="Teléfono" class="form-control" maxlength="9" minlength="9" required disabled>
 							<label for="txtTelefono">Teléfono</label>
@@ -67,14 +68,14 @@
 					</div>
 				</div>
 
-				<div class="row mb-3 mt-2">
+				<div class="row mb-3">
 					<div class="col-md-6">
 						<div class="form-floating">
 							<input type="text" id="txtUsuario" name="usuario" class="form-control" placeholder="Nombre de Usuario" required>
 							<label for="txtUsuario">Nombre de Usuario</label>
 						</div>
 					</div>
-					<div class="col-md-6 mt-2">
+					<div class="col-md-6">
 						<div class="form-floating">
 							<select id="slcRol" name="rol" class="form-select" required>
 								<option value="" disabled selected>Seleccione un rol</option>
@@ -84,17 +85,26 @@
 					</div>
 				</div>
 
-				<div class="row mb-3 mt-2">
+				<div class="row mb-3">
 					<div class="col-md-6">
 						<div class="form-floating">
 							<input type="email" id="txtEmail" name="email" class="form-control" placeholder="Correo Electrónico" required disabled>
 							<label for="txtEmail">Correo Electrónico</label>
 						</div>
 					</div>
-					<div class="col-md-6 mt-2">
+					<div class="col-md-6">
 						<div class="form-floating">
-							<input type="text" id="txtContrasenia" name="contrasena" class="form-control" placeholder="Contraseña" required>
+							<input type="password" id="txtContrasenia" name="contrasena" class="form-control" placeholder="Contraseña" required>
 							<label for="txtContrasenia">Contraseña</label>
+						</div>
+						<div id="ulRequisitos" hidden>
+							<ul>
+								<li>Requisito 8 caracteres mínimo</li>
+								<li>Al menos 1 número</li>
+								<li>Al menos 1 letra minúscula</li>
+								<li>Al menos 1 carácter especial</li>
+								<li>Al menos 1 letra mayúscula</li>
+							</ul>
 						</div>
 					</div>
 				</div>
@@ -104,6 +114,8 @@
 					<a href="index.php" class="btn btn-secondary">Cancelar</a>
 				</div>
 			</form>
+
+
 		</div>
 	</div>
 </div>

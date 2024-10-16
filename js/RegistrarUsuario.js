@@ -64,6 +64,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+  async function VerificarUserN(objectName) {
+    
+  }
+
   async function BuscarPersonaAPI(operacion, dni) {
     try {
       const respuesta = await fetch(
@@ -86,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function () {
       console.error("Error en BuscarPersonaAPI:", error);
       return null;
     }
-  }
+  };
 
   async function RegistrarPersona(dni) {
     try {
@@ -118,7 +122,7 @@ document.addEventListener("DOMContentLoaded", function () {
       console.error("Error al registrar persona:", error);
       return null;
     }
-  }
+  };
 
   async function RegistrarUsuario(idPersona) {
     try {
@@ -136,7 +140,6 @@ document.addEventListener("DOMContentLoaded", function () {
           body: formData,
         }
       );
-
       const data = await respuesta.json();
       //console.log(data.id_usuario);
       if (data) {
@@ -149,9 +152,7 @@ document.addEventListener("DOMContentLoaded", function () {
     } catch (error) {
       showToast("Error al registrar usuario:" + error, "ERROR");
     }
-
-
-  }
+  };
 
   async function registrarResponsable(idUsuarioR) {
     const formData = new FormData();
@@ -174,8 +175,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (data.guardado == false) {
       showToast("Error en asignar Rol", "ERROR");
     }
-
-  }
+  };
 
   $("registerForm").addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -198,15 +198,11 @@ document.addEventListener("DOMContentLoaded", function () {
       idPersonaEncontrada = idNuevaPersona;
     }
 
-
     const usuarioregistrado = await RegistrarUsuario(idPersonaEncontrada);
     console.log(usuarioregistrado);
 
     await registrarResponsable(usuarioregistrado);
-
-
   });
-
 
   const configurarSelectsDocumento = () => {
     const slcNacionalidad = $("slcNacionalidad");
@@ -273,12 +269,35 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   };
 
+  function verificarReqs() {
+    const pass = $("txtContrasenia").value;
 
+    const reqsCumplidos = [
+      pass.length >= 8,
+      /[0-9]/.test(pass),
+      /[a-z]/.test(pass),
+      /[!@#$%^&*(),.?":{}|<>]/.test(pass),
+      /[A-Z]/.test(pass)
+    ];
+
+    reqsCumplidos.forEach((cumplido, index) => {
+      reqs[index].style.color = cumplido ? "green" : "red";
+    });
+  };
 
   (async function iniciarAplicacion() {
     await obtenerRoles();
     configurarSelectsDocumento();
   })();
 
+  const reqs = $("ulRequisitos").getElementsByTagName("li");
+
+  $("txtContrasenia").addEventListener("focus", () => { $("ulRequisitos").hidden = false; verificarReqs() });
+  $("txtContrasenia").addEventListener("input", verificarReqs);
+  $("txtContrasenia").addEventListener("blur", () => $("ulRequisitos").hidden = true);
+
+
+
+  //txtUsuario --> Esto sera usado para luego hacer saltar alerta para el problema
 
 });

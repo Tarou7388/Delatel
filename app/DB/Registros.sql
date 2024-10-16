@@ -334,19 +334,27 @@ INSERT INTO tb_clientes (id_persona, id_empresa, direccion, referencia, iduser_c
 (24, NULL, 'Calle de la Creatividad 567, Santiago', 'Cerca del centro cultural', 1, '-1'),
 (25, NULL, 'Calle de los Recuerdos 890, Madrid', 'A una cuadra del teatro', 1, '-1');
 
-INSERT INTO tb_contratos (id_cliente, id_paquete, id_sector, id_usuario_registro, id_usuario_tecnico, direccion_servicio, referencia, coordenada, fecha_inicio, fecha_fin, fecha_registro, nota) VALUES 
-(1, 1, 1, 1, NULL, 'Av. Siempre Viva 123, Springfield', 'Cerca de la plaza principal', '12.3456, -65.4321', '2024-01-15', '2024-06-15', '2024-01-01', 'Primer contrato con cliente nuevo'),
-(2, 3, 2, 1, NULL, 'Calle Falsa 456, Gotham', 'Cerca del cine local', '34.5678, -76.5432', '2024-02-01', '2024-07-01', '2024-02-01', 'Instalación programada'),
-(2, 4, 2, 1, NULL, 'Calle Falsa 456, Gotham', 'Cerca del cine local', '34.5678, -76.5432', '2024-02-01', '2024-07-01', '2024-02-01', 'Instalación programada'),
-(2, 1, 2, 1, NULL, 'Calle Falsa 456, Gotham', 'Cerca del cine local', '34.5678, -76.5432', '2024-02-01', '2024-07-01', '2024-02-01', 'Instalación programada'),
-(3, 3, 3, 1, NULL, 'Av. Los Pinos 789, Lima', 'Esquina con Av. Las Flores', '23.4567, -54.3210', '2024-03-01', '2024-08-01', '2024-03-01', 'Revisión mensual incluida'),
-(4, 4, 4, 1, NULL, 'Jirón de la Unión 100, Lima', 'Frente a la Plaza Mayor', '45.6789, -43.2109', '2024-04-01', '2024-09-01', '2024-04-01', 'Descuento aplicado por contrato anual'),
-(5, 5, 5, 1, NULL, 'Calle Mayor 101, Barcelona', 'Cerca del mercado central', '56.7890, -32.1098', '2024-05-01', '2024-10-01', '2024-05-01', 'Contrato especial por volumen'),
-(6, 1, 2, 1, NULL, 'Av. del Libertador 200, Buenos Aires', 'A la vuelta de la oficina', '12.0011, -66.1122', '2024-06-01', '2024-11-01', '2024-06-01', 'Servicio premium incluido'),
-(7, 2, 3, 1, NULL, 'Calle de la Alegría 333, Bogotá', 'Cerca de la estación de buses', '34.3333, -76.6666', '2024-07-01', '2024-12-01', '2024-07-01', 'Soporte técnico 24/7'),
-(8, 3, 4, 1, NULL, 'Paseo del Prado 150, Madrid', 'Cerca del parque del Retiro', '23.8888, -54.7777', '2024-08-01', '2024-09-01', '2024-08-01', 'Incluye mantenimiento semestral'),
-(9, 4, 5, 1, NULL, 'Av. de la Paz 400, Santiago', 'Frente al hotel Plaza', '45.2222, -43.8888', '2024-09-01', '2024-12-01', '2024-09-01', 'Promoción de verano'),
-(10, 5, 1, 1, NULL, 'Calle del Comercio 789, Lima', 'Cerca de la Plaza San Martín', '56.4444, -32.5555', '2024-10-01', '2025-03-01', '2024-10-01', 'Condiciones especiales aplicables');
+INSERT INTO tb_contratos (id_cliente, id_paquete, id_sector, id_usuario_registro, id_usuario_tecnico, direccion_servicio, referencia, coordenada, fecha_inicio, fecha_fin, fecha_registro, nota) VALUES
+(1, 1, 20, 1, NULL, 'Av. Siempre Viva 123, Springfield', 'Cerca de la plaza principal', '12.3456, -65.4321', '2024-01-15', '2024-06-15', '2024-01-01', 'Primer contrato: Servicio WISP Básico con 6 meses de duración'),
+(2, 4, 20, 1, NULL, 'Calle Falsa 456, Gotham', 'Cerca del cine local', '34.5678, -76.5432', '2024-02-01', '2024-07-01', '2024-02-01', 'Renovación de contrato: Fibra + Cable por 6 meses'),
+(3, 3, 20, 1, NULL, 'Av. Los Pinos 789, Lima', 'Esquina con Av. Las Flores', '23.4567, -54.3210', '2024-03-01', '2024-08-01', '2024-03-01', 'Contrato nuevo: Instalación de Fibra + revisión mensual'),
+(4, 4, 20, 1, NULL, 'Jirón de la Unión 100, Lima', 'Frente a la Plaza Mayor', '45.6789, -43.2109', '2024-04-01', '2025-04-01', '2024-04-01', 'Renovación anual: Descuento aplicado por contrato anual'),
+(5, 5, 20, 1, NULL, 'Calle Mayor 101, Barcelona', 'Cerca del mercado central', '56.7890, -32.1098', '2024-05-01', '2025-05-01', '2024-05-01', 'Contrato especial por volumen: Servicio completo por 1 año'),
+(6, 1, 20, 1, NULL, 'Av. del Libertador 200, Buenos Aires', 'A la vuelta de la oficina', '12.0011, -66.1122', '2024-06-01', '2024-11-01', '2024-06-01', 'Servicio premium incluido en el contrato WISP'),
+(7, 2, 20, 1, NULL, 'Calle de la Alegría 333, Bogotá', 'Cerca de la estación de buses', '34.3333, -76.6666', '2024-07-01', '2024-12-01', '2024-07-01', 'Contrato por 6 meses: Soporte técnico 24/7 incluido'),
+(8, 3, 20, 1, NULL, 'Paseo del Prado 150, Madrid', 'Cerca del parque del Retiro', '23.8888, -54.7777', '2024-08-01', '2025-01-01', '2024-08-01', 'Contrato semestral: Mantenimiento semestral incluido'),
+(9, 4, 20, 1, NULL, 'Av. de la Paz 400, Santiago', 'Frente al hotel Plaza', '45.2222, -43.8888', '2024-09-01', '2025-03-01', '2024-09-01', 'Promoción especial: Contrato de 6 meses con descuento'),
+(10, 5, 20, 1, NULL, 'Calle del Comercio 789, Lima', 'Cerca de la Plaza San Martín', '56.4444, -32.5555', '2024-10-01', '2025-04-01', '2024-10-01', 'Contrato especial: Condiciones personalizadas aplicadas'),
+(11, 2, 20, 1, NULL, 'Av. Principal 111, Quito', 'Frente al centro comercial', '11.1111, -66.6666', '2024-02-15', '2024-08-15', '2024-02-15', 'Contrato estándar de WISP con soporte adicional'),
+(12, 3, 20, 1, NULL, 'Calle Secundaria 222, Caracas', 'Cerca del parque central', '22.2222, -55.5555', '2024-03-10', '2024-09-10', '2024-03-10', 'Contrato de Fibra: Instalación y soporte técnico semestral'),
+(13, 4, 20, 1, NULL, 'Av. Terciaria 333, Montevideo', 'Frente al museo histórico', '33.3333, -44.4444', '2024-04-20', '2024-10-20', '2024-04-20', 'Renovación de contrato: Instalación de Fibra con soporte anual'),
+(14, 5, 20, 1, NULL, 'Jirón Cuarto 444, Lima', 'Esquina con la calle Pinos', '44.4444, -33.3333', '2024-05-05', '2024-11-05', '2024-05-05', 'Contrato a medida: Servicio de Fibra + descuento corporativo'),
+(15, 1, 20, 1, NULL, 'Calle Final 555, La Paz', 'Cerca del edificio principal', '55.5555, -22.2222', '2024-06-01', '2024-12-01', '2024-06-01', 'Contrato nuevo: Servicio WISP básico con soporte trimestral'),
+(16, 1, 20, 1, NULL, 'Calle Estrella 111, Lima', 'Cerca de la Plaza de Armas', '55.5555, -22.2222', '2024-07-01', '2024-12-01', '2024-07-01', 'Contrato: Servicio WISP básico con soporte técnico mensual'),
+(17, 2, 20, 1, NULL, 'Calle Estrella 222, Lima', 'Cerca del Parque Kennedy', '44.4444, -33.3333', '2024-08-01', '2025-02-01', '2024-08-01', 'Contrato: Servicio Cable estándar con revisión mensual'),
+(18, 3, 20, 1, NULL, 'Calle Estrella 333, Lima', 'Cerca del Parque Universitario', '33.3333, -44.4444', '2024-09-01', '2025-03-01', '2024-09-01', 'Contrato: Instalación de Fibra con soporte semestral'),
+(19, 4, 20, 1, NULL, 'Calle Estrella 444, Lima', 'Cerca del Centro Comercial', '22.2222, -55.5555', '2024-10-01', '2025-04-01', '2024-10-01', 'Contrato: Mantenimiento de Fibra con soporte anual'),
+(20, 5, 20, 1, NULL, 'Calle Estrella 555, Lima', 'Cerca del Aeropuerto', '11.1111, -66.6666', '2024-11-01', '2025-05-01', '2024-11-01', 'Contrato: Servicio especial por volumen, 12 meses');
 
 INSERT INTO tb_contactabilidad (id_persona, id_empresa, id_paquete, fecha_hora_contacto, direccion_servicio, nota, iduser_create) VALUES
 (20, NULL, 1, '2024-01-10 14:30:00', 'Av. San Martín 500, Chincha Alta', 'Se realizó la instalación del servicio.', 1),
