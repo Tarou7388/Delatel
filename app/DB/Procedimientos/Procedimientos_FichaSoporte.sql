@@ -9,8 +9,8 @@ SELECT
     s.fecha_hora_asistencia,
     s.prioridad,
     s.soporte,
-    s.descripcion_problema,      -- Se agrega descripcion_problema
-    s.descripcion_solucion,      -- Se agrega descripcion_solucion
+    s.descripcion_problema,      
+    s.descripcion_solucion,      
     ts.tipo_soporte,
     c.id_cliente,
     c.direccion_servicio,
@@ -116,7 +116,7 @@ BEGIN
     WHERE id_soporte = p_id_soporte;
 END $$
 
--- Vista vw_soporte_detalle_incompleto actualizada
+-- Vista vw_soporte_detalle_incompleto actualizada POSIBLE A ELIMINACION
 DROP VIEW IF EXISTS vw_soporte_detalle_incompleto;
 CREATE VIEW vw_soporte_detalle_incompleto AS
 SELECT 

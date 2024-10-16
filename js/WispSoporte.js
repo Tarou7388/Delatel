@@ -38,17 +38,23 @@ document.addEventListener("DOMContentLoaded", () => {
   async function registrarWisp(jsondata) {
     const params = {
       operacion: "registrarSoporte",
-      idContrato: $("#slcContratos").value,
+      idContrato: window.idContratoSeleccionado,
       idTipoSoporte: $("#slcTipoSoporte").value,
       idTecnico: 1, // Este valor debe ser actualizado dinámicamente si es necesario
-      fechaHoraSolicitud: "", // Puedes generar la fecha y hora aquí si es necesario
+      fechaHoraSolicitud: `${$("#txtFecha").value} ${new Date()
+        .toISOString()
+        .slice(11, 19)}`, // Puedes generar la fecha y hora aquí si es necesario
       fechaHoraAsistencia: `${$("#txtFecha").value} ${new Date()
         .toISOString()
         .slice(11, 19)}`, // Concatenación de strings para mayor claridad
       prioridad: $("#slcPrioridad").value,
       soporte: jsondata, // Asegúrate de que jsondata esté definido antes de usarlo
       idUsuario: 1, // Actualizar este valor según sea necesario
+      descripcionProblema: $("#txtEstadoInicialWisp").value,
+      descripcionSolucion: $("#txtProcedimientoWisp").value
     };
+
+    console.log(params);
 
     const respuesta = await fetch(
       `${config.HOST}/app/controllers/Soporte.controllers.php`,
@@ -85,13 +91,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     JsonWisp.parametros.base = $("#txtBaseWisp").value;
     JsonWisp.parametros.ip = $("#txtIpWisp").value;
-    JsonWisp.parametros.señal = $("#txtSenialWisp").value;
-    JsonWisp.parametros.estadoInicial = $("#txtEstadoInicialWisp").value;
+    JsonWisp.parametros.senal = $("#txtSenialWisp").value;
 
     JsonWisp.cambios.nuevaBase = $("#txtCambiosBaseWisp").value;
     JsonWisp.cambios.nuevoIP = $("#txtCambiosIpWisp").value;
-    JsonWisp.cambios.señal = $("#txtCambiosSenialWisp").value;
-    JsonWisp.cambios.procedimiento = $("#txtProcedimientoWisp").value;
+    JsonWisp.cambios.senal = $("#txtCambiosSenialWisp").value;
 
     //console.log(JsonWisp);
 

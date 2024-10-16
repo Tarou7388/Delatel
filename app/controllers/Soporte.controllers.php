@@ -34,6 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'fechaHoraAsistencia' => $datos['fechaHoraAsistencia'],
         'prioridad' => Herramientas::sanitizarEntrada($datos['prioridad']),
         'soporte' => $datos['soporte'],
+        'descripcionProblema' => Herramientas::sanitizarEntrada($datos['descripcionProblema']),
+        'descripcionSolucion' => Herramientas::sanitizarEntrada($datos['descripcionSolucion']),
         'idUsuario' => Herramientas::sanitizarEntrada($datos['idUsuario'])
       ];
       $status = $soporte->registrarSoporte($values);

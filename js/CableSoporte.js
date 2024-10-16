@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const params = {
       operacion: "registrarSoporte",
-      idContrato: $("#slcContratos").value,
+      idContrato: window.idContratoSeleccionado,
       idTipoSoporte: $("#slcTipoSoporte").value,
       idTecnico: 1, // A cambiar
       fechaHoraSolicitud: new Date()
@@ -83,6 +83,8 @@ document.addEventListener("DOMContentLoaded", () => {
       prioridad: $("#slcPrioridad").value,
       soporte: JsonCable,
       idUsuario: 1, // A espera de un nuevo método
+      descripcionProblema: $("#txtEstadoInicialCable").value,
+      descripcionSolucion: $("#txtProcedimientoCable").value
     };
 
     const respuesta = await fetch(
@@ -135,14 +137,14 @@ document.addEventListener("DOMContentLoaded", () => {
           $("#slcSpliterCable").value === "1"
             ? "1x3"
             : $("#slcSpliterCable").value === "2"
-            ? "1x5"
-            : "1x8",
+              ? "1x5"
+              : "1x8",
       },
     ];
 
     JsonCable.parametroscable.cable = $("#txtCable").value;
     JsonCable.parametroscable.conectores = $("#txtConectorCable").value;
-    JsonCable.parametroscable.estadoinicial = $("#txtEstadoInicialCable").value;
+    //JsonCable.parametroscable.estadoinicial = $("#txtEstadoInicialCable").value;
 
     // Cambios en el Cable
     JsonCable.cambioscable.periodo = $("#slcCambiosPeriodoCable").value;
@@ -163,18 +165,16 @@ document.addEventListener("DOMContentLoaded", () => {
           $("#slcCambiosSpliterCable").value === "1"
             ? "1x3"
             : $("#slcCambiosSpliterCable").value === "2"
-            ? "1x5"
-            : "1x8",
+              ? "1x5"
+              : "1x8",
       },
     ];
 
     JsonCable.cambioscable.cable = $("#txtCambiosCable").value;
     JsonCable.cambioscable.conectores = $("#txtCambiosConectorCable").value;
-    JsonCable.cambioscable.procedimientosolucion = $(
-      "#txtProcedimientoCable"
-    ).value;
+    //JsonCable.cambioscable.procedimientosolucion = $("#txtProcedimientoCable").value;
 
-    //console.log(JsonCable);
-    registrarCable(JsonCable);
-  });
+  //console.log(JsonCable);
+  registrarCable(JsonCable);
+});
 });

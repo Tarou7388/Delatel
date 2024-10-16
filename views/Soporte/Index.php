@@ -26,7 +26,7 @@
       <i class="fas fa-table me-1"></i> Complete los Datos del Soporte
     </div>
     <div class="card-body">
-      <form action="" id="frmSoporteMovil" autocomplete="off">
+
 
         <h5>Datos del Usuario</h5>
         <div class="row g-2 mb-2">
@@ -51,14 +51,14 @@
             </div>
           </div>
 
-          <div class="col-md">
+          <!--           <div class="col-md">
             <div class="form-floating">
               <select class="form-select" id="slcContratos" required>
                 <option selected disabled>Seleccione</option>
               </select>
               <label for="slcContratos">Contratos:</label>
             </div>
-          </div>
+          </div> -->
 
           <div class="col-md">
             <div class="form-floating">
@@ -116,7 +116,7 @@
           </div>
 
         </div>
-      </form>
+
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview">
 

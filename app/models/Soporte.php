@@ -31,7 +31,7 @@ class Soporte extends Conexion
    */
   public function registrarSoporte($params = [])
   {
-    $sql = "CALL spu_registrar_fichasoporte(?,?,?,?,?,?,?,?)";
+    $sql = "CALL spu_registrar_fichasoporte(?,?,?,?,?,?,?,?,?,?)";
     $soporteJson = json_encode($params['soporte']);
     $values = array(
       $params['idContrato'],
@@ -41,6 +41,8 @@ class Soporte extends Conexion
       $params['fechaHoraAsistencia'],
       $params['prioridad'],
       $soporteJson,
+      $params['descripcionProblema'],
+      $params['descripcionSolucion'],
       $params['idUsuario']
     );
     return $this->registrar($sql, $values);

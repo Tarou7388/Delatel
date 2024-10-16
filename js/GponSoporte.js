@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
     //console.log(solicitud);
     const params = {
       operacion: "registrarSoporte",
-      idContrato: $("#slcContratos").value,
+      idContrato: window.idContratoSeleccionado,
       idTipoSoporte: $("#slcTipoSoporte").value,
       idTecnico: 1, // A cambiar
       fechaHoraSolicitud: solicitud, //2024-05-31 13:00:00 EJEMPLO
@@ -53,6 +53,8 @@ document.addEventListener("DOMContentLoaded", () => {
       prioridad: $("#slcPrioridad").value,
       soporte: jsonGpon,
       idUsuario: 1, // A espera de un nuevo método
+      descripcionProblema: $("#txtEstadoInicialGpon").value,
+      descripcionSolucion: $("#txtCambiosProcedimientoGpon").value
     };
 
     const respuesta = await fetch(
