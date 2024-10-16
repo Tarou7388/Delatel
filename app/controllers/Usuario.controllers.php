@@ -106,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
         case 'eliminarUsuario':
             $data = [
                 "idUsuario" => Herramientas::sanitizarEntrada($datos['idUsuario']),
-                "idUsuarioInactive" => Herramientas::sanitizarEntrada($datos['idUsuarioInactive'])
+                "idUsuarioEliminador" => Herramientas::sanitizarEntrada($datos['idUsuarioEliminador'])
             ];
             $resultado = $usuario->eliminarUsuario($data);
             echo json_encode(["eliminado" => $resultado]);

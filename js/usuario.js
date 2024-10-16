@@ -1,10 +1,10 @@
 import config from '../env.js';
 import { inicializarDataTable } from './Herramientas.js';
-const userid = JSON.stringify(user["idUsuario"]);
-let idUserEditar;
+
+const userid = JSON.stringify(user['idUsuario']);
+let idUserTabla = -1;
 
 document.addEventListener("DOMContentLoaded", () => {
-
   (async () => {
     try {
       const respuesta = await fetch(`${config.HOST}app/controllers/Rol.controllers.php?operacion=listarRoles`);
@@ -15,7 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error al cargar los roles:", error);
     }
   })();
-
 
   const table = inicializarDataTable('#tblUsuarios',
     `${config.HOST}app/controllers/Usuario.controllers.php?operacion=listarUsuarios`,
@@ -31,8 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
           return `
             <button class="btnActualizar btn btn-primary" 
                     data-id="${row.id_usuario}" 
-                    data-nombres="${row.nombre}" 
-                    data-telefono="${row.telefono || ''}"
+                    data-nombres="${row.nombre}"
                     data-nombre_user="${row.nombre_user}">Editar</button>
             <button class="btnEliminar btn btn-danger" 
                     data-id="${row.id_usuario}">Eliminar</button>`;
@@ -47,46 +45,44 @@ document.addEventListener("DOMContentLoaded", () => {
     ]
   );
 
+  // Evento para actualizar
   $('.card-body').on('click', '.btnActualizar', function () {
-    idUserEditar = $(this).data('id');
+    idUserTabla = $(this).data('id');
 
     const nombre = $(this).data('nombres');
     const usuario = $(this).data('nombre_user');
     abrirModal(nombre, usuario);
   });
 
-
   $('.card-body').on('click', '.btnEliminar', function () {
-    const id = $(this).data('id');
-    confirmarEliminacion(id);
+    idUserTabla = $(this).data('id');
+    confirmarEliminacion(idUserTabla);
   });
 });
 
-function abrirModal(nombres, usuario) {
-  $('#txtNombre').val(nombres);
-  $('#txtUsuario').val(usuario);
-  $('#editModal').modal('show');
-}
 
 document.getElementById('editForm').addEventListener('submit', async function (event) {
   event.preventDefault();
+  if (idUserTabla < 0) {
+    await showToast("Usuario no seleccionado correctamente", "ERROR");
+    $('#editModal').modal('hide').data('bs.modal', null);
+    return;
+  }
 
   const usuario = document.getElementById('txtUsuario').value;
   const rol = document.getElementById('slcRol').value;
   const nuevaPassword = document.getElementById('txtPassword').value;
-  console.log(idUserEditar)
+
   const parametros = {
     operacion: 'actualizarUsuario',
     parametros: {
       idUsuarioUpdate: userid,
       nombreUsuario: usuario,
-      idUsuario: idUserEditar,
+      idUsuario: idUserTabla,
       clave: nuevaPassword,
       rol: rol
     }
   };
-
-  console.log(parametros)
 
   const respuesta = await fetch(`${config.HOST}app/controllers/Usuario.controllers.php`, {
     method: 'PUT',
@@ -97,7 +93,6 @@ document.getElementById('editForm').addEventListener('submit', async function (e
   });
 
   const resultado = await respuesta.json();
-  console.log(resultado);
   if (resultado.actualizado) {
     showToast("Usuario actualizado", "SUCCESS");
     $('#editModal').modal('hide');
@@ -106,33 +101,39 @@ document.getElementById('editForm').addEventListener('submit', async function (e
     showToast("Usuario no actualizado", "ERROR");
   }
 
+  idUserTabla = -1;
 });
 
-
-function confirmarEliminacion(id) {
-  if (confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
-    eliminarUsuario(id);
+async function confirmarEliminacion(id) {
+  if (await ask('¿Estás seguro de que deseas eliminar este usuario?')) {
+    await eliminarUsuario(id);
   }
 }
 
-function eliminarUsuario(id) {
-  $.ajax({
-    url: `${config.HOST}app/controllers/Usuario.controllers.php?operacion=eliminarUsuario`,
-    type: 'POST',
-    data: { id: id },
-    success: function (response) {
-      if (response.success) {
-        alert('Usuario eliminado exitosamente.');
-        // Recargar la tabla después de la eliminación
-        $('#tblUsuarios').DataTable().ajax.reload();
-      } else {
-        alert('Error al eliminar el usuario: ' + response.message || 'Inténtalo más tarde.');
-      }
+// Eliminar usuario
+async function eliminarUsuario(id) {
+  const data = {
+    operacion: "eliminarUsuario",
+    idUsuario: id,
+    idUsuarioEliminador: userid
+  };
+
+  const response = await fetch(`${config.HOST}app/controllers/Usuario.controllers.php`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
     },
-    error: function () {
-      alert('Error en la conexión. Inténtalo de nuevo más tarde.');
-    }
+    body: JSON.stringify(data)
   });
 
+  const result = await response.json();
+  console.log(result);
+  if (result.eliminado) {
+    showToast("Usuario eliminado", "SUCCESS");
+    $('#tblUsuarios').DataTable().ajax.reload();
+  } else {
+    showToast("No se pudo eliminar el usuario", "ERROR");
+  }
 
+  idUserTabla = -1;
 }
