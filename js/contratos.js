@@ -6,14 +6,14 @@ window.addEventListener("DOMContentLoaded", () => {
   const txtfechaFin = document.querySelector("#txtFechaFin");
   const precio = document.querySelector("#txtPrecio");
   const direccion = document.querySelector("#txtDireccion");
-  const email = document.querySelector("#txtEmail");
   const sector = document.querySelector("#slcSector");
   const referencia = document.querySelector("#txtReferencia");
   const coordenada = document.querySelector("#txtCoordenada");
   const slcSector = document.querySelector("#slcSector");
   const slcServicio = document.querySelector("#slcServicio");
+  const span = document.querySelector('#infoFecha');
 
-
+  let lapsoTiempo = false;
   let fechaFin = null;
   let precioServicio = 0;
   let idCliente = null;
@@ -29,6 +29,10 @@ window.addEventListener("DOMContentLoaded", () => {
     if (params.nroDoc) {
       nroDoc.value = params.nroDoc;
       nroDoc.disabled = true;
+      coordenada.value = params.coordenadas;
+      direccion.value = params.direccion;
+      referencia.value = params.referencia;
+      slcServicio.value = params.Paquete;
     }
   }
 
@@ -47,13 +51,21 @@ window.addEventListener("DOMContentLoaded", () => {
     return await response.json();
   }
 
+  async function validarFechas() {
+    if (fechaInicio.value > txtfechaFin.value) {
+      showToast("¡La fecha de inicio no puede ser mayor a la fecha de fin!", "ERROR");
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   async function buscarCliente(nroDoc) {
     if (nroDoc == "") {
       showToast("¡Ingrese numero de documento!", "INFO");
     } else {
       const response = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteExistencia&nroDoc=${nroDoc}`);
       const data = await response.json();
-      console.log(data);
       if (data == []) {
         showToast("No existe la persona", "WARNING");
       } else {
@@ -71,7 +83,7 @@ window.addEventListener("DOMContentLoaded", () => {
           const data2 = await response.json();
           nombre.value = data2[0].nombre;
           direccion.value = data2[0].direccion;
-          coordenada.value = data2[0].coordenada;
+          coordenada.value = data2[0].coordenadas;
           referencia.value = data2[0].referencia;
           idPersona = '';
           idEmpresa = '';
@@ -91,16 +103,11 @@ window.addEventListener("DOMContentLoaded", () => {
     params.append("idUsuario", user.idUsuario);
     params.append("coordenadas", coordenada.value);
 
-    for (var pair of params.entries()) {
-      console.log(pair[0] + ", " + pair[1]);
-    }
-
     const response = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php`, {
       method: "POST",
       body: params,
     })
     const data = await response.json();
-    console.log(data);
     idCliente = data[0].id_cliente;
   }
 
@@ -109,8 +116,10 @@ window.addEventListener("DOMContentLoaded", () => {
     const nota = "";
     const idUsuarioRegistro = user.idRol;
 
-    if (!(await validarCampos())) {
-      showToast("¡Complete los campos!", "INFO");
+    if (!await validarCampos() || await !validarFechas()) {
+
+    } else if (!lapsoTiempo) {
+      showToast("¡La fecha de fin debe ser mayor a 3 meses!", "INFO");
     } else {
       try {
         const response = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php`, {
@@ -136,11 +145,11 @@ window.addEventListener("DOMContentLoaded", () => {
           },
         });
         const data = await response.json();
-        console.log(data);
         if (data.error) {
           console.log(data.error);
         } else {
           showToast("¡Contrato registrado correctamente!", "SUCCESS");
+          span.classList.add('invisible');
           nroDoc.disabled = false;
           resetUI();
         }
@@ -164,7 +173,6 @@ window.addEventListener("DOMContentLoaded", () => {
         }),
       });
       const data = await response.json();
-      console.log("Respuesta del servidor:", data);
       if (data.eliminado) {
         showToast("¡Contrato eliminado correctamente!", "SUCCESS");
         location.reload();
@@ -261,7 +269,12 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   async function validarCampos() {
-    return !(nroDoc.value === "" || nombre.value === "" || fechaInicio.value === "" || txtfechaFin.value === "" || precio.value === "" || direccion.value === "" || sector.value === "" || referencia.value === "" || coordenada.value === "" || slcSector.value === "0" || slcServicio.value === "0");
+    if (nroDoc.value == "" || nombre.value == "" || fechaInicio.value == "" || txtfechaFin.value == "" || precio.value == "" || direccion.value == "" || sector.value == "" || referencia.value == "" || coordenada.value == "" || slcSector.value == "0" || slcServicio.value == "0") {
+      showToast("¡Llene todos los campos!", "INFO");
+      return false;
+    } else {
+      return true;
+    }
   }
 
   async function resetUI() {
@@ -281,11 +294,12 @@ window.addEventListener("DOMContentLoaded", () => {
   (async () => {
     await getQueryParams();
     await cargarDatos();
+    const today = new Date().toISOString().split('T')[0];
+    fechaInicio.value = today;
   })();
 
   document.querySelector("#btnRegistrar").addEventListener("click", async (event) => {
     event.preventDefault();
-    console.log(idPersona);
     if (idCliente == null) {
       await registrarCliente();
     }
@@ -298,11 +312,11 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 
   document.querySelector('#txtFechaFin').addEventListener('input', () => {
-    const span = document.querySelector('#infoFecha');
+
     const fechaInicioValue = document.querySelector('#txtFechaInicio').value;
     const txtFechaFinValue = document.querySelector('#txtFechaFin').value;
-
-    if (fechaInicioValue && txtFechaFinValue >= 3) {
+    if (txtFechaFinValue > 3) {
+      lapsoTiempo = true;
       const dateFechaInicio = new Date(fechaInicioValue);
       const meses = parseInt(txtFechaFinValue, 10);
 
@@ -316,8 +330,13 @@ window.addEventListener("DOMContentLoaded", () => {
       const partesFecha = fechaFin.split('/');
       fechaFin = `${partesFecha[2]}-${partesFecha[1]}-${partesFecha[0]}`;
     } else {
+      lapsoTiempo = false;
       span.textContent = "La fecha de fin debe ser mayor a 3 meses";
       span.classList.remove('invisible');
+    }
+    if (txtFechaFinValue == '') {
+      lapsoTiempo = false;
+      span.classList.add('invisible');
     }
   });
 

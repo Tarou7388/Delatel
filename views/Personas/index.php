@@ -338,32 +338,6 @@
 	</div>
 </div>
 
-<div class="container-fluid px-4">
-	<div class="card mt-3">
-		<div class="card-header">
-			<i class="fas fa-table me-1"></i> Listado de Clientes
-		</div>
-		<div class="card-body">
-			<div class="table-responsive">
-				<table id="listarCliente" class="table table-striped mt-4">
-					<thead>
-						<th class="text-center">Nombre Cliente</th>
-						<th class="text-center">N° Identificador</th>
-						<th class="text-center">Email</th>
-						<th class="text-center">Teléfono</th>
-						<th class="text-center">Dirección</th>
-						<th class="text-center">Referencia</th>
-						<th class="text-center">Coordenadas</th>
-						<th class="text-center">Acciones</th>
-					</thead>
-					<tbody>
-					</tbody>
-				</table>
-			</div>
-		</div>
-	</div>
-</div>
-
 <?php require_once "../../footer.php"; ?>
 <script type="module" src="../../js/ListarClientes.js"></script>
 <script type="module" src="../../js/Empresa.js"></script>

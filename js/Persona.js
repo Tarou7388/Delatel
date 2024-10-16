@@ -1,10 +1,6 @@
 import config from "../env.js";
 
 document.addEventListener("DOMContentLoaded", function () {
-  // if (!permisos[0].permisos.personas.leer) {
-  //   window.location.href = `${config.HOST}views`;
-  // }
-
   const userid = JSON.stringify(user["idUsuario"]);
   const slcServicio = document.getElementById("slcServicio");
   const slcChangeRegistro = document.getElementById("slcChangeRegistro");
@@ -22,8 +18,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const txtDireccion = document.getElementById("txtDireccionPersona");
   const txtReferencia = document.getElementById("txtReferenciaPersona");
   const btnBuscar = document.getElementById("btnBuscar");
+
   let dniActual = null;
-  let idPersona = null;
 
   function toggleForms(value) {
     if (value === "Persona") {
@@ -100,7 +96,6 @@ document.addEventListener("DOMContentLoaded", function () {
     if (data.error) {
       showToast(data.error.message, "WARNING");
     } else {
-      idPersona = data[0].id_persona;
       registrarContacto(data[0].id_persona);
     }
   }
@@ -119,6 +114,7 @@ document.addEventListener("DOMContentLoaded", function () {
       idUsuario: userid,
       fechaLimite: fecha.toISOString().slice(0, 10),
     };
+    console.log(datos);
     const response = await fetch(`${config.HOST}app/controllers/Contactabilidad.controllers.php`, {
       method: "POST",
       body: JSON.stringify(datos),
@@ -129,7 +125,11 @@ document.addEventListener("DOMContentLoaded", function () {
       setTimeout(async () => {
         frmPersonas.reset();
         if (await ask("¿Desea registrar un contrato?")) {
-          window.location.href = `${config.HOST}views/Contratos/?nroDoc=${dniActual}&idObjeto=${idPersona}`;
+          const coordenadas = txtcoordenadasPersona.value;
+          const direccion = txtDireccion.value;
+          const referencia = txtReferencia.value;
+          
+          window.location.href = `${config.HOST}views/Contratos/?nroDoc=${dniActual}&idObjeto=${idPersona}&coordenadas=${coordenadas}&Paquete=${Paquete}&direccion=${direccion}&referencia=${referencia}`;
         }
       }, 650);
     }
@@ -205,9 +205,6 @@ document.addEventListener("DOMContentLoaded", function () {
     event.preventDefault();
     const bandera = verificarCamposPersona();
     if (!bandera) {
-      // if (permisos[0].permisos.personas.crear != 1) {
-      //   showToast("No tienes permiso de registrar", "ERROR");
-      // }
       registrarPersona();
     }
   });
