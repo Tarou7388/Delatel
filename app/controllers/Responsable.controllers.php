@@ -24,3 +24,23 @@ if (isset($_POST['operacion'])) {
       break;
   }
 }
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+  $json = file_get_contents('php://input');
+  $datos = json_decode($json, true);
+  $operacion = $datos['operacion'];
+
+  switch ($operacion) {
+    case 'actualizarResponsable':
+      $datos = [
+        "idUsuarioActualizador"   => $datos['datos']['idUsuarioActualizador'],  // NO TIENEN EL SANITIZAR POR UN CONFLICTO,
+        "idRol"                   => $datos['datos']['idRol'],                  // DADO QUE NO ES POR CAJA DE TEXTO SE 
+        "idResponsable"           => $datos['datos']['idResponsable']           // MANTENDRA SIN SANITIZAR
+      ];
+
+      $estado = $responsable->actualizarResponsable($datos);
+      echo json_encode(["Actualizado" => $estado]);
+      break;
+  }
+}

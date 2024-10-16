@@ -120,6 +120,7 @@
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview">
 
+          <!-- ***INCIO WISP FICHA *** -->
           <li class="nav-item menu-open" id="lstWisp" hidden>
             <!-- 
             ***
@@ -206,17 +207,9 @@
               </div>
             </form>
           </li>
-          <!-- 
-            ***
-            ***FIN WISP FICHA
-            ***
-            -->
+          <!-- ***FIN WISP FICHA *** -->
 
-          <!-- 
-            ***
-            ***INICIO GPON FICHA
-            ***
-            -->
+          <!-- ***INICIO GPON FICHA***-->
           <li class="nav-item menu-open" id="lstGpon" hidden>
             <form id="Form-FichaGpon">
               <h5>Parámetros de Gpon</h5>
@@ -401,17 +394,9 @@
             </form>
             <hr>
           </li>
-          <!-- 
-            ***
-            ***FIN GPON FICHA
-            ***
-            -->
+          <!--***FIN GPON FICHA***-->
 
-          <!-- 
-            ***
-            ***INICIO CABLE FICHA
-            ***
-            -->
+          <!--***INICIO CABLE FICHA***-->
           <li class="nav-item menu-open" id="lstCable" hidden>
             <form id="Form-FichaCable">
               <h5>Parámetros Cable</h5>
@@ -645,18 +630,13 @@
             <hr>
 
           </li>
-          <!-- 
-            ***
-            ***FIN CABLE FICHA
-            ***
-            -->
+          <!--***FIN CABLE FICHA***-->
           <hr>
 
         </ul>
       </nav>
 
-      <!--       
-      <div class="row">
+      <!--<div class="row">
         <div class="col-12 text-center text-md-end mb-3">
           <div class="d-flex flex-column flex-md-row justify-content-center justify-content-md-end">
             <button type="button" id="btnCodigoBarra" class="btn btn-warning mb-2 me-md-2">Verificar Código</button>
@@ -664,10 +644,7 @@
             <button type="reset" id="btnCancelar" class="btn btn-secondary mb-2">Cancelar Proceso</button>
           </div>
         </div>
-      </div> 
--->
-
-
+      </div>-->
 
     </div>
   </div>

@@ -133,6 +133,7 @@ CREATE TABLE tb_responsables (
     id_usuario INT NOT NULL,
     id_rol INT NOT NULL,
     fecha_inicio DATETIME NOT NULL DEFAULT NOW(),
+    update_at DATETIME NULL,
     fecha_fin DATETIME NULL,
     iduser_create INT NOT NULL,
     iduser_update INT NULL,

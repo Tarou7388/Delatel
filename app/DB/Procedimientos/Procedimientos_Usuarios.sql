@@ -6,6 +6,7 @@ CREATE VIEW vw_usuarios_listar AS
 SELECT 
     res.id_responsable,
     us.id_usuario,
+    ro.id_rol,
     COALESCE(CONCAT(pe.nombres, ", ", pe.apellidos)) AS nombre,
     us.nombre_user,
     ro.rol AS "Cargo",
