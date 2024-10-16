@@ -23,11 +23,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $idPersona = null;
       $idEmpresa = null;
       if(isset($datos['idEmpresa']) && $datos['idEmpresa'] !== ''){
-        $idEmpresa = $_POST['idEmpresa'];
+        $idEmpresa = $datos['idEmpresa'];
         $idPersona = null;
       }
       if(isset($datos['idPersona']) && $datos['idPersona'] !== ''){
-        $idPersona = $_POST['idPersona'];
+        $idPersona = $datos['idPersona'];
         $idEmpresa = null;
       }
       $respuesta = $contactabilidad->registrarContacto([
