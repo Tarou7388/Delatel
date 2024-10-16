@@ -25,9 +25,10 @@ BEGIN
 END $$
 
 -- ACTUALIZAR PROCEDURE 
-DROP PROCEDURE IF EXISTS spu_responsables_actualizar$$
-CREATE PROCEDURE spu_responsables_actualizar (
+DROP PROCEDURE IF EXISTS spu_responsablesUsuarios_actualizar$$
+CREATE PROCEDURE spu_responsablesUsuarios_actualizar(
     IN p_iduser_update INT,
+    IN p_id_rol INT,
     IN p_id_responsable INT
 )
 BEGIN
@@ -50,7 +51,7 @@ BEGIN
     UPDATE tb_responsables
     SET 
         user_inactive = p_iduser_inactive,
-        inactive_at = NOW()
+        fecha_fin = NOW()
     WHERE 
         p_id_responsable = id_responsable;
 END $$

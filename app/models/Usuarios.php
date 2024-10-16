@@ -98,7 +98,7 @@ class Usuario extends Conexion
    * 
    * @param array $params Arreglo asociativo con los siguientes índices:
    *                      - 'idUsuario' (int): ID del usuario que se está inhabilitando.
-   *                      - 'idUsuarioInactive' (int): ID del usuario que realiza la inhabilitación.
+   *                      - 'idUsuarioEliminador' (int): ID del usuario que realiza la inhabilitación.
    * 
    * @return bool El resultado será verdadero si la operación se realiza con éxito o falso si falla.
    */
@@ -107,7 +107,7 @@ class Usuario extends Conexion
     $sql = "CALL sp_usuario_eliminar(?,?)";
     $values = array(
       $params['idUsuario'],
-      $params['idUsuarioInactive'],
+      $params['idUsuarioEliminador'],
     );
     return $this->registrar($sql, $values);
   }
