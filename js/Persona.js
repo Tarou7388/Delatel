@@ -98,14 +98,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const response = await fetch(`${config.HOST}app/controllers/Persona.controllers.php`, options);
     const data = await response.json();
     if (data.error) {
-      switch (data.error) {
-        case 'Duplicado':
-          showToast("Persona ya registrada", "WARNING");
-          break;
-        default:
-          showToast("Error al registrar persona", "ERROR");
-          break;
-      }
+      showToast(data.error.message, "WARNING");
     } else {
       idPersona = data[0].id_persona;
       registrarContacto(data[0].id_persona);
@@ -136,7 +129,7 @@ document.addEventListener("DOMContentLoaded", function () {
       setTimeout(async () => {
         frmPersonas.reset();
         if (await ask("¿Desea registrar un contrato?")) {
-          window.location.href = `${config.HOST}views/Contratos/?dni=${dniActual}&idPersona=${idPersona}`;
+          window.location.href = `${config.HOST}views/Contratos/?nroDoc=${dniActual}&idObjeto=${idPersona}`;
         }
       }, 650);
     }

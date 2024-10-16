@@ -74,13 +74,28 @@ class Conexion
     } catch (Exception $e) {
       switch ($e->getCode()) {
         case 23000:
-          return ['error' => 'Duplicado'];
+          return ['error' => [
+            'message' => 'Duplicado',
+            'code' => $e->getCode()
+          ]];
           break;
         case 22007:
-          return ['error' => 'Formato Incorrecto'];
+          return ['error' => [
+            'message' => 'Formato incorrecto',
+            'code' => $e->getCode()
+          ]];
           break;
         case 22001:
-          return ['error' => 'Largo'];
+          return ['error' => [
+            'message' => 'Largo',
+            'code' => $e->getCode()
+          ]];
+          break;
+        case 42000:
+          return ['error' => [
+            'message' => 'Sintaxis',
+            'code' => $e->getCode()
+          ]];
           break;
         default:
           die($e->getMessage());
@@ -126,7 +141,34 @@ class Conexion
       $consulta->execute();
       return $consulta->fetch(PDO::FETCH_ASSOC);
     } catch (Exception $e) {
-      die($e->getMessage());
+      switch ($e->getCode()) {
+        case 23000:
+          return ['error' => [
+            'message' => 'Duplicado',
+            'code' => $e->getCode()
+          ]];
+          break;
+        case 22007:
+          return ['error' => [
+            'message' => 'Formato incorrecto',
+            'code' => $e->getCode()
+          ]];
+          break;
+        case 22001:
+          return ['error' => [
+            'message' => 'Largo',
+            'code' => $e->getCode()
+          ]];
+          break;
+        case 42000:
+          return ['error' => [
+            'message' => 'Sintaxis',
+            'code' => $e->getCode()
+          ]];
+          break;
+        default:
+          die($e->getMessage());
+      }
     }
   }
 
@@ -145,13 +187,28 @@ class Conexion
     } catch (Exception $e) {
       switch ($e->getCode()) {
         case 23000:
-          return ['error' => 'Duplicado'];
+          return ['error' => [
+            'message' => 'Duplicado',
+            'code' => $e->getCode()
+          ]];
           break;
         case 22007:
-          return ['error' => 'Formato incorrecto'];
+          return ['error' => [
+            'message' => 'Formato incorrecto',
+            'code' => $e->getCode()
+          ]];
           break;
         case 22001:
-          return ['error' => 'Largo'];
+          return ['error' => [
+            'message' => 'Largo',
+            'code' => $e->getCode()
+          ]];
+          break;
+        case 42000:
+          return ['error' => [
+            'message' => 'Sintaxis',
+            'code' => $e->getCode()
+          ]];
           break;
         default:
           die($e->getMessage());

@@ -74,3 +74,13 @@ BEGIN
         iduser_inactive = p_iduser_inactive
     WHERE id_empresa = p_id_empresa;
 END $$
+
+DROP PROCEDURE IF EXISTS spu_empresa_cliente_existencia$$
+CREATE PROCEDURE spu_empresa_cliente_existencia(
+    IN p_ruc VARCHAR(15)
+)
+BEGIN
+    SELECT e.id_empresa, c.id_cliente, e.ruc, e.razon_social FROM
+    tb_empresas e LEFT JOIN tb_clientes c ON e.id_empresa = c.id_empresa
+    WHERE e.ruc = p_ruc;
+END $$

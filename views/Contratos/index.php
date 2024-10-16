@@ -16,7 +16,7 @@
           <div class="col-md-3">
             <div class="input-group">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtDni" name="documento" placeholder="Número de Documento" required>
+                <input type="text" class="form-control" id="txtNumDoc" name="documento" placeholder="Número de Documento" required>
                 <label for="txtDni" class="form-label">Número de Documento</label>
               </div>
               <button class="btn btn-primary" id="btnBuscar" type="button"><i class="fa-solid fa-magnifying-glass"></i></button>

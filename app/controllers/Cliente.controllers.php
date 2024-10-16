@@ -2,10 +2,13 @@
 
 use App\Controllers\Herramientas;
 
+require_once '../models/Empresa.php';
+require_once '../models/Persona.php';
 require_once '../models/Cliente.php';
 require_once './Herramientas.php';
 
-
+$persona = new Persona();
+$empresa = new Empresa();
 $cliente = new Cliente();
 
 if (isset($_GET['operacion'])) {
@@ -22,6 +25,17 @@ if (isset($_GET['operacion'])) {
         }
       } else {
         $resultado = ["error" => "Valor debe ser numérico"];
+      }
+      echo json_encode($resultado);
+      break;
+    case 'buscarClienteExistencia':
+      $nroDoc = Herramientas::sanitizarEntrada($_GET['nroDoc']);
+      if(strlen($nroDoc) == 8 || strlen($nroDoc) == 9){
+        $resultado = $persona->buscarPersonaClienteDni(["nroDoc" => $_GET['nroDoc']]);
+      }else if(strlen($nroDoc) == 11){
+        $resultado = $empresa->buscarEmpresaClienteRuc(["ruc" => $_GET['nroDoc']]);
+      }else{
+        $resultado = ["error" => "Valor no válido"];
       }
       echo json_encode($resultado);
       break;

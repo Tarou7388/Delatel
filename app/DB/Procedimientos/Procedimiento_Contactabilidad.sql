@@ -5,6 +5,7 @@ DELIMITER $$
 DROP PROCEDURE IF EXISTS spu_contactabilidad_registrar$$
 CREATE PROCEDURE spu_contactabilidad_registrar(
     p_id_persona INT,
+    p_id_empresa INT,
     p_id_paquete INT,
     p_direccion_servicio VARCHAR(250),
     p_nota TEXT,
@@ -12,8 +13,8 @@ CREATE PROCEDURE spu_contactabilidad_registrar(
     p_fecha_limite DATE
 )
 BEGIN
-    INSERT INTO tb_contactabilidad (id_persona, id_paquete, direccion_servicio, nota, iduser_create, fecha_limite)
-    VALUES (p_id_persona, p_id_paquete, p_direccion_servicio, p_nota, p_iduser_create, p_fecha_limite);
+    INSERT INTO tb_contactabilidad (id_persona, id_empresa, id_paquete, direccion_servicio, nota, iduser_create, fecha_limite)
+    VALUES (p_id_persona, p_id_empresa, p_id_paquete, p_direccion_servicio, p_nota, p_iduser_create, p_fecha_limite);
     SELECT LAST_INSERT_ID() AS id_contactabilidad;
 END $$
 

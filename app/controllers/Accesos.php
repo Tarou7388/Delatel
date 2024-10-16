@@ -1,11 +1,11 @@
 <?php
+session_start();
 //IO JSON
 header("Content-type: application/json; charset=utf-8");
 
 require_once '../models/Conexion.php'; // Asegúrate de incluir tu archivo de conexión a la base de datos
 require_once '../models/Rol.php'; // Asegúrate de incluir tu modelo de roles
 
-session_start();
 
 // Función para cargar permisos
 function cargarPermisos($idRol)

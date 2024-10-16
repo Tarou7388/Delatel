@@ -39,6 +39,14 @@ class Empresa extends Conexion
             $params['email'],
             $params['idUsuario']
         );
-        return $this->registrar($sql, $values);
+        return $this->registroValorDevolvido($sql, $values);
+    }
+    public function buscarEmpresaClienteRuc($params = [])
+    {
+        $sql = "CALL spu_empresa_cliente_existencia(?)";
+        $values = array(
+            $params['ruc']
+        );
+        return $this->consultaParametros($sql, $values);
     }
 }

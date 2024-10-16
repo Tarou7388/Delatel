@@ -1,11 +1,12 @@
 import config from "../env.js";
 window.addEventListener("DOMContentLoaded", () => {
-  const dni = document.querySelector("#txtDni");
+  const nroDoc = document.querySelector("#txtNumDoc");
   const nombre = document.querySelector("#txtNombre");
   const fechaInicio = document.querySelector("#txtFechaInicio");
   const txtfechaFin = document.querySelector("#txtFechaFin");
   const precio = document.querySelector("#txtPrecio");
   const direccion = document.querySelector("#txtDireccion");
+  const email = document.querySelector("#txtEmail");
   const sector = document.querySelector("#slcSector");
   const referencia = document.querySelector("#txtReferencia");
   const coordenada = document.querySelector("#txtCoordenada");
@@ -15,18 +16,19 @@ window.addEventListener("DOMContentLoaded", () => {
   
   let fechaFin = null;
   let precioServicio = 0;
-  let idCliente = 0;
+  let idCliente = null;
   let idServicio = 0;
   let idPersona = null;
+  let idEmpresa = null;
 
   async function getQueryParams() {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
 
     const params = Object.fromEntries(urlParams.entries());
-    if (params.dni) {
-      dni.value = params.dni;
-      dni.disabled = true;
+    if (params.nroDoc) {
+      nroDoc.value = params.nroDoc;
+      nroDoc.disabled = true;
     }
   }
 
@@ -45,23 +47,30 @@ window.addEventListener("DOMContentLoaded", () => {
     return await response.json();
   }
 
-  async function buscarCliente(dni) {
-    if (dni == "") {
+  async function buscarCliente(nroDoc) {
+    if (nroDoc == "") {
       showToast("¡Ingrese numero de documento!", "INFO");
     } else {
-      const response = await fetch(`${config.HOST}app/controllers/Persona.controllers.php?operacion=buscarPersonaClienteDni&dni=${dni}`);
+      const response = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteExistensia&nroDoc=${nroDoc}`);
       const data = await response.json();
       if (data[0].id_cliente == null) {
-        idPersona = data[0].id_persona;
+        if(!data[0].id_empresa){
+          idPersona = data.id_persona;
+          idCliente = data.id_empresa;
+        }else if(!data[0].id_persona){
+          idCliente = null;
+          idObjeto = data[0].id_persona;
+        }
         nombre.value = data[0].nombres;
       } else {
-        const response = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${dni}`);
+        const response = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${nroDoc}`);
         const data = await response.json();
         nombre.value = data[0].nombre;
         direccion.value = data[0].direccion;
         coordenada.value = data[0].coordenada;
         referencia.value = data[0].referencia;
-        idPersona = null;
+        
+        idObjeto = null;
         idCliente = data[0].id_cliente;
       }
     }
@@ -243,11 +252,11 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   async function validarCampos() {
-    return !(dni.value === "" || nombre.value === "" || fechaInicio.value === "" || txtfechaFin.value === "" || precio.value === "" || direccion.value === "" || sector.value === "" || referencia.value === "" || coordenada.value === "" || slcSector.value === "0" || slcServicio.value === "0");
+    return !(nroDoc.value === "" || nombre.value === "" || fechaInicio.value === "" || txtfechaFin.value === "" || precio.value === "" || direccion.value === "" || sector.value === "" || referencia.value === "" || coordenada.value === "" || slcSector.value === "0" || slcServicio.value === "0");
   }
 
   async function resetUI() {
-    dni.value = "";
+    nroDoc.value = "";
     nombre.value = "";
     fechaInicio.value = "";
     txtfechaFin.value = "";
@@ -277,7 +286,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   document.querySelector("#btnBuscar").addEventListener("click", async (event) => {
     event.preventDefault();
-    await buscarCliente(dni.value);
+    await buscarCliente(nroDoc.value);
   });
 
   document.querySelector('#txtFechaFin').addEventListener('input', () => {

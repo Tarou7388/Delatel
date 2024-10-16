@@ -22,17 +22,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     case 'registrarContacto':
       $idPersona = null;
       $idEmpresa = null;
-      if(isset($_POST['idEmpresa']) && $_POST['idEmpresa'] !== ''){
+      if(isset($datos['idEmpresa']) && $datos['idEmpresa'] !== ''){
         $idEmpresa = $_POST['idEmpresa'];
         $idPersona = null;
       }
-      if(isset($_POST['idPersona']) && $_POST['idPersona'] !== ''){
+      if(isset($datos['idPersona']) && $datos['idPersona'] !== ''){
         $idPersona = $_POST['idPersona'];
         $idEmpresa = null;
       }
       $respuesta = $contactabilidad->registrarContacto([
-        'idPersona' => Herramientas::sanitizarEntrada($datos['idPersona']),
-        'idEmpresa' => Herramientas::sanitizarEntrada($datos['idEmpresa']),
+        'idPersona' => $idPersona,
+        'idEmpresa' => $idEmpresa,
         'idPaquete' => Herramientas::sanitizarEntrada($datos['idPaquete']),
         'direccion' => Herramientas::sanitizarEntrada($datos['direccion']),
         'nota' => Herramientas::sanitizarEntrada($datos['nota']),

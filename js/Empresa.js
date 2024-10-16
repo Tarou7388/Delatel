@@ -20,6 +20,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const btnCancelarEmpresa = document.getElementById("btnCancelarEmpresa");
   const btnBuscarEmpresa = document.getElementById("btnBuscarEmpresa");
 
+  let ruc = null;
+
   async function cargarPaquetes() {
     const response = await fetch(`${config.HOST}app/controllers/Paquete.controllers.php?operacion=listarPaquetes`);
     const data = await response.json();
@@ -64,23 +66,28 @@ document.addEventListener("DOMContentLoaded", function () {
       body: params,
     };
 
-    try {
-      const response = await fetch(`${config.HOST}app/controllers/Empresa.controllers.php`, options);
-      const data = await response.json();
-      await registrarcliente(data.idEmpresa);
-      frmEmpresas.reset();
-    } catch (error) {
-      showToast("Empresa ya registrada", "WARNING");
+    const response = await fetch(`${config.HOST}app/controllers/Empresa.controllers.php`, options);
+    const data = await response.json();
+    if (data.error) {
+      showToast(data.error.message, "WARNING");
     }
+    else {
+      ruc = txtRuc.value;
+      await showToast("Empresa registrada correctamente", "SUCCESS", 650);
+      await registrarContacto(data[0].id_empresa);
+      frmEmpresas.reset();
+    }
+
   }
 
-  async function registrarContacto(idPersona) {
+  async function registrarContacto(idEmpresa) {
     const Paquete = slcServicio.value;
     const fecha = new Date();
     fecha.setDate(fecha.getDate() + 14);
     const datos = {
       operacion: "registrarContacto",
       idPersona: '',
+      idEmpresa: idEmpresa,
       idPaquete: Paquete,
       direccion: txtDireccion.value,
       nota: "Para llamar",
@@ -93,20 +100,21 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     const data = await response.json();
     if (data.guardado) {
-      await showToast("Persona registrada correctamente", "SUCCESS", 650);
+      await showToast("Empresa registrada correctamente", "SUCCESS", 650);
       setTimeout(async () => {
         frmPersonas.reset();
         if (await ask("¿Desea registrar un contrato?")) {
-          window.location.href = `${config.HOST}views/Contratos/?dni=${dniActual}&idPersona=${idPersona}`;
+          window.location.href = `${config.HOST}views/Contratos/?nroDoc=${ruc}&idObjeto=${idEmpresa}`;
         }
       }, 650);
     }
   }
 
-  async function ObtenerDataRUC(operacion, ruc) {
+  async function ObtenerDataRUC(ruc) {
     try {
-      const response = await fetch(`${config.HOST}app/controllers/Persona.controllers.php?operacion=${operacion}&ruc=${encodeURIComponent(ruc)}`);
+      const response = await fetch(`${config.HOST}app/controllers/Persona.controllers.php?operacion=obtenerRuc&ruc=${ruc}`);
       const data = await response.json();
+      console.log(data);
       txtRazonSocial.value = data.razonSocial;
       txtDireccion.value = data.direccion;
     } catch (error) {
@@ -127,8 +135,6 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   btnBuscarEmpresa.addEventListener("click", async function () {
-    await ObtenerDataRUC("getapiruc", txtRuc.value);
+    await ObtenerDataRUC(txtRuc.value);
   });
-
-  ObtenerDataRUC("getapiruc", txtRuc.value);
 });
