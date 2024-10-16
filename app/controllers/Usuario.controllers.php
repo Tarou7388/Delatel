@@ -32,7 +32,8 @@ if (isset($_POST['operacion'])) {
             "estado" => false,
             "idRol" => -1,
             "idUsuario" => -1,
-            "mensaje" => ""
+            "mensaje" => "",
+            "accesos" => "",
         ];
 
         if ($registro) {
