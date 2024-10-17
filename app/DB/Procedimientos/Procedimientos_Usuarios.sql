@@ -85,3 +85,12 @@ BEGIN
     WHERE id_usuario = p_id_usuario;
 END $$
 
+DROP PROCEDURE IF EXISTS spu_usuario_buscar_username$$
+CREATE PROCEDURE spu_usuario_buscar_username
+(
+	IN p_username VARCHAR(100)
+)
+BEGIN
+	SELECT nombre_user FROM tb_usuarios 
+    WHERE nombre_user = p_username;
+END$$
