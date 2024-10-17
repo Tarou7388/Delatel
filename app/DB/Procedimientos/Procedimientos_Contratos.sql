@@ -200,7 +200,5 @@ BEGIN
     JOIN 
         tb_servicios sv ON p.id_servicio = sv.id_servicio
     WHERE 
-        c.id_cliente = p_id_cliente;
+        c.id_cliente = p_id_cliente AND c.inactive_at IS NULL;
 END$$
-
-

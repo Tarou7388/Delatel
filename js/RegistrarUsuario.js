@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
           showToast("Persona encontrada en la API externa. Completa los campos restantes EMAIL - TELEFONO", "INFO");
         } else {
-          showToast("No se encontraron datos en la API externa.", "INFO");
+          showToast("No se encontraron datos en la API externa.", "ERROR");
         }
       }
     } catch (error) {
@@ -64,24 +64,18 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  /*   async function VerificarUserN(objectName) {
-      const datos = {
-        operacion: "buscarNombre",
-        nombreUser: objectName
-      };
-  
-      const respuesta = await fetch(`${config.HOST}app/controllers/Usuario.controllers.php`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(datos) // Convertir a JSON
-      });
-  
-      const data = await respuesta.text();
-      console.log(data);
-      return data;
-    } */
+  async function VerificarUserN() {
+    const params = new FormData();
+    params.append("operacion", "buscarNombre");
+    params.append("nombreUser", $("txtUsuario").value);
+
+    const respuesta = await fetch(`${config.HOST}app/controllers/Usuario.controllers.php`, {
+      method: 'POST',
+      body: params
+    });
+    const data = await respuesta.json();
+    return data;
+  };
 
   async function BuscarPersonaAPI(operacion, dni) {
     try {
@@ -102,7 +96,8 @@ document.addEventListener("DOMContentLoaded", function () {
         idUsuario: userid
       };
     } catch (error) {
-      console.error("Error en BuscarPersonaAPI:", error);
+      showToast("No se pudo encontrar a la persona con el API.", "ERROR");
+      //console.error("Error en BuscarPersonaAPI:", error);
       return null;
     }
   };
@@ -195,34 +190,38 @@ document.addEventListener("DOMContentLoaded", function () {
   $("registerForm").addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    /*     console.log($("txtUsuario").value);
-        const NombreUser = await VerificarUserN($("txtUsuario").value);
-        console.log(NombreUser);
-        if (NombreUser.length > 0) {
-          showToast("Nombre repetido, ingrese uno valido e intentelo de nuevo", "ERROR");
-        } */
-    // Verificar si ya se encontró una persona.
-    if (!idPersonaEncontrada) {
-      const dni = $("txtNumDocumentoPersona").value;
-      if (!dni) {
-        showToast("Debes buscar una persona primero.", "WARNING");
-        return;
-      }
-
-      const idNuevaPersona = await RegistrarPersona(dni);
-
-      if (!idNuevaPersona) {
-        showToast("No se pudo registrar la persona.", "ERROR");
-        return;
-      }
-
-      idPersonaEncontrada = idNuevaPersona;
+    // Verifica si los requisitos de contraseña se cumplen
+    if (!verificarReqs()) {
+      showToast("La contraseña no cumple con los requisitos necesarios.", "ERROR");
+      return; // Cancela el registro si no se cumplen
     }
 
-    const usuarioregistrado = await RegistrarUsuario(idPersonaEncontrada);
-    console.log(usuarioregistrado);
+    const NombreUser = await VerificarUserN();
 
-    await registrarResponsable(usuarioregistrado);
+    if (NombreUser) {
+      showToast("Nombre repetido, ingrese uno válido e inténtelo de nuevo", "ERROR");
+    } else {
+      if (!idPersonaEncontrada) {
+        const dni = $("txtNumDocumentoPersona").value;
+        if (!dni) {
+          showToast("Debes buscar una persona primero.", "WARNING");
+          return;
+        }
+
+        const idNuevaPersona = await RegistrarPersona(dni);
+
+        if (!idNuevaPersona) {
+          showToast("No se pudo registrar la persona.", "ERROR");
+          return;
+        }
+
+        idPersonaEncontrada = idNuevaPersona;
+      }
+
+      const usuarioregistrado = await RegistrarUsuario(idPersonaEncontrada);
+
+      await registrarResponsable(usuarioregistrado);
+    }
   });
 
   const configurarSelectsDocumento = () => {
@@ -304,7 +303,9 @@ document.addEventListener("DOMContentLoaded", function () {
     reqsCumplidos.forEach((cumplido, index) => {
       reqs[index].style.color = cumplido ? "green" : "red";
     });
-  };
+
+    return reqsCumplidos.every(Boolean);
+  }
 
   (async function iniciarAplicacion() {
     await obtenerRoles();

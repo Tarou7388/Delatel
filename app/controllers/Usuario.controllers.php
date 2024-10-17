@@ -63,7 +63,7 @@ if (isset($_POST['operacion'])) {
                 $Login["estado"] = false;
             }
         } else {
-            $Login["mensaje"] = "No existe el Usuario";
+            $resultados["mensaje"] = "No existe el Usuario";
             $Login["estado"] = false;
         }
         $_SESSION["login"] = $Login;
