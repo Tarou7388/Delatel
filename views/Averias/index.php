@@ -23,13 +23,15 @@
         <div class="table-responsive">
           <table id="listarClienteyContratos" class="table mt-4">
             <thead>
-              <th class="text-center">#</th>
-              <th class="text-center">Numero Documento</th>
-              <th>Cliente</th>
-              <th class="text-center">Contrato</th>
+              <tr>
+                <th class="text-center">#</th>
+                <th class="text-center">Cliente</th>
+                <th class="text-center">Numero Documento</th>
+                <th class="text-center">Contrato</th>
+              </tr>
             </thead>
             <tbody>
-
+              
             </tbody>
           </table>
         </div>
