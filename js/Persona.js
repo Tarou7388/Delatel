@@ -1,4 +1,5 @@
 import config from "../env.js";
+import * as mapa from "./Mapa.js";
 
 document.addEventListener("DOMContentLoaded", function () {
   const userid = JSON.stringify(user["idUsuario"]);
@@ -239,7 +240,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  btnBuscar.addEventListener("click", () => {
+  document.querySelector("#btnBuscarCoordenadas").addEventListener("click", mapa.iniciarMapa)
+
+  /* btnBuscar.addEventListener("click", () => {
     ObtenerDataDNI("obtenerDni", txtNumDocumentoPersona.value);
-  });
+  }); */
 });
