@@ -166,7 +166,7 @@
 				<div class="row mb-3">
 					<div class="col-md-6">
 						<div class="form-floating">
-							<input type="text" class="form-control" id="txtRazonSocial" name="razon_social" placeholder="Razón Social" required>
+							<input type="text" class="form-control" id="txtRazonSocial" name="razon_social" placeholder="Razón Social" required disabled>
 							<label for="txtRazonSocial">Razón Social</label>
 						</div>
 					</div>
@@ -202,7 +202,7 @@
 				<div class="row mb-3">
 					<div class="col-md-4">
 						<div class="form-floating">
-							<input type="text" class="form-control" id="txtDireccion" name="direccion" placeholder="Dirección" required>
+							<input type="text" class="form-control" id="txtDireccion" name="direccion" placeholder="Dirección" required disabled>
 							<label for="txtDireccion">Dirección</label>
 						</div>
 					</div>
@@ -254,7 +254,7 @@
 								<input type="number" id="txtNumDocumentoPersona" class="form-control" placeholder="Número de documento" required max="20999999999">
 								<label for="txtNumDocumentoPersona">Número de documento</label>
 							</div>
-							<button class="btn btn-primary" type="button" id="btnBuscar"><i class="fa-solid fa-magnifying-glass"></i></button>
+							<button class="btn btn-primary" type="button" id="btnBuscar" disabled><i class="fa-solid fa-magnifying-glass"></i></button>
 						</div>
 					</div>
 					<div class="col-md-4">

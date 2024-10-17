@@ -95,6 +95,21 @@ CREATE TABLE tb_personas (
     )
 ) ENGINE = InnoDB;
 
+CREATE TABLE tb_cajas(
+    id_caja INT PRIMARY KEY AUTO_INCREMENT,
+    nombre INT PRIMARY KEY AUTO_INCREMENT,
+    descripcion VARCHAR(100) NOT NULL,
+    numero_entradas TINYINT NOT NULL,
+    id_sector INT NOT NULL,
+    create_at DATETIME NOT NULL DEFAULT NOW(),
+    update_at DATETIME NULL,
+    inactive_at DATETIME NULL,
+    iduser_create INT NOT NULL,
+    iduser_update INT NULL,
+    iduser_inactive INT NULL,
+    CONSTRAINT caja_fk_id_sector FOREIGN KEY (id_sector) REFERENCES tb_sectores (id_sector)
+) ENGINE = InnoDB;
+
 CREATE TABLE tb_empresas (
     id_empresa INT PRIMARY KEY AUTO_INCREMENT,
     ruc VARCHAR(11) NOT NULL,

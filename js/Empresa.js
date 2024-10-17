@@ -116,15 +116,33 @@ document.addEventListener("DOMContentLoaded", function () {
 
   async function ObtenerDataRUC(ruc) {
     try {
-      const response = await fetch(`${config.HOST}app/controllers/Persona.controllers.php?operacion=obtenerRuc&ruc=${ruc}`);
-      const data = await response.json();
-      console.log(data);
-      txtRazonSocial.value = data.razonSocial;
-      txtDireccion.value = data.direccion;
+      if (ruc.length < 11) {
+        showToast("¡El RUC debe tener 11 dígitos!", "INFO");
+        return;
+      } else {
+        showLoadingMessage(true);
+        const response = await fetch(`${config.HOST}app/controllers/Persona.controllers.php?operacion=obtenerRuc&ruc=${ruc}`);
+        const data = await response.json();
+        txtRazonSocial.value = data.razonSocial;
+        txtDireccion.value = data.direccion;
+      }
     } catch (error) {
       showToast("¡Empresa no encontrada, verifique RUC!", "INFO");
-      console.error("Detalles del error:", error);
+    } finally {
+      showLoadingMessage(false);
     }
+  }
+
+  async function showLoadingMessage(show) {
+    txtCoordenadas.disabled = show;
+    txtReferencia.disabled = show;
+    txtNombreComercial.disabled = show;
+    txtTelefono.disabled = show;
+    txtEmail.disabled = show;
+    txtRepresentanteLegal.disabled = show;
+    btnBuscarEmpresa.disabled = show;
+    btnCancelarEmpresa.disabled = show;
+    slcServicio.disabled = show;
   }
 
   (async function () {

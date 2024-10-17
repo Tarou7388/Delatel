@@ -11,6 +11,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const coordenada = document.querySelector("#txtCoordenada");
   const slcSector = document.querySelector("#slcSector");
   const slcServicio = document.querySelector("#slcServicio");
+  const txtNota = document.querySelector("#txtNota");
   const span = document.querySelector('#infoFecha');
 
   let lapsoTiempo = false;
@@ -69,7 +70,8 @@ window.addEventListener("DOMContentLoaded", () => {
     } else {
       const response = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteExistencia&nroDoc=${nroDoc}`);
       const data = await response.json();
-      if (data == []) {
+      console.log(data);
+      if (data.length == 0) {
         showToast("No existe la persona", "WARNING");
       } else {
         if (data[0].id_cliente == null) {
@@ -116,7 +118,8 @@ window.addEventListener("DOMContentLoaded", () => {
 
   async function registrarContrato() {
     const fechaRegistro = new Date().toISOString().split('T')[0];
-    const nota = "";
+    const nota = txtNota.value;
+    console.log(nota);
     const idUsuarioRegistro = user.idRol;
 
     if (!await validarCampos() || await !validarFechas()) {
@@ -154,7 +157,7 @@ window.addEventListener("DOMContentLoaded", () => {
           showToast("¡Contrato registrado correctamente!", "SUCCESS");
           span.classList.add('invisible');
           nroDoc.disabled = false;
-          window.location.reload();
+          //window.location.reload();
           resetUI();
         }
       } catch (error) {
@@ -179,7 +182,7 @@ window.addEventListener("DOMContentLoaded", () => {
       const data = await response.json();
       if (data.eliminado) {
         showToast("¡Contrato eliminado correctamente!", "SUCCESS");
-        location.reload();
+        window.location.reload();
       }
     }
   }
@@ -228,8 +231,9 @@ window.addEventListener("DOMContentLoaded", () => {
       language: {
         url: `https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json`,
       },
+      ordering: false,
       columnDefs: [
-        { width: "12.5%", targets: 0 },
+        { width: "12.5%", targets: 0},
         { width: "12.5%", targets: 1 },
         { width: "12.5%", targets: 2 },
         { width: "12.5%", targets: 3 },
@@ -253,7 +257,7 @@ window.addEventListener("DOMContentLoaded", () => {
           "CABl": "FichaTecnicaCable",
           "FIBR": "FichaTecnicaGpon",
         };
-        window.location.href = `${config.HOST}//views/contratos/${tipoFicha[tipoPaquete]}.php?idContrato=${idContrato}`;
+        window.location.href = `${config.HOST}views/Contratos/${tipoFicha[tipoPaquete]}.php?idContrato=${idContrato}`;
       });
     });
 

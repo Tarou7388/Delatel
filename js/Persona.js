@@ -136,6 +136,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
   toggleForms(slcChangeRegistro.value);
 
+  async function bloquearCargar(show) {
+    txtTelefono.disabled = show;
+    txtEmail.disabled = show;
+    txtDireccion.disabled = show;
+    txtReferencia.disabled = show;
+    txtcoordenadasPersona.disabled = show;
+    slcTipoDocumento.disabled = show;
+    slcNacionalidad.disabled = show;
+    txtNumDocumentoPersona.disabled = show;
+    slcServicio.disabled = show;
+    btnBuscar.disabled = show;
+    frmPersonas.querySelector("button[type=submit]").disabled = show;
+  }
+
+
   function manejarDocumentoNacionalidad() {
     const peruanoOpcion = new Option('Peruano', 'Peruano');
     peruanoOpcion.id = 'peruanoOpcion';
@@ -149,19 +164,27 @@ document.addEventListener("DOMContentLoaded", function () {
         if (![...slcNacionalidad.options].some(option => option.value === 'Peruano')) {
           slcNacionalidad.add(peruanoOpcion);
         }
+        btnBuscar.disabled = false;
         slcTipoDocumento.value = 'DNI';
         slcTipoDocumento.disabled = true;
         slcNacionalidad.value = 'Peruano';
         slcNacionalidad.disabled = true;
       } else {
+        btnBuscar.disabled = true;
         if ([...slcNacionalidad.options].some(option => option.value === 'Peruano')) {
           slcNacionalidad.remove(slcNacionalidad.querySelector('#peruanoOpcion').index);
         }
         slcTipoDocumento.disabled = false;
         if (length === 12) {
           slcTipoDocumento.value = 'PAS';
-        } else if (length === 10) {
+          slcTipoDocumento.disabled = true;
+          txtApellidosPersona.disabled = false;
+          txtNombresPersona.disabled = false;
+        } else if (length === 9) {
           slcTipoDocumento.value = 'CAR';
+          slcTipoDocumento.disabled = true;
+          txtApellidosPersona.disabled = false;
+          txtNombresPersona.disabled = false;
         } else {
           slcTipoDocumento.value = '';
         }

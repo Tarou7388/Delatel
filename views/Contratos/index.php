@@ -48,9 +48,12 @@
         <div class="row mt-2">
 
           <div class="col-md-3">
-            <select class="form-select select2me" id="slcServicio" aria-label=Servicios>
-              <option value="0" disabled selected>Servicios</option>
-            </select>
+            <div class="form-floating">
+              <select class="form-select select2me" id="slcServicio" aria-label=Servicios>
+                <option value="0" disabled selected>Servicios</option>
+              </select>
+              <label for="slcServicio" class="form-label">Servicios</label>
+            </div>
           </div>
 
 
@@ -69,9 +72,13 @@
           </div>
 
           <div class="col-md-3">
-            <select class="form-select select2me" id="slcSector" aria-label=Sectores>
-              <option value="0" disabled selected>Sectores</option>
-            </select>
+            <div class="form-floating">
+              <select class="form-select select2me" id="slcSector" aria-label=Sectores>
+                <option value="0" disabled selected>Sectores</option>
+              </select>
+              <label for="slcSector" class="form-label">Sectores</label>
+            </div>
+
           </div>
 
         </div>
@@ -92,9 +99,19 @@
           </div>
 
         </div>
+        <div class="row mt-2">
+
+          <div class="col-md-12">
+            <div class="form-floating">
+              <textarea class="form-control" id="txtNota" placeholder="Observaciones" name="observacion"></textarea>
+              <label for="txtObservacion" class="form-label">Observaciones</label>
+            </div>
+          </div>
+
+        </div>
 
 
-        <div class="col-12 text-center text-md-end mb-3">
+        <div class="col-12 text-center text-md-end mb-3 mt-3">
           <button class="btn btn-success" id="btnRegistrar">Registrar</button>
           <button class="btn btn-secondary" type="reset">Cancelar</button>
         </div>
