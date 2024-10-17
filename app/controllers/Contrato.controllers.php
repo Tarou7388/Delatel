@@ -64,7 +64,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     case 'guardarFichaInstalacion':
       $data = [
         "id" => Herramientas::sanitizarEntrada($datos['id']),
-        "fichaInstalacion" => json_encode($datos['fichaInstalacion'])
+        "fichaInstalacion" => json_encode($datos['fichaInstalacion']),
+        "idUsuario" => Herramientas::sanitizarEntrada($datos['idUsuario'])
       ];
       $resultado = $contrato->guardarFichaInstalacion($data);
       echo json_encode(["guardado" => $resultado]);

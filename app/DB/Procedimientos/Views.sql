@@ -51,3 +51,7 @@ LEFT JOIN
     tb_usuarios u2 ON c.iduser_update = u2.id_usuario
 LEFT JOIN 
     tb_usuarios u3 ON c.iduser_inactive = u3.id_usuario;
+
+
+
+CALL spu_fichatecnica_buscar_id(5);

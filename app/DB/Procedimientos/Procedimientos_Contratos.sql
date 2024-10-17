@@ -92,7 +92,8 @@ BEGIN
             ELSE e.ruc
         END AS num_identificacion,
         sv.servicio,
-        t.tipo_paquete
+        t.tipo_paquete,
+        c.ficha_instalacion
     FROM
         tb_contratos c
         INNER JOIN tb_clientes cl ON c.id_cliente = cl.id_cliente
@@ -161,7 +162,6 @@ BEGIN
     WHERE id_contrato = p_id_contrato;
 END $$
 
-/**
 DROP PROCEDURE IF EXISTS spu_ficha_tecnica_registrar$$
 CREATE PROCEDURE spu_ficha_tecnica_registrar(
     p_id_contrato INT,
@@ -175,7 +175,6 @@ BEGIN
     id_usuario_registro = p_id_usuario_registro
     WHERE id_contrato = p_id_contrato;
 END $$
-**/
 
 DROP PROCEDURE IF EXISTS buscar_contrato_por_cliente$$
 CREATE PROCEDURE buscar_contrato_por_cliente(IN p_id_cliente INT)
