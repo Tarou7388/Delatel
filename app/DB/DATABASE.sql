@@ -97,7 +97,7 @@ CREATE TABLE tb_personas (
 
 CREATE TABLE tb_cajas(
     id_caja INT PRIMARY KEY AUTO_INCREMENT,
-    nombre INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(30) NOT NULL,
     descripcion VARCHAR(100) NOT NULL,
     numero_entradas TINYINT NOT NULL,
     id_sector INT NOT NULL,

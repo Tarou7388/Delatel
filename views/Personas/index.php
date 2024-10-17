@@ -1,9 +1,30 @@
 <?php require_once '../../header.php'; ?>
 
+
+<div class="modal fade" id="ModalMapa" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-xl" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="myModalLabel">Título del Modal</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div id="map" style="height: 700px;"></div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+				<button type="button" class="btn btn-primary" id="btnGuardar">Guardar cambios</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 <div class="container-fluid px-4">
 	<h1 class="mt-4">Clientes</h1>
 
-	<div class="form-floating">
+	<div class="form-floating mb-3">
 		<select class="form-control" name="slchangeRegistro" id="slcChangeRegistro">
 			<option value="" disabled selected>Seleccione el Tipo de Cliente</option>
 			<option value="Persona" id="optPersona">Persona</option>
@@ -12,129 +33,6 @@
 		<label for="lblCliente">Cliente</label>
 	</div>
 </div>
-
-<!-- Modal para Empresa -->
-<div class="modal fade" id="editEmpresaModal" tabindex="-1" aria-labelledby="editEmpresaModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="editEmpresaModalLabel">Editar Empresa</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				<form id="editEmpresaForm">
-					<input type="hidden" id="editCodigoEmpresa">
-					<div class="mb-3">
-						<div class="form-floating">
-							<input type="text" class="form-control" id="txteditNombreEmpresa" placeholder="Nombre Comercial">
-							<label for="txteditNombreEmpresa" class="form-label">Nombre Comercial</label>
-						</div>
-					</div>
-					<div class="mb-3">
-						<div class="form-floating">
-							<input type="email" class="form-control" id="txteditEmailEmpresa" placeholder="Email">
-							<label for="txteditEmailEmpresa" class="form-label">Email</label>
-						</div>
-					</div>
-					<div class="mb-3">
-						<div class="form-floating">
-							<input type="text" class="form-control" id="txteditTelefonoEmpresa" placeholder="Teléfono">
-							<label for="txteditTelefonoEmpresa" class="form-label">Teléfono</label>
-						</div>
-					</div>
-					<div class="mb-3">
-						<div class="form-floating">
-							<input type="text" class="form-control" id="txteditDireccionEmpresa" placeholder="Dirección">
-							<label for="txteditDireccionEmpresa" class="form-label">Dirección</label>
-						</div>
-
-					</div>
-					<div class="mb-3">
-						<div class="form-floating">
-							<input type="text" class="form-control" id="txteditReferenciaEmpresa" placeholder="Referencia">
-							<label for="txteditReferenciaEmpresa" class="form-label">Referencia</label>
-						</div>
-					</div>
-					<div class="mb-3">
-						<div class="form-floating">
-							<input type="text" class="form-control" id="txteditCoordenadasEmpresa" placeholder="Coordenadas">
-							<label for="txteditCoordenadasEmpresa" class="form-label">Coordenadas</label>
-						</div>
-					</div>
-				</form>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-				<button type="button" class="btn btn-success" id="btnsaveEmpresaChanges">Guardar cambios</button>
-			</div>
-		</div>
-	</div>
-</div>
-
-<!-- Modal para Persona -->
-<div class="modal fade" id="editPersonaModal" tabindex="-1" aria-labelledby="editPersonaModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="editPersonaModalLabel">Editar Persona</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				<form id="editPersonaForm">
-					<input type="hidden" id="editCodigoPersona">
-					<div class="mb-3">
-						<div class="form-floating">
-							<input type="text" class="form-control" id="txteditNombrePersona" placeholder="Nombre">
-							<label for="txteditNombrePersona" class="form-label">Nombre</label>
-						</div>
-					</div>
-					<div class="mb-3">
-						<div class="form-floating">
-							<inputxtDirecciont type="text" class="form-control" id="txteditApellidosPersona" placeholder="Apellidos">
-								<label for="txteditApellidosPersona" class="form-label">Apellidos</label>
-						</div>
-					</div>
-					<div class="mb-3">
-						<div class="form-floating">
-							<input type="email" class="form-control" id="txteditEmailPersona" placeholder="Email">
-							<label for="txteditEmailPersona" class="form-label">Email</label>
-						</div>
-					</div>
-					<div class="mb-3">
-						<div class="form-floating">
-							<input type="text" class="form-control" id="txteditTelefonoPersona" placeholder="Teléfono">
-							<label for="txteditTelefonoPersona" class="form-label">Teléfono</label>
-						</div>
-					</div>
-					<div class="mb-3">
-						<div class="form-floating">
-							<input type="text" class="form-control" id="txteditDireccionPersona" placeholder="Dirección">
-							<label for="txteditDireccionPersona" class="form-label">Dirección</label>
-						</div>
-					</div>
-					<div class="mb-3">
-						<div class="form-floating">
-							<input type="text" class="form-control" id="txteditReferenciaPersona" placeholder="Referencia">
-							<label for="txteditReferenciaPersona" class="form-label">Referencia</label>
-						</div>
-					</div>
-					<div class="mb-3">
-						<div class="form-floating">
-							<input type="text" class="form-control" id="txteditCoordenadasPersona" placeholder="Coordenadas">
-							<label for="txteditCoordenadasPersona" class="form-label">Coordenadas</label>
-						</div>
-					</div>
-				</form>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-				<button type="button" class="btn btn-success" id="savePersonaChanges">Guardar cambios</button>
-			</div>
-		</div>
-	</div>
-</div>
-
-<br>
 
 <!-- Contenido del registro -->
 
@@ -300,9 +198,12 @@
 						</div>
 					</div>
 					<div class="col-md-4">
-						<div class="form-floating">
-							<input type="text" class="form-control" id="txtCoordenadasPersona" placeholder="Referencia" required>
-							<label for="txtCoordenadasPersona">Coordenadas</label>
+						<div class="input-group">
+							<div class="form-floating">
+								<input type="text" class="form-control" id="txtCoordenadasPersona" placeholder="Referencia" required>
+								<label for="txtCoordenadasPersona">Coordenadas</label>
+							</div>
+							<button class="btn btn-primary" type="button" id="btnBuscarCoordenadas" data-toggle="modal" data-target="#ModalMapa"><i class="fa-solid fa-magnifying-glass"></i></button>
 						</div>
 					</div>
 				</div>
@@ -342,3 +243,4 @@
 <script type="module" src="../../js/ListarClientes.js"></script>
 <script type="module" src="../../js/Empresa.js"></script>
 <script type="module" src="../../js/Persona.js"></script>
+<script type="module" src="../../js/Mapa.js"></script>

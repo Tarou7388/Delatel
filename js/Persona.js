@@ -35,6 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function ObtenerDataDNI(operacion, dni) {
+    bloquearCargar(true);
     fetch(`${config.HOST}app/controllers/Persona.controllers.php?operacion=${operacion}&dni=${encodeURIComponent(dni)}`)
       .then((response) => {
         if (!response.ok) {
@@ -54,6 +55,9 @@ document.addEventListener("DOMContentLoaded", function () {
       })
       .catch((error) => {
         showToast('Error al obtener la información de la persona: ' + error.message, 'ERROR');
+      })
+      .finally(() => {
+        bloquearCargar(false);
       });
   }
 
@@ -169,6 +173,8 @@ document.addEventListener("DOMContentLoaded", function () {
         slcTipoDocumento.disabled = true;
         slcNacionalidad.value = 'Peruano';
         slcNacionalidad.disabled = true;
+        txtApellidosPersona.disabled = true;
+          txtNombresPersona.disabled = true;
       } else {
         btnBuscar.disabled = true;
         if ([...slcNacionalidad.options].some(option => option.value === 'Peruano')) {
@@ -187,6 +193,8 @@ document.addEventListener("DOMContentLoaded", function () {
           txtNombresPersona.disabled = false;
         } else {
           slcTipoDocumento.value = '';
+          txtApellidosPersona.disabled = true;
+          txtNombresPersona.disabled = true;
         }
         slcNacionalidad.disabled = false;
       }
