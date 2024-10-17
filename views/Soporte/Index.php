@@ -6,7 +6,7 @@
 
   <div class="row g-2 mb-2">
     <div class="col text-start">
-      <a href="<?= $host; ?>/views/Soporte/ListarSoporteIn" type="button" class="btn btn-primary mt-2"> Dirigirse a Listar</a>
+      <a href="<?= $host; ?>views/Soporte/ListarSoporteIn" type="button" class="btn btn-primary mt-2"> Dirigirse a Listar</a>
     </div>
     <div class="col text-end">
       <div class="row g-2 justify-content-end">

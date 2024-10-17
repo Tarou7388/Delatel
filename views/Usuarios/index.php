@@ -9,7 +9,7 @@
       <div>
         <i class="fas fa-table me-1"></i> Gestionar Usuarios
       </div>
-      <a href="<?= $host ?>/views/Usuarios/registrar.php" class="btn btn-primary">Registrar Usuario</a>
+      <a href="<?= $host ?>views/Usuarios/registrar.php" class="btn btn-primary">Registrar Usuario</a>
     </div>
     <div class="card-body">
       <div class="table-responsive">

@@ -111,4 +111,21 @@ class Usuario extends Conexion
     );
     return $this->registrar($sql, $values);
   }
+
+  /**
+   * Buscar Nombre de Usuario para verificar
+   *
+   * Este método llama al procedimiento almacenado `spu_usuario_buscar_username` 
+   * para verificar a un usuario basado en el nombre de usuario proporcionado.
+   *
+   * @param array $params Arreglo asociativo que contiene el nombre de usuario 
+   *                      bajo la clave 'nombreUser'.
+   * @return mixed El resultado de la consulta
+   */
+  public function buscarNombre($params = [])
+  {
+    $sql = "CALL spu_usuario_buscar_username(?)";
+    $values = array($params['nombreUser']);
+    return $this->buscarObjeto($sql, $values);
+  }
 }

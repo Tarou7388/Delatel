@@ -1,5 +1,6 @@
 import config from "../env.js";
 document.addEventListener("DOMContentLoaded", () => {
+  const userid = user["idUsuario"];
   const txtCantCable = document.getElementById("txtCantCable");
   const txtPrecioCable = document.getElementById("txtPrecioCable");
   const txtCostoCable = document.getElementById("txtCostoCable");
@@ -26,7 +27,8 @@ document.addEventListener("DOMContentLoaded", () => {
         `${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerFichaInstalacion&id=${idContrato}`
       );
       const data = await response.json();
-  
+      console.log(data)
+      tipoPaquete = data[0].tipo_paquete;
       const usuario = (
         data[0].nombre_cliente.split(", ")[0].substring(0, 3) +
         data[0].nombre_cliente.split(", ")[1].substring(0, 3)
@@ -52,7 +54,15 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("slcBanda").value = fibra.moden?.banda || "";
         document.getElementById("txtAntenas").value = fibra.moden?.numeroantena || "";
         document.getElementById("chkCatv").checked = fibra.moden?.catv || false;
-  
+        document.getElementById("txtaDetallesModen").value = fibra.detalles || "";
+        document.getElementById("txtSsidRepetidor").value = fibra.repetidores[0].ssid;
+        document.getElementById("txtContraseniaRepetidor").value = fibra.repetidores[0].contrasenia;
+        document.getElementById("txtMarcaModeloRepetidor").value = fibra.repetidores[0].marca;
+        document.getElementById("txtIpRepetidor").value = fibra.repetidores[0].ip;
+        
+        console.log("Tipo de paquete:", data[0].tipo_paquete);
+        console.log("Datos de fibra:", fibra);
+
         if (data[0].tipo_paquete == "FIBR" && fibra) {
           // Datos de Fibra
           document.querySelector("#contenidoCable").setAttribute("hidden", "");
@@ -71,8 +81,6 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         console.warn("No hay datos en ficha_instalacion.");
       }
-  
-      tipoPaquete = data[0].tipo_paquete;
   
     } catch (error) {
       console.error("Error al obtener los datos de la ficha de instalación:", error);
@@ -132,7 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (txtPagoInst === "" || txtPotencia === "" || slcTriplexor === "" || txtCantConector === "" || txtPrecioConector === "" || txtSpliter === "" || slcSpliter === "" || txtCantCable === "" || txtPrecioCable === "") {
       showToast("Por favor, llene todos los campos del Cable.", "WARNING");
-      return;
+      return; 
     } else {
       jsonCable = {
         pagoinstalacion: parseFloat(txtPagoInst),
@@ -312,22 +320,27 @@ document.addEventListener("DOMContentLoaded", () => {
     if (numeroRepetidores > 0) {
       jsonData.fibraoptica.repetidores = jsonRepetidor;
     }
+    console.log(tipoPaquete)
     if (tipoPaquete == "GPON") {
       if (numeroSintotizadores > 0) {
         jsonCable.sintonizadores = jsonSintotizador;
       }
       jsonData.cable = jsonCable;
+      console.log(jsonData);
     }
     const data = {
       operacion: "guardarFichaInstalacion",
       fichaInstalacion: jsonData,
-      id: idContrato
+      id: idContrato,
+      idUsuario: userid
     };
+    console.log(data)
     const response = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php`, {
       method: "PUT",
       body: JSON.stringify(data)
     });
     const datos = await response.json();
+    console.log(datos);
   }
 
   txtCantCable.addEventListener("input", calcularCostos);
@@ -356,11 +369,36 @@ document.addEventListener("DOMContentLoaded", () => {
     if(!flagFichaInstalacion){
       await guardar();
       showToast("Ficha de Instalación Guardarda Correctamente", "SUCCESS");
-      window.location.href = `${config.HOST}/views/Contratos/Index.php`;
+      //window.location.href = `${config.HOST}views/Contratos/Index.php`;
     }else{
       showToast("La ficha de instalación ya ha sido guardada.", "WARNING");
     }
   });
   document.getElementById('txtFecha').value = today;
-});
 
+  function formatoIPinput(event){
+    let input = event.target.value.replace(/[^0-9.]/g, ''); 
+    let formattedInput = '';
+    let count = 0; 
+
+    for (let i = 0; i < input.length; i++) {
+      if (input[i] !== '.') {
+        formattedInput += input[i];
+        count++;
+        if (count % 3 === 0 && i < input.length - 1 && input[i + 1] !== '.') {
+          formattedInput += '.';
+        }
+      } else {
+        if (formattedInput[formattedInput.length - 1] !== '.') {
+          formattedInput += '.'; 
+        }
+        count = 0; 
+      }
+    }
+    event.target.value = formattedInput.slice(0, 15); 
+  };
+
+  $('#txtIpRepetidor').on('input', function (event) {
+    formatoIPinput(event);
+  });
+});
