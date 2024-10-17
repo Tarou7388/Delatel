@@ -10,10 +10,6 @@
       <div class="modal-body">
         <p>El texto del cuerpo modal va aquí.</p>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary">Guardar cambios</button>
-      </div>
     </div>
   </div>
 </div>
@@ -28,9 +24,9 @@
           <table id="listarClienteyContratos" class="table mt-4">
             <thead>
               <th class="text-center">#</th>
-              <th class="text-center">Apellidos</th>
-              <th class="text-center">Nombres</th>
-              <th class="text-center">Detalles</th>
+              <th class="text-center">Numero Documento</th>
+              <th>Cliente</th>
+              <th class="text-center">Contrato</th>
             </thead>
             <tbody>
 
@@ -42,3 +38,4 @@
   </div>
 </div>
 <?php require_once "../../footer.php"; ?>
+<script type="module" src="../../js/Averias.js"></script>
