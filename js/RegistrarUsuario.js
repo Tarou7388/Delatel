@@ -64,9 +64,24 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  async function VerificarUserN(objectName) {
-    
-  }
+  /*   async function VerificarUserN(objectName) {
+      const datos = {
+        operacion: "buscarNombre",
+        nombreUser: objectName
+      };
+  
+      const respuesta = await fetch(`${config.HOST}app/controllers/Usuario.controllers.php`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(datos) // Convertir a JSON
+      });
+  
+      const data = await respuesta.text();
+      console.log(data);
+      return data;
+    } */
 
   async function BuscarPersonaAPI(operacion, dni) {
     try {
@@ -180,6 +195,12 @@ document.addEventListener("DOMContentLoaded", function () {
   $("registerForm").addEventListener("submit", async (event) => {
     event.preventDefault();
 
+    /*     console.log($("txtUsuario").value);
+        const NombreUser = await VerificarUserN($("txtUsuario").value);
+        console.log(NombreUser);
+        if (NombreUser.length > 0) {
+          showToast("Nombre repetido, ingrese uno valido e intentelo de nuevo", "ERROR");
+        } */
     // Verificar si ya se encontró una persona.
     if (!idPersonaEncontrada) {
       const dni = $("txtNumDocumentoPersona").value;

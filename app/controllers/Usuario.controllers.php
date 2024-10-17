@@ -84,6 +84,12 @@ if (isset($_POST['operacion'])) {
         $resultado = $usuario->registrarUsuarios($data);
         echo json_encode($resultado);
     }
+
+    if ($operacion == "buscarNombre") {
+        $nombreUser = Herramientas::sanitizarEntrada($_POST["nombreUser"]);
+        $resultado = $usuario->buscarNombre(["nombreUser" => $nombreUser]);
+        echo json_encode($resultado);
+    }
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
