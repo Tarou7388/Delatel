@@ -102,14 +102,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
   async function registrarContacto(idPersona) {
     const Paquete = slcServicio.value;
+    const direccion = txtDireccion.value;
+    const referencia = txtReferencia.value;
+    const coordenadas = txtcoordenadasPersona.value;
     const fecha = new Date();
     fecha.setDate(fecha.getDate() + 14);
     const datos = {
       operacion: "registrarContacto",
       idPersona: idPersona,
       idEmpresa: '',
-      idPaquete: Paquete,
-      direccion: txtDireccion.value,
+      idPaquete: parseInt(slcServicio.value.split((" - ")[0])),
+      direccion: direccion,
       nota: "Para llamar",
       idUsuario: userid,
       fechaLimite: fecha.toISOString().slice(0, 10),
@@ -125,11 +128,7 @@ document.addEventListener("DOMContentLoaded", function () {
       setTimeout(async () => {
         frmPersonas.reset();
         if (await ask("¿Desea registrar un contrato?")) {
-          const coordenadas = txtcoordenadasPersona.value;
-          const direccion = txtDireccion.value;
-          const referencia = txtReferencia.value;
-          
-          window.location.href = `${config.HOST}views/Contratos/?nroDoc=${dniActual}&idObjeto=${idPersona}&coordenadas=${coordenadas}&Paquete=${Paquete}&direccion=${direccion}&referencia=${referencia}`;
+          window.location.href = `${config.HOST}views/Contratos/?nroDoc=${dniActual}&idObjeto=${idPersona}&Paquete=${Paquete}&direccion=${direccion}&referencia=${referencia}&coordenadas=${coordenadas}`;
         }
       }, 650);
     }
@@ -176,7 +175,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const data = await response.json();
     data.forEach((paquetes) => {
       const option = document.createElement("option");
-      const id = paquetes.id_paquete;
+      const id = `${paquetes.id_servicio} - ${paquetes.precio}`;
       option.value = id;
       option.textContent = paquetes.servicio;
       slcServicio.appendChild(option);

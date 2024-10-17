@@ -47,8 +47,8 @@
         </div>
         <div class="row mt-2">
 
-          <div class="col-md-3 mt-2">
-            <select class="form-select select2" id="slcServicio">
+          <div class="col-md-3">
+            <select class="form-select select2me" id="slcServicio" aria-label=Servicios>
               <option value="0" disabled selected>Servicios</option>
             </select>
           </div>
@@ -68,8 +68,8 @@
             </div>
           </div>
 
-          <div class="col-md-3 mt-2">
-            <select class="form-select" id="slcSector">
+          <div class="col-md-3">
+            <select class="form-select select2me" id="slcSector" aria-label=Sectores>
               <option value="0" disabled selected>Sectores</option>
             </select>
           </div>

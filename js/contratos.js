@@ -32,7 +32,10 @@ window.addEventListener("DOMContentLoaded", () => {
       coordenada.value = params.coordenadas;
       direccion.value = params.direccion;
       referencia.value = params.referencia;
-      slcServicio.value = params.Paquete;
+      const optionToSelect = slcServicio.querySelector(`option[value="${params.paquete}"]`);
+      if (optionToSelect) {
+        optionToSelect.selected = true;
+      }
     }
   }
 
@@ -151,6 +154,7 @@ window.addEventListener("DOMContentLoaded", () => {
           showToast("¡Contrato registrado correctamente!", "SUCCESS");
           span.classList.add('invisible');
           nroDoc.disabled = false;
+          window.location.reload();
           resetUI();
         }
       } catch (error) {
@@ -347,15 +351,8 @@ window.addEventListener("DOMContentLoaded", () => {
     slcServicio.value = idServicio;
   });
 
-  $("#slcSector").select2({
-    theme: "bootstrap-5",
-    placeholder: "Seleccione Sectores",
-    allowClear: true,
-  });
-
-  $("#slcServicio").select2({
-    theme: "bootstrap-5",
-    placeholder: "Seleccione Servicio",
-    allowClear: true,
-  });
+  $(".select2me").select2({ theme: "bootstrap-5", placeholder: "Seleccione Servicio", allowClear: true });
+  $('.select2me').parent('div').children('span').children('span').children('span').css('height', ' calc(3.5rem + 2px)');
+  $('.select2me').parent('div').children('span').children('span').children('span').children('span').css('margin-top', '18px');
+  $('.select2me').parent('div').find('label').css('z-index', '1');
 });

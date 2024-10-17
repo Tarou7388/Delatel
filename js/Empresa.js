@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const data = await response.json();
     data.forEach((paquetes) => {
       const option = document.createElement("option");
-      const id = paquetes.id_paquete;
+      const id = `${paquetes.id_servicio} - ${paquetes.precio}`;;
       option.value = id;
       option.textContent = paquetes.servicio;
       slcServicio.appendChild(option);
@@ -88,7 +88,7 @@ document.addEventListener("DOMContentLoaded", function () {
       operacion: "registrarContacto",
       idPersona: '',
       idEmpresa: idEmpresa,
-      idPaquete: Paquete,
+      idPaquete: parseInt(slcServicio.value.split((" - ")[0])),
       direccion: txtDireccion.value,
       nota: "Para llamar",
       idUsuario: userid,
@@ -100,11 +100,15 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     const data = await response.json();
     if (data.guardado) {
+      const Paquete = slcServicio.value;
+      const direccion = txtDireccion.value;
+      const referencia = txtReferencia.value;
+      const coordenadas = txtCoordenadas.value;
       await showToast("Empresa registrada correctamente", "SUCCESS", 650);
       setTimeout(async () => {
         frmPersonas.reset();
         if (await ask("¿Desea registrar un contrato?")) {
-          window.location.href = `${config.HOST}views/Contratos/?nroDoc=${ruc}&idObjeto=${idEmpresa}`;
+          window.location.href = `${config.HOST}views/Contratos/?nroDoc=${ruc}&idObjeto=${idPersona}&Paquete=${Paquete}&direccion=${direccion}&referencia=${referencia}&coordenadas=${coordenadas}`;
         }
       }, 650);
     }

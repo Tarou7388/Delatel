@@ -30,7 +30,8 @@ INNER JOIN
 INNER JOIN 
     tb_servicios sv ON t.id_servicio = sv.id_servicio
 WHERE 
-    c.inactive_at IS NULL;
+    c.inactive_at IS NULL
+    ORDER BY c.id_contrato DESC;
 
 DELIMITER $$
 
