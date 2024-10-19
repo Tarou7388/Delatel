@@ -1,7 +1,8 @@
 <?php require_once "../../header.php" ?>
 
+<!-- Modal de Actualización -->
 <div class="modal fade" id="modalEditarProducto" tabindex="-1" aria-labelledby="modalEditarProductoLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
         <h6 class="modal-title" id="modalEditarProductoLabel">Editar Producto</h6>

@@ -70,5 +70,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
       $resultado = $contrato->guardarFichaInstalacion($data);
       echo json_encode(["guardado" => $resultado]);
       break;
+    case 'actualizarContrato':
+      $datosActualizar = [
+        "idContrato"         => Herramientas::sanitizarEntrada($datos['parametros']['idContrato']),
+        "idPaquete"          => Herramientas::sanitizarEntrada($datos['parametros']['idPaquete']),
+        "idSector"           => Herramientas::sanitizarEntrada($datos['parametros']['idSector']),
+        "direccionServicio"  => Herramientas::sanitizarEntrada($datos['parametros']['direccionServicio']),
+        "referencia"         => Herramientas::sanitizarEntrada($datos['parametros']['referencia']),
+        "coordenada"         => Herramientas::sanitizarEntrada($datos['parametros']['coordenada']),
+        "fechaInicio"        => Herramientas::sanitizarEntrada($datos['parametros']['fechaInicio']),
+        "fechaFin"           => Herramientas::sanitizarEntrada($datos['parametros']['fechaFin']),
+        "fechaRegistro"      => Herramientas::sanitizarEntrada($datos['parametros']['fechaRegistro']),
+        "nota"               => Herramientas::sanitizarEntrada($datos['parametros']['nota']),
+        "idUsuarioUpdate"    => Herramientas::sanitizarEntrada($datos['parametros']['idUsuarioUpdate'])
+      ];
+      $resultado = $contrato->actualizarContrato($datosActualizar);
+      echo json_encode(["actualizado" => $resultado]);
+      break;
   }
 }

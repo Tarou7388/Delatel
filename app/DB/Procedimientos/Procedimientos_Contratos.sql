@@ -202,3 +202,35 @@ BEGIN
     WHERE 
         c.id_cliente = p_id_cliente AND c.inactive_at IS NULL;
 END$$
+
+
+DROP PROCEDURE IF EXISTS spu_contratos_actualizar$$
+CREATE PROCEDURE spu_contratos_actualizar(
+    IN p_id_contrato INT,
+    IN p_id_paquete INT,
+    IN p_id_sector INT,
+    IN p_direccion_servicio VARCHAR(200),
+    IN p_referencia VARCHAR(200),
+    IN p_coordenada VARCHAR(25),
+    IN p_fecha_inicio DATE,
+    IN p_fecha_fin DATE,
+    IN p_fecha_registro DATE,
+    IN p_nota TEXT,
+    IN p_iduser_update INT
+)
+BEGIN
+    UPDATE tb_contratos
+    SET
+        id_paquete = p_id_paquete,
+        id_sector = p_id_sector,
+        direccion_servicio = p_direccion_servicio,
+        referencia = p_referencia,
+        coordenada = p_coordenada,
+        fecha_inicio = p_fecha_inicio,
+        fecha_fin = p_fecha_fin,
+        fecha_registro = p_fecha_registro,
+        nota = p_nota,
+        iduser_update = p_iduser_update,
+        update_at = NOW()
+    WHERE id_contrato = p_id_contrato;
+END $$

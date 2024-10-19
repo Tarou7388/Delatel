@@ -163,4 +163,41 @@ class Contrato extends Conexion
         );
         return $this->consultaParametros($sql, $values);
     }
+
+    /**
+     * Actualiza un contrato en la base de datos llamando a un procedimiento almacenado.
+     *
+     * @param array $params Un array asociativo que contiene las siguientes claves:
+     *                      - 'idContrato' (int): El ID del contrato.
+     *                      - 'idTarifario' (int): El ID del tarifario.
+     *                      - 'idSector' (int): El ID del sector.
+     *                      - 'direccionServicio' (string): La dirección del servicio.
+     *                      - 'referencia' (string): Una referencia para la dirección.
+     *                      - 'coordenada' (string): Las coordenadas de la ubicación.
+     *                      - 'fechaInicio' (string): La fecha de inicio del contrato.
+     *                      - 'fechaFin' (string): La fecha de fin del contrato.
+     *                      - 'fechaRegistro' (string): La fecha de registro del contrato.
+     *                      - 'nota' (string): Cualquier nota adicional.
+     *                      - 'idUsuarioUpdate' (int): El ID del usuario que actualiza el contrato.
+     *
+     * @return bool El resultado será verdadero si se realiza o falso si falla.
+     */
+    public function actualizarContrato($params = [])
+    {
+        $sql = "CALL spu_contratos_actualizar(?,?,?,?,?,?,?,?,?,?,?)";
+        $values = array(
+            $params['idContrato'],
+            $params['idPaquete'],
+            $params['idSector'],
+            $params['direccionServicio'],
+            $params['referencia'],
+            $params['coordenada'],
+            $params['fechaInicio'],
+            $params['fechaFin'],
+            $params['fechaRegistro'],
+            $params['nota'],
+            $params['idUsuarioUpdate']
+        );
+        return $this->registrar($sql, $values);
+    }
 }
