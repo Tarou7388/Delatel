@@ -1,4 +1,3 @@
-import { chownSync } from "fs-extra";
 import config from "../env.js";
 window.addEventListener("DOMContentLoaded", () => {
   const nroDoc = document.querySelector("#txtNumDoc");
@@ -19,8 +18,10 @@ window.addEventListener("DOMContentLoaded", () => {
   let fechaFin = null;
   let fechaFinActualizar = null; 
   let precioServicio = 0;
+  let precioServicioActualizar = 0;
   let idCliente = null;
   let idServicio = 0;
+  let idServicioActualizar = 0; 
   let idPersona = '';
   let idEmpresa = '';
 
@@ -190,7 +191,6 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   async function actualizarContrato(idContrato, idUsuario) {
-    const idPaquete = document.querySelector("#slcServicioActualizar").value;
     const idSector = document.querySelector("#slcSectorActualizar").value;
     const direccionServicio = document.querySelector("#txtDireccionActualizar").value;
     const referencia = document.querySelector("#txtReferenciaActualizar").value;
@@ -199,13 +199,22 @@ window.addEventListener("DOMContentLoaded", () => {
     const fechaRegistro = new Date().toISOString().split('T')[0];
     const nota = document.querySelector("#txtNotaActualizar").value;
 
+    const today = new Date().toISOString().split('T')[0];
+    if (fechaInicio < today) {
+      showToast("¡La fecha de inicio no puede ser menor a la fecha de hoy!", "WARNING");
+      return;
+    }
+
     const response = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php`, {
       method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
         operacion: "actualizarContrato",
         parametros: {
           idContrato: idContrato,
-          idPaquete: idServicio,
+          idPaquete: idServicioActualizar,
           idSector: idSector,
           direccionServicio: direccionServicio,
           referencia: referencia,
@@ -217,11 +226,9 @@ window.addEventListener("DOMContentLoaded", () => {
           idUsuarioUpdate: idUsuario
         },
       }),
-      headers: {
-        "Content-Type": "application/json",
-      },
     });
     const data = await response.json();
+    console.log(data);
     if (data.actualizado) {
       showToast("¡Contrato actualizado correctamente!", "SUCCESS");
       setTimeout(() => {
@@ -515,10 +522,11 @@ document.querySelector('#txtFechaFinActualizar').addEventListener('input', () =>
   });
 
   $("#slcServicioActualizar").on("select2:select", function () {
-    idServicio = parseInt(slcServicioActualizar.value.split(" - ")[0]);
-    precioServicio = parseFloat(slcServicioActualizar.value.split(" - ")[1]);
-    document.querySelector("#txtPrecioActualizar").value = precioServicio; 
-    slcServicioActualizar.value = idServicio;
+    idServicioActualizar = parseInt(slcServicioActualizar.value.split(" - ")[0]);
+    precioServicioActualizar = parseFloat(slcServicioActualizar.value.split(" - ")[1]);
+    document.querySelector("#txtPrecioActualizar").value = precioServicioActualizar; 
+    slcServicioActualizar.value = idServicioActualizar;
+    console.log(idServicioActualizar);
   });
 
   $(".select2me").select2({ theme: "bootstrap-5", allowClear: true });
