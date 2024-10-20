@@ -1,101 +1,109 @@
 <?php require_once '../../header.php'; ?>
 
-<div class="container-fluid px-4">
-  <!-- Contenido de la página -->
-  <div class="modal fade" id="modalEditarContrato" tabindex="-1" aria-labelledby="modalEditarContratoLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl"> 
-      <div class="modal-content">
-        <div class="modal-header">
-          <h6 class="modal-title" id="modalEditarContratoLabel">Editar Contrato</h6>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form id="form-editar-contrato">
-            <input type="hidden" id="txtIdContratoActualizar" name="id_contrato">
+<!-- Modal de Actualización de Contrato -->
+<div class="modal fade" id="modalEditarContrato" tabindex="-1" aria-labelledby="modalEditarContratoLabel" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title" id="modalEditarContratoLabel">Editar Contrato</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="form-editar-contrato">
+          <input type="hidden" id="txtIdContratoActualizar" name="id_contrato">
 
-            <div class="row mb-2">
-              <div class="col-md-4 mt-2">
-                <div class="form-floating">
-                  <input type="text" class="form-control" id="txtNombreActualizar" name="nombre" placeholder="Nombre de Cliente" disabled>
-                  <label for="txtNombreActualizar" class="form-label">Nombre de Cliente</label>
-                </div>
+          <div class="row mb-2">
+            <div class="col-md-4 mt-2">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="txtNombreActualizar" name="nombre" placeholder="Nombre de Cliente" disabled>
+                <label for="txtNombreActualizar" class="form-label">Nombre de Cliente</label>
               </div>
-              <div class="col-md-4 mt-2">
-                <div class="form-floating">
-                  <input type="date" class="form-control" id="txtFechaInicioActualizar" name="fechaInicio" required>
-                  <label for="txtFechaInicioActualizar">Fecha de Inicio</label>
-                </div>
-              </div>
-              <div class="col-md-4 mt-2">
-                <div class="form-floating">
-                  <input type="number" class="form-control" id="txtFechaFinActualizar" name="fechaFin" max=24 min=3 required>
-                  <label for="txtFechaFinActualizar" class="form-label">Fecha de Fin (Meses)</label>
-                  <span id="mensajeFechaFin" class="invisible"></span>
-                </div>
+            </div>
+            
+            <div class="col-md-4 mt-2">
+              <div class="form-floating">
+                <input type="date" class="form-control" id="txtFechaInicioActualizar" name="fechaInicio" required>
+                <label for="txtFechaInicioActualizar">Fecha de Inicio</label>
               </div>
             </div>
 
-            <div class="row mb-2">
-              <div class="col-md-4">
-                <div class="form-floating">
-                  <select class="form-select select2me" id="slcServicioActualizar" aria-label="ServiciosActualizar">
-                    <option value="0" disabled selected>Servicios</option>
-                  </select>
-                  <label for="slcServicioActualizar" class="form-label">Servicios</label>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-floating">
-                  <input type="number" class="form-control" id="txtPrecioActualizar" value="0" placeholder="Precio" disabled>
-                  <label for="txtPrecioActualizar" class="form-label">Precio</label>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-floating">
-                  <select class="form-select select2me" id="slcSectorActualizar" aria-label="Sectores">
-                    <option value="0" disabled selected>Sectores</option>
-                  </select>
-                  <label for="slcSectorActualizar" class="form-label">Sectores</label>
-                </div>
+            <div class="col-md-4 mt-2">
+              <div class="form-floating">
+                <input type="number" class="form-control" id="txtFechaFinActualizar" name="fechaFin" max=24 min=3 required>
+                <label for="txtFechaFinActualizar" class="form-label">Fecha de Fin (Meses)</label>
+                <span id="mensajeFechaFin" class="invisible"></span>
               </div>
             </div>
 
-            <div class="row mb-2">
-              <div class="col-md-4">
-                <div class="form-floating">
-                  <input type="text" class="form-control" id="txtDireccionActualizar" placeholder="Dirección de Servicio">
-                  <label for="txtDireccionActualizar" class="form-label">Dirección de Servicio</label>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-floating">
-                  <input type="text" class="form-control" id="txtReferenciaActualizar" placeholder="Referencia" name="referencia">
-                  <label for="txtReferenciaActualizar" class="form-label">Referencia</label>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-floating">
-                  <input type="text" class="form-control" id="txtCoordenadaActualizar" placeholder="Coordenada" name="coordenada">
-                  <label for="txtCoordenadaActualizar" class="form-label">Coordenada</label>
-                </div>
+          </div>
+
+          <div class="row mb-2">
+
+            <div class="col-md-4">
+              <div class="form-floating">
+                <select class="form-select select2me" id="slcServicioActualizar" aria-label="ServiciosActualizar">
+                  <option value="0" disabled selected>Servicios</option>
+                </select>
+                <label for="slcServicioActualizar" class="form-label">Servicios</label>
               </div>
             </div>
 
-            <div class="row mb-2">
-              <div class="col-md-12">
-                <div class="form-floating">
-                  <textarea class="form-control" id="txtNotaActualizar" placeholder="Nota" name="nota"></textarea>
-                  <label for="txtNotaActualizar" class="form-label">Nota</label>
-                </div>
+            <div class="col-md-4">
+              <div class="form-floating">
+                <input type="number" class="form-control" id="txtPrecioActualizar" value="0" placeholder="Precio" disabled>
+                <label for="txtPrecioActualizar" class="form-label">Precio</label>
               </div>
             </div>
 
-            <div class="text-end mt-2">
-              <button type="submit" class="btn btn-success" id="btnActualizar">Guardar Cambios</button>
+            <div class="col-md-4">
+              <div class="form-floating">
+                <select class="form-select select2me" id="slcSectorActualizar" aria-label="Sectores">
+                  <option value="0" disabled selected>Sectores</option>
+                </select>
+                <label for="slcSectorActualizar" class="form-label">Sectores</label>
+              </div>
             </div>
 
-          </form>
-        </div>
+          </div>
+
+          <div class="row mb-2">
+
+            <div class="col-md-4">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="txtDireccionActualizar" placeholder="Dirección de Servicio">
+                <label for="txtDireccionActualizar" class="form-label">Dirección de Servicio</label>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="txtReferenciaActualizar" placeholder="Referencia" name="referencia">
+                <label for="txtReferenciaActualizar" class="form-label">Referencia</label>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="txtCoordenadaActualizar" placeholder="Coordenada" name="coordenada">
+                <label for="txtCoordenadaActualizar" class="form-label">Coordenada</label>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-md-12">
+              <div class="form-floating">
+                <textarea class="form-control" id="txtNotaActualizar" placeholder="Nota" name="nota"></textarea>
+                <label for="txtNotaActualizar" class="form-label">Nota</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-end mt-2">
+            <button type="submit" class="btn btn-success" id="btnActualizar">Guardar Cambios</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>

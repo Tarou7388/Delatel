@@ -424,6 +424,11 @@ window.addEventListener("DOMContentLoaded", () => {
       document.getElementById('txtReferenciaActualizar').value = data[0].referencia;
       document.getElementById('txtCoordenadaActualizar').value = data[0].coordenada;
       document.getElementById('txtNotaActualizar').value = data[0].nota;
+
+      document.querySelector('.btn-close').addEventListener('click', () => {
+        modal.hide();
+      });   
+         
     } catch (error) {
       console.error('Error al obtener los detalles del contrato:', error);
     }
