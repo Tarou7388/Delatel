@@ -191,6 +191,7 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   async function actualizarContrato(idContrato, idUsuario) {
+    const idServicio = document.querySelector("#slcServicioActualizar").value; 
     const idSector = document.querySelector("#slcSectorActualizar").value;
     const direccionServicio = document.querySelector("#txtDireccionActualizar").value;
     const referencia = document.querySelector("#txtReferenciaActualizar").value;
@@ -228,7 +229,6 @@ window.addEventListener("DOMContentLoaded", () => {
       }),
     });
     const data = await response.json();
-    console.log(data);
     if (data.actualizado) {
       showToast("¡Contrato actualizado correctamente!", "SUCCESS");
       setTimeout(() => {
@@ -378,45 +378,49 @@ window.addEventListener("DOMContentLoaded", () => {
       document.getElementById('txtNombreActualizar').value = data[0].nombre_cliente;
       document.getElementById('txtFechaInicioActualizar').value = data[0].fecha_inicio;
       
-      const fechaFin = data[0].fecha_fin;
+      fechaFinActualizar = data[0].fecha_fin;
       
       const span = document.getElementById('mensajeFechaFin');
-      span.textContent = `La fecha de fin es: ${fechaFin}`;
+      span.textContent = `La fecha de fin es: ${fechaFinActualizar}`;
       span.classList.remove('invisible');
   
       const slcServicio = document.getElementById('slcServicioActualizar');
-      const servicioValue = data[0].servicio;
+      const servicioId = data[0].id_servicio; 
+      const servicioTexto = data[0].servicio;
       let optionExists = false;
 
       for (let i = 0; i < slcServicio.options.length; i++) {
-        if (slcServicio.options[i].value == servicioValue) {
+        if (slcServicio.options[i].value == servicioId) {
           optionExists = true;
           break;
         }
       }
 
       if (optionExists) {
-        slcServicio.value = servicioValue;
+        slcServicio.value = servicioId;
       } else {
-        const newOption = new Option(servicioValue, servicioValue, true, true);
+        const newOption = new Option(servicioTexto, servicioId, true, true);
         slcServicio.add(newOption);
       }
 
+      idServicioActualizar = servicioId;
+
       const slcSector = document.getElementById('slcSectorActualizar');
-      const sectorValue = data[0].nombre_sector;
+      const sectorId = data[0].id_sector; 
+      const sectorTexto = data[0].nombre_sector;
       optionExists = false;
 
       for (let i = 0; i < slcSector.options.length; i++) {
-        if (slcSector.options[i].value == sectorValue) {
+        if (slcSector.options[i].value == sectorId) {
           optionExists = true;
           break;
         }
       }
 
       if (optionExists) {
-        slcSector.value = sectorValue;
+        slcSector.value = sectorId;
       } else {
-        const newOption = new Option(sectorValue, sectorValue, true, true);
+        const newOption = new Option(sectorTexto, sectorId, true, true);
         slcSector.add(newOption);
       }
 
@@ -428,7 +432,6 @@ window.addEventListener("DOMContentLoaded", () => {
       document.querySelector('.btn-close').addEventListener('click', () => {
         modal.hide();
       });   
-         
     } catch (error) {
       console.error('Error al obtener los detalles del contrato:', error);
     }
@@ -437,7 +440,7 @@ window.addEventListener("DOMContentLoaded", () => {
 document.querySelector('#txtFechaFinActualizar').addEventListener('input', () => {
   const fechaInicioValue = document.querySelector('#txtFechaInicioActualizar').value;
   const txtFechaFinValue = document.querySelector('#txtFechaFinActualizar').value;
-  const span = document.getElementById('mensajeFechaFin'); // Obtener el elemento span
+  const span = document.getElementById('mensajeFechaFin'); 
 
   if (txtFechaFinValue > 3) {
     lapsoTiempo = true;

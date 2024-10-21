@@ -120,10 +120,12 @@ BEGIN
         WHEN cl.id_persona IS NOT NULL THEN p.nro_doc
         ELSE e.ruc
     END AS num_identificacion,
+    s.id_sector,
     s.sector AS nombre_sector,
     ur_persona.nombres AS nombre_usuario_registro,
     ut_persona.nombres AS nombre_usuario_tecnico,
     c.direccion_servicio,
+    sv.id_servicio,
     sv.servicio,
     t.tipo_paquete,
     c.referencia,
