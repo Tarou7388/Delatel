@@ -11,7 +11,9 @@
 				</button>
 			</div>
 			<div class="modal-body">
-				<div id="map" style="height: 700px;"></div>
+				<div id="map" style="height: 700px;">
+					
+				</div>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>

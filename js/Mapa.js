@@ -1,10 +1,9 @@
+import config from "../env.js";
 
 let mapa;
 let circulos = [];
-let datos = [];
-let coordenadas = 0;
-let marcadorMasCercano = null;
 let marcadorActivo = null;
+export let marcadorMasCercano = null;
 
 //await obtenerDatos();
 
@@ -15,13 +14,13 @@ async function posicionActual(e) {
     position: { lat: e.latLng.lat(), lng: e.latLng.lng() },
     map: mapa,
   });
-  marcadorClickeado = marcadorActivo;
 }
 
-async function obtenerDatos() {
-  const respuesta = await fetch("http://localhost/mapas/controlador.php?operacion=listar");
+export async function obtenerDatos() {
+  const respuesta = await fetch(`${config.HOST}app/controllers/Caja.controllers.php?operacion=listarCajas`);
   const data = await respuesta.json();
-  data.forEach(({ id_caja, coordenadas, nombre, descripcion, id_sector, n_entradas_disponibles }) => {
+  let datos = [];
+  data.forEach(({ id_caja, nombre, descripcion, numero_entradas, id_sector, coordenadas }) => {
     if (!datos[id_sector]) {
       datos[id_sector] = [];
     }
@@ -31,58 +30,33 @@ async function obtenerDatos() {
       nombre,
       descripcion,
       idSector: id_sector,
-      nEntradas: n_entradas_disponibles
+      nEntradas: numero_entradas
     });
   });
-
   console.log(datos);
+  return datos;
+
 }
 
-async function encontrarPuntoMasCercano(latClick, lonClick, marcadores, circulos) {
+async function encontrarPuntoMasCercano(latClick, lonClick, marcadores) {
   const clickLatLng = new google.maps.LatLng(latClick, lonClick);
-  let circulosEnInterseccion = [];
-  marcadorMasCercano = null;
-  let distanciaMinima = Infinity;
-  circulos.forEach(circulo => {
-    const centro = circulo.getCenter();
-    const radio = circulo.getRadius();
-    const distancia = google.maps.geometry.spherical.computeDistanceBetween(clickLatLng, centro);
-    if (distancia <= radio) {
-      circulosEnInterseccion.push(circulo);
+  let marcadormas = null;
+  let distanciaMinima = 1000;
+  for (let i = 0; i < marcadores.length; i++) {
+    const marcador = marcadores[i];
+    const posicionMarcador = new google.maps.LatLng(marcador.latLng[0], marcador.latLng[1]);
+    const distancia = google.maps.geometry.spherical.computeDistanceBetween(posicionMarcador, clickLatLng);
+    if (distancia < distanciaMinima && marcador.nEntradas > 0) {
+      marcadormas = marcador.nombre;
+      distanciaMinima = distancia;
     }
-  });
-  if (circulosEnInterseccion.length > 2) {
-    circulosEnInterseccion.forEach(circulo => {
-      marcadores.forEach(marcador => {
-        const posicionMarcador = new google.maps.LatLng(marcador.latLng[0], marcador.latLng[1]);
-        const distancia = google.maps.geometry.spherical.computeDistanceBetween(posicionMarcador, circulo.getCenter());
-        if (distancia <= circulo.getRadius() && marcador.nEntradas > 0) {
-          marcadorMasCercano = marcador.nombre;
-          distanciaMinima = distancia;
-          return;
-        }
-      });
-      if (marcadorMasCercano) {
-        return;
-      }
-    });
-  } else {
-    marcadores.forEach(marcador => {
-      const posicionMarcador = new google.maps.LatLng(marcador.latLng[0], marcador.latLng[1]);
-      const distancia = google.maps.geometry.spherical.computeDistanceBetween(posicionMarcador, clickLatLng);
-      if (distancia < distanciaMinima && marcador.nEntradas > 0) {
-        marcadorMasCercano = marcador.nombre;
-        distanciaMinima = distancia;
-      } else {
-        console.log('No hay cajas disponibles');
-      }
-    });
   }
   const datos = {
-    marcadorMasCercano,
-    distancia: distanciaMinima
+    marcadormas,
+    distancia: distanciaMinima,
+    coordenadas: `${latClick}, ${lonClick}`
   }
-  return marcadorMasCercano;
+  marcadorMasCercano = datos;
 }
 
 export async function iniciarMapa() {
@@ -95,9 +69,12 @@ export async function iniciarMapa() {
     center: posicionInicial,
     mapId: "DEMO_MAP_ID",
   });
-  /* datos.forEach(subArray => {
 
-    subArray.forEach(({ latLng, nombre, direccion, idSector }) => {
+  const datos = await obtenerDatos();
+
+  datos.forEach(subArray => {
+
+    subArray.forEach(({ latLng, nombre, descripcion, idSector }) => {
       const posicion = { lat: latLng[0], lng: latLng[1] };
       const marcador = new AdvancedMarkerElement({
         map: mapa,
@@ -105,14 +82,13 @@ export async function iniciarMapa() {
         title: nombre
       });
 
-
       const ventanaInfo = new google.maps.InfoWindow({
         content: `
         <div id="content">
           <h1 id="firstHeading" class="firstHeading">${nombre}</h1>
           <div id="bodyContent">
-            <p><b>${nombre}</b>, ${direccion}</p>
-            <p>NOMBRE: ${nombre}</p>
+            <p>${descripcion}</p>
+            <p>Coordenadas: ${latLng}</p>
           </div>
         </div>`,
         ariaLabel: "Demo InfoWindow",
@@ -142,29 +118,15 @@ export async function iniciarMapa() {
 
   mapa.addListener("click", async (e) => {
     console.log("Has hecho click en:", e.latLng.lat(), e.latLng.lng());
-    coordenadas = 0;
     await posicionActual(e);
     alert('Zona sin cobertura');
-  }); */
+  });
 
 }
 
-async function circulosCajaCercana(circulo, datosIdSector, circulosIdSector) {
+async function circulosCajaCercana(circulo, datosIdSector) {
   circulo.addListener("click", async (e) => {
     await posicionActual(e);
-    marcadorMasCercano = await encontrarPuntoMasCercano(e.latLng.lat(), e.latLng.lng(), datosIdSector, circulosIdSector);
-    coordenadas = `${e.latLng.lat()},${e.latLng.lng()}`;
-    console.log('El marcador más cercano está en:', marcadorMasCercano);
+    await encontrarPuntoMasCercano(e.latLng.lat(), e.latLng.lng(), datosIdSector);
   })
 }
-
-//document.querySelector("#btnmodal").addEventListener("click", iniciarMapa);
-
-/* document.querySelector("#btnGuardar").addEventListener("click", () => {
-  if (coordenadas === 0) {
-    alert('Debe seleccionar una caja');
-  } else if (confirm('¿Desea guardar la caja?')) {
-    console.log(marcadorMasCercano);
-    console.log(coordenadas);
-  }
-}); */

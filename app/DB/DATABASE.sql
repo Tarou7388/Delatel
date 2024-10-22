@@ -101,6 +101,7 @@ CREATE TABLE tb_cajas(
     descripcion VARCHAR(100) NOT NULL,
     numero_entradas TINYINT NOT NULL,
     id_sector INT NOT NULL,
+    coordenadas VARCHAR(50) NOT NULL,
     create_at DATETIME NOT NULL DEFAULT NOW(),
     update_at DATETIME NULL,
     inactive_at DATETIME NULL,

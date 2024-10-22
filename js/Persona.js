@@ -155,7 +155,6 @@ document.addEventListener("DOMContentLoaded", function () {
     frmPersonas.querySelector("button[type=submit]").disabled = show;
   }
 
-
   function manejarDocumentoNacionalidad() {
     const peruanoOpcion = new Option('Peruano', 'Peruano');
     peruanoOpcion.id = 'peruanoOpcion';
@@ -242,7 +241,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.querySelector("#btnBuscarCoordenadas").addEventListener("click", mapa.iniciarMapa)
 
-  /* btnBuscar.addEventListener("click", () => {
+  document.querySelector("#btnGuardar").addEventListener("click", () => {
+    console.log(mapa.marcadorMasCercano);
+  });
+
+  btnBuscar.addEventListener("click", () => {
     ObtenerDataDNI("obtenerDni", txtNumDocumentoPersona.value);
-  }); */
+  });
 });

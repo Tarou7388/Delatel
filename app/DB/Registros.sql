@@ -264,12 +264,12 @@ INSERT INTO tb_sectores (id_distrito, sector, iduser_create) VALUES
 (110201, 'San José', 1),
 (110201, 'Nazareno', 1),
 (110201, 'Chacarilla', 1),
-(110201, 'Sunampe', 1),
+(110201, 'Sunampe', 1), --6
 (110201, 'San Juan de Yanac', 1),
 (110201, 'Carmen Alto', 1),
 (110201, 'Rinconada', 1),
 (110201, 'Lurinchincha', 1),
-(110201, 'Grocio Prado', 1),
+(110201, 'Grocio Prado', 1), --11
 (110201, 'Hoja Redonda', 1),
 (110201, 'Hacienda San Pedro', 1),
 (110201, 'Cañete', 1),
@@ -277,14 +277,14 @@ INSERT INTO tb_sectores (id_distrito, sector, iduser_create) VALUES
 (110201, 'San Hilarión', 1),
 (110201, 'Los Laureles', 1),
 (110201, 'Las Casuarinas', 1),
-(110201, 'San Isidro', 1),
-(110201, 'Chincha Baja', 1),
+(110201, 'San Isidro', 1), --19
+(110201, 'Chincha Baja', 1), --20
 (110201, 'El Carmen', 1),
 (110201, 'Las Pampas', 1),
 (110201, 'La Victoria', 1),
 (110201, 'San Andrés', 1),
 (110201, 'Río Seco', 1),
-(110201, 'Pueblo Nuevo', 1),
+(110201, 'Pueblo Nuevo', 1), --26
 (110201, 'Tambo de Mora', 1),
 (110201, 'San Benito', 1),
 (110201, 'Los Jardines', 1),
@@ -301,6 +301,18 @@ INSERT INTO tb_sectores (id_distrito, sector, iduser_create) VALUES
 (110201, 'Rincón del Prado', 1),
 (110201, 'La Concepción', 1),
 (110201, 'Los Ángeles', 1);
+
+INSERT INTO tb_cajas(nombre, descripcion, numero_entradas, id_sector, coordenadas, iduser_create) VALUES
+("Caja 1", "Cerca del estadio", 16, 11, "-13.390019838079903, -76.14898062581466", 1),
+("Caja 2", "Plaza san Isidro", 8, 19, "-13.396082705347906, -76.13534364004165", 1),
+("Caja 3", "Cerca de la Plaza", 8, 6, "-13.4277387660967, -76.16422117136221", 1),
+("Caja 4", "San Nicolas", 16, 6, "-13.432393655576314, -76.1627322889994", 1),
+("Caja 5", "Prolongacion Cañete", 16, 11, "-13.393627228237747, -76.14441531745013", 1),
+("Caja 6", "Tecnologico Chincha", 8, 19, "-13.404627155707574, -76.13712932116213", 1),
+("Caja 7", "Los Bancarios", 8, 20,"-13.42826126892918, -76.135733419194", 1),
+("Caja 8", "Plaza Chincha", 16, 20, "-13.41819520203595, -76.13222851544388", 1),
+("Caja 9", "Parque Toledo", 8, 20, "-13.417732015444551, -76.11985007949754", 1),
+("Caja 10", "Plaza de pueblo nuevo", 16, 26, "-13.404169746696624, -76.12736834665132", 1);
 
 
 
