@@ -5,7 +5,7 @@ use App\Controllers\Herramientas;
 session_start();
 
 require_once '../models/Soporte.php';
-require_once './Herramientas.php';
+require_once '../controllers/Herramientas.php';
 
 $soporte = new Soporte();
 
@@ -43,6 +43,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'status' => $status ? 'success' : 'error',
         'message' => $status ? 'Soporte registrado correctamente' : 'Error al registrar soporte'
       ]);
+      break;
+    case 'FiltrarSoportePrioridad':
+      $values=[
+        'prioridad'=>Herramientas::sanitizarEntrada($datos['prioridad'])
+      ];
+      echo json_encode($soporte->FiltrarSoportePrioridad($values));
       break;
   }
 }

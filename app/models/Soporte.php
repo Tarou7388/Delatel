@@ -73,4 +73,22 @@ class Soporte extends Conexion
     $sql = "SELECT * FROM vw_soporte_detalle_incompleto";
     return $this->listarDatos($sql);
   }
+
+  /**
+   * Filtra los soportes por prioridad.
+   *
+   * Este método ejecuta un procedimiento almacenado que filtra los soportes
+   * según su prioridad.
+   *
+   * @param array $params Un array asociativo que contiene las siguientes claves:
+   *  - prioridad (string): La prioridad del soporte.
+   *
+   * @return mixed El resultado de la búsqueda de objetos filtrados por prioridad.
+   */
+  public function filtrarSoportePrioridad($params = [])
+  {
+    $sql = "CALL spu_soporte_filtrar_prioridad(?)";
+    $values = array($params['prioridad']);
+    return $this->consultaParametros($sql, $values);
+  }
 }

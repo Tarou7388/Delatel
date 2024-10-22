@@ -179,8 +179,8 @@ BEGIN
     WHERE id_contrato = p_id_contrato;
 END $$
 
-DROP PROCEDURE IF EXISTS buscar_contrato_por_cliente$$
-CREATE PROCEDURE buscar_contrato_por_cliente(IN p_id_cliente INT)
+DROP PROCEDURE IF EXISTS spu_contratos_buscar_cliente$$
+CREATE PROCEDURE spu_contratos_buscar_cliente(IN p_id_cliente INT)
 BEGIN
     SELECT 
         c.id_contrato, 

@@ -148,3 +148,41 @@ JOIN
 JOIN 
     tb_personas p_cliente ON cl.id_persona = p_cliente.id_persona
 ORDER BY s.id_soporte DESC;
+
+DROP PROCEDURE IF EXISTS spu_soporte_filtrar_prioridad$$
+CREATE PROCEDURE spu_soporte_filtrar_prioridad(
+    IN p_prioridad VARCHAR(10)
+)
+BEGIN
+    SELECT 
+        s.id_soporte,
+        s.prioridad,
+        s.soporte,
+        s.descripcion_problema,
+        s.descripcion_solucion,
+        ts.tipo_soporte,
+        c.id_cliente,
+        CONCAT(p_cliente.nombres, ' ', p_cliente.apellidos) AS nombre_cliente,
+        c.direccion_servicio,
+        r.id_usuario AS id_tecnico,
+        CONCAT(p_tecnico.nombres, ' ', p_tecnico.apellidos) AS nombre_tecnico
+    FROM 
+        tb_soporte s
+    JOIN 
+        tb_contratos c ON s.id_contrato = c.id_contrato
+    JOIN 
+        tb_tipo_soporte ts ON s.id_tipo_soporte = ts.id_tipo_soporte
+    JOIN 
+        tb_responsables r ON s.id_tecnico = r.id_responsable
+    JOIN 
+        tb_usuarios u ON r.id_usuario = u.id_usuario
+    JOIN 
+        tb_personas p_tecnico ON u.id_persona = p_tecnico.id_persona
+    JOIN 
+        tb_clientes cl ON c.id_cliente = cl.id_cliente
+    JOIN 
+        tb_personas p_cliente ON cl.id_persona = p_cliente.id_persona 
+    WHERE 
+        LOWER(TRIM(s.prioridad)) = LOWER(TRIM(p_prioridad));
+END$$
+
