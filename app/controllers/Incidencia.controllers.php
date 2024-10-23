@@ -14,19 +14,25 @@ if (isset($_GET["operacion"])) {
   }
 }
 
-if (isset($_POST["operacion"])) {
-  if ($_POST["operacion"] == "registrarIncidencia") {
-    $datos = [
-      "idCliente"       => Herramientas::sanitizarEntrada($_POST["idCliente"]),
-      "fechaIncidencia" => Herramientas::sanitizarEntrada($_POST["fechaIncidencia"]),
-      "descripcion"     => Herramientas::sanitizarEntrada($_POST["descripcion"]),
-      "solucion"        => Herramientas::sanitizarEntrada($_POST["solucion"]),
-      "idtecnico"       => Herramientas::sanitizarEntrada($_POST["idtecnico"]),
-      "idUsuario"       => Herramientas::sanitizarEntrada($_POST["idUsuario"])
-    ];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $json = file_get_contents('php://input');
+  $datos = json_decode($json, true);
+  $operacion = Herramientas::sanitizarEntrada($datos['operacion']);
 
-    $resultado = $incidencia->registrarIncidencia($datos);
-    echo json_encode($resultado);
+  switch ($operacion) {
+    case "registrarIncidencia":
+      $datos = [
+        "idCliente"       => Herramientas::sanitizarEntrada($datos["idCliente"]),
+        "fechaIncidencia" => Herramientas::sanitizarEntrada($datos["fechaIncidencia"]),
+        "descripcion"     => Herramientas::sanitizarEntrada($datos["descripcion"]),
+        "solucion"        => Herramientas::sanitizarEntrada($datos["solucion"]),
+        "idtecnico"       => Herramientas::sanitizarEntrada($datos["idtecnico"]),
+        "idUsuario"       => Herramientas::sanitizarEntrada($datos["idUsuario"])
+      ];
+
+      $resultado = $incidencia->registrarIncidencia($datos);
+      echo json_encode(["guardado" => $resultado]);
+      break;
   }
 }
 
@@ -35,10 +41,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
   $datos = json_decode($json, true);
   $operacion = Herramientas::sanitizarEntrada($datos['operacion']);
 
-  if ($operacion === "eliminarIncidencia") {
+  if ($operacion == "eliminarIncidencia") {
     $idIncidencia = Herramientas::sanitizarEntrada($datos["idIncidencia"]);
     $idUsuario = Herramientas::sanitizarEntrada($datos["idUsuario"]);
-
 
     $parametros = [
       "idIncidencia" => $idIncidencia,

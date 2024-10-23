@@ -7,60 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function obtenerJsonCable() {
-    const datos = {
-      parametroscable: {
-        periodo: [],
-        potencia: 0,
-        sintonizador: 0,
-        triplexor: {
-          requiere: false,
-          cantidad: 0,
-          tipo: [],
-        },
-        spliter: [
-          {
-            cantidad: 0,
-            tipo: "",
-          },
-          {
-            cantidad: 0,
-            tipo: "",
-          },
-          {
-            cantidad: 0,
-            tipo: "",
-          },
-        ],
-        cable: 0,
-        conectores: 0,
-      },
-      cambioscable: {
-        periodo: [],
-        potencia: 0,
-        sintonizador: 0,
-        triplexor: {
-          requiere: false,
-          cantidad: 0,
-          tipo: [],
-        },
-        spliter: [
-          {
-            cantidad: 0,
-            tipo: "",
-          },
-          {
-            cantidad: 0,
-            tipo: "",
-          },
-          {
-            cantidad: 0,
-            tipo: "",
-          },
-        ],
-        cable: 0,
-        conectores: 0,
-      },
-    };
+    const respuesta = await fetch(`${config.HOST}Json/spCable.json`);
+    const datos = await respuesta.json();
     return datos;
   }
 
@@ -101,7 +49,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const data = await respuesta.json();
 
     if (data) {
-      alert("Correcto");
     } else {
       alert("Error");
     }
@@ -114,6 +61,9 @@ document.addEventListener("DOMContentLoaded", () => {
       $("#txtNrodocumento").value.length < 9 ||
       $("#txtNrodocumento").value.length > 11
     ) {
+      await showToast("Encontrado Correctamente", "SUCCESS");
+    }
+    else {
       await showToast("Ingrese un documento válido", "ERROR");
     };
 
@@ -174,7 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
     JsonCable.cambioscable.conectores = $("#txtCambiosConectorCable").value;
     //JsonCable.cambioscable.procedimientosolucion = $("#txtProcedimientoCable").value;
 
-  //console.log(JsonCable);
-  registrarCable(JsonCable);
-});
+    //console.log(JsonCable);
+    registrarCable(JsonCable);
+  });
 });

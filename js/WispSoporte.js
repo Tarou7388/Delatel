@@ -20,20 +20,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function obtenerJsonWisp() {
-    const datos = {
-      parametros: {
-        base: "",
-        ip: "",
-        senal: "",
-      },
-      cambios: {
-        nuevaBase: "",
-        nuevoIP: "",
-        senal: "",
-      },
-    };
+    const respuesta = await fetch(`${config.HOST}Json/spWISP.json`);
+    const datos = await respuesta.json();
     return datos;
-  }
+  };
 
   async function registrarWisp(jsondata) {
     const params = {
@@ -69,7 +59,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const data = await respuesta.json();
     if (data) {
-      alert("Correcto");
       await ResetWisp();
     } else {
       alert("Error");
@@ -84,8 +73,11 @@ document.addEventListener("DOMContentLoaded", () => {
       $("#txtNrodocumento").value.length < 9 ||
       $("#txtNrodocumento").value.length > 11
     ) {
-      await showToast("Ingrese un documento válido", "ERROR");
+      await showToast("Encontrado Correctamente", "SUCCESS");
     }
+    else {
+      await showToast("Ingrese un documento válido", "ERROR");
+    };
 
     const JsonWisp = await obtenerJsonWisp();
 

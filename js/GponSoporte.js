@@ -7,31 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function obtenerJsonGpon() {
-    const datos = {
-      parametrosgpon: {
-        pppoe: "",
-        potencia: "",
-        catv: false,
-        clave: "",
-        vlan: 0,
-        potencia: "",
-        ssid: "",
-        password: "",
-        otros: "",
-      },
-      cambiosgpon: {
-        pppoe: "",
-        potencia: "",
-        catv: false,
-        clave: "",
-        vlan: 0,
-        potencia: "",
-        ssid: "",
-        password: "",
-        otros: "",
-      },
-    };
-
+    const respuesta = await fetch(`${config.HOST}Json/spGPON.json`);
+    const datos = await respuesta.json();
     return datos;
   }
 
@@ -71,7 +48,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const data = await respuesta.json();
 
     if (data) {
-      alert("Correcto");
     } else {
       alert("Error");
     }
@@ -84,8 +60,11 @@ document.addEventListener("DOMContentLoaded", () => {
       $("#txtNrodocumento").value.length < 9 ||
       $("#txtNrodocumento").value.length > 11
     ) {
-      await showToast("Ingrese un documento válido", "ERROR");
+      await showToast("Encontrado Correctamente", "SUCCESS");
     }
+    else {
+      await showToast("Ingrese un documento válido", "ERROR");
+    };
 
     const JsonGpon = await obtenerJsonGpon();
 
