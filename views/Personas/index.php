@@ -12,12 +12,12 @@
 			</div>
 			<div class="modal-body">
 				<div id="map" style="height: 700px;">
-					
+
 				</div>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-				<button type="button" class="btn btn-primary" id="btnGuardar">Guardar cambios</button>
+				<button type="button" class="btn btn-primary" id="btnGuardarCoordenadas" data-dismiss="modal" disabled>Guardar cambios</button>
 			</div>
 		</div>
 	</div>
@@ -113,9 +113,12 @@
 						</div>
 					</div>
 					<div class="col-md-4">
-						<div class="form-floating">
-							<input type="text" class="form-control" id="txtCoordenadas" placeholder="Referencia" required>
-							<label for="txtCoordenadas">Coordenadas</label>
+						<div class="input-group">
+							<div class="form-floating">
+								<input type="text" class="form-control" id="txtCoordenadas" placeholder="Referencia" required disabled>
+								<label for="txtCoordenadas">Coordenadas</label>
+							</div>
+							<button class="btn btn-primary" type="button" id="btnBuscarCoordenadasEmpresa" data-toggle="modal" data-target="#ModalMapa"><i class="fa-solid fa-magnifying-glass"></i></button>
 						</div>
 					</div>
 				</div>
@@ -142,7 +145,6 @@
 							<select class="form-select" id="slcTipoDocumento" aria-label="Tipo de Documento">
 								<option selected>Seleccionar...</option>
 								<option value="DNI">DNI</option>
-								<option value="PAS">Pasaporte</option>
 								<option value="CAR">Carnét de Extranjería</option>
 							</select>
 							<label for="slcTipoDocumento">Tipo de Documento</label>
@@ -151,7 +153,7 @@
 					<div class="col-md-4">
 						<div class="input-group">
 							<div class="form-floating flex-fill">
-								<input type="number" id="txtNumDocumentoPersona" class="form-control" placeholder="Número de documento" required max="20999999999">
+								<input type="tel" id="txtNumDocumentoPersona" class="form-control" placeholder="Número de documento" required maxlength="10">
 								<label for="txtNumDocumentoPersona">Número de documento</label>
 							</div>
 							<button class="btn btn-primary" type="button" id="btnBuscar" disabled><i class="fa-solid fa-magnifying-glass"></i></button>
@@ -202,7 +204,7 @@
 					<div class="col-md-4">
 						<div class="input-group">
 							<div class="form-floating">
-								<input type="text" class="form-control" id="txtCoordenadasPersona" placeholder="Referencia" required>
+								<input type="text" class="form-control" id="txtCoordenadasPersona" placeholder="Referencia" required disabled>
 								<label for="txtCoordenadasPersona">Coordenadas</label>
 							</div>
 							<button class="btn btn-primary" type="button" id="btnBuscarCoordenadas" data-toggle="modal" data-target="#ModalMapa"><i class="fa-solid fa-magnifying-glass"></i></button>
@@ -242,6 +244,5 @@
 </div>
 
 <?php require_once "../../footer.php"; ?>
-<script type="module" src="../../js/ListarClientes.js"></script>
 <script type="module" src="../../js/Empresa.js"></script>
 <script type="module" src="../../js/Persona.js"></script>

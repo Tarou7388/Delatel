@@ -1,4 +1,5 @@
 import config from "../env.js";
+import * as mapa from "./Mapa.js";
 
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -159,4 +160,9 @@ document.addEventListener("DOMContentLoaded", function () {
   btnBuscarEmpresa.addEventListener("click", async function () {
     await ObtenerDataRUC(txtRuc.value);
   });
+
+  document.querySelector("#btnBuscarCoordenadasEmpresa").addEventListener("click", async () => {
+    await mapa.iniciarMapa();
+  })
+
 });

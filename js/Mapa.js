@@ -5,7 +5,7 @@ let circulos = [];
 let marcadorActivo = null;
 export let marcadorMasCercano = null;
 
-export async function posicionActual(e) {
+async function posicionActual(e) {
   const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
   if (marcadorActivo) marcadorActivo.setMap(null);
   marcadorActivo = new AdvancedMarkerElement({
@@ -46,6 +46,7 @@ async function encontrarPuntoMasCercano(latClick, lonClick, marcadores) {
     if (distancia < distanciaMinima && marcador.nEntradas > 0) {
       marcadormas = marcador.nombre;
       distanciaMinima = distancia;
+      document.querySelector('#btnGuardarCoordenadas').disabled = false;
     }
   }
   const datos = {
@@ -109,13 +110,14 @@ export async function iniciarMapa() {
       circulos[idSector].push(circulo);
 
       circulosCajaCercana(circulo, datos[idSector], circulos[idSector]);
-
-      mapa.addListener("click", async (e) => {
-        console.log("Has hecho click en:", e.latLng.lat(), e.latLng.lng());
-        await mapa.posicionActual(e);
-        alert('Zona sin cobertura');
-      });
     });
+  });
+  mapa.addListener("click", async (e) => {
+    console.log("Has hecho click en:", e.latLng.lat(), e.latLng.lng());
+    await posicionActual(e);
+    marcadorMasCercano = null;
+    document.querySelector('#btnGuardarCoordenadas').disabled = true;
+    alert('Zona sin cobertura');
   });
 }
 
