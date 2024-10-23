@@ -113,6 +113,7 @@ export async function iniciarMapa() {
   });
   mapa.addListener("click", async (e) => {
     console.log("Has hecho click en:", e.latLng.lat(), e.latLng.lng());
+    await posicionActual(e);
     marcadorMasCercano = null;
     document.querySelector('#btnGuardarCoordenadas').disabled = true;
     showToast("No hay Cobertura en esta Zona", "WARNING");
