@@ -115,7 +115,7 @@ export async function iniciarMapa() {
     console.log("Has hecho click en:", e.latLng.lat(), e.latLng.lng());
     marcadorMasCercano = null;
     document.querySelector('#btnGuardarCoordenadas').disabled = true;
-    alert("No hay coberura en esta zona");
+    showToast("No hay Cobertura en esta Zona", "WARNING");
   });
 }
 
