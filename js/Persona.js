@@ -187,10 +187,7 @@ document.addEventListener("DOMContentLoaded", function () {
           txtApellidosPersona.disabled = false;
           txtNombresPersona.disabled = false;
         } else if (length === 9) {
-          slcTipoDocumento.value = 'CAR';
-          slcTipoDocumento.disabled = true;
-          txtApellidosPersona.disabled = false;
-          txtNombresPersona.disabled = false;
+          slcTipoDocumento.value = 'CAR';const mapa = e;
         } else {
           slcTipoDocumento.value = '';
           txtApellidosPersona.disabled = true;
@@ -239,11 +236,16 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  document.querySelector("#btnBuscarCoordenadas").addEventListener("click", mapa.iniciarMapa)
+  document.querySelector("#btnBuscarCoordenadas").addEventListener("click", async () =>{
+    await mapa.iniciarMapa;
+
+  })
 
   document.querySelector("#btnGuardar").addEventListener("click", () => {
-    console.log(mapa.marcadorMasCercano);
+    txtcoordenadasPersona.value = `${mapa.marcadorMasCercano.coordenadas}`;
   });
+
+  
 
   btnBuscar.addEventListener("click", () => {
     ObtenerDataDNI("obtenerDni", txtNumDocumentoPersona.value);
