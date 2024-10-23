@@ -76,11 +76,11 @@ $idContrato = $_GET['idContrato'];
 
   <div class="form-container mt-3">
 
-    <h1 class="mt-4">Formulario de Registro de Ficha Técnica GPON</h1>
+    <h1 class="mt-4">Formulario de Registro de Ficha Técnica</h1>
 
     <div class="row g-2 mb-2 justify-content-end">
       <div class="col-sm-1">
-        <input type="text" class="form-control" id="txtNumFicha" placeholder="N°" disabled>
+        <input type="text" class="form-control text-center" id="txtNumFicha" placeholder="N°" disabled>
       </div>
       <div class="col-sm-2">
         <input type="date" class="form-control text-center" id="txtFecha" placeholder="Fecha" disabled>
@@ -119,7 +119,7 @@ $idContrato = $_GET['idContrato'];
               </div>
               <div class="col md-3">
                 <div class="form-floating">
-                  <input type="number" class="form-control" id="txtPotenciaFibra" placeholder="Potencia">
+                  <input type="number" class="form-control" id="txtPotenciaFibra" placeholder="Potencia" min="-30" max="24">
                   <label for="lblPotenciaFibra">Potencia</label>
                 </div>
               </div>
@@ -167,7 +167,7 @@ $idContrato = $_GET['idContrato'];
               </div>
               <div class="col md-6">
                 <div class="form-floating">
-                  <input type="number" class="form-control" id="txtAntenas" placeholder="Antena#">
+                  <input type="number" class="form-control" id="txtAntenas" placeholder="Antena#" min="2" max="10">
                   <label for="lblAntena">N°Antena</label>
                 </div>
               </div>
@@ -198,7 +198,6 @@ $idContrato = $_GET['idContrato'];
   </div>
 </div>
 
-
 <div class="container-fluid px-4" id="contenidoCable">
   <!-- Card: Cable -->
   <div class="conteiner">
@@ -226,7 +225,7 @@ $idContrato = $_GET['idContrato'];
         <div class="row g-3 mb-3">
           <div class="col-md-6">
             <div class="form-floating">
-              <input type="number" class="form-control" id="txtPotenciaCable" placeholder="Potencia">
+              <input type="number" class="form-control" id="txtPotenciaCable" placeholder="Potencia" min="-50" max="-7">
               <label for="lblPotenciaCable">Potencia</label>
             </div>
           </div>
@@ -348,30 +347,32 @@ $idContrato = $_GET['idContrato'];
         </div>
         <label class="form-label mt-2">Medición en caja NAP</label>
         <div class="row g-2 mb-2">
+
           <div class="col-md">
             <div class="form-floating">
-              <input type="number" class="form-control" id="txtGponNap" placeholder="GPON">
+              <input type="number" class="form-control" id="txtGponNap" placeholder="GPON" min="-50" max="-7">
               <label for="lblGponNap">GPON</label>
             </div>
           </div>
           <div class="col-md">
             <div class="form-floating">
-              <input type="number" class="form-control" id="txtCatvNap" placeholder="CATV">
+              <input type="number" class="form-control" id="txtCatvNap" placeholder="CATV" min="-50" max="-7">
               <label for="lblCatvNap">CATV</label>
             </div>
           </div>
+
         </div>
         <label class="form-label mt-2">Medición en interior de casa</label>
         <div class="row g-2 mb-2">
           <div class="col-md">
             <div class="form-floating">
-              <input type="number" class="form-control" id="txtGponCasa" placeholder="GPON">
+              <input type="number" class="form-control" id="txtGponCasa" placeholder="GPON" min="-50" max="-7">
               <label for="lblGponCasa">GPON</label>
             </div>
           </div>
           <div class="col-md">
             <div class="form-floating">
-              <input type="number" class="form-control" id="txtCatvCasa" placeholder="CATV">
+              <input type="number" class="form-control" id="txtCatvCasa" placeholder="CATV" min="-50" max="-7">
               <label for="lblCatvCasa">CATV</label>
             </div>
           </div>

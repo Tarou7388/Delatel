@@ -23,14 +23,12 @@ $idContrato = $_GET['idContrato'];
 </div>
 
 <div class="container-fluid px-4">
-
   <div class="form-container mt-3">
 
     <h1 class="mt-4">Formulario de Registro de Ficha de Cable</h1>
-
     <div class="row g-2 mb-2 justify-content-end">
       <div class="col-sm-1">
-        <input type="text" class="form-control" id="txtNumFicha" placeholder="N°" disabled>
+        <input type="text" class="form-control text-center" id="txtNumFicha" placeholder="N°" disabled>
       </div>
       <div class="col-sm-2">
         <input type="date" class="form-control text-center" id="txtFecha" placeholder="Fecha" disabled>
@@ -45,30 +43,44 @@ $idContrato = $_GET['idContrato'];
         </div>
         <div class="card-body">
           <div class="row g-3 mb-3">
-            <div class="col-md-6">
+            <div class="col-md-4">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtPlanCable" disabled placeholder="Plan">
-                <label for="lblPlanCable">Plan</label>
+                <input type="text" class="form-control" id="txtUsuario" placeholder="Usuario" disabled>
+                <label for="txtUsuario">Usuario</label>
               </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtPagoInst" disabled placeholder="Pago Instalación">
-                <label for="lblPagoInst">Pago Instalación</label>
+                <input type="text" class="form-control" id="txtPaquete" placeholder="Paquete" disabled>
+                <label for="txtPaquete">Paquete</label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="txtPlanCable" disabled placeholder="Plan">
+                <label for="txtPlanCable">Plan</label>
               </div>
             </div>
           </div>
           <div class="row g-3 mb-3">
-            <div class="col-md-6">
+            <div class="col-md input-group">
+              <span class="input-group-text">S/.</span>
+              <div class="form-floating">
+                <input type="number" class="form-control" id="txtPagoInst" value=30 min="0" placeholder="Pago Instalación">
+                <label for="lblPago">Pago Instalación</label>
+              </div>
+              <span class="input-group-text">.00</span>
+            </div>
+            <div class="col-md-4">
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtPeriodo" disabled placeholder="Período">
-                <label for="lblPeriodo">Período</label>
+                <label for="txtPeriodo">Período</label>
               </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
               <div class="form-floating">
-                <input type="number" class="form-control" id="txtPotenciaCable" placeholder="Potencia">
-                <label for="lblPotencia">Potencia</label>
+                <input type="number" class="form-control" id="txtPotenciaCable" placeholder="Potencia" min="-50" max="-7">
+                <label for="txtPotenciaCable">Potencia</label>
               </div>
             </div>
           </div>
@@ -105,7 +117,7 @@ $idContrato = $_GET['idContrato'];
               <div class="input-group">
                 <div class="form-floating">
                   <input type="number" id="txtSpliter" class="form-control" placeholder="Spliter">
-                  <label for="lblSpliter">Spliter</label>
+                  <label for="txtSpliter">Spliter</label>
                 </div>
                 <div class="form-floating">
                   <select class="form-select" id="slcSpliter" aria-label="Selecciona una opción">
@@ -122,11 +134,11 @@ $idContrato = $_GET['idContrato'];
               <div class="input-group">
                 <div class="form-floating">
                   <input type="number" class="form-control" id="txtCantCable" placeholder="Cable M.">
-                  <label for="lblCable">Cable M.</label>
+                  <label for="txtCantCable">Cable M.</label>
                 </div>
                 <div class="form-floating">
                   <input type="number" class="form-control" id="txtPrecioCable" value="1.10" disabled>
-                  <label for="lblPrecioCable">Precio del Cable</label>
+                  <label for="txtPrecioCable">Precio del Cable</label>
                 </div>
               </div>
             </div>
@@ -135,79 +147,93 @@ $idContrato = $_GET['idContrato'];
       </div>
     </div>
 
-    <div class="container-fluid px-4">
-      <!-- Card: Otros -->
-      <div class="conteiner">
-        <div class="card mb-4">
-          <div class="card-header">
-            <h6 class="card-title">Otros:</h6>
+  </div>
+</div>
+
+<!-- Card: Otros -->
+<div class="container-fluid px-4">
+  <!-- Card: Otros -->
+  <div class="conteiner">
+    <div class="card mb-4">
+      <div class="card-header">
+        <h6 class="card-title">Otros:</h6>
+      </div>
+      <div class="card-body">
+        <label class="form-label mt-2">Costos</label>
+        <div class="row g-2 mb-2">
+          <div class="col-md">
+            <div class="form-floating">
+              <input type="text" class="form-control" value=0 id="txtCantSintotizador" placeholder="Cantidad Sintotizador" disabled>
+              <label for="txtCantSintotizador">Cantidad de Sintotizador</label>
+            </div>
           </div>
-          <div class="card-body">
-            <label class="form-label mt-2">Costos</label>
-            <div class="row g-2 mb-2">
-              <div class="col-md">
-                <div class="form-floating">
-                  <input type="text" class="form-control" id="txtCantSintotizador" placeholder="Cantidad Sintotizador" disabled>
-                  <label for="txtCantSintotizador">Cantidad de Sintotizador</label>
-                </div>
-              </div>
-              <div class="col-md">
-                <div class="form-floating">
-                  <input type="number" class="form-control" id="txtCostoAlquiler" placeholder="Costo de Alquiler" disabled>
-                  <label for="txtCostoAlquiler">Costo de Alquiler</label>
-                </div>
-              </div>
+          <div class="col-md">
+            <div class="form-floating">
+              <input type="number" class="form-control" value=0 id="txtCostoAlquiler" placeholder="Costo de Alquiler" disabled>
+              <label for="txtCostoAlquiler">Costo de Alquiler</label>
             </div>
-            <div class="row g-2 mb-2">
-              <div class="col-md">
-                <div class="form-floating">
-                  <input type="number" class="form-control" id="txtCostoCable" placeholder="Costo de Cable" disabled>
-                  <label for="txtCostoCable">Costo de Cable</label>
-                </div>
-              </div>
-              <div class="col-md">
-                <div class="form-floating">
-                  <input type="number" class="form-control" id="txtCostoConector" disabled>
-                  <label for="txtCostoConector">Costo Conector</label>
-                </div>
-              </div>
+          </div>
+        </div>
+        <div class="row g-2 mb-2">
+          <div class="col-md">
+            <div class="form-floating">
+              <input type="number" class="form-control" value=0 id="txtCostoCable" placeholder="Costo de Cable" disabled>
+              <label for="txtCostoCable">Costo de Cable</label>
             </div>
-            <label class="form-label mt-2">Medición en caja NAP</label>
-            <div class="row g-3 mb-3">
-              <div class="col-md-6 form-floating">
-                <input type="number" class="form-control" id="txtGponNap" placeholder="GPON">
-                <label for="txtGponNap">GPON</label>
-              </div>
-              <div class="col-md-6 form-floating">
-                <input type="number" class="form-control" id="txtCatvNap" placeholder="CATV">
-                <label for="txtCatvNap">CATV</label>
-              </div>
+          </div>
+          <div class="col-md">
+            <div class="form-floating">
+              <input type="number" class="form-control" value=0 id="txtCostoConector" placeholder="Costo Conector" disabled>
+              <label for="txtCostoConector">Costo Conector</label>
             </div>
-            <label class="form-label mt-2">Medición en interior de casa</label>
-            <div class="row g-3 mb-3">
-              <div class="col-md-6 form-floating">
-                <input type="number" class="form-control" id="txtGponCasa" placeholder="GPON">
-                <label for="txtGponCasa">GPON</label>
-              </div>
-              <div class="col-md-6 form-floating">
-                <input type="number" class="form-control" id="txtCatvCasa" placeholder="CATV">
-                <label for="txtCatvCasa">CATV</label>
-              </div>
+          </div>
+        </div>
+        <label class="form-label mt-2">Medición en caja NAP</label>
+        <div class="row g-3 mb-3">
+
+          <div class="col-md-6">
+            <div class="form-floating">
+              <input type="number" class="form-control" id="txtGponNap" placeholder="GPON" min="-50" max="-7">
+              <label for="txtGponNap">GPON</label>
             </div>
-            <!-- Botones -->
-            <div class="row">
-              <div class="col-12 text-center text-md-end mb-3">
-                <button type="button" id="btnGuardar" class="btn btn-primary btn-sm">Guardar</button>
-                <button type="button" id="btnCancelar" class="btn btn-secondary btn-sm">Cancelar</button>
-              </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-floating">
+              <input type="number" class="form-control" id="txtCatvNap" placeholder="CATV" min="-50" max="-7">
+              <label for="txtCatvNap">CATV</label>
             </div>
+          </div>
+
+        </div>
+        <label class="form-label mt-2">Medición en interior de casa</label>
+        <div class="row g-3 mb-3">
+          <div class="col-md-6">
+            <div class="form-floating">
+              <input type="number" class="form-control" id="txtGponCasa" placeholder="GPON" min="-50" max="-7">
+              <label for="txtGponCasa">GPON</label>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-floating">
+              <input type="number" class="form-control" id="txtCatvCasa" placeholder="CATV" min="-50" max="-7">
+              <label for="txtCatvCasa">CATV</label>
+            </div>
+          </div>
+        </div>
+        <!-- Botones -->
+        <div class="row">
+          <div class="col-12 text-center text-md-end mb-3">
+            <button type="button" id="btnGuardar" class="btn btn-primary btn-sm">Guardar</button>
+            <button type="button" id="btnCancelar" class="btn btn-secondary btn-sm">Cancelar</button>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-
-<script src="../../js/FichaTecnicaCable.js"></script>
+<script>
+  const idContrato = <?= $idContrato ?>;
+</script>
+<script type="module" src="../../js/FichaTecnicaCable.js"></script>
 
 <?php require_once "../../footer.php"; ?>
