@@ -264,12 +264,12 @@ INSERT INTO tb_sectores (id_distrito, sector, iduser_create) VALUES
 (110201, 'San José', 1),
 (110201, 'Nazareno', 1),
 (110201, 'Chacarilla', 1),
-(110201, 'Sunampe', 1), --6
+(110201, 'Sunampe', 1),
 (110201, 'San Juan de Yanac', 1),
 (110201, 'Carmen Alto', 1),
 (110201, 'Rinconada', 1),
 (110201, 'Lurinchincha', 1),
-(110201, 'Grocio Prado', 1), --11
+(110201, 'Grocio Prado', 1), 
 (110201, 'Hoja Redonda', 1),
 (110201, 'Hacienda San Pedro', 1),
 (110201, 'Cañete', 1),
@@ -277,14 +277,14 @@ INSERT INTO tb_sectores (id_distrito, sector, iduser_create) VALUES
 (110201, 'San Hilarión', 1),
 (110201, 'Los Laureles', 1),
 (110201, 'Las Casuarinas', 1),
-(110201, 'San Isidro', 1), --19
-(110201, 'Chincha Baja', 1), --20
+(110201, 'San Isidro', 1), 
+(110201, 'Chincha Baja', 1),
 (110201, 'El Carmen', 1),
 (110201, 'Las Pampas', 1),
 (110201, 'La Victoria', 1),
 (110201, 'San Andrés', 1),
 (110201, 'Río Seco', 1),
-(110201, 'Pueblo Nuevo', 1), --26
+(110201, 'Pueblo Nuevo', 1),
 (110201, 'Tambo de Mora', 1),
 (110201, 'San Benito', 1),
 (110201, 'Los Jardines', 1),
