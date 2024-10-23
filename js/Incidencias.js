@@ -1,9 +1,49 @@
 import config from '../env.js';
 
-
-
 window.addEventListener('DOMContentLoaded', function () {
-  idcliente = null;
+  const userid = JSON.stringify(user['idUsuario']);
+  let idcliente = -1;
+
+  function $(object) {
+    return document.querySelector(object);
+  };
+
+  async function registrarIncidencia() {
+    const datos = {
+      idCliente: idcliente,
+      fechaIncidencia: new Date()
+        .toISOString()
+        .slice(0, 19)
+        .replace("T", " "),
+      descripcion: $("#txtDescripcion").value,
+      solucion: $("#txtSolucion").value,
+      idtecnico: userid,
+      idUsuario: userid,
+    };
+
+    console.log(JSON.stringify({
+      operacion: "registrarIncidencia",
+      datos: datos
+    }));
+
+    const respuesta = await fetch(`${config.HOST}app/controllers/Incidencia.controllers.php`, {
+      method: "POST",
+      body: JSON.stringify({
+        operacion: "registrarIncidencia",
+        datos: datos
+      })
+    });
+
+    const data = await respuesta.json();
+
+    if (data) {
+      showToast("Incicencia guardada", "SUCCESS");
+      formRegistroIncidencia.reset();
+    }
+    else {
+      showToast("No se logró registrar la incidencia", "ERROR");
+    }
+  }
 
   const botonbuscar = document.getElementById('btnNrodocumento');
   const formRegistroIncidencia = document.getElementById('formRegistroIncidencia');
@@ -12,13 +52,13 @@ window.addEventListener('DOMContentLoaded', function () {
     const data = await respuesta.json();
     //console.log(data[0].nombre);
     if (data[0]) {
-      $("#txtCliente").val(data[0].nombre);
+      $("#txtCliente").value = data[0].nombre;
       idcliente = data[0].id_cliente;
-      $("#txtCliente").prop('disabled', true);
+      $("#txtCliente").disabled = true;
     }
     else {
       showToast("No se encuentra a este cliente", "ERROR");
-      idcliente = null;
+      idcliente = -1;
     }
 
   }
@@ -28,8 +68,9 @@ window.addEventListener('DOMContentLoaded', function () {
     await BuscarcontratoNDoc(dni);
   });
 
-  formRegistroIncidencia.addEventListener("submit", (event) => {
-
+  formRegistroIncidencia.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    await registrarIncidencia();
   });
 
 });

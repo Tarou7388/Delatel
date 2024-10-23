@@ -24,7 +24,8 @@ LEFT JOIN
 LEFT JOIN 
     tb_usuarios u ON r.id_usuario = u.id_usuario
 LEFT JOIN 
-    tb_personas t_persona ON u.id_persona = t_persona.id_persona;
+    tb_personas t_persona ON u.id_persona = t_persona.id_persona
+    WHERE i.inactive_at IS NULL;
 
 
 DELIMITER $$

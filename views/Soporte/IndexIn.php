@@ -19,7 +19,7 @@
       <div class="col-md-6">
         <div class="input-group">
           <div class="form-floating flex-grow-1">
-            <input type="tel" class="form-control" maxlength="11" minlength="11" pattern="\d{11}" id="txtNrodocumento" placeholder="Número de Documento" required>
+            <input type="text" class="form-control" maxlength="11" minlength="8" id="txtNrodocumento" placeholder="Número de Documento" required>
             <label for="txtNrodocumento">Número de Documento</label>
           </div>
           <button class="btn btn-outline-primary" type="button" id="btnNrodocumento">
