@@ -1,5 +1,4 @@
 import config from "../env.js";
-
 let mapa;
 let circulos = [];
 let marcadorActivo = null;
@@ -114,10 +113,9 @@ export async function iniciarMapa() {
   });
   mapa.addListener("click", async (e) => {
     console.log("Has hecho click en:", e.latLng.lat(), e.latLng.lng());
-    await posicionActual(e);
     marcadorMasCercano = null;
     document.querySelector('#btnGuardarCoordenadas').disabled = true;
-    alert('Zona sin cobertura');
+    alert("No hay coberura en esta zona");
   });
 }
 
