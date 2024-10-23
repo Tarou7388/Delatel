@@ -262,6 +262,23 @@ CREATE TABLE tb_soporte (
     CONSTRAINT sopor_fk_id_tecnico FOREIGN KEY (id_tecnico) REFERENCES tb_responsables (id_responsable)
 ) ENGINE = InnoDB;
 
+CREATE TABLE tb_incidencias (
+    id_incidencia INT PRIMARY KEY AUTO_INCREMENT,
+    id_cliente INT NOT NULL,
+    fecha_incidencia DATETIME NOT NULL DEFAULT NOW(),
+    descripcion TEXT NOT NULL,
+    solucion TEXT NOT NULL,
+    id_tecnico INT NOT NULL,
+    create_at DATETIME NOT NULL DEFAULT NOW(),
+    update_at DATETIME NULL,
+    inactive_at DATETIME NULL,
+    iduser_create INT NOT NULL,
+    iduser_update INT NULL,
+    iduser_inactive INT NULL,
+    CONSTRAINT fk_incidencias_cliente FOREIGN KEY (id_cliente) REFERENCES tb_clientes (id_cliente),
+    CONSTRAINT fk_incidencias_tecnico FOREIGN KEY (id_tecnico) REFERENCES tb_responsables (id_responsable)
+) ENGINE = InnoDB;
+
 CREATE TABLE tb_productos (
     id_producto INT PRIMARY KEY AUTO_INCREMENT,
     marca VARCHAR(30) NOT NULL,

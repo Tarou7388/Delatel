@@ -1,18 +1,33 @@
 <?php require_once '../../header.php'; ?>
 <?php $host = $_ENV['HOST']; ?>
-<div class="modal" tabindex="-1" id="modalContratos">
-  <div class="modal-dialog">
+
+<div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Contratos del Cliente</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+        <h5 class="modal-title" id="exampleModalToggleLabel">Contratos</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p id="detallesContrato">Cargando contratos...</p>
       </div>
     </div>
   </div>
 </div>
+<div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalToggleLabel2">Detalles de la Avería</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+      </div>
+    </div>
+  </div>
+</div>
+<!-- fin del segundo modal -->
+
 
 <div class="container-fluid px-4">
   <div class="form-container mt-4">
@@ -40,5 +55,7 @@
     </div>
   </div>
 </div>
+</body>
 <?php require_once "../../footer.php"; ?>
 <script type="module" src="../../js/Averias.js"></script>
+</html>

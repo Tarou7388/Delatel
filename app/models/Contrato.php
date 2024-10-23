@@ -157,7 +157,7 @@ class Contrato extends Conexion
      */
     public function buscarContratoporClienteId($params = [])
     {
-        $sql = "CALL buscar_contrato_por_cliente(?)";
+        $sql = "CALL spu_contratos_buscar_cliente(?)";
         $values = array(
             $params['id']
         );

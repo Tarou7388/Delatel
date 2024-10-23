@@ -148,3 +148,46 @@ JOIN
 JOIN 
     tb_personas p_cliente ON cl.id_persona = p_cliente.id_persona
 ORDER BY s.id_soporte DESC;
+
+DROP PROCEDURE IF EXISTS spu_soporte_filtrar_prioridad$$
+CREATE PROCEDURE spu_soporte_filtrar_prioridad(
+    IN p_prioridad VARCHAR(50)
+)
+BEGIN
+    SELECT 
+        s.id_soporte,
+        s.prioridad,
+        s.soporte,
+        s.descripcion_problema,
+        s.descripcion_solucion,
+        ts.tipo_soporte,
+        c.id_cliente,
+        CASE
+            WHEN cl.id_persona IS NOT NULL THEN CONCAT(p_cliente.nombres, ' ', p_cliente.apellidos)
+            WHEN cl.id_empresa IS NOT NULL THEN e.razon_social
+        END AS nombre_cliente,
+        c.direccion_servicio,
+        r.id_usuario AS id_tecnico,
+        CONCAT(p_tecnico.nombres, ' ', p_tecnico.apellidos) AS nombre_tecnico
+    FROM 
+        tb_soporte s
+    LEFT JOIN 
+        tb_contratos c ON s.id_contrato = c.id_contrato
+    LEFT JOIN 
+        tb_tipo_soporte ts ON s.id_tipo_soporte = ts.id_tipo_soporte
+    LEFT JOIN 
+        tb_responsables r ON s.id_tecnico = r.id_responsable
+    LEFT JOIN 
+        tb_usuarios u ON r.id_usuario = u.id_usuario
+    LEFT JOIN 
+        tb_personas p_tecnico ON u.id_persona = p_tecnico.id_persona
+    LEFT JOIN 
+        tb_clientes cl ON c.id_cliente = cl.id_cliente
+    LEFT JOIN 
+        tb_personas p_cliente ON cl.id_persona = p_cliente.id_persona 
+    LEFT JOIN 
+        tb_empresas e ON cl.id_empresa = e.id_empresa 
+    WHERE 
+        (p_prioridad IS NULL OR TRIM(p_prioridad) = '' OR LOWER(TRIM(s.prioridad)) = LOWER(TRIM(p_prioridad)))
+        AND LOWER(TRIM(s.prioridad)) != 'completo';
+END$$
