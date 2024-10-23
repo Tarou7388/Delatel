@@ -24,12 +24,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function toggleForms(value) {
     if (value === "Persona") {
+      resetUI();
       divPersonaCard.classList.remove("d-none");
       divEmpresaCard.classList.add("d-none");
     } else if (value === "Empresa") {
+      resetUI();
       divPersonaCard.classList.add("d-none");
       divEmpresaCard.classList.remove("d-none");
     } else {
+      resetUI();
       divPersonaCard.classList.remove("d-none");
       divEmpresaCard.classList.add("d-none");
     }
@@ -62,21 +65,53 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
+  function resetUI() {
+    txtNumDocumentoPersona.value = '';
+    txtNombresPersona.value = '';
+    txtApellidosPersona.value = '';
+    txtTelefono.value = '';
+    txtEmail.value = '';
+    txtDireccion.value = '';
+    txtReferencia.value = '';
+    txtcoordenadasPersona.value = '';
+    slcTipoDocumento.value = '';
+    slcNacionalidad.value = '';
+    txtRuc.value = '';
+    txtRepresentanteLegal.value = '';
+    txtRazonSocial.value = '';
+    txtNombreComercial.value = '';
+    txtTelefono.value = '';
+    txtEmail.value = '';
+    txtCoordenadas.value = '';
+    txtDireccion.value = '';
+    txtReferencia.value = '';
+    slcServicio.value = '';
+  }
+
   function verificarCamposPersona() {
     const camposPersona = [
       slcTipoDocumento, txtNumDocumentoPersona, txtNombresPersona,
       txtApellidosPersona, txtTelefono, txtEmail,
       txtDireccion, txtReferencia, txtcoordenadasPersona,
     ];
-
-    for (let campo of camposPersona) {
-      if (campo.value.trim() === '') {
-        showToast('Por favor, complete todos los campos de la persona.', "WARNING");
-        return true;
-      }
+    let bandera = {
+      mensaje: "",
+      confirmacion: true
+    };
+    const length = txtNumDocumentoPersona.value.length;
+    if ((slcTipoDocumento.value === 'DNI' && length !== 8) || (slcTipoDocumento.value === 'CAR' && length !== 9)) {
+      bandera.mensaje = "El número de documento no es válido";
+      bandera.confirmacion = false;
     }
 
-    return false;
+    for (let campo of camposPersona) {
+      if (campo.value.trim() == '') {
+        bandera.mensaje = "Por favor complete el campo " + campo.placeholder;
+        campo.focus();
+        bandera.confirmacion = false;
+      }
+    }
+    return bandera;
   }
 
   async function registrarPersona() {
@@ -148,7 +183,9 @@ document.addEventListener("DOMContentLoaded", function () {
     txtReferencia.disabled = show;
     txtcoordenadasPersona.disabled = show;
     slcTipoDocumento.disabled = show;
-    slcNacionalidad.disabled = show;
+    if(slcTipoDocumento.value != 'DNI') {
+      slcNacionalidad.disabled = show;
+    }
     txtNumDocumentoPersona.disabled = show;
     slcServicio.disabled = show;
     btnBuscar.disabled = show;
@@ -162,6 +199,8 @@ document.addEventListener("DOMContentLoaded", function () {
     txtNumDocumentoPersona.addEventListener('input', cambiarslc);
 
     function cambiarslc() {
+      txtApellidosPersona.value = '';
+      txtNombresPersona.value = '';
       const length = txtNumDocumentoPersona.value.length;
 
       if (length === 8) {
@@ -174,20 +213,19 @@ document.addEventListener("DOMContentLoaded", function () {
         slcNacionalidad.value = 'Peruano';
         slcNacionalidad.disabled = true;
         txtApellidosPersona.disabled = true;
-          txtNombresPersona.disabled = true;
+        txtNombresPersona.disabled = true;
       } else {
+
         btnBuscar.disabled = true;
         if ([...slcNacionalidad.options].some(option => option.value === 'Peruano')) {
           slcNacionalidad.remove(slcNacionalidad.querySelector('#peruanoOpcion').index);
         }
         slcTipoDocumento.disabled = false;
-        if (length === 12) {
-          slcTipoDocumento.value = 'PAS';
+        if (length === 9) {
+          slcTipoDocumento.value = 'CAR';
           slcTipoDocumento.disabled = true;
           txtApellidosPersona.disabled = false;
           txtNombresPersona.disabled = false;
-        } else if (length === 9) {
-          slcTipoDocumento.value = 'CAR';const mapa = e;
         } else {
           slcTipoDocumento.value = '';
           txtApellidosPersona.disabled = true;
@@ -218,7 +256,7 @@ document.addEventListener("DOMContentLoaded", function () {
     await cargarPaquetes();
   })();
 
-  $(".select2me").select2({theme: "bootstrap-5", placeholder: "Seleccione Servicio", allowClear: true});
+  $(".select2me").select2({ theme: "bootstrap-5", placeholder: "Seleccione Servicio", allowClear: true });
   $('.select2me').parent('div').children('span').children('span').children('span').css('height', ' calc(3.5rem + 2px)');
   $('.select2me').parent('div').children('span').children('span').children('span').children('span').css('margin-top', '18px');
   $('.select2me').parent('div').find('label').css('z-index', '1');
@@ -231,21 +269,22 @@ document.addEventListener("DOMContentLoaded", function () {
   frmPersonas.addEventListener("submit", (event) => {
     event.preventDefault();
     const bandera = verificarCamposPersona();
-    if (!bandera) {
+    if (bandera.confirmacion) {
       registrarPersona();
+      console.log("Registrando persona...");
+    } else {
+      showToast(bandera.mensaje, "WARNING");
     }
   });
 
-  document.querySelector("#btnBuscarCoordenadas").addEventListener("click", async () =>{
-    await mapa.iniciarMapa;
-
+  document.querySelector("#btnBuscarCoordenadas").addEventListener("click", async () => {
+    await mapa.iniciarMapa();
   })
 
-  document.querySelector("#btnGuardar").addEventListener("click", () => {
+  document.querySelector("#btnGuardarCoordenadas").addEventListener("click", () => {
     txtcoordenadasPersona.value = `${mapa.marcadorMasCercano.coordenadas}`;
+    document.querySelector("#txtCoordenadas").value = `${mapa.marcadorMasCercano.coordenadas}`;
   });
-
-  
 
   btnBuscar.addEventListener("click", () => {
     ObtenerDataDNI("obtenerDni", txtNumDocumentoPersona.value);
