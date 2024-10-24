@@ -35,6 +35,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  
+
   async function verificarCampos() {
     const campos = [
       txtRuc, txtRepresentanteLegal, txtRazonSocial,

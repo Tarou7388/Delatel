@@ -17,23 +17,18 @@ if (!isset($_SESSION['login']) || $_SESSION['login']['estado'] == false) {
   $rutaCompleta = array_filter($rutaCompleta);
   $totalElementos = count($rutaCompleta);
 
-  $vistaActual = $rutaCompleta[$totalElementos];
   $listaAcceso = $_SESSION['login']['accesos'];
   $nombreUser = $_SESSION['login']['nombreUser'];
   $cargo = $_SESSION['login']['Cargo'];
-
   $encontrado = false;
 
-  /* $i = 0;
   while (($i < count($listaAcceso)) && !$encontrado) {
     if ($listaAcceso[$i]['ruta'] == $vistaActual) {
       $encontrado = true;
+    } elseif (isset($listaAcceso[$i]['rutasAnexas']) && in_array($vistaActual, $listaAcceso[$i]['rutasAnexas'])) {
+      $encontrado = true;
     }
     $i++;
-  } */
-
-  if (count($listaAcceso) > 0) {
-    $encontrado = true;
   }
 
   // Validamos si se encontró..

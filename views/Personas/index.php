@@ -1,6 +1,5 @@
 <?php require_once '../../header.php'; ?>
 
-
 <div class="modal fade" id="ModalMapa" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-xl" role="document">
 		<div class="modal-content">

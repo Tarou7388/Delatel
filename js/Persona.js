@@ -279,6 +279,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.querySelector("#btnBuscarCoordenadas").addEventListener("click", async () => {
     await mapa.iniciarMapa();
+    await mapa.obtenerDatos();
   })
 
   document.querySelector("#btnGuardarCoordenadas").addEventListener("click", () => {
