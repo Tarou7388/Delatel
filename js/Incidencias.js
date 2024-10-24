@@ -1,8 +1,15 @@
 import config from '../env.js';
 
+if (JSON.stringify(user['idRol']) == 2) {
+  window.location.href = `${config.HOST}views/Soporte/registroSoporte`;
+}
+
 window.addEventListener('DOMContentLoaded', function () {
   const userid = JSON.stringify(user['idUsuario']);
   let idcliente = -1;
+
+  var today = new Date().toISOString().split('T')[0];
+  document.getElementById('txtFecha').value = today;
 
   function $(object) {
     return document.querySelector(object);

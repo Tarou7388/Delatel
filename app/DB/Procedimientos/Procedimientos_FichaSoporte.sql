@@ -1,6 +1,6 @@
 USE Delatel;
 
--- Vista vw_soporte_detalle actualizada
+
 DROP VIEW IF EXISTS vw_soporte_detalle;
 CREATE VIEW vw_soporte_detalle AS
 SELECT 
@@ -29,9 +29,6 @@ JOIN
     tb_usuarios u ON r.id_usuario = u.id_usuario
 JOIN 
     tb_personas p ON u.id_persona = p.id_persona;
-
-
--- Procedimientos almacenados (sin cambios)
 
 DELIMITER $$
 DROP PROCEDURE IF EXISTS spu_tipo_soporte_registrar$$
@@ -115,39 +112,6 @@ BEGIN
         iduser_update = p_iduser_update
     WHERE id_soporte = p_id_soporte;
 END $$
-
--- Vista vw_soporte_detalle_incompleto actualizada POSIBLE A ELIMINACION
-DROP VIEW IF EXISTS vw_soporte_detalle_incompleto;
-CREATE VIEW vw_soporte_detalle_incompleto AS
-SELECT 
-    s.id_soporte,
-    s.prioridad,
-    s.soporte,
-    s.descripcion_problema,      -- Se agrega descripcion_problema
-    s.descripcion_solucion,      -- Se agrega descripcion_solucion
-    ts.tipo_soporte,
-    c.id_cliente,
-    CONCAT(p_cliente.nombres, ' ', p_cliente.apellidos) AS nombre_cliente,
-    c.direccion_servicio,
-    r.id_usuario AS id_tecnico,
-    CONCAT(p_tecnico.nombres, ' ', p_tecnico.apellidos) AS nombre_tecnico
-FROM 
-    tb_soporte s
-JOIN 
-    tb_contratos c ON s.id_contrato = c.id_contrato
-JOIN 
-    tb_tipo_soporte ts ON s.id_tipo_soporte = ts.id_tipo_soporte
-JOIN 
-    tb_responsables r ON s.id_tecnico = r.id_responsable
-JOIN 
-    tb_usuarios u ON r.id_usuario = u.id_usuario
-JOIN 
-    tb_personas p_tecnico ON u.id_persona = p_tecnico.id_persona
-JOIN 
-    tb_clientes cl ON c.id_cliente = cl.id_cliente
-JOIN 
-    tb_personas p_cliente ON cl.id_persona = p_cliente.id_persona
-ORDER BY s.id_soporte DESC;
 
 DROP PROCEDURE IF EXISTS spu_soporte_filtrar_prioridad$$
 CREATE PROCEDURE spu_soporte_filtrar_prioridad(

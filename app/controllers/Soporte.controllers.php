@@ -14,8 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     case 'listarTipoSoporte':
       echo json_encode($soporte->listarTipoSoporte());
       break;
-    case 'listarSoportesIncompletos':
-      echo json_encode($soporte->listarSoportesIncompletos());
+    case 'FiltrarSoportePrioridad':
+      echo json_encode($soporte->FiltrarSoportePrioridad(["prioridad"=>$_GET['prioridad']]));
       break;
   }
 }
@@ -43,12 +43,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'status' => $status ? 'success' : 'error',
         'message' => $status ? 'Soporte registrado correctamente' : 'Error al registrar soporte'
       ]);
-      break;
-    case 'FiltrarSoportePrioridad':
-      $values=[
-        'prioridad'=>Herramientas::sanitizarEntrada($datos['prioridad'])
-      ];
-      echo json_encode($soporte->FiltrarSoportePrioridad($values));
       break;
   }
 }
