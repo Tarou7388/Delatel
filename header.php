@@ -25,7 +25,6 @@ if (!isset($_SESSION['login']) || $_SESSION['login']['estado'] == false) {
   $i = 0;
   $encontrado = false;
 
-  // Iterar sobre $accesosV2 para encontrar la coincidencia
   while (($i < count($listaAcceso)) && !$encontrado) {
     if ($listaAcceso[$i]['ruta'] == $vistaActual) {
       $encontrado = true;
