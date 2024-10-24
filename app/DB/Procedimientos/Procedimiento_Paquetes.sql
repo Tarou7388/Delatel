@@ -41,8 +41,7 @@ CREATE PROCEDURE spu_paquetes_actualizar(
     p_id_servicio INT,
     p_paquete VARCHAR(250),
     p_precio DECIMAL(7,2),
-    p_fecha_inicio DATE,
-    p_fecha_fin DATE,
+    p_duracion JSON,
     p_iduser_update INT
 )
 BEGIN
@@ -51,8 +50,7 @@ BEGIN
 		id_servicio = p_id_servicio,
         paquete = p_paquete,
         precio = p_precio,
-        fecha_inicio = p_fecha_inicio,
-        fecha_fin = p_fecha_fin,
+        duracion = p_duracion,
         iduser_update = p_iduser_update,
         update_at = NOW()
 	WHERE
