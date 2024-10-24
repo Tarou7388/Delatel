@@ -46,7 +46,7 @@
 
         </div> <!-- Fin de la Primera Fila -->
 
-                 <hr>
+        <hr>
 
         <!-- Segunda Fila -->
         <h5>Parámetros Técnicos</h5>
@@ -63,7 +63,7 @@
           </div>
 
           <div class="col md-6 form-check form-switch d-flex align-items-center">
-            <input class="form-check-input ms-5"" type="checkbox" id="chkCatv">
+            <input class="form-check-input ms-5"" type=" checkbox" id="chkCatv">
             <label class="form-check-label" for="chkCatv">CATV</label>
           </div>
 
@@ -136,10 +136,10 @@
             <label>CATV</label>
             <input type="text" class="form-control" id="txtCatv" placeholder="SI/NO" required>
           </div>
-                    <div class="col md-6 form-check form-switch d-flex align-items-center">
-                        <input class="form-check-input ms-5"" type="checkbox" id="chkCatv">
-                        <label class="form-check-label" for="chkCatv">CATV</label>
-                    </div>
+          <div class="col md-6 form-check form-switch d-flex align-items-center">
+            <input class="form-check-input ms-5"" type=" checkbox" id="chkCatv">
+            <label class="form-check-label" for="chkCatv">CATV</label>
+          </div>
 
         </div> <!-- Fin de la Primera Fila -->
 
@@ -189,17 +189,6 @@
             <textarea type="text" class="form-control" id="txtaProceSolucion" style="height: 100px" required></textarea>
           </div>
         </div> <!-- Fin de la Tercera Fila -->
-
-        <hr>
-
-        <!-- Botones -->
-        <div class="row">
-          <div class="col-12 text-center text-md-end mb-3">
-            <button type="button" id="btnCodigoBarra" class="btn btn-warning btn-sm me-2 mb-2 mb-md-0">Verificar Código</button>
-            <button type="submit" id="btnRegistrarSoporte" class="btn btn-primary btn-sm me-2 mb-2 mb-md-0">Registrar Soporte</button>
-            <button type="reset" id="btnCancelar" class="btn btn-secondary btn-sm mb-2 mb-md-0">Cancelar Proceso</button>
-          </div>
-        </div>
 
       </form>
     </div>

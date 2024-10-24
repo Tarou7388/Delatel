@@ -62,19 +62,6 @@ class Soporte extends Conexion
   }
 
   /**
-   * Método para el listado de Soportes Imcompletos en campos
-   *
-   * Este método llama a un procedimiento almacenado para hacer el listado 
-   * en la tabla de soporte
-   * 
-   */
-  public function listarSoportesIncompletos()
-  {
-    $sql = "SELECT * FROM vw_soporte_detalle_incompleto";
-    return $this->listarDatos($sql);
-  }
-
-  /**
    * Filtra los soportes por prioridad.
    *
    * Este método ejecuta un procedimiento almacenado que filtra los soportes
