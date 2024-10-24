@@ -6,19 +6,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const Prioridad = document.querySelector("#slcPrioridad");
 
-  async function obtenerDataSoporte() {
+  async function obtenerDataSoporte(idsoport) {
     const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php`, {
       method: "POST",
       body: JSON.stringify({
         operacion: "obtenerJSON",
-        datos: id_soporte
+        idSoporte: idsoport
       })
     })
 
     const data = await respuesta.json();
+
+    return data;
   }
 
-  function abrirModal(idsoport) {
+  async function abrirModal(idsoport) {
+    await obtenerDataSoporte(idsoport);
     $('#editModal').modal('show');
   };
 
