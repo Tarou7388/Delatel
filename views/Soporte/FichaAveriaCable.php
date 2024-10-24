@@ -236,17 +236,6 @@
           </div>
         </div>
 
-        <hr>
-
-        <!-- Botones -->
-        <div class="row">
-          <div class="col-12 text-center text-md-end mb-3">
-            <button type="button" id="btnCodigoBarra" class="btn btn-warning btn-sm me-2 mb-2 mb-md-0">Verificar Código</button>
-            <button type="submit" id="btnRegistrarSoporte" class="btn btn-primary btn-sm me-2 mb-2 mb-md-0">Registrar Soporte</button>
-            <button type="reset" id="btnCancelar" class="btn btn-secondary btn-sm mb-2 mb-md-0">Cancelar Proceso</button>
-          </div>
-        </div>
-
       </form>
     </div>
 
