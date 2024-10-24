@@ -40,7 +40,8 @@ function obtenerAccesosFiltrados($idRol, $permissions)
         ["ruta" => "Productos", "texto" => "Productos", "icono" => "fa-solid fa-boxes-stacked"],
         ["ruta" => "Roles", "texto" => "Roles", "icono" => "fa-regular fa-address-card"],
         ["ruta" => "Soporte", "texto" => "Soporte", "icono" => "fa-solid fa-wrench"],
-        ["ruta" => 'Usuarios', "texto" => "Usuarios", "icono" => "fa-solid fa-users"]
+        ["ruta" => 'Usuarios', "texto" => "Usuarios", "icono" => "fa-solid fa-users"],
+        ["ruta" => 'Averias',"texto"=>"Averias","icono"=>"fa-solid fa-wrench"]
     ];
 
     // Filtrar accesos basados en permisos
