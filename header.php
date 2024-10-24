@@ -17,11 +17,15 @@ if (!isset($_SESSION['login']) || $_SESSION['login']['estado'] == false) {
   $rutaCompleta = array_filter($rutaCompleta);
   $totalElementos = count($rutaCompleta);
 
+  $vistaActual = end($rutaCompleta);
   $listaAcceso = $_SESSION['login']['accesos'];
   $nombreUser = $_SESSION['login']['nombreUser'];
   $cargo = $_SESSION['login']['Cargo'];
+
+  $i = 0;
   $encontrado = false;
 
+  // Iterar sobre $accesosV2 para encontrar la coincidencia
   while (($i < count($listaAcceso)) && !$encontrado) {
     if ($listaAcceso[$i]['ruta'] == $vistaActual) {
       $encontrado = true;
@@ -31,10 +35,8 @@ if (!isset($_SESSION['login']) || $_SESSION['login']['estado'] == false) {
     $i++;
   }
 
-  // Validamos si se encontró..
-  if (!$encontrado) {
-    header("Location: $host");
-    exit();
+  if (count($listaAcceso) > 0) {
+    $encontrado = true;
   }
 }
 ?>
