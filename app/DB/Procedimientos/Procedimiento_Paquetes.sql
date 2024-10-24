@@ -1,6 +1,6 @@
 USE Delatel;
 
-DELIMITER $$
+/* DELIMITER $$
 DROP VIEW IF EXISTS vw_paquetes_listar$$
 CREATE VIEW vw_paquetes_listar AS
 SELECT
@@ -33,7 +33,7 @@ CREATE PROCEDURE spu_paquete_registrar(
 BEGIN
     INSERT INTO tb_paquetes (id_servicio, paquete, precio, fecha_inicio, fecha_fin, iduser_create) 
     VALUES (p_id_servicio, p_paquete, p_precio, p_fecha_inicio, p_fecha_fin, p_iduser_create);
-END $$
+END $$ */
 
 DROP PROCEDURE IF EXISTS spu_paquetes_actualizar$$
 CREATE PROCEDURE spu_paquetes_actualizar(
