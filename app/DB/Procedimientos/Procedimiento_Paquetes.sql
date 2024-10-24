@@ -24,38 +24,53 @@ FROM
 DROP PROCEDURE IF EXISTS spu_paquete_registrar$$
 CREATE PROCEDURE spu_paquete_registrar(
     IN p_id_servicio INT,
-    IN p_precio DECIMAL(7, 2),
-    IN p_tipo_paquete CHAR(4),
+    IN p_paquete VARCHAR(250),
+    IN p_precio DECIMAL(7,2),
     IN p_fecha_inicio DATE,
     IN p_fecha_fin DATE,
     IN p_iduser_create INT
 )
 BEGIN
-    INSERT INTO tb_paquetes (id_servicio, precio, tipo_paquete, fecha_inicio, fecha_fin, iduser_create) 
-    VALUES (p_id_servicio, p_precio, p_tipo_paquete, p_fecha_inicio, p_fecha_fin, p_iduser_create);
+    INSERT INTO tb_paquetes (id_servicio, paquete, precio, fecha_inicio, fecha_fin, iduser_create) 
+    VALUES (p_id_servicio, p_paquete, p_precio, p_fecha_inicio, p_fecha_fin, p_iduser_create);
 END $$
 
 DROP PROCEDURE IF EXISTS spu_paquetes_actualizar$$
 CREATE PROCEDURE spu_paquetes_actualizar(
-    IN p_id_paquete INT,
-    IN p_id_servicio INT,
-    IN p_precio DECIMAL(7, 2),
-    IN p_tipo_paquete CHAR(4),
-    IN p_fecha_inicio DATE,
-    IN p_fecha_fin DATE,
-    IN p_iduser_update INT
+	p_id_paquete INT,
+    p_id_servicio INT,
+    p_paquete VARCHAR(250),
+    p_precio DECIMAL(7,2),
+    p_fecha_inicio DATE,
+    p_fecha_fin DATE,
+    p_iduser_update INT
 )
 BEGIN
-    UPDATE tb_paquetes
-    SET
-        id_servicio = p_id_servicio,
+	UPDATE tb_paquetes 
+    SET 
+		id_servicio = p_id_servicio,
+        paquete = p_paquete,
         precio = p_precio,
-        tipo_paquete = p_tipo_paquete,
         fecha_inicio = p_fecha_inicio,
         fecha_fin = p_fecha_fin,
-        update_at = NOW(),
-        iduser_update = p_iduser_update
-    WHERE
-        id_paquete = p_id_paquete;
+        iduser_update = p_iduser_update,
+        update_at = NOW()
+	WHERE
+		id_paquete = p_id_paquete;
+END $$
+
+
+DROP PROCEDURE IF EXISTS spu_paquete_eliminar$$
+CREATE PROCEDURE spu_paquete_eliminar(
+	p_id_paquete INT,
+    p_iduser_inactive INT
+)
+BEGIN
+	UPDATE tb_paquetes
+    SET 	
+		inactive_at = NOW(),
+        iduser_inactive = p_iduser_inactive
+	WHERE 
+		id_paquete = p_id_paquete;
 END $$
 
