@@ -49,15 +49,18 @@ CREATE TABLE tb_roles (
 ) ENGINE = InnoDB;
 
 CREATE TABLE tb_servicios (
-    id_servicio INT PRIMARY KEY AUTO_INCREMENT,
-    servicio VARCHAR(50) NOT NULL,
+	id_servicio INT PRIMARY KEY AUTO_INCREMENT, 
+    tipo_servicio CHAR(4) CHECK (
+		tipo_servicio IN ('CABL', 'WISP', 'GPON', 'FIBR')
+    ),
+    servicio VARCHAR(200) NOT NULL, 
     create_at DATETIME DEFAULT NOW(),
     update_at DATETIME NULL,
     inactive_at DATETIME NULL,
     iduser_create INT NOT NULL,
     iduser_update INT NULL,
     iduser_inactive INT NULL,
-    CONSTRAINT servi_uk_servicio UNIQUE (servicio)
+    CONSTRAINT servi_uk_servicio UNIQUE (servicio, tipo_servicio)
 ) ENGINE = InnoDB;
 
 CREATE TABLE tb_sectores (
@@ -159,22 +162,21 @@ CREATE TABLE tb_responsables (
 ) ENGINE = InnoDB;
 
 CREATE TABLE tb_paquetes (
-    id_paquete INT PRIMARY KEY AUTO_INCREMENT,
-    id_servicio INT NOT NULL,
-    precio DECIMAL(7, 2) NOT NULL,
-    tipo_paquete CHAR(4) CHECK (
-        tipo_paquete IN ('CABl', 'WISP', 'GPON', 'FIBR')
-    ),
-    fecha_inicio DATE NOT NULL,
-    fecha_fin DATE NOT NULL,
-    create_at DATETIME NOT NULL DEFAULT NOW(),
-    update_at DATETIME NULL,
-    inactive_at DATETIME NULL,
-    iduser_create INT NOT NULL,
-    iduser_update INT NULL,
+	id_paquete 		INT PRIMARY KEY AUTO_INCREMENT,
+    id_servicio 	INT NOT NULL,
+    paquete 		VARCHAR(250) NOT NULL,
+    precio 			DECIMAL(7,2) NOT NULL,
+    fecha_inicio 	DATE NOT NULL,
+    fecha_fin		DATE NOT NULL,
+    create_at 		DATETIME NOT NULL DEFAULT NOW(),
+    update_at 		DATETIME NULL,
+    inactive_at 	DATETIME NULL,
+    iduser_create 	INT NOT NULL,
+    iduser_update 	INT NULL, 
     iduser_inactive INT NULL,
     CONSTRAINT fk_paque_id_servicio FOREIGN KEY (id_servicio) REFERENCES tb_servicios (id_servicio)
 ) ENGINE = InnoDB;
+
 
 CREATE TABLE tb_clientes (
     id_cliente INT PRIMARY KEY AUTO_INCREMENT,
