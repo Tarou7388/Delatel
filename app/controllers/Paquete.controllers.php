@@ -9,18 +9,20 @@ require_once "./Herramientas.php";
 
 $paquete = new Paquete();
 
-if (isset($_POST["operacion"])) {
-  switch ($_POST["operacion"]) {
-    case "registrarPaquete":
-      $datos = [
-        "idServicio"        => Herramientas::sanitizarEntrada($_POST["idServicio"]),
-        "precio"            => Herramientas::sanitizarEntrada($_POST["precio"]),
-        "tipoPaquete"       => Herramientas::sanitizarEntrada($_POST["tipoPaquete"]),
-        "fechaInicio"       => Herramientas::sanitizarEntrada($_POST["fechaInicio"]),
-        "fechaFin"          => Herramientas::sanitizarEntrada($_POST["fechaFin"]),
-        "idUsuario"         => Herramientas::sanitizarEntrada($_POST["idUsuario"])
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $json = file_get_contents('php://input');
+  $datos = json_decode($json, true);
+  $operacion = Herramientas::sanitizarEntrada($datos['operacion']);
+  switch ($operacion) {
+    case 'registrarPaquete':
+      $datosEnviar = [
+        "idServicio"        => Herramientas::sanitizarEntrada($datos['parametros']["idServicio"]),
+        "paquete"           => Herramientas::sanitizarEntrada($datos['parametros']["paquete"]),
+        "precio"            => Herramientas::sanitizarEntrada($datos['parametros']["precio"]),
+        "duracion"          => json_encode($datos['parametros']["duracion"]),
+        "idUsuario"         => Herramientas::sanitizarEntrada($datos['parametros']["idUsuario"])
       ];
-      $resultado = $paquete->registrarPaquete($datos);
+      $resultado = $paquete->registrarPaquete($datosEnviar);
       echo json_encode(["guardado" => $resultado]);
       break;
   }
@@ -31,6 +33,34 @@ if (isset($_GET["operacion"])) {
     case "listarPaquetes":
       $resultado = $paquete->listarPaquetes();
       echo json_encode($resultado);
+      break;
+    case "buscarPaqueteId":
+      $resultado = $paquete->buscarPaqueteId(["idPaquete" => Herramientas::sanitizarEntrada($_GET['idPaquete'])]);
+      echo json_encode($resultado);
+      break;
+  }
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+  $json = file_get_contents('php://input');
+  $datos = json_decode($json, true);
+  $operacion = Herramientas::sanitizarEntrada($datos['operacion']);
+  switch ($operacion) {
+    case "actualizarPaquete":
+      $datosActualizar = [
+        "idPaquete"         => Herramientas::sanitizarEntrada($datos['parametros']["idPaquete"]),
+        "idServicio"        => Herramientas::sanitizarEntrada($datos['parametros']["idServicio"]),
+        "paquete"           => Herramientas::sanitizarEntrada($datos['parametros']["paquete"]),
+        "precio"            => Herramientas::sanitizarEntrada($datos['parametros']["precio"]),
+        "duracion"          => json_encode($datos['parametros']["duracion"]),
+        "idUsuario"   => Herramientas::sanitizarEntrada($datos['parametros']["idUsuario"])
+      ];
+      $resultado = $paquete->actualizarPaquete($datosActualizar);
+      echo json_encode(["actualizado" => $resultado]);
+      break;
+    case "eliminarPaquete":
+      $resultado = $paquete->eliminarPaquete($datos['parametros']);
+      echo json_encode(["eliminado" => $resultado]);
       break;
   }
 }

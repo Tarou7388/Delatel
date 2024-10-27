@@ -9,7 +9,17 @@ require_once "./Herramientas.php";
 
 $servicio = new Servicio();
 
-if($_POST["operacion"]){
+if (isset($_GET["operacion"])){
+  $operacion = Herramientas::sanitizarEntrada($_GET["operacion"]);
+  switch ($operacion){
+    case 'listarServicio':
+      $resultado = $servicio->listarServicio();
+      echo json_encode($resultado);
+      break;
+  }
+}
+
+/* if($_POST["operacion"]){
   switch ($_POST["operacion"]) {
     case "registrarServicio":
       $datos = [
@@ -21,4 +31,4 @@ if($_POST["operacion"]){
       echo json_encode(["guardado" => $resultado]);
       break;
   }
-}
+} */

@@ -4,11 +4,14 @@ DROP VIEW IF EXISTS vw_servicios_listar;
 CREATE VIEW vw_servicios_listar AS
 SELECT
     s.id_servicio,
+    s.tipo_servicio,
     s.servicio
 FROM
     tb_servicios s 
 WHERE 
     s.iduser_inactive IS NULL;
+
+SELECT * FROM vw_servicios_listar;
 
 DROP VIEW IF EXISTS vw_servicios_listarTotal;
 CREATE VIEW vw_servicios_listarTotal AS

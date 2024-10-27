@@ -30,4 +30,18 @@ class Servicio extends Conexion
     return $this->registrar($sql, $values);
   }
 
+  /**
+   * Lista los servicios disponibles.
+   *
+   * Esta función ejecuta una consulta a la vista `vw_servicios_listar` para obtener
+   * una lista de servicios disponibles.
+   *
+   * @return array Retorna un arreglo con los datos de los servicios listados.
+   */
+  public function listarServicio()
+  {
+    $sql = "SELECT * FROM vw_servicios_listar";
+    return $this->listarDatos($sql);
+  }
+
 }
