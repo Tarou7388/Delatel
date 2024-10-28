@@ -13,10 +13,10 @@ SELECT
         ELSE e.ruc
     END AS num_identificacion,
     c.direccion_servicio,
+	t.paquete,
+    sv.tipo_servicio,
     sv.servicio,
-    t.tipo_paquete,
-    c.fecha_inicio,
-    c.fecha_fin
+    t.duracion
 FROM 
     tb_contratos c
 INNER JOIN 
@@ -31,7 +31,8 @@ INNER JOIN
     tb_servicios sv ON t.id_servicio = sv.id_servicio
 WHERE 
     c.inactive_at IS NULL
-    ORDER BY c.id_contrato DESC;
+ORDER BY 
+    c.id_contrato DESC;
 
 DELIMITER $$
 
@@ -92,8 +93,8 @@ BEGIN
             WHEN cl.id_persona IS NOT NULL THEN p.nro_doc
             ELSE e.ruc
         END AS num_identificacion,
-        sv.servicio,
-        t.tipo_paquete,
+        t.paquete,
+        sv.tipo_servicio,
         c.ficha_instalacion
     FROM
         tb_contratos c

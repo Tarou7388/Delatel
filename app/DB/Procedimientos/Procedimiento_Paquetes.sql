@@ -72,7 +72,7 @@ BEGIN
 		id_paquete = p_id_paquete;
 END $$
 
-DROP PROCEDURE IF EXISTS spu_paquete_buscar_por_id$$
+DROP PROCEDURE IF EXISTS spu_paquete_buscar_id$$
 CREATE PROCEDURE spu_paquete_buscar_id(
     IN p_id_paquete INT
 )
