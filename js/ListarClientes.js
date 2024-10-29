@@ -4,6 +4,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const userid = user["idUsuario"];
 
   // if (permisos[0].permisos.inventariado.leer != 1) {
+  //   console.log(permisos[0])
   //   window.location.href = `${config.HOST}views`;
   // }
 
