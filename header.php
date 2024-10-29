@@ -28,8 +28,10 @@ if (!isset($_SESSION['login']) || $_SESSION['login']['estado'] == false) {
   while (($i < count($listaAcceso)) && !$encontrado) {
     if ($listaAcceso[$i]['ruta'] == $vistaActual) {
       $encontrado = true;
+      break;
     } elseif (isset($listaAcceso[$i]['rutasAnexas']) && in_array($vistaActual, $listaAcceso[$i]['rutasAnexas'])) {
       $encontrado = true;
+      break;
     }
     $i++;
   }

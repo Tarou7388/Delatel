@@ -102,4 +102,13 @@ class Producto extends Conexion
     );
     return $this->registrar($sql, $values);
   }
+
+  // AQUI COMIENZA LA DIVISION DE PRODUCTOS Y SUS TIPOS
+
+  public function listarTipoProductos():array
+  {
+    $sql = "SELECT * FROM tb_tipo_productos";
+    return $this->listarDatos($sql);
+    
+  }
 }

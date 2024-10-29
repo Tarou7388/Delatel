@@ -1,6 +1,26 @@
 USE Delatel;
 
 DELIMITER $$
+DROP VIEW IF EXISTS vw_tipo_productos$$
+CREATE VIEW vw_tipo_productos AS
+	SELECT id_tipo,
+    tipo_nombre,
+    iduser_create,
+    iduser_update
+    FROM tb_tipoproducto 
+    WHERE inactive_at IS NULL;
+$$
+
+DELIMITER $$
+DROP VIEW IF EXISTS vw_almacen$$
+CREATE VIEW vw_almacen AS
+	SELECT id_almacen,
+    nombre_almacen,
+    iduser_create,
+	iduser_update
+    FROM tb_almacen 
+    WHERE inactive_at IS NULL;
+$$
 
 DROP PROCEDURE IF EXISTS spu_productos_registrar$$
 CREATE PROCEDURE spu_productos_registrar(
