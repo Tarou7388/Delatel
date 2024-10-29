@@ -50,9 +50,7 @@ CREATE TABLE tb_roles (
 
 CREATE TABLE tb_servicios (
 	id_servicio INT PRIMARY KEY AUTO_INCREMENT, 
-    tipo_servicio CHAR(4) CHECK (
-		tipo_servicio IN ('CABL', 'WISP', 'GPON', 'FIBR')
-    ),
+    tipo_servicio CHAR(4) NOT NULL,
     servicio VARCHAR(200) NOT NULL, 
     create_at DATETIME DEFAULT NOW(),
     update_at DATETIME NULL,

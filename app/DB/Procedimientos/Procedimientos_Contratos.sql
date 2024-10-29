@@ -185,9 +185,9 @@ CREATE PROCEDURE spu_contratos_buscar_cliente(IN p_id_cliente INT)
 BEGIN
     SELECT 
         c.id_contrato, 
-        p.tipo_paquete, 
+        sv.tipo_servicio,
         s.sector, 
-        sv.servicio,
+        p.paquete,
         c.id_usuario_registro,
         c.referencia,
         c.fecha_inicio,

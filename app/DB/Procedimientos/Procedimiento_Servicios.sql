@@ -11,8 +11,6 @@ FROM
 WHERE 
     s.iduser_inactive IS NULL;
 
-SELECT * FROM vw_servicios_listar;
-
 DROP VIEW IF EXISTS vw_servicios_listarTotal;
 CREATE VIEW vw_servicios_listarTotal AS
 SELECT
@@ -31,23 +29,26 @@ DELIMITER $$
 
 DROP PROCEDURE IF EXISTS spu_servicio_registrar$$
 CREATE PROCEDURE spu_servicio_registrar(
+    IN p_tipo_servicio CHAR(4),
     IN p_servicio VARCHAR(50), 
     IN p_iduser_create INT
 ) 
 BEGIN 
-    INSERT INTO tb_servicios (servicio, iduser_create) 
-    VALUES (p_servicio, p_iduser_create); 
+    INSERT INTO tb_servicios (tipo_servicio, servicio, iduser_create) 
+    VALUES (p_tipo_servicio, p_servicio, p_iduser_create); 
 END $$
 
 DROP PROCEDURE IF EXISTS spu_servicio_actualizar$$
 CREATE PROCEDURE spu_servicio_actualizar(
     IN p_id_servicio INT,
+    IN p_tipo_servicio CHAR(4),
     IN p_servicio VARCHAR(50),
     IN p_iduser_update INT 
 )
 BEGIN
     UPDATE tb_servicios 
     SET
+        tipo_servicio = p_tipo_servicio,
         servicio = p_servicio,
         update_at = NOW(),
         iduser_update = p_iduser_update

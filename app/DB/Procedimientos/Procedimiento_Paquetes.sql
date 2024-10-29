@@ -97,3 +97,21 @@ BEGIN
     WHERE
         p.id_paquete = p_id_paquete;
 END $$
+
+DROP PROCEDURE IF EXISTS spu_paquete_buscar_idServicio$$
+CREATE PROCEDURE spu_paquete_buscar_idServicio(IN p_id_servicio INT)
+BEGIN 
+    SELECT 
+        p.id_paquete, 
+        p.paquete, 
+        p.precio, 
+        p.duracion,
+        s.tipo_servicio,
+        p.inactive_at
+    FROM 
+        tb_paquetes p
+        LEFT JOIN tb_servicios s ON p.id_servicio = s.id_servicio
+    WHERE 
+        p.id_servicio = p_id_servicio;
+END $$
+
