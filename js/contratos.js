@@ -2,28 +2,27 @@ import config from "../env.js";
 window.addEventListener("DOMContentLoaded", () => {
   const nroDoc = document.querySelector("#txtNumDoc");
   const nombre = document.querySelector("#txtNombre");
-  const fechaInicio = document.querySelector("#txtFechaInicio");
-  const txtfechaFin = document.querySelector("#txtFechaFin");
+  const txtDuracion = document.querySelector("#txtDuracion");
   const precio = document.querySelector("#txtPrecio");
   const direccion = document.querySelector("#txtDireccion");
   const sector = document.querySelector("#slcSector");
   const referencia = document.querySelector("#txtReferencia");
   const coordenada = document.querySelector("#txtCoordenada");
   const slcSector = document.querySelector("#slcSector");
-  const slcServicio = document.querySelector("#slcServicio");
+  const slcPaquetes = document.querySelector("#slcPaquetes");
   const txtNota = document.querySelector("#txtNota");
-  const span = document.querySelector('#infoFecha');
+  const span = document.querySelector("#infoFecha");
 
   let lapsoTiempo = false;
   let fechaFin = null;
-  let fechaFinActualizar = null; 
+  let fechaFinActualizar = null;
   let precioServicio = 0;
   let precioServicioActualizar = 0;
   let idCliente = null;
   let idServicio = 0;
-  let idServicioActualizar = 0; 
-  let idPersona = '';
-  let idEmpresa = '';
+  let idServicioActualizar = 0;
+  let idPersona = "";
+  let idEmpresa = "";
 
   async function getQueryParams() {
     const queryString = window.location.search;
@@ -36,7 +35,9 @@ window.addEventListener("DOMContentLoaded", () => {
       coordenada.value = params.coordenadas;
       direccion.value = params.direccion;
       referencia.value = params.referencia;
-      const optionToSelect = slcServicio.querySelector(`option[value="${params.paquete}"]`);
+      const optionToSelect = slcPaquetes.querySelector(
+        `option[value="${params.paquete}"]`
+      );
       if (optionToSelect) {
         optionToSelect.selected = true;
       }
@@ -44,34 +45,64 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   async function fetchSectores() {
-    const response = await fetch(`${config.HOST}app/controllers/Sector.controllers.php?operacion=listarSectores`);
+    const response = await fetch(
+      `${config.HOST}app/controllers/Sector.controllers.php?operacion=listarSectores`
+    );
     return await response.json();
   }
 
-  async function fetchPaquetes() {
-    const response = await fetch(`${config.HOST}app/controllers/Paquete.controllers.php?operacion=listarPaquetes`);
+  async function fetchPaquetesPorServicio(idServicio) {
+    const response = await fetch(
+      `${config.HOST}app/controllers/Paquete.controllers.php?operacion=buscarPaquetePorIdServicio&idServicio=${idServicio}`
+    );
     return await response.json();
   }
+
+  async function cargarPaquetes(idServicio) {
+    const dataPaquetes = await fetchPaquetesPorServicio(idServicio);
+    slcPaquetes.innerHTML = '<option value="" disabled selected>Seleccione un paquete</option>';
+    dataPaquetes
+      .filter(paquete => !paquete.inactive_at) 
+      .forEach((paquete) => {
+        const option = document.createElement("option");
+        const id = `${paquete.id_paquete} - ${paquete.precio} - ${paquete.duracion}`;
+        option.value = id;
+        option.textContent = paquete.paquete;
+        slcPaquetes.appendChild(option);
+      });
+  }
+
+  slcTipoServicio.addEventListener("change", async function () {
+    const idServicioSeleccionado = slcTipoServicio.value;
+    await cargarPaquetes(idServicioSeleccionado);
+  });
 
   async function fetchContratos() {
-    const response = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=listarContratos`);
+    const response = await fetch(
+      `${config.HOST}app/controllers/Contrato.controllers.php?operacion=listarContratos`
+    );
     return await response.json();
   }
 
-  async function validarFechas() {
+  /* async function validarFechas() {
     if (fechaInicio.value > txtfechaFin.value) {
-      showToast("¡La fecha de inicio no puede ser mayor a la fecha de fin!", "ERROR");
+      showToast(
+        "¡La fecha de inicio no puede ser mayor a la fecha de fin!",
+        "ERROR"
+      );
       return false;
     } else {
       return true;
     }
-  }
+  } */
 
   async function buscarCliente(nroDoc) {
     if (nroDoc == "") {
       showToast("¡Ingrese numero de documento!", "INFO");
     } else {
-      const response = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteExistencia&nroDoc=${nroDoc}`);
+      const response = await fetch(
+        `${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteExistencia&nroDoc=${nroDoc}`
+      );
       const data = await response.json();
       console.log(data);
       if (data.length == 0) {
@@ -80,21 +111,23 @@ window.addEventListener("DOMContentLoaded", () => {
         if (data[0].id_cliente == null) {
           if (!data[0].id_empresa) {
             idPersona = data[0].id_persona;
-            idEmpresa = '';
+            idEmpresa = "";
           } else if (!data[0].id_persona) {
-            idPersona = '';
+            idPersona = "";
             idEmpresa = data[0].id_empresa;
           }
           nombre.value = data[0].nombres;
         } else {
-          const response = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${nroDoc}`);
+          const response = await fetch(
+            `${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${nroDoc}`
+          );
           const data2 = await response.json();
           nombre.value = data2[0].nombre;
           direccion.value = data2[0].direccion;
           coordenada.value = data2[0].coordenadas;
           referencia.value = data2[0].referencia;
-          idPersona = '';
-          idEmpresa = '';
+          idPersona = "";
+          idEmpresa = "";
           idCliente = data2[0].id_cliente;
         }
       }
@@ -111,77 +144,88 @@ window.addEventListener("DOMContentLoaded", () => {
     params.append("idUsuario", user.idUsuario);
     params.append("coordenadas", coordenada.value);
 
-    const response = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php`, {
-      method: "POST",
-      body: params,
-    })
+    const response = await fetch(
+      `${config.HOST}app/controllers/Cliente.controllers.php`,
+      {
+        method: "POST",
+        body: params,
+      }
+    );
     const data = await response.json();
     idCliente = data[0].id_cliente;
   }
 
   async function registrarContrato() {
-    const fechaRegistro = new Date().toISOString().split('T')[0];
+    const fechaRegistro = new Date().toISOString().split("T")[0];
     const nota = txtNota.value;
     console.log(nota);
     const idUsuarioRegistro = user.idRol;
 
-    if (!await validarCampos() || await !validarFechas()) {
-
+    if (!(await validarCampos()) || (await !validarFechas())) {
     } else if (!lapsoTiempo) {
       showToast("¡La fecha de fin debe ser mayor a 3 meses!", "INFO");
     } else {
       try {
-        const response = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php`, {
-          method: "POST",
-          body: JSON.stringify({
-            operacion: "registrarContrato",
-            parametros: {
-              idCliente: idCliente,
-              idTarifario: idServicio,
-              idSector: sector.value,
-              direccion: direccion.value,
-              referencia: referencia.value,
-              coordenada: coordenada.value,
-              fechaInicio: fechaInicio.value,
-              fechaFin: fechaFin,
-              fechaRegistro: fechaRegistro,
-              nota: nota,
-              idUsuario: user.idUsuario,
+        const response = await fetch(
+          `${config.HOST}app/controllers/Contrato.controllers.php`,
+          {
+            method: "POST",
+            body: JSON.stringify({
+              operacion: "registrarContrato",
+              parametros: {
+                idCliente: idCliente,
+                idTarifario: idServicio,
+                idSector: sector.value,
+                direccion: direccion.value,
+                referencia: referencia.value,
+                coordenada: coordenada.value,
+                fechaInicio: fechaInicio.value,
+                fechaFin: fechaFin,
+                fechaRegistro: fechaRegistro,
+                nota: nota,
+                idUsuario: user.idUsuario,
+              },
+            }),
+            headers: {
+              "Content-Type": "application/json",
             },
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+          }
+        );
         const data = await response.json();
         if (data.error) {
           console.log(data.error);
         } else {
           showToast("¡Contrato registrado correctamente!", "SUCCESS");
-          span.classList.add('invisible');
+          span.classList.add("invisible");
           nroDoc.disabled = false;
           //window.location.reload();
           resetUI();
         }
       } catch (error) {
-        console.log(error);  // Añade este log para depurar el error
-        showToast("Ocurrió un error al registrar el contrato. Por favor, inténtelo de nuevo.", "ERROR");
+        console.log(error); // Añade este log para depurar el error
+        showToast(
+          "Ocurrió un error al registrar el contrato. Por favor, inténtelo de nuevo.",
+          "ERROR"
+        );
       }
     }
   }
 
   async function eliminar(idContrato, idUsuario) {
     if (await ask("¿Desea eliminar este contrato?")) {
-      const response = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php`, {
-        method: "PUT",
-        body: JSON.stringify({
-          operacion: "eliminarContrato",
-          parametros: {
-            id: idContrato,
-            idUsuario: idUsuario
-          },
-        }),
-      });
+      const response = await fetch(
+        `${config.HOST}app/controllers/Contrato.controllers.php`,
+        {
+          method: "PUT",
+          body: JSON.stringify({
+            operacion: "eliminarContrato",
+            parametros: {
+              id: idContrato,
+              idUsuario: idUsuario,
+            },
+          }),
+        }
+      );
       const data = await response.json();
       if (data.eliminado) {
         showToast("¡Contrato eliminado correctamente!", "SUCCESS");
@@ -191,48 +235,58 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   async function actualizarContrato(idContrato, idUsuario) {
-    const idServicio = document.querySelector("#slcServicioActualizar").value; 
+    const idServicio = document.querySelector("#slcServicioActualizar").value;
     const idSector = document.querySelector("#slcSectorActualizar").value;
-    const direccionServicio = document.querySelector("#txtDireccionActualizar").value;
+    const direccionServicio = document.querySelector(
+      "#txtDireccionActualizar"
+    ).value;
     const referencia = document.querySelector("#txtReferenciaActualizar").value;
     const coordenada = document.querySelector("#txtCoordenadaActualizar").value;
-    const fechaInicio = document.querySelector("#txtFechaInicioActualizar").value;
-    const fechaRegistro = new Date().toISOString().split('T')[0];
+    const fechaInicio = document.querySelector(
+      "#txtFechaInicioActualizar"
+    ).value;
+    const fechaRegistro = new Date().toISOString().split("T")[0];
     const nota = document.querySelector("#txtNotaActualizar").value;
 
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date().toISOString().split("T")[0];
     if (fechaInicio < today) {
-      showToast("¡La fecha de inicio no puede ser menor a la fecha de hoy!", "WARNING");
+      showToast(
+        "¡La fecha de inicio no puede ser menor a la fecha de hoy!",
+        "WARNING"
+      );
       return;
     }
 
-    const response = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        operacion: "actualizarContrato",
-        parametros: {
-          idContrato: idContrato,
-          idPaquete: idServicioActualizar,
-          idSector: idSector,
-          direccionServicio: direccionServicio,
-          referencia: referencia,
-          coordenada: coordenada,
-          fechaInicio: fechaInicio,
-          fechaFin: fechaFinActualizar,
-          fechaRegistro: fechaRegistro,
-          nota: nota,
-          idUsuarioUpdate: idUsuario
+    const response = await fetch(
+      `${config.HOST}app/controllers/Contrato.controllers.php`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
         },
-      }),
-    });
+        body: JSON.stringify({
+          operacion: "actualizarContrato",
+          parametros: {
+            idContrato: idContrato,
+            idPaquete: idServicioActualizar,
+            idSector: idSector,
+            direccionServicio: direccionServicio,
+            referencia: referencia,
+            coordenada: coordenada,
+            fechaInicio: fechaInicio,
+            fechaFin: fechaFinActualizar,
+            fechaRegistro: fechaRegistro,
+            nota: nota,
+            idUsuarioUpdate: idUsuario,
+          },
+        }),
+      }
+    );
     const data = await response.json();
     if (data.actualizado) {
       showToast("¡Contrato actualizado correctamente!", "SUCCESS");
       setTimeout(() => {
-      window.location.reload();
+        window.location.reload();
       }, 2500);
     } else {
       showToast("Error al actualizar el contrato.", "ERROR");
@@ -251,35 +305,59 @@ window.addEventListener("DOMContentLoaded", () => {
       slcSectorActualizar.appendChild(option);
     });
 
-    const dataPaquetes = await fetchPaquetes();
-    dataPaquetes.forEach((paquete) => {
+    //const dataPaquetes = await fetchPaquetes();
+    /* dataPaquetes
+      .filter((paquete) => !paquete.inactive_at) 
+      .forEach((paquete) => {
       const option = document.createElement("option");
-      const id = `${paquete.id_servicio} - ${paquete.precio}`;
+      const id = `${paquete.id_paquete} - ${paquete.precio}`;
       option.value = id;
-      option.textContent = paquete.servicio;
-      slcServicio.appendChild(option);
+      option.textContent = paquete.paquete;
+      slcPaquetes.appendChild(option);
 
-      slcServicio.appendChild(option.cloneNode(true));
-      slcServicioActualizar.appendChild(option);
-    });
+      // Clonar la opción solo una vez para slcServicioActualizar
+      const optionClone = option.cloneNode(true);
+      slcServicioActualizar.appendChild(optionClone);
+      }); */
 
     const dataContratos = await fetchContratos();
     const tbody = document.querySelector("#listarContratos tbody");
+
+    function formatDuracion(duracion) {
+      try {
+        const duracionObj = JSON.parse(duracion);
+        return Object.entries(duracionObj)
+          .map(
+            ([key, value]) =>
+              `${key.charAt(0).toUpperCase() + key.slice(1)}: ${value} meses`
+          )
+          .join(", ");
+      } catch (e) {
+        return duracion;
+      }
+    }
 
     dataContratos.forEach((contrato) => {
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td class="text-center">${contrato.nombre_cliente}</td>
         <td class="text-center">${contrato.num_identificacion}</td>
-        <td class="text-center">${contrato.servicio}</td>
+        <td class="text-center">${contrato.paquete}</td>
         <td class="text-center">${contrato.direccion_servicio}</td>
-        <td class="text-center">${contrato.fecha_inicio}</td>
-        <td class="text-center">${contrato.fecha_fin}</td>
-        <td>
-          <button class="btn btn-sm btn-warning btn-edit" data-idContrato="${contrato.id_contrato}"><i class="fa-regular fa-pen-to-square icon-disabled"></i></button>
-          <button class="btn btn-sm btn-danger btnEliminar" data-idContrato=${contrato.id_contrato}><i class="fa-regular fa-trash-can icon-disabled"></i></button>
-          <button class="btn btn-sm btn-primary btnGenerar" data-idContrato=${contrato.id_contrato}><i class="fa-solid fa-file-pdf icon-disabled"></i></button>
-          <button class="btn btn-sm btn-success btnFicha" data-tipoPaquete=${contrato.tipo_paquete} data-idContrato=${contrato.id_contrato}>Ficha</button>
+        <td class="text-center">${formatDuracion(contrato.duracion)}</td>
+        <td class="text-center">
+          <button class="btn btn-sm btn-warning btn-edit" data-idContrato="${
+            contrato.id_contrato
+          }"><i class="fa-regular fa-pen-to-square icon-disabled"></i></button>
+          <button class="btn btn-sm btn-danger btnEliminar" data-idContrato=${
+            contrato.id_contrato
+          }><i class="fa-regular fa-trash-can icon-disabled"></i></button>
+          <button class="btn btn-sm btn-primary btnGenerar" data-idContrato=${
+            contrato.id_contrato
+          }><i class="fa-solid fa-file-pdf icon-disabled"></i></button>
+          <button class="btn btn-sm btn-success btnFicha" data-tipoServicio=${
+            contrato.tipo_servicio
+          } data-idContrato=${contrato.id_contrato}>Ficha</button>
         </td>
       `;
       tbody.appendChild(tr);
@@ -291,13 +369,12 @@ window.addEventListener("DOMContentLoaded", () => {
       },
       ordering: false,
       columnDefs: [
-        { width: "12.5%", targets: 0},
+        { width: "12.5%", targets: 0 },
         { width: "12.5%", targets: 1 },
         { width: "12.5%", targets: 2 },
-        { width: "12.5%", targets: 3 },
-        { width: "11%", targets: 4 },
-        { width: "12.5%", targets: 5 },
-        { width: "14%", targets: 6 },
+        { width: "14%", targets: 3 },
+        { width: "17%", targets: 4 },
+        { width: "14%", targets: 5 },
       ],
     });
 
@@ -309,14 +386,14 @@ window.addEventListener("DOMContentLoaded", () => {
     botonesFicha.forEach((boton) => {
       boton.addEventListener("click", (event) => {
         const idContrato = event.target.getAttribute("data-idContrato");
-        const tipoPaquete = event.target.getAttribute("data-tipoPaquete");
+        const tipoServicio = event.target.getAttribute("data-tipoServicio");
         const tipoFicha = {
-          "GPON": "FichaTecnicaGpon",
-          "WISP": "FichaTecnicaWisp",
-          "CABl": "FichaTecnicaCable",
-          "FIBR": "FichaTecnicaGpon",
+          GPON: "FichaTecnicaGpon",
+          WISP: "FichaTecnicaWisp",
+          CABl: "FichaTecnicaCable",
+          FIBR: "FichaTecnicaGpon",
         };
-        window.location.href = `${config.HOST}views/Contratos/${tipoFicha[tipoPaquete]}.php?idContrato=${idContrato}`;
+        window.location.href = `${config.HOST}views/Contratos/${tipoFicha[tipoServicio]}.php?idContrato=${idContrato}`;
       });
     });
 
@@ -338,13 +415,27 @@ window.addEventListener("DOMContentLoaded", () => {
     botonesPdf.forEach((boton) => {
       boton.addEventListener("click", () => {
         const idContrato = boton.getAttribute("data-idContrato");
-        window.open(`${config.HOST}views/reports/Contrato/soporte.php?id=${idContrato}`);
+        window.open(
+          `${config.HOST}views/reports/Contrato/soporte.php?id=${idContrato}`
+        );
       });
     });
   }
 
   async function validarCampos() {
-    if (nroDoc.value == "" || nombre.value == "" || fechaInicio.value == "" || txtfechaFin.value == "" || precio.value == "" || direccion.value == "" || sector.value == "" || referencia.value == "" || coordenada.value == "" || slcSector.value == "0" || slcServicio.value == "0") {
+    if (
+      nroDoc.value == "" ||
+      nombre.value == "" ||
+      fechaInicio.value == "" ||
+      txtfechaFin.value == "" ||
+      precio.value == "" ||
+      direccion.value == "" ||
+      sector.value == "" ||
+      referencia.value == "" ||
+      coordenada.value == "" ||
+      slcSector.value == "0" ||
+      slcPaquetes.value == "0"
+    ) {
       showToast("¡Llene todos los campos!", "INFO");
       return false;
     } else {
@@ -363,50 +454,57 @@ window.addEventListener("DOMContentLoaded", () => {
     referencia.value = "";
     coordenada.value = "";
     slcSector.value = "0";
-    slcServicio.value = "0";
+    slcPaquetes.value = "0";
   }
 
   async function abrirModalEditar(idContrato) {
-    const modal = new bootstrap.Modal(document.getElementById('modalEditarContrato'));
+    const modal = new bootstrap.Modal(
+      document.getElementById("modalEditarContrato")
+    );
     modal.show();
-  
+
     try {
-      const response = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=buscarContratoId&id=${idContrato}`);
+      const response = await fetch(
+        `${config.HOST}app/controllers/Contrato.controllers.php?operacion=buscarContratoId&id=${idContrato}`
+      );
       const data = await response.json();
-      
-      document.getElementById('txtIdContratoActualizar').value = data[0].id_contrato;
-      document.getElementById('txtNombreActualizar').value = data[0].nombre_cliente;
-      document.getElementById('txtFechaInicioActualizar').value = data[0].fecha_inicio;
-      
+
+      document.getElementById("txtIdContratoActualizar").value =
+        data[0].id_contrato;
+      document.getElementById("txtNombreActualizar").value =
+        data[0].nombre_cliente;
+      document.getElementById("txtFechaInicioActualizar").value =
+        data[0].fecha_inicio;
+
       fechaFinActualizar = data[0].fecha_fin;
-      
-      const span = document.getElementById('mensajeFechaFin');
+
+      const span = document.getElementById("mensajeFechaFin");
       span.textContent = `La fecha de fin es: ${fechaFinActualizar}`;
-      span.classList.remove('invisible');
-  
-      const slcServicio = document.getElementById('slcServicioActualizar');
-      const servicioId = data[0].id_servicio; 
+      span.classList.remove("invisible");
+
+      const slcServicio = document.getElementById("slcServicioActualizar");
+      const servicioId = data[0].id_servicio;
       const servicioTexto = data[0].servicio;
       let optionExists = false;
 
-      for (let i = 0; i < slcServicio.options.length; i++) {
-        if (slcServicio.options[i].value == servicioId) {
+      for (let i = 0; i < slcPaquetes.options.length; i++) {
+        if (slcPaquetes.options[i].value == servicioId) {
           optionExists = true;
           break;
         }
       }
 
       if (optionExists) {
-        slcServicio.value = servicioId;
+        slcPaquetes.value = servicioId;
       } else {
         const newOption = new Option(servicioTexto, servicioId, true, true);
-        slcServicio.add(newOption);
+        slcPaquetes.add(newOption);
       }
 
       idServicioActualizar = servicioId;
 
-      const slcSector = document.getElementById('slcSectorActualizar');
-      const sectorId = data[0].id_sector; 
+      const slcSector = document.getElementById("slcSectorActualizar");
+      const sectorId = data[0].id_sector;
       const sectorTexto = data[0].nombre_sector;
       optionExists = false;
 
@@ -424,121 +522,186 @@ window.addEventListener("DOMContentLoaded", () => {
         slcSector.add(newOption);
       }
 
-      document.getElementById('txtDireccionActualizar').value = data[0].direccion_servicio;
-      document.getElementById('txtReferenciaActualizar').value = data[0].referencia;
-      document.getElementById('txtCoordenadaActualizar').value = data[0].coordenada;
-      document.getElementById('txtNotaActualizar').value = data[0].nota;
+      document.getElementById("txtDireccionActualizar").value =
+        data[0].direccion_servicio;
+      document.getElementById("txtReferenciaActualizar").value =
+        data[0].referencia;
+      document.getElementById("txtCoordenadaActualizar").value =
+        data[0].coordenada;
+      document.getElementById("txtNotaActualizar").value = data[0].nota;
 
-      document.querySelector('.btn-close').addEventListener('click', () => {
+      document.querySelector(".btn-close").addEventListener("click", () => {
         modal.hide();
-      });   
+      });
     } catch (error) {
-      console.error('Error al obtener los detalles del contrato:', error);
+      console.error("Error al obtener los detalles del contrato:", error);
     }
   }
-  
-document.querySelector('#txtFechaFinActualizar').addEventListener('input', () => {
-  const fechaInicioValue = document.querySelector('#txtFechaInicioActualizar').value;
-  const txtFechaFinValue = document.querySelector('#txtFechaFinActualizar').value;
-  const span = document.getElementById('mensajeFechaFin'); 
 
-  if (txtFechaFinValue > 3) {
-    lapsoTiempo = true;
-    const dateFechaInicio = new Date(fechaInicioValue);
-    const meses = parseInt(txtFechaFinValue, 10);
+  document
+    .querySelector("#txtFechaFinActualizar")
+    .addEventListener("input", () => {
+      const fechaInicioValue = document.querySelector(
+        "#txtFechaInicioActualizar"
+      ).value;
+      const txtFechaFinValue = document.querySelector(
+        "#txtFechaFinActualizar"
+      ).value;
+      const span = document.getElementById("mensajeFechaFin");
 
-    dateFechaInicio.setMonth(dateFechaInicio.getMonth() + meses);
+      if (txtFechaFinValue > 3) {
+        lapsoTiempo = true;
+        const dateFechaInicio = new Date(fechaInicioValue);
+        const meses = parseInt(txtFechaFinValue, 10);
 
-    const opciones = { year: 'numeric', month: '2-digit', day: '2-digit' };
-    fechaFinActualizar = dateFechaInicio.toLocaleDateString('es-ES', opciones);
+        dateFechaInicio.setMonth(dateFechaInicio.getMonth() + meses);
 
-    span.textContent = `La fecha de fin es: ${fechaFinActualizar}`;
-    span.classList.remove('invisible');
-    const partesFecha = fechaFinActualizar.split('/');
-    fechaFinActualizar = `${partesFecha[2]}-${partesFecha[1]}-${partesFecha[0]}`;
-  } else {
-    lapsoTiempo = false;
-    span.textContent = "La fecha de fin debe ser mayor a 3 meses";
-    span.classList.remove('invisible');
-  }
-  if (txtFechaFinValue == '') {
-    lapsoTiempo = false;
-    span.classList.add('invisible');
-  }
-});
+        const opciones = { year: "numeric", month: "2-digit", day: "2-digit" };
+        fechaFinActualizar = dateFechaInicio.toLocaleDateString(
+          "es-ES",
+          opciones
+        );
+
+        span.textContent = `La fecha de fin es: ${fechaFinActualizar}`;
+        span.classList.remove("invisible");
+        const partesFecha = fechaFinActualizar.split("/");
+        fechaFinActualizar = `${partesFecha[2]}-${partesFecha[1]}-${partesFecha[0]}`;
+      } else {
+        lapsoTiempo = false;
+        span.textContent = "La fecha de fin debe ser mayor a 3 meses";
+        span.classList.remove("invisible");
+      }
+      if (txtFechaFinValue == "") {
+        lapsoTiempo = false;
+        span.classList.add("invisible");
+      }
+    });
 
   (async () => {
     await getQueryParams();
     await cargarDatos();
-    const today = new Date().toISOString().split('T')[0];
-    fechaInicio.value = today;
   })();
 
-  document.querySelector("#btnRegistrar").addEventListener("click", async (event) => {
-    event.preventDefault();
-    if (idCliente == null) {
-      await registrarCliente();
-    }
-    await registrarContrato();
-  });
+  document
+    .querySelector("#btnRegistrar")
+    .addEventListener("click", async (event) => {
+      event.preventDefault();
+      if (idCliente == null) {
+        await registrarCliente();
+      }
+      await registrarContrato();
+    });
 
-  document.querySelector("#btnBuscar").addEventListener("click", async (event) => {
-    event.preventDefault();
-    await buscarCliente(nroDoc.value);
-  });
+  document
+    .querySelector("#btnBuscar")
+    .addEventListener("click", async (event) => {
+      event.preventDefault();
+      await buscarCliente(nroDoc.value);
+    });
 
-  document.querySelector('#txtFechaFin').addEventListener('input', () => {
-    const fechaInicioValue = document.querySelector('#txtFechaInicio').value;
-    const txtFechaFinValue = document.querySelector('#txtFechaFin').value;
-    if (txtFechaFinValue > 3) {
-      lapsoTiempo = true;
-      const dateFechaInicio = new Date(fechaInicioValue);
-      const meses = parseInt(txtFechaFinValue, 10);
+  document
+    .querySelector("#btnActualizar")
+    .addEventListener("click", async (event) => {
+      event.preventDefault();
+      const idContrato = document.querySelector(
+        "#txtIdContratoActualizar"
+      ).value;
+      const idUsuario = user.idUsuario;
+      await actualizarContrato(idContrato, idUsuario);
+    });
 
-      dateFechaInicio.setMonth(dateFechaInicio.getMonth() + meses);
-
-      const opciones = { year: 'numeric', month: '2-digit', day: '2-digit' };
-      fechaFin = dateFechaInicio.toLocaleDateString('es-ES', opciones);
-
-      span.textContent = `La fecha de fin es: ${fechaFin}`;
-      span.classList.remove('invisible');
-      const partesFecha = fechaFin.split('/');
-      fechaFin = `${partesFecha[2]}-${partesFecha[1]}-${partesFecha[0]}`;
-    } else {
-      lapsoTiempo = false;
-      span.textContent = "La fecha de fin debe ser mayor a 3 meses";
-      span.classList.remove('invisible');
-    }
-    if (txtFechaFinValue == '') {
-      lapsoTiempo = false;
-      span.classList.add('invisible');
-    }
-  });
-
-  document.querySelector("#btnActualizar").addEventListener("click", async (event) => {
-    event.preventDefault();
-    const idContrato = document.querySelector("#txtIdContratoActualizar").value;
-    const idUsuario = user.idUsuario; 
-    await actualizarContrato(idContrato, idUsuario);
-  });
-
-  $("#slcServicio").on("select2:select", function () {
-    idServicio = parseInt(slcServicio.value.split((" - ")[0]))
-    precioServicio = parseFloat(slcServicio.value.split(" - ")[1]);
-    precio.value = precioServicio;
-    slcServicio.value = idServicio;
-  });
+    $("#slcPaquetes").on("select2:select", function () {
+      const selectedValue = slcPaquetes.value.split(" - ");
+      idServicio = parseInt(selectedValue[0]);
+      precioServicio = selectedValue[1];
+      const duracionServicio = selectedValue[2]; 
+    
+      precio.value = precioServicio;
+    
+      let duracionFormateada = "Duracion no disponible";
+      if (duracionServicio) {
+        try {
+          const duracionObj = JSON.parse(duracionServicio);
+          duracionFormateada = Object.entries(duracionObj)
+            .map(([key, value]) => `${key.charAt(0).toUpperCase() + key.slice(1)}: ${value} meses`)
+            .join(", ");
+        } catch (e) {
+          console.error("Error al parsear la duración:", e);
+        }
+      }
+    
+      txtDuracion.value = duracionFormateada;
+      slcPaquetes.value = idServicio;
+    });
 
   $("#slcServicioActualizar").on("select2:select", function () {
-    idServicioActualizar = parseInt(slcServicioActualizar.value.split(" - ")[0]);
-    precioServicioActualizar = parseFloat(slcServicioActualizar.value.split(" - ")[1]);
-    document.querySelector("#txtPrecioActualizar").value = precioServicioActualizar; 
+    idServicioActualizar = parseInt(
+      slcServicioActualizar.value.split(" - ")[0]
+    );
+    precioServicioActualizar = parseFloat(
+      slcServicioActualizar.value.split(" - ")[1]
+    );
+    document.querySelector("#txtPrecioActualizar").value =
+      precioServicioActualizar;
     slcServicioActualizar.value = idServicioActualizar;
     console.log(idServicioActualizar);
   });
 
   $(".select2me").select2({ theme: "bootstrap-5", allowClear: true });
-  $('.select2me').parent('div').children('span').children('span').children('span').css('height', ' calc(3.5rem + 2px)');
-  $('.select2me').parent('div').children('span').children('span').children('span').children('span').css('margin-top', '18px');
-  $('.select2me').parent('div').find('label').css('z-index', '1');
+  $(".select2me")
+    .parent("div")
+    .children("span")
+    .children("span")
+    .children("span")
+    .css("height", " calc(3.5rem + 2px)");
+  $(".select2me")
+    .parent("div")
+    .children("span")
+    .children("span")
+    .children("span")
+    .children("span")
+    .css("margin-top", "18px");
+  $(".select2me").parent("div").find("label").css("z-index", "1");
+
+
+  async function cargarServicios() {
+    try {
+      const response = await fetch(
+        `${config.HOST}app/controllers/Servicio.controllers.php?operacion=listarServicio`
+      );
+      const servicios = await response.json();
+
+      const slcTipoServicio = $("#slcTipoServicio");
+      const slcTipoServicioActualizar = $("#slcTipoServicioActualizar");
+
+      slcTipoServicio.empty();
+      slcTipoServicioActualizar.empty();
+
+      slcTipoServicio.append(
+        '<option value="" disabled selected>Seleccione</option>'
+      );
+      slcTipoServicioActualizar.append(
+        '<option value="" disabled selected>Seleccione</option>'
+      );
+
+      servicios.forEach((servicio) => {
+        const option = `<option value="${servicio.id_servicio}">${servicio.tipo_servicio} (${servicio.servicio})</option>`;
+        slcTipoServicio.append(option);
+        slcTipoServicioActualizar.append(option);
+      });
+
+      slcTipoServicio.on("change", function () {
+        idServicio = parseInt($(this).val(), 10);
+      });
+
+      slcTipoServicioActualizar.on("change", function () {
+        idServicio = parseInt($(this).val(), 10);
+      });
+    } catch (error) {
+      console.error("Error al cargar servicios:", error);
+    }
+  }
+
+  cargarPaquetes();
+  cargarServicios();
 });

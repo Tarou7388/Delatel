@@ -19,7 +19,7 @@
                 <label for="txtNombreActualizar" class="form-label">Nombre de Cliente</label>
               </div>
             </div>
-            
+
             <div class="col-md-4 mt-2">
               <div class="form-floating">
                 <input type="date" class="form-control" id="txtFechaInicioActualizar" name="fechaInicio" required>
@@ -141,46 +141,41 @@
 
           <div class="col-md-3">
             <div class="form-floating">
-              <input type="date" class="form-control" id="txtFechaInicio" name="fechaInicio" required>
-              <label for="txtFechaInicio" class="form-label">Fecha de inicio</label>
+              <select class="form-select" id="slcTipoServicio" aria-label="Servicios">
+                <option value="0" disabled selected>Seleccione</option>
+              </select>
+              <label for="slcServicios">Servicios</label>
             </div>
           </div>
 
           <div class="col-md-3">
             <div class="form-floating">
-              <input type="number" class="form-control" id="txtFechaFin" name="fechaFin" max=24 min=3 required>
-              <label for="txtFechaFin" class="form-label">Fecha de fin (Meses)</label>
+              <select class="form-select select2me" id="slcPaquetes" aria-label=Servicios>
+                <option value="0" disabled selected>Seleccione</option>
+              </select>
+              <label for="slcPaquetes" class="form-label">Paquetes</label>
             </div>
           </div>
 
         </div>
+
         <div class="row mt-2">
 
-          <div class="col-md-3">
+          <div class="col-md-4">
             <div class="form-floating">
-              <select class="form-select select2me" id="slcServicio" aria-label=Servicios>
-                <option value="0" disabled selected>Servicios</option>
-              </select>
-              <label for="slcServicio" class="form-label">Servicios</label>
+              <input type="text" class="form-control" id="txtDuracion" name="Duracion" disabled>
+              <label for="txtDuracion" class="form-label">Duración (Meses)</label>
             </div>
           </div>
 
-
-          <div class="col-md-3">
+          <div class="col-md-4">
             <div class="form-floating">
               <input type="number" class="form-control" id="txtPrecio" value="0" placeholder="Precio" disabled>
               <label for="txtPrecio" class="form-label">Precio</label>
             </div>
           </div>
 
-          <div class="col-md-3">
-            <div class="form-floating">
-              <input type="text" class="form-control" id="txtDireccion" placeholder="Dirección de Servicio">
-              <label for="txtDireccion" class="form-label">Dirección de Servicio</label>
-            </div>
-          </div>
-
-          <div class="col-md-3">
+          <div class="col-md-4">
             <div class="form-floating">
               <select class="form-select select2me" id="slcSector" aria-label=Sectores>
                 <option value="0" disabled selected>Sectores</option>
@@ -190,7 +185,16 @@
           </div>
 
         </div>
+
         <div class="row mt-2">
+
+
+          <div class="col-md-3">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="txtDireccion" placeholder="Dirección de Servicio">
+              <label for="txtDireccion" class="form-label">Dirección de Servicio</label>
+            </div>
+          </div>
 
           <div class="col-md-3">
             <div class="form-floating">
@@ -239,10 +243,9 @@
             <tr>
               <th class="text-center">Cliente</th>
               <th class="text-center">Número de Doc</th>
-              <th class="text-center">Servicio</th>
+              <th class="text-center">Paquete</th>
               <th class="text-center">Dirección</th>
-              <th class="text-center">Fecha de Inicio</th>
-              <th class="text-center">Fecha de Fin</th>
+              <th class="text-center">Duración</th>
               <th class="text-center">Acciones</th>
             </tr>
           </thead>
