@@ -158,46 +158,62 @@ INSERT INTO tb_empresas (ruc, representante_legal, razon_social, nombre_comercia
 ('24234567890', 'Daniela Ortiz', 'Servicios Médicos S.A.C.', 'MedServ', '576543210', 'info@medserv.com', 1),
 ('24345678901', 'Gustavo Peña', 'Consultores en Ventas', 'VentasConsult', '565432109', 'contacto@ventasconsult.com', 1);
 
-INSERT INTO tb_productos (marca, tipo_producto, modelo, precio_actual, codigo_barra, iduser_create) VALUES
-('TP-Link', 'Router', 'TL-WR841N', 79.99, '0123456789012', 1),
-('TP-Link', 'Modem', 'TD-W8961N', 89.99, '0123456789013', 1),
-('Netgear', 'Router', 'R6120', 99.99, '0123456789014', 1),
-('Linksys', 'Router', 'EA7500', 129.99, '0123456789015', 1),
-('ASUS', 'Router', 'RT-AC66U', 149.99, '0123456789016', 1),
-('Motorola', 'Modem', 'MB7621', 119.99, '0123456789017', 1),
-('Cisco', 'Router', 'ISR4321', 299.99, '0123456789018', 1),
-('TP-Link', 'Extensor de rango', 'TL-WA855RE', 39.99, '0123456789019', 1),
-('D-Link', 'Router', 'DIR-867', 109.99, '0123456789020', 1),
-('Zyxel', 'Modem', 'C3000Z', 79.99, '0123456789021', 1),
-('Tenda', 'Router', 'AC1200', 49.99, '0123456789022', 1),
-('MikroTik', 'Router', 'hAP ac', 89.99, '0123456789023', 1),
-('Linksys', 'Modem', 'CM3024', 149.99, '0123456789024', 1),
-('Netgear', 'Extensor de rango', 'EX6200', 79.99, '0123456789025', 1),
-('TP-Link', 'Switch', 'TL-SG108', 59.99, '0123456789026', 1),
-('D-Link', 'Switch', 'DGS-108', 69.99, '0123456789027', 1),
-('Cisco', 'Switch', 'SG350-10', 299.99, '0123456789028', 1),
-('Ubiquiti', 'Punto de acceso', 'UAP-AC-LITE', 89.99, '0123456789029', 1),
-('Netgear', 'Router', 'Nighthawk RAX40', 229.99, '0123456789030', 1),
-('TP-Link', 'Router', 'Archer A7', 69.99, '0123456789031', 1),
-('Zyxel', 'Router', 'Zywall USG20-VPN', 199.99, '0123456789032', 1),
-('ASUS', 'Modem', 'DSL-AC68U', 149.99, '0123456789033', 1),
-('Motorola', 'Router', 'MG7700', 199.99, '0123456789034', 1),
-('Tenda', 'Modem', 'D301', 39.99, '0123456789035', 1),
-('TP-Link', 'Router', 'TL-R605', 99.99, '0123456789036', 1),
-('D-Link', 'Router', 'DIR-3060', 129.99, '0123456789037', 1),
-('Linksys', 'Extensor de rango', 'RE7000', 79.99, '0123456789038', 1),
-('Zyxel', 'Punto de acceso', 'NWA1123-AC', 69.99, '0123456789039', 1),
-('Ubiquiti', 'Router', 'EdgeRouter X', 99.99, '0123456789040', 1),
-('ASUS', 'Switch', 'GS308', 49.99, '0123456789041', 1),
-('Cisco', 'Punto de acceso', 'AIR-AP1815I', 199.99, '0123456789042', 1),
-('TP-Link', 'Modem', 'TD-8616', 39.99, '0123456789043', 1),
-('D-Link', 'Extensor de rango', 'DAP-1610', 49.99, '0123456789044', 1),
-('Netgear', 'Router', 'RAX80', 349.99, '0123456789045', 1),
-('Linksys', 'Router', 'WRT3200ACM', 249.99, '0123456789046', 1),
-('MikroTik', 'Modem', 'MikroTik RB951G-2HnD', 69.99, '0123456789047', 1),
-('Ubiquiti', 'Switch', 'US-8-60W', 99.99, '0123456789048', 1),
-('TP-Link', 'Router', 'Archer C7', 79.99, '0123456789049', 1),
-('Cisco', 'Router', 'ISR4331', 399.99, '0123456789050', 1);
+INSERT INTO tb_almacen (nombre_almacen, ubicacion, create_at, iduser_create) VALUES
+('Almacen 1', NULL, NOW(), 1),
+('Almacen 2', NULL, NOW(), 1);
+
+
+INSERT INTO tb_marca (marca, create_at, iduser_create) VALUES
+('TP Link', NOW(), 1),
+('Logitech', NOW(), 1),
+('Satra', NOW(), 1),
+('Epson', NOW(), 1),
+('Kingston', NOW(), 1),
+('Micronics', NOW(), 1),
+('Canon', NOW(), 1),
+('Omega', NOW(), 1),
+('Genius', NOW(), 1);
+
+
+INSERT INTO tb_tipoproducto (tipo_nombre, create_at, iduser_create) VALUES
+('Redes', NOW(), 1),
+('Accesorios', NOW(), 1),
+('Consumibles', NOW(), 1),
+('Componentes', NOW(), 1);
+
+
+INSERT INTO tb_unidadmedida (unidad_nombre, create_at, iduser_create) VALUES
+('Unidad', NOW(), 1),
+('Metros', NOW(), 1),
+('Centimetros', NOW(), 1);
+
+
+INSERT INTO tb_productos (id_marca, id_tipo, id_unidad, modelo, precio_actual, codigo_barra, create_at, iduser_create) 
+VALUES 
+(1, 1, 1, 'Router', 150.00, '1234567890123', NOW(), 1),
+(2, 2, 1, 'Teclado USB', 25.00, '1234567890124', NOW(), 1),
+(3, 1, 2, 'Cable UTP Cat. 6', 1.50, '1234567890125', NOW(), 1),
+(4, 3, 1, 'Tinta Magenta', 10.00, '1234567890126', NOW(), 1),
+(5, 4, 1, 'Memoria RAM', 80.00, '1234567890127', NOW(), 1),
+(6, 2, 1, 'Cámara Web MIC W360 + micrófono', 45.00, '1234567890128', NOW(), 1),
+(7, 3, 1, 'Tinta Yellow', 10.00, '1234567890129', NOW(), 1),
+(8, 2, 1, 'Supresor de Pisco', 15.00, '1234567890130', NOW(), 1),
+(9, 2, 1, 'Mouse', 8.00, '1234567890131', NOW(), 1);
+
+
+INSERT INTO tb_tipooperacion (descripcion, movimiento) VALUES
+('Entrada de Equipos WISP', 'E'),
+('Entrada de Equipos GPON', 'E'),
+('Entrada de Cables Coaxiales', 'E'),
+('Entrada de Routers', 'E'),
+('Entrada de Antenas', 'E'),
+('Entrada de Modems', 'E'),
+('Salida de Equipos WISP', 'S'),
+('Salida de Equipos GPON', 'S'),
+('Salida de Cables Coaxiales', 'S'),
+('Salida de Routers', 'S'),
+('Salida de Antenas', 'S'),
+('Salida de Modems', 'S');
 
 
 INSERT INTO tb_usuarios (id_persona, nombre_user, pass, iduser_create) VALUES
@@ -215,7 +231,7 @@ INSERT INTO tb_usuarios (id_persona, nombre_user, pass, iduser_create) VALUES
 
 INSERT INTO tb_roles (rol, permisos, iduser_create) VALUES
 ('Administrador', '{"actividades":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1", "actividad":"Mapa"},"soporte":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"contratos":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"inventariado":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"productos":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"personas":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"roles":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"usuarios":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"averias":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"}}',1),
-('Tecnico Oficina', '{"actividades":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1", "Soporte"},"soporte":[],"contratos":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"inventariado":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"productos":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"personas":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"roles":[],"usuarios":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"}}',1),
+('Tecnico Oficina', '{"actividades":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1", "actividad":"Soporte"},"soporte":[],"contratos":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"inventariado":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"productos":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"personas":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"roles":[],"usuarios":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"}}',1),
 ('Oficina', '{"actividades":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1", "actividad":"Contratos"},"soporte":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"contratos":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"inventariado":[],"productos":[],"personas":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"roles":[],"usuarios":[]}',1),
 ('Tecnico Campo', '{"actividades":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1", "actividad":"Fichas"},"soporte":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"contratos":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"inventariado":[],"productos":[],"personas":[],"roles":[],"usuarios":[]}',1),
 ('Almacen - Tecnico', '{"actividades":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1", "actividad":"Kardex"},"soporte":[],"contratos":[],"inventariado":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"productos":{"leer":"1","crear":"1","actualizar":"1","eliminar":"1"},"personas":[],"roles":[],"usuarios":[]}',1);

@@ -280,37 +280,97 @@ CREATE TABLE tb_incidencias (
     CONSTRAINT fk_incidencias_tecnico FOREIGN KEY (id_tecnico) REFERENCES tb_responsables (id_responsable)
 ) ENGINE = InnoDB;
 
+CREATE TABLE tb_almacen (
+	id_almacen       INT PRIMARY KEY AUTO_INCREMENT,
+	nombre_almacen   VARCHAR(65) NOT NULL,
+	ubicacion        VARCHAR(120) NULL,
+	inactive_at      DATETIME NULL,
+	iduser_inactive  INT NULL,
+	create_at        DATETIME NOT NULL DEFAULT NOW(),
+	update_at        DATETIME NULL,
+	iduser_create    INT NOT NULL,
+	iduser_update    INT NULL,
+    CONSTRAINT uk_almacen UNIQUE(nombre_almacen)
+) ENGINE = INNODB;
+
+CREATE TABLE tb_marca (
+	id_marca         INT PRIMARY KEY AUTO_INCREMENT,
+	marca     		 VARCHAR(30) NOT NULL,
+	inactive_at      DATETIME NULL,
+	iduser_inactive  INT NULL,
+	create_at        DATETIME NOT NULL DEFAULT NOW(),
+	update_at        DATETIME NULL,
+	iduser_create    INT NOT NULL,
+	iduser_update    INT NULL,
+    CONSTRAINT uk_marca UNIQUE(marca)
+) ENGINE = INNODB;
+
+CREATE TABLE tb_tipoproducto (
+	id_tipo          INT PRIMARY KEY AUTO_INCREMENT,
+	tipo_nombre      VARCHAR(30) NOT NULL,
+	create_at        DATETIME NOT NULL DEFAULT NOW(),
+	update_at        DATETIME NULL,
+	inactive_at      DATETIME NULL,
+	iduser_inactive  INT NULL,
+	iduser_create    INT NOT NULL,
+	iduser_update    INT NULL,
+    CONSTRAINT uk_tipopro UNIQUE(tipo_nombre)
+) ENGINE = INNODB;
+
+CREATE TABLE tb_unidadmedida (
+	id_unidad        INT PRIMARY KEY AUTO_INCREMENT,
+	unidad_nombre    VARCHAR(30) NOT NULL,
+	create_at        DATETIME NOT NULL DEFAULT NOW(),
+	update_at        DATETIME NULL,
+	iduser_create    INT NOT NULL,
+	iduser_update    INT NULL,
+    CONSTRAINT uk_unidad UNIQUE(unidad_nombre)
+) ENGINE = INNODB;
+
 CREATE TABLE tb_productos (
-    id_producto INT PRIMARY KEY AUTO_INCREMENT,
-    marca VARCHAR(30) NOT NULL,
-    tipo_producto VARCHAR(60) NOT NULL,
-    modelo VARCHAR(30) NOT NULL,
-    precio_actual DECIMAL(7, 2) NOT NULL,
-    codigo_barra VARCHAR(120) NOT NULL,
-    create_at DATETIME NOT NULL DEFAULT NOW(),
-    update_at DATETIME NULL,
-    inactive_at DATETIME NULL,
-    iduser_create INT NOT NULL,
-    iduser_update INT NULL,
-    iduser_inactive INT NULL,
-    CONSTRAINT produ_uk_codigo_barra UNIQUE (codigo_barra),
-    CONSTRAINT produc_uk_tp_md_mc UNIQUE (marca, tipo_producto, modelo)
+	id_producto      INT PRIMARY KEY AUTO_INCREMENT,
+	id_marca         INT NOT NULL,
+	id_tipo          INT NOT NULL,
+	id_unidad        INT NOT NULL,
+	modelo           VARCHAR(70) NOT NULL,
+	precio_actual    DECIMAL(7, 2) NOT NULL,
+	codigo_barra     VARCHAR(120) NOT NULL,
+	create_at        DATETIME NOT NULL DEFAULT NOW(),
+	update_at        DATETIME NULL,
+	inactive_at      DATETIME NULL,
+	iduser_create    INT NOT NULL,
+	iduser_update    INT NULL,
+	iduser_inactive  INT NULL,
+	CONSTRAINT fk_marca FOREIGN KEY (id_marca) REFERENCES tb_marca(id_marca),
+	CONSTRAINT fk_tipo_producto FOREIGN KEY (id_tipo) REFERENCES tb_tipoproducto(id_tipo),
+	CONSTRAINT fk_unidad_medida FOREIGN KEY (id_unidad) REFERENCES tb_unidadmedida(id_unidad),
+	CONSTRAINT producto_uk_modelo UNIQUE (id_marca, id_tipo, modelo),
+    CONSTRAINT producto_uk_codigo UNIQUE (codigo_barra)
+) ENGINE = INNODB;
+
+CREATE TABLE tb_tipooperacion (
+	id_tipooperacion INT PRIMARY KEY AUTO_INCREMENT,
+	descripcion       VARCHAR(30) NOT NULL,
+	movimiento        CHAR(1) NOT NULL,
+	CONSTRAINT tipoop UNIQUE(descripcion)
 ) ENGINE = INNODB;
 
 CREATE TABLE tb_kardex (
-    id_kardex INT PRIMARY KEY AUTO_INCREMENT,
-    id_producto INT NOT NULL,
-    fecha DATE NOT NULL,
-    tipo_operacion VARCHAR(20) NOT NULL,
-    motivo VARCHAR(30) NOT NULL,
-    cantidad INT NOT NULL,
-    saldo_total INT NOT NULL,
-    valor_unico_historico DECIMAL(7, 2) NOT NULL,
-    create_at DATETIME NOT NULL DEFAULT NOW(),
-    update_at DATETIME NULL,
-    inactive_at DATETIME NULL,
-    iduser_create INT NOT NULL,
-    iduser_update INT NULL,
-    iduser_inactive INT NULL,
-    CONSTRAINT kard_fk_id_producto FOREIGN KEY (id_producto) REFERENCES tb_productos (id_producto)
+	id_kardex            INT PRIMARY KEY AUTO_INCREMENT,
+	id_producto          INT NOT NULL,
+	id_almacen           INT NOT NULL,
+	id_tipooperacion     INT NOT NULL,
+	fecha                DATE NOT NULL,
+	cantidad             INT NOT NULL,
+	saldo_total          INT NOT NULL,
+	valor_unico_historico DECIMAL(7, 2) NOT NULL,
+	create_at            DATETIME NOT NULL DEFAULT NOW(),
+	update_at            DATETIME NULL,
+	inactive_at          DATETIME NULL,
+	iduser_create        INT NOT NULL,
+	iduser_update        INT NULL,
+	iduser_inactive      INT NULL,
+	CONSTRAINT fk_id_producto FOREIGN KEY (id_producto) REFERENCES tb_productos(id_producto),
+	CONSTRAINT fk_id_almacen FOREIGN KEY (id_almacen) REFERENCES tb_almacen(id_almacen),
+	CONSTRAINT fk_id_tipooperacion FOREIGN KEY (id_tipooperacion) REFERENCES tb_tipooperacion(id_tipooperacion)
 ) ENGINE = INNODB;
