@@ -311,37 +311,41 @@ window.addEventListener("DOMContentLoaded", () => {
 
   async function tablaModal(idRol) {
     const datos = await rolesPermisos(idRol);
+    const contenido = document.getElementById("contenido");
+    const tbodyModal = document.getElementById("cardBodyTabla");
     tbodyModal.innerHTML = "";
+
+    // Insertar el select antes de la tabla
+    contenido.insertBefore(selectActividad, contenido.querySelector(".table"));
+
     const datosRol = datos.permisos[0].permisos;
 
+    let isFirstModule = true;
     for (const [modulo, permisosModulo] of Object.entries(datosRol)) {
+      if (isFirstModule) {
+        isFirstModule = false;
+        continue;
+      }
+
       const fila = document.createElement("tr");
 
       const moduloCelda = document.createElement("td");
       moduloCelda.textContent = modulo;
 
       const leerCelda = document.createElement("td");
-      leerCelda.innerHTML = `<input type="checkbox" class="leer form-check-input" id="${modulo}-leer" ${
-        permisosModulo.leer ? "checked" : ""
-      }/>`;
+      leerCelda.innerHTML = `<input type="checkbox" class="leer form-check-input" id="${modulo}-leer" ${permisosModulo.leer ? "checked" : ""}/>`;
       leerCelda.style.textAlign = "center";
 
       const crearCelda = document.createElement("td");
-      crearCelda.innerHTML = `<input type="checkbox" class="crear form-check-input" id="${modulo}-crear" ${
-        permisosModulo.crear ? "checked" : ""
-      }/>`;
+      crearCelda.innerHTML = `<input type="checkbox" class="crear form-check-input" id="${modulo}-crear" ${permisosModulo.crear ? "checked" : ""}/>`;
       crearCelda.style.textAlign = "center";
 
       const actualizarCelda = document.createElement("td");
-      actualizarCelda.innerHTML = `<input type="checkbox" class="actualizar form-check-input" id="${modulo}-actualizar" ${
-        permisosModulo.actualizar ? "checked" : ""
-      }/>`;
+      actualizarCelda.innerHTML = `<input type="checkbox" class="actualizar form-check-input" id="${modulo}-actualizar" ${permisosModulo.actualizar ? "checked" : ""}/>`;
       actualizarCelda.style.textAlign = "center";
 
       const eliminarCelda = document.createElement("td");
-      eliminarCelda.innerHTML = `<input type="checkbox" class="eliminar form-check-input" id="${modulo}-eliminar" ${
-        permisosModulo.eliminar ? "checked" : ""
-      }/>`;
+      eliminarCelda.innerHTML = `<input type="checkbox" class="eliminar form-check-input" id="${modulo}-eliminar" ${permisosModulo.eliminar ? "checked" : ""}/>`;
       eliminarCelda.style.textAlign = "center";
 
       fila.appendChild(moduloCelda);
@@ -406,7 +410,7 @@ window.addEventListener("DOMContentLoaded", () => {
   async function actualizarPermisos() {
     const permisosActualizados = {};
     const checkboxes = tbodyModal.querySelectorAll('input[type="checkbox"]');
-
+    permisosActualizados["actividad"] = document.querySelector("#selectActividad").value;
     checkboxes.forEach((checkbox) => {
       const [modulo, permiso] = checkbox.id.split("-");
       if (!permisosActualizados[modulo]) {
@@ -460,11 +464,9 @@ window.addEventListener("DOMContentLoaded", () => {
     await obtenerRoles();
   })();
 
-  document
-    .querySelector("#btnCambiosPermisos")
-    .addEventListener("click", () => {
-      actualizarPermisos();
-    });
+  document.querySelector("#btnCambiosPermisos").addEventListener("click", () => {
+    actualizarPermisos();
+  });
 
   form.addEventListener("submit", function (event) {
     event.preventDefault();
@@ -521,20 +523,18 @@ window.addEventListener("DOMContentLoaded", () => {
     verificarEstadoCheck();
   });
 
-  document
-    .querySelector("#chkActualizar")
-    .addEventListener("change", (event) => {
-      if (event.target.checked) {
-        document
-          .querySelectorAll(".actualizar")
-          .forEach((checkbox) => (checkbox.checked = true));
-      } else {
-        document
-          .querySelectorAll(".actualizar")
-          .forEach((checkbox) => (checkbox.checked = false));
-      }
-      verificarEstadoCheck();
-    });
+  document.querySelector("#chkActualizar").addEventListener("change", (event) => {
+    if (event.target.checked) {
+      document
+        .querySelectorAll(".actualizar")
+        .forEach((checkbox) => (checkbox.checked = true));
+    } else {
+      document
+        .querySelectorAll(".actualizar")
+        .forEach((checkbox) => (checkbox.checked = false));
+    }
+    verificarEstadoCheck();
+  });
 
   document.querySelector("#chkEliminar").addEventListener("change", (event) => {
     if (event.target.checked) {

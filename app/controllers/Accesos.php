@@ -33,7 +33,6 @@ function obtenerAccesosFiltrados($idRol, $permissions)
 {
     // Definir accesos basados en permisos
     $accesosV2 = [
-        ["ruta" => "views", "texto" => "Actividades", "icono" => "fa-solid fa-chart-line"],
         ["ruta" => "Contratos", "texto" => "Contratos", "icono" => "fa-solid fa-file-contract", "rutasAnexas" => ["FichaTecnicaCable", "FichaTecnicaGpon", "FichaTecnicaWisp"]],
         ["ruta" => "Inventariado", "texto" => "Inventariado", "icono" => "fa-solid fa-warehouse"],
         ["ruta" => "Personas", "texto" => "Personas", "icono" => "fa-solid fa-user"],
@@ -44,8 +43,12 @@ function obtenerAccesosFiltrados($idRol, $permissions)
         ["ruta" => 'Averias',"texto"=>"Averias","icono"=>"fa-solid fa-wrench"]
     ];
 
+    // Añadir "Actividades" directamente a los accesos filtrados
+    $accesosFiltrados = [
+        ["ruta" => "views", "texto" => "Actividades", "icono" => "fa-solid fa-chart-line"]
+    ];
+
     // Filtrar accesos basados en permisos
-    $accesosFiltrados = [];
     foreach ($accesosV2 as $acceso) {
         $modulo = strtolower($acceso['texto']);
         if (isset($permissions[$modulo]) && isset($permissions[$modulo]['leer']) && $permissions[$modulo]['leer']) {

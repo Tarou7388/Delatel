@@ -9,9 +9,16 @@
       </div>
       <div class="mdlBodyPermisos">
         <div class="container">
-          <div class="card">
+          <div class="card mt-2">
             <div class="card-body">
-              <div class="card-text">
+              <div class="card-text" id="contenido">
+                <select id="selectActividad" class="form-select mb-3">
+                  <option value="Mapa" selected>Mapa</option>
+                  <option value="Soporte">Tabla de soportes</option>
+                  <option value="Contratos">Tabla de contratos</option>
+                  <option value="Kardex">Ultimos registros de Kardex</option>
+                  <option value="Fichas">Soportes y instalacion faltantes</option>
+                </select>
                 <table class="table" id="tablaPermisos">
                   <thead>
                     <tr>
@@ -23,7 +30,7 @@
                     </tr>
                   </thead>
                   <tbody id="cardBodyTabla">
-
+                    <!-- Contenido dinámico de la tabla -->
                   </tbody>
                 </table>
               </div>

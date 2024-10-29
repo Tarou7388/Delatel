@@ -6,7 +6,7 @@ window.addEventListener("DOMContentLoaded", function () {
   async function cargarActividades() {
     const response = await fetch(`${config.HOST}app/controllers/Usuario.controllers.php?operacion=obtenerPermisos`);
     const data = await response.json();
-    actividad = data.actividades.actividad;
+    actividad = data.actividad;
   }
 
   (async () => {
@@ -29,6 +29,7 @@ window.addEventListener("DOMContentLoaded", function () {
         cargarKardex();
         break;
       case 'Fichas':
+        cargarFichas();
         break;
     }
   }
@@ -149,8 +150,42 @@ window.addEventListener("DOMContentLoaded", function () {
     })
   }
 
-  async function cargarFichas(params) {
-    
-  }
+  async function cargarFichas() {
+    await cargarSoporte();
 
+    contenido.innerHTML += `
+    <div>
+      <table class="table table-striped" id="tablaFichaContrato">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre Cliente</th>
+          <th>Direccion</th>
+          <th>Paquete</th>
+          <th>Servicio</th>
+        </tr>
+      </thead>
+      <tbody id="tbodyFichaContrato">
+      </tbody>
+    </table>
+    </div>
+    `
+
+    const tbodyFichaContrato = document.getElementById("tbodyFichaContrato");
+    const responseFichaContrato = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=listarContratos`);
+    const dataFichaContrato = await responseFichaContrato.json();
+    console.log(dataFichaContrato);
+    dataFichaContrato.forEach(contrato => {
+      tbodyFichaContrato.innerHTML += `
+        <tr>
+          <td>${contrato.id_contrato}</td>
+          <td>${contrato.nombre_cliente}</td>
+          <td>${contrato.direccion_servicio}</td>
+          <td>${contrato.paquete}</td>
+          <td>${contrato.servicio}</td>
+        </tr>
+      `;
+    });
+  }
+  
 });

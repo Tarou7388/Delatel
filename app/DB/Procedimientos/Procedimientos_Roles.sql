@@ -13,7 +13,7 @@ SELECT
 FROM
     tb_roles r 
 WHERE 
-    r.inactive_at IS NULL;
+    r.inactive_at IS NULL AND r.rol != 'Administrador';
 
 DROP VIEW IF EXISTS vw_rolesdetallado_listar$$
 CREATE VIEW vw_rolesdetallado_listar AS
@@ -34,7 +34,7 @@ FROM
     tb_roles r
     LEFT JOIN tb_usuarios u1 ON r.iduser_create = u1.id_usuario
     LEFT JOIN tb_usuarios u2 ON r.iduser_update = u2.id_usuario
-    LEFT JOIN tb_usuarios u3 ON r.iduser_inactive = u3.id_usuario;
+    LEFT JOIN tb_usuarios u3 ON r.iduser_inactive = u3.id_usuario ;
 
 DROP PROCEDURE IF EXISTS spu_roles_registrar$$
 CREATE PROCEDURE spu_roles_registrar(
