@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   var today = new Date().toISOString().split("T")[0];
 
-  let tipoPaquete = "";
+  let tipoServicio = "";
   let numeroSintotizadores = 0;
   let numeroRepetidores = 0;
   let jsonCosto = {};
@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
       document.getElementById("txtNumFicha").value = data[0].id_contrato;
   
-      tipoPaquete = data[0].tipo_paquete;
+      tipoServicio = data[0].tipo_servicio;
       const nombreCliente = data[0].nombre_cliente.split(", ");
       const usuario =
         (
@@ -48,8 +48,8 @@ document.addEventListener("DOMContentLoaded", () => {
   
       document.getElementById("txtUsuario").value = usuario;
       document.getElementById("txtClaveAcceso").value = contrasenia;
-      document.getElementById("txtPlan").value = data[0].servicio;
-      document.getElementById("txtPlanCable").value = data[0].servicio;
+      document.getElementById("txtPlan").value = data[0].paquete;
+      document.getElementById("txtPlanCable").value = data[0].paquete;
   
       // Verificar si existe ficha_instalacion
       if (data[0].ficha_instalacion) {
@@ -115,7 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
           });
         }
   
-        if (data[0].tipo_paquete == "FIBR" && fibra) {
+        if (data[0].tipo_servicio == "FIBR" && fibra) {
           document.querySelector("#contenidoCable").setAttribute("hidden", "true");
         } else if (cable) {
           document.querySelector("#contenidoCable").removeAttribute("hidden");
@@ -328,7 +328,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
     console.log(jsonCosto);
 
-    if (typeof tipoPaquete !== "undefined" && tipoPaquete === "GPON") {
+    if (typeof tipoServicio !== "undefined" && tipoServicio === "GPON") {
       const txtCantCable = document.querySelector("#txtCantCable").value;
       const txtPrecioCable = document.querySelector("#txtPrecioCable").value;
       const txtPrecioConector =
@@ -472,8 +472,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (numeroRepetidores > 0) {
       jsonData.fibraoptica.repetidores = jsonRepetidor;
     }
-    console.log(tipoPaquete);
-    if (tipoPaquete == "GPON") {
+    console.log(tipoServicio);
+    if (tipoServicio == "GPON") {
       if (numeroSintotizadores > 0) {
         jsonCable.sintonizadores = jsonSintotizador;
       }
