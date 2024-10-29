@@ -78,4 +78,11 @@ class Soporte extends Conexion
     $values = array($params['prioridad']);
     return $this->consultaParametros($sql, $values);
   }
+
+  public function listarSoporte()
+  {
+    $sql = "SELECT * FROM vw_soporte_detalle";
+    return $this->listarDatos($sql);
+  }
+
 }
