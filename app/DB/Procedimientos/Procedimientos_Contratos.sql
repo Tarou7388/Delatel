@@ -1,5 +1,35 @@
 USE Delatel;
 
+DROP VIEW IF EXISTS vw_fichainstalacion_filtrar;
+CREATE VIEW vw_fichainstalacion_filtrar
+AS
+SELECT 
+    c.id_contrato,
+    CASE 
+        WHEN cl.id_persona IS NOT NULL THEN p.nombres
+        ELSE e.razon_social
+    END AS nombre_cliente,
+    c.direccion_servicio,
+    sv.tipo_servicio,
+    sv.servicio,
+	DATE(c.create_at) as fecha_creacion
+FROM 
+    tb_contratos c
+INNER JOIN 
+    tb_clientes cl ON c.id_cliente = cl.id_cliente
+LEFT JOIN 
+    tb_personas p ON cl.id_persona = p.id_persona
+LEFT JOIN 
+    tb_empresas e ON cl.id_cliente = e.id_empresa
+INNER JOIN 
+    tb_paquetes t ON c.id_paquete = t.id_paquete
+INNER JOIN 
+    tb_servicios sv ON t.id_servicio = sv.id_servicio
+WHERE 
+    c.inactive_at IS NULL AND c.ficha_instalacion IS NULL
+ORDER BY 
+   c.create_at ASC;
+
 DROP VIEW IF EXISTS vw_contratos_listar;
 CREATE VIEW vw_contratos_listar AS
 SELECT 
