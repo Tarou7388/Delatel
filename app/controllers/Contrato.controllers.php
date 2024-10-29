@@ -24,6 +24,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
       $resultado = $contrato->buscarContratoporClienteId(["id" => Herramientas::sanitizarEntrada($_GET['id'])]);
       echo json_encode($resultado);
       break;
+    case 'fichaIntalacionFiltro':
+      $resultado = $contrato->listarFichaInstalacionFiltro();
+      echo json_encode($resultado);
+      break;
   }
 }
 

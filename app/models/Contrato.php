@@ -200,4 +200,10 @@ class Contrato extends Conexion
         );
         return $this->registrar($sql, $values);
     }
+
+    public function listarFichaInstalacionFiltro()
+    {
+        $sql = "SELECT * FROM vw_fichainstalacion_filtrar";
+        return $this->listarDatos($sql);
+    }
 }
