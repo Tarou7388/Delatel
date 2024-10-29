@@ -3,9 +3,6 @@ import config from '../env.js';
 window.window.idContratoSeleccionado = null;
 
 window.addEventListener('DOMContentLoaded', function () {
-  // if (permisos[0].permisos.soporte.leer != 1) {
-  //   window.location.href = `${config.HOST}views`;
-  // }
   const wisp = document.getElementById('lstWisp');
   const gpon = document.getElementById('lstGpon');
   const cable = document.getElementById('lstCable');
@@ -14,7 +11,6 @@ window.addEventListener('DOMContentLoaded', function () {
   async function BuscarcontratoNDoc(numdocumento) {
     const respuesta = await fetch(`${config.HOST}/app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${numdocumento}`);
     const data = await respuesta.json();
-    //console.log(data[0].nombre);
     $("#txtCliente").val(data[0].nombre);
     await obtenerContratosCliente(data[0].id_cliente);
   };

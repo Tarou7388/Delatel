@@ -55,3 +55,5 @@ function obtenerAccesosFiltrados($idRol, $permissions)
 
     return $accesosFiltrados;
 }
+//nota: de acá saco los permisos y lo llamo en un javascript y lo usopara todos los archivos 
+//guiarme de rol.js linea 304 -315

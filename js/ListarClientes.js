@@ -3,10 +3,6 @@ window.addEventListener("DOMContentLoaded", () => {
   const ruta = `${config.HOST}app/controllers/Cliente.controllers.php?operacion=listarClientes`;
   const userid = user["idUsuario"];
 
-  // if (permisos[0].permisos.inventariado.leer != 1) {
-  //   window.location.href = `${config.HOST}views`;
-  // }
-
   function actualizar(idcliente) {
     const data = {
       identificador: idcliente,
