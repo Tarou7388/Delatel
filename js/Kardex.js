@@ -1,7 +1,7 @@
 import config from "../env.js";
 
 document.addEventListener("DOMContentLoaded", function () {
-  
+
   const userid = user["idUsuario"];
   const tipoMovimientoSelect = document.getElementById("slcTipomovimiento");
   const slcMotivo = document.getElementById("slcMotivo");
@@ -17,15 +17,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const respuesta = await fetch(
       `${config.HOST}app/controllers/Movimiento.controllers.php?operacion=FiltrarSoportePrioridad&movimiento=${valor}`
     );
-    const data = await respuesta.json(); 
+    const data = await respuesta.json();
 
-    console.log(data);
-
-    slcMotivo.innerHTML = ""; 
+    slcMotivo.innerHTML = "";
     data.forEach((movimiento) => {
       const option = document.createElement("option");
-      option.value = movimiento.id_tipooperacion; 
-      option.textContent = movimiento.descripcion; 
+      option.value = movimiento.id_tipooperacion;
+      option.textContent = movimiento.descripcion;
       slcMotivo.appendChild(option);
     });
   }
@@ -43,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
     txtvalorhistorico.value = productoData[0]?.precio_actual || 0;
   };
 
-  
+
   const guardarKardex = () => {
     const params = new FormData();
     params.append("operacion", "registrarKardex");
@@ -55,26 +53,30 @@ document.addEventListener("DOMContentLoaded", function () {
     params.append("valorUnitarioHistorico", txtvalorhistorico.value);
     params.append("idUsuario", userid);
 
-    fetch(`${config.HOST}app/controllers/Kardex.controllers.php`, {
-      method: "POST",
-      body: params,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        showToast(data.Guardado ? "Se ha guardado correctamente" : "Error: Verifique la cantidad ingresada",
-          data.Guardado ? "SUCCESS" : "ERROR"
-        );
-        document.querySelector("#form-validaciones-kardex").reset();
-        tablaKardex.ajax.reload();
-      });
+    try {
+      fetch(`${config.HOST}app/controllers/Kardex.controllers.php`, {
+        method: "POST",
+        body: params,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          showToast(data.Guardado ? "Se ha guardado correctamente" : "Error: Verifique la cantidad ingresada",
+            data.Guardado ? "SUCCESS" : "ERROR"
+          );
+          document.querySelector("#form-validaciones-kardex").reset();
+          tablaKardex.ajax.reload();
+          fecha.value = new Date().toISOString().split("T")[0];
+        });
+    } catch (error) {
+      showToast("No se pudo realizar la operacion","ERROR")
+    }
   };
-  
+
   (async () => {
     const response = await fetch(
       `${config.HOST}app/controllers/Producto.controllers.php?operacion=listarProductos`
     );
     const data = await response.json();
-    idproductoField.innerHTML = ""; 
     data.forEach((row) => {
       const tagOption = document.createElement("option");
       tagOption.value = row.id_producto;
@@ -97,7 +99,6 @@ document.addEventListener("DOMContentLoaded", function () {
   })();
 
   tipoMovimientoSelect.addEventListener("change", async function () {
-    console.log(tipoMovimientoSelect.value);
     await actualizarMtv(tipoMovimientoSelect.value);
   });
 

@@ -113,6 +113,7 @@
 					<thead>
 						<tr>
 							<th class="text-center">ID Producto</th>
+							<th class="text-center">Almacen</th>
 							<th class="text-center">Fecha</th>
 							<th class="text-center">Tipo de Operación</th>
 							<th class="text-center">Motivo</th>

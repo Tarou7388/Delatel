@@ -53,13 +53,13 @@ window.tablaKardex = $('#TbKardex').DataTable({
         dataSrc: ''
     },
     columnDefs: [
-        { targets: 0, width: '20%' }, // Producto
-        { targets: 1, width: '10%' }, // Fecha
-        { targets: 2, width: '20%' }, // Tipo Operación
-        { targets: 3, width: '20%' }, // Motivo
-        { targets: 4, width: '10%' }, // Cantidad
-        { targets: 5, width: '10%' }, // Saldo Total
-        { targets: 6, width: '10%' }  // Valor Único Histórico
+        { targets: 0, width: '20%' },
+        { targets: 1, width: '10%' },
+        { targets: 2, width: '20%' },
+        { targets: 3, width: '20%' },
+        { targets: 4, width: '10%' },
+        { targets: 5, width: '10%' },
+        { targets: 6, width: '10%' }
     ],
     columns: [
         {
@@ -69,14 +69,15 @@ window.tablaKardex = $('#TbKardex').DataTable({
             },
             title: 'Producto', className: 'text-center' 
         },
+        { data: 'nombre_almacen', className: 'text-center' },
         { data: 'fecha', className: 'text-center' },
-        { data: 'tipo_operacion', className: 'text-center'  },
-        { data: 'motivo', className: 'text-center' },
+        { data: 'tipo_movimiento', className: 'text-center'  },
+        { data: 'tipo_operacion', className: 'text-center' },
         { data: 'cantidad', className: 'text-center' },
         { data: 'saldo_total', className: 'text-center' },
         { data: 'valor_unico_historico', className: 'text-center' }
     ],
-    order: [[1, 'desc']],
+    order: [],
     language: {
         url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
     },
