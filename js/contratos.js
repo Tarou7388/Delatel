@@ -11,6 +11,8 @@ window.addEventListener("DOMContentLoaded", async () => {
   const coordenada = document.querySelector("#txtCoordenada");
   const slcSector = document.querySelector("#slcSector");
   const slcPaquetes = document.querySelector("#slcPaquetes");
+  const slcPaquetesActualizar = document.querySelector("#slcPaquetesActualizar");
+  const slcServicioActualizar = document.querySelector("#slcServicioActualizar");
   const txtNota = document.querySelector("#txtNota");
   const span = document.querySelector("#infoFecha");
   const accesos = await Herramientas.permisos()
@@ -73,9 +75,54 @@ window.addEventListener("DOMContentLoaded", async () => {
       });
   }
 
+  async function cargarPaquetesActualizar(idServicio) {
+    const dataPaquetes = await fetchPaquetesPorServicio(idServicio);
+    console.log(dataPaquetes)
+    slcPaquetesActualizar.innerHTML = '<option value="" disabled selected>Seleccione un paquete</option>';
+    dataPaquetes
+      .filter(paquete => !paquete.inactive_at)
+      .forEach((paquete) => {
+        const option = document.createElement("option");
+        const id = `${paquete.id_paquete} - ${paquete.precio} - ${paquete.duracion}`;
+        option.value = id;
+        option.textContent = paquete.paquete;
+        slcPaquetesActualizar.appendChild(option);
+      });
+  }
+
   slcTipoServicio.addEventListener("change", async function () {
     const idServicioSeleccionado = slcTipoServicio.value;
     await cargarPaquetes(idServicioSeleccionado);
+  });
+
+  slcServicioActualizar.on("select2:select", async function (e) {
+    const idServicioActualizarSeleccionado = e.params.data.id;
+    await cargarPaquetesActualizar(idServicioActualizarSeleccionado);
+  });
+
+  $("#slcPaquetesActualizar").on("select2:select", function () {
+    const selectedValue = slcPaquetes.value.split(" - ");
+    console.log(selectedValue);
+    idServicio = parseInt(selectedValue[0]);
+    precioServicio = selectedValue[1];
+    const duracionServicio = selectedValue[2];
+
+    document.getElementById("txtPrecioActualizar").value = precioServicio;
+
+    let duracionFormateada = "Duracion no disponible";
+    if (duracionServicio) {
+      try {
+        const duracionObj = JSON.parse(duracionServicio);
+        duracionFormateada = Object.entries(duracionObj)
+          .map(([key, value]) => `${key.charAt(0).toUpperCase() + key.slice(1)}: ${value} meses`)
+          .join(", ");
+      } catch (e) {
+        console.error("Error al parsear la duración:", e);
+      }
+    }
+
+    txtDuracion.value = duracionFormateada;
+    slcPaquetes.value = idServicio;
   });
 
   async function fetchContratos() {
@@ -166,10 +213,10 @@ window.addEventListener("DOMContentLoaded", async () => {
       const nota = txtNota.value;
       console.log(nota);
       const idUsuarioRegistro = user.idRol;
-
+      console.log(lapsoTiempo);
       if (!(await validarCampos())) {
-        
-      } else if (!lapsoTiempo) {
+
+      } else if (lapsoTiempo) {
         showToast("¡La fecha de fin debe ser mayor a 3 meses!", "INFO");
       } else {
         try {
@@ -186,7 +233,7 @@ window.addEventListener("DOMContentLoaded", async () => {
                   direccion: direccion.value,
                   referencia: referencia.value,
                   coordenada: coordenada.value,
-                  fechaInicio: fechaInicio.value,
+                  fechaInicio: new Date().toISOString().split("T")[0],
                   fechaFin: fechaFin,
                   fechaRegistro: fechaRegistro,
                   nota: nota,
@@ -261,7 +308,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
       const today = new Date().toISOString().split("T")[0];
       if (fechaInicio < today) {
-        showToast("¡La fecha de inicio no puede ser menor a la fecha de hoy!","WARNING");
+        showToast("¡La fecha de inicio no puede ser menor a la fecha de hoy!", "WARNING");
         return;
       }
 
@@ -293,7 +340,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       const data = await response.json();
       if (data.actualizado) {
         showToast("¡Contrato actualizado correctamente!", "SUCCESS");
-        setTimeout(() => {window.location.reload();}, 2500);
+        setTimeout(() => { window.location.reload(); }, 2500);
       } else {
         showToast("Error al actualizar el contrato.", "ERROR");
       }
@@ -447,8 +494,8 @@ window.addEventListener("DOMContentLoaded", async () => {
   async function resetUI() {
     nroDoc.value = "";
     nombre.value = "";
-    fechaInicio.value = "";
-    txtfechaFin.value = "";
+    //fechaInicio.value = "";
+    //txtfechaFin.value = "";
     precio.value = "";
     direccion.value = "";
     sector.value = "";
@@ -539,44 +586,42 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  document
-    .querySelector("#txtFechaFinActualizar")
-    .addEventListener("input", () => {
-      const fechaInicioValue = document.querySelector(
-        "#txtFechaInicioActualizar"
-      ).value;
-      const txtFechaFinValue = document.querySelector(
-        "#txtFechaFinActualizar"
-      ).value;
-      const span = document.getElementById("mensajeFechaFin");
+  document.querySelector("#txtFechaFinActualizar").addEventListener("input", () => {
+    const fechaInicioValue = document.querySelector(
+      "#txtFechaInicioActualizar"
+    ).value;
+    const txtFechaFinValue = document.querySelector(
+      "#txtFechaFinActualizar"
+    ).value;
+    const span = document.getElementById("mensajeFechaFin");
 
-      if (txtFechaFinValue > 3) {
-        lapsoTiempo = true;
-        const dateFechaInicio = new Date(fechaInicioValue);
-        const meses = parseInt(txtFechaFinValue, 10);
+    if (txtFechaFinValue > 3) {
+      lapsoTiempo = true;
+      const dateFechaInicio = new Date(fechaInicioValue);
+      const meses = parseInt(txtFechaFinValue, 10);
 
-        dateFechaInicio.setMonth(dateFechaInicio.getMonth() + meses);
+      dateFechaInicio.setMonth(dateFechaInicio.getMonth() + meses);
 
-        const opciones = { year: "numeric", month: "2-digit", day: "2-digit" };
-        fechaFinActualizar = dateFechaInicio.toLocaleDateString(
-          "es-ES",
-          opciones
-        );
+      const opciones = { year: "numeric", month: "2-digit", day: "2-digit" };
+      fechaFinActualizar = dateFechaInicio.toLocaleDateString(
+        "es-ES",
+        opciones
+      );
 
-        span.textContent = `La fecha de fin es: ${fechaFinActualizar}`;
-        span.classList.remove("invisible");
-        const partesFecha = fechaFinActualizar.split("/");
-        fechaFinActualizar = `${partesFecha[2]}-${partesFecha[1]}-${partesFecha[0]}`;
-      } else {
-        lapsoTiempo = false;
-        span.textContent = "La fecha de fin debe ser mayor a 3 meses";
-        span.classList.remove("invisible");
-      }
-      if (txtFechaFinValue == "") {
-        lapsoTiempo = false;
-        span.classList.add("invisible");
-      }
-    });
+      span.textContent = `La fecha de fin es: ${fechaFinActualizar}`;
+      span.classList.remove("invisible");
+      const partesFecha = fechaFinActualizar.split("/");
+      fechaFinActualizar = `${partesFecha[2]}-${partesFecha[1]}-${partesFecha[0]}`;
+    } else {
+      lapsoTiempo = false;
+      span.textContent = "La fecha de fin debe ser mayor a 3 meses";
+      span.classList.remove("invisible");
+    }
+    if (txtFechaFinValue == "") {
+      lapsoTiempo = false;
+      span.classList.add("invisible");
+    }
+  });
 
   (async () => {
     await getQueryParams();
@@ -613,6 +658,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   $("#slcPaquetes").on("select2:select", function () {
     const selectedValue = slcPaquetes.value.split(" - ");
+    console.log(selectedValue);
     idServicio = parseInt(selectedValue[0]);
     precioServicio = selectedValue[1];
     const duracionServicio = selectedValue[2];
@@ -635,33 +681,9 @@ window.addEventListener("DOMContentLoaded", async () => {
     slcPaquetes.value = idServicio;
   });
 
-  $("#slcServicioActualizar").on("select2:select", function () {
-    idServicioActualizar = parseInt(
-      slcServicioActualizar.value.split(" - ")[0]
-    );
-    precioServicioActualizar = parseFloat(
-      slcServicioActualizar.value.split(" - ")[1]
-    );
-    document.querySelector("#txtPrecioActualizar").value =
-      precioServicioActualizar;
-    slcServicioActualizar.value = idServicioActualizar;
-    console.log(idServicioActualizar);
-  });
-
   $(".select2me").select2({ theme: "bootstrap-5", allowClear: true });
-  $(".select2me")
-    .parent("div")
-    .children("span")
-    .children("span")
-    .children("span")
-    .css("height", " calc(3.5rem + 2px)");
-  $(".select2me")
-    .parent("div")
-    .children("span")
-    .children("span")
-    .children("span")
-    .children("span")
-    .css("margin-top", "18px");
+  $(".select2me").parent("div").children("span").children("span").children("span").css("height", " calc(3.5rem + 2px)");
+  $(".select2me").parent("div").children("span").children("span").children("span").children("span").css("margin-top", "18px");
   $(".select2me").parent("div").find("label").css("z-index", "1");
 
 
@@ -673,7 +695,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       const servicios = await response.json();
 
       const slcTipoServicio = $("#slcTipoServicio");
-      const slcTipoServicioActualizar = $("#slcTipoServicioActualizar");
+      const slcTipoServicioActualizar = $("#slcServicioActualizar");
 
       slcTipoServicio.empty();
       slcTipoServicioActualizar.empty();
