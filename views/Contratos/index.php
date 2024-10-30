@@ -29,16 +29,14 @@
 
             <div class="col-md-4 mt-2">
               <div class="form-floating">
-                <input type="number" class="form-control" id="txtFechaFinActualizar" name="fechaFin" max=24 min=3 required>
+                <input type="number" class="form-control" id="txtFechaFinActualizar" name="fechaFin" max="24" min="3" required>
                 <label for="txtFechaFinActualizar" class="form-label">Fecha de Fin (Meses)</label>
                 <span id="mensajeFechaFin" class="invisible"></span>
               </div>
             </div>
-
           </div>
 
           <div class="row mb-2">
-
             <div class="col-md-4">
               <div class="form-floating">
                 <select class="form-select select2me" id="slcServicioActualizar" aria-label="ServiciosActualizar">
@@ -50,11 +48,24 @@
 
             <div class="col-md-4">
               <div class="form-floating">
+                <select class="form-select select2me" id="slcPaquetesActualizar" aria-label="Paquetes">
+                  <option value="0" disabled selected>Seleccione</option>
+                </select>
+                <label for="slcPaquetesActualizar" class="form-label">Paquetes</label>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-floating">
                 <input type="number" class="form-control" id="txtPrecioActualizar" value="0" placeholder="Precio" disabled>
                 <label for="txtPrecioActualizar" class="form-label">Precio</label>
               </div>
             </div>
 
+
+          </div>
+
+          <div class="row mb-2">
             <div class="col-md-4">
               <div class="form-floating">
                 <select class="form-select select2me" id="slcSectorActualizar" aria-label="Sectores">
@@ -63,10 +74,6 @@
                 <label for="slcSectorActualizar" class="form-label">Sectores</label>
               </div>
             </div>
-
-          </div>
-
-          <div class="row mb-2">
 
             <div class="col-md-4">
               <div class="form-floating">
@@ -81,17 +88,17 @@
                 <label for="txtReferenciaActualizar" class="form-label">Referencia</label>
               </div>
             </div>
+          </div>
 
+          <div class="row mb-2">
             <div class="col-md-4">
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtCoordenadaActualizar" placeholder="Coordenada" name="coordenada">
                 <label for="txtCoordenadaActualizar" class="form-label">Coordenada</label>
               </div>
             </div>
-
           </div>
-
-          <div class="row mb-2">
+          <div>
             <div class="col-md-12">
               <div class="form-floating">
                 <textarea class="form-control" id="txtNotaActualizar" placeholder="Nota" name="nota"></textarea>
@@ -108,6 +115,8 @@
     </div>
   </div>
 </div>
+
+
 
 <div class="container-fluid px-4">
   <h1 class="mt-4">Contratos</h1>

@@ -158,7 +158,6 @@ BEGIN
     c.direccion_servicio,
     sv.id_servicio,
     sv.servicio,
-    t.tipo_paquete,
     c.referencia,
     c.coordenada,
     c.fecha_inicio,
