@@ -81,9 +81,18 @@ window.addEventListener("DOMContentLoaded", function () {
         </tr>
       `;
     });
+    $('#tablaSoporte').DataTable({
+      columnDefs: [
+        { targets: 0, visible: false }
+      ],
+      language: {
+        url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json",
+      },
+      order: [[0, "desc"]]
+    });
   }
 
-  async function cargarContratos(){
+  async function cargarContratos() {
     contenido.innerHTML = `
     <table class="table table-striped" id="tablaContratos">
       <thead>
@@ -102,7 +111,6 @@ window.addEventListener("DOMContentLoaded", function () {
     const tbodyContratos = document.getElementById("tbodyContratos");
     const response = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=listarContratos`);
     const data = await response.json();
-    console.log(data);
     data.forEach(contrato => {
       tbodyContratos.innerHTML += `
         <tr>
@@ -113,7 +121,16 @@ window.addEventListener("DOMContentLoaded", function () {
           <td>${contrato.servicio}</td>
         </tr>
       `;
-    })
+    });
+    $('#tablaContratos').DataTable({
+      columnDefs: [
+        { targets: 0, visible: false }
+      ],
+      language: {
+        url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json",
+      },
+      order: [[0, "desc"]]
+    });
   }
 
   async function cargarKardex(){
@@ -147,7 +164,16 @@ window.addEventListener("DOMContentLoaded", function () {
           <td>${kardex.motivo}</td>
         </tr>
       `;
-    })
+    });
+    $('#tablaKardex').DataTable({
+      columnDefs: [
+        { targets: 0, visible: false }
+      ],
+      language: {
+        url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json",
+      },
+      order: [[0, "desc"]]
+    });
   }
 
   async function cargarFichas() {
@@ -174,7 +200,6 @@ window.addEventListener("DOMContentLoaded", function () {
     const tbodyFichaContrato = document.getElementById("tbodyFichaContrato");
     const responseFichaContrato = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=listarContratos`);
     const dataFichaContrato = await responseFichaContrato.json();
-    console.log(dataFichaContrato);
     dataFichaContrato.forEach(contrato => {
       tbodyFichaContrato.innerHTML += `
         <tr>
@@ -185,6 +210,15 @@ window.addEventListener("DOMContentLoaded", function () {
           <td>${contrato.servicio}</td>
         </tr>
       `;
+    });
+    $('#tablaFichaContrato').DataTable({
+      columnDefs: [
+        { targets: 0, visible: false }
+      ],
+      language: {
+        url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json",
+      },
+      order: [[0, "desc"]]
     });
   }
   
