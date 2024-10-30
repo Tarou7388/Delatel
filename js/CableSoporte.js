@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   async function registrarCable(JsonCable) {
-    if(accesos.averias.crear == 1){
+    if(accesos?.averias?.crear){
       const params = {
         operacion: "registrarSoporte",
         idContrato: window.idContratoSeleccionado,
@@ -54,6 +54,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       } else {
         alert("Error");
       }
+    }
+    else{
+      showToast("No tienes permisos", "ERROR")
     }
     
   }

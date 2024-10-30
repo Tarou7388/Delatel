@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", async () => {
    * actualizarUsuario();
    */
   async function actualizarUsuario() {
-    if (accesos.usuarios.actualizar == 1) {
+    if (accesos?.usuarios?.actualizar) {
       const usuario = document.getElementById('txtUsuario').value;
       const nuevaPassword = document.getElementById('txtPassword').value;
 
@@ -155,7 +155,7 @@ document.addEventListener("DOMContentLoaded", async () => {
    * @returns {void}
    */
   async function actualizarRolResponsable(idresponsabled) {
-    if (accesos.roles.actualizar == 1) {
+    if (accesos?.roles?.actualizar) {
       const rol = document.getElementById('slcRol').value;
 
       const parametros = {
@@ -230,7 +230,7 @@ document.addEventListener("DOMContentLoaded", async () => {
    * @returns {void}
    */
   async function eliminarUsuario(id) {
-    if (accesos.usuarios.eliminar == 1) {
+    if (accesos?.usuarios?.eliminar) {
       const data = {
         operacion: "eliminarUsuario",
         idUsuario: id,

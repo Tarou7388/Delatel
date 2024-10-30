@@ -136,7 +136,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 
   async function registrarCliente() {
-    if (accesos.personas.crear == 1) {
+    if (accesos?.personas?.crear) {
       const params = new FormData();
       params.append("operacion", "registrarCliente");
       params.append("idPersona", idPersona);
@@ -159,16 +159,16 @@ window.addEventListener("DOMContentLoaded", async () => {
       showToast("No tienes acceso para crear un cliente", "ERROR");
     }
   }
-  registrarCliente();
 
   async function registrarContrato() {
-    if (accesos.contratos.crear == 1) {
+    if (accesos?.contratos?.crear) {
       const fechaRegistro = new Date().toISOString().split("T")[0];
       const nota = txtNota.value;
       console.log(nota);
       const idUsuarioRegistro = user.idRol;
 
-      if (!(await validarCampos()) || (await !validarFechas())) {
+      if (!(await validarCampos())) {
+        
       } else if (!lapsoTiempo) {
         showToast("¡La fecha de fin debe ser mayor a 3 meses!", "INFO");
       } else {
@@ -217,12 +217,12 @@ window.addEventListener("DOMContentLoaded", async () => {
         }
       }
     } else {
-      showToast("No tienes acceso para crear un cliente", "ERROR");
+      showToast("No tienes acceso para registrar un contrato", "ERROR");
     }
   }
 
   async function eliminar(idContrato, idUsuario) {
-    if (accesos.contrato.eliminar == 1) {
+    if (accesos?.contrato?.eliminar) {
       if (await ask("¿Desea eliminar este contrato?")) {
         const response = await fetch(
           `${config.HOST}app/controllers/Contrato.controllers.php`,
@@ -249,26 +249,19 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 
   async function actualizarContrato(idContrato, idUsuario) {
-    if (accesos.contratos.actualizar == 1) {
+    if (accesos?.contratos?.actualizar) {
       const idServicio = document.querySelector("#slcServicioActualizar").value;
       const idSector = document.querySelector("#slcSectorActualizar").value;
-      const direccionServicio = document.querySelector(
-        "#txtDireccionActualizar"
-      ).value;
+      const direccionServicio = document.querySelector("#txtDireccionActualizar").value;
       const referencia = document.querySelector("#txtReferenciaActualizar").value;
       const coordenada = document.querySelector("#txtCoordenadaActualizar").value;
-      const fechaInicio = document.querySelector(
-        "#txtFechaInicioActualizar"
-      ).value;
+      const fechaInicio = document.querySelector("#txtFechaInicioActualizar").value;
       const fechaRegistro = new Date().toISOString().split("T")[0];
       const nota = document.querySelector("#txtNotaActualizar").value;
 
       const today = new Date().toISOString().split("T")[0];
       if (fechaInicio < today) {
-        showToast(
-          "¡La fecha de inicio no puede ser menor a la fecha de hoy!",
-          "WARNING"
-        );
+        showToast("¡La fecha de inicio no puede ser menor a la fecha de hoy!","WARNING");
         return;
       }
 
@@ -300,9 +293,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       const data = await response.json();
       if (data.actualizado) {
         showToast("¡Contrato actualizado correctamente!", "SUCCESS");
-        setTimeout(() => {
-          window.location.reload();
-        }, 2500);
+        setTimeout(() => {window.location.reload();}, 2500);
       } else {
         showToast("Error al actualizar el contrato.", "ERROR");
       }
@@ -438,8 +429,6 @@ window.addEventListener("DOMContentLoaded", async () => {
     if (
       nroDoc.value == "" ||
       nombre.value == "" ||
-      fechaInicio.value == "" ||
-      txtfechaFin.value == "" ||
       precio.value == "" ||
       direccion.value == "" ||
       sector.value == "" ||

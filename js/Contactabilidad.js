@@ -119,17 +119,12 @@ window.addEventListener("DOMContentLoaded", async function() {
             data.apellidoMaterno || ""
           }`.trim();
         } else {
-          showToast(
-            "No se encontraron datos para el DNI proporcionado",
-            "WARNING"
-          );
+          showToast("No se encontraron datos para el DNI proporcionado","WARNING");
         }
       })
       .catch((error) => {
-        showToast(
-          "Error al obtener la información de la persona: " + error.message,
-          "ERROR"
-        );
+        showToast("Error al obtener la información de la persona: ","ERROR");
+        console.log(error.message)
       });
   }
 

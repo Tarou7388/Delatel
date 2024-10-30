@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 
   async function registrarEmpresa() {
-    if (accesos.personas.crear == 1) {
+    if (accesos?.personas?.crear) {
       const params = new FormData();
       params.append("operacion", "registrarEmpresa");
       params.append("ruc", txtRuc.value);
@@ -88,7 +88,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 
   async function registrarContacto(idEmpresa) {
-    if (accesos.personas.crear == 1) {
+    if (accesos?.personas?.crear) {
       const Paquete = slcServicio.value;
       const fecha = new Date();
       fecha.setDate(fecha.getDate() + 14);
