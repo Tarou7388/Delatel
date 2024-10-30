@@ -91,7 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.head.appendChild(style);
 
   //Función registrar Servicio
-  async function registrarServicio() {
+  async function registrarServicio(idServicio) {
     const servicio = document.querySelector("#txtNombreServicio");
     const tipoServicio = document.querySelector("#txtTipoServicio");
 
@@ -128,6 +128,10 @@ document.addEventListener("DOMContentLoaded", () => {
       if (data.guardado) {
         showToast("El Servicio se ha guardado correctamente", "SUCCESS", 1500);
         obtenerServicios();
+        const event = new CustomEvent("servicioAgregado", {
+          detail: { idServicio, userid },
+        });
+        document.dispatchEvent(event);
         limpiarFormulario();
       } else {
         showToast("Verifique que se haya hecho bien la operacion", "ERROR", 1500);
