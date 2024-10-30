@@ -6,7 +6,6 @@ header("Content-type: application/json; charset=utf-8");
 require_once '../models/Conexion.php'; // Asegúrate de incluir tu archivo de conexión a la base de datos
 require_once '../models/Rol.php'; // Asegúrate de incluir tu modelo de roles
 
-
 // Función para cargar permisos
 function cargarPermisos($idRol)
 {
@@ -18,14 +17,8 @@ function cargarPermisos($idRol)
     $resultado = $rolModel->listarPermisosIdRol($params);
 
     // Convertir el resultado en un array de permisos
-    $permisos = [];
-    if (!empty($resultado)) {
-        foreach ($resultado as $row) {
-            $permisos = $row['permisos'];
-        }
-    }
 
-    return $permisos;
+    return $resultado;
 }
 
 // Función para obtener accesos filtrados
@@ -52,7 +45,7 @@ function obtenerAccesosFiltrados($idRol, $permissions)
     // Filtrar accesos basados en permisos
     foreach ($accesosV2 as $acceso) {
         $modulo = strtolower($acceso['texto']);
-        if (isset($permissions[$modulo]) && isset($permissions[$modulo]['leer']) && $permissions[$modulo]['leer']) {
+        if (isset($permissions[$modulo]) && isset($permissions[$modulo]['leer']) && $permissions[$modulo]['leer'] == "1") {
             $accesosFiltrados[] = $acceso;
         }
     }

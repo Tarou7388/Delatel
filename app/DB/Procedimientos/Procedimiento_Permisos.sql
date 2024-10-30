@@ -6,7 +6,7 @@ CREATE PROCEDURE spu_permisos_listar_id(
     p_id_rol INT
 )
 BEGIN
-    SELECT rol, permisos FROM tb_roles
+    SELECT permisos FROM tb_roles
     WHERE id_rol = p_id_rol;
 END$$
 

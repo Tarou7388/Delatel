@@ -29,7 +29,6 @@ if (isset($_POST['operacion'])) {
   if ($operacion == "login") {
     $nombreUser = Herramientas::sanitizarEntrada($_POST["nombreUser"]);
     $registro = $usuario->login(["nombreUser" => $nombreUser]);
-
     $Login = [
       "estado" => false,
       "idRol" => -1,
@@ -40,7 +39,7 @@ if (isset($_POST['operacion'])) {
 
     if ($registro) {
       $claveEncriptada = $registro["pass"];
-      $claveIngresada = Herramientas::sanitizarEntrada($_POST["pass"]);
+      $claveIngresada = $_POST["pass"];
 
       if (password_verify($claveIngresada, $claveEncriptada)) {
         $resultados["login"] = true;

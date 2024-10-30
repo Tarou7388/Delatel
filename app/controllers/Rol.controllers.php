@@ -17,18 +17,19 @@ if (isset($_GET["operacion"])) {
       $resultado  = $rol->listarRoles();
       echo json_encode($resultado);
       break;
-      case 'listarPermisosIdRol':
-        $datos = [
-          "idRol" => Herramientas::sanitizarEntrada($_GET['idRol'])
-        ];
-        $resultado = $rol->listarPermisosIdRol($datos);
-        
-        if ($resultado) {
-            echo json_encode(["permisos" => $resultado]);
-        } else {
-            echo json_encode(["error" => "No se encontraron permisos"]);
-        }
-        break;     
+    case 'listarPermisosIdRol':
+      $datos = [
+        "idRol" => Herramientas::sanitizarEntrada($_GET['idRol'])
+      ];
+      $resultado = $rol->listarPermisosIdRol($datos);
+      
+      if ($resultado) {
+        echo json_encode($resultado);
+      } else {
+        echo json_encode(["error" => "No se encontraron permisos"]);
+      }
+
+      break;     
   }
 }
 

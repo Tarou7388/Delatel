@@ -36,8 +36,9 @@ if (!isset($_SESSION['login']) || $_SESSION['login']['estado'] == false) {
     $i++;
   }
 
-  if (count($listaAcceso) > 0) {
-    $encontrado = true;
+  if (!$encontrado) {
+    header("Location: $host");
+    exit();
   }
 }
 ?>

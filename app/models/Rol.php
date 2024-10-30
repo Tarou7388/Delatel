@@ -41,7 +41,7 @@ class Rol extends Conexion
     $values = array(
       $params['rol'],
       $permisosJson,
-      $params['idUsuario'] 
+      $params['idUsuario']
     );
     return $this->registrar($sql, $values);
   }
@@ -59,12 +59,8 @@ class Rol extends Conexion
       $params['idRol']
     );
 
-    $resultado = $this->consultaParametros($sql, $values);
-    foreach ($resultado as &$row) {
-      if (isset($row['permisos'])) {
-        $row['permisos'] = json_decode($row['permisos'], true);
-      }
-    }
+    $resultado = $this->buscarObjeto($sql, $values);
+    $resultado = json_decode($resultado['permisos'], true);
     return $resultado;
   }
 
@@ -156,5 +152,4 @@ class Rol extends Conexion
     );
     return $this->registrar($sql, $values);
   }
-
 }
