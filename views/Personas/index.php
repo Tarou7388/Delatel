@@ -79,10 +79,10 @@
 				<div class="row mb-3">
 					<div class="col-md 3">
 						<div class="form-floating">
-							<select class="form-select select2 select2me" id="slcServicioEmpresa" aria-label="Servicios">
-								<option value="0" disabled selected>Seleciona</option>
+							<select class="form-select select2 select2me" id="slcServicioEmpresa" aria-label="Paquetes">
+								<option value="0" disabled selected>Seleccione</option>
 							</select>
-							<label for="slcServicio">Servicios</label>
+							<label for="slcServicio">Paquetes</label>
 						</div>
 					</div>
 					<div class="col-md-3">
@@ -224,10 +224,10 @@
 					</div>
 					<div class="col-md-4">
 						<div class="form-floating">
-							<select class="form-select select2 select2me" id="slcServicio" aria-label="Servicios">
-								<option value="0" disabled selected>Seleciona</option>
+							<select class="form-select select2 select2me" id="slcServicio" aria-label="Paquetes">
+								<option value="0" disabled selected>Seleccione</option>
 							</select>
-							<label for="slcServicio">Servicios</label>
+							<label for="slcServicio">Paquetes</label>
 						</div>
 					</div>
 				</div>

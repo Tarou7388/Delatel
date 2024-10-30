@@ -241,9 +241,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const data = await response.json();
     data.forEach((paquetes) => {
       const option = document.createElement("option");
-      const id = `${paquetes.id_servicio} - ${paquetes.precio}`;
+      const id = `${paquetes.id_paquete} - ${paquetes.precio}`;
       option.value = id;
-      option.textContent = paquetes.servicio;
+      option.textContent = paquetes.paquete;
       slcServicio.appendChild(option);
     });
   }
@@ -256,7 +256,7 @@ document.addEventListener("DOMContentLoaded", function () {
     await cargarPaquetes();
   })();
 
-  $(".select2me").select2({ theme: "bootstrap-5", placeholder: "Seleccione Servicio", allowClear: true });
+  $(".select2me").select2({ theme: "bootstrap-5", placeholder: "Seleccione", allowClear: true });
   $('.select2me').parent('div').children('span').children('span').children('span').css('height', ' calc(3.5rem + 2px)');
   $('.select2me').parent('div').children('span').children('span').children('span').children('span').css('margin-top', '18px');
   $('.select2me').parent('div').find('label').css('z-index', '1');

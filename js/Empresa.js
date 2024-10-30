@@ -30,14 +30,12 @@ document.addEventListener("DOMContentLoaded", async function () {
     const data = await response.json();
     data.forEach((paquetes) => {
       const option = document.createElement("option");
-      const id = `${paquetes.id_servicio} - ${paquetes.precio}`;;
+      const id = `${paquetes.id_paquete} - ${paquetes.precio}`;;
       option.value = id;
-      option.textContent = paquetes.servicio;
+      option.textContent = paquetes.paquete;
       slcServicio.appendChild(option);
     });
   }
-
-
 
   async function verificarCampos() {
     const campos = [
