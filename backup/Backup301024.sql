@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 17-10-2024 a las 19:23:55
+-- Tiempo de generación: 30-10-2024 a las 20:44:21
 -- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.1.25
+-- Versión de PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,7 +20,7 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `delatel`
 --
-DROP DATABASE IF EXISTS `delatel`;
+DROP DATABASE IF EXISTS delatel;
 CREATE DATABASE IF NOT EXISTS `delatel` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `delatel`;
 
@@ -28,28 +28,31 @@ DELIMITER $$
 --
 -- Procedimientos
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `buscar_contrato_por_cliente` (IN `p_id_cliente` INT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_averias_contratos_listar` (IN `p_id_contrato` INT)   BEGIN
     SELECT 
-        c.id_contrato, 
-        p.tipo_paquete, 
-        s.sector, 
-        sv.servicio,
-        c.id_usuario_registro,
-        c.referencia,
-        c.fecha_inicio,
-        c.fecha_fin,
-        c.nota,
-        c.direccion_servicio
+        s.id_soporte,
+        ts.tipo_soporte,
+        CONCAT(p.nombres, ' ', p.apellidos) AS nombre_tecnico,
+        s.soporte,
+        s.descripcion_solucion,
+        s.fecha_hora_solicitud,
+        s.fecha_hora_asistencia
     FROM 
-        tb_contratos c
+        tb_soporte s
     JOIN 
-        tb_paquetes p ON c.id_paquete = p.id_paquete
+        tb_responsables r ON s.id_tecnico = r.id_responsable
     JOIN 
-        tb_sectores s ON c.id_sector = s.id_sector
+        tb_usuarios u ON r.id_usuario = u.id_usuario
     JOIN 
-        tb_servicios sv ON p.id_servicio = sv.id_servicio
+        tb_personas p ON u.id_persona = p.id_persona
+    JOIN 
+        tb_tipo_soporte ts ON s.id_tipo_soporte = ts.id_tipo_soporte
     WHERE 
-        c.id_cliente = p_id_cliente AND c.inactive_at IS NULL;
+        s.id_contrato = p_id_contrato;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_cajas_listar` ()   BEGIN
+  SELECT id_caja, nombre, descripcion, numero_entradas, id_sector, coordenadas FROM tb_cajas;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_clientesPersonas_actualizar` (`p_identificador` VARCHAR(15), `p_nombre` VARCHAR(100), `p_apellidos` VARCHAR(30), `p_email` VARCHAR(100), `p_telefono` CHAR(9), `p_direccion` VARCHAR(250), `p_referencia` VARCHAR(150), `p_coordenadas` VARCHAR(50), `p_iduser_update` INT)   BEGIN
@@ -217,6 +220,47 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_contactabilidad_registrar` (`p_
     SELECT LAST_INSERT_ID() AS id_contactabilidad;
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_contratos_actualizar` (IN `p_id_contrato` INT, IN `p_id_paquete` INT, IN `p_id_sector` INT, IN `p_direccion_servicio` VARCHAR(200), IN `p_referencia` VARCHAR(200), IN `p_coordenada` VARCHAR(25), IN `p_fecha_inicio` DATE, IN `p_fecha_fin` DATE, IN `p_fecha_registro` DATE, IN `p_nota` TEXT, IN `p_iduser_update` INT)   BEGIN
+    UPDATE tb_contratos
+    SET
+        id_paquete = p_id_paquete,
+        id_sector = p_id_sector,
+        direccion_servicio = p_direccion_servicio,
+        referencia = p_referencia,
+        coordenada = p_coordenada,
+        fecha_inicio = p_fecha_inicio,
+        fecha_fin = p_fecha_fin,
+        fecha_registro = p_fecha_registro,
+        nota = p_nota,
+        iduser_update = p_iduser_update,
+        update_at = NOW()
+    WHERE id_contrato = p_id_contrato;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_contratos_buscar_cliente` (IN `p_id_cliente` INT)   BEGIN
+    SELECT 
+        c.id_contrato, 
+        sv.tipo_servicio,
+        s.sector, 
+        p.paquete,
+        c.id_usuario_registro,
+        c.referencia,
+        c.fecha_inicio,
+        c.fecha_fin,
+        c.nota,
+        c.direccion_servicio
+    FROM 
+        tb_contratos c
+    JOIN 
+        tb_paquetes p ON c.id_paquete = p.id_paquete
+    JOIN 
+        tb_sectores s ON c.id_sector = s.id_sector
+    JOIN 
+        tb_servicios sv ON p.id_servicio = sv.id_servicio
+    WHERE 
+        c.id_cliente = p_id_cliente AND c.inactive_at IS NULL;
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_contratos_eliminar` (`p_id_contrato` INT, `p_iduser_inactive` INT)   BEGIN
     UPDATE 
     tb_contratos 
@@ -264,10 +308,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_contrato_buscar_id` (`p_id_cont
         WHEN cl.id_persona IS NOT NULL THEN p.nro_doc
         ELSE e.ruc
     END AS num_identificacion,
+    s.id_sector,
     s.sector AS nombre_sector,
     ur_persona.nombres AS nombre_usuario_registro,
     ut_persona.nombres AS nombre_usuario_tecnico,
     c.direccion_servicio,
+    sv.id_servicio,
     sv.servicio,
     t.tipo_paquete,
     c.referencia,
@@ -340,8 +386,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_fichatecnica_buscar_id` (`p_id_
             WHEN cl.id_persona IS NOT NULL THEN p.nro_doc
             ELSE e.ruc
         END AS num_identificacion,
-        sv.servicio,
-        t.tipo_paquete,
+        t.paquete,
+        sv.tipo_servicio,
         c.ficha_instalacion
     FROM
         tb_contratos c
@@ -361,41 +407,64 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_ficha_tecnica_registrar` (`p_id
     WHERE id_contrato = p_id_contrato;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_kardex_buscar` (IN `p_idproducto` INT)   BEGIN
-	SELECT * FROM vw_kardex WHERE id_producto = p_idproducto ORDER BY id_producto DESC;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_incidencia_actualizar` (IN `p_id_incidencia` INT, IN `p_descripcion` TEXT, IN `p_solucion` VARCHAR(50), IN `p_iduser_update` INT)   BEGIN
+    UPDATE tb_incidencias
+    SET descripcion = p_descripcion,
+        solucion = p_solucion,
+        update_at = NOW(),
+        iduser_update = p_iduser_update
+    WHERE id_incidencia = p_id_incidencia;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_kardex_registrar` (IN `p_id_producto` INT, IN `p_fecha` DATE, IN `p_tipo_operacion` VARCHAR(20), IN `p_motivo` VARCHAR(90), IN `p_cantidad` INT, IN `p_valor_unitario_historico` DECIMAL(7,2), IN `p_iduser_create` INT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_incidencia_registrar` (IN `p_id_cliente` INT, IN `p_fecha_incidencia` DATETIME, IN `p_descripcion` TEXT, IN `p_solucion` VARCHAR(50), IN `p_id_tecnico` INT, IN `p_iduser_create` INT)   BEGIN
+    INSERT INTO tb_incidencias (id_cliente, fecha_incidencia, descripcion, solucion, id_tecnico, create_at, iduser_create)
+    VALUES (p_id_cliente, NOW(), p_descripcion, p_solucion, p_id_tecnico, NOW(), p_iduser_create);
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_kardex_buscar` (IN `p_id_producto` INT)   BEGIN
+    SELECT * FROM vw_kardex_listar 
+    WHERE id_producto = p_id_producto 
+    ORDER BY id_kardex DESC;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_kardex_registrar` (IN `p_id_almacen` INT, IN `p_id_producto` INT, IN `p_fecha` DATE, IN `p_id_tipooperacion` INT, IN `p_cantidad` INT, IN `p_valor_unitario_historico` DECIMAL(7,2), IN `p_iduser_create` INT)   BEGIN
     DECLARE p_saldo_kardex_actual INT DEFAULT 0;
+    DECLARE v_movimiento CHAR(1);
+
     
-    SELECT saldo_total
-    INTO p_saldo_kardex_actual
-    FROM tb_kardex
-    WHERE id_producto = p_id_producto
-    ORDER BY fecha DESC
+    SELECT movimiento
+    INTO v_movimiento
+    FROM tb_tipooperacion
+    WHERE id_tipooperacion = p_id_tipooperacion
     LIMIT 1;
 
-    IF p_saldo_kardex_actual IS NULL THEN
-        SET p_saldo_kardex_actual = 0;
+    
+    IF v_movimiento IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Tipo de operaci├│n no encontrado.';
     END IF;
 
-    IF p_tipo_operacion = 'SALIDA' THEN
+    
+    SELECT COALESCE(SUM(CASE WHEN id_tipooperacion = p_id_tipooperacion THEN cantidad ELSE -cantidad END), 0)
+    INTO p_saldo_kardex_actual
+    FROM tb_kardex
+    WHERE id_producto = p_id_producto;
+
+    
+    IF v_movimiento = 'S' THEN
         IF p_saldo_kardex_actual < p_cantidad THEN
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No hay suficiente saldo para la salida.';
         END IF;
-    END IF;
-
-    IF p_tipo_operacion = 'ENTRADA' THEN
-        SET p_saldo_kardex_actual = p_saldo_kardex_actual + p_cantidad;
-    ELSEIF p_tipo_operacion = 'SALIDA' THEN
         SET p_saldo_kardex_actual = p_saldo_kardex_actual - p_cantidad;
+    ELSE
+        SET p_saldo_kardex_actual = p_saldo_kardex_actual + p_cantidad;
     END IF;
 
+    
     INSERT INTO tb_kardex (
+        id_almacen,
         id_producto,
         fecha,
-        tipo_operacion,
-        motivo,
+        id_tipooperacion,
         cantidad,
         saldo_total,
         valor_unico_historico,
@@ -403,10 +472,10 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_kardex_registrar` (IN `p_id_pro
         iduser_create
     )
     VALUES (
+        p_id_almacen,
         p_id_producto,
         p_fecha,
-        p_tipo_operacion,
-        p_motivo,
+        p_id_tipooperacion,
         p_cantidad,
         p_saldo_kardex_actual,
         p_valor_unitario_historico,
@@ -415,23 +484,83 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_kardex_registrar` (IN `p_id_pro
     );
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_paquetes_actualizar` (IN `p_id_paquete` INT, IN `p_id_servicio` INT, IN `p_precio` DECIMAL(7,2), IN `p_tipo_paquete` CHAR(4), IN `p_fecha_inicio` DATE, IN `p_fecha_fin` DATE, IN `p_iduser_update` INT)   BEGIN
-    UPDATE tb_paquetes
-    SET
-        id_servicio = p_id_servicio,
-        precio = p_precio,
-        tipo_paquete = p_tipo_paquete,
-        fecha_inicio = p_fecha_inicio,
-        fecha_fin = p_fecha_fin,
-        update_at = NOW(),
-        iduser_update = p_iduser_update
-    WHERE
-        id_paquete = p_id_paquete;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_listar_tipo_operacion` (IN `tipo_movimiento` CHAR(1))   BEGIN
+    SELECT id_tipooperacion, descripcion, movimiento 
+    FROM tb_tipooperacion 
+    WHERE movimiento = tipo_movimiento;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_paquete_registrar` (IN `p_id_servicio` INT, IN `p_precio` DECIMAL(7,2), IN `p_tipo_paquete` CHAR(4), IN `p_fecha_inicio` DATE, IN `p_fecha_fin` DATE, IN `p_iduser_create` INT)   BEGIN
-    INSERT INTO tb_paquetes (id_servicio, precio, tipo_paquete, fecha_inicio, fecha_fin, iduser_create) 
-    VALUES (p_id_servicio, p_precio, p_tipo_paquete, p_fecha_inicio, p_fecha_fin, p_iduser_create);
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_paquete_actualizar` (`p_id_paquete` INT, `p_id_servicio` INT, `p_id_servicio2` INT, `p_id_servicio3` INT, `p_id_servicio4` INT, `p_paquete` VARCHAR(250), `p_precio` DECIMAL(7,2), `p_duracion` JSON, `p_iduser_update` INT)   BEGIN
+	UPDATE tb_paquetes 
+    SET 
+		id_servicio = p_id_servicio,
+        id_servicio2 = p_id_servicio2,
+        id_servicio3 = p_id_servicio3,
+        id_servicio4 = p_id_servicio4,
+        paquete = p_paquete,
+        precio = p_precio,
+        duracion = p_duracion,
+        iduser_update = p_iduser_update,
+        update_at = NOW()
+	WHERE
+		id_paquete = p_id_paquete;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_paquete_buscar_id` (IN `p_id_paquete` INT)   BEGIN
+    SELECT
+        p.id_paquete,
+        p.id_servicio, 
+        p.id_servicio2,
+        p.id_servicio3, 
+        p.id_servicio4,
+        p.paquete,
+        CONCAT_WS(' + ', s.tipo_servicio, s2.tipo_servicio, s3.tipo_servicio, s4.tipo_servicio) AS tipo_servicio,
+        s.servicio,
+        p.precio,
+        p.duracion,
+        p.create_at,
+        p.update_at,
+        p.inactive_at,
+        p.iduser_create,
+        p.iduser_update,
+        p.iduser_inactive
+    FROM
+        tb_paquetes p
+        LEFT JOIN tb_servicios s ON p.id_servicio = s.id_servicio
+        LEFT JOIN tb_servicios s2 ON p.id_servicio2 = s2.id_servicio
+        LEFT JOIN tb_servicios s3 ON p.id_servicio3 = s3.id_servicio
+        LEFT JOIN tb_servicios s4 ON p.id_servicio4 = s4.id_servicio
+    WHERE
+        p.id_paquete = p_id_paquete;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_paquete_buscar_idServicio` (IN `p_id_servicio` INT)   BEGIN 
+    SELECT 
+        p.id_paquete, 
+        p.paquete, 
+        p.precio, 
+        p.duracion,
+        s.tipo_servicio,
+        p.inactive_at
+    FROM 
+        tb_paquetes p
+        LEFT JOIN tb_servicios s ON p.id_servicio = s.id_servicio
+    WHERE 
+        p.id_servicio = p_id_servicio;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_paquete_eliminar` (`p_id_paquete` INT, `p_iduser_inactive` INT)   BEGIN
+	UPDATE tb_paquetes
+    SET 	
+		inactive_at = NOW(),
+        iduser_inactive = p_iduser_inactive
+	WHERE 
+		id_paquete = p_id_paquete;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_paquete_registrar` (IN `p_id_servicio` INT, IN `p_id_servicio2` INT, IN `p_id_servicio3` INT, IN `p_id_servicio4` INT, IN `p_paquete` VARCHAR(250), IN `p_precio` DECIMAL(7,2), IN `p_duracion` JSON, IN `p_iduser_create` INT)   BEGIN
+    INSERT INTO tb_paquetes (id_servicio, id_servicio2, id_servicio3, id_servicio4, paquete, precio, duracion, iduser_create) 
+    VALUES (p_id_servicio, p_id_servicio2, p_id_servicio3, p_id_servicio4, p_paquete, p_precio, p_duracion, p_iduser_create);
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_permisos_actualizar_id` (`p_id_rol` INT, `p_permisos` JSON, `p_iduser_update` INT)   BEGIN
@@ -490,22 +619,22 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_persona_cliente_existencia` (IN
     WHERE p.nro_doc = p_dni;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_productos_actualizar` (IN `p_id_producto` INT, IN `p_marca` VARCHAR(30), IN `p_tipo_producto` VARCHAR(60), IN `p_modelo` VARCHAR(30), IN `p_precio_actual` DECIMAL(7,2), IN `p_codigo_barra` VARCHAR(120), IN `p_iduser_update` INT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_productos_actualizar` (IN `p_id_producto` INT, IN `p_id_marca` INT, IN `p_id_tipo` INT, IN `p_idUnidad` INT, IN `p_modelo` VARCHAR(30), IN `p_precio_actual` DECIMAL(7,2), IN `p_iduser_update` INT)   BEGIN
     UPDATE tb_productos 
     SET 
-        marca = p_marca,
-        tipo_producto = p_tipo_producto,
+        id_marca = p_id_marca,
+        id_tipo = p_id_tipo,
+        id_unidad = p_idUnidad,
         modelo = p_modelo,
-        iduser_update = p_iduser_update,
         precio_actual = p_precio_actual,
-        codigo_barra = p_codigo_barra,
-        update_at = NOW()
+        update_at = NOW(),
+        iduser_update = p_iduser_update
     WHERE id_producto = p_id_producto;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_productos_registrar` (IN `p_marca` VARCHAR(30), IN `p_tipo_producto` VARCHAR(60), IN `p_modelo` VARCHAR(30), IN `p_precio_actual` DECIMAL(7,2), IN `p_codigo_barra` VARCHAR(120), IN `p_iduser_create` INT)   BEGIN
-    INSERT INTO tb_productos (marca, tipo_producto, modelo, precio_actual, codigo_barra, create_at, iduser_create)
-    VALUES (p_marca, p_tipo_producto, p_modelo, p_precio_actual, p_codigo_barra, NOW(), p_iduser_create);
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_productos_registrar` (IN `p_id_marca` INT, IN `p_id_tipo` INT, IN `p_id_unidad` INT, IN `p_modelo` VARCHAR(70), IN `p_precio_actual` DECIMAL(7,2), IN `p_codigo_barra` VARCHAR(120), IN `p_iduser_create` INT)   BEGIN
+    INSERT INTO tb_productos (id_marca, id_tipo, id_unidad, modelo, precio_actual, codigo_barra, create_at, iduser_create)
+    VALUES (p_id_marca, p_id_tipo, p_id_unidad, p_modelo, p_precio_actual, p_codigo_barra, NOW(), p_iduser_create);
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_registrar_fichasoporte` (IN `p_id_contrato` INT, IN `p_id_tipo_soporte` INT, IN `p_id_tecnico` INT, IN `p_fecha_hora_solicitud` DATETIME, IN `p_fecha_hora_asistencia` DATETIME, IN `p_prioridad` VARCHAR(50), IN `p_soporte` JSON, IN `p_descripcion_problema` TEXT, IN `p_descripcion_solucion` TEXT, IN `p_iduser_create` INT)   BEGIN
@@ -571,6 +700,17 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_responsables_registrar` (IN `p_
     );
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_roles_activar` (`p_id_rol` INT, `p_iduser_update` INT)   BEGIN
+    UPDATE tb_roles
+    SET
+        inactive_at = NULL,
+        iduser_inactive = NULL,
+        iduser_update = p_iduser_update,
+        update_at = NOW()
+    WHERE
+        id_rol = p_id_rol;
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_roles_actualizar` (`p_id_rol` INT, `p_rol` VARCHAR(30), `p_iduser_update` INT)   BEGIN
     UPDATE tb_roles
     SET 
@@ -611,9 +751,10 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_sectores_registrar` (`p_id_dist
     VALUES (p_id_distrito, p_sector, p_iduser_create);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_servicio_actualizar` (IN `p_id_servicio` INT, IN `p_servicio` VARCHAR(50), IN `p_iduser_update` INT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_servicio_actualizar` (IN `p_id_servicio` INT, IN `p_tipo_servicio` CHAR(4), IN `p_servicio` VARCHAR(50), IN `p_iduser_update` INT)   BEGIN
     UPDATE tb_servicios 
     SET
+        tipo_servicio = p_tipo_servicio,
         servicio = p_servicio,
         update_at = NOW(),
         iduser_update = p_iduser_update
@@ -630,9 +771,20 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_servicio_eliminar` (IN `p_id_se
         id_servicio = p_id_servicio;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_servicio_registrar` (IN `p_servicio` VARCHAR(50), IN `p_iduser_create` INT)   BEGIN 
-    INSERT INTO tb_servicios (servicio, iduser_create) 
-    VALUES (p_servicio, p_iduser_create); 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_servicio_reactivar` (IN `p_id_servicio` INT, IN `p_iduser_update` INT)   BEGIN
+    UPDATE tb_servicios 
+    SET
+        inactive_at = NULL,
+        iduser_inactive = NULL,
+        update_at = NOW(),
+        iduser_update = p_iduser_update
+    WHERE 
+        id_servicio = p_id_servicio;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_servicio_registrar` (IN `p_tipo_servicio` CHAR(4), IN `p_servicio` VARCHAR(50), IN `p_iduser_create` INT)   BEGIN 
+    INSERT INTO tb_servicios (tipo_servicio, servicio, iduser_create) 
+    VALUES (p_tipo_servicio, p_servicio, p_iduser_create); 
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_soporte_actualizar` (IN `p_id_soporte` INT, IN `p_id_contrato` INT, IN `p_id_tipo_soporte` INT, IN `p_id_tecnico` INT, IN `p_fecha_hora_asistencia` DATETIME, IN `p_prioridad` VARCHAR(50), IN `p_soporte` JSON, IN `p_descripcion_solucion` TEXT, IN `p_iduser_update` INT)   BEGIN
@@ -648,6 +800,45 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_soporte_actualizar` (IN `p_id_s
         update_at = NOW(),
         iduser_update = p_iduser_update
     WHERE id_soporte = p_id_soporte;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_soporte_filtrar_prioridad` (IN `p_prioridad` VARCHAR(50))   BEGIN
+    SELECT 
+        s.id_soporte,
+        s.prioridad,
+        s.soporte,
+        s.descripcion_problema,
+        s.descripcion_solucion,
+        ts.tipo_soporte,
+        c.id_cliente,
+        CASE
+            WHEN cl.id_persona IS NOT NULL THEN CONCAT(p_cliente.nombres, ' ', p_cliente.apellidos)
+            WHEN cl.id_empresa IS NOT NULL THEN e.razon_social
+        END AS nombre_cliente,
+        c.direccion_servicio,
+        r.id_usuario AS id_tecnico,
+        CONCAT(p_tecnico.nombres, ' ', p_tecnico.apellidos) AS nombre_tecnico
+    FROM 
+        tb_soporte s
+    LEFT JOIN 
+        tb_contratos c ON s.id_contrato = c.id_contrato
+    LEFT JOIN 
+        tb_tipo_soporte ts ON s.id_tipo_soporte = ts.id_tipo_soporte
+    LEFT JOIN 
+        tb_responsables r ON s.id_tecnico = r.id_responsable
+    LEFT JOIN 
+        tb_usuarios u ON r.id_usuario = u.id_usuario
+    LEFT JOIN 
+        tb_personas p_tecnico ON u.id_persona = p_tecnico.id_persona
+    LEFT JOIN 
+        tb_clientes cl ON c.id_cliente = cl.id_cliente
+    LEFT JOIN 
+        tb_personas p_cliente ON cl.id_persona = p_cliente.id_persona 
+    LEFT JOIN 
+        tb_empresas e ON cl.id_empresa = e.id_empresa 
+    WHERE 
+        (p_prioridad IS NULL OR TRIM(p_prioridad) = '' OR LOWER(TRIM(s.prioridad)) = LOWER(TRIM(p_prioridad)))
+        AND LOWER(TRIM(s.prioridad)) != 'completo';
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_tipo_soporte_registrar` (`p_tipo_soporte` VARCHAR(50), `p_iduser_create` INT)   BEGIN
@@ -694,6 +885,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_usuario_buscar_username` (IN `p
     WHERE nombre_user = p_username;
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_eliminar_incidencia` (IN `p_id_incidencia` INT, IN `p_iduser_inactive` INT)   BEGIN
+    UPDATE tb_incidencias
+    SET inactive_at = NOW(),
+        iduser_inactive = p_iduser_inactive
+    WHERE id_incidencia = p_id_incidencia;
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_usuario_eliminar` (IN `p_id_usuario` INT, IN `p_iduser_inactive` INT)   BEGIN
     UPDATE tb_usuarios
     SET inactive_at = NOW(), 
@@ -702,6 +900,32 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_usuario_eliminar` (IN `p_id_usua
 END$$
 
 DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tb_almacen`
+--
+
+CREATE TABLE `tb_almacen` (
+  `id_almacen` int(11) NOT NULL,
+  `nombre_almacen` varchar(65) NOT NULL,
+  `ubicacion` varchar(120) DEFAULT NULL,
+  `inactive_at` datetime DEFAULT NULL,
+  `iduser_inactive` int(11) DEFAULT NULL,
+  `create_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `update_at` datetime DEFAULT NULL,
+  `iduser_create` int(11) NOT NULL,
+  `iduser_update` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `tb_almacen`
+--
+
+INSERT INTO `tb_almacen` (`id_almacen`, `nombre_almacen`, `ubicacion`, `inactive_at`, `iduser_inactive`, `create_at`, `update_at`, `iduser_create`, `iduser_update`) VALUES
+(1, 'Almacen 1', NULL, NULL, NULL, '2024-10-30 14:43:33', NULL, 1, NULL),
+(2, 'Almacen 2', NULL, NULL, NULL, '2024-10-30 14:43:33', NULL, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -715,6 +939,7 @@ CREATE TABLE `tb_cajas` (
   `descripcion` varchar(100) NOT NULL,
   `numero_entradas` tinyint(4) NOT NULL,
   `id_sector` int(11) NOT NULL,
+  `coordenadas` varchar(50) NOT NULL,
   `create_at` datetime NOT NULL DEFAULT current_timestamp(),
   `update_at` datetime DEFAULT NULL,
   `inactive_at` datetime DEFAULT NULL,
@@ -722,6 +947,22 @@ CREATE TABLE `tb_cajas` (
   `iduser_update` int(11) DEFAULT NULL,
   `iduser_inactive` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `tb_cajas`
+--
+
+INSERT INTO `tb_cajas` (`id_caja`, `nombre`, `descripcion`, `numero_entradas`, `id_sector`, `coordenadas`, `create_at`, `update_at`, `inactive_at`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
+(1, 'Caja 1', 'Cerca del estadio', 16, 11, '-13.390019838079903, -76.14898062581466', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(2, 'Caja 2', 'Plaza san Isidro', 8, 19, '-13.396082705347906, -76.13534364004165', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(3, 'Caja 3', 'Cerca de la Plaza', 8, 6, '-13.4277387660967, -76.16422117136221', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(4, 'Caja 4', 'San Nicolas', 16, 6, '-13.432393655576314, -76.1627322889994', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(5, 'Caja 5', 'Prolongacion Cañete', 16, 11, '-13.393627228237747, -76.14441531745013', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(6, 'Caja 6', 'Tecnologico Chincha', 8, 19, '-13.404627155707574, -76.13712932116213', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(7, 'Caja 7', 'Los Bancarios', 8, 20, '-13.42826126892918, -76.135733419194', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(8, 'Caja 8', 'Plaza Chincha', 16, 20, '-13.41819520203595, -76.13222851544388', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(9, 'Caja 9', 'Parque Toledo', 8, 20, '-13.417732015444551, -76.11985007949754', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(10, 'Caja 10', 'Plaza de pueblo nuevo', 16, 26, '-13.404169746696624, -76.12736834665132', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -749,26 +990,26 @@ CREATE TABLE `tb_clientes` (
 --
 
 INSERT INTO `tb_clientes` (`id_cliente`, `id_persona`, `id_empresa`, `direccion`, `referencia`, `coordenadas`, `create_at`, `update_at`, `inactive_at`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
-(1, 6, NULL, 'Av. Siempre Viva 123, Springfield', 'Frente al parque central', '-1', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(2, NULL, 2, 'Calle Falsa 456, Gotham', 'A una cuadra del cine', '-1', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(3, 8, NULL, 'Av. Los Pinos 789, Lima', 'Esquina con Av. Las Flores', '-1', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(4, NULL, 4, 'Jirón de la Unión 100, Lima', 'A media cuadra de la Plaza Mayor', '-1', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(5, 10, NULL, 'Calle Mayor 101, Barcelona', 'Cerca del mercado central', '-1', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(6, 11, NULL, 'Av. Principal 500, Ciudad de México', 'Cerca de la estación del metro', '-1', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(7, 12, NULL, 'Calle de los Sueños 123, Madrid', 'Al lado del parque Retiro', '-1', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(8, 13, NULL, 'Blvd. de los Héroes 222, Buenos Aires', 'Cerca de la Plaza de Mayo', '-1', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(9, 14, NULL, 'Paseo del Río 45, Santiago', 'Frente al mall Costanera', '-1', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(10, 15, NULL, 'Calle de la Amistad 789, Bogotá', 'Cerca del centro comercial', '-1', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(11, 16, NULL, 'Av. de la Independencia 90, Quito', 'A dos cuadras del parque El Ejido', '-1', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(12, 17, NULL, 'Calle de la Esperanza 321, Caracas', 'Cerca de la Plaza Bolívar', '-1', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(13, 18, NULL, 'Av. de la Libertad 654, Lima', 'Cerca de la embajada', '-1', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(14, 19, NULL, 'Calle del Comercio 555, La Paz', 'Cerca de la Plaza Murillo', '-1', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(15, 20, NULL, 'Calle de la Cultura 888, San José', 'Frente al Museo Nacional', '-1', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(16, 21, NULL, 'Av. de los Árboles 100, Montevideo', 'Cerca del Parque Rodó', '-1', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(17, 22, NULL, 'Calle de la Innovación 400, Asunción', 'Al lado de la Universidad', '-1', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(18, 23, NULL, 'Av. de la Tecnología 234, Lima', 'Frente al Polideportivo', '-1', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(19, 24, NULL, 'Calle de la Creatividad 567, Santiago', 'Cerca del centro cultural', '-1', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(20, 25, NULL, 'Calle de los Recuerdos 890, Madrid', 'A una cuadra del teatro', '-1', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL);
+(1, 6, NULL, 'Av. Siempre Viva 123, Springfield', 'Frente al parque central', '-1', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(2, NULL, 2, 'Calle Falsa 456, Gotham', 'A una cuadra del cine', '-1', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(3, 8, NULL, 'Av. Los Pinos 789, Lima', 'Esquina con Av. Las Flores', '-1', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(4, NULL, 4, 'Jirón de la Unión 100, Lima', 'A media cuadra de la Plaza Mayor', '-1', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(5, 10, NULL, 'Calle Mayor 101, Barcelona', 'Cerca del mercado central', '-1', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(6, 11, NULL, 'Av. Principal 500, Ciudad de México', 'Cerca de la estación del metro', '-1', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(7, 12, NULL, 'Calle de los Sueños 123, Madrid', 'Al lado del parque Retiro', '-1', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(8, 13, NULL, 'Blvd. de los Héroes 222, Buenos Aires', 'Cerca de la Plaza de Mayo', '-1', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(9, 14, NULL, 'Paseo del Río 45, Santiago', 'Frente al mall Costanera', '-1', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(10, 15, NULL, 'Calle de la Amistad 789, Bogotá', 'Cerca del centro comercial', '-1', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(11, 16, NULL, 'Av. de la Independencia 90, Quito', 'A dos cuadras del parque El Ejido', '-1', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(12, 17, NULL, 'Calle de la Esperanza 321, Caracas', 'Cerca de la Plaza Bolívar', '-1', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(13, 18, NULL, 'Av. de la Libertad 654, Lima', 'Cerca de la embajada', '-1', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(14, 19, NULL, 'Calle del Comercio 555, La Paz', 'Cerca de la Plaza Murillo', '-1', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(15, 20, NULL, 'Calle de la Cultura 888, San José', 'Frente al Museo Nacional', '-1', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(16, 21, NULL, 'Av. de los Árboles 100, Montevideo', 'Cerca del Parque Rodó', '-1', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(17, 22, NULL, 'Calle de la Innovación 400, Asunción', 'Al lado de la Universidad', '-1', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(18, 23, NULL, 'Av. de la Tecnología 234, Lima', 'Frente al Polideportivo', '-1', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(19, 24, NULL, 'Calle de la Creatividad 567, Santiago', 'Cerca del centro cultural', '-1', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(20, 25, NULL, 'Calle de los Recuerdos 890, Madrid', 'A una cuadra del teatro', '-1', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -798,27 +1039,27 @@ CREATE TABLE `tb_contactabilidad` (
 --
 
 INSERT INTO `tb_contactabilidad` (`id_contactabilidad`, `id_persona`, `id_empresa`, `id_paquete`, `fecha_hora_contacto`, `direccion_servicio`, `nota`, `fecha_limite`, `create_at`, `update_at`, `inactive_at`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
-(1, 20, NULL, 1, '2024-01-10 14:30:00', 'Av. San Martín 500, Chincha Alta', 'Se realizó la instalación del servicio.', NULL, '2024-10-17 12:22:31', NULL, NULL, 1, NULL, NULL),
-(2, NULL, 21, 2, '2024-01-12 10:15:00', 'Calle Ayacucho 345, Chincha Alta', 'Cliente solicitó soporte técnico.', NULL, '2024-10-17 12:22:31', NULL, NULL, 1, NULL, NULL),
-(3, 22, NULL, 3, '2024-01-14 11:45:00', 'Calle Grau 125, Chincha Alta', 'Se acordó la renovación del contrato.', NULL, '2024-10-17 12:22:31', NULL, NULL, 1, NULL, NULL),
-(4, NULL, 23, 4, '2024-01-16 13:00:00', 'Av. Benavides 567, Chincha Alta', 'Se envió la propuesta de nuevos servicios.', NULL, '2024-10-17 12:22:31', NULL, NULL, 1, NULL, NULL),
-(5, 24, NULL, 5, '2024-01-18 09:30:00', 'Calle Libertad 890, Chincha Alta', 'Cliente solicitó información adicional.', NULL, '2024-10-17 12:22:31', NULL, NULL, 1, NULL, NULL),
-(6, NULL, 25, 6, '2024-01-20 12:00:00', 'Jirón Pisco 300, Chincha Alta', 'Se confirmó la fecha de instalación.', NULL, '2024-10-17 12:22:31', NULL, NULL, 1, NULL, NULL),
-(7, 26, NULL, 7, '2024-01-22 14:45:00', 'Av. América 444, Chincha Alta', 'Se realizó el seguimiento al cliente.', NULL, '2024-10-17 12:22:31', NULL, NULL, 1, NULL, NULL),
-(8, NULL, 27, 8, '2024-01-24 10:00:00', 'Calle Bolognesi 678, Chincha Alta', 'Cliente solicitó una ampliación del servicio.', NULL, '2024-10-17 12:22:31', NULL, NULL, 1, NULL, NULL),
-(9, 28, NULL, 9, '2024-01-26 16:15:00', 'Av. Progreso 234, Chincha Alta', 'Se completó la instalación del servicio adicional.', NULL, '2024-10-17 12:22:31', NULL, NULL, 1, NULL, NULL),
-(10, NULL, 29, 10, '2024-01-28 11:30:00', 'Calle Comercio 123, Chincha Alta', 'Cliente confirmó su satisfacción con el servicio.', NULL, '2024-10-17 12:22:31', NULL, NULL, 1, NULL, NULL),
-(11, 30, NULL, 11, '2024-01-30 15:00:00', 'Av. Victoria 876, Chincha Alta', 'Se acordó una visita técnica para revisar el servicio.', NULL, '2024-10-17 12:22:31', NULL, NULL, 1, NULL, NULL),
-(12, NULL, 31, 12, '2024-02-01 09:45:00', 'Calle Callao 789, Chincha Alta', 'Cliente solicitó una mejora en el plan contratado.', NULL, '2024-10-17 12:22:31', NULL, NULL, 1, NULL, NULL),
-(13, 32, NULL, 13, '2024-02-03 13:15:00', 'Jirón Lima 321, Chincha Alta', 'Se finalizó la modificación solicitada.', NULL, '2024-10-17 12:22:31', NULL, NULL, 1, NULL, NULL),
-(14, NULL, 33, 14, '2024-02-05 16:00:00', 'Calle Loreto 654, Chincha Alta', 'Se discutió la posibilidad de un nuevo contrato.', NULL, '2024-10-17 12:22:31', NULL, NULL, 1, NULL, NULL),
-(15, 34, NULL, 15, '2024-02-07 11:45:00', 'Av. Mariscal Castilla 555, Chincha Alta', 'Se realizó una revisión técnica.', NULL, '2024-10-17 12:22:31', NULL, NULL, 1, NULL, NULL),
-(16, NULL, 35, 16, '2024-02-09 14:30:00', 'Calle Zepita 412, Chincha Alta', 'Cliente aceptó el nuevo contrato propuesto.', NULL, '2024-10-17 12:22:31', NULL, NULL, 1, NULL, NULL),
-(17, 36, NULL, 17, '2024-02-11 12:15:00', 'Jirón Túpac Amaru 876, Chincha Alta', 'Se confirmó el pago del nuevo contrato.', NULL, '2024-10-17 12:22:31', NULL, NULL, 1, NULL, NULL),
-(18, NULL, 37, 18, '2024-02-13 09:30:00', 'Calle Junín 210, Chincha Alta', 'Se discutió un posible cambio en los términos del contrato.', NULL, '2024-10-17 12:22:31', NULL, NULL, 1, NULL, NULL),
-(19, 38, NULL, 19, '2024-02-15 15:45:00', 'Av. Nicolás de Piérola 654, Chincha Alta', 'Cliente solicitó una visita técnica adicional.', NULL, '2024-10-17 12:22:31', NULL, NULL, 1, NULL, NULL),
-(20, NULL, 39, 20, '2024-02-17 13:00:00', 'Calle Sucre 444, Chincha Alta', 'Se realizó el mantenimiento solicitado.', NULL, '2024-10-17 12:22:31', NULL, NULL, 1, NULL, NULL),
-(21, 40, NULL, 21, '2024-02-19 10:30:00', 'Av. Arica 765, Chincha Alta', 'Se acordó una renovación del plan actual.', NULL, '2024-10-17 12:22:31', NULL, NULL, 1, NULL, NULL);
+(1, 20, NULL, 1, '2024-01-10 14:30:00', 'Av. San Martín 500, Chincha Alta', 'Se realizó la instalación del servicio.', NULL, '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(2, NULL, 21, 2, '2024-01-12 10:15:00', 'Calle Ayacucho 345, Chincha Alta', 'Cliente solicitó soporte técnico.', NULL, '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(3, 22, NULL, 3, '2024-01-14 11:45:00', 'Calle Grau 125, Chincha Alta', 'Se acordó la renovación del contrato.', NULL, '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(4, NULL, 23, 4, '2024-01-16 13:00:00', 'Av. Benavides 567, Chincha Alta', 'Se envió la propuesta de nuevos servicios.', NULL, '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(5, 24, NULL, 5, '2024-01-18 09:30:00', 'Calle Libertad 890, Chincha Alta', 'Cliente solicitó información adicional.', NULL, '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(6, NULL, 25, 6, '2024-01-20 12:00:00', 'Jirón Pisco 300, Chincha Alta', 'Se confirmó la fecha de instalación.', NULL, '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(7, 26, NULL, 7, '2024-01-22 14:45:00', 'Av. América 444, Chincha Alta', 'Se realizó el seguimiento al cliente.', NULL, '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(8, NULL, 27, 8, '2024-01-24 10:00:00', 'Calle Bolognesi 678, Chincha Alta', 'Cliente solicitó una ampliación del servicio.', NULL, '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(9, 28, NULL, 9, '2024-01-26 16:15:00', 'Av. Progreso 234, Chincha Alta', 'Se completó la instalación del servicio adicional.', NULL, '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(10, NULL, 29, 10, '2024-01-28 11:30:00', 'Calle Comercio 123, Chincha Alta', 'Cliente confirmó su satisfacción con el servicio.', NULL, '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(11, 30, NULL, 11, '2024-01-30 15:00:00', 'Av. Victoria 876, Chincha Alta', 'Se acordó una visita técnica para revisar el servicio.', NULL, '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(12, NULL, 31, 12, '2024-02-01 09:45:00', 'Calle Callao 789, Chincha Alta', 'Cliente solicitó una mejora en el plan contratado.', NULL, '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(13, 32, NULL, 13, '2024-02-03 13:15:00', 'Jirón Lima 321, Chincha Alta', 'Se finalizó la modificación solicitada.', NULL, '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(14, NULL, 33, 14, '2024-02-05 16:00:00', 'Calle Loreto 654, Chincha Alta', 'Se discutió la posibilidad de un nuevo contrato.', NULL, '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(15, 34, NULL, 15, '2024-02-07 11:45:00', 'Av. Mariscal Castilla 555, Chincha Alta', 'Se realizó una revisión técnica.', NULL, '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(16, NULL, 35, 16, '2024-02-09 14:30:00', 'Calle Zepita 412, Chincha Alta', 'Cliente aceptó el nuevo contrato propuesto.', NULL, '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(17, 36, NULL, 17, '2024-02-11 12:15:00', 'Jirón Túpac Amaru 876, Chincha Alta', 'Se confirmó el pago del nuevo contrato.', NULL, '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(18, NULL, 37, 18, '2024-02-13 09:30:00', 'Calle Junín 210, Chincha Alta', 'Se discutió un posible cambio en los términos del contrato.', NULL, '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(19, 38, NULL, 19, '2024-02-15 15:45:00', 'Av. Nicolás de Piérola 654, Chincha Alta', 'Cliente solicitó una visita técnica adicional.', NULL, '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(20, NULL, 39, 20, '2024-02-17 13:00:00', 'Calle Sucre 444, Chincha Alta', 'Se realizó el mantenimiento solicitado.', NULL, '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(21, 40, NULL, 21, '2024-02-19 10:30:00', 'Av. Arica 765, Chincha Alta', 'Se acordó una renovación del plan actual.', NULL, '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -853,26 +1094,26 @@ CREATE TABLE `tb_contratos` (
 --
 
 INSERT INTO `tb_contratos` (`id_contrato`, `id_cliente`, `id_paquete`, `id_sector`, `id_usuario_registro`, `id_usuario_tecnico`, `direccion_servicio`, `referencia`, `ficha_instalacion`, `coordenada`, `fecha_inicio`, `fecha_fin`, `fecha_registro`, `nota`, `create_at`, `update_at`, `inactive_at`, `iduser_update`, `iduser_inactive`) VALUES
-(1, 1, 1, 20, 1, NULL, 'Av. Siempre Viva 123, Springfield', 'Cerca de la plaza principal', NULL, '12.3456, -65.4321', '2024-01-15', '2024-06-15', '2024-01-01', 'Primer contrato: Servicio WISP Básico con 6 meses de duración', '2024-10-17 12:22:31', NULL, NULL, NULL, NULL),
-(2, 2, 4, 20, 1, NULL, 'Calle Falsa 456, Gotham', 'Cerca del cine local', NULL, '34.5678, -76.5432', '2024-02-01', '2024-07-01', '2024-02-01', 'Renovación de contrato: Fibra + Cable por 6 meses', '2024-10-17 12:22:31', NULL, NULL, NULL, NULL),
-(3, 3, 3, 20, 1, NULL, 'Av. Los Pinos 789, Lima', 'Esquina con Av. Las Flores', NULL, '23.4567, -54.3210', '2024-03-01', '2024-08-01', '2024-03-01', 'Contrato nuevo: Instalación de Fibra + revisión mensual', '2024-10-17 12:22:31', NULL, NULL, NULL, NULL),
-(4, 4, 4, 20, 1, NULL, 'Jirón de la Unión 100, Lima', 'Frente a la Plaza Mayor', NULL, '45.6789, -43.2109', '2024-04-01', '2025-04-01', '2024-04-01', 'Renovación anual: Descuento aplicado por contrato anual', '2024-10-17 12:22:31', NULL, NULL, NULL, NULL),
-(5, 5, 5, 20, 1, NULL, 'Calle Mayor 101, Barcelona', 'Cerca del mercado central', NULL, '56.7890, -32.1098', '2024-05-01', '2025-05-01', '2024-05-01', 'Contrato especial por volumen: Servicio completo por 1 año', '2024-10-17 12:22:31', NULL, NULL, NULL, NULL),
-(6, 6, 1, 20, 1, NULL, 'Av. del Libertador 200, Buenos Aires', 'A la vuelta de la oficina', NULL, '12.0011, -66.1122', '2024-06-01', '2024-11-01', '2024-06-01', 'Servicio premium incluido en el contrato WISP', '2024-10-17 12:22:31', NULL, NULL, NULL, NULL),
-(7, 7, 2, 20, 1, NULL, 'Calle de la Alegría 333, Bogotá', 'Cerca de la estación de buses', NULL, '34.3333, -76.6666', '2024-07-01', '2024-12-01', '2024-07-01', 'Contrato por 6 meses: Soporte técnico 24/7 incluido', '2024-10-17 12:22:31', NULL, NULL, NULL, NULL),
-(8, 8, 3, 20, 1, NULL, 'Paseo del Prado 150, Madrid', 'Cerca del parque del Retiro', NULL, '23.8888, -54.7777', '2024-08-01', '2025-01-01', '2024-08-01', 'Contrato semestral: Mantenimiento semestral incluido', '2024-10-17 12:22:31', NULL, NULL, NULL, NULL),
-(9, 9, 4, 20, 1, NULL, 'Av. de la Paz 400, Santiago', 'Frente al hotel Plaza', NULL, '45.2222, -43.8888', '2024-09-01', '2025-03-01', '2024-09-01', 'Promoción especial: Contrato de 6 meses con descuento', '2024-10-17 12:22:31', NULL, NULL, NULL, NULL),
-(10, 10, 5, 20, 1, NULL, 'Calle del Comercio 789, Lima', 'Cerca de la Plaza San Martín', NULL, '56.4444, -32.5555', '2024-10-01', '2025-04-01', '2024-10-01', 'Contrato especial: Condiciones personalizadas aplicadas', '2024-10-17 12:22:31', NULL, NULL, NULL, NULL),
-(11, 11, 2, 20, 1, NULL, 'Av. Principal 111, Quito', 'Frente al centro comercial', NULL, '11.1111, -66.6666', '2024-02-15', '2024-08-15', '2024-02-15', 'Contrato estándar de WISP con soporte adicional', '2024-10-17 12:22:31', NULL, NULL, NULL, NULL),
-(12, 12, 3, 20, 1, NULL, 'Calle Secundaria 222, Caracas', 'Cerca del parque central', NULL, '22.2222, -55.5555', '2024-03-10', '2024-09-10', '2024-03-10', 'Contrato de Fibra: Instalación y soporte técnico semestral', '2024-10-17 12:22:31', NULL, NULL, NULL, NULL),
-(13, 13, 4, 20, 1, NULL, 'Av. Terciaria 333, Montevideo', 'Frente al museo histórico', NULL, '33.3333, -44.4444', '2024-04-20', '2024-10-20', '2024-04-20', 'Renovación de contrato: Instalación de Fibra con soporte anual', '2024-10-17 12:22:31', NULL, NULL, NULL, NULL),
-(14, 14, 5, 20, 1, NULL, 'Jirón Cuarto 444, Lima', 'Esquina con la calle Pinos', NULL, '44.4444, -33.3333', '2024-05-05', '2024-11-05', '2024-05-05', 'Contrato a medida: Servicio de Fibra + descuento corporativo', '2024-10-17 12:22:31', NULL, NULL, NULL, NULL),
-(15, 15, 1, 20, 1, NULL, 'Calle Final 555, La Paz', 'Cerca del edificio principal', NULL, '55.5555, -22.2222', '2024-06-01', '2024-12-01', '2024-06-01', 'Contrato nuevo: Servicio WISP básico con soporte trimestral', '2024-10-17 12:22:31', NULL, NULL, NULL, NULL),
-(16, 16, 1, 20, 1, NULL, 'Calle Estrella 111, Lima', 'Cerca de la Plaza de Armas', NULL, '55.5555, -22.2222', '2024-07-01', '2024-12-01', '2024-07-01', 'Contrato: Servicio WISP básico con soporte técnico mensual', '2024-10-17 12:22:31', NULL, NULL, NULL, NULL),
-(17, 17, 2, 20, 1, NULL, 'Calle Estrella 222, Lima', 'Cerca del Parque Kennedy', NULL, '44.4444, -33.3333', '2024-08-01', '2025-02-01', '2024-08-01', 'Contrato: Servicio Cable estándar con revisión mensual', '2024-10-17 12:22:31', NULL, NULL, NULL, NULL),
-(18, 18, 3, 20, 1, NULL, 'Calle Estrella 333, Lima', 'Cerca del Parque Universitario', NULL, '33.3333, -44.4444', '2024-09-01', '2025-03-01', '2024-09-01', 'Contrato: Instalación de Fibra con soporte semestral', '2024-10-17 12:22:31', NULL, NULL, NULL, NULL),
-(19, 19, 4, 20, 1, NULL, 'Calle Estrella 444, Lima', 'Cerca del Centro Comercial', NULL, '22.2222, -55.5555', '2024-10-01', '2025-04-01', '2024-10-01', 'Contrato: Mantenimiento de Fibra con soporte anual', '2024-10-17 12:22:31', NULL, NULL, NULL, NULL),
-(20, 20, 5, 20, 1, NULL, 'Calle Estrella 555, Lima', 'Cerca del Aeropuerto', NULL, '11.1111, -66.6666', '2024-11-01', '2025-05-01', '2024-11-01', 'Contrato: Servicio especial por volumen, 12 meses', '2024-10-17 12:22:31', NULL, NULL, NULL, NULL);
+(1, 1, 1, 20, 1, NULL, 'Av. Siempre Viva 123, Springfield', 'Cerca de la plaza principal', NULL, '12.3456, -65.4321', '2024-01-15', '2024-06-15', '2024-01-01', 'Primer contrato: Servicio WISP Básico con 6 meses de duración', '2024-10-30 14:43:33', NULL, NULL, NULL, NULL),
+(2, 2, 4, 20, 1, NULL, 'Calle Falsa 456, Gotham', 'Cerca del cine local', NULL, '34.5678, -76.5432', '2024-02-01', '2024-07-01', '2024-02-01', 'Renovación de contrato: Fibra + Cable por 6 meses', '2024-10-30 14:43:33', NULL, NULL, NULL, NULL),
+(3, 3, 3, 20, 1, NULL, 'Av. Los Pinos 789, Lima', 'Esquina con Av. Las Flores', NULL, '23.4567, -54.3210', '2024-03-01', '2024-08-01', '2024-03-01', 'Contrato nuevo: Instalación de Fibra + revisión mensual', '2024-10-30 14:43:33', NULL, NULL, NULL, NULL),
+(4, 4, 4, 20, 1, NULL, 'Jirón de la Unión 100, Lima', 'Frente a la Plaza Mayor', NULL, '45.6789, -43.2109', '2024-04-01', '2025-04-01', '2024-04-01', 'Renovación anual: Descuento aplicado por contrato anual', '2024-10-30 14:43:33', NULL, NULL, NULL, NULL),
+(5, 5, 5, 20, 1, NULL, 'Calle Mayor 101, Barcelona', 'Cerca del mercado central', NULL, '56.7890, -32.1098', '2024-05-01', '2025-05-01', '2024-05-01', 'Contrato especial por volumen: Servicio completo por 1 año', '2024-10-30 14:43:33', NULL, NULL, NULL, NULL),
+(6, 6, 1, 20, 1, NULL, 'Av. del Libertador 200, Buenos Aires', 'A la vuelta de la oficina', NULL, '12.0011, -66.1122', '2024-06-01', '2024-11-01', '2024-06-01', 'Servicio premium incluido en el contrato WISP', '2024-10-30 14:43:33', NULL, NULL, NULL, NULL),
+(7, 7, 2, 20, 1, NULL, 'Calle de la Alegría 333, Bogotá', 'Cerca de la estación de buses', NULL, '34.3333, -76.6666', '2024-07-01', '2024-12-01', '2024-07-01', 'Contrato por 6 meses: Soporte técnico 24/7 incluido', '2024-10-30 14:43:33', NULL, NULL, NULL, NULL),
+(8, 8, 3, 20, 1, NULL, 'Paseo del Prado 150, Madrid', 'Cerca del parque del Retiro', NULL, '23.8888, -54.7777', '2024-08-01', '2025-01-01', '2024-08-01', 'Contrato semestral: Mantenimiento semestral incluido', '2024-10-30 14:43:33', NULL, NULL, NULL, NULL),
+(9, 9, 4, 20, 1, NULL, 'Av. de la Paz 400, Santiago', 'Frente al hotel Plaza', NULL, '45.2222, -43.8888', '2024-09-01', '2025-03-01', '2024-09-01', 'Promoción especial: Contrato de 6 meses con descuento', '2024-10-30 14:43:33', NULL, NULL, NULL, NULL),
+(10, 10, 5, 20, 1, NULL, 'Calle del Comercio 789, Lima', 'Cerca de la Plaza San Martín', NULL, '56.4444, -32.5555', '2024-10-01', '2025-04-01', '2024-10-01', 'Contrato especial: Condiciones personalizadas aplicadas', '2024-10-30 14:43:33', NULL, NULL, NULL, NULL),
+(11, 11, 2, 20, 1, NULL, 'Av. Principal 111, Quito', 'Frente al centro comercial', NULL, '11.1111, -66.6666', '2024-02-15', '2024-08-15', '2024-02-15', 'Contrato estándar de WISP con soporte adicional', '2024-10-30 14:43:33', NULL, NULL, NULL, NULL),
+(12, 12, 3, 20, 1, NULL, 'Calle Secundaria 222, Caracas', 'Cerca del parque central', NULL, '22.2222, -55.5555', '2024-03-10', '2024-09-10', '2024-03-10', 'Contrato de Fibra: Instalación y soporte técnico semestral', '2024-10-30 14:43:33', NULL, NULL, NULL, NULL),
+(13, 13, 4, 20, 1, NULL, 'Av. Terciaria 333, Montevideo', 'Frente al museo histórico', NULL, '33.3333, -44.4444', '2024-04-20', '2024-10-20', '2024-04-20', 'Renovación de contrato: Instalación de Fibra con soporte anual', '2024-10-30 14:43:33', NULL, NULL, NULL, NULL),
+(14, 14, 5, 20, 1, NULL, 'Jirón Cuarto 444, Lima', 'Esquina con la calle Pinos', NULL, '44.4444, -33.3333', '2024-05-05', '2024-11-05', '2024-05-05', 'Contrato a medida: Servicio de Fibra + descuento corporativo', '2024-10-30 14:43:33', NULL, NULL, NULL, NULL),
+(15, 15, 1, 20, 1, NULL, 'Calle Final 555, La Paz', 'Cerca del edificio principal', NULL, '55.5555, -22.2222', '2024-06-01', '2024-12-01', '2024-06-01', 'Contrato nuevo: Servicio WISP básico con soporte trimestral', '2024-10-30 14:43:33', NULL, NULL, NULL, NULL),
+(16, 16, 1, 20, 1, NULL, 'Calle Estrella 111, Lima', 'Cerca de la Plaza de Armas', NULL, '55.5555, -22.2222', '2024-07-01', '2024-12-01', '2024-07-01', 'Contrato: Servicio WISP básico con soporte técnico mensual', '2024-10-30 14:43:33', NULL, NULL, NULL, NULL),
+(17, 17, 2, 20, 1, NULL, 'Calle Estrella 222, Lima', 'Cerca del Parque Kennedy', NULL, '44.4444, -33.3333', '2024-08-01', '2025-02-01', '2024-08-01', 'Contrato: Servicio Cable estándar con revisión mensual', '2024-10-30 14:43:33', NULL, NULL, NULL, NULL),
+(18, 18, 3, 20, 1, NULL, 'Calle Estrella 333, Lima', 'Cerca del Parque Universitario', NULL, '33.3333, -44.4444', '2024-09-01', '2025-03-01', '2024-09-01', 'Contrato: Instalación de Fibra con soporte semestral', '2024-10-30 14:43:33', NULL, NULL, NULL, NULL),
+(19, 19, 4, 20, 1, NULL, 'Calle Estrella 444, Lima', 'Cerca del Centro Comercial', NULL, '22.2222, -55.5555', '2024-10-01', '2025-04-01', '2024-10-01', 'Contrato: Mantenimiento de Fibra con soporte anual', '2024-10-30 14:43:33', NULL, NULL, NULL, NULL),
+(20, 20, 5, 20, 1, NULL, 'Calle Estrella 555, Lima', 'Cerca del Aeropuerto', NULL, '11.1111, -66.6666', '2024-11-01', '2025-05-01', '2024-11-01', 'Contrato: Servicio especial por volumen, 12 meses', '2024-10-30 14:43:33', NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -2837,49 +3078,70 @@ CREATE TABLE `tb_empresas` (
 --
 
 INSERT INTO `tb_empresas` (`id_empresa`, `ruc`, `representante_legal`, `razon_social`, `nombre_comercial`, `telefono`, `email`, `create_at`, `update_at`, `inactive_at`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
-(1, '20123456789', 'Luis García', 'Servicios Informáticos S.A.', 'InfoTech', '987654321', 'info@infotech.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(2, '20234567890', 'Ana Martínez', 'Soluciones Empresariales S.R.L.', 'SolEmp', '976543210', 'contacto@solemp.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(3, '20345678901', 'Carlos Lopez', 'Desarrollo y Consultoría', 'DevConsult', '965432109', 'consultoria@devconsult.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(4, '20456789012', 'María Pérez', 'Tecnología Avanzada', 'TechAdvance', '954321098', 'info@techadvance.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(5, '20567890123', 'José Fernández', 'Consultores Asociados', 'ConAsociados', '943210987', 'contacto@conasociados.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(6, '20678901234', 'Claudia Torres', 'Innovación Digital S.A.C.', 'InnovaDigital', '932109876', 'info@innovadigital.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(7, '20789012345', 'Andrés Ruiz', 'Gestión de Proyectos S.R.L.', 'ProyGest', '921098765', 'contacto@proygest.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(8, '20890123456', 'Laura Sánchez', 'Soluciones Logísticas', 'LogiSol', '910987654', 'info@logisol.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(9, '20901234567', 'Ricardo Jiménez', 'Tecnologías de la Información', 'TechInfo', '909876543', 'contacto@techinfo.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(10, '21012345678', 'Patricia Silva', 'Estrategias Comerciales S.A.', 'EstrategiaCom', '898765432', 'info@estrategiacom.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(11, '21123456789', 'Javier Morales', 'Desarrollo Web S.R.L.', 'WebDev', '887654321', 'contacto@webdev.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(12, '21234567890', 'Verónica Castro', 'Consultoría Financiera', 'FinanConsult', '876543210', 'info@financonsult.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(13, '21345678901', 'Fernando Delgado', 'Servicios de Marketing', 'MarketServ', '865432109', 'contacto@marketserv.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(14, '21456789012', 'Mónica Herrera', 'Desarrollo de Software', 'SoftDev', '854321098', 'info@softdev.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(15, '21567890123', 'Santiago Castillo', 'Consultores de Negocios', 'ConNegocios', '843210987', 'contacto@connegocios.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(16, '21678901234', 'Elena Mendoza', 'Soluciones Ambientales', 'AmbiSol', '832109876', 'info@ambisol.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(17, '21789012345', 'Pablo Romero', 'Sistemas Integrales S.R.L.', 'SistInteg', '821098765', 'contacto@sistinteg.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(18, '21890123456', 'Gabriela López', 'Innovación Empresarial', 'InnovaEmp', '810987654', 'info@innovaemp.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(19, '21901234567', 'Hugo Pérez', 'Desarrollo Sostenible', 'DesaSostenible', '809876543', 'contacto@desasostenible.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(20, '22012345678', 'Raquel Salas', 'Tecnologías Avanzadas', 'TechAvan', '798765432', 'info@techavan.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(21, '22123456789', 'Diego García', 'Soluciones Creativas S.A.C.', 'CreaSol', '787654321', 'contacto@creasol.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(22, '22234567890', 'Susana Ríos', 'Asesoría en TI', 'AsesoriaTI', '776543210', 'info@asesoriati.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(23, '22345678901', 'Jorge Castro', 'Innovaciones Técnicas', 'InnovaTec', '765432109', 'contacto@innovatec.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(24, '22456789012', 'Carla Ramos', 'Desarrollo de Aplicaciones', 'AppDev', '754321098', 'info@appdev.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(25, '22567890123', 'Nicolás Mendoza', 'Gestión de Recursos S.R.L.', 'RecursosGest', '743210987', 'contacto@recursosgest.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(26, '22678901234', 'Marta Ortega', 'Consultoría en Procesos', 'ProcCon', '732109876', 'info@proccon.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(27, '22789012345', 'Mauricio López', 'Soluciones Educativas', 'EduSol', '721098765', 'contacto@edusol.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(28, '22890123456', 'Adriana Flores', 'Marketing Digital', 'DigitalMarket', '710987654', 'info@digitalmarket.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(29, '22901234567', 'Felipe Morales', 'Consultoría Jurídica', 'JuridConsult', '709876543', 'contacto@juridconsult.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(30, '23012345678', 'Olga Fernández', 'Estrategias de Ventas', 'EstrategiaVentas', '698765432', 'info@estrategiaventas.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(31, '23123456789', 'Ignacio Torres', 'Servicios de Diseño', 'DiseñoServ', '687654321', 'contacto@disenoserv.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(32, '23234567890', 'Natalia Guzmán', 'Innovación en Salud', 'SaludInnova', '676543210', 'info@saludinnova.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(33, '23345678901', 'Ricardo Salcedo', 'Soluciones de Recursos Humanos', 'RecursosHum', '665432109', 'contacto@recursoshum.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(34, '23456789012', 'Silvia Morales', 'Consultoría en Tecnologías', 'TecConsult', '654321098', 'info@tecconsult.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(35, '23567890123', 'Raúl Gutiérrez', 'Servicios de Ingeniería', 'EngiServ', '643210987', 'contacto@engiserv.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(36, '23678901234', 'Camila Sánchez', 'Innovación Empresarial S.R.L.', 'EmpInnova', '632109876', 'info@empinnova.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(37, '23789012345', 'Julio Ramírez', 'Gestión Ambiental S.A.C.', 'AmbientalGest', '621098765', 'contacto@ambientalgest.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(38, '23890123456', 'Sofía Herrera', 'Tecnologías Sustentables', 'SustenTech', '610987654', 'info@sustentech.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(39, '23901234567', 'David Torres', 'Asesoría Financiera S.A.', 'FinanAses', '609876543', 'contacto@finanases.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(40, '24012345678', 'María Vargas', 'Consultores Legales', 'LegalConsult', '598765432', 'info@legalconsult.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(41, '24123456789', 'Esteban Gálvez', 'Desarrollo de Proyectos', 'ProyectDev', '587654321', 'contacto@proyectdev.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(42, '24234567890', 'Daniela Ortiz', 'Servicios Médicos S.A.C.', 'MedServ', '576543210', 'info@medserv.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(43, '24345678901', 'Gustavo Peña', 'Consultores en Ventas', 'VentasConsult', '565432109', 'contacto@ventasconsult.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL);
+(1, '20123456789', 'Luis García', 'Servicios Informáticos S.A.', 'InfoTech', '987654321', 'info@infotech.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(2, '20234567890', 'Ana Martínez', 'Soluciones Empresariales S.R.L.', 'SolEmp', '976543210', 'contacto@solemp.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(3, '20345678901', 'Carlos Lopez', 'Desarrollo y Consultoría', 'DevConsult', '965432109', 'consultoria@devconsult.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(4, '20456789012', 'María Pérez', 'Tecnología Avanzada', 'TechAdvance', '954321098', 'info@techadvance.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(5, '20567890123', 'José Fernández', 'Consultores Asociados', 'ConAsociados', '943210987', 'contacto@conasociados.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(6, '20678901234', 'Claudia Torres', 'Innovación Digital S.A.C.', 'InnovaDigital', '932109876', 'info@innovadigital.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(7, '20789012345', 'Andrés Ruiz', 'Gestión de Proyectos S.R.L.', 'ProyGest', '921098765', 'contacto@proygest.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(8, '20890123456', 'Laura Sánchez', 'Soluciones Logísticas', 'LogiSol', '910987654', 'info@logisol.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(9, '20901234567', 'Ricardo Jiménez', 'Tecnologías de la Información', 'TechInfo', '909876543', 'contacto@techinfo.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(10, '21012345678', 'Patricia Silva', 'Estrategias Comerciales S.A.', 'EstrategiaCom', '898765432', 'info@estrategiacom.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(11, '21123456789', 'Javier Morales', 'Desarrollo Web S.R.L.', 'WebDev', '887654321', 'contacto@webdev.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(12, '21234567890', 'Verónica Castro', 'Consultoría Financiera', 'FinanConsult', '876543210', 'info@financonsult.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(13, '21345678901', 'Fernando Delgado', 'Servicios de Marketing', 'MarketServ', '865432109', 'contacto@marketserv.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(14, '21456789012', 'Mónica Herrera', 'Desarrollo de Software', 'SoftDev', '854321098', 'info@softdev.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(15, '21567890123', 'Santiago Castillo', 'Consultores de Negocios', 'ConNegocios', '843210987', 'contacto@connegocios.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(16, '21678901234', 'Elena Mendoza', 'Soluciones Ambientales', 'AmbiSol', '832109876', 'info@ambisol.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(17, '21789012345', 'Pablo Romero', 'Sistemas Integrales S.R.L.', 'SistInteg', '821098765', 'contacto@sistinteg.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(18, '21890123456', 'Gabriela López', 'Innovación Empresarial', 'InnovaEmp', '810987654', 'info@innovaemp.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(19, '21901234567', 'Hugo Pérez', 'Desarrollo Sostenible', 'DesaSostenible', '809876543', 'contacto@desasostenible.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(20, '22012345678', 'Raquel Salas', 'Tecnologías Avanzadas', 'TechAvan', '798765432', 'info@techavan.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(21, '22123456789', 'Diego García', 'Soluciones Creativas S.A.C.', 'CreaSol', '787654321', 'contacto@creasol.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(22, '22234567890', 'Susana Ríos', 'Asesoría en TI', 'AsesoriaTI', '776543210', 'info@asesoriati.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(23, '22345678901', 'Jorge Castro', 'Innovaciones Técnicas', 'InnovaTec', '765432109', 'contacto@innovatec.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(24, '22456789012', 'Carla Ramos', 'Desarrollo de Aplicaciones', 'AppDev', '754321098', 'info@appdev.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(25, '22567890123', 'Nicolás Mendoza', 'Gestión de Recursos S.R.L.', 'RecursosGest', '743210987', 'contacto@recursosgest.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(26, '22678901234', 'Marta Ortega', 'Consultoría en Procesos', 'ProcCon', '732109876', 'info@proccon.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(27, '22789012345', 'Mauricio López', 'Soluciones Educativas', 'EduSol', '721098765', 'contacto@edusol.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(28, '22890123456', 'Adriana Flores', 'Marketing Digital', 'DigitalMarket', '710987654', 'info@digitalmarket.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(29, '22901234567', 'Felipe Morales', 'Consultoría Jurídica', 'JuridConsult', '709876543', 'contacto@juridconsult.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(30, '23012345678', 'Olga Fernández', 'Estrategias de Ventas', 'EstrategiaVentas', '698765432', 'info@estrategiaventas.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(31, '23123456789', 'Ignacio Torres', 'Servicios de Diseño', 'DiseñoServ', '687654321', 'contacto@disenoserv.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(32, '23234567890', 'Natalia Guzmán', 'Innovación en Salud', 'SaludInnova', '676543210', 'info@saludinnova.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(33, '23345678901', 'Ricardo Salcedo', 'Soluciones de Recursos Humanos', 'RecursosHum', '665432109', 'contacto@recursoshum.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(34, '23456789012', 'Silvia Morales', 'Consultoría en Tecnologías', 'TecConsult', '654321098', 'info@tecconsult.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(35, '23567890123', 'Raúl Gutiérrez', 'Servicios de Ingeniería', 'EngiServ', '643210987', 'contacto@engiserv.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(36, '23678901234', 'Camila Sánchez', 'Innovación Empresarial S.R.L.', 'EmpInnova', '632109876', 'info@empinnova.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(37, '23789012345', 'Julio Ramírez', 'Gestión Ambiental S.A.C.', 'AmbientalGest', '621098765', 'contacto@ambientalgest.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(38, '23890123456', 'Sofía Herrera', 'Tecnologías Sustentables', 'SustenTech', '610987654', 'info@sustentech.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(39, '23901234567', 'David Torres', 'Asesoría Financiera S.A.', 'FinanAses', '609876543', 'contacto@finanases.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(40, '24012345678', 'María Vargas', 'Consultores Legales', 'LegalConsult', '598765432', 'info@legalconsult.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(41, '24123456789', 'Esteban Gálvez', 'Desarrollo de Proyectos', 'ProyectDev', '587654321', 'contacto@proyectdev.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(42, '24234567890', 'Daniela Ortiz', 'Servicios Médicos S.A.C.', 'MedServ', '576543210', 'info@medserv.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(43, '24345678901', 'Gustavo Peña', 'Consultores en Ventas', 'VentasConsult', '565432109', 'contacto@ventasconsult.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tb_incidencias`
+--
+
+CREATE TABLE `tb_incidencias` (
+  `id_incidencia` int(11) NOT NULL,
+  `id_cliente` int(11) NOT NULL,
+  `fecha_incidencia` datetime NOT NULL DEFAULT current_timestamp(),
+  `descripcion` text NOT NULL,
+  `solucion` text NOT NULL,
+  `id_tecnico` int(11) NOT NULL,
+  `create_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `update_at` datetime DEFAULT NULL,
+  `inactive_at` datetime DEFAULT NULL,
+  `iduser_create` int(11) NOT NULL,
+  `iduser_update` int(11) DEFAULT NULL,
+  `iduser_inactive` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2890,9 +3152,9 @@ INSERT INTO `tb_empresas` (`id_empresa`, `ruc`, `representante_legal`, `razon_so
 CREATE TABLE `tb_kardex` (
   `id_kardex` int(11) NOT NULL,
   `id_producto` int(11) NOT NULL,
+  `id_almacen` int(11) NOT NULL,
+  `id_tipooperacion` int(11) NOT NULL,
   `fecha` date NOT NULL,
-  `tipo_operacion` varchar(20) NOT NULL,
-  `motivo` varchar(30) NOT NULL,
   `cantidad` int(11) NOT NULL,
   `saldo_total` int(11) NOT NULL,
   `valor_unico_historico` decimal(7,2) NOT NULL,
@@ -2907,16 +3169,50 @@ CREATE TABLE `tb_kardex` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `tb_marca`
+--
+
+CREATE TABLE `tb_marca` (
+  `id_marca` int(11) NOT NULL,
+  `marca` varchar(30) NOT NULL,
+  `inactive_at` datetime DEFAULT NULL,
+  `iduser_inactive` int(11) DEFAULT NULL,
+  `create_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `update_at` datetime DEFAULT NULL,
+  `iduser_create` int(11) NOT NULL,
+  `iduser_update` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `tb_marca`
+--
+
+INSERT INTO `tb_marca` (`id_marca`, `marca`, `inactive_at`, `iduser_inactive`, `create_at`, `update_at`, `iduser_create`, `iduser_update`) VALUES
+(1, 'TP Link', NULL, NULL, '2024-10-30 14:43:33', NULL, 1, NULL),
+(2, 'Logitech', NULL, NULL, '2024-10-30 14:43:33', NULL, 1, NULL),
+(3, 'Satra', NULL, NULL, '2024-10-30 14:43:33', NULL, 1, NULL),
+(4, 'Epson', NULL, NULL, '2024-10-30 14:43:33', NULL, 1, NULL),
+(5, 'Kingston', NULL, NULL, '2024-10-30 14:43:33', NULL, 1, NULL),
+(6, 'Micronics', NULL, NULL, '2024-10-30 14:43:33', NULL, 1, NULL),
+(7, 'Canon', NULL, NULL, '2024-10-30 14:43:33', NULL, 1, NULL),
+(8, 'Omega', NULL, NULL, '2024-10-30 14:43:33', NULL, 1, NULL),
+(9, 'Genius', NULL, NULL, '2024-10-30 14:43:33', NULL, 1, NULL);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `tb_paquetes`
 --
 
 CREATE TABLE `tb_paquetes` (
   `id_paquete` int(11) NOT NULL,
   `id_servicio` int(11) NOT NULL,
+  `id_servicio2` int(11) DEFAULT NULL,
+  `id_servicio3` int(11) DEFAULT NULL,
+  `id_servicio4` int(11) DEFAULT NULL,
+  `paquete` varchar(250) NOT NULL,
   `precio` decimal(7,2) NOT NULL,
-  `tipo_paquete` char(4) DEFAULT NULL CHECK (`tipo_paquete` in ('CABl','WISP','GPON','FIBR')),
-  `fecha_inicio` date NOT NULL,
-  `fecha_fin` date NOT NULL,
+  `duracion` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`duracion`)),
   `create_at` datetime NOT NULL DEFAULT current_timestamp(),
   `update_at` datetime DEFAULT NULL,
   `inactive_at` datetime DEFAULT NULL,
@@ -2929,47 +3225,47 @@ CREATE TABLE `tb_paquetes` (
 -- Volcado de datos para la tabla `tb_paquetes`
 --
 
-INSERT INTO `tb_paquetes` (`id_paquete`, `id_servicio`, `precio`, `tipo_paquete`, `fecha_inicio`, `fecha_fin`, `create_at`, `update_at`, `inactive_at`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
-(1, 1, 100.00, 'CABl', '2023-01-01', '2023-12-31', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(2, 2, 150.00, 'GPON', '2023-02-01', '2023-11-30', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(3, 3, 200.00, 'WISP', '2023-03-01', '2023-10-31', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(4, 4, 120.00, 'FIBR', '2023-04-01', '2023-09-30', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(5, 5, 180.00, 'GPON', '2023-05-01', '2023-08-31', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(6, 6, 220.00, 'WISP', '2023-06-01', '2023-07-31', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(7, 7, 130.00, 'FIBR', '2023-07-01', '2023-12-31', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(8, 8, 160.00, 'GPON', '2023-08-01', '2023-11-30', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(9, 9, 210.00, 'WISP', '2023-09-01', '2023-10-31', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(10, 10, 140.00, 'CABl', '2023-10-01', '2023-09-30', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(11, 11, 170.00, 'GPON', '2023-11-01', '2023-08-31', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(12, 12, 230.00, 'WISP', '2023-12-01', '2023-07-31', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(13, 13, 100.00, 'FIBR', '2023-01-02', '2023-12-30', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(14, 14, 150.00, 'GPON', '2023-02-02', '2023-11-29', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(15, 15, 200.00, 'WISP', '2023-03-02', '2023-10-30', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(16, 16, 120.00, 'CABl', '2023-04-02', '2023-09-29', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(17, 17, 180.00, 'GPON', '2023-05-02', '2023-08-30', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(18, 18, 220.00, 'WISP', '2023-06-02', '2023-07-30', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(19, 19, 130.00, 'CABl', '2023-07-02', '2023-12-30', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(20, 20, 160.00, 'GPON', '2023-08-02', '2023-11-29', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(21, 21, 210.00, 'WISP', '2023-09-02', '2023-10-30', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(22, 22, 140.00, 'CABl', '2023-10-02', '2023-09-29', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(23, 23, 170.00, 'GPON', '2023-11-02', '2023-08-30', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(24, 24, 230.00, 'WISP', '2023-12-02', '2023-07-30', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(25, 25, 110.00, 'CABl', '2023-01-03', '2023-12-29', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(26, 26, 155.00, 'GPON', '2023-02-03', '2023-11-28', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(27, 27, 205.00, 'WISP', '2023-03-03', '2023-10-29', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(28, 28, 125.00, 'CABl', '2023-04-03', '2023-09-28', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(29, 29, 185.00, 'GPON', '2023-05-03', '2023-08-29', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(30, 30, 225.00, 'WISP', '2023-06-03', '2023-07-29', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(31, 31, 135.00, 'CABl', '2023-07-03', '2023-12-29', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(32, 32, 165.00, 'GPON', '2023-08-03', '2023-11-28', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(33, 33, 215.00, 'WISP', '2023-09-03', '2023-10-29', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(34, 34, 145.00, 'CABl', '2023-10-03', '2023-09-28', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(35, 35, 175.00, 'FIBR', '2023-11-03', '2023-08-29', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(36, 36, 235.00, 'WISP', '2023-12-03', '2023-07-29', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(37, 37, 115.00, 'CABl', '2023-01-04', '2023-12-28', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(38, 38, 157.00, 'GPON', '2023-02-04', '2023-11-27', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(39, 39, 207.00, 'WISP', '2023-03-04', '2023-10-28', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(40, 40, 127.00, 'FIBR', '2023-04-04', '2023-09-27', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL);
+INSERT INTO `tb_paquetes` (`id_paquete`, `id_servicio`, `id_servicio2`, `id_servicio3`, `id_servicio4`, `paquete`, `precio`, `duracion`, `create_at`, `update_at`, `inactive_at`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
+(1, 1, NULL, NULL, NULL, 'Internet Residencial Básico', 100.00, '{\"CABL\": 7}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(2, 3, NULL, NULL, NULL, 'Internet Fibra Avanzado', 150.00, '{\"FIBR\": 10}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(3, 2, NULL, NULL, NULL, 'Internet Empresarial WISP', 200.00, '{\"WISP\": 10}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(4, 2, NULL, NULL, NULL, 'Televisión por Cable WISP', 50.00, '{\"WISP\": 10}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(5, 3, NULL, NULL, NULL, 'Telefonía Fija Fibra', 30.00, '{\"FIBR\": 10}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(6, 2, NULL, NULL, NULL, 'Paquete Doble: Internet + Televisión WISP', 120.00, '{\"WISP\": 10}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(7, 2, NULL, NULL, NULL, 'Paquete Triple: Internet + Televisión + Telefonía WISP', 180.00, '{\"WISP\": 10}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(8, 3, NULL, NULL, NULL, 'Internet Móvil Prepago Fibra', 20.00, '{\"FIBR\": 10}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(9, 2, NULL, NULL, NULL, 'VPN para Empresas WISP', 80.00, '{\"WISP\": 10}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(10, 1, NULL, NULL, NULL, 'Hosting Web para Empresas Cable', 60.00, '{\"CABL\": 3}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(11, 3, NULL, NULL, NULL, 'Correo Electrónico Empresarial Fibra', 40.00, '{\"FIBR\": 10}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(12, 2, NULL, NULL, NULL, 'Dominios Web WISP', 10.00, '{\"WISP\": 10}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(13, 2, NULL, NULL, NULL, 'Servicio de Soporte Técnico WISP', 100.00, '{\"WISP\": 10}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(14, 3, NULL, NULL, NULL, 'Mantenimiento de Equipos de Red Fibra', 70.00, '{\"FIBR\": 10}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(15, 2, NULL, NULL, NULL, 'Instalación de Equipos de Internet WISP', 90.00, '{\"WISP\": 10}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(16, 1, NULL, NULL, NULL, 'Configuración de Router y Modem Cable', 50.00, '{\"CABL\": 8}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(17, 3, NULL, NULL, NULL, 'Internet para Eventos Especiales Fibra', 200.00, '{\"FIBR\": 10}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(18, 2, NULL, NULL, NULL, 'Plan de Seguridad en Línea WISP', 150.00, '{\"WISP\": 10}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(19, 1, NULL, NULL, NULL, 'Backup en la Nube Cable', 70.00, '{\"CABL\": 5}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(20, 3, NULL, NULL, NULL, 'Monitoreo de Red para Empresas Fibra', 120.00, '{\"FIBR\": 10}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(21, 2, NULL, NULL, NULL, 'Análisis de Conectividad WISP', 80.00, '{\"WISP\": 10}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(22, 1, NULL, NULL, NULL, 'Instalación de CCTV para Seguridad Cable', 150.00, '{\"CABL\": 6}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(23, 3, NULL, NULL, NULL, 'Teleasistencia Técnica Fibra', 60.00, '{\"FIBR\": 10}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(24, 2, NULL, NULL, NULL, 'Acceso a Wi-Fi Público WISP', 30.00, '{\"WISP\": 10}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(25, 1, 3, NULL, NULL, 'Streaming de Video HD', 20.00, '{\"CABL\": 4, \"FIBR\": 10}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(26, 3, NULL, NULL, NULL, 'Streaming de Música Fibra', 15.00, '{\"FIBR\": 10}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(27, 2, NULL, NULL, NULL, 'Capacitación en Tecnología Digital WISP', 100.00, '{\"WISP\": 10}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(28, 1, 3, NULL, NULL, 'Gestión de Redes Sociales', 200.00, '{\"CABL\": 4, \"FIBR\": 10}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(29, 3, 1, NULL, NULL, 'Publicidad en Línea Fibra', 300.00, '{\"FIBR\": 24, \"CABL\": 12}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(30, 1, 3, NULL, NULL, 'Soporte 24/7 para Clientes WISP', 250.00, '{\"CABL\": 4, \"FIBR\": 10}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(31, 1, 3, NULL, NULL, 'Desarrollo de Aplicaciones Web', 500.00, '{\"CABL\": 4, \"FIBR\": 10}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(32, 3, 1, NULL, NULL, 'Plataforma de E-learning para Empresas Fibra', 400.00, '{\"FIBR\": 24, \"CABL\": 12}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(33, 1, 3, NULL, NULL, 'Gestión de Proyectos TI WISP', 350.00, '{\"CABL\": 4, \"FIBR\": 10}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(34, 1, 3, NULL, NULL, 'Servicios de Cloud Computing', 300.00, '{\"CABL\": 4, \"FIBR\": 10}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(35, 1, 3, NULL, NULL, 'Asesoría en Tecnología de la Información', 150.00, '{\"CABL\": 4, \"FIBR\": 10}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(36, 1, 3, NULL, NULL, 'Instalación de Redes Inalámbricas WISP', 200.00, '{\"CABL\": 4, \"FIBR\": 10}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(37, 1, 3, NULL, NULL, 'Consultoría de Seguridad Informática', 250.00, '{\"CABL\": 4, \"FIBR\": 10}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(38, 3, 1, NULL, NULL, 'Soluciones de Internet de las Cosas (IoT) Fibra', 300.00, '{\"FIBR\": 24, \"CABL\": 12}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(39, 1, 3, NULL, NULL, 'Migración a la Nube WISP', 400.00, '{\"CABL\": 4, \"FIBR\": 10}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(40, 3, 1, NULL, NULL, 'Desarrollo de Sistemas de Gestión Fibra', 500.00, '{\"FIBR\": 24, \"CABL\": 12}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -2999,46 +3295,46 @@ CREATE TABLE `tb_personas` (
 --
 
 INSERT INTO `tb_personas` (`id_persona`, `tipo_doc`, `nro_doc`, `apellidos`, `nombres`, `telefono`, `nacionalidad`, `email`, `create_at`, `update_at`, `inactive_at`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
-(1, 'DNI', '12345678', 'Pérez García', 'Juan', '987654321', 'Peruano', 'juan.perezgarcia@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(2, 'DNI', '23456789', 'González López', 'María', '987654322', 'Peruana', 'maria.gonzalezlopez@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(3, 'DNI', '34567890', 'Rodríguez Ríos', 'Luis', '987654323', 'Peruano', 'luis.rodriguezrios@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(4, 'DNI', '45678901', 'Martínez Soto', 'Ana', '987654324', 'Peruana', 'ana.martinezsoto@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(5, 'DNI', '56789012', 'López Mendoza', 'Carlos', '987654325', 'Peruano', 'carlos.lopezmendoza@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(6, 'DNI', '67890123', 'García Torres', 'Sofía', '987654326', 'Peruana', 'sofia.garciatorres@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(7, 'DNI', '78901234', 'Fernández Ruiz', 'Andrés', '987654327', 'Peruano', 'andres.fernandezruiz@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(8, 'DNI', '89012345', 'Morales Salazar', 'Patricia', '987654328', 'Peruana', 'patricia.moralessalazar@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(9, 'DNI', '90123456', 'Cruz González', 'Fernando', '987654329', 'Peruano', 'fernando.cruzgonzalez@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(10, 'DNI', '01234567', 'Díaz Arévalo', 'Lucía', '987654330', 'Peruana', 'lucia.diazarevalo@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(11, 'DNI', '12345679', 'Hernández Espinoza', 'Diego', '987654331', 'Peruano', 'diego.hernandezespinoza@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(12, 'DNI', '23456780', 'Rojas Morales', 'Valentina', '987654332', 'Peruana', 'valentina.rojasmorales@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(13, 'DNI', '34567891', 'Torres Quiroz', 'Javier', '987654333', 'Peruano', 'javier.torresquiroz@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(14, 'DNI', '45678902', 'Ramírez Córdova', 'Isabel', '987654334', 'Peruana', 'isabel.ramirezcordova@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(15, 'DNI', '56789013', 'Vásquez Beltrán', 'Sergio', '987654335', 'Peruano', 'sergio.vasquezbeltran@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(16, 'DNI', '67890124', 'Cano Paredes', 'Claudia', '987654336', 'Peruana', 'claudia.canoparedes@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(17, 'DNI', '78901235', 'Aguirre Ríos', 'Raúl', '987654337', 'Peruano', 'raul.aguirrrios@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(18, 'DNI', '89012346', 'Mendoza Silva', 'Natalia', '987654338', 'Peruana', 'natalia.mendozasilva@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(19, 'DNI', '90123457', 'Salazar Huerta', 'Gustavo', '987654339', 'Peruano', 'gustavo.salazarhuerta@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(20, 'DNI', '01234568', 'Palacios Fernández', 'Elena', '987654340', 'Peruana', 'elena.palaciosfernandez@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(21, 'DNI', '12345680', 'Soto Carranza', 'Mario', '987654341', 'Peruano', 'mario.sotocarranza@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(22, 'DNI', '23456781', 'Aguilar Castro', 'Angela', '987654342', 'Peruana', 'angela.aguilarcastro@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(23, 'DNI', '34567892', 'Maldonado León', 'Renato', '987654343', 'Peruano', 'renato.maldonadoleon@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(24, 'DNI', '45678903', 'Quiroz Alvarado', 'Verónica', '987654344', 'Peruana', 'veronica.quirozalvarado@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(25, 'DNI', '56789014', 'Peña Medina', 'Oscar', '987654345', 'Peruano', 'oscar.penamedina@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(26, 'DNI', '67890125', 'Pineda Mendoza', 'Carmen', '987654346', 'Peruana', 'carmen.pinedamendoza@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(27, 'DNI', '78901236', 'Beltrán Aguirre', 'Iván', '987654347', 'Peruano', 'ivan.beltranaguirre@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(28, 'DNI', '89012347', 'Acuña Ramírez', 'Silvia', '987654348', 'Peruana', 'silvia.acunaramirez@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(29, 'DNI', '90123458', 'Bermúdez Chacón', 'Antonio', '987654349', 'Peruano', 'antonio.bermudezchacon@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(30, 'DNI', '01234569', 'Carranza Torres', 'Rocío', '987654350', 'Peruana', 'rocio.carranzatorres@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(31, 'DNI', '12345681', 'Cuadra Álvarez', 'Julián', '987654351', 'Peruano', 'julian.cuadraalvarez@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(32, 'DNI', '23456782', 'Alvarado Vera', 'Gabriela', '987654352', 'Peruana', 'gabriela.alvaradovera@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(33, 'DNI', '34567893', 'Espinoza Silva', 'Fernando', '987654353', 'Peruano', 'fernando.espinozasilva@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(34, 'DNI', '45678904', 'Córdova Méndez', 'Ricardo', '987654354', 'Peruano', 'ricardo.cordovamendez@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(35, 'DNI', '56789015', 'Zapata Ramos', 'Daniela', '987654355', 'Peruana', 'daniela.zapataramos@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(36, 'DNI', '67890126', 'Villanueva Castillo', 'Saúl', '987654356', 'Peruano', 'saul.villanuevacastillo@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(37, 'DNI', '78901237', 'Rivas Salas', 'Paola', '987654357', 'Peruana', 'paola.rivassalas@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(38, 'DNI', '89012348', 'Medina López', 'Marcos', '987654358', 'Peruano', 'marcos.medinalopez@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(39, 'DNI', '90123459', 'Linares Gómez', 'Yolanda', '987654359', 'Peruana', 'yolanda.linaresgomez@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(40, 'DNI', '01234570', 'Córdova Bravo', 'Gonzalo', '987654360', 'Peruano', 'gonzalo.cordovabravo@example.com', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL);
+(1, 'DNI', '12345678', 'Pérez García', 'Juan', '987654321', 'Peruano', 'juan.perezgarcia@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(2, 'DNI', '23456789', 'González López', 'María', '987654322', 'Peruana', 'maria.gonzalezlopez@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(3, 'DNI', '34567890', 'Rodríguez Ríos', 'Luis', '987654323', 'Peruano', 'luis.rodriguezrios@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(4, 'DNI', '45678901', 'Martínez Soto', 'Ana', '987654324', 'Peruana', 'ana.martinezsoto@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(5, 'DNI', '56789012', 'López Mendoza', 'Carlos', '987654325', 'Peruano', 'carlos.lopezmendoza@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(6, 'DNI', '67890123', 'García Torres', 'Sofía', '987654326', 'Peruana', 'sofia.garciatorres@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(7, 'DNI', '78901234', 'Fernández Ruiz', 'Andrés', '987654327', 'Peruano', 'andres.fernandezruiz@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(8, 'DNI', '89012345', 'Morales Salazar', 'Patricia', '987654328', 'Peruana', 'patricia.moralessalazar@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(9, 'DNI', '90123456', 'Cruz González', 'Fernando', '987654329', 'Peruano', 'fernando.cruzgonzalez@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(10, 'DNI', '01234567', 'Díaz Arévalo', 'Lucía', '987654330', 'Peruana', 'lucia.diazarevalo@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(11, 'DNI', '12345679', 'Hernández Espinoza', 'Diego', '987654331', 'Peruano', 'diego.hernandezespinoza@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(12, 'DNI', '23456780', 'Rojas Morales', 'Valentina', '987654332', 'Peruana', 'valentina.rojasmorales@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(13, 'DNI', '34567891', 'Torres Quiroz', 'Javier', '987654333', 'Peruano', 'javier.torresquiroz@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(14, 'DNI', '45678902', 'Ramírez Córdova', 'Isabel', '987654334', 'Peruana', 'isabel.ramirezcordova@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(15, 'DNI', '56789013', 'Vásquez Beltrán', 'Sergio', '987654335', 'Peruano', 'sergio.vasquezbeltran@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(16, 'DNI', '67890124', 'Cano Paredes', 'Claudia', '987654336', 'Peruana', 'claudia.canoparedes@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(17, 'DNI', '78901235', 'Aguirre Ríos', 'Raúl', '987654337', 'Peruano', 'raul.aguirrrios@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(18, 'DNI', '89012346', 'Mendoza Silva', 'Natalia', '987654338', 'Peruana', 'natalia.mendozasilva@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(19, 'DNI', '90123457', 'Salazar Huerta', 'Gustavo', '987654339', 'Peruano', 'gustavo.salazarhuerta@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(20, 'DNI', '01234568', 'Palacios Fernández', 'Elena', '987654340', 'Peruana', 'elena.palaciosfernandez@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(21, 'DNI', '12345680', 'Soto Carranza', 'Mario', '987654341', 'Peruano', 'mario.sotocarranza@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(22, 'DNI', '23456781', 'Aguilar Castro', 'Angela', '987654342', 'Peruana', 'angela.aguilarcastro@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(23, 'DNI', '34567892', 'Maldonado León', 'Renato', '987654343', 'Peruano', 'renato.maldonadoleon@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(24, 'DNI', '45678903', 'Quiroz Alvarado', 'Verónica', '987654344', 'Peruana', 'veronica.quirozalvarado@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(25, 'DNI', '56789014', 'Peña Medina', 'Oscar', '987654345', 'Peruano', 'oscar.penamedina@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(26, 'DNI', '67890125', 'Pineda Mendoza', 'Carmen', '987654346', 'Peruana', 'carmen.pinedamendoza@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(27, 'DNI', '78901236', 'Beltrán Aguirre', 'Iván', '987654347', 'Peruano', 'ivan.beltranaguirre@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(28, 'DNI', '89012347', 'Acuña Ramírez', 'Silvia', '987654348', 'Peruana', 'silvia.acunaramirez@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(29, 'DNI', '90123458', 'Bermúdez Chacón', 'Antonio', '987654349', 'Peruano', 'antonio.bermudezchacon@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(30, 'DNI', '01234569', 'Carranza Torres', 'Rocío', '987654350', 'Peruana', 'rocio.carranzatorres@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(31, 'DNI', '12345681', 'Cuadra Álvarez', 'Julián', '987654351', 'Peruano', 'julian.cuadraalvarez@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(32, 'DNI', '23456782', 'Alvarado Vera', 'Gabriela', '987654352', 'Peruana', 'gabriela.alvaradovera@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(33, 'DNI', '34567893', 'Espinoza Silva', 'Fernando', '987654353', 'Peruano', 'fernando.espinozasilva@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(34, 'DNI', '45678904', 'Córdova Méndez', 'Ricardo', '987654354', 'Peruano', 'ricardo.cordovamendez@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(35, 'DNI', '56789015', 'Zapata Ramos', 'Daniela', '987654355', 'Peruana', 'daniela.zapataramos@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(36, 'DNI', '67890126', 'Villanueva Castillo', 'Saúl', '987654356', 'Peruano', 'saul.villanuevacastillo@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(37, 'DNI', '78901237', 'Rivas Salas', 'Paola', '987654357', 'Peruana', 'paola.rivassalas@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(38, 'DNI', '89012348', 'Medina López', 'Marcos', '987654358', 'Peruano', 'marcos.medinalopez@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(39, 'DNI', '90123459', 'Linares Gómez', 'Yolanda', '987654359', 'Peruana', 'yolanda.linaresgomez@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(40, 'DNI', '01234570', 'Córdova Bravo', 'Gonzalo', '987654360', 'Peruano', 'gonzalo.cordovabravo@example.com', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -3048,9 +3344,10 @@ INSERT INTO `tb_personas` (`id_persona`, `tipo_doc`, `nro_doc`, `apellidos`, `no
 
 CREATE TABLE `tb_productos` (
   `id_producto` int(11) NOT NULL,
-  `marca` varchar(30) NOT NULL,
-  `tipo_producto` varchar(60) NOT NULL,
-  `modelo` varchar(30) NOT NULL,
+  `id_marca` int(11) NOT NULL,
+  `id_tipo` int(11) NOT NULL,
+  `id_unidad` int(11) NOT NULL,
+  `modelo` varchar(70) NOT NULL,
   `precio_actual` decimal(7,2) NOT NULL,
   `codigo_barra` varchar(120) NOT NULL,
   `create_at` datetime NOT NULL DEFAULT current_timestamp(),
@@ -3065,46 +3362,16 @@ CREATE TABLE `tb_productos` (
 -- Volcado de datos para la tabla `tb_productos`
 --
 
-INSERT INTO `tb_productos` (`id_producto`, `marca`, `tipo_producto`, `modelo`, `precio_actual`, `codigo_barra`, `create_at`, `update_at`, `inactive_at`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
-(1, 'TP-Link', 'Router', 'TL-WR841N', 79.99, '0123456789012', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(2, 'TP-Link', 'Modem', 'TD-W8961N', 89.99, '0123456789013', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(3, 'Netgear', 'Router', 'R6120', 99.99, '0123456789014', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(4, 'Linksys', 'Router', 'EA7500', 129.99, '0123456789015', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(5, 'ASUS', 'Router', 'RT-AC66U', 149.99, '0123456789016', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(6, 'Motorola', 'Modem', 'MB7621', 119.99, '0123456789017', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(7, 'Cisco', 'Router', 'ISR4321', 299.99, '0123456789018', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(8, 'TP-Link', 'Extensor de rango', 'TL-WA855RE', 39.99, '0123456789019', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(9, 'D-Link', 'Router', 'DIR-867', 109.99, '0123456789020', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(10, 'Zyxel', 'Modem', 'C3000Z', 79.99, '0123456789021', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(11, 'Tenda', 'Router', 'AC1200', 49.99, '0123456789022', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(12, 'MikroTik', 'Router', 'hAP ac', 89.99, '0123456789023', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(13, 'Linksys', 'Modem', 'CM3024', 149.99, '0123456789024', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(14, 'Netgear', 'Extensor de rango', 'EX6200', 79.99, '0123456789025', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(15, 'TP-Link', 'Switch', 'TL-SG108', 59.99, '0123456789026', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(16, 'D-Link', 'Switch', 'DGS-108', 69.99, '0123456789027', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(17, 'Cisco', 'Switch', 'SG350-10', 299.99, '0123456789028', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(18, 'Ubiquiti', 'Punto de acceso', 'UAP-AC-LITE', 89.99, '0123456789029', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(19, 'Netgear', 'Router', 'Nighthawk RAX40', 229.99, '0123456789030', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(20, 'TP-Link', 'Router', 'Archer A7', 69.99, '0123456789031', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(21, 'Zyxel', 'Router', 'Zywall USG20-VPN', 199.99, '0123456789032', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(22, 'ASUS', 'Modem', 'DSL-AC68U', 149.99, '0123456789033', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(23, 'Motorola', 'Router', 'MG7700', 199.99, '0123456789034', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(24, 'Tenda', 'Modem', 'D301', 39.99, '0123456789035', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(25, 'TP-Link', 'Router', 'TL-R605', 99.99, '0123456789036', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(26, 'D-Link', 'Router', 'DIR-3060', 129.99, '0123456789037', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(27, 'Linksys', 'Extensor de rango', 'RE7000', 79.99, '0123456789038', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(28, 'Zyxel', 'Punto de acceso', 'NWA1123-AC', 69.99, '0123456789039', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(29, 'Ubiquiti', 'Router', 'EdgeRouter X', 99.99, '0123456789040', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(30, 'ASUS', 'Switch', 'GS308', 49.99, '0123456789041', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(31, 'Cisco', 'Punto de acceso', 'AIR-AP1815I', 199.99, '0123456789042', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(32, 'TP-Link', 'Modem', 'TD-8616', 39.99, '0123456789043', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(33, 'D-Link', 'Extensor de rango', 'DAP-1610', 49.99, '0123456789044', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(34, 'Netgear', 'Router', 'RAX80', 349.99, '0123456789045', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(35, 'Linksys', 'Router', 'WRT3200ACM', 249.99, '0123456789046', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(36, 'MikroTik', 'Modem', 'MikroTik RB951G-2HnD', 69.99, '0123456789047', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(37, 'Ubiquiti', 'Switch', 'US-8-60W', 99.99, '0123456789048', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(38, 'TP-Link', 'Router', 'Archer C7', 79.99, '0123456789049', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(39, 'Cisco', 'Router', 'ISR4331', 399.99, '0123456789050', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL);
+INSERT INTO `tb_productos` (`id_producto`, `id_marca`, `id_tipo`, `id_unidad`, `modelo`, `precio_actual`, `codigo_barra`, `create_at`, `update_at`, `inactive_at`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
+(1, 1, 1, 1, 'Router', 150.00, '1234567890123', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(2, 2, 2, 1, 'Teclado USB', 25.00, '1234567890124', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(3, 3, 1, 2, 'Cable UTP Cat. 6', 1.50, '1234567890125', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(4, 4, 3, 1, 'Tinta Magenta', 10.00, '1234567890126', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(5, 5, 4, 1, 'Memoria RAM', 80.00, '1234567890127', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(6, 6, 2, 1, 'Cámara Web MIC W360 + micrófono', 45.00, '1234567890128', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(7, 7, 3, 1, 'Tinta Yellow', 10.00, '1234567890129', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(8, 8, 2, 1, 'Supresor de Pisco', 15.00, '1234567890130', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(9, 9, 2, 1, 'Mouse', 8.00, '1234567890131', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -3343,12 +3610,12 @@ CREATE TABLE `tb_responsables` (
 --
 
 INSERT INTO `tb_responsables` (`id_responsable`, `id_usuario`, `id_rol`, `fecha_inicio`, `update_at`, `fecha_fin`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
-(1, 1, 1, '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(2, 2, 2, '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(3, 3, 3, '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(4, 4, 4, '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(5, 5, 5, '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(6, 6, 5, '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL);
+(1, 1, 1, '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(2, 2, 2, '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(3, 3, 3, '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(4, 4, 4, '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(5, 5, 5, '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(6, 6, 5, '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -3373,11 +3640,11 @@ CREATE TABLE `tb_roles` (
 --
 
 INSERT INTO `tb_roles` (`id_rol`, `rol`, `permisos`, `create_at`, `update_at`, `inactive_at`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
-(1, 'Administrador', '{\"actividades\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"soporte\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"contratos\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"inventariado\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"productos\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"personas\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"roles\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"usuarios\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"}}', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(2, 'Tecnico Oficina', '{\"actividades\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"soporte\":[],\"contratos\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"inventariado\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"productos\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"personas\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"roles\":[],\"usuarios\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"}}', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(3, 'Oficina', '{\"actividades\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"soporte\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"contratos\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"inventariado\":[],\"productos\":[],\"personas\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"roles\":[],\"usuarios\":[]}', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(4, 'Tecnico Campo', '{\"actividades\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"soporte\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"contratos\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"inventariado\":[],\"productos\":[],\"personas\":[],\"roles\":[],\"usuarios\":[]}', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(5, 'Almacen - Tecnico', '{\"actividades\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"soporte\":[],\"contratos\":[],\"inventariado\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"productos\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"personas\":[],\"roles\":[],\"usuarios\":[]}', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL);
+(1, 'Administrador', '{\"actividad\":\"Mapa\",\"soporte\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"contratos\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"inventariado\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"productos\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"personas\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"roles\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"usuarios\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"averias\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"}, \"paquetes\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"}}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(2, 'Tecnico Oficina', '{\"actividad\":\"Soporte\",\"soporte\":[],\"contratos\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"inventariado\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"productos\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"personas\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"roles\":[],\"usuarios\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"}, \"paquetes\":[]}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(3, 'Oficina', '{\"actividad\":\"Contratos\",\"soporte\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"contratos\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"inventariado\":[],\"productos\":[],\"personas\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"roles\":[],\"usuarios\":[], \"paquetes\":[]}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(4, 'Tecnico Campo', '{\"actividad\":\"Fichas\",\"soporte\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"contratos\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"inventariado\":[],\"productos\":[],\"personas\":[],\"roles\":[],\"usuarios\":[], \"paquetes\":[]}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(5, 'Almacen - Tecnico', '{\"actividad\":\"Kardex\",\"soporte\":[],\"contratos\":[],\"inventariado\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"productos\":{\"leer\":\"1\",\"crear\":\"1\",\"actualizar\":\"1\",\"eliminar\":\"1\"},\"personas\":[],\"roles\":[],\"usuarios\":[], \"paquetes\":[]}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -3402,48 +3669,48 @@ CREATE TABLE `tb_sectores` (
 --
 
 INSERT INTO `tb_sectores` (`id_sector`, `id_distrito`, `sector`, `create_at`, `update_at`, `inactive_at`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
-(1, 110201, 'Tupac Amaru', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(2, 110201, 'San Agustín', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(3, 110201, 'San José', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(4, 110201, 'Nazareno', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(5, 110201, 'Chacarilla', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(6, 110201, 'Sunampe', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(7, 110201, 'San Juan de Yanac', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(8, 110201, 'Carmen Alto', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(9, 110201, 'Rinconada', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(10, 110201, 'Lurinchincha', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(11, 110201, 'Grocio Prado', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(12, 110201, 'Hoja Redonda', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(13, 110201, 'Hacienda San Pedro', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(14, 110201, 'Cañete', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(15, 110201, 'El Molino', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(16, 110201, 'San Hilarión', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(17, 110201, 'Los Laureles', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(18, 110201, 'Las Casuarinas', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(19, 110201, 'San Isidro', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(20, 110201, 'Chincha Baja', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(21, 110201, 'El Carmen', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(22, 110201, 'Las Pampas', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(23, 110201, 'La Victoria', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(24, 110201, 'San Andrés', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(25, 110201, 'Río Seco', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(26, 110201, 'Pueblo Nuevo', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(27, 110201, 'Tambo de Mora', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(28, 110201, 'San Benito', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(29, 110201, 'Los Jardines', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(30, 110201, 'Miraflores', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(31, 110201, 'Fundo Santa Rosa', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(32, 110201, 'Loma Blanca', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(33, 110201, 'Viña Vieja', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(34, 110201, 'Casa Blanca', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(35, 110201, 'Villa Sol', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(36, 110201, 'La Cumbe', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(37, 110201, 'Cruz Verde', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(38, 110201, 'Callejón Blanco', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(39, 110201, 'Santa Bárbara', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(40, 110201, 'Rincón del Prado', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(41, 110201, 'La Concepción', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(42, 110201, 'Los Ángeles', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL);
+(1, 110201, 'Tupac Amaru', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(2, 110201, 'San Agustín', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(3, 110201, 'San José', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(4, 110201, 'Nazareno', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(5, 110201, 'Chacarilla', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(6, 110201, 'Sunampe', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(7, 110201, 'San Juan de Yanac', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(8, 110201, 'Carmen Alto', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(9, 110201, 'Rinconada', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(10, 110201, 'Lurinchincha', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(11, 110201, 'Grocio Prado', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(12, 110201, 'Hoja Redonda', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(13, 110201, 'Hacienda San Pedro', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(14, 110201, 'Cañete', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(15, 110201, 'El Molino', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(16, 110201, 'San Hilarión', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(17, 110201, 'Los Laureles', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(18, 110201, 'Las Casuarinas', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(19, 110201, 'San Isidro', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(20, 110201, 'Chincha Baja', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(21, 110201, 'El Carmen', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(22, 110201, 'Las Pampas', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(23, 110201, 'La Victoria', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(24, 110201, 'San Andrés', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(25, 110201, 'Río Seco', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(26, 110201, 'Pueblo Nuevo', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(27, 110201, 'Tambo de Mora', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(28, 110201, 'San Benito', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(29, 110201, 'Los Jardines', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(30, 110201, 'Miraflores', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(31, 110201, 'Fundo Santa Rosa', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(32, 110201, 'Loma Blanca', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(33, 110201, 'Viña Vieja', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(34, 110201, 'Casa Blanca', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(35, 110201, 'Villa Sol', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(36, 110201, 'La Cumbe', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(37, 110201, 'Cruz Verde', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(38, 110201, 'Callejón Blanco', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(39, 110201, 'Santa Bárbara', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(40, 110201, 'Rincón del Prado', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(41, 110201, 'La Concepción', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(42, 110201, 'Los Ángeles', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -3453,7 +3720,8 @@ INSERT INTO `tb_sectores` (`id_sector`, `id_distrito`, `sector`, `create_at`, `u
 
 CREATE TABLE `tb_servicios` (
   `id_servicio` int(11) NOT NULL,
-  `servicio` varchar(50) NOT NULL,
+  `tipo_servicio` char(4) NOT NULL,
+  `servicio` varchar(200) NOT NULL,
   `create_at` datetime DEFAULT current_timestamp(),
   `update_at` datetime DEFAULT NULL,
   `inactive_at` datetime DEFAULT NULL,
@@ -3466,48 +3734,10 @@ CREATE TABLE `tb_servicios` (
 -- Volcado de datos para la tabla `tb_servicios`
 --
 
-INSERT INTO `tb_servicios` (`id_servicio`, `servicio`, `create_at`, `update_at`, `inactive_at`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
-(1, 'Internet Residencial Básico', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(2, 'Internet Residencial Avanzado', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(3, 'Internet Empresarial', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(4, 'Televisión por Cable', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(5, 'Telefonía Fija', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(6, 'Paquete Doble: Internet + Televisión', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(7, 'Paquete Triple: Internet + Televisión + Telefonía', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(8, 'Internet Móvil Prepago', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(9, 'VPN para Empresas', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(10, 'Hosting Web para Empresas', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(11, 'Correo Electrónico Empresarial', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(12, 'Dominios Web', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(13, 'Servicio de Soporte Técnico', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(14, 'Mantenimiento de Equipos de Red', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(15, 'Instalación de Equipos de Internet', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(16, 'Configuración de Router y Modem', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(17, 'Internet para Eventos Especiales', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(18, 'Plan de Seguridad en Línea', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(19, 'Backup en la Nube', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(20, 'Monitoreo de Red para Empresas', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(21, 'Análisis de Conectividad', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(22, 'Instalación de CCTV para Seguridad', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(23, 'Teleasistencia Técnica', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(24, 'Acceso a Wi-Fi Público', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(25, 'Streaming de Video HD', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(26, 'Streaming de Música', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(27, 'Capacitación en Tecnología Digital', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(28, 'Gestión de Redes Sociales', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(29, 'Publicidad en Línea', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(30, 'Soporte 24/7 para Clientes', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(31, 'Desarrollo de Aplicaciones Web', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(32, 'Plataforma de E-learning para Empresas', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(33, 'Gestión de Proyectos TI', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(34, 'Servicios de Cloud Computing', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(35, 'Asesoría en Tecnología de la Información', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(36, 'Instalación de Redes Inalámbricas', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(37, 'Consultoría de Seguridad Informática', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(38, 'Soluciones de Internet de las Cosas (IoT)', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(39, 'Acceso a Contenido Premium', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(40, 'Migración a la Nube', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(41, 'Desarrollo de Sistemas de Gestión', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL);
+INSERT INTO `tb_servicios` (`id_servicio`, `tipo_servicio`, `servicio`, `create_at`, `update_at`, `inactive_at`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
+(1, 'CABL', 'Cable', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(2, 'WISP', 'Wireless Internet Service Provider', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(3, 'FIBR', 'Fibra Óptica', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -3539,11 +3769,68 @@ CREATE TABLE `tb_soporte` (
 --
 
 INSERT INTO `tb_soporte` (`id_soporte`, `id_contrato`, `id_tipo_soporte`, `id_tecnico`, `fecha_hora_solicitud`, `fecha_hora_asistencia`, `descripcion_problema`, `descripcion_solucion`, `prioridad`, `soporte`, `create_at`, `update_at`, `inactive_at`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
-(1, 1, 1, 1, '2024-01-10 15:00:00', '2024-10-09 17:05:29', 'Daños en el cable', 'Reemplazo del cable', 'Alta', '{\"parametroscable\":{\"periodo\":[\"mensual\",\"contado\"],\"potencia\":4,\"sintonizador\":2,\"triplexor\":{\"requiere\":true,\"cantidad\":1,\"tipo\":[\"activo\",\"pasivo\"]},\"spliter\":[{\"cantidad\":1,\"tipo\":\"1x3\"},{\"cantidad\":1,\"tipo\":\"1x5\"},{\"cantidad\":1,\"tipo\":\"1x8\"}],\"cable\":10,\"conectores\":1},\"cambioscable\":{\"periodo\":[\"mensual\",\"contado\"],\"potencia\":4,\"sintonizador\":2,\"triplexor\":{\"requiere\":true,\"cantidad\":1,\"tipo\":[\"activo\",\"pasivo\"]},\"spliter\":[{\"cantidad\":1,\"tipo\":\"1x3\"},{\"cantidad\":1,\"tipo\":\"1x5\"},{\"cantidad\":1,\"tipo\":\"1x8\"}],\"cable\":10,\"conectores\":1}}', '2024-10-17 12:22:31', NULL, NULL, 1, NULL, NULL),
-(2, 2, 2, 2, '2024-02-16 11:00:00', '2024-02-16 12:30:00', 'Daño X', NULL, 'Media', '{\"parametros\":{\"base\":\"\",\"ip\":\"\",\"senal\":\"\"},\"cambios\":{\"nuevaBase\":\"\",\"nuevoIP\":\"\",\"senal\":\"\"}}', '2024-10-17 12:22:31', NULL, NULL, 1, NULL, NULL),
-(3, 3, 3, 3, '2024-03-21 09:30:00', '2024-03-21 10:00:00', 'Daño X', NULL, 'Alta', '{\"parametros\":{\"base\":\"\",\"ip\":\"\",\"senal\":\"\"},\"cambios\":{\"nuevaBase\":\"\",\"nuevoIP\":\"\",\"senal\":\"\"}}', '2024-10-17 12:22:31', NULL, NULL, 1, NULL, NULL),
-(4, 4, 1, 4, '2024-04-26 14:00:00', '2024-04-26 15:30:00', 'Daño Y', NULL, 'Baja', '{\"parametros\":{\"base\":\"\",\"ip\":\"\",\"senal\":\"\"},\"cambios\":{\"nuevaBase\":\"\",\"nuevoIP\":\"\",\"senal\":\"\"}}', '2024-10-17 12:22:31', NULL, NULL, 1, NULL, NULL),
-(5, 5, 2, 5, '2024-05-31 13:00:00', '2024-05-31 14:30:00', 'Daño Z', NULL, 'Media', '{\"parametros\":{\"base\":\"\",\"ip\":\"\",\"senal\":\"\"},\"cambios\":{\"nuevaBase\":\"\",\"nuevoIP\":\"\",\"senal\":\"\"}}', '2024-10-17 12:22:31', NULL, NULL, 1, NULL, NULL);
+(1, 1, 1, 1, '2024-01-10 15:00:00', '2024-10-09 17:05:29', 'Daños en el cable', 'Reemplazo del cable', 'Alta', '{\"parametroscable\":{\"periodo\":[\"mensual\",\"contado\"],\"potencia\":4,\"sintonizador\":2,\"triplexor\":{\"requiere\":true,\"cantidad\":1,\"tipo\":[\"activo\",\"pasivo\"]},\"spliter\":[{\"cantidad\":1,\"tipo\":\"1x3\"},{\"cantidad\":1,\"tipo\":\"1x5\"},{\"cantidad\":1,\"tipo\":\"1x8\"}],\"cable\":10,\"conectores\":1},\"cambioscable\":{\"periodo\":[\"mensual\",\"contado\"],\"potencia\":4,\"sintonizador\":2,\"triplexor\":{\"requiere\":true,\"cantidad\":1,\"tipo\":[\"activo\",\"pasivo\"]},\"spliter\":[{\"cantidad\":1,\"tipo\":\"1x3\"},{\"cantidad\":1,\"tipo\":\"1x5\"},{\"cantidad\":1,\"tipo\":\"1x8\"}],\"cable\":10,\"conectores\":1}}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(2, 2, 2, 2, '2024-02-16 11:00:00', '2024-02-16 12:30:00', 'Daño X', NULL, 'Media', '{\"parametros\":{\"base\":\"\",\"ip\":\"\",\"senal\":\"\"},\"cambios\":{\"nuevaBase\":\"\",\"nuevoIP\":\"\",\"senal\":\"\"}}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(3, 3, 3, 3, '2024-03-21 09:30:00', '2024-03-21 10:00:00', 'Daño X', NULL, 'Alta', '{\"parametros\":{\"base\":\"\",\"ip\":\"\",\"senal\":\"\"},\"cambios\":{\"nuevaBase\":\"\",\"nuevoIP\":\"\",\"senal\":\"\"}}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(4, 4, 1, 4, '2024-04-26 14:00:00', '2024-04-26 15:30:00', 'Daño Y', NULL, 'Baja', '{\"parametros\":{\"base\":\"\",\"ip\":\"\",\"senal\":\"\"},\"cambios\":{\"nuevaBase\":\"\",\"nuevoIP\":\"\",\"senal\":\"\"}}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(5, 5, 2, 5, '2024-05-31 13:00:00', '2024-05-31 14:30:00', 'Daño Z', NULL, 'Media', '{\"parametros\":{\"base\":\"\",\"ip\":\"\",\"senal\":\"\"},\"cambios\":{\"nuevaBase\":\"\",\"nuevoIP\":\"\",\"senal\":\"\"}}', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tb_tipooperacion`
+--
+
+CREATE TABLE `tb_tipooperacion` (
+  `id_tipooperacion` int(11) NOT NULL,
+  `descripcion` varchar(55) NOT NULL,
+  `movimiento` char(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `tb_tipooperacion`
+--
+
+INSERT INTO `tb_tipooperacion` (`id_tipooperacion`, `descripcion`, `movimiento`) VALUES
+(1, 'Adquisición de activos', 'E'),
+(2, 'Compra de materiales', 'E'),
+(3, 'Recepción de suministros', 'E'),
+(4, 'Recepción de dispositivos de red', 'E'),
+(5, 'Recepción de componentes', 'E'),
+(6, 'Recepción de equipos', 'E'),
+(7, 'Devolución de equipos', 'S'),
+(8, 'Pérdida de activos', 'S'),
+(9, 'Equipos fuera de servicio', 'S'),
+(10, 'Despacho de dispositivos de red', 'S'),
+(11, 'Despacho de componentes', 'S'),
+(12, 'Despacho de equipos', 'S');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tb_tipoproducto`
+--
+
+CREATE TABLE `tb_tipoproducto` (
+  `id_tipo` int(11) NOT NULL,
+  `tipo_nombre` varchar(30) NOT NULL,
+  `create_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `update_at` datetime DEFAULT NULL,
+  `inactive_at` datetime DEFAULT NULL,
+  `iduser_inactive` int(11) DEFAULT NULL,
+  `iduser_create` int(11) NOT NULL,
+  `iduser_update` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `tb_tipoproducto`
+--
+
+INSERT INTO `tb_tipoproducto` (`id_tipo`, `tipo_nombre`, `create_at`, `update_at`, `inactive_at`, `iduser_inactive`, `iduser_create`, `iduser_update`) VALUES
+(1, 'Redes', '2024-10-30 14:43:33', NULL, NULL, NULL, 1, NULL),
+(2, 'Accesorios', '2024-10-30 14:43:33', NULL, NULL, NULL, 1, NULL),
+(3, 'Consumibles', '2024-10-30 14:43:33', NULL, NULL, NULL, 1, NULL),
+(4, 'Componentes', '2024-10-30 14:43:33', NULL, NULL, NULL, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -3567,26 +3854,50 @@ CREATE TABLE `tb_tipo_soporte` (
 --
 
 INSERT INTO `tb_tipo_soporte` (`id_tipo_soporte`, `tipo_soporte`, `create_at`, `update_at`, `inactive_at`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
-(1, 'Instalación de servicio', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(2, 'Mantenimiento preventivo', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(3, 'Problema de conexión', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(4, 'Soporte técnico', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(5, 'Consulta de facturación', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(6, 'Cambio de plan', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(7, 'Reinstalación de equipos', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(8, 'Consulta de saldo', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(9, 'Reportar caída de servicio', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(10, 'Activación de servicio', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(11, 'Desactivación de servicio', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(12, 'Actualización de datos', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(13, 'Asistencia en instalación de router', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(14, 'Problema con el router', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(15, 'Configuración de red', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(16, 'Consulta sobre promociones', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(17, 'Cambio de dirección de servicio', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(18, 'Aumento de velocidad', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(19, 'Sugerencias y quejas', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(20, 'Desbloqueo de cuenta', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL);
+(1, 'Instalación de servicio', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(2, 'Mantenimiento preventivo', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(3, 'Problema de conexión', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(4, 'Soporte técnico', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(5, 'Consulta de facturación', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(6, 'Cambio de plan', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(7, 'Reinstalación de equipos', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(8, 'Consulta de saldo', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(9, 'Reportar caída de servicio', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(10, 'Activación de servicio', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(11, 'Desactivación de servicio', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(12, 'Actualización de datos', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(13, 'Asistencia en instalación de router', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(14, 'Problema con el router', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(15, 'Configuración de red', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(16, 'Consulta sobre promociones', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(17, 'Cambio de dirección de servicio', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(18, 'Aumento de velocidad', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(19, 'Sugerencias y quejas', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(20, 'Desbloqueo de cuenta', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tb_unidadmedida`
+--
+
+CREATE TABLE `tb_unidadmedida` (
+  `id_unidad` int(11) NOT NULL,
+  `unidad_nombre` varchar(30) NOT NULL,
+  `create_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `update_at` datetime DEFAULT NULL,
+  `iduser_create` int(11) NOT NULL,
+  `iduser_update` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `tb_unidadmedida`
+--
+
+INSERT INTO `tb_unidadmedida` (`id_unidad`, `unidad_nombre`, `create_at`, `update_at`, `iduser_create`, `iduser_update`) VALUES
+(1, 'Unidad', '2024-10-30 14:43:33', NULL, 1, NULL),
+(2, 'Metros', '2024-10-30 14:43:33', NULL, 1, NULL),
+(3, 'Centimetros', '2024-10-30 14:43:33', NULL, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -3612,16 +3923,29 @@ CREATE TABLE `tb_usuarios` (
 --
 
 INSERT INTO `tb_usuarios` (`id_usuario`, `id_persona`, `nombre_user`, `pass`, `create_at`, `update_at`, `inactive_at`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
-(1, 1, 'Lgarcia', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(2, 2, 'Mmartinez', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(3, 3, 'Jlopez', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(4, 4, 'Srodriguez', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(5, 5, 'Ahernandez', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(6, 6, 'Bcontreras', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(7, 7, 'Cfernandez', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(8, 8, 'Dmartinez', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(9, 9, 'Egarcia', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL),
-(10, 10, 'Frojas', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', '2024-10-17 12:22:30', NULL, NULL, 1, NULL, NULL);
+(1, 1, 'Lgarcia', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(2, 2, 'Mmartinez', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(3, 3, 'Jlopez', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(4, 4, 'Srodriguez', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(5, 5, 'Ahernandez', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(6, 6, 'Bcontreras', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(7, 7, 'Cfernandez', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(8, 8, 'Dmartinez', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(9, 9, 'Egarcia', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL),
+(10, 10, 'Frojas', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', '2024-10-30 14:43:33', NULL, NULL, 1, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `vw_almacen`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `vw_almacen` (
+`id_almacen` int(11)
+,`nombre_almacen` varchar(65)
+,`iduser_create` int(11)
+,`iduser_update` int(11)
+);
 
 -- --------------------------------------------------------
 
@@ -3651,7 +3975,7 @@ CREATE TABLE `vw_contactabilidad_listar` (
 ,`nombre_contacto` varchar(61)
 ,`telefono` char(9)
 ,`email` varchar(100)
-,`tipo_paquete` char(4)
+,`paquete` varchar(250)
 ,`precio` decimal(7,2)
 ,`fecha_hora_contacto` datetime
 ,`direccion_servicio` varchar(250)
@@ -3675,10 +3999,10 @@ CREATE TABLE `vw_contratos_listar` (
 ,`nombre_cliente` varchar(100)
 ,`num_identificacion` varchar(15)
 ,`direccion_servicio` varchar(200)
-,`servicio` varchar(50)
-,`tipo_paquete` char(4)
-,`fecha_inicio` date
-,`fecha_fin` date
+,`paquete` varchar(250)
+,`tipo_servicio` char(4)
+,`servicio` varchar(200)
+,`duracion` longtext
 );
 
 -- --------------------------------------------------------
@@ -3706,23 +4030,67 @@ CREATE TABLE `vw_empresas_listar` (
 -- --------------------------------------------------------
 
 --
+-- Estructura Stand-in para la vista `vw_fichainstalacion_filtrar`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `vw_fichainstalacion_filtrar` (
+`id_contrato` int(11)
+,`nombre_cliente` varchar(100)
+,`direccion_servicio` varchar(200)
+,`tipo_servicio` char(4)
+,`servicio` varchar(200)
+,`fecha_creacion` date
+);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `vw_incidencias`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `vw_incidencias` (
+`id_incidencia` int(11)
+,`nombre_cliente` varchar(100)
+,`nombre_tecnico` varchar(62)
+,`descripcion` text
+,`solucion` text
+);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura Stand-in para la vista `vw_kardex_listar`
 -- (Véase abajo para la vista actual)
 --
 CREATE TABLE `vw_kardex_listar` (
 `id_kardex` int(11)
 ,`id_producto` int(11)
-,`modelo` varchar(30)
-,`tipo_producto` varchar(60)
-,`marca` varchar(30)
+,`modelo` varchar(70)
+,`id_tipo_producto` int(11)
+,`tipo_producto` varchar(30)
+,`id_marca` int(11)
+,`nombre_marca` varchar(30)
 ,`precio_actual` decimal(7,2)
 ,`fecha` date
-,`tipo_operacion` varchar(20)
-,`motivo` varchar(30)
+,`id_tipo_operacion` int(11)
+,`tipo_operacion` varchar(55)
 ,`cantidad` int(11)
 ,`saldo_total` int(11)
 ,`valor_unico_historico` decimal(7,2)
 ,`fecha_creacion` datetime
+);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `vw_marca`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `vw_marca` (
+`id_marca` int(11)
+,`marca` varchar(30)
+,`create_at` datetime
+,`iduser_create` int(11)
 );
 
 -- --------------------------------------------------------
@@ -3734,10 +4102,14 @@ CREATE TABLE `vw_kardex_listar` (
 CREATE TABLE `vw_paquetes_listar` (
 `id_paquete` int(11)
 ,`id_servicio` int(11)
-,`servicio` varchar(50)
+,`id_servicio2` int(11)
+,`id_servicio3` int(11)
+,`id_servicio4` int(11)
+,`paquete` varchar(250)
+,`tipo_servicio` varchar(25)
+,`servicio` varchar(200)
 ,`precio` decimal(7,2)
-,`fecha_inicio` date
-,`fecha_fin` date
+,`duracion` longtext
 ,`create_at` datetime
 ,`update_at` datetime
 ,`inactive_at` datetime
@@ -3775,6 +4147,31 @@ CREATE TABLE `vw_personas_listar` (
 -- --------------------------------------------------------
 
 --
+-- Estructura Stand-in para la vista `vw_productos_detalle`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `vw_productos_detalle` (
+`id_producto` int(11)
+,`modelo` varchar(70)
+,`precio_actual` decimal(7,2)
+,`codigo_barra` varchar(120)
+,`marca` varchar(30)
+,`id_marca` int(11)
+,`tipo_nombre` varchar(30)
+,`id_tipo` int(11)
+,`unidad_nombre` varchar(30)
+,`id_unidad` int(11)
+,`create_at` datetime
+,`update_at` datetime
+,`inactive_at` datetime
+,`iduser_create` int(11)
+,`iduser_update` int(11)
+,`iduser_inactive` int(11)
+);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura Stand-in para la vista `vw_rolesdetallado_listar`
 -- (Véase abajo para la vista actual)
 --
@@ -3805,6 +4202,7 @@ CREATE TABLE `vw_roles_listar` (
 ,`create_at` datetime
 ,`update_at` datetime
 ,`iduser_create` int(11)
+,`inactive_at` datetime
 );
 
 -- --------------------------------------------------------
@@ -3845,7 +4243,9 @@ CREATE TABLE `vw_sectores_obtener` (
 --
 CREATE TABLE `vw_servicios_listar` (
 `id_servicio` int(11)
-,`servicio` varchar(50)
+,`tipo_servicio` char(4)
+,`servicio` varchar(200)
+,`inactive_at` datetime
 );
 
 -- --------------------------------------------------------
@@ -3856,7 +4256,7 @@ CREATE TABLE `vw_servicios_listar` (
 --
 CREATE TABLE `vw_servicios_listartotal` (
 `id_servicio` int(11)
-,`servicio` varchar(50)
+,`servicio` varchar(200)
 ,`create_at` datetime
 ,`update_at` datetime
 ,`inactive_at` datetime
@@ -3890,26 +4290,6 @@ CREATE TABLE `vw_soporte_detalle` (
 -- --------------------------------------------------------
 
 --
--- Estructura Stand-in para la vista `vw_soporte_detalle_incompleto`
--- (Véase abajo para la vista actual)
---
-CREATE TABLE `vw_soporte_detalle_incompleto` (
-`id_soporte` int(11)
-,`prioridad` varchar(50)
-,`soporte` longtext
-,`descripcion_problema` text
-,`descripcion_solucion` text
-,`tipo_soporte` varchar(50)
-,`id_cliente` int(11)
-,`nombre_cliente` varchar(61)
-,`direccion_servicio` varchar(200)
-,`id_tecnico` int(11)
-,`nombre_tecnico` varchar(61)
-);
-
--- --------------------------------------------------------
-
---
 -- Estructura Stand-in para la vista `vw_tiposoporte_listar`
 -- (Véase abajo para la vista actual)
 --
@@ -3925,6 +4305,34 @@ CREATE TABLE `vw_tiposoporte_listar` (
 ,`usuario_modificador` varchar(100)
 ,`iduser_inactive` int(11)
 ,`usuario_inactivador` varchar(100)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `vw_tipo_productos`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `vw_tipo_productos` (
+`id_tipo` int(11)
+,`tipo_nombre` varchar(30)
+,`iduser_create` int(11)
+,`iduser_update` int(11)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `vw_unidadmedida`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `vw_unidadmedida` (
+`id_unidad` int(11)
+,`unidad_nombre` varchar(30)
+,`create_at` datetime
+,`update_at` datetime
+,`iduser_create` int(11)
+,`iduser_update` int(11)
 );
 
 -- --------------------------------------------------------
@@ -3947,6 +4355,15 @@ CREATE TABLE `vw_usuarios_listar` (
 -- --------------------------------------------------------
 
 --
+-- Estructura para la vista `vw_almacen`
+--
+DROP TABLE IF EXISTS `vw_almacen`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_almacen`  AS SELECT `tb_almacen`.`id_almacen` AS `id_almacen`, `tb_almacen`.`nombre_almacen` AS `nombre_almacen`, `tb_almacen`.`iduser_create` AS `iduser_create`, `tb_almacen`.`iduser_update` AS `iduser_update` FROM `tb_almacen` WHERE `tb_almacen`.`inactive_at` is null ;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura para la vista `vw_clientes_obtener`
 --
 DROP TABLE IF EXISTS `vw_clientes_obtener`;
@@ -3960,7 +4377,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `vw_contactabilidad_listar`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_contactabilidad_listar`  AS SELECT `c`.`id_contactabilidad` AS `id_contactabilidad`, concat(`p`.`nombres`,' ',`p`.`apellidos`) AS `nombre_contacto`, `p`.`telefono` AS `telefono`, `p`.`email` AS `email`, `pk`.`tipo_paquete` AS `tipo_paquete`, `pk`.`precio` AS `precio`, `c`.`create_at` AS `fecha_hora_contacto`, `c`.`direccion_servicio` AS `direccion_servicio`, `c`.`nota` AS `nota`, `c`.`fecha_limite` AS `fecha_limite`, `u1`.`nombre_user` AS `usuario_creador`, `c`.`iduser_update` AS `iduser_update`, `u2`.`nombre_user` AS `usuario_modificador`, `c`.`iduser_inactive` AS `iduser_inactive`, `u3`.`nombre_user` AS `usuario_inactivador` FROM (((((`tb_contactabilidad` `c` join `tb_personas` `p` on(`c`.`id_persona` = `p`.`id_persona`)) join `tb_paquetes` `pk` on(`c`.`id_paquete` = `pk`.`id_paquete`)) left join `tb_usuarios` `u1` on(`c`.`iduser_create` = `u1`.`id_usuario`)) left join `tb_usuarios` `u2` on(`c`.`iduser_update` = `u2`.`id_usuario`)) left join `tb_usuarios` `u3` on(`c`.`iduser_inactive` = `u3`.`id_usuario`)) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_contactabilidad_listar`  AS SELECT `c`.`id_contactabilidad` AS `id_contactabilidad`, concat(`p`.`nombres`,' ',`p`.`apellidos`) AS `nombre_contacto`, `p`.`telefono` AS `telefono`, `p`.`email` AS `email`, `pk`.`paquete` AS `paquete`, `pk`.`precio` AS `precio`, `c`.`create_at` AS `fecha_hora_contacto`, `c`.`direccion_servicio` AS `direccion_servicio`, `c`.`nota` AS `nota`, `c`.`fecha_limite` AS `fecha_limite`, `u1`.`nombre_user` AS `usuario_creador`, `c`.`iduser_update` AS `iduser_update`, `u2`.`nombre_user` AS `usuario_modificador`, `c`.`iduser_inactive` AS `iduser_inactive`, `u3`.`nombre_user` AS `usuario_inactivador` FROM (((((`tb_contactabilidad` `c` join `tb_personas` `p` on(`c`.`id_persona` = `p`.`id_persona`)) join `tb_paquetes` `pk` on(`c`.`id_paquete` = `pk`.`id_paquete`)) join `tb_usuarios` `u1` on(`c`.`iduser_create` = `u1`.`id_usuario`)) join `tb_usuarios` `u2` on(`c`.`iduser_update` = `u2`.`id_usuario`)) join `tb_usuarios` `u3` on(`c`.`iduser_inactive` = `u3`.`id_usuario`)) ;
 
 -- --------------------------------------------------------
 
@@ -3969,7 +4386,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `vw_contratos_listar`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_contratos_listar`  AS SELECT `c`.`id_contrato` AS `id_contrato`, CASE WHEN `cl`.`id_persona` is not null THEN `p`.`nombres` ELSE `e`.`razon_social` END AS `nombre_cliente`, CASE WHEN `cl`.`id_persona` is not null THEN `p`.`nro_doc` ELSE `e`.`ruc` END AS `num_identificacion`, `c`.`direccion_servicio` AS `direccion_servicio`, `sv`.`servicio` AS `servicio`, `t`.`tipo_paquete` AS `tipo_paquete`, `c`.`fecha_inicio` AS `fecha_inicio`, `c`.`fecha_fin` AS `fecha_fin` FROM (((((`tb_contratos` `c` join `tb_clientes` `cl` on(`c`.`id_cliente` = `cl`.`id_cliente`)) left join `tb_personas` `p` on(`cl`.`id_persona` = `p`.`id_persona`)) left join `tb_empresas` `e` on(`cl`.`id_cliente` = `e`.`id_empresa`)) join `tb_paquetes` `t` on(`c`.`id_paquete` = `t`.`id_paquete`)) join `tb_servicios` `sv` on(`t`.`id_servicio` = `sv`.`id_servicio`)) WHERE `c`.`inactive_at` is null ORDER BY `c`.`id_contrato` DESC ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_contratos_listar`  AS SELECT `c`.`id_contrato` AS `id_contrato`, CASE WHEN `cl`.`id_persona` is not null THEN `p`.`nombres` ELSE `e`.`razon_social` END AS `nombre_cliente`, CASE WHEN `cl`.`id_persona` is not null THEN `p`.`nro_doc` ELSE `e`.`ruc` END AS `num_identificacion`, `c`.`direccion_servicio` AS `direccion_servicio`, `t`.`paquete` AS `paquete`, `sv`.`tipo_servicio` AS `tipo_servicio`, `sv`.`servicio` AS `servicio`, `t`.`duracion` AS `duracion` FROM (((((`tb_contratos` `c` join `tb_clientes` `cl` on(`c`.`id_cliente` = `cl`.`id_cliente`)) left join `tb_personas` `p` on(`cl`.`id_persona` = `p`.`id_persona`)) left join `tb_empresas` `e` on(`cl`.`id_cliente` = `e`.`id_empresa`)) join `tb_paquetes` `t` on(`c`.`id_paquete` = `t`.`id_paquete`)) join `tb_servicios` `sv` on(`t`.`id_servicio` = `sv`.`id_servicio`)) WHERE `c`.`inactive_at` is null ORDER BY `c`.`id_contrato` DESC ;
 
 -- --------------------------------------------------------
 
@@ -3983,11 +4400,38 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- --------------------------------------------------------
 
 --
+-- Estructura para la vista `vw_fichainstalacion_filtrar`
+--
+DROP TABLE IF EXISTS `vw_fichainstalacion_filtrar`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_fichainstalacion_filtrar`  AS SELECT `c`.`id_contrato` AS `id_contrato`, CASE WHEN `cl`.`id_persona` is not null THEN `p`.`nombres` ELSE `e`.`razon_social` END AS `nombre_cliente`, `c`.`direccion_servicio` AS `direccion_servicio`, `sv`.`tipo_servicio` AS `tipo_servicio`, `sv`.`servicio` AS `servicio`, cast(`c`.`create_at` as date) AS `fecha_creacion` FROM (((((`tb_contratos` `c` join `tb_clientes` `cl` on(`c`.`id_cliente` = `cl`.`id_cliente`)) left join `tb_personas` `p` on(`cl`.`id_persona` = `p`.`id_persona`)) left join `tb_empresas` `e` on(`cl`.`id_cliente` = `e`.`id_empresa`)) join `tb_paquetes` `t` on(`c`.`id_paquete` = `t`.`id_paquete`)) join `tb_servicios` `sv` on(`t`.`id_servicio` = `sv`.`id_servicio`)) WHERE `c`.`inactive_at` is null AND `c`.`ficha_instalacion` is null ORDER BY `c`.`create_at` ASC ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `vw_incidencias`
+--
+DROP TABLE IF EXISTS `vw_incidencias`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_incidencias`  AS SELECT `i`.`id_incidencia` AS `id_incidencia`, CASE WHEN `p`.`nombres` is not null THEN concat(`p`.`apellidos`,', ',`p`.`nombres`) WHEN `e`.`razon_social` is not null THEN `e`.`razon_social` END AS `nombre_cliente`, concat(`t_persona`.`apellidos`,', ',`t_persona`.`nombres`) AS `nombre_tecnico`, `i`.`descripcion` AS `descripcion`, `i`.`solucion` AS `solucion` FROM ((((((`tb_incidencias` `i` left join `tb_clientes` `c` on(`i`.`id_cliente` = `c`.`id_cliente`)) left join `tb_personas` `p` on(`c`.`id_persona` = `p`.`id_persona`)) left join `tb_empresas` `e` on(`c`.`id_empresa` = `e`.`id_empresa`)) left join `tb_responsables` `r` on(`i`.`id_tecnico` = `r`.`id_responsable`)) left join `tb_usuarios` `u` on(`r`.`id_usuario` = `u`.`id_usuario`)) left join `tb_personas` `t_persona` on(`u`.`id_persona` = `t_persona`.`id_persona`)) WHERE `i`.`inactive_at` is null ;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura para la vista `vw_kardex_listar`
 --
 DROP TABLE IF EXISTS `vw_kardex_listar`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_kardex_listar`  AS SELECT `k`.`id_kardex` AS `id_kardex`, `p`.`id_producto` AS `id_producto`, `p`.`modelo` AS `modelo`, `p`.`tipo_producto` AS `tipo_producto`, `p`.`marca` AS `marca`, `p`.`precio_actual` AS `precio_actual`, `k`.`fecha` AS `fecha`, `k`.`tipo_operacion` AS `tipo_operacion`, `k`.`motivo` AS `motivo`, `k`.`cantidad` AS `cantidad`, `k`.`saldo_total` AS `saldo_total`, `k`.`valor_unico_historico` AS `valor_unico_historico`, `k`.`create_at` AS `fecha_creacion` FROM (`tb_productos` `p` join `tb_kardex` `k` on(`p`.`id_producto` = `k`.`id_producto`)) ORDER BY `k`.`create_at` DESC ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_kardex_listar`  AS SELECT `k`.`id_kardex` AS `id_kardex`, `p`.`id_producto` AS `id_producto`, `p`.`modelo` AS `modelo`, `p`.`id_tipo` AS `id_tipo_producto`, `tp`.`tipo_nombre` AS `tipo_producto`, `p`.`id_marca` AS `id_marca`, `m`.`marca` AS `nombre_marca`, `p`.`precio_actual` AS `precio_actual`, `k`.`fecha` AS `fecha`, `k`.`id_tipooperacion` AS `id_tipo_operacion`, `toper`.`descripcion` AS `tipo_operacion`, `k`.`cantidad` AS `cantidad`, `k`.`saldo_total` AS `saldo_total`, `k`.`valor_unico_historico` AS `valor_unico_historico`, `k`.`create_at` AS `fecha_creacion` FROM ((((`tb_productos` `p` join `tb_kardex` `k` on(`p`.`id_producto` = `k`.`id_producto`)) join `tb_tipoproducto` `tp` on(`p`.`id_tipo` = `tp`.`id_tipo`)) join `tb_marca` `m` on(`p`.`id_marca` = `m`.`id_marca`)) join `tb_tipooperacion` `toper` on(`k`.`id_tipooperacion` = `toper`.`id_tipooperacion`)) ORDER BY `k`.`create_at` DESC ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `vw_marca`
+--
+DROP TABLE IF EXISTS `vw_marca`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_marca`  AS SELECT `tb_marca`.`id_marca` AS `id_marca`, `tb_marca`.`marca` AS `marca`, `tb_marca`.`create_at` AS `create_at`, `tb_marca`.`iduser_create` AS `iduser_create` FROM `tb_marca` WHERE `tb_marca`.`inactive_at` is null ;
 
 -- --------------------------------------------------------
 
@@ -3996,7 +4440,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `vw_paquetes_listar`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_paquetes_listar`  AS SELECT `p`.`id_paquete` AS `id_paquete`, `p`.`id_servicio` AS `id_servicio`, `s`.`servicio` AS `servicio`, `p`.`precio` AS `precio`, `p`.`fecha_inicio` AS `fecha_inicio`, `p`.`fecha_fin` AS `fecha_fin`, `p`.`create_at` AS `create_at`, `p`.`update_at` AS `update_at`, `p`.`inactive_at` AS `inactive_at`, `p`.`iduser_create` AS `iduser_create`, `p`.`iduser_update` AS `iduser_update`, `p`.`iduser_inactive` AS `iduser_inactive` FROM (`tb_paquetes` `p` left join `tb_servicios` `s` on(`p`.`id_servicio` = `s`.`id_servicio`)) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_paquetes_listar`  AS SELECT `p`.`id_paquete` AS `id_paquete`, `p`.`id_servicio` AS `id_servicio`, `p`.`id_servicio2` AS `id_servicio2`, `p`.`id_servicio3` AS `id_servicio3`, `p`.`id_servicio4` AS `id_servicio4`, `p`.`paquete` AS `paquete`, concat_ws(' + ',`s`.`tipo_servicio`,`s2`.`tipo_servicio`,`s3`.`tipo_servicio`,`s4`.`tipo_servicio`) AS `tipo_servicio`, `s`.`servicio` AS `servicio`, `p`.`precio` AS `precio`, `p`.`duracion` AS `duracion`, `p`.`create_at` AS `create_at`, `p`.`update_at` AS `update_at`, `p`.`inactive_at` AS `inactive_at`, `p`.`iduser_create` AS `iduser_create`, `p`.`iduser_update` AS `iduser_update`, `p`.`iduser_inactive` AS `iduser_inactive` FROM ((((`tb_paquetes` `p` left join `tb_servicios` `s` on(`p`.`id_servicio` = `s`.`id_servicio`)) left join `tb_servicios` `s2` on(`p`.`id_servicio2` = `s2`.`id_servicio`)) left join `tb_servicios` `s3` on(`p`.`id_servicio3` = `s3`.`id_servicio`)) left join `tb_servicios` `s4` on(`p`.`id_servicio4` = `s4`.`id_servicio`)) ;
 
 -- --------------------------------------------------------
 
@@ -4006,6 +4450,15 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 DROP TABLE IF EXISTS `vw_personas_listar`;
 
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_personas_listar`  AS SELECT `p`.`id_persona` AS `id_persona`, `p`.`tipo_doc` AS `tipo_doc`, `p`.`nro_doc` AS `nro_doc`, `p`.`apellidos` AS `apellidos`, `p`.`nombres` AS `nombres`, `p`.`telefono` AS `telefono`, `p`.`nacionalidad` AS `nacionalidad`, `p`.`email` AS `email`, `p`.`create_at` AS `create_at`, `p`.`update_at` AS `update_at`, `p`.`inactive_at` AS `inactive_at`, `p`.`iduser_create` AS `iduser_create`, `u1`.`nombre_user` AS `usuario_creador`, `p`.`iduser_update` AS `iduser_update`, `u2`.`nombre_user` AS `usuario_modificador`, `p`.`iduser_inactive` AS `iduser_inactive`, `u3`.`nombre_user` AS `usuario_inactivador` FROM (((`tb_personas` `p` left join `tb_usuarios` `u1` on(`p`.`iduser_create` = `u1`.`id_usuario`)) left join `tb_usuarios` `u2` on(`p`.`iduser_update` = `u2`.`id_usuario`)) left join `tb_usuarios` `u3` on(`p`.`iduser_inactive` = `u3`.`id_usuario`)) ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `vw_productos_detalle`
+--
+DROP TABLE IF EXISTS `vw_productos_detalle`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_productos_detalle`  AS SELECT `p`.`id_producto` AS `id_producto`, `p`.`modelo` AS `modelo`, `p`.`precio_actual` AS `precio_actual`, `p`.`codigo_barra` AS `codigo_barra`, `m`.`marca` AS `marca`, `m`.`id_marca` AS `id_marca`, `t`.`tipo_nombre` AS `tipo_nombre`, `t`.`id_tipo` AS `id_tipo`, `u`.`unidad_nombre` AS `unidad_nombre`, `u`.`id_unidad` AS `id_unidad`, `p`.`create_at` AS `create_at`, `p`.`update_at` AS `update_at`, `p`.`inactive_at` AS `inactive_at`, `p`.`iduser_create` AS `iduser_create`, `p`.`iduser_update` AS `iduser_update`, `p`.`iduser_inactive` AS `iduser_inactive` FROM (((`tb_productos` `p` join `tb_marca` `m` on(`p`.`id_marca` = `m`.`id_marca`)) join `tb_tipoproducto` `t` on(`p`.`id_tipo` = `t`.`id_tipo`)) join `tb_unidadmedida` `u` on(`p`.`id_unidad` = `u`.`id_unidad`)) WHERE `p`.`inactive_at` is null ;
 
 -- --------------------------------------------------------
 
@@ -4023,7 +4476,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `vw_roles_listar`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_roles_listar`  AS SELECT `r`.`id_rol` AS `id_rol`, `r`.`rol` AS `rol`, `r`.`create_at` AS `create_at`, `r`.`update_at` AS `update_at`, `r`.`iduser_create` AS `iduser_create` FROM `tb_roles` AS `r` WHERE `r`.`inactive_at` is null ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_roles_listar`  AS SELECT `r`.`id_rol` AS `id_rol`, `r`.`rol` AS `rol`, `r`.`create_at` AS `create_at`, `r`.`update_at` AS `update_at`, `r`.`iduser_create` AS `iduser_create`, `r`.`inactive_at` AS `inactive_at` FROM `tb_roles` AS `r` WHERE `r`.`rol` <> 'Administrador' ;
 
 -- --------------------------------------------------------
 
@@ -4050,7 +4503,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `vw_servicios_listar`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_servicios_listar`  AS SELECT `s`.`id_servicio` AS `id_servicio`, `s`.`servicio` AS `servicio` FROM `tb_servicios` AS `s` WHERE `s`.`iduser_inactive` is null ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_servicios_listar`  AS SELECT `s`.`id_servicio` AS `id_servicio`, `s`.`tipo_servicio` AS `tipo_servicio`, `s`.`servicio` AS `servicio`, `s`.`inactive_at` AS `inactive_at` FROM `tb_servicios` AS `s` ;
 
 -- --------------------------------------------------------
 
@@ -4073,20 +4526,29 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- --------------------------------------------------------
 
 --
--- Estructura para la vista `vw_soporte_detalle_incompleto`
---
-DROP TABLE IF EXISTS `vw_soporte_detalle_incompleto`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_soporte_detalle_incompleto`  AS SELECT `s`.`id_soporte` AS `id_soporte`, `s`.`prioridad` AS `prioridad`, `s`.`soporte` AS `soporte`, `s`.`descripcion_problema` AS `descripcion_problema`, `s`.`descripcion_solucion` AS `descripcion_solucion`, `ts`.`tipo_soporte` AS `tipo_soporte`, `c`.`id_cliente` AS `id_cliente`, concat(`p_cliente`.`nombres`,' ',`p_cliente`.`apellidos`) AS `nombre_cliente`, `c`.`direccion_servicio` AS `direccion_servicio`, `r`.`id_usuario` AS `id_tecnico`, concat(`p_tecnico`.`nombres`,' ',`p_tecnico`.`apellidos`) AS `nombre_tecnico` FROM (((((((`tb_soporte` `s` join `tb_contratos` `c` on(`s`.`id_contrato` = `c`.`id_contrato`)) join `tb_tipo_soporte` `ts` on(`s`.`id_tipo_soporte` = `ts`.`id_tipo_soporte`)) join `tb_responsables` `r` on(`s`.`id_tecnico` = `r`.`id_responsable`)) join `tb_usuarios` `u` on(`r`.`id_usuario` = `u`.`id_usuario`)) join `tb_personas` `p_tecnico` on(`u`.`id_persona` = `p_tecnico`.`id_persona`)) join `tb_clientes` `cl` on(`c`.`id_cliente` = `cl`.`id_cliente`)) join `tb_personas` `p_cliente` on(`cl`.`id_persona` = `p_cliente`.`id_persona`)) ORDER BY `s`.`id_soporte` DESC ;
-
--- --------------------------------------------------------
-
---
 -- Estructura para la vista `vw_tiposoporte_listar`
 --
 DROP TABLE IF EXISTS `vw_tiposoporte_listar`;
 
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_tiposoporte_listar`  AS SELECT `t`.`id_tipo_soporte` AS `id_tipo_soporte`, `t`.`tipo_soporte` AS `tipo_soporte`, `t`.`create_at` AS `create_at`, `t`.`update_at` AS `update_at`, `t`.`inactive_at` AS `inactive_at`, `t`.`iduser_create` AS `iduser_create`, `u1`.`nombre_user` AS `usuario_creador`, `t`.`iduser_update` AS `iduser_update`, `u2`.`nombre_user` AS `usuario_modificador`, `t`.`iduser_inactive` AS `iduser_inactive`, `u3`.`nombre_user` AS `usuario_inactivador` FROM (((`tb_tipo_soporte` `t` left join `tb_usuarios` `u1` on(`t`.`iduser_create` = `u1`.`id_usuario`)) left join `tb_usuarios` `u2` on(`t`.`iduser_update` = `u2`.`id_usuario`)) left join `tb_usuarios` `u3` on(`t`.`iduser_inactive` = `u3`.`id_usuario`)) ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `vw_tipo_productos`
+--
+DROP TABLE IF EXISTS `vw_tipo_productos`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_tipo_productos`  AS SELECT `tb_tipoproducto`.`id_tipo` AS `id_tipo`, `tb_tipoproducto`.`tipo_nombre` AS `tipo_nombre`, `tb_tipoproducto`.`iduser_create` AS `iduser_create`, `tb_tipoproducto`.`iduser_update` AS `iduser_update` FROM `tb_tipoproducto` WHERE `tb_tipoproducto`.`inactive_at` is null ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `vw_unidadmedida`
+--
+DROP TABLE IF EXISTS `vw_unidadmedida`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_unidadmedida`  AS SELECT `tb_unidadmedida`.`id_unidad` AS `id_unidad`, `tb_unidadmedida`.`unidad_nombre` AS `unidad_nombre`, `tb_unidadmedida`.`create_at` AS `create_at`, `tb_unidadmedida`.`update_at` AS `update_at`, `tb_unidadmedida`.`iduser_create` AS `iduser_create`, `tb_unidadmedida`.`iduser_update` AS `iduser_update` FROM `tb_unidadmedida` ;
 
 -- --------------------------------------------------------
 
@@ -4100,6 +4562,13 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 -- Índices para tablas volcadas
 --
+
+--
+-- Indices de la tabla `tb_almacen`
+--
+ALTER TABLE `tb_almacen`
+  ADD PRIMARY KEY (`id_almacen`),
+  ADD UNIQUE KEY `uk_almacen` (`nombre_almacen`);
 
 --
 -- Indices de la tabla `tb_cajas`
@@ -4158,18 +4627,38 @@ ALTER TABLE `tb_empresas`
   ADD UNIQUE KEY `empre_uk_ruc` (`ruc`);
 
 --
+-- Indices de la tabla `tb_incidencias`
+--
+ALTER TABLE `tb_incidencias`
+  ADD PRIMARY KEY (`id_incidencia`),
+  ADD KEY `fk_incidencias_cliente` (`id_cliente`),
+  ADD KEY `fk_incidencias_tecnico` (`id_tecnico`);
+
+--
 -- Indices de la tabla `tb_kardex`
 --
 ALTER TABLE `tb_kardex`
   ADD PRIMARY KEY (`id_kardex`),
-  ADD KEY `kard_fk_id_producto` (`id_producto`);
+  ADD KEY `fk_id_producto` (`id_producto`),
+  ADD KEY `fk_id_almacen` (`id_almacen`),
+  ADD KEY `fk_id_tipooperacion` (`id_tipooperacion`);
+
+--
+-- Indices de la tabla `tb_marca`
+--
+ALTER TABLE `tb_marca`
+  ADD PRIMARY KEY (`id_marca`),
+  ADD UNIQUE KEY `uk_marca` (`marca`);
 
 --
 -- Indices de la tabla `tb_paquetes`
 --
 ALTER TABLE `tb_paquetes`
   ADD PRIMARY KEY (`id_paquete`),
-  ADD KEY `fk_paque_id_servicio` (`id_servicio`);
+  ADD KEY `fk_paque_id_servicio` (`id_servicio`),
+  ADD KEY `fk_paque_id_servicio2` (`id_servicio2`),
+  ADD KEY `fk_paque_id_servicio3` (`id_servicio3`),
+  ADD KEY `fk_paque_id_servicio4` (`id_servicio4`);
 
 --
 -- Indices de la tabla `tb_personas`
@@ -4183,8 +4672,10 @@ ALTER TABLE `tb_personas`
 --
 ALTER TABLE `tb_productos`
   ADD PRIMARY KEY (`id_producto`),
-  ADD UNIQUE KEY `produ_uk_codigo_barra` (`codigo_barra`),
-  ADD UNIQUE KEY `produc_uk_tp_md_mc` (`marca`,`tipo_producto`,`modelo`);
+  ADD UNIQUE KEY `producto_uk_modelo` (`id_marca`,`id_tipo`,`modelo`),
+  ADD UNIQUE KEY `producto_uk_codigo` (`codigo_barra`),
+  ADD KEY `fk_tipo_producto` (`id_tipo`),
+  ADD KEY `fk_unidad_medida` (`id_unidad`);
 
 --
 -- Indices de la tabla `tb_provincias`
@@ -4221,7 +4712,7 @@ ALTER TABLE `tb_sectores`
 --
 ALTER TABLE `tb_servicios`
   ADD PRIMARY KEY (`id_servicio`),
-  ADD UNIQUE KEY `servi_uk_servicio` (`servicio`);
+  ADD UNIQUE KEY `servi_uk_servicio` (`servicio`,`tipo_servicio`);
 
 --
 -- Indices de la tabla `tb_soporte`
@@ -4233,11 +4724,32 @@ ALTER TABLE `tb_soporte`
   ADD KEY `sopor_fk_id_tecnico` (`id_tecnico`);
 
 --
+-- Indices de la tabla `tb_tipooperacion`
+--
+ALTER TABLE `tb_tipooperacion`
+  ADD PRIMARY KEY (`id_tipooperacion`),
+  ADD UNIQUE KEY `tipoop` (`descripcion`);
+
+--
+-- Indices de la tabla `tb_tipoproducto`
+--
+ALTER TABLE `tb_tipoproducto`
+  ADD PRIMARY KEY (`id_tipo`),
+  ADD UNIQUE KEY `uk_tipopro` (`tipo_nombre`);
+
+--
 -- Indices de la tabla `tb_tipo_soporte`
 --
 ALTER TABLE `tb_tipo_soporte`
   ADD PRIMARY KEY (`id_tipo_soporte`),
   ADD UNIQUE KEY `tiposopor_uk_tipo_soporte` (`tipo_soporte`);
+
+--
+-- Indices de la tabla `tb_unidadmedida`
+--
+ALTER TABLE `tb_unidadmedida`
+  ADD PRIMARY KEY (`id_unidad`),
+  ADD UNIQUE KEY `uk_unidad` (`unidad_nombre`);
 
 --
 -- Indices de la tabla `tb_usuarios`
@@ -4252,10 +4764,16 @@ ALTER TABLE `tb_usuarios`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `tb_almacen`
+--
+ALTER TABLE `tb_almacen`
+  MODIFY `id_almacen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT de la tabla `tb_cajas`
 --
 ALTER TABLE `tb_cajas`
-  MODIFY `id_caja` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_caja` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `tb_clientes`
@@ -4282,10 +4800,22 @@ ALTER TABLE `tb_empresas`
   MODIFY `id_empresa` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
+-- AUTO_INCREMENT de la tabla `tb_incidencias`
+--
+ALTER TABLE `tb_incidencias`
+  MODIFY `id_incidencia` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `tb_kardex`
 --
 ALTER TABLE `tb_kardex`
   MODIFY `id_kardex` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `tb_marca`
+--
+ALTER TABLE `tb_marca`
+  MODIFY `id_marca` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `tb_paquetes`
@@ -4303,7 +4833,7 @@ ALTER TABLE `tb_personas`
 -- AUTO_INCREMENT de la tabla `tb_productos`
 --
 ALTER TABLE `tb_productos`
-  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `tb_responsables`
@@ -4327,7 +4857,7 @@ ALTER TABLE `tb_sectores`
 -- AUTO_INCREMENT de la tabla `tb_servicios`
 --
 ALTER TABLE `tb_servicios`
-  MODIFY `id_servicio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `id_servicio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `tb_soporte`
@@ -4336,10 +4866,28 @@ ALTER TABLE `tb_soporte`
   MODIFY `id_soporte` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT de la tabla `tb_tipooperacion`
+--
+ALTER TABLE `tb_tipooperacion`
+  MODIFY `id_tipooperacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT de la tabla `tb_tipoproducto`
+--
+ALTER TABLE `tb_tipoproducto`
+  MODIFY `id_tipo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT de la tabla `tb_tipo_soporte`
 --
 ALTER TABLE `tb_tipo_soporte`
   MODIFY `id_tipo_soporte` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+
+--
+-- AUTO_INCREMENT de la tabla `tb_unidadmedida`
+--
+ALTER TABLE `tb_unidadmedida`
+  MODIFY `id_unidad` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `tb_usuarios`
@@ -4390,16 +4938,36 @@ ALTER TABLE `tb_distritos`
   ADD CONSTRAINT `distr_fk_id_provincia` FOREIGN KEY (`id_provincia`) REFERENCES `tb_provincias` (`id_provincia`);
 
 --
+-- Filtros para la tabla `tb_incidencias`
+--
+ALTER TABLE `tb_incidencias`
+  ADD CONSTRAINT `fk_incidencias_cliente` FOREIGN KEY (`id_cliente`) REFERENCES `tb_clientes` (`id_cliente`),
+  ADD CONSTRAINT `fk_incidencias_tecnico` FOREIGN KEY (`id_tecnico`) REFERENCES `tb_responsables` (`id_responsable`);
+
+--
 -- Filtros para la tabla `tb_kardex`
 --
 ALTER TABLE `tb_kardex`
-  ADD CONSTRAINT `kard_fk_id_producto` FOREIGN KEY (`id_producto`) REFERENCES `tb_productos` (`id_producto`);
+  ADD CONSTRAINT `fk_id_almacen` FOREIGN KEY (`id_almacen`) REFERENCES `tb_almacen` (`id_almacen`),
+  ADD CONSTRAINT `fk_id_producto` FOREIGN KEY (`id_producto`) REFERENCES `tb_productos` (`id_producto`),
+  ADD CONSTRAINT `fk_id_tipooperacion` FOREIGN KEY (`id_tipooperacion`) REFERENCES `tb_tipooperacion` (`id_tipooperacion`);
 
 --
 -- Filtros para la tabla `tb_paquetes`
 --
 ALTER TABLE `tb_paquetes`
-  ADD CONSTRAINT `fk_paque_id_servicio` FOREIGN KEY (`id_servicio`) REFERENCES `tb_servicios` (`id_servicio`);
+  ADD CONSTRAINT `fk_paque_id_servicio` FOREIGN KEY (`id_servicio`) REFERENCES `tb_servicios` (`id_servicio`),
+  ADD CONSTRAINT `fk_paque_id_servicio2` FOREIGN KEY (`id_servicio2`) REFERENCES `tb_servicios` (`id_servicio`),
+  ADD CONSTRAINT `fk_paque_id_servicio3` FOREIGN KEY (`id_servicio3`) REFERENCES `tb_servicios` (`id_servicio`),
+  ADD CONSTRAINT `fk_paque_id_servicio4` FOREIGN KEY (`id_servicio4`) REFERENCES `tb_servicios` (`id_servicio`);
+
+--
+-- Filtros para la tabla `tb_productos`
+--
+ALTER TABLE `tb_productos`
+  ADD CONSTRAINT `fk_marca` FOREIGN KEY (`id_marca`) REFERENCES `tb_marca` (`id_marca`),
+  ADD CONSTRAINT `fk_tipo_producto` FOREIGN KEY (`id_tipo`) REFERENCES `tb_tipoproducto` (`id_tipo`),
+  ADD CONSTRAINT `fk_unidad_medida` FOREIGN KEY (`id_unidad`) REFERENCES `tb_unidadmedida` (`id_unidad`);
 
 --
 -- Filtros para la tabla `tb_provincias`
@@ -4438,7 +5006,7 @@ DELIMITER $$
 --
 -- Eventos
 --
-CREATE DEFINER=`root`@`localhost` EVENT `ev_inhabilitar_contactos` ON SCHEDULE EVERY 1 DAY STARTS '2024-10-17 12:22:45' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN
+CREATE DEFINER=`root`@`localhost` EVENT `ev_inhabilitar_contactos` ON SCHEDULE EVERY 1 DAY STARTS '2024-10-30 14:43:45' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN
     CALL spu_contactabilidad_inhabilitar(); 
 END$$
 

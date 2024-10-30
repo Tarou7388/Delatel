@@ -354,7 +354,7 @@ CREATE TABLE tb_productos (
 
 CREATE TABLE tb_tipooperacion (
 	id_tipooperacion INT PRIMARY KEY AUTO_INCREMENT,
-	descripcion       VARCHAR(30) NOT NULL,
+	descripcion       VARCHAR(55) NOT NULL,
 	movimiento        CHAR(1) NOT NULL,
 	CONSTRAINT tipoop UNIQUE(descripcion)
 ) ENGINE = INNODB;
