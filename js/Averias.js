@@ -142,4 +142,11 @@ document.addEventListener("DOMContentLoaded", () => {
       "responsive": true
     });
   })();
+  async function permisos(){
+    const response = await fetch(`${config.HOST}app/controllers/Usuario.controllers.php?operacion=obtenerPermisos`);
+    const data = await response.json()
+    if(data.contrato.crear){
+
+    }
+  }
 });

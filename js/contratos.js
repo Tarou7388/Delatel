@@ -1,5 +1,6 @@
 import config from "../env.js";
-window.addEventListener("DOMContentLoaded", () => {
+import * as Herramientas from "../js/Herramientas.js";
+window.addEventListener("DOMContentLoaded", async () => {
   const nroDoc = document.querySelector("#txtNumDoc");
   const nombre = document.querySelector("#txtNombre");
   const txtDuracion = document.querySelector("#txtDuracion");
@@ -12,7 +13,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const slcPaquetes = document.querySelector("#slcPaquetes");
   const txtNota = document.querySelector("#txtNota");
   const span = document.querySelector("#infoFecha");
-
+  const accesos = await Herramientas.permisos()
   let lapsoTiempo = false;
   let fechaFin = null;
   let fechaFinActualizar = null;
@@ -62,7 +63,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const dataPaquetes = await fetchPaquetesPorServicio(idServicio);
     slcPaquetes.innerHTML = '<option value="" disabled selected>Seleccione un paquete</option>';
     dataPaquetes
-      .filter(paquete => !paquete.inactive_at) 
+      .filter(paquete => !paquete.inactive_at)
       .forEach((paquete) => {
         const option = document.createElement("option");
         const id = `${paquete.id_paquete} - ${paquete.precio} - ${paquete.duracion}`;
@@ -135,161 +136,176 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   async function registrarCliente() {
-    const params = new FormData();
-    params.append("operacion", "registrarCliente");
-    params.append("idPersona", idPersona);
-    params.append("idEmpresa", idEmpresa);
-    params.append("direccion", direccion.value);
-    params.append("referencia", referencia.value);
-    params.append("idUsuario", user.idUsuario);
-    params.append("coordenadas", coordenada.value);
+    if (accesos.personas.crear == 1) {
+      const params = new FormData();
+      params.append("operacion", "registrarCliente");
+      params.append("idPersona", idPersona);
+      params.append("idEmpresa", idEmpresa);
+      params.append("direccion", direccion.value);
+      params.append("referencia", referencia.value);
+      params.append("idUsuario", user.idUsuario);
+      params.append("coordenadas", coordenada.value);
 
-    const response = await fetch(
-      `${config.HOST}app/controllers/Cliente.controllers.php`,
-      {
-        method: "POST",
-        body: params,
-      }
-    );
-    const data = await response.json();
-    idCliente = data[0].id_cliente;
+      const response = await fetch(
+        `${config.HOST}app/controllers/Cliente.controllers.php`,
+        {
+          method: "POST",
+          body: params,
+        }
+      );
+      const data = await response.json();
+      idCliente = data[0].id_cliente;
+    } else {
+      showToast("No tienes acceso para crear un cliente", "ERROR");
+    }
   }
+  registrarCliente();
 
   async function registrarContrato() {
-    const fechaRegistro = new Date().toISOString().split("T")[0];
-    const nota = txtNota.value;
-    console.log(nota);
-    const idUsuarioRegistro = user.idRol;
+    if (accesos.contratos.crear == 1) {
+      const fechaRegistro = new Date().toISOString().split("T")[0];
+      const nota = txtNota.value;
+      console.log(nota);
+      const idUsuarioRegistro = user.idRol;
 
-    if (!(await validarCampos()) || (await !validarFechas())) {
-    } else if (!lapsoTiempo) {
-      showToast("¡La fecha de fin debe ser mayor a 3 meses!", "INFO");
-    } else {
-      try {
-        const response = await fetch(
-          `${config.HOST}app/controllers/Contrato.controllers.php`,
-          {
-            method: "POST",
-            body: JSON.stringify({
-              operacion: "registrarContrato",
-              parametros: {
-                idCliente: idCliente,
-                idTarifario: idServicio,
-                idSector: sector.value,
-                direccion: direccion.value,
-                referencia: referencia.value,
-                coordenada: coordenada.value,
-                fechaInicio: fechaInicio.value,
-                fechaFin: fechaFin,
-                fechaRegistro: fechaRegistro,
-                nota: nota,
-                idUsuario: user.idUsuario,
+      if (!(await validarCampos()) || (await !validarFechas())) {
+      } else if (!lapsoTiempo) {
+        showToast("¡La fecha de fin debe ser mayor a 3 meses!", "INFO");
+      } else {
+        try {
+          const response = await fetch(
+            `${config.HOST}app/controllers/Contrato.controllers.php`,
+            {
+              method: "POST",
+              body: JSON.stringify({
+                operacion: "registrarContrato",
+                parametros: {
+                  idCliente: idCliente,
+                  idTarifario: idServicio,
+                  idSector: sector.value,
+                  direccion: direccion.value,
+                  referencia: referencia.value,
+                  coordenada: coordenada.value,
+                  fechaInicio: fechaInicio.value,
+                  fechaFin: fechaFin,
+                  fechaRegistro: fechaRegistro,
+                  nota: nota,
+                  idUsuario: user.idUsuario,
+                },
+              }),
+              headers: {
+                "Content-Type": "application/json",
               },
-            }),
-            headers: {
-              "Content-Type": "application/json",
-            },
+            }
+          );
+          const data = await response.json();
+          if (data.error) {
+            console.log(data.error);
+          } else {
+            showToast("¡Contrato registrado correctamente!", "SUCCESS");
+            span.classList.add("invisible");
+            nroDoc.disabled = false;
+            //window.location.reload();
+            resetUI();
           }
-        );
-        const data = await response.json();
-        if (data.error) {
-          console.log(data.error);
-        } else {
-          showToast("¡Contrato registrado correctamente!", "SUCCESS");
-          span.classList.add("invisible");
-          nroDoc.disabled = false;
-          //window.location.reload();
-          resetUI();
+        } catch (error) {
+          console.log(error); // Añade este log para depurar el error
+          showToast(
+            "Ocurrió un error al registrar el contrato. Por favor, inténtelo de nuevo.",
+            "ERROR"
+          );
         }
-      } catch (error) {
-        console.log(error); // Añade este log para depurar el error
-        showToast(
-          "Ocurrió un error al registrar el contrato. Por favor, inténtelo de nuevo.",
-          "ERROR"
-        );
       }
+    } else {
+      showToast("No tienes acceso para crear un cliente", "ERROR");
     }
   }
 
   async function eliminar(idContrato, idUsuario) {
-    if (await ask("¿Desea eliminar este contrato?")) {
+    if (accesos.contrato.eliminar == 1) {
+      if (await ask("¿Desea eliminar este contrato?")) {
+        const response = await fetch(
+          `${config.HOST}app/controllers/Contrato.controllers.php`,
+          {
+            method: "PUT",
+            body: JSON.stringify({
+              operacion: "eliminarContrato",
+              parametros: {
+                id: idContrato,
+                idUsuario: idUsuario,
+              },
+            }),
+          }
+        );
+        const data = await response.json();
+        if (data.eliminado) {
+          showToast("¡Contrato eliminado correctamente!", "SUCCESS");
+          window.location.reload();
+        }
+      }
+    } else {
+      showToast("No tienes acceso para eliminar un contrato", "ERROR");
+    }
+  }
+
+  async function actualizarContrato(idContrato, idUsuario) {
+    if (accesos.contratos.actualizar == 1) {
+      const idServicio = document.querySelector("#slcServicioActualizar").value;
+      const idSector = document.querySelector("#slcSectorActualizar").value;
+      const direccionServicio = document.querySelector(
+        "#txtDireccionActualizar"
+      ).value;
+      const referencia = document.querySelector("#txtReferenciaActualizar").value;
+      const coordenada = document.querySelector("#txtCoordenadaActualizar").value;
+      const fechaInicio = document.querySelector(
+        "#txtFechaInicioActualizar"
+      ).value;
+      const fechaRegistro = new Date().toISOString().split("T")[0];
+      const nota = document.querySelector("#txtNotaActualizar").value;
+
+      const today = new Date().toISOString().split("T")[0];
+      if (fechaInicio < today) {
+        showToast(
+          "¡La fecha de inicio no puede ser menor a la fecha de hoy!",
+          "WARNING"
+        );
+        return;
+      }
+
       const response = await fetch(
         `${config.HOST}app/controllers/Contrato.controllers.php`,
         {
           method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify({
-            operacion: "eliminarContrato",
+            operacion: "actualizarContrato",
             parametros: {
-              id: idContrato,
-              idUsuario: idUsuario,
+              idContrato: idContrato,
+              idPaquete: idServicioActualizar,
+              idSector: idSector,
+              direccionServicio: direccionServicio,
+              referencia: referencia,
+              coordenada: coordenada,
+              fechaInicio: fechaInicio,
+              fechaFin: fechaFinActualizar,
+              fechaRegistro: fechaRegistro,
+              nota: nota,
+              idUsuarioUpdate: idUsuario,
             },
           }),
         }
       );
       const data = await response.json();
-      if (data.eliminado) {
-        showToast("¡Contrato eliminado correctamente!", "SUCCESS");
-        window.location.reload();
+      if (data.actualizado) {
+        showToast("¡Contrato actualizado correctamente!", "SUCCESS");
+        setTimeout(() => {
+          window.location.reload();
+        }, 2500);
+      } else {
+        showToast("Error al actualizar el contrato.", "ERROR");
       }
-    }
-  }
-
-  async function actualizarContrato(idContrato, idUsuario) {
-    const idServicio = document.querySelector("#slcServicioActualizar").value;
-    const idSector = document.querySelector("#slcSectorActualizar").value;
-    const direccionServicio = document.querySelector(
-      "#txtDireccionActualizar"
-    ).value;
-    const referencia = document.querySelector("#txtReferenciaActualizar").value;
-    const coordenada = document.querySelector("#txtCoordenadaActualizar").value;
-    const fechaInicio = document.querySelector(
-      "#txtFechaInicioActualizar"
-    ).value;
-    const fechaRegistro = new Date().toISOString().split("T")[0];
-    const nota = document.querySelector("#txtNotaActualizar").value;
-
-    const today = new Date().toISOString().split("T")[0];
-    if (fechaInicio < today) {
-      showToast(
-        "¡La fecha de inicio no puede ser menor a la fecha de hoy!",
-        "WARNING"
-      );
-      return;
-    }
-
-    const response = await fetch(
-      `${config.HOST}app/controllers/Contrato.controllers.php`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          operacion: "actualizarContrato",
-          parametros: {
-            idContrato: idContrato,
-            idPaquete: idServicioActualizar,
-            idSector: idSector,
-            direccionServicio: direccionServicio,
-            referencia: referencia,
-            coordenada: coordenada,
-            fechaInicio: fechaInicio,
-            fechaFin: fechaFinActualizar,
-            fechaRegistro: fechaRegistro,
-            nota: nota,
-            idUsuarioUpdate: idUsuario,
-          },
-        }),
-      }
-    );
-    const data = await response.json();
-    if (data.actualizado) {
-      showToast("¡Contrato actualizado correctamente!", "SUCCESS");
-      setTimeout(() => {
-        window.location.reload();
-      }, 2500);
-    } else {
-      showToast("Error al actualizar el contrato.", "ERROR");
     }
   }
 
@@ -346,18 +362,14 @@ window.addEventListener("DOMContentLoaded", () => {
         <td class="text-center">${contrato.direccion_servicio}</td>
         <td class="text-center">${formatDuracion(contrato.duracion)}</td>
         <td class="text-center">
-          <button class="btn btn-sm btn-warning btn-edit" data-idContrato="${
-            contrato.id_contrato
-          }"><i class="fa-regular fa-pen-to-square icon-disabled"></i></button>
-          <button class="btn btn-sm btn-danger btnEliminar" data-idContrato=${
-            contrato.id_contrato
-          }><i class="fa-regular fa-trash-can icon-disabled"></i></button>
-          <button class="btn btn-sm btn-primary btnGenerar" data-idContrato=${
-            contrato.id_contrato
-          }><i class="fa-solid fa-file-pdf icon-disabled"></i></button>
-          <button class="btn btn-sm btn-success btnFicha" data-tipoServicio=${
-            contrato.tipo_servicio
-          } data-idContrato=${contrato.id_contrato}>Ficha</button>
+          <button class="btn btn-sm btn-warning btn-edit" data-idContrato="${contrato.id_contrato
+        }"><i class="fa-regular fa-pen-to-square icon-disabled"></i></button>
+          <button class="btn btn-sm btn-danger btnEliminar" data-idContrato=${contrato.id_contrato
+        }><i class="fa-regular fa-trash-can icon-disabled"></i></button>
+          <button class="btn btn-sm btn-primary btnGenerar" data-idContrato=${contrato.id_contrato
+        }><i class="fa-solid fa-file-pdf icon-disabled"></i></button>
+          <button class="btn btn-sm btn-success btnFicha" data-tipoServicio=${contrato.tipo_servicio
+        } data-idContrato=${contrato.id_contrato}>Ficha</button>
         </td>
       `;
       tbody.appendChild(tr);
@@ -610,29 +622,29 @@ window.addEventListener("DOMContentLoaded", () => {
       await actualizarContrato(idContrato, idUsuario);
     });
 
-    $("#slcPaquetes").on("select2:select", function () {
-      const selectedValue = slcPaquetes.value.split(" - ");
-      idServicio = parseInt(selectedValue[0]);
-      precioServicio = selectedValue[1];
-      const duracionServicio = selectedValue[2]; 
-    
-      precio.value = precioServicio;
-    
-      let duracionFormateada = "Duracion no disponible";
-      if (duracionServicio) {
-        try {
-          const duracionObj = JSON.parse(duracionServicio);
-          duracionFormateada = Object.entries(duracionObj)
-            .map(([key, value]) => `${key.charAt(0).toUpperCase() + key.slice(1)}: ${value} meses`)
-            .join(", ");
-        } catch (e) {
-          console.error("Error al parsear la duración:", e);
-        }
+  $("#slcPaquetes").on("select2:select", function () {
+    const selectedValue = slcPaquetes.value.split(" - ");
+    idServicio = parseInt(selectedValue[0]);
+    precioServicio = selectedValue[1];
+    const duracionServicio = selectedValue[2];
+
+    precio.value = precioServicio;
+
+    let duracionFormateada = "Duracion no disponible";
+    if (duracionServicio) {
+      try {
+        const duracionObj = JSON.parse(duracionServicio);
+        duracionFormateada = Object.entries(duracionObj)
+          .map(([key, value]) => `${key.charAt(0).toUpperCase() + key.slice(1)}: ${value} meses`)
+          .join(", ");
+      } catch (e) {
+        console.error("Error al parsear la duración:", e);
       }
-    
-      txtDuracion.value = duracionFormateada;
-      slcPaquetes.value = idServicio;
-    });
+    }
+
+    txtDuracion.value = duracionFormateada;
+    slcPaquetes.value = idServicio;
+  });
 
   $("#slcServicioActualizar").on("select2:select", function () {
     idServicioActualizar = parseInt(
