@@ -9,7 +9,7 @@ class Marca extends Conexion
         $this->pdo = parent::getConexion();
     }
 
-    public function listarClientes()
+    public function listarMarcas()
     {
         $sql = "SELECT * FROM vw_marca";
         return $this->listarDatos($sql);

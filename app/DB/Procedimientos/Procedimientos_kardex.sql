@@ -3,6 +3,13 @@ USE Delatel;
 
 DELIMITER $$
 
+CREATE PROCEDURE spu_listar_tipo_operacion(IN tipo_movimiento CHAR(1))
+BEGIN
+    SELECT id_tipooperacion, descripcion, movimiento 
+    FROM tb_tipooperacion 
+    WHERE movimiento = tipo_movimiento;
+END $$
+
 DROP VIEW IF EXISTS vw_kardex_listar$$
 CREATE VIEW vw_kardex_listar AS
 SELECT
@@ -33,27 +40,29 @@ CREATE PROCEDURE spu_kardex_registrar(
     IN p_id_almacen INT, 
     IN p_id_producto INT,
     IN p_fecha DATE,
-    IN p_tipo_operacion_texto VARCHAR(30), 
+    IN p_id_tipooperacion INT, 
     IN p_cantidad INT,
     IN p_valor_unitario_historico DECIMAL(7,2),
     IN p_iduser_create INT
 )
 BEGIN
     DECLARE p_saldo_kardex_actual INT DEFAULT 0;
-    DECLARE v_id_tipooperacion INT;
     DECLARE v_movimiento CHAR(1);
 
-    SELECT id_tipooperacion, movimiento
-    INTO v_id_tipooperacion, v_movimiento
+    -- Obtenemos el tipo de movimiento (E/S) directamente
+    SELECT movimiento
+    INTO v_movimiento
     FROM tb_tipooperacion
-    WHERE descripcion = p_tipo_operacion_texto
+    WHERE id_tipooperacion = p_id_tipooperacion
     LIMIT 1;
 
-    IF v_id_tipooperacion IS NULL THEN
+    -- Validación de tipo de operación
+    IF v_movimiento IS NULL THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Tipo de operación no encontrado.';
     END IF;
 
-    SELECT COALESCE(SUM(CASE WHEN id_tipooperacion = v_id_tipooperacion THEN cantidad ELSE -cantidad END), 0)
+    -- Obtener el saldo actual del producto
+    SELECT COALESCE(SUM(CASE WHEN id_tipooperacion = p_id_tipooperacion THEN cantidad ELSE -cantidad END), 0)
     INTO p_saldo_kardex_actual
     FROM tb_kardex
     WHERE id_producto = p_id_producto;
@@ -68,6 +77,7 @@ BEGIN
         SET p_saldo_kardex_actual = p_saldo_kardex_actual + p_cantidad;
     END IF;
 
+    -- Insertar el registro en el kardex
     INSERT INTO tb_kardex (
         id_almacen,
         id_producto,
@@ -83,7 +93,7 @@ BEGIN
         p_id_almacen,
         p_id_producto,
         p_fecha,
-        v_id_tipooperacion,
+        p_id_tipooperacion,
         p_cantidad,
         p_saldo_kardex_actual,
         p_valor_unitario_historico,
@@ -91,7 +101,6 @@ BEGIN
         p_iduser_create
     );
 END $$
-
 
 -- Procedimiento spu_kardex_buscar
 DROP PROCEDURE IF EXISTS spu_kardex_buscar$$

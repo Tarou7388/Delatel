@@ -11,12 +11,12 @@ if (isset($_POST['operacion'])) {
   switch ($_POST['operacion']) {
     case 'registrarKardex':
       $datos = [
+        "idAlmacen"            => Herramientas::sanitizarEntrada($_POST['idAlmacen']),
         "idProducto"            => Herramientas::sanitizarEntrada($_POST['idProducto']),
         "fecha"                 => Herramientas::sanitizarEntrada($_POST['fecha']),
-        "tipoOperacion"         => Herramientas::sanitizarEntrada($_POST['tipoOperacion']),
-        "motivo"                => Herramientas::sanitizarEntrada($_POST['motivo']),
+        "idtipoOperacion"         => Herramientas::sanitizarEntrada($_POST['idtipoOperacion']),
         "cantidad"              => Herramientas::sanitizarEntrada($_POST['cantidad']),
-        "valorUnitarioHistorico"=> Herramientas::sanitizarEntrada($_POST['valorUnitarioHistorico']),
+        "valorUnitarioHistorico" => Herramientas::sanitizarEntrada($_POST['valorUnitarioHistorico']),
         "idUsuario"             => Herramientas::sanitizarEntrada($_POST["idUsuario"])
       ];
       $estado = $kardex->registrarKardex($datos);

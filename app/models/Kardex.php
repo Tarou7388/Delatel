@@ -63,10 +63,10 @@ class Kardex extends Conexion
     {
         $sql = "CALL spu_kardex_registrar(?, ?, ?, ?, ?, ?, ?)";
         $values = array(
+            $params['idAlmacen'],
             $params['idProducto'],
             $params['fecha'],
-            $params['tipoOperacion'],
-            $params['motivo'],
+            $params['idtipoOperacion'],
             $params['cantidad'],
             $params['valorUnitarioHistorico'],
             $params['idUsuario']

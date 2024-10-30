@@ -10,27 +10,29 @@
       </div>
       <div class="modal-body">
         <form id="form-editar-producto">
-          <input type="hidden" id="txtIdProducto" name="id_producto">
 
           <div class="form-floating mb-2">
-            <input type="text" class="form-control" id="slcEditarTipoProducto" name="modelo" placeholder="Tipo Producto" disabled>
-            <label for="slcEditarTipoProducto">Tipo Producto</label>
+            <select class="form-select" id="slcEditarTipoProducto" name="marca" required>
+              <option disabled selected>Seleccione Marca</option>
+            </select>
+            <label for="slcEditarTipoProducto">Marca</label>
           </div>
 
           <div class="form-group">
             <div class="form-floating mb-2">
               <select class="form-select" id="slcEditarMarca" name="marca" required>
-                <option value="" disabled selected>Seleccione Marca</option>
-                <option value="Huawei">Huawei</option>
-                <option value="Netgear">Netgear</option>
-                <option value="ASUS">ASUS</option>
-                <option value="TP-Link">TP-Link</option>
-                <option value="D-Link">D-Link</option>
-                <option value="Zyxel">Zyxel</option>
-                <option value="Ubiquiti">Ubiquiti</option>
-                <option value="Cisco">Cisco</option>
+                <option disabled selected>Seleccione Marca</option>
               </select>
               <label for="slcEditarMarca">Marca</label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-floating mb-2">
+              <select class="form-select" id="slcUnidadEditarMedida" name="marca" required>
+                <option disabled selected>Seleccionar Unidad</option>
+              </select>
+              <label for="slcUnidadEditarMedida">Unidad</label>
             </div>
           </div>
 
@@ -79,10 +81,6 @@
             <div class="form-floating">
               <select class="form-select" id="slcTipoProducto" name="slcTipoProducto" required>
                 <option value="" disabled selected>Seleccione Producto</option>
-                <option value="Router">Router</option>
-                <option value="Triplexor">Triplexor</option>
-                <option value="Modem">Módem</option>
-                <option value="Repetidor">Repetidor</option>
               </select>
               <label for="slcTipoProducto">Tipo Producto</label>
             </div>
@@ -92,16 +90,17 @@
             <div class="form-floating">
               <select class="form-select" id="slcMarca" name="slcMarca" required>
                 <option value="" disabled selected>Seleccione Marca</option>
-                <option value="Huawei">Huawei</option>
-                <option value="Netgear">Netgear</option>
-                <option value="ASUS">ASUS</option>
-                <option value="TP-Link">TP-Link</option>
-                <option value="D-Link">D-Link</option>
-                <option value="Zyxel">Zyxel</option>
-                <option value="Ubiquiti">Ubiquiti</option>
-                <option value="Cisco">Cisco</option>
               </select>
               <label for="slcMarca">Marca</label>
+            </div>
+          </div>
+
+          <div class="col-md">
+            <div class="form-floating">
+              <select class="form-select" id="slcUnidadMedida" name="slcUnidadMedida" required>
+                <option value="" disabled selected>Seleccione Unidad</option>
+              </select>
+              <label for="slcUnidadMedida">Unidades</label>
             </div>
           </div>
         </div>
@@ -153,6 +152,7 @@
               <th class="text-center">Marca</th>
               <th class="text-center">Tipo de Producto</th>
               <th class="text-center">Modelo</th>
+              <th class="text-center">Unidad de Medida</th>
               <th class="text-center">Precio Actual</th>
               <th class="text-center">Código de Barra</th>
               <th class="text-center">Acciones</th>

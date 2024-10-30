@@ -3,7 +3,7 @@ import config from "../env.js";
 document.addEventListener("DOMContentLoaded", function () {
   const userid = user["idUsuario"];
   const ruta = `${config.HOST}app/controllers/Producto.controllers.php?operacion=listarProductos`;
-
+  let idProducto = -1;
   // 2. Inicialización de la tabla de productos
   window.tablaProductos = $("#tblProductos").DataTable({
     dom: `
@@ -62,14 +62,19 @@ document.addEventListener("DOMContentLoaded", function () {
     columns: [
       { data: "marca", title: "Marca", className: "text-center" },
       {
-        data: "tipo_producto",
+        data: "tipo_nombre",
         title: "Tipo de Producto",
         className: "text-center",
       },
-      { data: "modelo", title: "Modelo", className: "text-center" },
+      { data: "modelo", title: "Nombre o Modelo", className: "text-center" },
+      {
+        data: "unidad_nombre",
+        title: "Precio Actual",
+        className: "text-center",
+      },
       {
         data: "precio_actual",
-        title: "Precio Actual",
+        title: "Unidad de Medida",
         className: "text-center",
       },
       {
@@ -95,19 +100,23 @@ document.addEventListener("DOMContentLoaded", function () {
     lengthChange: false,
   });
 
+  const slcEditarMarca = document.querySelector("#slcEditarMarca");
+  const slcUnidadEditarMedida = document.querySelector("#slcUnidadEditarMedida");
+  const slcEditarTipoProducto = document.querySelector("#slcEditarTipoProducto");
+
   // 3. Evento para editar un producto
   $("#tblProductos tbody").on("click", ".btn-edit", async function () {
-    const idProducto = $(this).data("id");
+    idProducto = $(this).data("id");
 
     try {
       const response = await fetch(
         `${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoId&idProducto=` +
-          idProducto
+        idProducto
       );
       const producto = await response.json();
-      $("#txtIdProducto").val(producto[0].id_producto);
-      $("#slcEditarTipoProducto").val(producto[0].tipo_producto);
-      $("#slcEditarMarca").val(producto[0].marca);
+      $("#slcEditarTipoProducto").val(producto[0].id_tipo);
+      $("#slcEditarMarca").val(producto[0].id_marca);
+      $("#slcUnidadEditarMedida").val(producto[0].id_unidad);
       $("#txtEditarModelo").val(producto[0].modelo);
       $("#txtEditarPrecioActual").val(producto[0].precio_actual);
       $("#txtEditarCodigoBarras").val(producto[0].codigo_barra);
@@ -124,37 +133,90 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const datosProducto = {
       operacion: "actualizarProducto",
-      idProducto: $("#txtIdProducto").val(),
-      marca: $("#slcEditarMarca").val(),
-      tipoProducto: $("#slcEditarTipoProducto").val(),
+      idProducto: idProducto,
+      idmarca: $("#slcEditarMarca").val(),
+      idtipoProducto: $("#slcEditarTipoProducto").val(),
+      idUnidad: $("#slcUnidadEditarMedida").val(),
       modelo: $("#txtEditarModelo").val(),
       precioActual: $("#txtEditarPrecioActual").val(),
-      codigoBarra: $("#txtEditarCodigoBarras").val(),
       idUsuario: userid,
     };
 
+    const response = await fetch(
+      `${config.HOST}app/controllers/Producto.controllers.php`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(datosProducto),
+      }
+    );
+    const data = await response.json();
+
+    if (data.Actualizado) {
+      tablaProductos.ajax.reload();
+      showToast("Actualizado Correctamente.", "SUCCESS");
+      $("#modalEditarProducto").modal("hide");
+      idProducto = -1;
+    } else {
+      showToast("Error al actualizar el producto.", "ERROR");
+      idProducto = -1;
+    }
+
+  });
+
+  (async () => {
     try {
-      const response = await fetch(
-        `${config.HOST}app/controllers/Producto.controllers.php`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(datosProducto),
-        }
-      );
+      const response = await fetch(`${config.HOST}app/controllers/Marcas.controllers.php?operacion=listarmarca`);
       const data = await response.json();
 
-      if (data.Actualizado) {
-        tablaProductos.ajax.reload();
-        showToast("Actualizado Correctamente.", "SUCCESS");
-        $("#modalEditarProducto").modal("hide");
-      } else {
-        showToast("Error al actualizar el producto.", "ERROR");
+      if (Array.isArray(data)) {
+        data.forEach(data => {
+          const option = document.createElement("option");
+          option.value = data.id_marca;
+          option.textContent = data.marca;
+          slcEditarMarca.appendChild(option);
+        });
       }
     } catch (error) {
-      console.error("Error updating product:", error);
+      console.error("Error al cargar las marcas:", error);
     }
-  });
+  })();
+
+  (async () => {
+    try {
+      const response = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=listarTipoProductos`);
+      const data = await response.json();
+
+      if (Array.isArray(data)) {
+        data.forEach(tipoProduc => {
+          const option = document.createElement("option");
+          option.value = tipoProduc.id_tipo;
+          option.textContent = tipoProduc.tipo_nombre;
+          slcEditarTipoProducto.appendChild(option);
+        });
+      }
+    } catch (error) {
+      console.error("Error al cargar los Tipos de Producto:", error);
+    }
+  })();
+
+  (async () => {
+    try {
+      const response = await fetch(`${config.HOST}app/controllers/Medidas.controllers.php?operacion=listarmedidas`);
+      const data = await response.json();
+
+      if (Array.isArray(data)) {
+        data.forEach(unidades => {
+          const option = document.createElement("option");
+          option.value = unidades.id_unidad;
+          option.textContent = unidades.unidad_nombre;
+          slcUnidadEditarMedida.appendChild(option);
+        });
+      }
+    } catch (error) {
+      console.error("Error al cargar las Medidas:", error);
+    }
+  })();
 });

@@ -22,6 +22,30 @@ CREATE VIEW vw_almacen AS
     WHERE inactive_at IS NULL;
 $$
 
+DROP VIEW IF EXISTS vw_unidadmedida$$
+CREATE VIEW vw_unidadmedida AS
+	SELECT 
+        id_unidad,
+        unidad_nombre,
+        create_at,
+        update_at,
+        iduser_create,
+        iduser_update
+	FROM 
+        tb_unidadmedida;
+$$
+
+DELIMITER $$
+DROP VIEW IF EXISTS vw_marca$$
+CREATE VIEW vw_marca AS
+	SELECT id_marca,
+           marca,
+           create_at,
+           iduser_create
+	FROM tb_marca
+	WHERE inactive_at IS NULL;
+$$
+
 DROP PROCEDURE IF EXISTS spu_productos_registrar$$
 CREATE PROCEDURE spu_productos_registrar(
     IN p_id_marca INT,
@@ -42,9 +66,9 @@ CREATE PROCEDURE spu_productos_actualizar(
     IN p_id_producto INT,
     IN p_id_marca INT,
     IN p_id_tipo INT,
+    IN p_idUnidad INT,
     IN p_modelo VARCHAR(30),
     IN p_precio_actual DECIMAL(7, 2),
-    IN p_codigo_barra VARCHAR(120),
     IN p_iduser_update INT
 )
 BEGIN
@@ -52,9 +76,9 @@ BEGIN
     SET 
         id_marca = p_id_marca,
         id_tipo = p_id_tipo,
+        id_unidad = p_idUnidad,
         modelo = p_modelo,
         precio_actual = p_precio_actual,
-        codigo_barra = p_codigo_barra,
         update_at = NOW(),
         iduser_update = p_iduser_update
     WHERE id_producto = p_id_producto;
@@ -70,8 +94,11 @@ CREATE VIEW vw_productos_detalle AS
         p.precio_actual,
         p.codigo_barra,
         m.marca,
+        m.id_marca,
         t.tipo_nombre,
+        t.id_tipo,
         u.unidad_nombre,
+        u.id_unidad,
         p.create_at,
         p.update_at,
         p.inactive_at,

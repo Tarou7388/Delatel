@@ -23,11 +23,11 @@ class Producto extends Conexion
    */
   public function buscarProductoId($params = [])
   {
-    $sql = "SELECT * FROM tb_productos WHERE id_producto = ?";
+    $sql = "SELECT * FROM vw_productos_detalle WHERE id_producto = ?";
     $value = array($params['idProducto']);
     return $this->consultaParametros($sql, $value);
   }
-  
+
   /**
    * Lista todos los productos.
    *
@@ -38,7 +38,7 @@ class Producto extends Conexion
    */
   public function listarProductos()
   {
-    $sql = "SELECT * FROM tb_productos ORDER BY id_producto DESC";
+    $sql = "SELECT * FROM vw_productos_detalle ORDER BY id_producto DESC";
     return $this->listarDatos($sql);
   }
 
@@ -59,10 +59,11 @@ class Producto extends Conexion
    */
   public function registrarProducto($params = [])
   {
-    $sql = "CALL spu_productos_registrar(?,?,?,?,?,?)";
+    $sql = "CALL spu_productos_registrar(?,?,?,?,?,?,?)";
     $values = array(
-      $params['marca'],
-      $params['tipoProducto'],
+      $params['idmarca'],
+      $params['idtipoProducto'],
+      $params['idUnidad'],
       $params['modelo'],
       $params['precioActual'],
       $params['codigoBarra'],
@@ -93,11 +94,11 @@ class Producto extends Conexion
     $sql = "CALL spu_productos_actualizar(?,?,?,?,?,?,?)";
     $values = array(
       $params['idProducto'],
-      $params['marca'],
-      $params['tipoProducto'],
+      $params['idmarca'],
+      $params['idtipoProducto'],
+      $params['idUnidad'],
       $params['modelo'],
       $params['precioActual'],
-      $params['codigoBarra'],
       $params['idUsuario']
     );
     return $this->registrar($sql, $values);
@@ -105,10 +106,9 @@ class Producto extends Conexion
 
   // AQUI COMIENZA LA DIVISION DE PRODUCTOS Y SUS TIPOS
 
-  public function listarTipoProductos():array
+  public function listarTipoProductos(): array
   {
-    $sql = "SELECT * FROM tb_tipo_productos";
+    $sql = "SELECT * FROM vw_tipo_productos";
     return $this->listarDatos($sql);
-    
   }
 }

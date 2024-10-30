@@ -46,8 +46,8 @@
 						<div class="form-floating">
 							<select name="slcTipomovimiento" id="slcTipomovimiento" class="form-select" required>
 								<option value="" disabled selected>Seleccione</option>
-								<option value="ENTRADA">Entrada</option>
-								<option value="SALIDA">Salida</option>
+								<option value="E">Entrada</option>
+								<option value="S">Salida</option>
 							</select>
 							<label for="slcTipomovimiento">Tipo de Movimiento</label>
 						</div>
@@ -73,10 +73,19 @@
 				<div class="row g-2 mt-2">
 					<div class="col-md">
 						<div class="form-floating">
-							<select name="txtaMotivo" id="txtaMotivo" class="form-select" required>
+							<select name="slcMotivo" id="slcMotivo" class="form-select" required>
 								<option value="" disabled selected>Seleccione</option>
 							</select>
-							<label for="txtaMotivo">Motivo</label>
+							<label for="slcMotivo">Motivo</label>
+						</div>
+					</div>
+
+					<div class="col-md">
+						<div class="form-floating">
+							<select name="slcAlmacen" id="slcAlmacen" class="form-select" required>
+								<option value="" disabled selected>Seleccione</option>
+							</select>
+							<label for="slcAlmacen">Almacen</label>
 						</div>
 					</div>
 				</div> <!-- ./tercera fila -->

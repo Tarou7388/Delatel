@@ -9,7 +9,7 @@ class Almacen extends Conexion
         $this->pdo = parent::getConexion();
     }
 
-    public function listarClientes()
+    public function listarAlmacen()
     {
         $sql = "SELECT * FROM vw_almacen";
         return $this->listarDatos($sql);

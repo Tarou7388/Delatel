@@ -1,7 +1,7 @@
 <?php
 require_once 'Conexion.php';
 
-class Medidas extends Conexion
+class Medida extends Conexion
 {
     private $pdo;
     public function __construct()
@@ -9,9 +9,9 @@ class Medidas extends Conexion
         $this->pdo = parent::getConexion();
     }
 
-    public function listarClientes()
+    public function listarMedidas()
     {
-        $sql = "SELECT * FROM vw_medidas";
+        $sql = "SELECT * FROM vw_unidadmedida";
         return $this->listarDatos($sql);
     }
 }
