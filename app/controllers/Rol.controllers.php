@@ -88,5 +88,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
         echo json_encode(["Inhabilitado" => false, "error" => "ID de rol o usuario no encontrado"]);
       }
       break;
+    case 'activarRol':
+      if (isset($datos['idRol']) && isset($datos['idUsuario'])) {
+      $activarData = [
+        "idRol" => Herramientas::sanitizarEntrada($datos['idRol']),
+        "idUsuario" => Herramientas::sanitizarEntrada($datos['idUsuario'])
+      ];
+      $estado = $rol->activarRol($activarData);
+      echo json_encode(["Activado" => $estado]);
+      } else {
+      echo json_encode(["Activado" => false, "error" => "ID de rol o usuario no encontrado"]);
+      }
+      break;
   }
 }

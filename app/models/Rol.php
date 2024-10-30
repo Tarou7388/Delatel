@@ -20,7 +20,7 @@ class Rol extends Conexion
    */
   public function listarRoles()
   {
-    $sql = "SELECT id_rol, rol from vw_roles_listar";
+    $sql = "SELECT * from vw_roles_listar";
     return $this->listarDatos($sql);
   }
 
@@ -129,6 +129,27 @@ class Rol extends Conexion
   public function eliminarRol($params = [])
   {
     $sql = "CALL spu_roles_eliminar(?,?)";
+    $values = array(
+      $params['idRol'],
+      $params['idUsuario']
+    );
+    return $this->registrar($sql, $values);
+  }
+
+
+  /**
+   * Activa un rol en la base de datos.
+   *
+   * Este método llama a un procedimiento almacenado para activar un rol
+   * específico de la base de datos utilizando el ID del rol proporcionado.
+   *
+   * @param array $params Arreglo asociativo que contiene el ID del rol a activar.
+   *                      Ejemplo: ['idRol' => 1]
+   * @return mixed El resultado de la operación de activación.
+   */
+  public function activarRol($params = [])
+  {
+    $sql = "CALL spu_roles_activar(?,?)";
     $values = array(
       $params['idRol'],
       $params['idUsuario']

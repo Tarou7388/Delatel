@@ -9,11 +9,12 @@ SELECT
     r.rol,
     r.create_at,
     r.update_at,
-    r.iduser_create
+    r.iduser_create,
+    r.inactive_at
 FROM
     tb_roles r 
 WHERE 
-    r.inactive_at IS NULL AND r.rol != 'Administrador';
+    r.rol != 'Administrador';
 
 DROP VIEW IF EXISTS vw_rolesdetallado_listar$$
 CREATE VIEW vw_rolesdetallado_listar AS
@@ -75,6 +76,22 @@ BEGIN
     SET
         inactive_at = NOW(),
         iduser_inactive = p_iduser_inactive
+    WHERE
+        id_rol = p_id_rol;
+END $$
+
+DROP PROCEDURE IF EXISTS spu_roles_activar$$
+CREATE PROCEDURE spu_roles_activar(
+    p_id_rol INT,
+    p_iduser_update INT
+)
+BEGIN
+    UPDATE tb_roles
+    SET
+        inactive_at = NULL,
+        iduser_inactive = NULL,
+        iduser_update = p_iduser_update,
+        update_at = NOW()
     WHERE
         id_rol = p_id_rol;
 END $$

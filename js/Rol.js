@@ -7,43 +7,20 @@ window.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("frmRol");
   const tbody = document.querySelector("#mostrar");
   const tbodyModal = document.querySelector("#cardBodyTabla");
-
-  const btnActualizar = document.getElementById("btnActualizar");
   const btnAgregar = document.getElementById("btnAgregar");
 
-  btnActualizar.style.display = "none";
-  btnAgregar.disabled = false;
+  const btnCancelarActualizacion = document.createElement("button");
+  btnCancelarActualizacion.id = "btnCancelarActualizacion";
+  btnCancelarActualizacion.className = "btn btn-secondary ms-2";
+  btnCancelarActualizacion.textContent = "Cancelar Actualización";
+  btnCancelarActualizacion.style.display = "none";
 
-  function actualizarBotones() {
-    if (btnActualizar) {
-      btnActualizar.style.display = "inline-block";
-    }
-    if (btnAgregar) {
-      btnAgregar.disabled = true;
-    }
-  }
+  const btnContainer = document.createElement("div");
+  btnContainer.className = "d-flex justify-content-end mt-2";
+  btnContainer.appendChild(btnAgregar);
+  btnContainer.appendChild(btnCancelarActualizacion);
 
-  function evaluarCampo() {
-    if (idRolActual === -1) {
-      // Modo agregar
-      if (rol.value.trim() === "") {
-        btnAgregar.disabled = true;
-      } else {
-        btnAgregar.disabled = false;
-      }
-      btnActualizar.style.display = "none";
-    } else {
-      // Modo actualizar
-      if (rol.value.trim() === "") {
-        btnActualizar.style.display = "none";
-      } else {
-        btnActualizar.style.display = "inline-block";
-      }
-      btnAgregar.disabled = true;
-    }
-  }
-
-  rol.addEventListener("input", evaluarCampo);
+  form.appendChild(btnContainer);
 
   function permisosBoton(clase) {
     const botones = document.querySelectorAll(clase);
@@ -62,14 +39,36 @@ window.addEventListener("DOMContentLoaded", () => {
         `${config.HOST}app/controllers/Rol.controllers.php?operacion=listarRoles`
       );
       const datos = await respuesta.json();
-      listarRol(datos); // Función que procesa y muestra los roles
-      tabla(); // Función que inicializa la tabla
+      listarRol(datos);
+      tabla();
     } catch (e) {
       console.error(e);
     }
   };
 
+  btnAgregar.addEventListener("click", (event) => {
+    event.preventDefault();
+    if (idRolActual == -1) {
+      registrarRoles();
+    } else {
+      actualizarRol();
+    }
+  });
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (idRolActual == -1) {
+      registrarRoles();
+    } else {
+      actualizarRol();
+    }
+  });
+
   async function tabla() {
+    if ($.fn.DataTable.isDataTable("#tablaRol")) {
+      $("#tablaRol").DataTable().destroy();
+    }
+
     $(tablaRol).DataTable({
       paging: true,
       searching: true,
@@ -77,8 +76,7 @@ window.addEventListener("DOMContentLoaded", () => {
       columnDefs: [
         { width: "30px", targets: 0 },
         { width: "30px", targets: 1 },
-        { width: "20px", targets: 2 },
-        { width: "20px", targets: 3 },
+        { width: "40px", targets: 2 },
       ],
       autoWidth: false,
       language: {
@@ -88,12 +86,16 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   async function listarRol(datos) {
+    tbody.innerHTML = "";
     datos.forEach((element) => {
       const tr = document.createElement("tr");
+      if (element.inactive_at !== null) {
+        tr.classList.add("disabled-role");
+      }
       const thid = document.createElement("td");
       thid.textContent = element.rol;
       tr.appendChild(thid);
-
+  
       tbody.appendChild(tr);
       const tdBoton = document.createElement("td");
       const boton = document.createElement("button");
@@ -105,42 +107,74 @@ window.addEventListener("DOMContentLoaded", () => {
       tdBoton.appendChild(boton);
       tr.appendChild(tdBoton);
 
-      // Nueva Columna para el botón Actualizar
-      const tdBotonActualizar = document.createElement("td");
+      const tdAcciones = document.createElement("td");
+  
+      // Botón Actualizar
       const botonActualizar = document.createElement("button");
-      botonActualizar.setAttribute("class", "btnActualizar btn btn-warning");
+      botonActualizar.setAttribute("class", "btnActualizar btn btn-warning me-2");
       botonActualizar.setAttribute("data-idRol", element.id_rol);
-
+  
       const iconoLapiz = document.createElement("i");
       iconoLapiz.setAttribute("class", "fa-regular fa-pen-to-square");
       iconoLapiz.style.pointerEvents = "none";
-
+  
       botonActualizar.appendChild(iconoLapiz);
-
-      tdBotonActualizar.appendChild(botonActualizar);
-      tr.appendChild(tdBotonActualizar);
-
-      // Nueva columna para el botón de Inhabilitar
-      const tdBotonInhabilitar = document.createElement("td");
+  
+      // Botón Eliminar
       const botonInhabilitar = document.createElement("button");
-      botonInhabilitar.setAttribute("class", "btnInhabilitar btn btn-danger");
+      botonInhabilitar.setAttribute("class", "btnInhabilitar btn btn-danger me-2");
       botonInhabilitar.setAttribute("data-idRol", element.id_rol);
-
-      const iconodelete = document.createElement("i");
-      iconodelete.setAttribute("class", "fa-regular fa-trash-can");
-      iconodelete.style.pointerEvents = "none";
-
-      botonInhabilitar.appendChild(iconodelete);
-
-      tdBotonInhabilitar.appendChild(botonInhabilitar);
-      tr.appendChild(tdBotonInhabilitar);
-
+  
+      const iconoEliminar = document.createElement("i");
+      iconoEliminar.setAttribute("class", "fa-regular fa-trash-can");
+      iconoEliminar.style.pointerEvents = "none";
+  
+      botonInhabilitar.appendChild(iconoEliminar);
+  
+      // Botón Activar
+      const botonActivar = document.createElement("button");
+      botonActivar.setAttribute("class", "btnActivar btn btn-success");
+      botonActivar.setAttribute("data-idRol", element.id_rol);
+  
+      const iconoActivar = document.createElement("i");
+      iconoActivar.setAttribute("class", "fa-solid fa-check");
+      iconoActivar.style.pointerEvents = "none";
+  
+      botonActivar.appendChild(iconoActivar);
+  
+      // Agregar botones a la columna de acciones
+      tdAcciones.appendChild(botonActualizar);
+      tdAcciones.appendChild(botonInhabilitar);
+      tdAcciones.appendChild(botonActivar);
+      tr.appendChild(tdAcciones);
+  
+      // Deshabilitar otros botones si el registro está deshabilitado
+      if (element.inactive_at !== null) {
+        boton.disabled = true;
+        botonActualizar.disabled = true;
+        botonInhabilitar.disabled = true;
+        botonActivar.disabled = false; 
+      } else {
+        botonActivar.disabled = true; 
+      }
+  
       tbody.appendChild(tr);
     });
     permisosBoton(".btnPermisos");
     actualizarBoton(".btnActualizar");
     inhabilitarBoton(".btnInhabilitar");
+    activarBoton(".btnActivar");
   }
+
+  const style = document.createElement("style");
+  style.innerHTML = `
+    .disabled-role td:nth-child(1),
+    .disabled-role td:nth-child(2) {
+      opacity: 0.5;
+      text-decoration: line-through;
+    }
+  `;
+  document.head.appendChild(style);
 
   async function obtenerJsonPermisos() {
     const respuesta = await fetch(`${config.HOST}Json/permisos.json`);
@@ -151,14 +185,17 @@ window.addEventListener("DOMContentLoaded", () => {
   async function registrarRoles() {
     const json = await obtenerJsonPermisos();
 
+    if (!rol.value.trim()) {
+      showToast("El campo Rol no puede estar vacío", "WARNING", 1500);
+      return;
+    }
+
     const datos = {
       operacion: "registrarRoles",
       rol: rol.value,
       permisos: json,
       idUsuario: userid,
     };
-
-    console.log("Datos enviados:", datos);
 
     try {
       const respuesta = await fetch(
@@ -176,12 +213,8 @@ window.addEventListener("DOMContentLoaded", () => {
       const data = await respuesta.json();
 
       if (data.guardado) {
-        showToast("El rol se ha agregado exitosamente", "SUCCESS");
-        form.reset();
-
-        setTimeout(function () {
-          location.reload();
-        }, 1500);
+        showToast("El rol se ha agregado exitosamente", "SUCCESS", 1500);
+        location.reload();
       } else {
         console.log("No se pudo agregar el Rol");
       }
@@ -202,11 +235,25 @@ window.addEventListener("DOMContentLoaded", () => {
         idRolActual = idRol;
         console.log(idRolActual);
         actualizarBotones();
+        btnCancelarActualizacion.style.display = "inline-block";
       });
     });
   }
 
+  btnCancelarActualizacion.addEventListener("click", () => {
+    idRolActual = -1;
+    form.reset();
+    actualizarBotones();
+    btnCancelarActualizacion.style.display = "none"; // Ocultar botón de cancelar
+  });
+
   async function actualizarRol() {
+
+    if (!rol.value.trim()) {
+      showToast("El campo Rol no puede estar vacío", "WARNING", 1500);
+      return;
+    }
+
     const datos = {
       operacion: "actualizarRol",
       rol: rol.value,
@@ -234,11 +281,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
       if (data.Actualizado) {
         showToast("El rol se ha actualizado exitosamente", "SUCCESS");
-        form.reset();
-
-        setTimeout(function () {
-          location.reload();
-        }, 1500);
+        location.reload();
       } else {
         console.log("No se pudo Actualizar el Rol");
       }
@@ -270,34 +313,76 @@ window.addEventListener("DOMContentLoaded", () => {
       idRol: idRolActual,
       idUsuario: userid,
     };
+    console.log(datos);
 
     try {
-      const respuesta = await fetch(
-        `${config.HOST}app/controllers/Rol.controllers.php`,
-        {
-          method: "PUT",
-          body: JSON.stringify(datos),
+      if (await ask("¿Desea Eliminar este Rol?")) {
+        const respuesta = await fetch(
+          `${config.HOST}app/controllers/Rol.controllers.php`,
+          {
+            method: "PUT",
+            body: JSON.stringify(datos),
+          }
+        );
+
+        if (!respuesta.ok) {
+          throw new Error(`Error ${respuesta.status}: ${respuesta.statusText}`);
         }
-      );
 
-      if (!respuesta.ok) {
-        throw new Error(`Error ${respuesta.status}: ${respuesta.statusText}`);
-      }
+        const data = await respuesta.json();
+        if (data.Inhabilitado) {
+          showToast("El rol se ha inhabilitado exitosamente", "SUCCESS");
+          const fila = document
+            .querySelector(`button[data-idrol="${idRolActual}"]`)
+            .closest("tr");
+            fila.classList.add("disabled-role");
 
-      const data = await respuesta.json();
-      if (data.Inhabilitado) {
-        showToast("El rol se ha inhabilitado exitosamente", "SUCCESS");
-        form.reset();
-
-        setTimeout(function () {
-          location.reload();
-        }, 1500);
-      } else {
-        console.log("No se pudo inhabilitar el Rol");
+            location.reload();
+          
+        } else {
+          console.log("No se pudo inhabilitar el Rol");
+        }
       }
     } catch (error) {
       console.error("Error:", error);
       showToast("No se pudo inhabilitar el rol", "ERROR");
+    }
+  }
+
+  async function activarRol() {
+    const datos = {
+      operacion: "activarRol",
+      idRol: idRolActual,
+      idUsuario: userid,
+    };
+    console.log(datos);
+
+    try {
+      if (await ask("¿Desea Activar este Rol?")) {
+        const response = await fetch(
+          `${config.HOST}app/controllers/Rol.controllers.php`,
+          {
+            method: "PUT",
+            body: JSON.stringify(datos),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+
+        if (data.Activado) {
+          showToast("¡Rol activado correctamente!", "SUCCESS");
+          location.reload();
+        } else {
+          showToast("No se pudo activar el rol.", "ERROR");
+        }
+      }
+    } catch (e) {
+      console.error("Error al activar el rol:", e);
+      showToast("Ocurrió un error al activar el rol", "ERROR");
     }
   }
 
@@ -333,19 +418,27 @@ window.addEventListener("DOMContentLoaded", () => {
       moduloCelda.textContent = modulo;
 
       const leerCelda = document.createElement("td");
-      leerCelda.innerHTML = `<input type="checkbox" class="leer form-check-input" id="${modulo}-leer" ${permisosModulo.leer ? "checked" : ""}/>`;
+      leerCelda.innerHTML = `<input type="checkbox" class="leer form-check-input" id="${modulo}-leer" ${
+        permisosModulo.leer ? "checked" : ""
+      }/>`;
       leerCelda.style.textAlign = "center";
 
       const crearCelda = document.createElement("td");
-      crearCelda.innerHTML = `<input type="checkbox" class="crear form-check-input" id="${modulo}-crear" ${permisosModulo.crear ? "checked" : ""}/>`;
+      crearCelda.innerHTML = `<input type="checkbox" class="crear form-check-input" id="${modulo}-crear" ${
+        permisosModulo.crear ? "checked" : ""
+      }/>`;
       crearCelda.style.textAlign = "center";
 
       const actualizarCelda = document.createElement("td");
-      actualizarCelda.innerHTML = `<input type="checkbox" class="actualizar form-check-input" id="${modulo}-actualizar" ${permisosModulo.actualizar ? "checked" : ""}/>`;
+      actualizarCelda.innerHTML = `<input type="checkbox" class="actualizar form-check-input" id="${modulo}-actualizar" ${
+        permisosModulo.actualizar ? "checked" : ""
+      }/>`;
       actualizarCelda.style.textAlign = "center";
 
       const eliminarCelda = document.createElement("td");
-      eliminarCelda.innerHTML = `<input type="checkbox" class="eliminar form-check-input" id="${modulo}-eliminar" ${permisosModulo.eliminar ? "checked" : ""}/>`;
+      eliminarCelda.innerHTML = `<input type="checkbox" class="eliminar form-check-input" id="${modulo}-eliminar" ${
+        permisosModulo.eliminar ? "checked" : ""
+      }/>`;
       eliminarCelda.style.textAlign = "center";
 
       fila.appendChild(moduloCelda);
@@ -410,7 +503,8 @@ window.addEventListener("DOMContentLoaded", () => {
   async function actualizarPermisos() {
     const permisosActualizados = {};
     const checkboxes = tbodyModal.querySelectorAll('input[type="checkbox"]');
-    permisosActualizados["actividad"] = document.querySelector("#selectActividad").value;
+    permisosActualizados["actividad"] =
+      document.querySelector("#selectActividad").value;
     checkboxes.forEach((checkbox) => {
       const [modulo, permiso] = checkbox.id.split("-");
       if (!permisosActualizados[modulo]) {
@@ -447,10 +541,6 @@ window.addEventListener("DOMContentLoaded", () => {
       if (data.guardado) {
         showToast("Permisos actualizados correctamente.", "SUCCESS");
         form.reset();
-
-        setTimeout(function () {
-          location.reload();
-        }, 1500);
       } else {
         console.log("No se pudo actualizar los permisos");
       }
@@ -464,9 +554,11 @@ window.addEventListener("DOMContentLoaded", () => {
     await obtenerRoles();
   })();
 
-  document.querySelector("#btnCambiosPermisos").addEventListener("click", () => {
-    actualizarPermisos();
-  });
+  document
+    .querySelector("#btnCambiosPermisos")
+    .addEventListener("click", () => {
+      actualizarPermisos();
+    });
 
   form.addEventListener("submit", function (event) {
     event.preventDefault();
@@ -523,18 +615,20 @@ window.addEventListener("DOMContentLoaded", () => {
     verificarEstadoCheck();
   });
 
-  document.querySelector("#chkActualizar").addEventListener("change", (event) => {
-    if (event.target.checked) {
-      document
-        .querySelectorAll(".actualizar")
-        .forEach((checkbox) => (checkbox.checked = true));
-    } else {
-      document
-        .querySelectorAll(".actualizar")
-        .forEach((checkbox) => (checkbox.checked = false));
-    }
-    verificarEstadoCheck();
-  });
+  document
+    .querySelector("#chkActualizar")
+    .addEventListener("change", (event) => {
+      if (event.target.checked) {
+        document
+          .querySelectorAll(".actualizar")
+          .forEach((checkbox) => (checkbox.checked = true));
+      } else {
+        document
+          .querySelectorAll(".actualizar")
+          .forEach((checkbox) => (checkbox.checked = false));
+      }
+      verificarEstadoCheck();
+    });
 
   document.querySelector("#chkEliminar").addEventListener("change", (event) => {
     if (event.target.checked) {
@@ -548,4 +642,44 @@ window.addEventListener("DOMContentLoaded", () => {
     }
     verificarEstadoCheck();
   });
+
+  document.getElementById("btnAgregar").addEventListener("click", () => {
+    if (idRolActual == -1) {
+      registrarRoles();
+    } else {
+      actualizarRol();
+    }
+  });
+
+  form.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    if (idRolActual == -1) {
+      registrarRoles();
+    } else {
+      actualizarRol();
+    }
+  });
+
+  function actualizarBotones() {
+    if (idRolActual == -1) {
+      btnAgregar.textContent = "Agregar";
+    } else {
+      btnAgregar.textContent = "Actualizar";
+    }
+  }
+
+  rol.addEventListener("input", actualizarBotones);
+
+  function activarBoton(clase) {
+    const botones = document.querySelectorAll(clase);
+    botones.forEach((boton) => {
+      boton.addEventListener("click", (event) => {
+        const idRol = parseInt(event.target.dataset.idrol);
+        idRolActual = idRol;
+
+        activarRol(idRol, userid);
+      });
+    });
+  }
 });

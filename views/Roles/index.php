@@ -1,5 +1,4 @@
 <?php require_once "../../header.php"; ?>
-
 <div class="modal fade" id="mdlPermisos" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -63,7 +62,6 @@
                 <label for="txtRol">Rol</label>
               </div>
               <button class="btn btn-success" type="submit" id="btnAgregar">Agregar</button>
-              <button class="btn btn-primary" type="submit" id="btnActualizar">Actualizar</button>
             </div>
           </form>
         </div>
@@ -82,10 +80,9 @@
         <table id="tablaRol" class="display">
           <thead>
             <tr>
-              <th class="text-center">Rol</th>
-              <th class="text-center">Permisos</th>
-              <th class="text-center">Actualizar</th>
-              <th class="text-center">Inhabilitar</th>
+              <th>Rol</th>
+              <th>Permisos</th>
+              <th>Acciones</th>
             </tr>
           </thead>
           <tbody id="mostrar">
