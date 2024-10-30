@@ -17,7 +17,7 @@ if (!isset($_SESSION['login']) || $_SESSION['login']['estado'] == false) {
   $rutaCompleta = array_filter($rutaCompleta);
   $totalElementos = count($rutaCompleta);
 
-  $vistaActual = end($rutaCompleta);
+  $vistaActual = parse_url(end($rutaCompleta), PHP_URL_PATH);
   $listaAcceso = $_SESSION['login']['accesos'];
   $nombreUser = $_SESSION['login']['nombreUser'];
   $cargo = $_SESSION['login']['Cargo'];
