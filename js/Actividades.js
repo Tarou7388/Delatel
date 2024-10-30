@@ -43,20 +43,20 @@ window.addEventListener("DOMContentLoaded", function () {
 
   async function cargarSoporte() {
     contenido.innerHTML = `
-    <table class="table table-striped" id="tablaSoporte">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Fecha Asistencia</th>
-          <th>Tipo Soporte</th>
-          <th>Direccion</th>
-          <th>Prioridad</th>
-        </tr>
-      </thead>
-      <tbody id="tbodySoporte">
-      </tbody>
-    </table>
-    `
+      <table class="table table-striped" id="tablaSoporte">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Fecha Asistencia</th>
+            <th>Tipo Soporte</th>
+            <th>Direccion</th>
+            <th>Prioridad</th>
+          </tr>
+        </thead>
+        <tbody id="tbodySoporte">
+        </tbody>
+      </table>
+      `
     const tbodySoporte = document.getElementById("tbodySoporte");
     const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=FiltrarSoportePrioridad`);
     const data = await response.json();
@@ -72,23 +72,23 @@ window.addEventListener("DOMContentLoaded", function () {
       }
 
       tbodySoporte.innerHTML += `
-        <tr>
-          <td>${soporte.id_soporte}</td>
-          <td>${soporte.fecha_hora_asistencia}</td>
-          <td>${soporte.tipo_soporte}</td>
-          <td>${soporte.direccion_servicio}</td>
-          <td class="${rowClass}">${soporte.prioridad}</td>
-        </tr>
-      `;
+          <tr>
+            <td>${soporte.id_soporte}</td>
+            <td>${soporte.fecha_hora_asistencia}</td>
+            <td>${soporte.tipo_soporte}</td>
+            <td>${soporte.direccion_servicio}</td>
+            <td class="${rowClass}">${soporte.prioridad}</td>
+          </tr>
+        `;
     });
     $('#tablaSoporte').DataTable({
       columnDefs: [
-        { targets: 0, visible: false }
+        { targets: [], visible: true } // Asegurarse de que todas las columnas sean visibles
       ],
       language: {
         url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json",
       },
-      order: [[0, "desc"]]
+      ordering: false
     });
   }
 
@@ -133,7 +133,7 @@ window.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  async function cargarKardex(){
+  async function cargarKardex() {
     contenido.innerHTML = `
     <table class="table table-striped" id="tablaKardex">
       <thead>
@@ -221,5 +221,5 @@ window.addEventListener("DOMContentLoaded", function () {
       order: [[0, "desc"]]
     });
   }
-  
+
 });
