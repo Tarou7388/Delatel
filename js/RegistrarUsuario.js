@@ -105,67 +105,69 @@ document.addEventListener("DOMContentLoaded", async function () {
   };
 
   async function RegistrarPersona(dni) {
-    if (accesos?.personas?.crear) {
-      try {
-        const formData = new FormData();
-        formData.append("operacion", "registrarPersona");
-        formData.append("tipoDoc", $("slcDocumento").value);
-        formData.append("nroDoc", dni);
-        formData.append("apellidos", $("txtApe").value);
-        formData.append("nombres", $("txtNombre").value);
-        formData.append("telefono", $("txtTelefono").value);
-        formData.append("nacionalidad", $("slcNacionalidad").value);
-        formData.append("email", $("txtEmail").value);
-        formData.append("idUsuario", userid);
+    // if (accesos?.personas?.crear) {
 
-        const respuesta = await fetch(
-          `${config.HOST}app/controllers/Persona.controllers.php`,
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
-        if (!respuesta.ok) {
-          throw new Error("Error al registrar la persona.");
+    // }
+    try {
+      const formData = new FormData();
+      formData.append("operacion", "registrarPersona");
+      formData.append("tipoDoc", $("slcDocumento").value);
+      formData.append("nroDoc", dni);
+      formData.append("apellidos", $("txtApe").value);
+      formData.append("nombres", $("txtNombre").value);
+      formData.append("telefono", $("txtTelefono").value);
+      formData.append("nacionalidad", $("slcNacionalidad").value);
+      formData.append("email", $("txtEmail").value);
+      formData.append("idUsuario", userid);
+
+      const respuesta = await fetch(
+        `${config.HOST}app/controllers/Persona.controllers.php`,
+        {
+          method: "POST",
+          body: formData,
         }
-        const data = await respuesta.json();
-        console.log("Respuesta de búsqueda:", data);
-        return data[0].id_persona;
-      } catch (error) {
-        console.error("Error al registrar persona:", error);
-        return null;
+      );
+      if (!respuesta.ok) {
+        throw new Error("Error al registrar la persona.");
       }
+      const data = await respuesta.json();
+      console.log("Respuesta de búsqueda:", data);
+      return data[0].id_persona;
+    } catch (error) {
+      console.error("Error al registrar persona:", error);
+      return null;
     }
   }
   async function RegistrarUsuario(idPersona) {
-    if (accesos?.usuarios?.crear) {
-      try {
-        const formData = new FormData();
-        formData.append("operacion", "registrarUsuarios");
-        formData.append("idPersona", idPersona);
-        formData.append("nombreUsuario", $("txtUsuario").value);
-        formData.append("clave", $("txtContrasenia").value);
-        formData.append("idUsuario", userid);
+    // if (accesos?.usuarios?.crear) {
+      
+    // }
+    try {
+      const formData = new FormData();
+      formData.append("operacion", "registrarUsuarios");
+      formData.append("idPersona", idPersona);
+      formData.append("nombreUsuario", $("txtUsuario").value);
+      formData.append("clave", $("txtContrasenia").value);
+      formData.append("idUsuario", userid);
 
-        const respuesta = await fetch(
-          `${config.HOST}app/controllers/Usuario.controllers.php`,
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
-        const data = await respuesta.json();
-        //console.log(data.id_usuario);
-        if (data) {
-          showToast("Usuario registrado con éxito", "SUCCESS");
-          //console.log(data[0].id_usuario);
-          return data[0].id_usuario;
+      const respuesta = await fetch(
+        `${config.HOST}app/controllers/Usuario.controllers.php`,
+        {
+          method: "POST",
+          body: formData,
         }
-        else { showToast("Usuario ya registrado", "ERROR"); }
-
-      } catch (error) {
-        showToast("Error al registrar usuario:" + error, "ERROR");
+      );
+      const data = await respuesta.json();
+      //console.log(data.id_usuario);
+      if (data) {
+        showToast("Usuario registrado con éxito", "SUCCESS");
+        //console.log(data[0].id_usuario);
+        return data[0].id_usuario;
       }
+      else { showToast("Usuario ya registrado", "ERROR"); }
+
+    } catch (error) {
+      showToast("Error al registrar usuario:" + error, "ERROR");
     }
   };
 
