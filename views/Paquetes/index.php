@@ -21,36 +21,18 @@
             <label for="txtPrecio">Precio</label>
           </div>
 
-          <div class="form-group">
-            <div class="form-floating mb-2">
-              <select class="form-select" name="TipoServicio" id="slcTipoServicio" required>
-                <option value=""></option>
-              </select>
-              <label for="slcTipoServicio">Tipo de Servicio</label>
-            </div>
+          <label for="slcTipoServicio" class="form-label">Tipo de Servicio</label>
+          <div class="form-floating mb-2">
+            <select class="js-example-basic-multiple form-select" name="states[]" id="slcTipoServicio" multiple="multiple" style="width: 100%;" required>
+            </select>
           </div>
 
-          <div class="row mb-2">
-            <div class="col">
-              <div class="form-floating">
-                <input type="number" class="form-control" id="txtDuracion1" name="duracion1" min=3 required>
-                <label for="txtDuracion1" class="form-label">Duración (Meses)</label>
-              </div>
-            </div>
-            <div class="col">
-              <div class="form-floating">
-                <input type="number" class="form-control" id="txtDuracion2" name="duracion2" min=3 required>
-                <label for="txtDuracion2" class="form-label">Duración (Meses)</label>
-              </div>
-            </div>
-          </div>
-
-
+          <div id="serviciosContainer"></div>
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="submit" id="btnRegistrar" class="btn btn-primary">Registrar</button>
+        <button type="submit" id="btnRegistrar" class="btn btn-success">Registrar</button>
       </div>
     </div>
   </div>
@@ -65,7 +47,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form action="" id="frmRegistrarPaquete">
+        <form action="" id="frmActualizarPaquete">
           <input type="hidden" id="txtIdPaquete" name="id_paquete">
 
           <div class="form-floating mb-2">
@@ -78,52 +60,75 @@
             <label for="txtPrecioActualizar">Precio</label>
           </div>
 
-          <div class="form-group">
-            <div class="form-floating mb-2">
-              <select class="form-select" id="slcTipoServicioActualizar" name="tipo_servicio" required>
-                <option value=""></option>
-              </select>
-              <label for="slcTipoServicioActualizar">Tipo de Servicio</label>
-            </div>
+          <label for="slcTipoServicioActualizar" class="form-label">Tipo de Servicio</label>
+          <div class="form-floating mb-2">
+            <select class="js-example-basic-multiple form-select" name="states[]" id="slcTipoServicioActualizar" multiple="multiple" style="width: 100%;" required>
+            </select>
           </div>
 
-          <div class="row mb-2">
-            <div class="col">
-              <div class="form-floating">
-                <input type="number" class="form-control" id="txtDuracion1Actualizar" name="duracion1" min=3 required>
-                <label for="txtDuracion1Actualizar" class="form-label">Duración (Meses)</label>
-              </div>
-            </div>
-            <div class="col">
-              <div class="form-floating">
-                <input type="number" class="form-control" id="txtDuracion2Actualizar" name="duracion2" min=3 required>
-                <label for="txtDuracion2Actualizar" class="form-label">Duración (Meses)</label>
-              </div>
-            </div>
-          </div>
+          <div id="serviciosContainerActualizar"></div>
 
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="submit" id="btnActualizar" class="btn btn-primary">Actualizar</button>
+        <button type="submit" id="btnActualizar" class="btn btn-success">Actualizar</button>
       </div>
     </div>
   </div>
 </div>
 
+<!-- Modal Para Servicios -->
+<div class="modal fade" id="modalServicio" tabindex="-1" aria-labelledby="modalServicio" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Servicios</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="frmServicios" class="mb-4">
+          <div class="mb-3 d-flex align-items-center">
+            <input type="text" id="txtNombreServicio" class="form-control me-2" placeholder="Nombre del servicio" required>
+            <input type="text" id="txtTipoServicio" class="form-control me-2 w-25" maxlength="4" placeholder="Tipo de servicio" required>
+            <button type="button" id="btnRegistrarServicio" class="btn btn-success">Agregar</button>
+          </div>
+        </form>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Nombre del Servicio</th>
+              <th>Tipo</th>
+              <th class="text-end">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="listaServicios">
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <!-- Tabla de Listar -->
 <div class="container-fluid px-4">
   <h1 class="mt-4">Configuración de Paquetes y Servicios</h1>
 
-  <div class="card mb-4">
+  <div class="card mt-3">
     <div class="card-header d-flex justify-content-between align-items-center">
       <div>
         <i class="fas fa-table me-1"></i> Gestionar Paquetes
       </div>
-      <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalAgregarPaquete">
-        Nuevo Paquete
-      </button>
+      <div>
+        <button type="button" class="btn btn-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#modalAgregarPaquete">
+          Nuevo Paquete
+        </button>
+        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalServicio">
+          Servicio
+        </button>
+      </div>
     </div>
 
     <div class="card-body">
@@ -146,11 +151,14 @@
     </div>
   </div>
 </div>
+
+
 <script type="module">
   const user = <?php echo json_encode($_SESSION['login']); ?>;
 </script>
 <?php require_once "../../footer.php"; ?>
 <script type="module" src="../../js/paquetes.js"></script>
+<script type="module" src="../../js/servicios.js"></script>
 </body>
 
 </html>

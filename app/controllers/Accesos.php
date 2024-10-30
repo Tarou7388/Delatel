@@ -40,7 +40,8 @@ function obtenerAccesosFiltrados($idRol, $permissions)
         ["ruta" => "Roles", "texto" => "Roles", "icono" => "fa-regular fa-address-card"],
         ["ruta" => "Soporte", "texto" => "Soporte", "icono" => "fa-solid fa-wrench"],
         ["ruta" => 'Usuarios', "texto" => "Usuarios", "icono" => "fa-solid fa-users"],
-        ["ruta" => 'Averias',"texto"=>"Averias","icono"=>"fa-solid fa-wrench"]
+        ["ruta" => 'Averias',"texto"=>"Averias","icono"=>"fa-solid fa-wrench"],
+        ["ruta" => 'Paquetes',"texto"=>"Paquetes","icono"=>"fa-solid fa-box-open"]
     ];
 
     // Añadir "Actividades" directamente a los accesos filtrados
@@ -58,5 +59,3 @@ function obtenerAccesosFiltrados($idRol, $permissions)
 
     return $accesosFiltrados;
 }
-//nota: de acá saco los permisos y lo llamo en un javascript y lo usopara todos los archivos 
-//guiarme de rol.js linea 304 -315

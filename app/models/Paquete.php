@@ -28,9 +28,12 @@ class Paquete extends Conexion
    */
   public function registrarPaquete($params = [])
   {
-    $sql = "CALL spu_paquete_registrar(?,?,?,?,?)";
+    $sql = "CALL spu_paquete_registrar(?,?,?,?,?,?,?,?)";
     $values = array(
       $params['idServicio'],
+      $params['idServicio2'],
+      $params['idServicio3'],
+      $params['idServicio4'],
       $params['paquete'],
       $params['precio'],
       $params['duracion'],
@@ -73,10 +76,13 @@ class Paquete extends Conexion
    */
   public function actualizarPaquete($params = [])
   {
-    $sql = "CALL spu_paquete_actualizar(?,?,?,?,?,?)";
+    $sql = "CALL spu_paquete_actualizar(?,?,?,?,?,?,?,?,?)";
     $values = array(
       $params['idPaquete'],
       $params['idServicio'],
+      $params['idServicio2'],
+      $params['idServicio3'],
+      $params['idServicio4'],
       $params['paquete'],
       $params['precio'],
       $params['duracion'],
@@ -120,6 +126,25 @@ class Paquete extends Conexion
     $sql = "CALL spu_paquete_buscar_id(?)";
     $values = array(
       $params['idPaquete']
+    );
+    return $this->consultaParametros($sql, $values);
+  }
+
+  /**
+   * Busca paquetes por su ID de servicio.
+   *
+   * Este método llama a un procedimiento almacenado `spu_paquete_buscar_idServicio` para recuperar paquetes
+   * de la base de datos utilizando el ID del servicio.
+   *
+   * @param int $idServicio El ID del servicio a buscar.
+   *
+   * @return array|null Los datos de los paquetes si se encuentran, o null si no se encuentran.
+   */
+  public function buscarPaquetePorIdServicio($params = [])
+  {
+    $sql = "CALL spu_paquete_buscar_idServicio(?)";
+    $values = array(
+      $params['idServicio']
     );
     return $this->consultaParametros($sql, $values);
   }

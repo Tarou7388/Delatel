@@ -5,11 +5,10 @@ CREATE VIEW vw_servicios_listar AS
 SELECT
     s.id_servicio,
     s.tipo_servicio,
-    s.servicio
+    s.servicio,
+    s.inactive_at
 FROM
-    tb_servicios s 
-WHERE 
-    s.iduser_inactive IS NULL;
+    tb_servicios s;
 
 DROP VIEW IF EXISTS vw_servicios_listarTotal;
 CREATE VIEW vw_servicios_listarTotal AS
@@ -66,6 +65,23 @@ BEGIN
     SET
         inactive_at = NOW(),
         iduser_inactive = p_iduser_inactive
+    WHERE 
+        id_servicio = p_id_servicio;
+END $$
+
+
+DROP PROCEDURE IF EXISTS spu_servicio_reactivar$$
+CREATE PROCEDURE spu_servicio_reactivar(
+    IN p_id_servicio INT,
+    IN p_iduser_update INT
+)
+BEGIN
+    UPDATE tb_servicios 
+    SET
+        inactive_at = NULL,
+        iduser_inactive = NULL,
+        update_at = NOW(),
+        iduser_update = p_iduser_update
     WHERE 
         id_servicio = p_id_servicio;
 END $$

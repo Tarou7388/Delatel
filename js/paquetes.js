@@ -2,7 +2,6 @@ import config from "../env.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const userid = user["idUsuario"];
-
   let idServicio = 0;
 
   const ruta = `${config.HOST}app/controllers/Paquete.controllers.php?operacion=listarPaquetes`;
@@ -38,9 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
               return Object.entries(duracionObj)
                 .map(
                   ([key, value]) =>
-                    `${
-                      key.charAt(0).toUpperCase() + key.slice(1)
-                    }: ${value} meses`
+                    `${key.charAt(0).toUpperCase() + key.slice(1)}: ${value} meses`
                 )
                 .join(", ");
             } catch (e) {
@@ -96,23 +93,28 @@ document.addEventListener("DOMContentLoaded", () => {
     deshabilitarDuracion2("slcTipoServicioActualizar");
 
     // Validar números positivos en los campos de entrada
-    $(
-      "#txtPrecio, #txtDuracion1, #txtDuracion2, #txtPrecioActualizar, #txtDuracion1Actualizar, #txtDuracion2Actualizar"
-    ).on("input", function () {
+    $("#txtPrecio, #txtPrecioActualizar").on("input", function () {
       validarNumerosPositivos(this);
     });
+  });
+
+  // Escuchar el evento personalizado
+  document.addEventListener("servicioActivado", (event) => {
+    const { idServicio, userid } = event.detail;
+    cargarServicios();
+  });
+
+  document.addEventListener("servicioDesactivado", (event) => {
+    const { idServicio, userid } = event.detail;
+    cargarServicios();
   });
 
   // Limpiar campos de texto
   function limpiarModal() {
     $("#txtPaquete").val("");
     $("#txtPrecio").val("");
-    $("#txtDuracion1").val("");
-    $("#txtDuracion2").val("");
     $("#txtPaqueteActualizar").val("");
     $("#txtPrecioActualizar").val("");
-    $("#txtDuracion1Actualizar").val("");
-    $("#txtDuracion2Actualizar").val("");
     $("#slcTipoServicio").val("").trigger("change");
     $("#slcTipoServicioActualizar").val("").trigger("change");
 
@@ -123,7 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Evento para abrir el modal de actualización
   $("#tablaPaquetes tbody").on("click", ".btn-edit", async function () {
     const idPaquete = $(this).data("id");
-
+  
     try {
       const response = await fetch(
         `${config.HOST}app/controllers/Paquete.controllers.php?operacion=buscarPaqueteId&idPaquete=` +
@@ -133,113 +135,85 @@ document.addEventListener("DOMContentLoaded", () => {
       $("#txtIdPaquete").val(paquete[0].id_paquete);
       $("#txtPaqueteActualizar").val(paquete[0].paquete);
       $("#txtPrecioActualizar").val(paquete[0].precio);
-      $("#slcTipoServicioActualizar").val(paquete[0].id_servicio);
+  
+      // Establecer los valores de los servicios en el selector
+      const selectedServices = [
+        paquete[0].id_servicio,
+        paquete[0].id_servicio2,
+        paquete[0].id_servicio3,
+        paquete[0].id_servicio4,
+      ].filter((id) => id !== null);
+      $("#slcTipoServicioActualizar").val(selectedServices).trigger("change");
+  
       idServicio = paquete[0].id_servicio;
+  
+      // Parsear y mostrar las duraciones
       const duracionObj = JSON.parse(paquete[0].duracion);
-      if (paquete[0].id_servicio === 3) {
-        $("#txtDuracion1Actualizar").val(duracionObj.fibra || "");
-        $("#txtDuracion2Actualizar").val(duracionObj.cable || "");
-      } else {
-        $("#txtDuracion1Actualizar").val(duracionObj.duracion || "");
-        $("#txtDuracion2Actualizar").val("");
-      }
-
+      actualizarCajasDeTexto("Actualizar");
+      selectedServices.forEach((servicio, index) => {
+        const nombreCortoServicio = $(`#slcTipoServicioActualizar option[value="${servicio}"]`).data("nombre-corto");
+        $(`#txtDuracionServicioActualizar${index + 1}`).val(duracionObj[nombreCortoServicio] || "");
+      });
+  
       deshabilitarDuracion2("slcTipoServicioActualizar");
-
+  
       $("#modalActualizarPaquete").modal("show");
     } catch (error) {
       console.error("Error en paquete:", error);
     }
   });
 
-  // Función para obtener los valores de duración
-  function obtenerValoresDuracion(contexto) {
-    let txtMeses1, txtMeses2;
-
-    if (contexto === "registro") {
-      txtMeses1 = document.querySelector("#txtDuracion1");
-      txtMeses2 = document.querySelector("#txtDuracion2");
-    } else if (contexto === "actualizacion") {
-      txtMeses1 = document.querySelector("#txtDuracion1Actualizar");
-      txtMeses2 = document.querySelector("#txtDuracion2Actualizar");
-    }
-
-    if (!txtMeses1 || !txtMeses1.value.trim()) {
-      console.error("Elemento de duración 1 no encontrado o vacío");
-      return null;
-    }
-
-    const tipoServicio =
-      $("#slcTipoServicio").val() || $("#slcTipoServicioActualizar").val();
-
-    if (tipoServicio === "3") {
-      if (!txtMeses2 || !txtMeses2.value.trim()) {
-        console.error("Elemento de duración 2 no encontrado o vacío para GPON");
-        return null;
-      }
-      return {
-        fibra: parseInt(txtMeses1.value, 10),
-        cable: parseInt(txtMeses2.value, 10),
-      };
-    } else {
-      return {
-        duracion: parseInt(txtMeses1.value, 10),
-      };
-    }
-  }
-
   // Función meses actualizada
   async function meses(contexto) {
-    const idServicio =
-      document.querySelector("#slcTipoServicio").value ||
-      document.querySelector("#slcTipoServicioActualizar").value;
+    const selectedServices = $(`#slcTipoServicio${contexto === "actualizacion" ? "Actualizar" : ""}`).val() || [];
     let jsonMeses = {};
-
-    jsonMeses = obtenerValoresDuracion(contexto);
-    if (!jsonMeses) {
+  
+    selectedServices.forEach((servicio, index) => {
+      const nombreCortoServicio = $(`#slcTipoServicio${contexto === "actualizacion" ? "Actualizar" : ""} option[value="${servicio}"]`).data("nombre-corto");
+      const duracion = document.querySelector(`#txtDuracionServicio${contexto === "actualizacion" ? "Actualizar" : ""}${index + 1}`).value;
+      if (duracion) {
+        jsonMeses[nombreCortoServicio] = parseInt(duracion, 10);
+      }
+    });
+  
+    if (Object.keys(jsonMeses).length === 0) {
       return null;
     }
-
+  
     return jsonMeses;
   }
 
   // Validar Campos
   async function validarCampos(contexto) {
-    let paquete, precio, tipoServicio, duracion1, duracion2;
-
+    let paquete, precio, tipoServicio, duracionServicio;
+  
     if (contexto === "registro") {
       paquete = document.querySelector("#txtPaquete");
       precio = document.querySelector("#txtPrecio");
       tipoServicio = document.querySelector("#slcTipoServicio");
-      duracion1 = document.querySelector("#txtDuracion1");
-      duracion2 = document.querySelector("#txtDuracion2");
+      duracionServicio = document.querySelector("#txtDuracionServicio1"); 
     } else if (contexto === "actualizacion") {
       paquete = document.querySelector("#txtPaqueteActualizar");
       precio = document.querySelector("#txtPrecioActualizar");
       tipoServicio = document.querySelector("#slcTipoServicioActualizar");
-      duracion1 = document.querySelector("#txtDuracion1Actualizar");
-      duracion2 = document.querySelector("#txtDuracion2Actualizar");
+      duracionServicio = document.querySelector("#txtDuracionServicioActualizar1"); 
     }
-
+  
     if (
-      !paquete.value.trim() ||
-      !precio.value.trim() ||
-      !tipoServicio.value.trim() ||
-      !duracion1.value.trim() ||
-      (tipoServicio.value === "3" && !duracion2.value.trim())
+      !paquete || !paquete.value.trim() ||
+      !precio || !precio.value.trim() ||
+      !tipoServicio || !tipoServicio.value.trim() ||
+      !duracionServicio || !duracionServicio.value.trim()
     ) {
       showToast("Todos los campos son obligatorios", "WARNING");
       return false;
     }
-
-    if (
-      parseFloat(duracion1.value) < 3 ||
-      (tipoServicio.value === "3" && parseFloat(duracion2.value) < 3)
-    ) {
+  
+    if (parseFloat(duracionServicio.value) < 3) {
       showToast("La duración no puede ser menor a 3 meses.", "WARNING");
       return false;
     }
-
+  
     return true;
   }
 
@@ -248,49 +222,52 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!(await validarCampos("registro"))) {
       return;
     }
-
+  
     const jsonMeses = await meses("registro");
     if (!jsonMeses) {
       showToast("Error al obtener la duración", "ERROR");
       return;
     }
-
-    const paquete = document.querySelector("#txtPaquete");
-    const precio = document.querySelector("#txtPrecio");
-
+  
+    const paquete = document.querySelector("#txtPaquete").value;
+    const precio = document.querySelector("#txtPrecio").value;
+    const selectedServices = $("#slcTipoServicio").val() || [];
+  
     if (!paquete || !precio) {
       console.error("Elementos de paquete o precio no encontrados");
       showToast("Error al obtener los datos del paquete o precio", "ERROR");
       return;
     }
-
+  
+    const datosEnviar = {
+      operacion: "registrarPaquete",
+      parametros: {
+        idServicio: selectedServices[0] || null,
+        idServicio2: selectedServices[1] || null,
+        idServicio3: selectedServices[2] || null,
+        idServicio4: selectedServices[3] || null,
+        paquete: paquete,
+        precio: precio,
+        duracion: jsonMeses,
+        idUsuario: userid,
+      },
+    };
+  
     try {
-      const respuesta = await fetch(
-        `${config.HOST}app/controllers/Paquete.controllers.php`,
-        {
-          method: "POST",
-          body: JSON.stringify({
-            operacion: "registrarPaquete",
-            parametros: {
-              idServicio: idServicio,
-              paquete: paquete.value,
-              precio: precio.value,
-              duracion: jsonMeses,
-              idUsuario: userid,
-            },
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
+      const respuesta = await fetch(`${config.HOST}app/controllers/Paquete.controllers.php`, {
+        method: "POST",
+        body: JSON.stringify(datosEnviar),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+  
       if (!respuesta.ok) {
         throw new Error(`Error ${respuesta.status}: ${respuesta.statusText}`);
       }
-
+  
       const data = await respuesta.json();
-
+  
       if (data.guardado) {
         showToast("El Paquete se ha guardado correctamente", "SUCCESS");
         $("#tablaPaquetes").DataTable().ajax.reload(null, false);
@@ -304,37 +281,37 @@ document.addEventListener("DOMContentLoaded", () => {
       showToast("No se pudo Agregar el paquete", "ERROR");
     }
   }
-
   // Función Actualizar
   async function actualizarPaquete(idPaquete) {
     if (!(await validarCampos("actualizacion"))) {
       return;
     }
-
+  
     const jsonMeses = await meses("actualizacion");
     if (!jsonMeses) {
       showToast("Error al obtener la duración", "ERROR");
       return;
     }
-
+  
     const paquete = document.querySelector("#txtPaqueteActualizar").value;
     const precio = document.querySelector("#txtPrecioActualizar").value;
-    const idServicio = document.querySelector(
-      "#slcTipoServicioActualizar"
-    ).value;
-
+    const selectedServices = $("#slcTipoServicioActualizar").val() || [];
+  
     const datos = {
       operacion: "actualizarPaquete",
       parametros: {
         idPaquete: idPaquete,
-        idServicio: idServicio,
+        idServicio: selectedServices[0] || null,
+        idServicio2: selectedServices[1] || null,
+        idServicio3: selectedServices[2] || null,
+        idServicio4: selectedServices[3] || null,
         paquete: paquete,
         precio: precio,
         duracion: jsonMeses,
         idUsuario: userid,
       },
     };
-
+  
     try {
       const respuesta = await fetch(
         `${config.HOST}app/controllers/Paquete.controllers.php`,
@@ -346,13 +323,13 @@ document.addEventListener("DOMContentLoaded", () => {
           },
         }
       );
-
+  
       if (!respuesta.ok) {
         throw new Error(`Error ${respuesta.status}: ${respuesta.statusText}`);
       }
-
+  
       const data = await respuesta.json();
-
+  
       if (data.actualizado) {
         showToast("El Paquete se ha actualizado correctamente", "SUCCESS");
         $("#tablaPaquetes").DataTable().ajax.reload(null, false);
@@ -414,37 +391,70 @@ document.addEventListener("DOMContentLoaded", () => {
         `${config.HOST}app/controllers/Servicio.controllers.php?operacion=listarServicio`
       );
       const servicios = await response.json();
-
+  
       const slcTipoServicio = $("#slcTipoServicio");
       const slcTipoServicioActualizar = $("#slcTipoServicioActualizar");
-
+      const serviciosContainer = $("#serviciosContainer");
+  
       slcTipoServicio.empty();
       slcTipoServicioActualizar.empty();
-
-      slcTipoServicio.append(
-        '<option value="" disabled selected>Seleccione</option>'
-      );
-      slcTipoServicioActualizar.append(
-        '<option value="" disabled selected>Seleccione</option>'
-      );
-
-      servicios.forEach((servicio) => {
-        const option = `<option value="${servicio.id_servicio}">${servicio.tipo_servicio} (${servicio.servicio})</option>`;
-        slcTipoServicio.append(option);
-        slcTipoServicioActualizar.append(option);
-      });
-
+      serviciosContainer.empty();
+  
+      servicios
+        .filter((servicio) => servicio.inactive_at === null)
+        .forEach((servicio) => {
+          const option = `<option value="${servicio.id_servicio}" data-nombre-corto="${servicio.tipo_servicio}">${servicio.tipo_servicio} (${servicio.servicio})</option>`;
+          slcTipoServicio.append(option);
+          slcTipoServicioActualizar.append(option);
+        });
+  
       slcTipoServicio.on("change", function () {
         idServicio = parseInt($(this).val(), 10);
+        actualizarCajasDeTexto();
       });
-
+  
       slcTipoServicioActualizar.on("change", function () {
         idServicio = parseInt($(this).val(), 10);
+        actualizarCajasDeTexto("Actualizar");
       });
     } catch (error) {
       console.error("Error al cargar servicios:", error);
     }
   }
+  
+  function actualizarCajasDeTexto(contexto = "") {
+    const serviciosContainer = $(`#serviciosContainer${contexto}`);
+    const selectedServices = $(`#slcTipoServicio${contexto}`).val() || [];
+  
+    serviciosContainer.empty();
+  
+    selectedServices.forEach((servicio, index) => {
+      const nombreCortoServicio = $(`#slcTipoServicio${contexto} option[value="${servicio}"]`).data("nombre-corto");
+      const inputHtml = `
+        <div class="form-floating mb-2">
+          <input type="number" class="form-control" id="txtDuracionServicio${contexto}${index + 1}" placeholder="Duración del Servicio ${nombreCortoServicio}" required>
+          <label for="txtDuracionServicio${contexto}${index + 1}">Duración del Servicio ${nombreCortoServicio} (Meses)</label>
+        </div>
+      `;
+      serviciosContainer.append(inputHtml);
+    });
+  }
+  
+  $(document).ready(function () {
+    cargarServicios();
+  
+    $("#slcTipoServicioActualizar").on("change", function () {
+      actualizarCajasDeTexto("Actualizar");
+    });
+  });
+  
+  $(document).ready(function () {
+    cargarServicios();
+  
+    $("#slcTipoServicioActualizar").on("change", function () {
+      actualizarCajasDeTexto("Actualizar");
+    });
+  });
 
   function deshabilitarDuracion2(selectorId) {
     const idServicio = $(`#${selectorId}`).val();
@@ -467,4 +477,26 @@ document.addEventListener("DOMContentLoaded", () => {
       input.value = "";
     }
   }
+
+  $(document).ready(function () {
+    $("#modalAgregarPaquete .js-example-basic-multiple").select2({
+      dropdownParent: $("#modalAgregarPaquete"),
+      placeholder: "Seleccione" 
+    });
+
+    $("#modalActualizarPaquete .js-example-basic-multiple").select2({
+      dropdownParent: $("#modalActualizarPaquete"),
+      placeholder: "Seleccione"
+    });
+  });
+
+  $(document).ready(function () {
+    cargarServicios();
+  
+    $("#slcTipoServicioActualizar").on("change", function () {
+      idServicio = parseInt($(this).val(), 10); 
+      actualizarCajasDeTexto("Actualizar");
+    });
+  });
+  
 });

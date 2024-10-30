@@ -160,18 +160,24 @@ CREATE TABLE tb_responsables (
 ) ENGINE = InnoDB;
 
 CREATE TABLE tb_paquetes (
-	id_paquete 		INT PRIMARY KEY AUTO_INCREMENT,
-    id_servicio 	INT NOT NULL,
-    paquete 		VARCHAR(250) NOT NULL,
-    precio 			DECIMAL(7,2) NOT NULL,
-    duracion		JSON NOT NULL,
-    create_at 		DATETIME NOT NULL DEFAULT NOW(),
-    update_at 		DATETIME NULL,
-    inactive_at 	DATETIME NULL,
-    iduser_create 	INT NOT NULL,
-    iduser_update 	INT NULL, 
+	id_paquete      INT PRIMARY KEY AUTO_INCREMENT,
+    id_servicio     INT NOT NULL,
+    id_servicio2    INT NULL,
+    id_servicio3    INT NULL,
+    id_servicio4    INT NULL,
+    paquete         VARCHAR(250) NOT NULL,
+    precio          DECIMAL(7,2) NOT NULL,
+    duracion        JSON NOT NULL,
+    create_at       DATETIME NOT NULL DEFAULT NOW(),
+    update_at       DATETIME NULL,
+    inactive_at     DATETIME NULL,
+    iduser_create   INT NOT NULL,
+    iduser_update   INT NULL, 
     iduser_inactive INT NULL,
-    CONSTRAINT fk_paque_id_servicio FOREIGN KEY (id_servicio) REFERENCES tb_servicios (id_servicio)
+    CONSTRAINT fk_paque_id_servicio FOREIGN KEY (id_servicio) REFERENCES tb_servicios (id_servicio),
+    CONSTRAINT fk_paque_id_servicio2 FOREIGN KEY (id_servicio2) REFERENCES tb_servicios (id_servicio),
+    CONSTRAINT fk_paque_id_servicio3 FOREIGN KEY (id_servicio3) REFERENCES tb_servicios (id_servicio),
+    CONSTRAINT fk_paque_id_servicio4 FOREIGN KEY (id_servicio4) REFERENCES tb_servicios (id_servicio)
 ) ENGINE = InnoDB;
 
 

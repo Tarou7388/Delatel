@@ -5,9 +5,12 @@ DROP VIEW IF EXISTS vw_paquetes_listar$$
 CREATE VIEW vw_paquetes_listar AS
 SELECT
     p.id_paquete,
-    p.id_servicio,
+    p.id_servicio, 
+    p.id_servicio2,
+    p.id_servicio3, 
+    p.id_servicio4,
     p.paquete,
-    s.tipo_servicio,
+    CONCAT_WS(' + ', s.tipo_servicio, s2.tipo_servicio, s3.tipo_servicio, s4.tipo_servicio) AS tipo_servicio,
     s.servicio,
     p.precio,
     p.duracion,
@@ -19,26 +22,36 @@ SELECT
     p.iduser_inactive
 FROM
     tb_paquetes p
-    LEFT JOIN tb_servicios s ON p.id_servicio = s.id_servicio;
+    LEFT JOIN tb_servicios s ON p.id_servicio = s.id_servicio
+    LEFT JOIN tb_servicios s2 ON p.id_servicio2 = s2.id_servicio
+    LEFT JOIN tb_servicios s3 ON p.id_servicio3 = s3.id_servicio
+    LEFT JOIN tb_servicios s4 ON p.id_servicio4 = s4.id_servicio;
 
 
 DROP PROCEDURE IF EXISTS spu_paquete_registrar$$
 CREATE PROCEDURE spu_paquete_registrar(
     IN p_id_servicio INT,
+    IN p_id_servicio2 INT,
+    IN p_id_servicio3 INT,
+    IN p_id_servicio4 INT,
     IN p_paquete VARCHAR(250),
     IN p_precio DECIMAL(7,2),
     IN p_duracion JSON,
     IN p_iduser_create INT
 )
 BEGIN
-    INSERT INTO tb_paquetes (id_servicio, paquete, precio, duracion, iduser_create) 
-    VALUES (p_id_servicio, p_paquete, p_precio, p_duracion, p_iduser_create);
+    INSERT INTO tb_paquetes (id_servicio, id_servicio2, id_servicio3, id_servicio4, paquete, precio, duracion, iduser_create) 
+    VALUES (p_id_servicio, p_id_servicio2, p_id_servicio3, p_id_servicio4, p_paquete, p_precio, p_duracion, p_iduser_create);
 END $$  
+
 
 DROP PROCEDURE IF EXISTS spu_paquete_actualizar$$
 CREATE PROCEDURE spu_paquete_actualizar(
 	p_id_paquete INT,
     p_id_servicio INT,
+    p_id_servicio2 INT,
+    p_id_servicio3 INT,
+    p_id_servicio4 INT,
     p_paquete VARCHAR(250),
     p_precio DECIMAL(7,2),
     p_duracion JSON,
@@ -48,6 +61,9 @@ BEGIN
 	UPDATE tb_paquetes 
     SET 
 		id_servicio = p_id_servicio,
+        id_servicio2 = p_id_servicio2,
+        id_servicio3 = p_id_servicio3,
+        id_servicio4 = p_id_servicio4,
         paquete = p_paquete,
         precio = p_precio,
         duracion = p_duracion,
@@ -79,9 +95,12 @@ CREATE PROCEDURE spu_paquete_buscar_id(
 BEGIN
     SELECT
         p.id_paquete,
-        p.id_servicio,
+        p.id_servicio, 
+        p.id_servicio2,
+        p.id_servicio3, 
+        p.id_servicio4,
         p.paquete,
-        s.tipo_servicio,
+        CONCAT_WS(' + ', s.tipo_servicio, s2.tipo_servicio, s3.tipo_servicio, s4.tipo_servicio) AS tipo_servicio,
         s.servicio,
         p.precio,
         p.duracion,
@@ -94,6 +113,9 @@ BEGIN
     FROM
         tb_paquetes p
         LEFT JOIN tb_servicios s ON p.id_servicio = s.id_servicio
+        LEFT JOIN tb_servicios s2 ON p.id_servicio2 = s2.id_servicio
+        LEFT JOIN tb_servicios s3 ON p.id_servicio3 = s3.id_servicio
+        LEFT JOIN tb_servicios s4 ON p.id_servicio4 = s4.id_servicio
     WHERE
         p.id_paquete = p_id_paquete;
 END $$

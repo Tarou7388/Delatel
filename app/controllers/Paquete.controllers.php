@@ -16,11 +16,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   switch ($operacion) {
     case 'registrarPaquete':
       $datosEnviar = [
-        "idServicio"        => Herramientas::sanitizarEntrada($datos['parametros']["idServicio"]),
-        "paquete"           => Herramientas::sanitizarEntrada($datos['parametros']["paquete"]),
-        "precio"            => Herramientas::sanitizarEntrada($datos['parametros']["precio"]),
-        "duracion"          => json_encode($datos['parametros']["duracion"]),
-        "idUsuario"         => Herramientas::sanitizarEntrada($datos['parametros']["idUsuario"])
+          "idServicio"    => Herramientas::sanitizarEntrada($datos['parametros']["idServicio"]),
+          "idServicio2"   => isset($datos['parametros']["idServicio2"]) ? Herramientas::sanitizarEntrada($datos['parametros']["idServicio2"]) : null,
+          "idServicio3"   => isset($datos['parametros']["idServicio3"]) ? Herramientas::sanitizarEntrada($datos['parametros']["idServicio3"]) : null,
+          "idServicio4"   => isset($datos['parametros']["idServicio4"]) ? Herramientas::sanitizarEntrada($datos['parametros']["idServicio4"]) : null,
+          "paquete"       => Herramientas::sanitizarEntrada($datos['parametros']["paquete"]),
+          "precio"        => Herramientas::sanitizarEntrada($datos['parametros']["precio"]),
+          "duracion"      => json_encode($datos['parametros']["duracion"]),
+          "idUsuario"     => Herramientas::sanitizarEntrada($datos['parametros']["idUsuario"])
       ];
       $resultado = $paquete->registrarPaquete($datosEnviar);
       echo json_encode(["guardado" => $resultado]);
@@ -38,6 +41,10 @@ if (isset($_GET["operacion"])) {
       $resultado = $paquete->buscarPaqueteId(["idPaquete" => Herramientas::sanitizarEntrada($_GET['idPaquete'])]);
       echo json_encode($resultado);
       break;
+    case "buscarPaquetePorIdServicio":
+      $resultado = $paquete->buscarPaquetePorIdServicio(["idServicio" => Herramientas::sanitizarEntrada($_GET['idServicio'])]);
+      echo json_encode($resultado);
+      break;
   }
 }
 
@@ -50,6 +57,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
       $datosActualizar = [
         "idPaquete"         => Herramientas::sanitizarEntrada($datos['parametros']["idPaquete"]),
         "idServicio"        => Herramientas::sanitizarEntrada($datos['parametros']["idServicio"]),
+        "idServicio2"   => isset($datos['parametros']["idServicio2"]) ? Herramientas::sanitizarEntrada($datos['parametros']["idServicio2"]) : null,
+        "idServicio3"   => isset($datos['parametros']["idServicio3"]) ? Herramientas::sanitizarEntrada($datos['parametros']["idServicio3"]) : null,
+        "idServicio4"   => isset($datos['parametros']["idServicio4"]) ? Herramientas::sanitizarEntrada($datos['parametros']["idServicio4"]) : null,
         "paquete"           => Herramientas::sanitizarEntrada($datos['parametros']["paquete"]),
         "precio"            => Herramientas::sanitizarEntrada($datos['parametros']["precio"]),
         "duracion"          => json_encode($datos['parametros']["duracion"]),
