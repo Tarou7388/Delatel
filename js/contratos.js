@@ -95,7 +95,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     await cargarPaquetes(idServicioSeleccionado);
   });
 
-  slcServicioActualizar.on("select2:select", async function (e) {
+  $("#slcServicioActualizar").on("select2:select", async function (e) {
     const idServicioActualizarSeleccionado = e.params.data.id;
     await cargarPaquetesActualizar(idServicioActualizarSeleccionado);
   });
