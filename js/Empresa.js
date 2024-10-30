@@ -1,7 +1,9 @@
 import config from "../env.js";
 import * as mapa from "./Mapa.js";
+import * as Herramientas from "../js/Herramientas.js";
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
+  const accesos = await Herramientas.permisos()
 
   const userid = JSON.stringify(user['idUsuario']);
 
@@ -35,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  
+
 
   async function verificarCampos() {
     const campos = [
@@ -54,66 +56,70 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   async function registrarEmpresa() {
-    const params = new FormData();
-    params.append("operacion", "registrarEmpresa");
-    params.append("ruc", txtRuc.value);
-    params.append("representanteLegal", txtRepresentanteLegal.value);
-    params.append("razonSocial", txtRazonSocial.value);
-    params.append("nombreComercial", txtNombreComercial.value);
-    params.append("telefono", txtTelefono.value);
-    params.append("email", txtEmail.value);
-    params.append("idUsuario", userid);
+    if (accesos.personas.crear == 1) {
+      const params = new FormData();
+      params.append("operacion", "registrarEmpresa");
+      params.append("ruc", txtRuc.value);
+      params.append("representanteLegal", txtRepresentanteLegal.value);
+      params.append("razonSocial", txtRazonSocial.value);
+      params.append("nombreComercial", txtNombreComercial.value);
+      params.append("telefono", txtTelefono.value);
+      params.append("email", txtEmail.value);
+      params.append("idUsuario", userid);
 
-    const options = {
-      method: "POST",
-      body: params,
-    };
+      const options = {
+        method: "POST",
+        body: params,
+      };
 
-    const response = await fetch(`${config.HOST}app/controllers/Empresa.controllers.php`, options);
-    const data = await response.json();
-    if (data.error) {
-      showToast(data.error.message, "WARNING");
-    }
-    else {
-      ruc = txtRuc.value;
-      await showToast("Empresa registrada correctamente", "SUCCESS", 650);
-      await registrarContacto(data[0].id_empresa);
-      frmEmpresas.reset();
+      const response = await fetch(`${config.HOST}app/controllers/Empresa.controllers.php`, options);
+      const data = await response.json();
+      if (data.error) {
+        showToast(data.error.message, "WARNING");
+      }
+      else {
+        ruc = txtRuc.value;
+        await showToast("Empresa registrada correctamente", "SUCCESS", 650);
+        await registrarContacto(data[0].id_empresa);
+        frmEmpresas.reset();
+      }
     }
 
   }
 
   async function registrarContacto(idEmpresa) {
-    const Paquete = slcServicio.value;
-    const fecha = new Date();
-    fecha.setDate(fecha.getDate() + 14);
-    const datos = {
-      operacion: "registrarContacto",
-      idPersona: '',
-      idEmpresa: idEmpresa,
-      idPaquete: parseInt(slcServicio.value.split((" - ")[0])),
-      direccion: txtDireccion.value,
-      nota: "Para llamar",
-      idUsuario: userid,
-      fechaLimite: fecha.toISOString().slice(0, 10),
-    };
-    const response = await fetch(`${config.HOST}app/controllers/Contactabilidad.controllers.php`, {
-      method: "POST",
-      body: JSON.stringify(datos),
-    });
-    const data = await response.json();
-    if (data.guardado) {
+    if (accesos.personas.crear == 1) {
       const Paquete = slcServicio.value;
-      const direccion = txtDireccion.value;
-      const referencia = txtReferencia.value;
-      const coordenadas = txtCoordenadas.value;
-      await showToast("Empresa registrada correctamente", "SUCCESS", 650);
-      setTimeout(async () => {
-        frmPersonas.reset();
-        if (await ask("¿Desea registrar un contrato?")) {
-          window.location.href = `${config.HOST}views/Contratos/?nroDoc=${ruc}&idObjeto=${idPersona}&Paquete=${Paquete}&direccion=${direccion}&referencia=${referencia}&coordenadas=${coordenadas}`;
-        }
-      }, 650);
+      const fecha = new Date();
+      fecha.setDate(fecha.getDate() + 14);
+      const datos = {
+        operacion: "registrarContacto",
+        idPersona: '',
+        idEmpresa: idEmpresa,
+        idPaquete: parseInt(slcServicio.value.split((" - ")[0])),
+        direccion: txtDireccion.value,
+        nota: "Para llamar",
+        idUsuario: userid,
+        fechaLimite: fecha.toISOString().slice(0, 10),
+      };
+      const response = await fetch(`${config.HOST}app/controllers/Contactabilidad.controllers.php`, {
+        method: "POST",
+        body: JSON.stringify(datos),
+      });
+      const data = await response.json();
+      if (data.guardado) {
+        const Paquete = slcServicio.value;
+        const direccion = txtDireccion.value;
+        const referencia = txtReferencia.value;
+        const coordenadas = txtCoordenadas.value;
+        await showToast("Empresa registrada correctamente", "SUCCESS", 650);
+        setTimeout(async () => {
+          frmPersonas.reset();
+          if (await ask("¿Desea registrar un contrato?")) {
+            window.location.href = `${config.HOST}views/Contratos/?nroDoc=${ruc}&idObjeto=${idPersona}&Paquete=${Paquete}&direccion=${direccion}&referencia=${referencia}&coordenadas=${coordenadas}`;
+          }
+        }, 650);
+      }
     }
   }
 

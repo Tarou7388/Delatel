@@ -1,7 +1,9 @@
 import config from '../env.js';
 import { inicializarDataTable } from './Herramientas.js';
+import * as Herramientas from "../js/Herramientas.js";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+  const accesos = await Herramientas.permisos()
   const userid = JSON.stringify(user['idUsuario']);
   let idUserTabla = -1;
   let idresponsable = -1;
@@ -98,38 +100,40 @@ document.addEventListener("DOMContentLoaded", () => {
    * actualizarUsuario();
    */
   async function actualizarUsuario() {
-    const usuario = document.getElementById('txtUsuario').value;
-    const nuevaPassword = document.getElementById('txtPassword').value;
+    if (accesos.usuarios.actualizar == 1) {
+      const usuario = document.getElementById('txtUsuario').value;
+      const nuevaPassword = document.getElementById('txtPassword').value;
 
-    const parametros = {
-      operacion: 'actualizarUsuario',
-      parametros: {
-        idUsuarioUpdate: userid,
-        nombreUsuario: usuario,
-        idUsuario: idUserTabla,
-        clave: nuevaPassword
+      const parametros = {
+        operacion: 'actualizarUsuario',
+        parametros: {
+          idUsuarioUpdate: userid,
+          nombreUsuario: usuario,
+          idUsuario: idUserTabla,
+          clave: nuevaPassword
+        }
+      };
+
+      const respuesta = await fetch(`${config.HOST}app/controllers/Usuario.controllers.php`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(parametros)
+      });
+
+      const resultado = await respuesta.json();
+      if (resultado.actualizado) {
+        showToast("Usuario actualizado", "SUCCESS");
+        $('#editModal').modal('hide');
+        $('#tblUsuarios').DataTable().ajax.reload();
+      } else {
+        showToast("Usuario no actualizado", "ERROR");
       }
-    };
 
-    const respuesta = await fetch(`${config.HOST}app/controllers/Usuario.controllers.php`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(parametros)
-    });
-
-    const resultado = await respuesta.json();
-    if (resultado.actualizado) {
-      showToast("Usuario actualizado", "SUCCESS");
-      $('#editModal').modal('hide');
-      $('#tblUsuarios').DataTable().ajax.reload();
-    } else {
-      showToast("Usuario no actualizado", "ERROR");
+      idUserTabla = -1;
     }
-
-    idUserTabla = -1;
-  };
+  }
 
   /**
    * Función asíncrona que actualiza el rol de un responsable en el sistema.
@@ -151,36 +155,38 @@ document.addEventListener("DOMContentLoaded", () => {
    * @returns {void}
    */
   async function actualizarRolResponsable(idresponsabled) {
-    const rol = document.getElementById('slcRol').value;
+    if (accesos.roles.actualizar == 1) {
+      const rol = document.getElementById('slcRol').value;
 
-    const parametros = {
-      operacion: 'actualizarResponsable',
-      datos: {
-        idUsuarioActualizador: userid,
-        idRol: rol,
-        idResponsable: idresponsabled
+      const parametros = {
+        operacion: 'actualizarResponsable',
+        datos: {
+          idUsuarioActualizador: userid,
+          idRol: rol,
+          idResponsable: idresponsabled
+        }
+      };
+      //console.log(parametros);
+
+      const respuesta = await fetch(`${config.HOST}app/controllers/Responsable.controllers.php`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(parametros)
+      });
+
+      const resultado = await respuesta.json();
+      if (resultado.Actualizado) {
+        showToast("Usuario actualizado", "SUCCESS");
+        $('#editModal').modal('hide');
+        $('#tblUsuarios').DataTable().ajax.reload();
+      } else {
+        showToast("Usuario no actualizado", "ERROR");
       }
-    };
-    //console.log(parametros);
-
-    const respuesta = await fetch(`${config.HOST}app/controllers/Responsable.controllers.php`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(parametros)
-    });
-
-    const resultado = await respuesta.json();
-    if (resultado.Actualizado) {
-      showToast("Usuario actualizado", "SUCCESS");
-      $('#editModal').modal('hide');
-      $('#tblUsuarios').DataTable().ajax.reload();
-    } else {
-      showToast("Usuario no actualizado", "ERROR");
+      idresponsable = -1;
+      idUserTabla = -1;
     }
-    idresponsable = -1;
-    idUserTabla = -1;
   };
 
   /**
@@ -224,30 +230,32 @@ document.addEventListener("DOMContentLoaded", () => {
    * @returns {void}
    */
   async function eliminarUsuario(id) {
-    const data = {
-      operacion: "eliminarUsuario",
-      idUsuario: id,
-      idUsuarioEliminador: userid
-    };
+    if (accesos.usuarios.eliminar == 1) {
+      const data = {
+        operacion: "eliminarUsuario",
+        idUsuario: id,
+        idUsuarioEliminador: userid
+      };
 
-    const response = await fetch(`${config.HOST}app/controllers/Usuario.controllers.php`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    });
+      const response = await fetch(`${config.HOST}app/controllers/Usuario.controllers.php`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
 
-    const result = await response.json();
-    //console.log(result);
-    if (result.eliminado) {
-      showToast("Usuario eliminado", "SUCCESS");
-      $('#tblUsuarios').DataTable().ajax.reload();
-    } else {
-      showToast("No se pudo eliminar el usuario", "ERROR");
+      const result = await response.json();
+      //console.log(result);
+      if (result.eliminado) {
+        showToast("Usuario eliminado", "SUCCESS");
+        $('#tblUsuarios').DataTable().ajax.reload();
+      } else {
+        showToast("No se pudo eliminar el usuario", "ERROR");
+      }
+
+      idUserTabla = -1;
     }
-
-    idUserTabla = -1;
   };
 
 });

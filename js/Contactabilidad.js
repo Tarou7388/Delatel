@@ -1,6 +1,7 @@
 import config from "../env.js";
+import * as Herramientas from "../js/Herramientas.js";
 
-window.addEventListener("DOMContentLoaded", function () {
+window.addEventListener("DOMContentLoaded", async function() {
   const slcPlanes = document.querySelector("#slcPlanes");
   const txtPrecio = document.querySelector("#txtPrecioContactabilidad");
   const dni = document.querySelector("#txtDniContactabilidad");
@@ -8,6 +9,7 @@ window.addEventListener("DOMContentLoaded", function () {
   const txtApellidos = document.querySelector("#txtApellidosContactabilidad");
   const btnBuscar = document.querySelector("#btnBuscarDni");
   const slcNacionalidad = document.querySelector("#slcTipoDoc");
+  const accesos = await Herramientas.permisos()
 
   //Listar Planes con sus Precios
   const fetchPlanes = async () => {

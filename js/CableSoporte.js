@@ -1,7 +1,10 @@
 import config from "../env.js";
 import { inicializarDataTable } from "./Herramientas.js";
+import * as Herramientas from "../js/Herramientas.js";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+  const accesos = await Herramientas.permisos()
+
   function $(object = null) {
     return document.querySelector(object);
   }
@@ -13,45 +16,46 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function registrarCable(JsonCable) {
-    //console.log(JsonCable);
-
-    const params = {
-      operacion: "registrarSoporte",
-      idContrato: window.idContratoSeleccionado,
-      idTipoSoporte: $("#slcTipoSoporte").value,
-      idTecnico: 1, // A cambiar
-      fechaHoraSolicitud: new Date()
-        .toISOString()
-        .slice(0, 19)
-        .replace("T", " "), //2024-05-31 13:00:00 EJEMPLO
-      fechaHoraAsistencia: new Date()
-        .toISOString()
-        .slice(0, 19)
-        .replace("T", " "),
-      prioridad: $("#slcPrioridad").value,
-      soporte: JsonCable,
-      idUsuario: 1, // A espera de un nuevo método
-      descripcionProblema: $("#txtEstadoInicialCable").value,
-      descripcionSolucion: $("#txtProcedimientoCable").value
-    };
-
-    const respuesta = await fetch(
-      `${config.HOST}/app/controllers/Soporte.controllers.php`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(params),
+    if(accesos.averias.crear == 1){
+      const params = {
+        operacion: "registrarSoporte",
+        idContrato: window.idContratoSeleccionado,
+        idTipoSoporte: $("#slcTipoSoporte").value,
+        idTecnico: 1, // A cambiar
+        fechaHoraSolicitud: new Date()
+          .toISOString()
+          .slice(0, 19)
+          .replace("T", " "), //2024-05-31 13:00:00 EJEMPLO
+        fechaHoraAsistencia: new Date()
+          .toISOString()
+          .slice(0, 19)
+          .replace("T", " "),
+        prioridad: $("#slcPrioridad").value,
+        soporte: JsonCable,
+        idUsuario: 1, // A espera de un nuevo método
+        descripcionProblema: $("#txtEstadoInicialCable").value,
+        descripcionSolucion: $("#txtProcedimientoCable").value
+      };
+  
+      const respuesta = await fetch(
+        `${config.HOST}/app/controllers/Soporte.controllers.php`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(params),
+        }
+      );
+  
+      const data = await respuesta.json();
+  
+      if (data) {
+      } else {
+        alert("Error");
       }
-    );
-
-    const data = await respuesta.json();
-
-    if (data) {
-    } else {
-      alert("Error");
     }
+    
   }
 
   $("#Form-FichaCable").addEventListener("submit", async (event) => {
