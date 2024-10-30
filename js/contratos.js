@@ -217,7 +217,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         }
       }
     } else {
-      showToast("No tienes acceso para crear un cliente", "ERROR");
+      showToast("No tienes acceso para registrar un contrato", "ERROR");
     }
   }
 

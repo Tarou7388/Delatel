@@ -55,6 +55,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         alert("Error");
       }
     }
+    else{
+      showToast("No tienes permisos", "ERROR")
+    }
     
   }
 
