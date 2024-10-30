@@ -1,6 +1,7 @@
 USE Delatel;
 
-DROP PROCEDURE IF EXISTS spu_averias_contratos_listar;
+DELIMITER $$
+DROP PROCEDURE IF EXISTS spu_averias_contratos_listar$$
 
 CREATE PROCEDURE spu_averias_contratos_listar(IN p_id_contrato INT)
 BEGIN
@@ -24,4 +25,4 @@ BEGIN
         tb_tipo_soporte ts ON s.id_tipo_soporte = ts.id_tipo_soporte
     WHERE 
         s.id_contrato = p_id_contrato;
-END;
+END$$

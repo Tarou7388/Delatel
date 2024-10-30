@@ -200,19 +200,18 @@ VALUES
 
 
 INSERT INTO tb_tipooperacion (descripcion, movimiento) VALUES
-('Entrada de Equipos WISP', 'E'),
-('Entrada de Equipos GPON', 'E'),
-('Entrada de Cables Coaxiales', 'E'),
-('Entrada de Routers', 'E'),
-('Entrada de Antenas', 'E'),
-('Entrada de Modems', 'E'),
-('Salida de Equipos WISP', 'S'),
-('Salida de Equipos GPON', 'S'),
-('Salida de Cables Coaxiales', 'S'),
-('Salida de Routers', 'S'),
-('Salida de Antenas', 'S'),
-('Salida de Modems', 'S');
-
+('Adquisición de activos', 'E'),
+('Compra de materiales', 'E'),
+('Recepción de suministros', 'E'),
+('Recepción de dispositivos de red', 'E'),
+('Recepción de componentes', 'E'),
+('Recepción de equipos', 'E'),
+('Devolución de equipos', 'S'),
+('Pérdida de activos', 'S'),
+('Equipos fuera de servicio', 'S'),
+('Despacho de dispositivos de red', 'S'),
+('Despacho de componentes', 'S'),
+('Despacho de equipos', 'S');
 
 INSERT INTO tb_usuarios (id_persona, nombre_user, pass, iduser_create) VALUES
 (1, 'Lgarcia', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1), -- 123456
