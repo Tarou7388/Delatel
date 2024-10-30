@@ -446,7 +446,7 @@ window.addEventListener("DOMContentLoaded", async () => {
           CABl: "FichaTecnicaCable",
           FIBR: "FichaTecnicaGpon",
         };
-        window.location.href = `${config.HOST}views/Contratos/${tipoFicha[tipoServicio]}.php?idContrato=${idContrato}`;
+        window.location.href = `${config.HOST}views/Contratos/${tipoFicha[tipoServicio]}?idContrato=${idContrato}`;
       });
     });
 
