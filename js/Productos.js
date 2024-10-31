@@ -1,5 +1,6 @@
 import config from "../env.js";
-document.addEventListener("DOMContentLoaded", () => {
+import * as Herramientas from "../js/Herramientas.js";
+document.addEventListener("DOMContentLoaded", async () => {
   const userid = user["idUsuario"];
   const precioActual = document.querySelector("#txtPrecioActual");
   const tipoProducto = document.querySelector("#slcTipoProducto");
@@ -7,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const CodigoBarras = document.querySelector("#txtCodigoBarras");
   const slcMarca = document.querySelector("#slcMarca");
   const slcUnidadMedida = document.querySelector("#slcUnidadMedida");
+  const accesos = await Herramientas.permisos()
 
   (async () => {
     try {

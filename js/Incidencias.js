@@ -1,10 +1,12 @@
 import config from '../env.js';
+import * as Herramientas from "../js/Herramientas.js";
 
 if (JSON.stringify(user['idRol']) == 2) {
   window.location.href = `${config.HOST}views/Soporte/registroSoporte`;
 }
 
-window.addEventListener('DOMContentLoaded', function () {
+window.addEventListener('DOMContentLoaded', async function () {
+  const accesos = await Herramientas.permisos()
   const userid = JSON.stringify(user['idUsuario']);
   let idcliente = -1;
 
@@ -16,39 +18,41 @@ window.addEventListener('DOMContentLoaded', function () {
   };
 
   async function registrarIncidencia() {
-    const datos = {
-      idCliente: idcliente,
-      fechaIncidencia: new Date()
-        .toISOString()
-        .slice(0, 19)
-        .replace("T", " "),
-      descripcion: $("#txtDescripcion").value,
-      solucion: $("#txtSolucion").value,
-      idtecnico: userid,
-      idUsuario: userid,
-    };
+    if (accesos?.soporte?.crear) {
+      const datos = {
+        idCliente: idcliente,
+        fechaIncidencia: new Date()
+          .toISOString()
+          .slice(0, 19)
+          .replace("T", " "),
+        descripcion: $("#txtDescripcion").value,
+        solucion: $("#txtSolucion").value,
+        idtecnico: userid,
+        idUsuario: userid,
+      };
 
-    console.log(JSON.stringify({
-      operacion: "registrarIncidencia",
-      datos: datos
-    }));
-
-    const respuesta = await fetch(`${config.HOST}app/controllers/Incidencia.controllers.php`, {
-      method: "POST",
-      body: JSON.stringify({
+      console.log(JSON.stringify({
         operacion: "registrarIncidencia",
         datos: datos
-      })
-    });
+      }));
 
-    const data = await respuesta.json();
+      const respuesta = await fetch(`${config.HOST}app/controllers/Incidencia.controllers.php`, {
+        method: "POST",
+        body: JSON.stringify({
+          operacion: "registrarIncidencia",
+          datos: datos
+        })
+      });
 
-    if (data) {
-      showToast("Incicencia guardada", "SUCCESS");
-      formRegistroIncidencia.reset();
-    }
-    else {
-      showToast("No se logró registrar la incidencia", "ERROR");
+      const data = await respuesta.json();
+
+      if (data) {
+        showToast("Incicencia guardada", "SUCCESS");
+        formRegistroIncidencia.reset();
+      }
+      else {
+        showToast("No se logró registrar la incidencia", "ERROR");
+      }
     }
   }
 

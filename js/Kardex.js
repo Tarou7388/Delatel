@@ -1,6 +1,7 @@
 import config from "../env.js";
+import * as Herramientas from "../js/Herramientas.js";
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
 
   const userid = user["idUsuario"];
   const tipoMovimientoSelect = document.getElementById("slcTipomovimiento");
@@ -11,6 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const txtvalorhistorico = document.querySelector("#txtValorunitario");
   const fecha = document.querySelector("#txtfecha");
   const Almacen = document.querySelector("#slcAlmacen");
+  const accesos = await Herramientas.permisos()
   fecha.value = new Date().toISOString().split("T")[0];
 
   async function actualizarMtv(valor) {
@@ -43,32 +45,37 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
   const guardarKardex = () => {
-    const params = new FormData();
-    params.append("operacion", "registrarKardex");
-    params.append("idAlmacen", Almacen.value);
-    params.append("idProducto", idproductoField.value);
-    params.append("fecha", fecha.value);
-    params.append("idtipoOperacion", slcMotivo.value);
-    params.append("cantidad", txtCantidad.value);
-    params.append("valorUnitarioHistorico", txtvalorhistorico.value);
-    params.append("idUsuario", userid);
+    console.log(accesos)
+    if (accesos?.inventariado?.crear) {
+      const params = new FormData();
+      params.append("operacion", "registrarKardex");
+      params.append("idAlmacen", Almacen.value);
+      params.append("idProducto", idproductoField.value);
+      params.append("fecha", fecha.value);
+      params.append("idtipoOperacion", slcMotivo.value);
+      params.append("cantidad", txtCantidad.value);
+      params.append("valorUnitarioHistorico", txtvalorhistorico.value);
+      params.append("idUsuario", userid);
 
-    try {
-      fetch(`${config.HOST}app/controllers/Kardex.controllers.php`, {
-        method: "POST",
-        body: params,
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          showToast(data.Guardado ? "Se ha guardado correctamente" : "Error: Verifique la cantidad ingresada",
-            data.Guardado ? "SUCCESS" : "ERROR"
-          );
-          document.querySelector("#form-validaciones-kardex").reset();
-          tablaKardex.ajax.reload();
-          fecha.value = new Date().toISOString().split("T")[0];
-        });
-    } catch (error) {
-      showToast("No se pudo realizar la operacion","ERROR")
+      try {
+        fetch(`${config.HOST}app/controllers/Kardex.controllers.php`, {
+          method: "POST",
+          body: params,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            showToast(data.Guardado ? "Se ha guardado correctamente" : "Error: Verifique la cantidad ingresada",
+              data.Guardado ? "SUCCESS" : "ERROR"
+            );
+            document.querySelector("#form-validaciones-kardex").reset();
+            tablaKardex.ajax.reload();
+            fecha.value = new Date().toISOString().split("T")[0];
+          });
+      } catch (error) {
+        showToast("No se pudo realizar la operacion", "ERROR")
+      }
+    } else{
+      showToast("No tienes permisos para guardar en el Kardex","ERROR")
     }
   };
 

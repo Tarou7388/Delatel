@@ -100,40 +100,39 @@ document.addEventListener("DOMContentLoaded", async () => {
    * actualizarUsuario();
    */
   async function actualizarUsuario() {
-    // if (accesos?.usuarios?.actualizar) {
+    if (accesos?.usuarios?.actualizar) {
+      const usuario = document.getElementById('txtUsuario').value;
+      const nuevaPassword = document.getElementById('txtPassword').value;
 
-    // }
-    const usuario = document.getElementById('txtUsuario').value;
-    const nuevaPassword = document.getElementById('txtPassword').value;
+      const parametros = {
+        operacion: 'actualizarUsuario',
+        parametros: {
+          idUsuarioUpdate: userid,
+          nombreUsuario: usuario,
+          idUsuario: idUserTabla,
+          clave: nuevaPassword
+        }
+      };
 
-    const parametros = {
-      operacion: 'actualizarUsuario',
-      parametros: {
-        idUsuarioUpdate: userid,
-        nombreUsuario: usuario,
-        idUsuario: idUserTabla,
-        clave: nuevaPassword
+      const respuesta = await fetch(`${config.HOST}app/controllers/Usuario.controllers.php`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(parametros)
+      });
+
+      const resultado = await respuesta.json();
+      if (resultado.actualizado) {
+        showToast("Usuario actualizado", "SUCCESS");
+        $('#editModal').modal('hide');
+        $('#tblUsuarios').DataTable().ajax.reload();
+      } else {
+        showToast("Usuario no actualizado", "ERROR");
       }
-    };
 
-    const respuesta = await fetch(`${config.HOST}app/controllers/Usuario.controllers.php`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(parametros)
-    });
-
-    const resultado = await respuesta.json();
-    if (resultado.actualizado) {
-      showToast("Usuario actualizado", "SUCCESS");
-      $('#editModal').modal('hide');
-      $('#tblUsuarios').DataTable().ajax.reload();
-    } else {
-      showToast("Usuario no actualizado", "ERROR");
+      idUserTabla = -1;
     }
-
-    idUserTabla = -1;
   }
 
   /**
@@ -156,39 +155,39 @@ document.addEventListener("DOMContentLoaded", async () => {
    * @returns {void}
    */
   async function actualizarRolResponsable(idresponsabled) {
-    // if (accesos?.roles?.actualizar) {
+    if (accesos?.roles?.actualizar) {
+      const rol = document.getElementById('slcRol').value;
 
-    // }
-    const rol = document.getElementById('slcRol').value;
+      const parametros = {
+        operacion: 'actualizarResponsable',
+        datos: {
+          idUsuarioActualizador: userid,
+          idRol: rol,
+          idResponsable: idresponsabled
+        }
+      };
+      //console.log(parametros);
 
-    const parametros = {
-      operacion: 'actualizarResponsable',
-      datos: {
-        idUsuarioActualizador: userid,
-        idRol: rol,
-        idResponsable: idresponsabled
+      const respuesta = await fetch(`${config.HOST}app/controllers/Responsable.controllers.php`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(parametros)
+      });
+
+      const resultado = await respuesta.json();
+      if (resultado.Actualizado) {
+        showToast("Usuario actualizado", "SUCCESS");
+        $('#editModal').modal('hide');
+        $('#tblUsuarios').DataTable().ajax.reload();
+      } else {
+        showToast("Usuario no actualizado", "ERROR");
       }
-    };
-    //console.log(parametros);
-
-    const respuesta = await fetch(`${config.HOST}app/controllers/Responsable.controllers.php`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(parametros)
-    });
-
-    const resultado = await respuesta.json();
-    if (resultado.Actualizado) {
-      showToast("Usuario actualizado", "SUCCESS");
-      $('#editModal').modal('hide');
-      $('#tblUsuarios').DataTable().ajax.reload();
-    } else {
-      showToast("Usuario no actualizado", "ERROR");
+      idresponsable = -1;
+      idUserTabla = -1;
     }
-    idresponsable = -1;
-    idUserTabla = -1;
+
   };
 
   /**
@@ -232,33 +231,33 @@ document.addEventListener("DOMContentLoaded", async () => {
    * @returns {void}
    */
   async function eliminarUsuario(id) {
-    // if (accesos?.usuarios?.eliminar) {
-      
-    // }
-    const data = {
-      operacion: "eliminarUsuario",
-      idUsuario: id,
-      idUsuarioEliminador: userid
-    };
+    if (accesos?.usuarios?.eliminar) {
+      const data = {
+        operacion: "eliminarUsuario",
+        idUsuario: id,
+        idUsuarioEliminador: userid
+      };
 
-    const response = await fetch(`${config.HOST}app/controllers/Usuario.controllers.php`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    });
+      const response = await fetch(`${config.HOST}app/controllers/Usuario.controllers.php`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
 
-    const result = await response.json();
-    //console.log(result);
-    if (result.eliminado) {
-      showToast("Usuario eliminado", "SUCCESS");
-      $('#tblUsuarios').DataTable().ajax.reload();
-    } else {
-      showToast("No se pudo eliminar el usuario", "ERROR");
+      const result = await response.json();
+      //console.log(result);
+      if (result.eliminado) {
+        showToast("Usuario eliminado", "SUCCESS");
+        $('#tblUsuarios').DataTable().ajax.reload();
+      } else {
+        showToast("No se pudo eliminar el usuario", "ERROR");
+      }
+
+      idUserTabla = -1;
     }
 
-    idUserTabla = -1;
   };
 
 });

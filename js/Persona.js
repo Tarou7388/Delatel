@@ -1,7 +1,9 @@
 import config from "../env.js";
 import * as mapa from "./Mapa.js";
+import * as Herramientas from "../js/Herramientas.js";
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
+  const accesos = await Herramientas.permisos()
   const userid = JSON.stringify(user["idUsuario"]);
   const slcPaquetes = document.getElementById("slcPaquetes");
   const slcTipoServicio = document.getElementById("slcTipoServicio");
@@ -144,31 +146,34 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   async function registrarPersona() {
-    const params = new FormData();
-    params.append("operacion", "registrarPersona");
-    params.append("tipoDoc", slcTipoDocumento.value);
-    params.append("nroDoc", txtNumDocumentoPersona.value);
-    params.append("apellidos", txtApellidosPersona.value);
-    params.append("nombres", txtNombresPersona.value);
-    params.append("telefono", txtTelefono.value);
-    params.append("nacionalidad", slcNacionalidad.value);
-    params.append("email", txtEmail.value);
-    params.append("idUsuario", userid);
+    console.log(accesos)
+    if (accesos?.personas?.crear) {
+      const params = new FormData();
+      params.append("operacion", "registrarPersona");
+      params.append("tipoDoc", slcTipoDocumento.value);
+      params.append("nroDoc", txtNumDocumentoPersona.value);
+      params.append("apellidos", txtApellidosPersona.value);
+      params.append("nombres", txtNombresPersona.value);
+      params.append("telefono", txtTelefono.value);
+      params.append("nacionalidad", slcNacionalidad.value);
+      params.append("email", txtEmail.value);
+      params.append("idUsuario", userid);
 
-    const options = {
-      method: "POST",
-      body: params
-    };
+      const options = {
+        method: "POST",
+        body: params
+      };
 
-    const response = await fetch(`${config.HOST}app/controllers/Persona.controllers.php`, options);
-    const data = await response.json();
-    if (data.error) {
-      showToast(data.error.message, "WARNING");
-    } else {
-      registrarContacto(data[0].id_persona);
+      const response = await fetch(`${config.HOST}app/controllers/Persona.controllers.php`, options);
+      const data = await response.json();
+      if (data.error) {
+        showToast(data.error.message, "WARNING");
+      } else {
+        registrarContacto(data[0].id_persona);
+      }
     }
   }
-
+  registrarPersona()
   async function registrarContacto(idPersona) {
     const Paquete = slcPaquetes.value;
     const direccion = txtDireccion.value;
@@ -212,7 +217,7 @@ document.addEventListener("DOMContentLoaded", function () {
     txtReferencia.disabled = show;
     txtcoordenadasPersona.disabled = show;
     slcTipoDocumento.disabled = show;
-    if(slcTipoDocumento.value != 'DNI') {
+    if (slcTipoDocumento.value != 'DNI') {
       slcNacionalidad.disabled = show;
     }
     txtNumDocumentoPersona.disabled = show;

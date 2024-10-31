@@ -41,7 +41,7 @@ window.addEventListener("DOMContentLoaded", () => {
         } else {
           alert(
             "Error al actualizar el cliente: " +
-              (data.error || "Error desconocido")
+            (data.error || "Error desconocido")
           );
         }
       });
