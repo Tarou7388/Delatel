@@ -25,6 +25,29 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   let dniActual = null;
 
+  slcPaquetes.disabled = true;
+
+  // Le avisa al select cuando se activa, elimina, actualiza o agrega un servicio
+  document.addEventListener("servicioActivado", (event) => {
+    const { idServicio, userid } = event.detail;
+    cargarServicios();
+  });
+
+  document.addEventListener("servicioDesactivado", (event) => {
+    const { idServicio, userid } = event.detail;
+    cargarServicios();
+  });
+
+  document.addEventListener("servicioAgregado", (event) => {
+    const { idServicio, userid } = event.detail;
+    cargarServicios();
+  });
+
+  document.addEventListener("servicioActualizado", (event) => {
+    const { idServicio, userid } = event.detail;
+    cargarServicios();
+  });
+
   function toggleForms(value) {
     if (value === "Persona") {
       resetUI();
@@ -49,7 +72,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 
   async function cargarPaquetes(idServicio) {
-    console.log("Cargando paquetes para el servicio:", idServicio);
     const dataPaquetes = await fetchPaquetesPorServicio(idServicio);
     slcPaquetes.innerHTML = '<option value="" disabled selected>Seleccione un paquete</option>';
     dataPaquetes
@@ -61,11 +83,11 @@ document.addEventListener("DOMContentLoaded", async function () {
         option.textContent = paquete.paquete;
         slcPaquetes.appendChild(option);
       });
+      slcPaquetes.disabled = false;
   }
 
   slcTipoServicio.addEventListener("change", async function () {
     const idServicioSeleccionado = slcTipoServicio.value;
-    console.log("Servicio seleccionado:", idServicioSeleccionado);
     await cargarPaquetes(idServicioSeleccionado);
   });
 
@@ -116,6 +138,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     txtCoordenadas.value = '';
     txtDireccion.value = '';
     txtReferencia.value = '';
+    slcTipoServicio.value = '';
     slcPaquetes.value = '';
   }
 
@@ -173,7 +196,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       }
     }
   }
-  registrarPersona()
+
   async function registrarContacto(idPersona) {
     const Paquete = slcPaquetes.value;
     const direccion = txtDireccion.value;
@@ -221,7 +244,8 @@ document.addEventListener("DOMContentLoaded", async function () {
       slcNacionalidad.disabled = show;
     }
     txtNumDocumentoPersona.disabled = show;
-    slcPaquetes.disabled = show;
+    slcTipoServicio.disabled = show;
+    slcPaquetes.disabled;
     btnBuscar.disabled = show;
     frmPersonas.querySelector("button[type=submit]").disabled = show;
   }
@@ -270,25 +294,9 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   }
 
-  /* async function cargarPaquetes() {
-    const response = await fetch(`${config.HOST}app/controllers/Paquete.controllers.php?operacion=listarPaquetes`);
-    const data = await response.json();
-    data.forEach((paquetes) => {
-      const option = document.createElement("option");
-      const id = `${paquetes.id_paquete} - ${paquetes.precio}`;
-      option.value = id;
-      option.textContent = paquetes.paquete;
-      slcServicio.appendChild(option);
-    });
-  } */
-
   (() => {
     manejarDocumentoNacionalidad();
   })();
-
-  /* (async () => {
-    await cargarPaquetes();
-  })(); */
 
   $(".select2me").select2({ theme: "bootstrap-5", placeholder: "Seleccione", allowClear: true });
   $('.select2me').parent('div').children('span').children('span').children('span').css('height', ' calc(3.5rem + 2px)');
@@ -353,7 +361,5 @@ document.addEventListener("DOMContentLoaded", async function () {
       console.error("Error al cargar servicios:", error);
     }
   }
-
-  //cargarPaquetes();
   cargarServicios();
 });
