@@ -44,8 +44,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   };
 
 
-  const guardarKardex = () => {
-    console.log(accesos)
+  const guardarKardex = async () => {
     if (accesos?.inventariado?.crear) {
       const params = new FormData();
       params.append("operacion", "registrarKardex");
@@ -58,24 +57,23 @@ document.addEventListener("DOMContentLoaded", async function () {
       params.append("idUsuario", userid);
 
       try {
-        fetch(`${config.HOST}app/controllers/Kardex.controllers.php`, {
-          method: "POST",
-          body: params,
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            showToast(data.Guardado ? "Se ha guardado correctamente" : "Error: Verifique la cantidad ingresada",
-              data.Guardado ? "SUCCESS" : "ERROR"
-            );
-            document.querySelector("#form-validaciones-kardex").reset();
-            tablaKardex.ajax.reload();
-            fecha.value = new Date().toISOString().split("T")[0];
-          });
+      const response = await fetch(`${config.HOST}app/controllers/Kardex.controllers.php`, {
+        method: "POST",
+        body: params,
+      });
+      const data = await response.json();
+      const message = data.Guardado ? "Se ha guardado correctamente" : "Error: Verifique la cantidad ingresada";
+      const messageType = data.Guardado ? "SUCCESS" : "ERROR";
+      
+      showToast(message, messageType);
+      document.querySelector("#form-validaciones-kardex").reset();
+      tablaKardex.ajax.reload();
+      fecha.value = new Date().toISOString().split("T")[0];
       } catch (error) {
-        showToast("No se pudo realizar la operacion", "ERROR")
+      showToast("No se pudo realizar la operacion", "ERROR");
       }
-    } else{
-      showToast("No tienes permisos para guardar en el Kardex","ERROR")
+    } else {
+      showToast("No tienes permisos para guardar en el Kardex", "ERROR");
     }
   };
 

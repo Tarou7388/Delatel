@@ -201,6 +201,15 @@ class Contrato extends Conexion
         return $this->registrar($sql, $values);
     }
 
+    /**
+     * Lista las fichas de instalación que están por completar.
+     *
+     * Este método ejecuta una consulta SQL para obtener todas las filas de la vista
+     * `vw_fichainstalacion_filtrar`, que contiene las fichas de instalación que aún
+     * no han sido completadas.
+     *
+     * @return array Un arreglo con los datos de las fichas de instalación filtradas.
+     */
     public function listarFichaInstalacionFiltro()
     {
         $sql = "SELECT * FROM vw_fichainstalacion_filtrar";

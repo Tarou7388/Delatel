@@ -60,6 +60,12 @@ class Persona extends Conexion
         return $this->consultaParametros($sql, $values);
     }
 
+    /**
+     * Busca la existencia de una persona cliente por su número de documento (DNI).
+     *
+     * @param array $params Arreglo asociativo que contiene el número de documento (DNI) con la clave 'nroDoc'.
+     * @return mixed Resultado de la consulta a la base de datos.
+     */
     public function buscarPersonaClienteDni($params = [])
     {
         $sql = "CALL spu_persona_cliente_existencia(?)";

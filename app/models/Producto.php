@@ -106,6 +106,14 @@ class Producto extends Conexion
 
   // AQUI COMIENZA LA DIVISION DE PRODUCTOS Y SUS TIPOS
 
+  /**
+   * Lista todos los tipos de productos.
+   *
+   * Esta función ejecuta una consulta SQL para seleccionar todos los registros
+   * de la vista `vw_tipo_productos` y devuelve los resultados como un array.
+   *
+   * @return array Un array con los datos de los tipos de productos.
+   */
   public function listarTipoProductos(): array
   {
     $sql = "SELECT * FROM vw_tipo_productos";

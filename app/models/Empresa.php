@@ -41,6 +41,15 @@ class Empresa extends Conexion
         );
         return $this->registroValorDevolvido($sql, $values);
     }
+
+    /**
+     * Busca la existencia de una empresa cliente por su RUC.
+     *
+     * @param array $params Arreglo asociativo que contiene los siguientes campos:
+     * - 'ruc' (string): El RUC de la empresa cliente a buscar.
+     * 
+     * @return mixed Resultado de la consulta a la base de datos.
+     */
     public function buscarEmpresaClienteRuc($params = [])
     {
         $sql = "CALL spu_empresa_cliente_existencia(?)";
