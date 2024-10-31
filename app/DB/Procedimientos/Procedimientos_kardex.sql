@@ -43,7 +43,6 @@ FROM tb_productos p
     JOIN tb_almacen a ON k.id_almacen = a.id_almacen
 ORDER BY k.create_at DESC;
 
-
 DROP PROCEDURE IF EXISTS spu_kardex_registrar$$
 CREATE PROCEDURE spu_kardex_registrar(
     IN p_id_almacen INT, 
@@ -55,36 +54,44 @@ CREATE PROCEDURE spu_kardex_registrar(
     IN p_iduser_create INT
 )
 BEGIN
-    DECLARE p_saldo_kardex_actual DECIMAL(10,2) DEFAULT 0;
+    DECLARE v_saldo_kardex_actual DECIMAL(10,2) DEFAULT 0;
     DECLARE v_movimiento CHAR(1);
     DECLARE v_nuevo_saldo DECIMAL(10,2);
 
+    -- Obtener el tipo de movimiento (E para entrada, S para salida)
     SELECT movimiento
     INTO v_movimiento
     FROM tb_tipooperacion
     WHERE id_tipooperacion = p_id_tipooperacion
     LIMIT 1;
 
+    -- Validar si el tipo de operación existe
     IF v_movimiento IS NULL THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Tipo de operación no encontrado.';
     END IF;
 
+    -- Obtener el saldo actual del producto específico o 0 si no existen registros previos
     SELECT COALESCE(saldo_total, 0)
-    INTO p_saldo_kardex_actual
+    INTO v_saldo_kardex_actual
     FROM tb_kardex
     WHERE id_producto = p_id_producto
-    ORDER BY fecha DESC
+    ORDER BY create_at DESC
     LIMIT 1;
 
+    -- Calcular el nuevo saldo en función del tipo de movimiento
     IF v_movimiento = 'S' THEN
-        SET v_nuevo_saldo = p_saldo_kardex_actual - p_cantidad;
-        IF v_nuevo_saldo < 0 THEN
+        -- Verificar que hay suficiente saldo para la salida
+        IF v_saldo_kardex_actual = 0 OR p_cantidad > v_saldo_kardex_actual THEN
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No hay suficiente saldo para la salida.';
         END IF;
+        -- Realizar la resta
+        SET v_nuevo_saldo = v_saldo_kardex_actual - p_cantidad;
     ELSE
-        SET v_nuevo_saldo = p_saldo_kardex_actual + p_cantidad;
+        -- Realizar la suma para entrada
+        SET v_nuevo_saldo = v_saldo_kardex_actual + p_cantidad;
     END IF;
 
+    -- Insertar el movimiento en el kardex
     INSERT INTO tb_kardex (
         id_almacen,
         id_producto,
@@ -107,7 +114,9 @@ BEGIN
         NOW(),
         p_iduser_create
     );
-END $$
+END$$
+
+
 
 DROP PROCEDURE IF EXISTS spu_kardex_buscar$$
 CREATE PROCEDURE spu_kardex_buscar(
