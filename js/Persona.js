@@ -348,7 +348,9 @@ document.addEventListener("DOMContentLoaded", async function () {
         '<option value="" disabled selected>Seleccione</option>'
       );
 
-      servicios.forEach((servicio) => {
+      servicios
+        .filter((servicio) => servicio.inactive_at === null)
+        .forEach((servicio) => {
         const option = `<option value="${servicio.id_servicio}">${servicio.tipo_servicio} (${servicio.servicio})</option>`;
         slcTipoServicio.append(option);
       });

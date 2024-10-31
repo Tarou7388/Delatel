@@ -116,6 +116,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     cargarServicios();
   });
 
+  document.addEventListener("servicioActualizado", (event) => {
+    const { idServicio, userid } = event.detail;
+    cargarServicios();
+  });
+
   // Limpiar campos de texto
   function limpiarModal() {
     $("#txtPaquete").val("");
