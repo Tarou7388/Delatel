@@ -16,26 +16,26 @@ REM Asegúrate de que el comando mysql esté accesible
 set PATH=%PATH%;%MYSQL_PATH%
 
 REM Elimina la base de datos si existe
-mysql -u "%USER%" -p"%PASSWORD%" -e "DROP DATABASE IF EXISTS %DATABASE%;"
+mysql -u "%USER%" -p"%PASSWORD%" --default-character-set=utf8 -e "DROP DATABASE IF EXISTS %DATABASE%;"
 
 REM Ejecuta el archivo SQL en la base de datos 'Delatel'
-mysql -u "%USER%" -p"%PASSWORD%" < "%SQL_FILE%"
+mysql -u "%USER%" -p"%PASSWORD%" --default-character-set=utf8 < "%SQL_FILE%"
 
 if ERRORLEVEL 1 (
     echo Error al ejecutar el archivo SQL.
 ) else (
-    mysql -u "%USER%" -p"%PASSWORD%" < "%SQL_FILE2%"
-	mysql -u "%USER%" -p"%PASSWORD%" < "%SQL_FILE3%"
-	cd /d "%SQL_FOLDER%"
-	for %%f in (*.sql) do (
-    echo Ejecutando %%f...
-    mysql -u "%USER%" -p"%PASSWORD%" "%DATABASE%" < "%%f"
-    if ERRORLEVEL 1 (
-        echo Error al ejecutar %%f
-    ) else (
-        echo %%f ejecutado correctamente.
+    mysql -u "%USER%" -p"%PASSWORD%" --default-character-set=utf8 < "%SQL_FILE2%"
+    mysql -u "%USER%" -p"%PASSWORD%" --default-character-set=utf8 < "%SQL_FILE3%"
+    cd /d "%SQL_FOLDER%"
+    for %%f in (*.sql) do (
+        echo Ejecutando %%f...
+        mysql -u "%USER%" -p"%PASSWORD%" --default-character-set=utf8 "%DATABASE%" < "%%f"
+        if ERRORLEVEL 1 (
+            echo Error al ejecutar %%f
+        ) else (
+            echo %%f ejecutado correctamente.
+        )
     )
-)
 )
 
 echo Proceso completado. Presiona cualquier tecla para salir.
