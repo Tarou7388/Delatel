@@ -3,7 +3,8 @@ import * as mapa from "./Mapa.js";
 
 document.addEventListener("DOMContentLoaded", function () {
   const userid = JSON.stringify(user["idUsuario"]);
-  const slcServicio = document.getElementById("slcServicio");
+  const slcPaquetes = document.getElementById("slcPaquetes");
+  const slcTipoServicio = document.getElementById("slcTipoServicio");
   const slcChangeRegistro = document.getElementById("slcChangeRegistro");
   const divPersonaCard = document.getElementById("divPersonaCard");
   const divEmpresaCard = document.getElementById("divEmpresaCard");
@@ -37,6 +38,34 @@ document.addEventListener("DOMContentLoaded", function () {
       divEmpresaCard.classList.add("d-none");
     }
   }
+
+  async function fetchPaquetesPorServicio(idServicio) {
+    const response = await fetch(
+      `${config.HOST}app/controllers/Paquete.controllers.php?operacion=buscarPaquetePorIdServicio&idServicio=${idServicio}`
+    );
+    return await response.json();
+  }
+
+  async function cargarPaquetes(idServicio) {
+    console.log("Cargando paquetes para el servicio:", idServicio);
+    const dataPaquetes = await fetchPaquetesPorServicio(idServicio);
+    slcPaquetes.innerHTML = '<option value="" disabled selected>Seleccione un paquete</option>';
+    dataPaquetes
+      .filter(paquete => !paquete.inactive_at)
+      .forEach((paquete) => {
+        const option = document.createElement("option");
+        const id = `${paquete.id_paquete} - ${paquete.precio} - ${paquete.duracion}`;
+        option.value = id;
+        option.textContent = paquete.paquete;
+        slcPaquetes.appendChild(option);
+      });
+  }
+
+  slcTipoServicio.addEventListener("change", async function () {
+    const idServicioSeleccionado = slcTipoServicio.value;
+    console.log("Servicio seleccionado:", idServicioSeleccionado);
+    await cargarPaquetes(idServicioSeleccionado);
+  });
 
   function ObtenerDataDNI(operacion, dni) {
     bloquearCargar(true);
@@ -85,7 +114,7 @@ document.addEventListener("DOMContentLoaded", function () {
     txtCoordenadas.value = '';
     txtDireccion.value = '';
     txtReferencia.value = '';
-    slcServicio.value = '';
+    slcPaquetes.value = '';
   }
 
   function verificarCamposPersona() {
@@ -141,7 +170,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   async function registrarContacto(idPersona) {
-    const Paquete = slcServicio.value;
+    const Paquete = slcPaquetes.value;
     const direccion = txtDireccion.value;
     const referencia = txtReferencia.value;
     const coordenadas = txtcoordenadasPersona.value;
@@ -151,7 +180,7 @@ document.addEventListener("DOMContentLoaded", function () {
       operacion: "registrarContacto",
       idPersona: idPersona,
       idEmpresa: '',
-      idPaquete: parseInt(slcServicio.value.split((" - ")[0])),
+      idPaquete: parseInt(slcPaquetes.value.split((" - ")[0])),
       direccion: direccion,
       nota: "Para llamar",
       idUsuario: userid,
@@ -187,7 +216,7 @@ document.addEventListener("DOMContentLoaded", function () {
       slcNacionalidad.disabled = show;
     }
     txtNumDocumentoPersona.disabled = show;
-    slcServicio.disabled = show;
+    slcPaquetes.disabled = show;
     btnBuscar.disabled = show;
     frmPersonas.querySelector("button[type=submit]").disabled = show;
   }
@@ -236,7 +265,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  async function cargarPaquetes() {
+  /* async function cargarPaquetes() {
     const response = await fetch(`${config.HOST}app/controllers/Paquete.controllers.php?operacion=listarPaquetes`);
     const data = await response.json();
     data.forEach((paquetes) => {
@@ -246,15 +275,15 @@ document.addEventListener("DOMContentLoaded", function () {
       option.textContent = paquetes.paquete;
       slcServicio.appendChild(option);
     });
-  }
+  } */
 
   (() => {
     manejarDocumentoNacionalidad();
   })();
 
-  (async () => {
+  /* (async () => {
     await cargarPaquetes();
-  })();
+  })(); */
 
   $(".select2me").select2({ theme: "bootstrap-5", placeholder: "Seleccione", allowClear: true });
   $('.select2me').parent('div').children('span').children('span').children('span').css('height', ' calc(3.5rem + 2px)');
@@ -290,4 +319,36 @@ document.addEventListener("DOMContentLoaded", function () {
   btnBuscar.addEventListener("click", () => {
     ObtenerDataDNI("obtenerDni", txtNumDocumentoPersona.value);
   });
+
+  async function cargarServicios() {
+    try {
+      const response = await fetch(
+        `${config.HOST}app/controllers/Servicio.controllers.php?operacion=listarServicio`
+      );
+      const servicios = await response.json();
+
+      const slcTipoServicio = $("#slcTipoServicio");
+
+      slcTipoServicio.empty();
+
+      slcTipoServicio.append(
+        '<option value="" disabled selected>Seleccione</option>'
+      );
+
+      servicios.forEach((servicio) => {
+        const option = `<option value="${servicio.id_servicio}">${servicio.tipo_servicio} (${servicio.servicio})</option>`;
+        slcTipoServicio.append(option);
+      });
+
+      slcTipoServicio.on("change", function () {
+        const idServicio = parseInt($(this).val(), 10);
+        cargarPaquetes(idServicio);
+      });
+    } catch (error) {
+      console.error("Error al cargar servicios:", error);
+    }
+  }
+
+  //cargarPaquetes();
+  cargarServicios();
 });

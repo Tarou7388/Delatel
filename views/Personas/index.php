@@ -23,11 +23,11 @@
 </div>
 
 <div class="container-fluid px-4">
-	<h1 class="mt-4">Clientes</h1>
+	<h1 class="mt-4">Personas</h1>
 
 	<div class="form-floating mb-3">
 		<select class="form-control" name="slchangeRegistro" id="slcChangeRegistro">
-			<option value="" disabled selected>Seleccione el Tipo de Cliente</option>
+			<option value="" disabled selected>Seleccione</option>
 			<option value="Persona" id="optPersona">Persona</option>
 			<option value="Empresa" id="optEmpresa">Empresa</option>
 		</select>
@@ -142,7 +142,7 @@
 					<div class="col-md-4">
 						<div class="form-floating">
 							<select class="form-select" id="slcTipoDocumento" aria-label="Tipo de Documento">
-								<option selected>Seleccionar...</option>
+								<option value="" disabled selected>Seleccione</option>
 								<option value="DNI">DNI</option>
 								<option value="CAR">Carnét de Extranjería</option>
 							</select>
@@ -214,7 +214,7 @@
 					<div class="col-md-4">
 						<div class="form-floating">
 							<select class="form-select" id="slcNacionalidad" aria-label="Nacionalidad">
-								<option selected>Seleccionar Nacionalidad</option>
+								<option value="" disabled selected>Seleccione</option>
 								<option value="Venezolano">Venezolano</option>
 								<option value="Colombiano">Colombiano</option>
 								<option value="Argentino">Argentino</option>
@@ -222,12 +222,22 @@
 							<label for="slcNacionalidad">Nacionalidad</label>
 						</div>
 					</div>
+
 					<div class="col-md-4">
 						<div class="form-floating">
-							<select class="form-select select2 select2me" id="slcServicio" aria-label="Paquetes">
+							<select class="form-select" id="slcTipoServicio" aria-label="Servicios">
 								<option value="0" disabled selected>Seleccione</option>
 							</select>
-							<label for="slcServicio">Paquetes</label>
+							<label for="slcTipoServicio">Servicios</label>
+						</div>
+					</div>
+
+					<div class="col-md-4">
+						<div class="form-floating">
+							<select class="form-select select2 select2me" id="slcPaquetes" aria-label="Paquetes">
+								<option value="0" disabled selected>Seleccione</option>
+							</select>
+							<label for="slcPaquetes">Paquetes</label>
 						</div>
 					</div>
 				</div>
