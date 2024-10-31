@@ -116,7 +116,7 @@
 
           <div class="col-md">
             <div class="form-floating">
-              <input type="number" class="form-control" id="txtPrecioActual" name="txtPrecioActual" placeholder="Precio" step="0.01" required>
+              <input type="text" class="form-control" id="txtPrecioActual" name="txtPrecioActual" placeholder="Precio" step="0.01" required>
               <label for="txtPrecioActual">Precio</label>
             </div>
           </div>

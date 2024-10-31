@@ -1,5 +1,5 @@
 import config from "../env.js";
-import * as Herramientas from "../js/Herramientas.js";
+import * as Herramientas from "./Herramientas.js";
 document.addEventListener("DOMContentLoaded", async () => {
   const userid = user["idUsuario"];
   const precioActual = document.querySelector("#txtPrecioActual");
@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const CodigoBarras = document.querySelector("#txtCodigoBarras");
   const slcMarca = document.querySelector("#slcMarca");
   const slcUnidadMedida = document.querySelector("#slcUnidadMedida");
-  const accesos = await Herramientas.permisos()
+  const accesos = await Herramientas.permisos;
 
   (async () => {
     try {
@@ -92,4 +92,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         tablaProductos.ajax.reload();
       });
   });
+
+  precioActual.addEventListener("input", (event) => {
+    const value = event.target.value;
+    if (value.includes("-")) {
+      event.target.value = value.replace("-", "");
+    }
+    if (parseFloat(value) < 0) {
+      event.target.value = 0.00;
+    } else {
+      event.target.value = parseFloat(value).toFixed(2);
+    }
+  });
+
 });

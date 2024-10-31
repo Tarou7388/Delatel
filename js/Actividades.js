@@ -158,10 +158,11 @@ window.addEventListener("DOMContentLoaded", function () {
       tbodyKardex.innerHTML += `
         <tr>
           <td>${kardex.id_kardex}</td>
-          <td>${kardex.marca}</td>
+          <td>${kardex.fecha}</td>
+          <td>${kardex.nombre_marca}</td>
           <td>${kardex.tipo_producto}</td>
           <td>${kardex.saldo_total}</td>
-          <td>${kardex.motivo}</td>
+          <td>${kardex.tipo_operacion}</td>
         </tr>
       `;
     });

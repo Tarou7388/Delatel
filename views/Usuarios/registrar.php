@@ -8,7 +8,7 @@
 			<div>
 				<i class="fas fa-table me-1"></i> Gestionar Usuarios
 			</div>
-			<a href="index.php" class="btn btn-primary">Listado de Usuario</a>
+			<a href="<?= $host ?>views/Usuarios/" class="btn btn-primary">Listado de Usuario</a>
 		</div>
 		<div class="card-body">
 
