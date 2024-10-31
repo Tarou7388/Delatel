@@ -200,7 +200,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   //Función actualizar Servicio
-  async function actualizarServicio() {
+  async function actualizarServicio(idServicio) {
     const servicioInput = document.querySelector("#txtNombreServicio");
     const tipoServicioInput = document.querySelector("#txtTipoServicio");
 
@@ -243,6 +243,10 @@ document.addEventListener("DOMContentLoaded", () => {
       if (data.actualizado) {
         showToast("El Servicio se ha actualizado correctamente", "SUCCESS", 1500);
         obtenerServicios();
+        const event = new CustomEvent("servicioActualizado", {
+          detail: { idServicio, userid },
+        });
+        document.dispatchEvent(event);
         limpiarFormulario();
       } else {
         showToast("Verifique que se haya hecho bien la operacion", "ERROR", 1500);
