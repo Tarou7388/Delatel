@@ -28,25 +28,10 @@ document.addEventListener("DOMContentLoaded", async function () {
   slcPaquetes.disabled = true;
 
   // Le avisa al select cuando se activa, elimina, actualiza o agrega un servicio
-  document.addEventListener("servicioActivado", (event) => {
-    const { idServicio, userid } = event.detail;
-    cargarServicios();
-  });
-
-  document.addEventListener("servicioDesactivado", (event) => {
-    const { idServicio, userid } = event.detail;
-    cargarServicios();
-  });
-
-  document.addEventListener("servicioAgregado", (event) => {
-    const { idServicio, userid } = event.detail;
-    cargarServicios();
-  });
-
-  document.addEventListener("servicioActualizado", (event) => {
-    const { idServicio, userid } = event.detail;
-    cargarServicios();
-  });
+  document.addEventListener("servicioActivado", cargarServicios);
+  document.addEventListener("servicioDesactivado", cargarServicios);
+  document.addEventListener("servicioAgregado", cargarServicios);
+  document.addEventListener("servicioActualizado", cargarServicios);
 
   function toggleForms(value) {
     if (value === "Persona") {
@@ -68,27 +53,63 @@ document.addEventListener("DOMContentLoaded", async function () {
     const response = await fetch(
       `${config.HOST}app/controllers/Paquete.controllers.php?operacion=buscarPaquetePorIdServicio&idServicio=${idServicio}`
     );
-    return await response.json();
+    const data = await response.json();
+    return data;
   }
 
   async function cargarPaquetes(idServicio) {
     const dataPaquetes = await fetchPaquetesPorServicio(idServicio);
     slcPaquetes.innerHTML = '<option value="" disabled selected>Seleccione un paquete</option>';
     dataPaquetes
-      .filter(paquete => !paquete.inactive_at)
+      .filter(paquete =>
+        !paquete.id_servicio2 &&
+        !paquete.id_servicio3 &&
+        !paquete.id_servicio4 &&
+        !paquete.inactive_at
+      )
       .forEach((paquete) => {
         const option = document.createElement("option");
-        const id = `${paquete.id_paquete} - ${paquete.precio} - ${paquete.duracion}`;
+        const id = `${paquete.id_paquete}`;
         option.value = id;
         option.textContent = paquete.paquete;
         slcPaquetes.appendChild(option);
       });
-      slcPaquetes.disabled = false;
+    slcPaquetes.disabled = false;
+  }
+
+  async function cargarPaquetesMultiples(tipo) {
+    const response = await fetch(
+      `${config.HOST}app/controllers/Paquete.controllers.php?operacion=listarPaquetes`
+    );
+    const dataPaquetes = await response.json();
+    slcPaquetes.innerHTML = '<option value="" disabled selected>Seleccione un paquete</option>';
+
+    let paquetesFiltrados = [];
+    if (tipo === "duos") {
+      paquetesFiltrados = dataPaquetes.filter(paquete => paquete.id_servicio && paquete.id_servicio2 && !paquete.id_servicio3 && !paquete.id_servicio4 && !paquete.inactive_at);
+    } else if (tipo === "trios") {
+      paquetesFiltrados = dataPaquetes.filter(paquete => paquete.id_servicio && paquete.id_servicio2 && paquete.id_servicio3 && !paquete.id_servicio4 && !paquete.inactive_at);
+    } else if (tipo === "cuarteto") {
+      paquetesFiltrados = dataPaquetes.filter(paquete => paquete.id_servicio && paquete.id_servicio2 && paquete.id_servicio3 && paquete.id_servicio4 && !paquete.inactive_at);
+    }
+
+    paquetesFiltrados.forEach((paquete) => {
+      const option = document.createElement("option");
+      const id = `${paquete.id_paquete}`;
+      option.value = id;
+      option.textContent = paquete.paquete;
+      slcPaquetes.appendChild(option);
+    });
+    slcPaquetes.disabled = false;
   }
 
   slcTipoServicio.addEventListener("change", async function () {
     const idServicioSeleccionado = slcTipoServicio.value;
-    await cargarPaquetes(idServicioSeleccionado);
+    if (idServicioSeleccionado === "duos" || idServicioSeleccionado === "trios" || idServicioSeleccionado === "cuarteto") {
+      await cargarPaquetesMultiples(idServicioSeleccionado);
+    } else {
+      await cargarPaquetes(idServicioSeleccionado);
+    }
   });
 
   function ObtenerDataDNI(operacion, dni) {
@@ -339,6 +360,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         `${config.HOST}app/controllers/Servicio.controllers.php?operacion=listarServicio`
       );
       const servicios = await response.json();
+      console.log(servicios);
 
       const slcTipoServicio = $("#slcTipoServicio");
 
@@ -351,17 +373,26 @@ document.addEventListener("DOMContentLoaded", async function () {
       servicios
         .filter((servicio) => servicio.inactive_at === null)
         .forEach((servicio) => {
-        const option = `<option value="${servicio.id_servicio}">${servicio.tipo_servicio} (${servicio.servicio})</option>`;
-        slcTipoServicio.append(option);
-      });
+          const option = `<option value="${servicio.id_servicio}">${servicio.tipo_servicio} (${servicio.servicio})</option>`;
+          slcTipoServicio.append(option);
+        });
+        
+      slcTipoServicio.append('<option value="duos">Duos</option>');
+      slcTipoServicio.append('<option value="trios">Trios</option>');
+      slcTipoServicio.append('<option value="cuarteto">Cuarteto</option>');
 
       slcTipoServicio.on("change", function () {
-        const idServicio = parseInt($(this).val(), 10);
-        cargarPaquetes(idServicio);
+        const idServicio = $(this).val();
+        if (idServicio === "duos" || idServicio === "trios" || idServicio === "cuarteto") {
+          cargarPaquetesMultiples(idServicio);
+        } else {
+          cargarPaquetes(idServicio);
+        }
       });
     } catch (error) {
       console.error("Error al cargar servicios:", error);
     }
   }
+
   cargarServicios();
 });

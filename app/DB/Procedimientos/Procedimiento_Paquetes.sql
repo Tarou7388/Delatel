@@ -124,6 +124,9 @@ DROP PROCEDURE IF EXISTS spu_paquete_buscar_idServicio$$
 CREATE PROCEDURE spu_paquete_buscar_idServicio(IN p_id_servicio INT)
 BEGIN 
     SELECT 
+        p.id_servicio2,
+        p.id_servicio3,
+        p.id_servicio4,
         p.id_paquete, 
         p.paquete, 
         p.precio, 

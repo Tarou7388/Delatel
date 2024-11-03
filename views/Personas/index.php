@@ -23,15 +23,13 @@
 </div>
 
 <div class="container-fluid px-4">
-	<h1 class="mt-4">Personas</h1>
-
-	<div class="form-floating mb-3">
+	<div class="form-floating mb-3 mt-4">
 		<select class="form-control" name="slchangeRegistro" id="slcChangeRegistro">
 			<option value="" disabled selected>Seleccione</option>
 			<option value="Persona" id="optPersona">Persona</option>
 			<option value="Empresa" id="optEmpresa">Empresa</option>
 		</select>
-		<label for="lblCliente">Cliente</label>
+		<label for="lblCliente">Persona o Empresa</label>
 	</div>
 </div>
 
@@ -46,7 +44,7 @@
 			<p class="mb-4"><strong>Complete los Datos</strong></p>
 			<form class="form-control" id="frmEmpresas">
 				<div class="row mb-3">
-					<div class="col-md-6">
+					<div class="col-md-4">
 						<div class="input-group">
 							<div class="form-floating flex-fill">
 								<input type="number" id="txtRuc" class="form-control" placeholder="R.U.C" require maxlength="11" required>
@@ -55,36 +53,44 @@
 							<button class="btn btn-primary" type="button" id="btnBuscarEmpresa"><i class="fa-solid fa-magnifying-glass"></i></button>
 						</div>
 					</div>
-					<div class="col-md-6">
+					<div class="col-md-4">
 						<div class="form-floating">
 							<input type="text" class="form-control" id="txtRepresentanteLegal" name="representante_legal" placeholder="Representante Legal" required>
 							<label for="txtRepresentanteLegal">Representante Legal</label>
 						</div>
 					</div>
-				</div>
-				<div class="row mb-3">
-					<div class="col-md-6">
+					<div class="col-md-4">
 						<div class="form-floating">
 							<input type="text" class="form-control" id="txtRazonSocial" name="razon_social" placeholder="Razón Social" required disabled>
 							<label for="txtRazonSocial">Razón Social</label>
 						</div>
 					</div>
-					<div class="col-md-6">
+				</div>
+				<div class="row mb-3">
+					<div class="col-md-4">
 						<div class="form-floating">
 							<input type="text" class="form-control" id="txtNombreComercial" name="nombre_comercial" placeholder="Nombre Comercial" required>
 							<label for="txtNombreComercial">Nombre Comercial</label>
 						</div>
 					</div>
-				</div>
-				<div class="row mb-3">
-					<div class="col-md 3">
+					<div class="col-md-4">
 						<div class="form-floating">
-							<select class="form-select select2 select2me" id="slcServicioEmpresa" aria-label="Paquetes">
+							<select class="form-select" id="slcTipoServicioEmpresa" aria-label="Servicios" required>
 								<option value="0" disabled selected>Seleccione</option>
 							</select>
-							<label for="slcServicio">Paquetes</label>
+							<label for="slcTipoServicioEmpresa">Servicios</label>
 						</div>
 					</div>
+					<div class="col-md-4">
+						<div class="form-floating">
+							<select class="form-select select2 select2me" id="slcPaqueteEmpresa" aria-label="Paquetes" required>
+								<option value="0" disabled selected>Seleccione</option>
+							</select>
+							<label for="slcPaqueteEmpresa">Paquetes</label>
+						</div>
+					</div>
+				</div>
+				<div class="row mb-3">
 					<div class="col-md-3">
 						<div class="form-floating">
 							<input type="text" class="form-control" id="txtTelefono" name="telefono" maxlength="9" placeholder="Teléfono" required>
@@ -97,21 +103,22 @@
 							<label for="txtEmail">Email</label>
 						</div>
 					</div>
-				</div>
-				<div class="row mb-3">
-					<div class="col-md-4">
+					<div class="col-md-6">
 						<div class="form-floating">
 							<input type="text" class="form-control" id="txtDireccion" name="direccion" placeholder="Dirección" required disabled>
 							<label for="txtDireccion">Dirección</label>
 						</div>
 					</div>
-					<div class="col-md-4">
+				</div>
+				<div class="row mb-3">
+					
+					<div class="col-md-6">
 						<div class="form-floating">
 							<input type="text" class="form-control" id="txtReferencia" name="referencia" placeholder="Referencia" required>
 							<label for="txtReferencia">Referencia</label>
 						</div>
 					</div>
-					<div class="col-md-4">
+					<div class="col-md-6">
 						<div class="input-group">
 							<div class="form-floating">
 								<input type="text" class="form-control" id="txtCoordenadas" placeholder="Referencia" required disabled>

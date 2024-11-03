@@ -19,23 +19,83 @@ document.addEventListener("DOMContentLoaded", async function () {
   const txtCoordenadas = document.getElementById("txtCoordenadas");
   const txtDireccion = document.getElementById("txtDireccion");
   const txtReferencia = document.getElementById("txtReferencia");
-  const slcServicio = document.getElementById("slcServicioEmpresa");
+  const slcPaquetes = document.getElementById("slcPaqueteEmpresa");
+  const slcTipoServicio = document.getElementById("slcTipoServicioEmpresa");
   const btnCancelarEmpresa = document.getElementById("btnCancelarEmpresa");
   const btnBuscarEmpresa = document.getElementById("btnBuscarEmpresa");
 
   let ruc = null;
 
-  async function cargarPaquetes() {
-    const response = await fetch(`${config.HOST}app/controllers/Paquete.controllers.php?operacion=listarPaquetes`);
+  slcPaquetes.disabled = true;
+
+  // Le avisa al select cuando se activa, elimina, actualiza o agrega un servicio
+  document.addEventListener("servicioActivado", cargarServicios);
+  document.addEventListener("servicioDesactivado", cargarServicios);
+  document.addEventListener("servicioAgregado", cargarServicios);
+  document.addEventListener("servicioActualizado", cargarServicios);
+
+  async function fetchPaquetesPorServicio(idServicio) {
+    const response = await fetch(
+      `${config.HOST}app/controllers/Paquete.controllers.php?operacion=buscarPaquetePorIdServicio&idServicio=${idServicio}`
+    );
     const data = await response.json();
-    data.forEach((paquetes) => {
-      const option = document.createElement("option");
-      const id = `${paquetes.id_paquete} - ${paquetes.precio}`;;
-      option.value = id;
-      option.textContent = paquetes.paquete;
-      slcServicio.appendChild(option);
-    });
+    return data;
   }
+
+  async function cargarPaquetes(idServicio) {
+    const dataPaquetes = await fetchPaquetesPorServicio(idServicio);
+    slcPaquetes.innerHTML = '<option value="" disabled selected>Seleccione un paquete</option>';
+    dataPaquetes
+      .filter(paquete =>
+        !paquete.id_servicio2 &&
+        !paquete.id_servicio3 &&
+        !paquete.id_servicio4 &&
+        !paquete.inactive_at
+      )
+      .forEach((paquete) => {
+        const option = document.createElement("option");
+        const id = `${paquete.id_paquete}`;
+        option.value = id;
+        option.textContent = paquete.paquete;
+        slcPaquetes.appendChild(option);
+      });
+    slcPaquetes.disabled = false;
+  }
+
+  async function cargarPaquetesMultiples(tipo) {
+    const response = await fetch(
+      `${config.HOST}app/controllers/Paquete.controllers.php?operacion=listarPaquetes`
+    );
+    const dataPaquetes = await response.json();
+    slcPaquetes.innerHTML = '<option value="" disabled selected>Seleccione un paquete</option>';
+
+    let paquetesFiltrados = [];
+    if (tipo === "duos") {
+      paquetesFiltrados = dataPaquetes.filter(paquete => paquete.id_servicio && paquete.id_servicio2 && !paquete.id_servicio3 && !paquete.id_servicio4 && !paquete.inactive_at);
+    } else if (tipo === "trios") {
+      paquetesFiltrados = dataPaquetes.filter(paquete => paquete.id_servicio && paquete.id_servicio2 && paquete.id_servicio3 && !paquete.id_servicio4 && !paquete.inactive_at);
+    } else if (tipo === "cuarteto") {
+      paquetesFiltrados = dataPaquetes.filter(paquete => paquete.id_servicio && paquete.id_servicio2 && paquete.id_servicio3 && paquete.id_servicio4 && !paquete.inactive_at);
+    }
+
+    paquetesFiltrados.forEach((paquete) => {
+      const option = document.createElement("option");
+      const id = `${paquete.id_paquete}`;
+      option.value = id;
+      option.textContent = paquete.paquete;
+      slcPaquetes.appendChild(option);
+    });
+    slcPaquetes.disabled = false;
+  }
+
+  slcTipoServicio.addEventListener("change", async function () {
+    const idServicioSeleccionado = slcTipoServicio.value;
+    if (idServicioSeleccionado === "duos" || idServicioSeleccionado === "trios" || idServicioSeleccionado === "cuarteto") {
+      await cargarPaquetesMultiples(idServicioSeleccionado);
+    } else {
+      await cargarPaquetes(idServicioSeleccionado);
+    }
+  });
 
   async function verificarCampos() {
     const campos = [
@@ -87,14 +147,14 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   async function registrarContacto(idEmpresa) {
     if (accesos?.personas?.crear) {
-      const Paquete = slcServicio.value;
+      const Paquete = slcPaquetes.value;
       const fecha = new Date();
       fecha.setDate(fecha.getDate() + 14);
       const datos = {
         operacion: "registrarContacto",
         idPersona: '',
         idEmpresa: idEmpresa,
-        idPaquete: parseInt(slcServicio.value.split((" - ")[0])),
+        idPaquete: parseInt(slcPaquetes.value.split((" - ")[0])),
         direccion: txtDireccion.value,
         nota: "Para llamar",
         idUsuario: userid,
@@ -106,7 +166,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       });
       const data = await response.json();
       if (data.guardado) {
-        const Paquete = slcServicio.value;
+        const Paquete = slcPaquetes.value;
         const direccion = txtDireccion.value;
         const referencia = txtReferencia.value;
         const coordenadas = txtCoordenadas.value;
@@ -114,7 +174,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         setTimeout(async () => {
           frmPersonas.reset();
           if (await ask("¿Desea registrar un contrato?")) {
-            window.location.href = `${config.HOST}views/Contratos/?nroDoc=${ruc}&idObjeto=${idPersona}&Paquete=${Paquete}&direccion=${direccion}&referencia=${referencia}&coordenadas=${coordenadas}`;
+            window.location.href = `${config.HOST}views/Contratos/?nroDoc=${ruc}&Paquete=${Paquete}&direccion=${direccion}&referencia=${referencia}&coordenadas=${coordenadas}`;
           }
         }, 650);
       }
@@ -149,12 +209,9 @@ document.addEventListener("DOMContentLoaded", async function () {
     txtRepresentanteLegal.disabled = show;
     btnBuscarEmpresa.disabled = show;
     btnCancelarEmpresa.disabled = show;
-    slcServicio.disabled = show;
+    slcTipoServicio.disabled = show;
+    slcPaquetes.disabled;
   }
-
-  (async function () {
-    await cargarPaquetes();
-  })();
 
   frmEmpresas.addEventListener("submit", async function (event) {
     event.preventDefault();
@@ -171,4 +228,45 @@ document.addEventListener("DOMContentLoaded", async function () {
     await mapa.iniciarMapa();
   })
 
+  async function cargarServicios() {
+    try {
+      const response = await fetch(
+        `${config.HOST}app/controllers/Servicio.controllers.php?operacion=listarServicio`
+      );
+      const servicios = await response.json();
+      console.log(servicios);
+
+      const slcTipoServicio = $("#slcTipoServicioEmpresa");
+
+      slcTipoServicio.empty();
+
+      slcTipoServicio.append(
+        '<option value="" disabled selected>Seleccione</option>'
+      );
+
+      servicios
+        .filter((servicio) => servicio.inactive_at === null)
+        .forEach((servicio) => {
+          const option = `<option value="${servicio.id_servicio}">${servicio.tipo_servicio} (${servicio.servicio})</option>`;
+          slcTipoServicio.append(option);
+        });
+
+      slcTipoServicio.append('<option value="duos">Duos</option>');
+      slcTipoServicio.append('<option value="trios">Trios</option>');
+      slcTipoServicio.append('<option value="cuarteto">Cuarteto</option>');
+
+      slcTipoServicio.on("change", function () {
+        const idServicio = $(this).val();
+        if (idServicio === "duos" || idServicio === "trios" || idServicio === "cuarteto") {
+          cargarPaquetesMultiples(idServicio);
+        } else {
+          cargarPaquetes(idServicio);
+        }
+      });
+    } catch (error) {
+      console.error("Error al cargar servicios:", error);
+    }
+  }
+
+  cargarServicios();
 });

@@ -461,16 +461,22 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   $(document).ready(function () {
     cargarServicios();
-
-    $("#slcTipoServicioActualizar").on("change", function () {
-      actualizarCajasDeTexto("Actualizar");
+  
+    $("#slcTipoServicio").on("change", function () {
+      if ($(this).val().length > 4) {
+        showToast("No se pueden añadir más de 4 servicios", "WARNING");
+        $(this).val($(this).val().slice(0, 4)).trigger("change");
+      }
+      idServicio = parseInt($(this).val(), 10);
+      actualizarCajasDeTexto();
     });
-  });
-
-  $(document).ready(function () {
-    cargarServicios();
-
+  
     $("#slcTipoServicioActualizar").on("change", function () {
+      if ($(this).val().length > 4) {
+        showToast("No se pueden añadir más de 4 servicios", "WARNING");
+        $(this).val($(this).val().slice(0, 4)).trigger("change");
+      }
+      idServicio = parseInt($(this).val(), 10);
       actualizarCajasDeTexto("Actualizar");
     });
   });
