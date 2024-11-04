@@ -9,7 +9,6 @@ CREATE VIEW vw_tipo_productos AS
     iduser_update
     FROM tb_tipoproducto 
     WHERE inactive_at IS NULL;
-$$
 
 DELIMITER $$
 DROP VIEW IF EXISTS vw_almacen$$
@@ -20,7 +19,6 @@ CREATE VIEW vw_almacen AS
 	iduser_update
     FROM tb_almacen 
     WHERE inactive_at IS NULL;
-$$
 
 DROP VIEW IF EXISTS vw_unidadmedida$$
 CREATE VIEW vw_unidadmedida AS
@@ -33,7 +31,6 @@ CREATE VIEW vw_unidadmedida AS
         iduser_update
 	FROM 
         tb_unidadmedida;
-$$
 
 DROP PROCEDURE IF EXISTS spu_productos_registrar$$
 CREATE PROCEDURE spu_productos_registrar(
@@ -104,4 +101,3 @@ CREATE VIEW vw_productos_detalle AS
         tb_unidadmedida u ON p.id_unidad = u.id_unidad
     WHERE 
         p.inactive_at IS NULL;
-$$

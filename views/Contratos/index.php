@@ -1,5 +1,27 @@
 <?php require_once '../../header.php'; ?>
 
+<div class="modal fade" id="ModalMapa" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-xl" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="myModalLabel">Título del Modal</h5>
+				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div id="map" style="height: 700px;">
+
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+				<button type="button" class="btn btn-primary" id="btnGuardarCoordenadas" data-dismiss="modal" disabled>Guardar cambios</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 <!-- Modal de Actualización de Contrato -->
 <div class="modal fade" id="modalEditarContrato" tabindex="-1" aria-labelledby="modalEditarContratoLabel" aria-hidden="true" data-bs-backdrop="static">
   <div class="modal-dialog modal-xl">
@@ -213,9 +235,14 @@
           </div>
 
           <div class="col-md-3">
-            <div class="form-floating">
-              <input type="text" class="form-control" id="txtCoordenada" placeholder="Coordenada" name="coordenada">
-              <label for="coordenada" class="form-label">Coordenada</label>
+            <div class="input-group">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="txtCoordenadas" placeholder="Referencia" required disabled>
+                <label for="txtCoordenadas">Coordenadas</label>
+              </div>
+              <button class="btn btn-primary" type="button" id="btnBuscarCoordenadas" data-bs-toggle="modal" data-bs-target="#ModalMapa">
+                <i class="fa-solid fa-magnifying-glass"></i>
+              </button>
             </div>
           </div>
 

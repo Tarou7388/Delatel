@@ -1,5 +1,6 @@
 import config from "../env.js";
 import * as Herramientas from "../js/Herramientas.js";
+import * as mapa from "./Mapa.js";
 window.addEventListener("DOMContentLoaded", async () => {
   const nroDoc = document.querySelector("#txtNumDoc");
   const nombre = document.querySelector("#txtNombre");
@@ -8,7 +9,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   const direccion = document.querySelector("#txtDireccion");
   const sector = document.querySelector("#slcSector");
   const referencia = document.querySelector("#txtReferencia");
-  const coordenada = document.querySelector("#txtCoordenada");
+  const coordenada = document.querySelector("#txtCoordenadasu");
   const slcSector = document.querySelector("#slcSector");
   const slcPaquetes = document.querySelector("#slcPaquetes");
   const slcPaquetesActualizar = document.querySelector("#slcPaquetesActualizar");
@@ -132,18 +133,6 @@ window.addEventListener("DOMContentLoaded", async () => {
     return await response.json();
   }
 
-  /* async function validarFechas() {
-    if (fechaInicio.value > txtfechaFin.value) {
-      showToast(
-        "¡La fecha de inicio no puede ser mayor a la fecha de fin!",
-        "ERROR"
-      );
-      return false;
-    } else {
-      return true;
-    }
-  } */
-
   async function buscarCliente(nroDoc) {
     if (nroDoc == "") {
       showToast("¡Ingrese numero de documento!", "INFO");
@@ -212,11 +201,9 @@ window.addEventListener("DOMContentLoaded", async () => {
     if (accesos?.contratos?.crear) {
       const fechaRegistro = new Date().toISOString().split("T")[0];
       const nota = txtNota.value;
-      console.log(nota);
       const idUsuarioRegistro = user.idRol;
-      console.log(lapsoTiempo);
       if (!(await validarCampos())) {
-
+        showToast("¡Llene todos los campos!", "INFO");
       } else if (lapsoTiempo) {
         showToast("¡La fecha de fin debe ser mayor a 3 meses!", "INFO");
       } else {
@@ -253,11 +240,10 @@ window.addEventListener("DOMContentLoaded", async () => {
             showToast("¡Contrato registrado correctamente!", "SUCCESS");
             span.classList.add("invisible");
             nroDoc.disabled = false;
-            //window.location.reload();
             resetUI();
           }
         } catch (error) {
-          console.log(error); // Añade este log para depurar el error
+          console.log(error);
           showToast(
             "Ocurrió un error al registrar el contrato. Por favor, inténtelo de nuevo.",
             "ERROR"
@@ -267,7 +253,6 @@ window.addEventListener("DOMContentLoaded", async () => {
     } else {
       showToast("No tienes acceso para registrar un contrato", "ERROR");
     }
-
   }
 
   async function eliminar(idContrato, idUsuario) {
@@ -394,6 +379,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       }
     }
 
+
     dataContratos.forEach((contrato) => {
       const tr = document.createElement("tr");
       tr.innerHTML = `
@@ -408,7 +394,8 @@ window.addEventListener("DOMContentLoaded", async () => {
           <button class="btn btn-sm btn-danger btnEliminar" data-idContrato=${contrato.id_contrato
         }><i class="fa-regular fa-trash-can icon-disabled"></i></button>
           <button class="btn btn-sm btn-primary btnGenerar" data-idContrato=${contrato.id_contrato
-        }><i class="fa-solid fa-file-pdf icon-disabled"></i></button>
+        }><i class="fa-solid fa-file-pdf icon-disable
+d"></i></button>
           <button class="btn btn-sm btn-success btnFicha" data-tipoServicio=${contrato.tipo_servicio
         } data-idContrato=${contrato.id_contrato}>Ficha</button>
         </td>
@@ -420,6 +407,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       language: {
         url: `https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json`,
       },
+
       ordering: false,
       columnDefs: [
         { width: "12.5%", targets: 0 },
@@ -446,7 +434,8 @@ window.addEventListener("DOMContentLoaded", async () => {
           CABl: "FichaTecnicaCable",
           FIBR: "FichaTecnicaGpon",
         };
-        window.location.href = `${config.HOST}views/Contratos/${tipoFicha[tipoServicio]}?idContrato=${idContrato}`;
+        window.location.href = `${config.HOST}views/Contr
+atos/${tipoFicha[tipoServicio]}?idContrato=${idContrato}`;
       });
     });
 
@@ -631,9 +620,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     await cargarDatos();
   })();
 
-  document
-    .querySelector("#btnRegistrar")
-    .addEventListener("click", async (event) => {
+  document.querySelector("#btnRegistrar").addEventListener("click", async (event) => {
       event.preventDefault();
       if (idCliente == null) {
         await registrarCliente();
@@ -641,16 +628,12 @@ window.addEventListener("DOMContentLoaded", async () => {
       await registrarContrato();
     });
 
-  document
-    .querySelector("#btnBuscar")
-    .addEventListener("click", async (event) => {
+  document.querySelector("#btnBuscar").addEventListener("click", async (event) => {
       event.preventDefault();
       await buscarCliente(nroDoc.value);
     });
 
-  document
-    .querySelector("#btnActualizar")
-    .addEventListener("click", async (event) => {
+  document.querySelector("#btnActualizar").addEventListener("click", async (event) => {
       event.preventDefault();
       const idContrato = document.querySelector(
         "#txtIdContratoActualizar"
@@ -728,6 +711,14 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  cargarPaquetes();
+  document.querySelector("#btnBuscarCoordenadas").addEventListener("click", async () => {
+    await mapa.iniciarMapa();
+    await mapa.obtenerDatos();
+  })
+
+  document.querySelector("#btnGuardarCoordenadas").addEventListener("click", () => {
+    document.querySelector("#txtCoordenadas").value = `${mapa.marcadorMasCercano.coordenadas}`;
+  });
+
   cargarServicios();
 });

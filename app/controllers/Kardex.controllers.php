@@ -37,7 +37,8 @@ if (isset($_GET["operacion"])) {
       break;
 
     case "obtenerProducto":
-      echo json_encode($kardex->buscarProductoId(["id_producto" => Herramientas::sanitizarEntrada($_GET['id_producto'])]));
+      echo json_encode(["hola" => "mundo"]);
+      //echo json_encode($kardex->buscarProductoId(["id_producto" => Herramientas::sanitizarEntrada($_GET['id_producto'])]));
       break;
   }
 }

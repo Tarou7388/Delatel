@@ -1,4 +1,4 @@
-USE delatel;
+USE Delatel;
 
 DELIMITER $$
 DROP VIEW IF EXISTS vw_marca$$
@@ -9,4 +9,3 @@ CREATE VIEW vw_marca AS
            iduser_create
 	FROM tb_marca
 	WHERE inactive_at IS NULL;
-$$
