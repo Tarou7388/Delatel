@@ -4,7 +4,7 @@ use App\Controllers\Herramientas;
 
 session_start();
 
-require_once '../Models/Producto.php';
+require_once '../models/Producto.php';
 require_once './Herramientas.php';
 
 $producto = new Producto();
