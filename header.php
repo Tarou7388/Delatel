@@ -23,7 +23,9 @@ if (!isset($_SESSION['login']) || $_SESSION['login']['estado'] == false) {
   $cargo = $_SESSION['login']['Cargo'];
 
   $i = 0;
-  $encontrado = false;
+  $encontrado = true;
+
+  echo `<script>console.log($vistaActual)</script>`;
 
   while (($i < count($listaAcceso)) && !$encontrado) {
     if ($listaAcceso[$i]['ruta'] == $vistaActual) {
