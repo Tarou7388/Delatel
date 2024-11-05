@@ -15,17 +15,18 @@ if (!isset($_SESSION['login']) || $_SESSION['login']['estado'] == false) {
   $url = $_SERVER['REQUEST_URI'];
   $rutaCompleta = explode("/", $url);
   $rutaCompleta = array_filter($rutaCompleta);
-  $totalElementos = count($rutaCompleta);
 
   $vistaActual = parse_url(end($rutaCompleta), PHP_URL_PATH);
+  if($vistaActual == ''){
+    $vistaActual = $rutaCompleta[count($rutaCompleta) - 1];
+  }
   $listaAcceso = $_SESSION['login']['accesos'];
   $nombreUser = $_SESSION['login']['nombreUser'];
   $cargo = $_SESSION['login']['Cargo'];
 
   $i = 0;
-  $encontrado = true;
+  $encontrado = false;
 
-  echo `<script>console.log($vistaActual)</script>`;
 
   while (($i < count($listaAcceso)) && !$encontrado) {
     if ($listaAcceso[$i]['ruta'] == $vistaActual) {
@@ -47,7 +48,6 @@ if (!isset($_SESSION['login']) || $_SESSION['login']['estado'] == false) {
 
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
