@@ -202,6 +202,19 @@ window.addEventListener("DOMContentLoaded", async () => {
       const fechaRegistro = new Date().toISOString().split("T")[0];
       const nota = txtNota.value;
       const idUsuarioRegistro = user.idRol;
+
+      // Verificación de los valores antes de hacer la solicitud
+      console.log("Verificando los valores antes de registrar el contrato:");
+      console.log("idCliente:", idCliente);
+      console.log("idServicio:", idServicio);
+      console.log("sector:", sector.value);
+      console.log("direccion:", direccion.value);
+      console.log("referencia:", referencia.value);
+      console.log("coordenada:", coordenada.value);
+      console.log("fechaFin:", fechaFin);
+      console.log("nota:", nota);
+      console.log("idUsuario:", user.idUsuario);
+
       if (!(await validarCampos())) {
         showToast("¡Llene todos los campos!", "INFO");
       } else if (lapsoTiempo) {
@@ -216,7 +229,7 @@ window.addEventListener("DOMContentLoaded", async () => {
                 operacion: "registrarContrato",
                 parametros: {
                   idCliente: idCliente,
-                  idPaquete: idServicio,
+                  idTarifario: idServicio,
                   idSector: sector.value,
                   direccion: direccion.value,
                   referencia: referencia.value,
@@ -347,21 +360,6 @@ window.addEventListener("DOMContentLoaded", async () => {
       slcSectorActualizar.appendChild(option);
     });
 
-    //const dataPaquetes = await fetchPaquetes();
-    /* dataPaquetes
-      .filter((paquete) => !paquete.inactive_at) 
-      .forEach((paquete) => {
-      const option = document.createElement("option");
-      const id = `${paquete.id_paquete} - ${paquete.precio}`;
-      option.value = id;
-      option.textContent = paquete.paquete;
-      slcPaquetes.appendChild(option);
-
-      // Clonar la opción solo una vez para slcServicioActualizar
-      const optionClone = option.cloneNode(true);
-      slcServicioActualizar.appendChild(optionClone);
-      }); */
-
     const dataContratos = await fetchContratos();
     const tbody = document.querySelector("#listarContratos tbody");
 
@@ -378,7 +376,6 @@ window.addEventListener("DOMContentLoaded", async () => {
         return duracion;
       }
     }
-
 
     dataContratos.forEach((contrato) => {
       const tr = document.createElement("tr");
@@ -620,26 +617,26 @@ window.addEventListener("DOMContentLoaded", async () => {
   })();
 
   document.querySelector("#btnRegistrar").addEventListener("click", async (event) => {
-      event.preventDefault();
-      if (idCliente == null) {
-        await registrarCliente();
-      }
-      await registrarContrato();
-    });
+    event.preventDefault();
+    if (idCliente == null) {
+      await registrarCliente();
+    }
+    await registrarContrato();
+  });
 
   document.querySelector("#btnBuscar").addEventListener("click", async (event) => {
-      event.preventDefault();
-      await buscarCliente(nroDoc.value);
-    });
+    event.preventDefault();
+    await buscarCliente(nroDoc.value);
+  });
 
   document.querySelector("#btnActualizar").addEventListener("click", async (event) => {
-      event.preventDefault();
-      const idContrato = document.querySelector(
-        "#txtIdContratoActualizar"
-      ).value;
-      const idUsuario = user.idUsuario;
-      await actualizarContrato(idContrato, idUsuario);
-    });
+    event.preventDefault();
+    const idContrato = document.querySelector(
+      "#txtIdContratoActualizar"
+    ).value;
+    const idUsuario = user.idUsuario;
+    await actualizarContrato(idContrato, idUsuario);
+  });
 
   $("#slcPaquetes").on("select2:select", function () {
     const selectedValue = slcPaquetes.value.split(" - ");
