@@ -216,7 +216,7 @@ window.addEventListener("DOMContentLoaded", async () => {
                 operacion: "registrarContrato",
                 parametros: {
                   idCliente: idCliente,
-                  idTarifario: idServicio,
+                  idPaquete: idServicio,
                   idSector: sector.value,
                   direccion: direccion.value,
                   referencia: referencia.value,
