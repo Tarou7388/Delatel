@@ -394,8 +394,7 @@ window.addEventListener("DOMContentLoaded", async () => {
           <button class="btn btn-sm btn-danger btnEliminar" data-idContrato=${contrato.id_contrato
         }><i class="fa-regular fa-trash-can icon-disabled"></i></button>
           <button class="btn btn-sm btn-primary btnGenerar" data-idContrato=${contrato.id_contrato
-        }><i class="fa-solid fa-file-pdf icon-disable
-d"></i></button>
+        }><i class="fa-solid fa-file-pdf icon-disabled"></i></button>
           <button class="btn btn-sm btn-success btnFicha" data-tipoServicio=${contrato.tipo_servicio
         } data-idContrato=${contrato.id_contrato}>Ficha</button>
         </td>
@@ -429,13 +428,13 @@ d"></i></button>
         const idContrato = event.target.getAttribute("data-idContrato");
         const tipoServicio = event.target.getAttribute("data-tipoServicio");
         const tipoFicha = {
-          GPON: "FichaTecnicaGpon",
+          "FIBR + CABL": "FichaTecnicaGpon",
+          "CABL + FIBR": "FichaTecnicaGpon",
           WISP: "FichaTecnicaWisp",
-          CABl: "FichaTecnicaCable",
+          CABL: "FichaTecnicaCable",
           FIBR: "FichaTecnicaGpon",
         };
-        window.location.href = `${config.HOST}views/Contr
-atos/${tipoFicha[tipoServicio]}?idContrato=${idContrato}`;
+        window.location.href = `${config.HOST}views/Contratos/${tipoFicha[tipoServicio]}?idContrato=${idContrato}`;
       });
     });
 
@@ -712,8 +711,7 @@ atos/${tipoFicha[tipoServicio]}?idContrato=${idContrato}`;
   }
 
   document.querySelector("#btnBuscarCoordenadas").addEventListener("click", async () => {
-    await mapa.iniciarMapa();
-    await mapa.obtenerDatos();
+    await mapa.iniciarMapa('map');
   })
 
   document.querySelector("#btnGuardarCoordenadas").addEventListener("click", () => {

@@ -225,7 +225,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   });
 
   document.querySelector("#btnBuscarCoordenadasEmpresa").addEventListener("click", async () => {
-    await mapa.iniciarMapa();
+    await mapa.iniciarMapa('map');
   })
 
   async function cargarServicios() {
