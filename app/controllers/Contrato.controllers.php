@@ -10,7 +10,20 @@ $contrato = new Contrato();
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   switch (Herramientas::sanitizarEntrada($_GET['operacion'])) {
     case 'listarContratos':
-      echo json_encode($contrato->listarContratos());
+      // Obtener los valores de paginación de la solicitud
+      $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+      $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 10;
+      $offset = ($page - 1) * $limit;
+
+      $columnas = ['nombre_cliente', 'num_identificacion', 'paquete', 'direccion_servicio', 'duracion'];
+      $contratos = $contrato->listarContratos($columnas, $offset, $limit);
+
+      // Salida de datos en formato JSON
+      $salida = ["datos" => []];
+      foreach ($contratos as $contrato2) {
+        $salida['datos'][] = array_values($contrato2);
+      }
+      echo json_encode($salida);
       break;
     case 'buscarContratoId':
       $resultado = $contrato->buscarContratoId(["id" => Herramientas::sanitizarEntrada($_GET['id'])]);

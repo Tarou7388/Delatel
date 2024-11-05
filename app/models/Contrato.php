@@ -55,12 +55,14 @@ class Contrato extends Conexion
      *
      * @return array El conjunto de resultados de la ejecución del procedimiento almacenado.
      */
-    public function listarContratos()
+    public function listarContratos($columnas, $offset = 0, $limit = 10)
     {
-        $sql = "SELECT * FROM vw_contratos_listar";
-        return $this->listarDatos($sql);
-    }
+        // Construimos la consulta SQL incluyendo directamente los valores de paginación
+        $sql = "SELECT " . implode(", ", $columnas) . " FROM vw_contratos_listar LIMIT $offset, $limit";
 
+        // Llamamos a la función general de consulta sin parámetros adicionales
+        return $this->datosPaginados($sql);
+    }
     /**
      * Elimina un contrato de la base de datos.
      *
