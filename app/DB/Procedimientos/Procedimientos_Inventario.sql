@@ -10,7 +10,6 @@ CREATE VIEW vw_tipo_productos AS
     FROM tb_tipoproducto 
     WHERE inactive_at IS NULL;
 
-DELIMITER $$
 DROP VIEW IF EXISTS vw_almacen$$
 CREATE VIEW vw_almacen AS
 	SELECT id_almacen,

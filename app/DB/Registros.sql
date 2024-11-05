@@ -181,13 +181,11 @@ INSERT INTO tb_tipoproducto (tipo_nombre, create_at, iduser_create) VALUES
 
 
 INSERT INTO tb_unidadmedida (unidad_nombre, create_at, iduser_create) VALUES
-('Unidad', NOW(), 1),
-('Metros', NOW(), 1),
-('Centimetros', NOW(), 1);
+('Unidades', NOW(), 1),
+('Metros', NOW(), 1);
 
 
-INSERT INTO tb_productos (id_marca, id_tipo, id_unidad, modelo, precio_actual, codigo_barra, create_at, iduser_create) 
-VALUES 
+INSERT INTO tb_productos (id_marca, id_tipo, id_unidad, modelo, precio_actual, codigo_barra, create_at, iduser_create) VALUES 
 (1, 1, 1, 'Router', 150.00, '1234567890123', NOW(), 1),
 (2, 2, 1, 'Teclado USB', 25.00, '1234567890124', NOW(), 1),
 (3, 1, 2, 'Cable UTP Cat. 6', 1.50, '1234567890125', NOW(), 1),
@@ -226,11 +224,12 @@ INSERT INTO tb_usuarios (id_persona, nombre_user, pass, iduser_create) VALUES
 (10, 'Frojas', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1);
 
 INSERT INTO tb_roles (rol, permisos, iduser_create) VALUES
-('Administrador', '{"actividad":"Mapa","soporte":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"contratos":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"inventariado":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"productos":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"personas":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"roles":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"usuarios":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"averias":{"leer":true,"crear":true,"actualizar":true,"eliminar":true}, "paquetes":{"leer":true,"crear":true,"actualizar":true,"eliminar":true}}',1),
-('Tecnico Oficina', '{"actividad":"Soporte","soporte":false,"contratos":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"inventariado":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"productos":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"personas":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"roles":false,"usuarios":{"leer":true,"crear":true,"actualizar":true,"eliminar":true}, "paquetes":false}',1),
-('Oficina', '{"actividad":"Contratos","soporte":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"contratos":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"inventariado":false,"productos":false,"personas":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"roles":false,"usuarios":false, "paquetes":false}',1),
-('Tecnico Campo', '{"actividad":"Fichas","soporte":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"contratos":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"inventariado":false,"productos":false,"personas":false,"roles":false,"usuarios":false, "paquetes":false}',1),
-('Almacen - Tecnico', '{"actividad":"Kardex","soporte":false,"contratos":false,"inventariado":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"productos":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"personas":false,"roles":false,"usuarios":false, "paquetes":false}',1);
+('Administrador', '{"actividad":"Mapa","soporte":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"contratos":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"inventariado":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"productos":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"personas":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"roles":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"usuarios":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"averias":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"paquetes":{"leer":true,"crear":true,"actualizar":true,"eliminar":true}}', 1),
+('Tecnico Oficina', '{"actividad":"Soporte","soporte":false,"contratos":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"inventariado":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"productos":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"personas":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"roles":false,"usuarios":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"paquetes":false}', 1),
+('Oficina', '{"actividad":"Contratos","soporte":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"contratos":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"inventariado":false,"productos":false,"personas":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"roles":false,"usuarios":false,"paquetes":false}', 1),
+('Tecnico Campo', '{"actividad":"Fichas","soporte":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"contratos":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"inventariado":false,"productos":false,"personas":false,"roles":false,"usuarios":false,"paquetes":false}', 1),
+('Almacen - Tecnico', '{"actividad":"Kardex","soporte":false,"contratos":false,"inventariado":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"productos":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"personas":false,"roles":false,"usuarios":false,"paquetes":false}', 1);
+
 INSERT INTO tb_sectores (id_distrito, sector, iduser_create) VALUES
 (110201, 'Tupac Amaru', 1),
 (110201, 'San Agustín', 1),
