@@ -56,12 +56,12 @@ async function encontrarPuntoMasCercano(latClick, lonClick, marcadores) {
   marcadorMasCercano = datos;
 }
 
-export async function iniciarMapa() {
+export async function iniciarMapa(id) {
   const posicionInicial = { lat: -13.417077, lng: -76.136585 };
   const { Map, Circle } = await google.maps.importLibrary("maps");
   const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
 
-  mapa = new Map(document.getElementById("map"), {
+  mapa = new Map(document.getElementById(id), {
     zoom: 16,
     center: posicionInicial,
     mapId: "DEMO_MAP_ID",
