@@ -10,8 +10,18 @@ $contrato = new Contrato();
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   switch (Herramientas::sanitizarEntrada($_GET['operacion'])) {
     case 'listarContratos':
-      echo json_encode($contrato->listarContratos());
-      break;
+      $start = isset($_GET['start']) ? (int)$_GET['start'] : 0;
+      $length = isset($_GET['length']) ? (int)$_GET['length'] : 10;
+      $search = isset($_GET['search']['value']) ? $_GET['search']['value'] : "";  
+      $resultados = $contrato->listarContratos($start, $length, $search);
+      $response = [
+          "draw" => isset($_GET['draw']) ? (int)$_GET['draw'] : 1,
+          "recordsTotal" => $resultados['totalRegistros'],
+          "recordsFiltered" => $resultados['totalRegistros'],
+          "data" => $resultados['contratos']
+      ];
+      echo json_encode($response);
+      break;   
     case 'buscarContratoId':
       $resultado = $contrato->buscarContratoId(["id" => Herramientas::sanitizarEntrada($_GET['id'])]);
       echo json_encode($resultado);
@@ -78,13 +88,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
       $datosActualizar = [
         "idContrato"         => Herramientas::sanitizarEntrada($datos['parametros']['idContrato']),
         "idPaquete"          => Herramientas::sanitizarEntrada($datos['parametros']['idPaquete']),
-        "idSector"           => Herramientas::sanitizarEntrada($datos['parametros']['idSector']),
         "direccionServicio"  => Herramientas::sanitizarEntrada($datos['parametros']['direccionServicio']),
         "referencia"         => Herramientas::sanitizarEntrada($datos['parametros']['referencia']),
         "coordenada"         => Herramientas::sanitizarEntrada($datos['parametros']['coordenada']),
-        "fechaInicio"        => Herramientas::sanitizarEntrada($datos['parametros']['fechaInicio']),
-        "fechaFin"           => Herramientas::sanitizarEntrada($datos['parametros']['fechaFin']),
-        "fechaRegistro"      => Herramientas::sanitizarEntrada($datos['parametros']['fechaRegistro']),
         "nota"               => Herramientas::sanitizarEntrada($datos['parametros']['nota']),
         "idUsuarioUpdate"    => Herramientas::sanitizarEntrada($datos['parametros']['idUsuarioUpdate'])
       ];

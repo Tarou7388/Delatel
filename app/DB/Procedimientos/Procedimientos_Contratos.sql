@@ -43,26 +43,21 @@ SELECT
         ELSE e.ruc
     END AS num_identificacion,
     c.direccion_servicio,
-	t.paquete,
-    sv.tipo_servicio,
-    sv.servicio,
+	  t.paquete,
+    CONCAT_WS(' + ', sv.tipo_servicio, sv2.tipo_servicio, sv3.tipo_servicio, sv4.tipo_servicio) AS tipo_servicio,
     t.duracion
 FROM 
     tb_contratos c
-INNER JOIN 
-    tb_clientes cl ON c.id_cliente = cl.id_cliente
-LEFT JOIN 
-    tb_personas p ON cl.id_persona = p.id_persona
-LEFT JOIN 
-    tb_empresas e ON cl.id_cliente = e.id_empresa
-INNER JOIN 
-    tb_paquetes t ON c.id_paquete = t.id_paquete
-INNER JOIN 
-    tb_servicios sv ON t.id_servicio = sv.id_servicio
-WHERE 
-    c.inactive_at IS NULL
-ORDER BY 
-    c.id_contrato DESC;
+INNER JOIN tb_clientes cl ON c.id_cliente = cl.id_cliente
+LEFT JOIN tb_personas p ON cl.id_persona = p.id_persona
+LEFT JOIN tb_empresas e ON cl.id_cliente = e.id_empresa
+INNER JOIN tb_paquetes t ON c.id_paquete = t.id_paquete
+INNER JOIN tb_servicios sv ON t.id_servicio = sv.id_servicio
+LEFT JOIN tb_servicios sv2 ON t.id_servicio2 = sv2.id_servicio
+LEFT JOIN tb_servicios sv3 ON t.id_servicio3 = sv3.id_servicio
+LEFT JOIN tb_servicios sv4 ON t.id_servicio4 = sv4.id_servicio
+WHERE c.inactive_at IS NULL
+ORDER BY c.id_contrato DESC;
 
 DELIMITER $$
 
@@ -124,7 +119,7 @@ BEGIN
             ELSE e.ruc
         END AS num_identificacion,
         t.paquete,
-        sv.tipo_servicio,
+        CONCAT_WS(' + ', sv.tipo_servicio, sv2.tipo_servicio, sv3.tipo_servicio, sv4.tipo_servicio) AS tipo_servicio,
         c.ficha_instalacion
     FROM
         tb_contratos c
@@ -132,7 +127,10 @@ BEGIN
         LEFT JOIN tb_personas p ON cl.id_persona = p.id_persona
         LEFT JOIN tb_empresas e ON cl.id_cliente = e.id_empresa
         INNER JOIN tb_paquetes t ON c.id_paquete = t.id_paquete
-        INNER JOIN tb_servicios sv ON t.id_servicio = sv.id_servicio
+        LEFT JOIN tb_servicios sv ON t.id_servicio = sv.id_servicio
+        LEFT JOIN tb_servicios sv2 ON t.id_servicio2 = sv2.id_servicio
+        LEFT JOIN tb_servicios sv3 ON t.id_servicio3 = sv3.id_servicio
+        LEFT JOIN tb_servicios sv4 ON t.id_servicio4 = sv4.id_servicio
     WHERE c.id_contrato = p_id_contrato AND c.inactive_at IS NULL;
 END $$
 
@@ -142,44 +140,50 @@ CREATE PROCEDURE spu_contrato_buscar_id(
 )
 BEGIN
     SELECT
-    c.id_contrato,
-    CASE
-        WHEN cl.id_persona IS NOT NULL THEN p.nombres
-        ELSE e.razon_social
-    END AS nombre_cliente,
-    CASE
-        WHEN cl.id_persona IS NOT NULL THEN p.nro_doc
-        ELSE e.ruc
-    END AS num_identificacion,
-    s.id_sector,
-    s.sector AS nombre_sector,
-    ur_persona.nombres AS nombre_usuario_registro,
-    ut_persona.nombres AS nombre_usuario_tecnico,
-    c.direccion_servicio,
-    sv.id_servicio,
-    sv.servicio,
-    c.referencia,
-    c.coordenada,
-    c.fecha_inicio,
-    c.fecha_fin,
-    c.fecha_registro,
-    c.nota
-FROM
-    tb_contratos c
-    INNER JOIN tb_clientes cl ON c.id_cliente = cl.id_cliente
-    LEFT JOIN tb_personas p ON cl.id_persona = p.id_persona
-    LEFT JOIN tb_empresas e ON cl.id_cliente = e.id_empresa
-    INNER JOIN tb_paquetes t ON c.id_paquete = t.id_paquete
-    INNER JOIN tb_servicios sv ON t.id_servicio = sv.id_servicio
-    INNER JOIN tb_sectores s ON c.id_sector = s.id_sector
-    INNER JOIN tb_responsables ur ON c.id_usuario_registro = ur.id_responsable
-    INNER JOIN tb_usuarios ur_usuario ON ur.id_usuario = ur_usuario.id_usuario
-    INNER JOIN tb_personas ur_persona ON ur_usuario.id_persona = ur_persona.id_persona
-    LEFT JOIN tb_responsables ut ON c.id_usuario_tecnico = ut.id_responsable
-    LEFT JOIN tb_usuarios ut_usuario ON ut.id_usuario = ut_usuario.id_usuario
-    LEFT JOIN tb_personas ut_persona ON ut_usuario.id_persona = ut_persona.id_persona
-WHERE
-    c.id_contrato = p_id_contrato AND c.inactive_at IS NULL;
+        c.id_contrato,
+        CASE
+            WHEN cl.id_persona IS NOT NULL THEN p.nombres
+            ELSE e.razon_social
+        END AS nombre_cliente,
+        CASE
+            WHEN cl.id_persona IS NOT NULL THEN p.nro_doc
+            ELSE e.ruc
+        END AS num_identificacion,
+        s.id_sector,
+        s.sector AS nombre_sector,
+        ur_persona.nombres AS nombre_usuario_registro,
+        ut_persona.nombres AS nombre_usuario_tecnico,
+        c.direccion_servicio,
+        sv.id_servicio,
+        CONCAT_WS(' + ', sv.tipo_servicio, sv2.tipo_servicio, sv3.tipo_servicio, sv4.tipo_servicio) AS tipo_servicio,
+        t.id_paquete,
+        t.paquete,
+        t.precio,
+        c.referencia,
+        c.coordenada,
+        c.fecha_inicio,
+        c.fecha_fin,
+        c.fecha_registro,
+        c.nota
+    FROM
+        tb_contratos c
+        INNER JOIN tb_clientes cl ON c.id_cliente = cl.id_cliente
+        LEFT JOIN tb_personas p ON cl.id_persona = p.id_persona
+        LEFT JOIN tb_empresas e ON cl.id_cliente = e.id_empresa
+        INNER JOIN tb_paquetes t ON c.id_paquete = t.id_paquete
+        LEFT JOIN tb_servicios sv ON t.id_servicio = sv.id_servicio
+        LEFT JOIN tb_servicios sv2 ON t.id_servicio2 = sv2.id_servicio
+        LEFT JOIN tb_servicios sv3 ON t.id_servicio3 = sv3.id_servicio
+        LEFT JOIN tb_servicios sv4 ON t.id_servicio4 = sv4.id_servicio
+        INNER JOIN tb_sectores s ON c.id_sector = s.id_sector
+        INNER JOIN tb_responsables ur ON c.id_usuario_registro = ur.id_responsable
+        INNER JOIN tb_usuarios ur_usuario ON ur.id_usuario = ur_usuario.id_usuario
+        INNER JOIN tb_personas ur_persona ON ur_usuario.id_persona = ur_persona.id_persona
+        LEFT JOIN tb_responsables ut ON c.id_usuario_tecnico = ut.id_responsable
+        LEFT JOIN tb_usuarios ut_usuario ON ut.id_usuario = ut_usuario.id_usuario
+        LEFT JOIN tb_personas ut_persona ON ut_usuario.id_persona = ut_persona.id_persona
+    WHERE
+        c.id_contrato = p_id_contrato AND c.inactive_at IS NULL;
 END $$
 
 DROP PROCEDURE IF EXISTS spu_contratos_eliminar$$
@@ -240,13 +244,9 @@ DROP PROCEDURE IF EXISTS spu_contratos_actualizar$$
 CREATE PROCEDURE spu_contratos_actualizar(
     IN p_id_contrato INT,
     IN p_id_paquete INT,
-    IN p_id_sector INT,
     IN p_direccion_servicio VARCHAR(200),
     IN p_referencia VARCHAR(200),
     IN p_coordenada VARCHAR(25),
-    IN p_fecha_inicio DATE,
-    IN p_fecha_fin DATE,
-    IN p_fecha_registro DATE,
     IN p_nota TEXT,
     IN p_iduser_update INT
 )
@@ -254,13 +254,9 @@ BEGIN
     UPDATE tb_contratos
     SET
         id_paquete = p_id_paquete,
-        id_sector = p_id_sector,
         direccion_servicio = p_direccion_servicio,
         referencia = p_referencia,
         coordenada = p_coordenada,
-        fecha_inicio = p_fecha_inicio,
-        fecha_fin = p_fecha_fin,
-        fecha_registro = p_fecha_registro,
         nota = p_nota,
         iduser_update = p_iduser_update,
         update_at = NOW()

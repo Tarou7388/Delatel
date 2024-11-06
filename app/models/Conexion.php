@@ -50,6 +50,18 @@ class Conexion
     }
   }
 
+  public function datosPaginados($sql, $params = [])
+  {
+    try {
+      $conexion = $this->getConexion();
+      $consulta = $conexion->prepare($sql);
+      $consulta->execute($params);
+      return $consulta->fetchAll(PDO::FETCH_ASSOC);
+    } catch (Exception $e) {
+      die($e->getMessage());
+    }
+  }
+
   /**
    * Ejecuta una declaración SQL preparada con los parámetros dados.
    *

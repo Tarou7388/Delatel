@@ -7,10 +7,10 @@ document.addEventListener("DOMContentLoaded", function () {
   // 2. Inicialización de la tabla de productos
   window.tablaProductos = $("#tblProductos").DataTable({
     dom: `
-        <"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6 text-end"f>>
-        <"row"<"col-sm-12"tr>>
-        <"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>
-        `,
+      <"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6 text-end"f>>
+      <"row"<"col-sm-12"tr>>
+      <"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>
+    `,
     language: {
       url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json",
     },
@@ -54,10 +54,22 @@ document.addEventListener("DOMContentLoaded", function () {
         },
       },
     ],
+    processing: true,
+    serverSide: true,
     ajax: {
-      url: ruta,
+      url: ruta,  
       type: "GET",
-      dataSrc: "",
+      data: function (d) {
+        return {
+          draw: d.draw,
+          start: d.start,
+          length: d.length,
+          search: d.search.value,  
+        };
+      },
+      dataSrc: function (json) {
+        return json.data;  
+      },
     },
     columns: [
       { data: "marca", title: "Marca", className: "text-center" },
@@ -69,12 +81,12 @@ document.addEventListener("DOMContentLoaded", function () {
       { data: "modelo", title: "Nombre o Modelo", className: "text-center" },
       {
         data: "unidad_nombre",
-        title: "Precio Actual",
+        title: "Unidad de Medida",
         className: "text-center",
       },
       {
         data: "precio_actual",
-        title: "Unidad de Medida",
+        title: "Precio Actual",
         className: "text-center",
       },
       {
@@ -88,9 +100,9 @@ document.addEventListener("DOMContentLoaded", function () {
         className: "text-center",
         render: function (data, type, row) {
           return `
-                        <button class="btn btn-warning btn-edit" data-id="${row.id_producto}"><i class="fa-regular fa-pen-to-square"></i></button>
-                        <button class="btn btn-danger btn-delete" data-id="${row.id_producto}"><i class="fa-regular fa-trash-can"></i></button>
-                    `;
+            <button class="btn btn-warning btn-edit" data-id="${row.id_producto}"><i class="fa-regular fa-pen-to-square"></i></button>
+            <button class="btn btn-danger btn-delete" data-id="${row.id_producto}"><i class="fa-regular fa-trash-can"></i></button>
+          `;
         },
       },
     ],
@@ -98,7 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
     searching: true,
     info: true,
     lengthChange: false,
-  });
+  });  
 
   const slcEditarMarca = document.querySelector("#slcEditarMarca");
   const slcUnidadEditarMedida = document.querySelector("#slcUnidadEditarMedida");

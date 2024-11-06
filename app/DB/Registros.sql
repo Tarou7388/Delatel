@@ -181,13 +181,11 @@ INSERT INTO tb_tipoproducto (tipo_nombre, create_at, iduser_create) VALUES
 
 
 INSERT INTO tb_unidadmedida (unidad_nombre, create_at, iduser_create) VALUES
-('Unidad', NOW(), 1),
-('Metros', NOW(), 1),
-('Centimetros', NOW(), 1);
+('Unidades', NOW(), 1),
+('Metros', NOW(), 1);
 
 
-INSERT INTO tb_productos (id_marca, id_tipo, id_unidad, modelo, precio_actual, codigo_barra, create_at, iduser_create) 
-VALUES 
+INSERT INTO tb_productos (id_marca, id_tipo, id_unidad, modelo, precio_actual, codigo_barra, create_at, iduser_create) VALUES 
 (1, 1, 1, 'Router', 150.00, '1234567890123', NOW(), 1),
 (2, 2, 1, 'Teclado USB', 25.00, '1234567890124', NOW(), 1),
 (3, 1, 2, 'Cable UTP Cat. 6', 1.50, '1234567890125', NOW(), 1),
@@ -226,11 +224,12 @@ INSERT INTO tb_usuarios (id_persona, nombre_user, pass, iduser_create) VALUES
 (10, 'Frojas', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1);
 
 INSERT INTO tb_roles (rol, permisos, iduser_create) VALUES
-('Administrador', '{"actividad":"Mapa","soporte":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"contratos":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"inventariado":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"productos":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"personas":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"roles":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"usuarios":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"averias":{"leer":true,"crear":true,"actualizar":true,"eliminar":true}, "paquetes":{"leer":true,"crear":true,"actualizar":true,"eliminar":true}}',1),
-('Tecnico Oficina', '{"actividad":"Soporte","soporte":false,"contratos":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"inventariado":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"productos":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"personas":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"roles":false,"usuarios":{"leer":true,"crear":true,"actualizar":true,"eliminar":true}, "paquetes":false}',1),
-('Oficina', '{"actividad":"Contratos","soporte":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"contratos":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"inventariado":false,"productos":false,"personas":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"roles":false,"usuarios":false, "paquetes":false}',1),
-('Tecnico Campo', '{"actividad":"Fichas","soporte":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"contratos":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"inventariado":false,"productos":false,"personas":false,"roles":false,"usuarios":false, "paquetes":false}',1),
-('Almacen - Tecnico', '{"actividad":"Kardex","soporte":false,"contratos":false,"inventariado":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"productos":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"personas":false,"roles":false,"usuarios":false, "paquetes":false}',1);
+('Administrador', '{"actividad":"Mapa","soporte":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"contratos":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"inventariado":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"productos":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"personas":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"roles":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"usuarios":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"averias":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"paquetes":{"leer":true,"crear":true,"actualizar":true,"eliminar":true}}', 1),
+('Tecnico Oficina', '{"actividad":"Soporte","soporte":false,"contratos":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"inventariado":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"productos":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"personas":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"roles":false,"usuarios":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"paquetes":false}', 1),
+('Oficina', '{"actividad":"Contratos","soporte":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"contratos":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"inventariado":false,"productos":false,"personas":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"roles":false,"usuarios":false,"paquetes":false}', 1),
+('Tecnico Campo', '{"actividad":"Fichas","soporte":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"contratos":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"inventariado":false,"productos":false,"personas":false,"roles":false,"usuarios":false,"paquetes":false}', 1),
+('Almacen - Tecnico', '{"actividad":"Kardex","soporte":false,"contratos":false,"inventariado":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"productos":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"personas":false,"roles":false,"usuarios":false,"paquetes":false}', 1);
+
 INSERT INTO tb_sectores (id_distrito, sector, iduser_create) VALUES
 (110201, 'Tupac Amaru', 1),
 (110201, 'San Agustín', 1),
@@ -365,8 +364,13 @@ INSERT INTO tb_contactabilidad (id_persona, id_empresa, id_paquete, fecha_hora_c
 (40, NULL, 21, '2024-02-19 10:30:00', 'Av. Arica 765, Chincha Alta', 'Se acordó una renovación del plan actual.', 1);
 
 INSERT INTO tb_soporte (id_contrato, id_tipo_soporte, id_tecnico, fecha_hora_solicitud, fecha_hora_asistencia, descripcion_problema, descripcion_solucion, prioridad, soporte, iduser_create) VALUES 
-(1, 1, 1, '2024-01-10 15:00:00', '2024-10-09 17:05:29', "Daños en el cable", "Reemplazo del cable", 'Alta', '{"parametroscable":{"periodo":["mensual","contado"],"potencia":4,"sintonizador":2,"triplexor":{"requiere":true,"cantidad":1,"tipo":["activo","pasivo"]},"spliter":[{"cantidad":1,"tipo":"1x3"},{"cantidad":1,"tipo":"1x5"},{"cantidad":1,"tipo":"1x8"}],"cable":10,"conectores":1},"cambioscable":{"periodo":["mensual","contado"],"potencia":4,"sintonizador":2,"triplexor":{"requiere":true,"cantidad":1,"tipo":["activo","pasivo"]},"spliter":[{"cantidad":1,"tipo":"1x3"},{"cantidad":1,"tipo":"1x5"},{"cantidad":1,"tipo":"1x8"}],"cable":10,"conectores":1}}', 1),
-(2, 2, 2, '2024-02-16 11:00:00', '2024-02-16 12:30:00', "Daño X", null, 'Media', '{"parametros":{"base":"","ip":"","senal":""},"cambios":{"nuevaBase":"","nuevoIP":"","senal":""}}', 1),
-(3, 3, 3, '2024-03-21 09:30:00', '2024-03-21 10:00:00', "Daño X", null, 'Alta', '{"parametros":{"base":"","ip":"","senal":""},"cambios":{"nuevaBase":"","nuevoIP":"","senal":""}}', 1),
-(4, 1, 4, '2024-04-26 14:00:00', '2024-04-26 15:30:00', "Daño Y", null, 'Baja', '{"parametros":{"base":"","ip":"","senal":""},"cambios":{"nuevaBase":"","nuevoIP":"","senal":""}}', 1),
-(5, 2, 5, '2024-05-31 13:00:00', '2024-05-31 14:30:00', "Daño Z", null, 'Media', '{"parametros":{"base":"","ip":"","senal":""},"cambios":{"nuevaBase":"","nuevoIP":"","senal":""}}', 1);
+(1, 1, 1, '2024-01-10 15:00:00', '2024-10-09 17:05:29', "Daños en el cable", "Reemplazo del cable", 'Alta', 
+  '{"parametroscable":{"periodo":["mensual","contado"],"potencia":4,"sintonizador":2,"triplexor":{"requiere":true,"cantidad":1,"tipo":["activo","pasivo"]},"spliter":[{"cantidad":1,"tipo":"1x3"},{"cantidad":1,"tipo":"1x5"},{"cantidad":1,"tipo":"1x8"}],"cable":10,"conectores":1},"cambioscable":{"periodo":["mensual","contado"],"potencia":4,"sintonizador":2,"triplexor":{"requiere":true,"cantidad":1,"tipo":["activo","pasivo"]},"spliter":[{"cantidad":1,"tipo":"1x3"},{"cantidad":1,"tipo":"1x5"},{"cantidad":1,"tipo":"1x8"}],"cable":10,"conectores":1}}', 1),
+(2, 2, 2, '2024-02-16 11:00:00', '2024-02-16 12:30:00', "Daño X", null, 'Media', 
+  '{"parametros":{"base":"","ip":"","senal":""},"cambios":{"nuevaBase":"","nuevoIP":"","senal":""}}', 1),
+(3, 3, 3, '2024-03-21 09:30:00', '2024-03-21 10:00:00', "Daño X", null, 'Alta', 
+  '{"parametros":{"base":"","ip":"","senal":""},"cambios":{"nuevaBase":"","nuevoIP":"","senal":""}}', 1),
+(4, 1, 4, '2024-04-26 14:00:00', '2024-04-26 15:30:00', "Daño Y", null, 'Baja', 
+  '{"parametros":{"base":"","ip":"","senal":""},"cambios":{"nuevaBase":"","nuevoIP":"","senal":""}}', 1),
+(5, 2, 5, '2024-05-31 13:00:00', '2024-05-31 14:30:00', "Daño Z", null, 'Media', 
+  '{"parametros":{"base":"","ip":"","senal":""},"cambios":{"nuevaBase":"","nuevoIP":"","senal":""}}', 1);

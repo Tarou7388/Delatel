@@ -20,6 +20,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     case 'listarSoporte':
       echo json_encode($soporte->listarSoporte());
       break;
+    case 'ObtenerDatosSoporteByID':
+      echo json_encode($soporte->ObtenerDatosSoporteByID(["idSoporte"=>$_GET['idSoporte']]));
+      break;
   }
 }
 

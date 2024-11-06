@@ -85,4 +85,10 @@ class Soporte extends Conexion
     return $this->listarDatos($sql);
   }
 
+  public function ObtenerDatosSoporteByID($params = [])
+  {
+    $sql = "SELECT * FROM vw_soporte_detalle WHERE id_soporte = ?";
+    $values = array($params['idSoporte']);
+    return $this->consultaParametros($sql, $values);
+  }
 }

@@ -33,7 +33,11 @@ if (isset($_GET["operacion"])) {
       break;
 
     case "buscarStockId":
-      echo json_encode($kardex->buscarStockId(["idProducto" => Herramientas::sanitizarEntrada($_GET['idProducto'])]));
+
+      $idProducto = Herramientas::sanitizarEntrada($_GET['idProducto']);
+      $idAlmacen =  Herramientas::sanitizarEntrada($_GET['idAlmacen']);
+
+      echo json_encode($kardex->buscarStockId(["idProducto" => $idProducto , "idAlmacen" => $idAlmacen]));
       break;
 
     case "obtenerProducto":

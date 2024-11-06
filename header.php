@@ -104,13 +104,46 @@ if (!isset($_SESSION['login']) || $_SESSION['login']['estado'] == false) {
 
             <?php
             foreach ($listaAcceso as $acceso) {
-              if (strpos($acceso['ruta'], 'views') === false) {
+              if ($acceso['texto'] == 'Actividades') continue;
+
+              if ($acceso['texto'] == 'Inventariado') {
                 echo "
-              <a class='nav-link' href='http://localhost/Delatel/views/{$acceso['ruta']}'>
-                <div class='sb-nav-link-icon'><i class='fa-solid {$acceso['icono']}'></i></div>
-                {$acceso['texto']}
-              </a>
-              ";
+                    <a class='nav-link' href='#' data-bs-toggle='collapse' data-bs-target='#collapseInventariado' aria-expanded='false' aria-controls='collapseInventariado'>
+                        <div class='sb-nav-link-icon'><i class='fa-solid {$acceso['icono']}'></i></div>
+                        {$acceso['texto']}
+                    </a>
+                    <div id='collapseInventariado' class='collapse'>
+                        <a class='nav-link ps-5' href='http://localhost/Delatel/views/{$acceso['ruta']}'>
+                            <div class='sb-nav-link-icon'><i class='fa-solid {$acceso['icono']}'></i></div>
+                            {$acceso['texto']}
+                    </a>";
+
+                foreach ($listaAcceso as $accesoProducto) {
+                  if ($accesoProducto['texto'] == 'Productos') {
+                    echo "
+                        <a class='nav-link ps-5' href='http://localhost/Delatel/views/{$accesoProducto['ruta']}'>
+                            <div class='sb-nav-link-icon'><i class='fa-solid {$accesoProducto['icono']}'></i></div>
+                            {$accesoProducto['texto']}
+                        </a>";
+                  }
+                  if ($accesoProducto['texto'] == 'Almacen') {
+                    echo "
+                        <a class='nav-link ps-5' href='http://localhost/Delatel/views/{$accesoProducto['ruta']}'>
+                            <div class='sb-nav-link-icon'><i class='fa-solid {$accesoProducto['icono']}'></i></div>
+                            {$accesoProducto['texto']}
+                        </a>";
+                  }
+                }
+
+                echo "</div>";
+              } else {
+                if ($acceso['texto'] != 'Productos' && $acceso['texto'] != 'Almacen' && strpos($acceso['ruta'], 'views') === false) {
+                  echo "
+                      <a class='nav-link' href='http://localhost/Delatel/views/{$acceso['ruta']}'>
+                          <div class='sb-nav-link-icon'><i class='fa-solid {$acceso['icono']}'></i></div>
+                          {$acceso['texto']}
+                      </a>";
+                }
               }
             }
             ?>

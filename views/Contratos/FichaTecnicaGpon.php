@@ -388,6 +388,7 @@ $idContrato = $_GET['idContrato'];
     </div>
   </div>
 </div>
+
 <script>
   const idContrato = <?= $idContrato ?>;
 </script>

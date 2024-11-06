@@ -9,9 +9,8 @@
 		</div>
 		<div class="card-body">
 			<form action="" id="form-validaciones-kardex" autocomplete="off">
-				<!-- primera fila -->
+				<!-- Primera fila -->
 				<div class="row g-2 m-b2">
-
 					<div class="col-md">
 						<div class="input-group">
 							<div class="form-floating">
@@ -25,6 +24,18 @@
 
 					<div class="col-md">
 						<div class="form-floating">
+							<select name="slcAlmacen" id="slcAlmacen" class="form-select" required>
+								<option value="" disabled selected>Seleccione</option>
+							</select>
+							<label for="slcAlmacen">Almacen</label>
+						</div>
+					</div>
+				</div> <!-- ./Primera fila -->
+
+				<!-- Segunda fila -->
+				<div class="row g-2 mt-2">
+					<div class="col-md">
+						<div class="form-floating">
 							<input type="number" class="form-control" id="txtStockactual" placeholder="Stock Actual" disabled>
 							<label for="txtStockactual">Stock Actual</label>
 						</div>
@@ -36,12 +47,10 @@
 							<label for="txtfecha">Fecha</label>
 						</div>
 					</div>
+				</div> <!-- ./Segunda fila -->
 
-				</div> <!-- ./primera fila -->
-
-				<!-- segunda fila -->
+				<!-- Tercera fila -->
 				<div class="row g-2 mt-2">
-
 					<div class="col-md">
 						<div class="form-floating">
 							<select name="slcTipomovimiento" id="slcTipomovimiento" class="form-select" required>
@@ -66,10 +75,9 @@
 							<label for="txtValorunitario">Valor Unitario</label>
 						</div>
 					</div>
+				</div> <!-- ./Tercera fila -->
 
-				</div> <!-- ./segunda fila -->
-
-				<!-- tercera fila -->
+				<!-- Cuarta fila (Motivo) -->
 				<div class="row g-2 mt-2">
 					<div class="col-md">
 						<div class="form-floating">
@@ -79,17 +87,7 @@
 							<label for="slcMotivo">Motivo</label>
 						</div>
 					</div>
-
-					<div class="col-md">
-						<div class="form-floating">
-							<select name="slcAlmacen" id="slcAlmacen" class="form-select" required>
-								<option value="" disabled selected>Seleccione</option>
-							</select>
-							<label for="slcAlmacen">Almacen</label>
-						</div>
-					</div>
-				</div> <!-- ./tercera fila -->
-
+				</div> <!-- ./Cuarta fila -->
 
 				<!-- Botones -->
 				<div class="text-end mt-2">
@@ -100,6 +98,7 @@
 			</form>
 		</div>
 	</div>
+
 </div>
 
 <div class="container-fluid px-4">
@@ -123,7 +122,7 @@
 						</tr>
 					</thead>
 					<tbody>
-	
+
 					</tbody>
 				</table>
 			</div>

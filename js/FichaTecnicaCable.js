@@ -18,7 +18,6 @@ document.addEventListener("DOMContentLoaded", () => {
   let jsonCosto = {};
   let jsonData = {};
   let jsonCable = {};
-  let flagFichaInstalacion = false;
 
   // Cargar Datos de Ficha del Cliente y la Ficha Tecnica
   (async () => {
@@ -29,20 +28,78 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await response.json();
       console.log(data);
 
-      if (data.length === 0) {
-        console.warn("No hay datos en Ficha Instalación");
-        return;
+      if (data.length === 0 || !data[0].ficha_instalacion) {
+        showToast("No hay datos en Ficha de Instalación", "INFO");
       }
 
-      document.getElementById("txtUsuario").value = data[0].nombre_cliente;
-      document.getElementById("txtPlanCable").value = data[0].servicio;
-      document.getElementById("txtPaquete").value = data[0].tipo_paquete;
+      const fichaInstalacion = JSON.parse(data[0].ficha_instalacion);
 
+      document.getElementById("txtUsuario").value = data[0].nombre_cliente;
+      document.getElementById("txtPaquete").value = data[0].paquete;
       document.getElementById("txtNumFicha").value = data[0].id_contrato;
 
-      tipoPaquete = data[0].tipo_paquete;
+      tipoPaquete = data[0].tipo_servicio;
 
-      
+      // Cargar datos del cable
+      if (fichaInstalacion && fichaInstalacion.cable) {
+        const cable = fichaInstalacion.cable;
+        document.querySelector("#txtPagoInst").value = cable.pagoinstalacion;
+        document.querySelector("#txtPotenciaCable").value = cable.potencia;
+        document.querySelector("#slcTriplexor").value = `${cable.triplexor.requerido},${cable.triplexor.cargador}`;
+        document.querySelector("#txtCantConector").value = cable.conector.numeroconector;
+        document.querySelector("#txtPrecioConector").value = cable.conector.precio;
+        document.querySelector("#txtSpliter").value = cable.spliter[0].cantidad;
+        document.querySelector("#slcSpliter").value = cable.spliter[0].tipo;
+        document.querySelector("#txtCantCable").value = cable.cable.metrosadicionales;
+        document.querySelector("#txtPrecioCable").value = cable.cable.preciometro;
+        calcularCostos();
+      }
+
+      // Cargar datos de costos
+      if (fichaInstalacion && fichaInstalacion.costo) {
+        const costo = fichaInstalacion.costo;
+        document.querySelector("#txtGponNap").value = costo.nap.gpon;
+        document.querySelector("#txtCatvNap").value = costo.nap.catv;
+        document.querySelector("#txtGponCasa").value = costo.casa.gpon;
+        document.querySelector("#txtCatvCasa").value = costo.casa.catv;
+
+        if (costo.cableCosto) {
+          document.querySelector("#txtCantSintotizador").value = costo.cableCosto.numerosintotizadores;
+          document.querySelector("#txtCostoAlquiler").value = costo.cableCosto.costoAlquilerSintotizador;
+          document.querySelector("#txtCantCable").value = costo.cableCosto.cantidadCable;
+          document.querySelector("#txtPrecioCable").value = costo.cableCosto.precioCable;
+          document.querySelector("#txtPrecioConector").value = costo.cableCosto.precioConector;
+          document.querySelector("#txtCantConector").value = costo.cableCosto.cantidadConector;
+        }
+      }
+
+      // Cargar datos de sintonizadores
+      if (fichaInstalacion && fichaInstalacion.cable && fichaInstalacion.cable.sintonizadores) {
+        jsonSintotizador = fichaInstalacion.cable.sintonizadores;
+        numeroSintotizadores = jsonSintotizador.length;
+        jsonSintotizador.forEach(sintonizador => {
+          const card = document.createElement("div");
+          card.className = "card mt-2";
+          card.innerHTML = `
+            <div class="card-body">
+                <h5 class="card-title">Sintonizador</h5>
+                <p class="card-text"><strong>Marca y Modelo:</strong> ${sintonizador.marcaModelo}</p>
+                <p class="card-text"><strong>Serie:</strong> ${sintonizador.serie}</p>
+                <button class="btn btn-danger btn-sm mt-2 btnEliminar">Eliminar</button>
+            </div>
+          `;
+          document.getElementById("mdlSintotizadorBody").appendChild(card);
+
+          card.querySelector(".btnEliminar").addEventListener("click", async function () {
+            card.remove();
+            await ActualizarCantidadSintotizador();
+            numeroSintotizadores--;
+            jsonSintotizador = jsonSintotizador.filter(s => s.numero !== sintonizador.numero);
+          });
+        });
+        await ActualizarCantidadSintotizador();
+      }
+
     } catch (error) {
       console.error(
         "Error al obtener los datos de la ficha de Instalación:",
@@ -80,7 +137,7 @@ document.addEventListener("DOMContentLoaded", () => {
       jsonCable = {
         pagoinstalacion: parseFloat(txtPagoInst),
         potencia: txtPotencia,
-        sintonizador: {},
+        //sintonizador: {},
         triplexor: {
           requerido: slcTriplexor[0],
           cargador: slcTriplexor[1],
@@ -111,7 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const txtCatvNap = document.querySelector("#txtCatvNap").value;
     const txtGponCasa = document.querySelector("#txtGponCasa").value;
     const txtCatvCasa = document.querySelector("#txtCatvCasa").value;
-
+  
     const jsonCosto = {
       nap: {
         gpon: txtGponNap,
@@ -122,14 +179,13 @@ document.addEventListener("DOMContentLoaded", () => {
         catv: txtCatvCasa,
       },
     };
-    console.log(jsonCosto);
-
-    if (typeof tipoPaquete !== "undefined" && tipoPaquete === "GPON") {
+  
+    if (typeof tipoPaquete !== "undefined" && tipoPaquete === "CABL") {
       const txtCantCable = document.querySelector("#txtCantCable").value;
       const txtPrecioCable = document.querySelector("#txtPrecioCable").value;
       const txtPrecioConector = document.querySelector("#txtPrecioConector").value;
       const txtCantConector = document.querySelector("#txtCantConector").value;
-
+  
       const jsonCostoCable = {
         numerosintotizadores: parseInt(txtCantSintotizador) || 0,
         costoAlquilerSintotizador: parseFloat(txtCostoAlquiler) || 0,
@@ -140,7 +196,7 @@ document.addEventListener("DOMContentLoaded", () => {
       };
       jsonCosto.cableCosto = jsonCostoCable;
     }
-
+  
     return jsonCosto;
   }
 
@@ -197,20 +253,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function guardar() {
     await cable();
-    const jsonCosto = await costos();
-
-    if (!validarDatos()) {
-      showToast("Por favor, complete todos los campos requeridos", "WARNING");
-      return;
-    }
-
+    jsonCosto = await costos();
+    
     if (numeroSintotizadores > 0) {
       jsonCable.sintonizadores = jsonSintotizador;
     }
     jsonData.cable = jsonCable;
     jsonData.costo = jsonCosto;
 
-    console.log("Datos a guardar:", jsonData);
+    // Validación de campos obligatorios
+    if (!validarCampos()) {
+      showToast("Todos los campos son obligatorios.", "WARNING");
+      return;
+    }
 
     const data = {
       operacion: "guardarFichaInstalacion",
@@ -218,39 +273,53 @@ document.addEventListener("DOMContentLoaded", () => {
       id: idContrato,
       idUsuario: userid,
     };
+    console.log(data);
     const response = await fetch(
       `${config.HOST}app/controllers/Contrato.controllers.php`,
       {
         method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(data),
       }
     );
     const datos = await response.json();
-    console.log("Respuesta del servidor:", datos);
+    showToast("Ficha de Instalación Guardada Correctamente", "SUCCESS");
+    setTimeout(() => {
+      window.location.href = `${config.HOST}views/Contratos/`;
+    }, 2500);
   }
 
-  function validarDatos() {
-    const txtPagoInst = document.querySelector("#txtPagoInst").value;
-    const txtPotencia = document.querySelector("#txtPotenciaCable").value;
-    const slcTriplexor = document.querySelector("#slcTriplexor").value.split(",");
-    const txtCantConector = document.querySelector("#txtCantConector").value;
-    const txtPrecioConector = document.querySelector("#txtPrecioConector").value;
-    const txtSpliter = document.querySelector("#txtSpliter").value;
-    const slcSpliter = document.querySelector("#slcSpliter").value;
-    const txtCantCable = document.querySelector("#txtCantCable").value;
-    const txtPrecioCable = document.querySelector("#txtPrecioCable").value;
+  function validarCampos() {
+    const campos = [
+      "txtUsuario",
+      "txtPaquete",
+      "txtNumFicha",
+      "txtPagoInst",
+      "txtPotenciaCable",
+      "slcTriplexor",
+      "txtCantConector",
+      "txtPrecioConector",
+      "txtSpliter",
+      "slcSpliter",
+      "txtCantCable",
+      "txtPrecioCable",
+      "txtCantSintotizador",
+      "txtCostoAlquiler",
+      "txtGponNap",
+      "txtCatvNap",
+      "txtGponCasa",
+      "txtCatvCasa"
+    ];
 
-    return (
-      txtPagoInst !== "" &&
-      txtPotencia !== "" &&
-      slcTriplexor.length > 1 &&
-      txtCantConector !== "" &&
-      txtPrecioConector !== "" &&
-      txtSpliter !== "" &&
-      slcSpliter !== "" &&
-      txtCantCable !== "" &&
-      txtPrecioCable !== ""
-    );
+    for (const campo of campos) {
+      const elemento = document.getElementById(campo);
+      if (!elemento || elemento.value.trim() === "") {
+        return false;
+      }
+    }
+    return true;
   }
 
   txtCantCable.addEventListener("input", calcularCostos);
@@ -261,19 +330,11 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.getElementById("btnGuardar").addEventListener("click", async () => {
-    if (!flagFichaInstalacion) {
-      await guardar();
-      showToast("Ficha de Instalación Guardarda Correctamente", "SUCCESS");
-      /* setTimeout(() => {
-        window.location.href = `${config.HOST}views/Contratos/Index.php`;
-      }, 2500); */
-    } else {
-      showToast("La ficha de instalación ya ha sido guardada.", "WARNING");
-    }
+    await guardar();
   });
 
   document.getElementById("btnCancelar").addEventListener("click", () => {
-    window.location.href = `${config.HOST}views/Contratos/Index.php`;
+    window.location.href = `${config.HOST}views/Contratos/`;
   });
 
   document.getElementById("txtFecha").value = today;

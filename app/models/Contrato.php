@@ -55,10 +55,31 @@ class Contrato extends Conexion
      *
      * @return array El conjunto de resultados de la ejecución del procedimiento almacenado.
      */
-    public function listarContratos()
+    public function listarContratos($offset = 0, $limit = 10, $search = "")
     {
         $sql = "SELECT * FROM vw_contratos_listar";
-        return $this->listarDatos($sql);
+        $sqlCount = "SELECT COUNT(*) AS total FROM vw_contratos_listar";
+        if ($search) {
+            $sql .= " WHERE nombre_cliente LIKE :search OR num_identificacion LIKE :search OR paquete LIKE :search OR direccion_servicio LIKE :search OR duracion LIKE :search";
+            $sqlCount .= " WHERE nombre_cliente LIKE :search OR num_identificacion LIKE :search OR paquete LIKE :search OR direccion_servicio LIKE :search OR duracion LIKE :search";
+        }
+        $sql .= " LIMIT :offset, :limit";
+        $stmt = $this->pdo->prepare($sql);
+        if ($search) {
+            $stmt->bindValue(':search', "%$search%", PDO::PARAM_STR);
+        }
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+        $contratos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmtCount = $this->pdo->prepare($sqlCount);
+        if ($search) {
+            $stmtCount->bindValue(':search', "%$search%", PDO::PARAM_STR);
+        }
+        $stmtCount->execute();
+        $totalRegistros = $stmtCount->fetch(PDO::FETCH_ASSOC)['total'];
+
+        return ['contratos' => $contratos, 'totalRegistros' => $totalRegistros];
     }
 
     /**
@@ -184,17 +205,13 @@ class Contrato extends Conexion
      */
     public function actualizarContrato($params = [])
     {
-        $sql = "CALL spu_contratos_actualizar(?,?,?,?,?,?,?,?,?,?,?)";
+        $sql = "CALL spu_contratos_actualizar(?,?,?,?,?,?,?)";
         $values = array(
             $params['idContrato'],
             $params['idPaquete'],
-            $params['idSector'],
             $params['direccionServicio'],
             $params['referencia'],
             $params['coordenada'],
-            $params['fechaInicio'],
-            $params['fechaFin'],
-            $params['fechaRegistro'],
             $params['nota'],
             $params['idUsuarioUpdate']
         );

@@ -82,10 +82,10 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div>
-
-
-        </div>
+        <h6>Parámetros</h6>
+        <ul id="parametrosList"></ul>
+        <h6>Cambios</h6>
+        <ul id="cambiosList"></ul>
       </div>
     </div>
   </div>
@@ -96,18 +96,19 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="editModalLabel">Detalle del Soporte</h5>
+        <h5 class="modal-title" id="editModalLabel">Detalle del Soporte CABLE</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div>
-
-
-        </div>
+        <h6>Parámetros</h6>
+        <ul id="parametrosListCable"></ul>
+        <h6>Cambios</h6>
+        <ul id="cambiosListCable"></ul>
       </div>
     </div>
   </div>
 </div>
+
 
 <?php require_once "../../footer.php"; ?>
 </body>

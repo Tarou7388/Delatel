@@ -23,6 +23,7 @@ $idContrato = $_GET['idContrato'];
 </div>
 
 <div class="container-fluid px-4">
+  
   <div class="form-container mt-3">
 
     <h1 class="mt-4">Formulario de Registro de Ficha de Cable</h1>
@@ -43,22 +44,16 @@ $idContrato = $_GET['idContrato'];
         </div>
         <div class="card-body">
           <div class="row g-3 mb-3">
-            <div class="col-md-4">
+            <div class="col-md-6">
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtUsuario" placeholder="Usuario" disabled>
                 <label for="txtUsuario">Usuario</label>
               </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtPaquete" placeholder="Paquete" disabled>
                 <label for="txtPaquete">Paquete</label>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-floating">
-                <input type="text" class="form-control" id="txtPlanCable" disabled placeholder="Plan">
-                <label for="txtPlanCable">Plan</label>
               </div>
             </div>
           </div>
@@ -93,9 +88,9 @@ $idContrato = $_GET['idContrato'];
           <div class="row g-3 mb-3">
             <div class="form-floating col-md-6">
               <select class="form-select" id="slcTriplexor">
-                <option value="1" selected>No Lleva</option>
-                <option value="2">Pasivo</option>
-                <option value="3">Activo</option>
+                <option value="false, false" selected>No Lleva</option>
+                <option value="true,false">Pasivo</option>
+                <option value="true, true">Activo</option>
               </select>
               <label for="slcTriplexor">Triplexor</label>
             </div>
@@ -122,9 +117,9 @@ $idContrato = $_GET['idContrato'];
                 <div class="form-floating">
                   <select class="form-select" id="slcSpliter" aria-label="Selecciona una opción">
                     <option selected disabled>Elige una opción</option>
-                    <option value="1">1x3</option>
-                    <option value="2">1x5</option>
-                    <option value="3">1x8</option>
+                    <option value="1x3">1x3</option>
+                    <option value="1x5">1x5</option>
+                    <option value="1x8">1x8</option>
                   </select>
                   <label for="slcSpliter">Tipo</label>
                 </div>
@@ -224,13 +219,14 @@ $idContrato = $_GET['idContrato'];
         <div class="row">
           <div class="col-12 text-center text-md-end mb-3">
             <button type="button" id="btnGuardar" class="btn btn-primary btn-sm">Guardar</button>
-            <button type="button" id="btnCancelar" class="btn btn-secondary btn-sm">Cancelar</button>
+            <button type="button" id="btnCancelar" class="btn btn-outline-secondary btn-sm">Cancelar</button>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+
 <script>
   const idContrato = <?= $idContrato ?>;
 </script>

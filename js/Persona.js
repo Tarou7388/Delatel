@@ -341,7 +341,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   });
 
   document.querySelector("#btnBuscarCoordenadas").addEventListener("click", async () => {
-    await mapa.iniciarMapa();
+    await mapa.iniciarMapa('map');
     await mapa.obtenerDatos();
   })
 
@@ -349,6 +349,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     txtcoordenadasPersona.value = `${mapa.marcadorMasCercano.coordenadas}`;
     document.querySelector("#txtCoordenadas").value = `${mapa.marcadorMasCercano.coordenadas}`;
   });
+  console.log("Persona.js cargado");
 
   btnBuscar.addEventListener("click", () => {
     ObtenerDataDNI("obtenerDni", txtNumDocumentoPersona.value);

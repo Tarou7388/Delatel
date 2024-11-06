@@ -34,7 +34,8 @@ function obtenerAccesosFiltrados($idRol, $permissions)
         ["ruta" => "Soporte", "texto" => "Soporte", "icono" => "fa-solid fa-wrench","rutasAnexas" => ["registroSoporte","SoporteEscritorio","listarSoporte"]],
         ["ruta" => 'Usuarios', "texto" => "Usuarios", "icono" => "fa-solid fa-users", "rutasAnexas" => ["registrar"]],
         ["ruta" => 'Averias',"texto"=>"Averias","icono"=>"fa-solid fa-wrench"],
-        ["ruta" => 'Paquetes',"texto"=>"Paquetes","icono"=>"fa-solid fa-box-open"]
+        ["ruta" => 'Paquetes',"texto"=>"Paquetes","icono"=>"fa-solid fa-box-open"],
+        ["ruta" => "Almacen", "texto" => "Almacen", "icono" => "fa-solid fa-warehouse"]
     ];
 
     // Añadir "Actividades" directamente a los accesos filtrados
