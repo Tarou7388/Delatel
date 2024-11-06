@@ -19,17 +19,21 @@ export async function obtenerDatos() {
   const respuesta = await fetch(`${config.HOST}app/controllers/Caja.controllers.php?operacion=listarCajas`);
   const data = await respuesta.json();
   let datos = [];
-  data.forEach(({ id_caja, nombre, descripcion, numero_entradas, id_sector, coordenadas }) => {
-    if (!datos[id_sector]) {
-      datos[id_sector] = [];
+  data.forEach((item) => {
+    const idKey = Object.keys(item).find(key => key.startsWith('id'));
+    const idKeys = Object.keys(item).filter(key => key.startsWith('id'));
+    const idValue = idKeys.length > 1 ? item[idKeys[1]] : null;
+    console.log(idValue);
+    const id_sector = item.id_sector;
+
+    if (!datos[idValue]) {
+      datos[idValue] = [];
     }
-    datos[id_sector].push({
-      id: id_caja,
-      latLng: coordenadas.split(',').map(Number),
-      nombre,
-      descripcion,
-      idSector: id_sector,
-      nEntradas: numero_entradas
+    const latLng = item.coordenadas.split(',').map(Number);
+    const { coordenadas, ...resto } = item;
+    datos[idValue].push({
+      ...resto,
+      latLng: latLng
     });
   });
   console.log(datos);
@@ -77,16 +81,16 @@ export async function iniciarMapa(url = '', id = 'map', botonguardar = '') {
     mapId: "DEMO_MAP_ID",
   });
 
-  if(url != '') {
-    await obtenerDatosDesconocidos(url);
-
-  }else{
+  if (url != '') {
+    const datos = await obtenerDatosDesconocidos(url);
+    await procesarDatosDesconocidos(datos, mapa);
+  } else {
     const datos = await obtenerDatos();
-  await procesarDatosCajas(datos, mapa, botonguardar);
+    await procesarDatosCajas(datos, mapa, botonguardar);
   }
 }
 
-async function procesarDatosDesconocidos(datos,mapa){
+async function procesarDatosDesconocidos(datos, mapa) {
   datos.forEach(subArray => {
     subArray.forEach(({ nombre, descripcion }) => {
       const posicion = { lat: -13.417077, lng: -76.136585 };
@@ -110,7 +114,7 @@ async function procesarDatosDesconocidos(datos,mapa){
       marcador.addListener("click", () => ventanaInfo.open({ anchor: marcador, map: mapa }));
     });
   });
-  
+
 }
 
 async function procesarDatosCajas(datos, mapa, botonguardar) {
