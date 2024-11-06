@@ -4,6 +4,8 @@ let circulos = [];
 let marcadorActivo = null;
 export let marcadorMasCercano = null;
 
+let Map, Circle, AdvancedMarkerElement;
+
 async function posicionActual(e) {
   const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
   if (marcadorActivo) marcadorActivo.setMap(null);
@@ -33,6 +35,13 @@ export async function obtenerDatos() {
   console.log(datos);
   return datos;
 }
+let i = 0;
+export async function obtenerDatosDesconocidos(url) {
+  const respuesta = await fetch(url);
+  const data = await respuesta.json();
+  const datos = data;
+  return datos;
+}
 
 async function encontrarPuntoMasCercano(latClick, lonClick, marcadores) {
   const clickLatLng = new google.maps.LatLng(latClick, lonClick);
@@ -56,10 +65,11 @@ async function encontrarPuntoMasCercano(latClick, lonClick, marcadores) {
   marcadorMasCercano = datos;
 }
 
-export async function iniciarMapa(id) {
+export async function iniciarMapa(url = '', id = 'map', botonguardar = '') {
   const posicionInicial = { lat: -13.417077, lng: -76.136585 };
-  const { Map, Circle } = await google.maps.importLibrary("maps");
-  const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+  ({ Map, Circle } = await google.maps.importLibrary("maps"));
+  ({ AdvancedMarkerElement } = await google.maps.importLibrary("marker"));
+
 
   mapa = new Map(document.getElementById(id), {
     zoom: 16,
@@ -67,8 +77,43 @@ export async function iniciarMapa(id) {
     mapId: "DEMO_MAP_ID",
   });
 
-  const datos = await obtenerDatos();
+  if(url != '') {
+    await obtenerDatosDesconocidos(url);
 
+  }else{
+    const datos = await obtenerDatos();
+  await procesarDatosCajas(datos, mapa, botonguardar);
+  }
+}
+
+async function procesarDatosDesconocidos(datos,mapa){
+  datos.forEach(subArray => {
+    subArray.forEach(({ nombre, descripcion }) => {
+      const posicion = { lat: -13.417077, lng: -76.136585 };
+      const marcador = new AdvancedMarkerElement({
+        map: mapa,
+        position: posicion,
+        title: nombre
+      });
+
+      const ventanaInfo = new google.maps.InfoWindow({
+        content: `
+        <div id="content">
+          <h1 id="firstHeading" class="firstHeading">${nombre}</h1>
+          <div id="bodyContent">
+            <p>${descripcion}</p>
+          </div>
+        </div>`,
+        ariaLabel: "Demo InfoWindow",
+      });
+
+      marcador.addListener("click", () => ventanaInfo.open({ anchor: marcador, map: mapa }));
+    });
+  });
+  
+}
+
+async function procesarDatosCajas(datos, mapa, botonguardar) {
   datos.forEach(subArray => {
     subArray.forEach(({ latLng, nombre, descripcion, idSector }) => {
       const posicion = { lat: latLng[0], lng: latLng[1] };
@@ -92,6 +137,7 @@ export async function iniciarMapa(id) {
 
       marcador.addListener("click", () => ventanaInfo.open({ anchor: marcador, map: mapa }));
 
+      marcadorMasCercano = null;
       const circulo = new Circle({
         map: mapa,
         center: posicion,
@@ -112,10 +158,11 @@ export async function iniciarMapa(id) {
     });
   });
   mapa.addListener("click", async (e) => {
-    console.log("Has hecho click en:", e.latLng.lat(), e.latLng.lng());
     await posicionActual(e);
     marcadorMasCercano = null;
-    document.querySelector('#btnGuardarCoordenadas').disabled = true;
+    if (botonguardar != '') {
+      document.getElementById(botonguardar).disabled = true;
+    }
     showToast("No hay Cobertura en esta Zona", "WARNING");
   });
 }
