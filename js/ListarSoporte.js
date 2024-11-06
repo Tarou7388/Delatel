@@ -8,51 +8,110 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function obtenerDataSoporte(idsoport) {
     const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idsoport}`);
-    const data = await respuesta.text();
+    const data = await respuesta.json();
     console.log(data);
     return data;
   }
 
   async function abrirModal(idsoport) {
-    const soporteData = await obtenerDataSoporte(idsoport);
-    console.log(soporteData);
-    if (soporteData && soporteData.soporte) {
-      let modalID;
+    try {
+      // Obtener los datos de soporte
+      const soporteData = await obtenerDataSoporte(idsoport);
 
-      // Parsear el campo "soporte" que está en formato de cadena JSON
-      const soporteJson = JSON.parse(soporteData.soporte);
-
-      // Selección del modal según el tipo de servicio
-      if (soporteData.tipo_servicio === "WISP") {
-        modalID = "#editModalWISP";
-      } else if (soporteData.tipo_servicio === "GPON") {
-        modalID = "#editModalGPON";
-      } else if (soporteData.tipo_servicio === "CABL") {
-        modalID = "#editModalCABLE";
+      // Validar que la respuesta contenga datos y que soporteData[0] exista
+      if (!soporteData || !soporteData[0] || !soporteData[0].soporte) {
+        console.error("Datos de soporte no encontrados o JSON inválido");
+        return;
       }
 
-      // Seleccionar el modal y mostrar datos
-      const parametrosList = document.querySelector(`${modalID} #parametrosList`);
-      const cambiosList = document.querySelector(`${modalID} #cambiosList`);
-      
-      parametrosList.innerHTML = "";
-      cambiosList.innerHTML = "";
+      // Asegurarse de que el campo "soporte" sea un objeto JSON válido
+      let soporteJson = soporteData[0].soporte;
 
-      // Renderizar `parametros` y `cambios` en el modal
-      Object.entries(soporteJson.parametroscable).forEach(([key, value]) => {
-        parametrosList.innerHTML += `<li><strong>${key}:</strong> ${JSON.stringify(value)}</li>`;
-      });
-      
-      Object.entries(soporteJson.cambioscable).forEach(([key, value]) => {
-        cambiosList.innerHTML += `<li><strong>${key}:</strong> ${JSON.stringify(value)}</li>`;
-      });
+      if (typeof soporteJson === "string") {
+        soporteJson = JSON.parse(soporteJson);
+      }
 
-      // Mostrar el modal
+      // Selección del modal según el tipo de servicio
+      const tipoServicio = soporteData[0].tipo_servicio;
+      let modalID = "";
+      let parametrosList, cambiosList;
+
+      switch (tipoServicio) {
+        case "WISP":
+          modalID = "#editModalWISP";
+          parametrosList = document.querySelector(`${modalID} #parametrosList`);
+          cambiosList = document.querySelector(`${modalID} #cambiosList`);
+          break;
+        case "GPON":
+          modalID = "#editModalGPON";
+          parametrosList = document.querySelector(`${modalID} #parametrosList`);
+          cambiosList = document.querySelector(`${modalID} #cambiosList`);
+          break;
+        case "CABL":
+          modalID = "#editModalCABLE";
+          parametrosList = document.querySelector("#parametrosListCable");
+          cambiosList = document.querySelector("#cambiosListCable");
+          break;
+        default:
+          modalID = "#editModalWISP";
+          parametrosList = document.querySelector(`${modalID} #parametrosList`);
+          cambiosList = document.querySelector(`${modalID} #cambiosList`);
+          break;
+      }
+
+      // Limpiar las listas si existen
+      if (parametrosList) parametrosList.innerHTML = "";
+      if (cambiosList) cambiosList.innerHTML = "";
+
+      // Renderizado personalizado para "CABLE"
+      if (tipoServicio === "CABL") {
+        if (soporteJson.parametroscable) {
+          Object.entries(soporteJson.parametroscable).forEach(([key, value]) => {
+            if (Array.isArray(value)) {
+              parametrosList.innerHTML += `<li><strong>${key}:</strong> ${value.join(", ")}</li>`;
+            } else if (typeof value === "object") {
+              parametrosList.innerHTML += `<li><strong>${key}:</strong> ${JSON.stringify(value)}</li>`;
+            } else {
+              parametrosList.innerHTML += `<li><strong>${key}:</strong> ${value}</li>`;
+            }
+          });
+        }
+
+        if (soporteJson.cambioscable) {
+          Object.entries(soporteJson.cambioscable).forEach(([key, value]) => {
+            if (Array.isArray(value)) {
+              cambiosList.innerHTML += `<li><strong>${key}:</strong> ${value.join(", ")}</li>`;
+            } else if (typeof value === "object") {
+              cambiosList.innerHTML += `<li><strong>${key}:</strong> ${JSON.stringify(value)}</li>`;
+            } else {
+              cambiosList.innerHTML += `<li><strong>${key}:</strong> ${value}</li>`;
+            }
+          });
+        }
+      } else {
+        // Renderizado genérico para otros tipos de soporte
+        if (soporteJson.parametros) {
+          Object.entries(soporteJson.parametros).forEach(([key, value]) => {
+            parametrosList.innerHTML += `<li><strong>${key}:</strong> ${JSON.stringify(value)}</li>`;
+          });
+        }
+
+        if (soporteJson.cambios) {
+          Object.entries(soporteJson.cambios).forEach(([key, value]) => {
+            cambiosList.innerHTML += `<li><strong>${key}:</strong> ${JSON.stringify(value)}</li>`;
+          });
+        }
+      }
+
+      // Mostrar el modal correspondiente
       $(modalID).modal("show");
-    } else {
-      console.error("Datos de soporte no encontrados o JSON inválido");
+    } catch (error) {
+      console.error("Error al abrir el modal:", error);
     }
   }
+
+
+
 
   const table = inicializarDataTable(
     "#tblSoporteIncompleto",
@@ -67,7 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
         title: "Acciones",
         className: "text-center",
         render: function (data, type, row) {
-          return `<button class="btnActualizar btn btn-primary" data-id="${row.id_soporte}">Editar</button>`;
+          return `<button class="btnActualizar btn btn-primary" data-id="${row.id_soporte}">Mostrar info</button>`;
         },
       },
     ],
