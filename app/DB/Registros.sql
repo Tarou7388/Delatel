@@ -170,7 +170,9 @@ INSERT INTO tb_marca (marca, create_at, iduser_create) VALUES
 ('Micronics', NOW(), 1),
 ('Canon', NOW(), 1),
 ('Omega', NOW(), 1),
-('Genius', NOW(), 1);
+('Genius', NOW(), 1),
+('Generico',NOW(),1),
+('Sin Marca', NOW(), 1);
 
 
 INSERT INTO tb_tipoproducto (tipo_nombre, create_at, iduser_create) VALUES
@@ -178,7 +180,6 @@ INSERT INTO tb_tipoproducto (tipo_nombre, create_at, iduser_create) VALUES
 ('Accesorios', NOW(), 1),
 ('Consumibles', NOW(), 1),
 ('Componentes', NOW(), 1);
-
 
 INSERT INTO tb_unidadmedida (unidad_nombre, create_at, iduser_create) VALUES
 ('Unidades', NOW(), 1),
