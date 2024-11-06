@@ -69,6 +69,18 @@ BEGIN
     WHERE id_producto = p_id_producto;
 END $$
 
+DROP PROCEDURE IF EXISTS spu_productos_eliminar$$
+CREATE PROCEDURE spu_productos_eliminar(
+    IN p_id_producto INT,
+    IN p_iduser_inactive INT
+)
+BEGIN
+    UPDATE tb_productos 
+    SET 
+        inactive_at = NOW(),
+        iduser_inactive = p_iduser_inactive
+    WHERE id_producto = p_id_producto;
+END $$
 
 DELIMITER $$
 DROP VIEW IF EXISTS vw_productos_detalle$$
@@ -100,3 +112,4 @@ CREATE VIEW vw_productos_detalle AS
         tb_unidadmedida u ON p.id_unidad = u.id_unidad
     WHERE 
         p.inactive_at IS NULL;
+        

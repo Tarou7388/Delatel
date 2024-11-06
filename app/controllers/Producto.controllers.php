@@ -60,16 +60,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
   switch ($operacion) {
     case "actualizarProducto":
       $datos = [
-        "idProducto"             => Herramientas::sanitizarEntrada($data['idProducto']),
-        "idmarca"             => Herramientas::sanitizarEntrada($data['idmarca']),
-        "idtipoProducto"     => Herramientas::sanitizarEntrada($data['idtipoProducto']),
-        "idUnidad"     => Herramientas::sanitizarEntrada($data['idUnidad']),
+        "idProducto"        => Herramientas::sanitizarEntrada($data['idProducto']),
+        "idmarca"           => Herramientas::sanitizarEntrada($data['idmarca']),
+        "idtipoProducto"    => Herramientas::sanitizarEntrada($data['idtipoProducto']),
+        "idUnidad"          => Herramientas::sanitizarEntrada($data['idUnidad']),
         "modelo"            => Herramientas::sanitizarEntrada($data['modelo']),
-        "precioActual"     => Herramientas::sanitizarEntrada($data['precioActual']),
-        "idUsuario"     => Herramientas::sanitizarEntrada($data["idUsuario"])
+        "precioActual"      => Herramientas::sanitizarEntrada($data['precioActual']),
+        "idUsuario"         => Herramientas::sanitizarEntrada($data["idUsuario"])
       ];
       $estado = $producto->actualizarProducto($datos);
       echo json_encode(["Actualizado" => $estado]);
+      break;
+    case "EliminarProducto":
+      $datos = [
+        "idProducto"        => Herramientas::sanitizarEntrada($data['idProducto']),
+        "idUsuario"         => Herramientas::sanitizarEntrada($data["idUsuario"])
+      ];
+      $estado = $producto->EliminarProducto($datos);
+      echo json_encode(["Eliminado" => $estado]);
       break;
   }
 }
