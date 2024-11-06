@@ -68,7 +68,7 @@ async function encontrarPuntoMasCercano(latClick, lonClick, marcadores) {
 }
 
 export async function iniciarMapa(url = '', id = 'map', botonguardar = '') {
-  document.querySelector('#btnGuardarCoordenadas').disabled = true;
+  //document.querySelector('#btnGuardarCoordenadas').disabled = true;
   const posicionInicial = { lat: -13.417077, lng: -76.136585 };
   ({ Map, Circle } = await google.maps.importLibrary("maps"));
   ({ AdvancedMarkerElement } = await google.maps.importLibrary("marker"));
