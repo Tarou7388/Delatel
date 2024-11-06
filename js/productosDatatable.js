@@ -81,12 +81,12 @@ document.addEventListener("DOMContentLoaded", function () {
       { data: "modelo", title: "Nombre o Modelo", className: "text-center" },
       {
         data: "unidad_nombre",
-        title: "Precio Actual",
+        title: "Unidad de Medida",
         className: "text-center",
       },
       {
         data: "precio_actual",
-        title: "Unidad de Medida",
+        title: "Precio Actual",
         className: "text-center",
       },
       {
