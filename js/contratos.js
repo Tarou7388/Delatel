@@ -844,7 +844,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
 
   document.querySelector("#btnBuscarCoordenadas").addEventListener("click", async () => {
-    await mapa.iniciarMapa('map');
+    await mapa.iniciarMapa();
   });
 
   document.querySelector("#btnGuardarCoordenadas").addEventListener("click", () => {

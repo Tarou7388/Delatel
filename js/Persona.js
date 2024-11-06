@@ -259,7 +259,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     txtEmail.disabled = show;
     txtDireccion.disabled = show;
     txtReferencia.disabled = show;
-    txtcoordenadasPersona.disabled = show;
     slcTipoDocumento.disabled = show;
     if (slcTipoDocumento.value != 'DNI') {
       slcNacionalidad.disabled = show;
@@ -341,7 +340,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   });
 
   document.querySelector("#btnBuscarCoordenadas").addEventListener("click", async () => {
-    await mapa.iniciarMapa('map');
+    await mapa.iniciarMapa();
     await mapa.obtenerDatos();
   })
 

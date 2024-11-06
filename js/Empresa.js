@@ -201,7 +201,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 
   async function showLoadingMessage(show) {
-    txtCoordenadas.disabled = show;
     txtReferencia.disabled = show;
     txtNombreComercial.disabled = show;
     txtTelefono.disabled = show;
@@ -225,7 +224,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   });
 
   document.querySelector("#btnBuscarCoordenadasEmpresa").addEventListener("click", async () => {
-    await mapa.iniciarMapa('map');
+    await mapa.iniciarMapa();
   })
 
   async function cargarServicios() {

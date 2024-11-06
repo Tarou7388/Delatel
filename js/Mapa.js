@@ -23,7 +23,6 @@ export async function obtenerDatos() {
     const idKey = Object.keys(item).find(key => key.startsWith('id'));
     const idKeys = Object.keys(item).filter(key => key.startsWith('id'));
     const idValue = idKeys.length > 1 ? item[idKeys[1]] : null;
-    console.log(idValue);
     const id_sector = item.id_sector;
 
     if (!datos[idValue]) {
@@ -36,7 +35,6 @@ export async function obtenerDatos() {
       latLng: latLng
     });
   });
-  console.log(datos);
   return datos;
 }
 let i = 0;
@@ -55,7 +53,7 @@ async function encontrarPuntoMasCercano(latClick, lonClick, marcadores) {
     const marcador = marcadores[i];
     const posicionMarcador = new google.maps.LatLng(marcador.latLng[0], marcador.latLng[1]);
     const distancia = google.maps.geometry.spherical.computeDistanceBetween(posicionMarcador, clickLatLng);
-    if (distancia < distanciaMinima && marcador.nEntradas > 0) {
+    if (distancia < distanciaMinima && marcador.numero_entradas > 0) {
       marcadormas = marcador.nombre;
       distanciaMinima = distancia;
       document.querySelector('#btnGuardarCoordenadas').disabled = false;
@@ -70,6 +68,7 @@ async function encontrarPuntoMasCercano(latClick, lonClick, marcadores) {
 }
 
 export async function iniciarMapa(url = '', id = 'map', botonguardar = '') {
+  document.querySelector('#btnGuardarCoordenadas').disabled = true;
   const posicionInicial = { lat: -13.417077, lng: -76.136585 };
   ({ Map, Circle } = await google.maps.importLibrary("maps"));
   ({ AdvancedMarkerElement } = await google.maps.importLibrary("marker"));
@@ -119,7 +118,7 @@ async function procesarDatosDesconocidos(datos, mapa) {
 
 async function procesarDatosCajas(datos, mapa, botonguardar) {
   datos.forEach(subArray => {
-    subArray.forEach(({ latLng, nombre, descripcion, idSector }) => {
+    subArray.forEach(({ latLng, nombre, descripcion, id_sector }) => {
       const posicion = { lat: latLng[0], lng: latLng[1] };
       const marcador = new AdvancedMarkerElement({
         map: mapa,
@@ -153,12 +152,12 @@ async function procesarDatosCajas(datos, mapa, botonguardar) {
         strokeWeight: 2,
         name: nombre,
       });
-      if (!circulos[idSector]) {
-        circulos[idSector] = [];
+      if (!circulos[id_sector]) {
+        circulos[id_sector] = [];
       }
-      circulos[idSector].push(circulo);
+      circulos[id_sector].push(circulo);
 
-      circulosCajaCercana(circulo, datos[idSector], circulos[idSector]);
+      circulosCajaCercana(circulo, datos[id_sector]);
     });
   });
   mapa.addListener("click", async (e) => {
