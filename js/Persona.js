@@ -22,7 +22,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   const txtDireccion = document.getElementById("txtDireccionPersona");
   const txtReferencia = document.getElementById("txtReferenciaPersona");
   const btnBuscar = document.getElementById("btnBuscar");
-
   let dniActual = null;
 
   slcPaquetes.disabled = true;
@@ -219,6 +218,9 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 
   async function registrarContacto(idPersona) {
+    console.log(slcPaquetes.value);
+    console.log(slcTipoServicio.value);
+    const Servicio = slcTipoServicio.value;
     const Paquete = slcPaquetes.value;
     const direccion = txtDireccion.value;
     const referencia = txtReferencia.value;
@@ -235,7 +237,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       idUsuario: userid,
       fechaLimite: fecha.toISOString().slice(0, 10),
     };
-    console.log(datos);
     const response = await fetch(`${config.HOST}app/controllers/Contactabilidad.controllers.php`, {
       method: "POST",
       body: JSON.stringify(datos),
@@ -246,7 +247,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       setTimeout(async () => {
         frmPersonas.reset();
         if (await ask("¿Desea registrar un contrato?")) {
-          window.location.href = `${config.HOST}views/Contratos?nroDoc=${dniActual}&idObjeto=${idPersona}&Paquete=${Paquete}&direccion=${direccion}&referencia=${referencia}&coordenadas=${coordenadas}`;
+          //window.location.href = `${config.HOST}views/Contratos?nroDoc=${dniActual}&idObjeto=${idPersona}&Servicio=${Servicio}&Paquete=${Paquete}&direccion=${direccion}&referencia=${referencia}&coordenadas=${coordenadas}`;
         }
       }, 650);
     }

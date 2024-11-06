@@ -15,10 +15,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   const txtNota = document.querySelector("#txtNota");
   const accesos = await Herramientas.permisos();
   let lapsoTiempo = false;
-  let fechaFin = null;
-  let fechaFinActualizar = null;
   let precioServicio = 0;
-  let precioServicioActualizar = 0;
   let idCliente = null;
   let idServicio = 0;
   let idServicioActualizar = 0;
@@ -114,13 +111,17 @@ window.addEventListener("DOMContentLoaded", async () => {
     slcPaquetes.disabled = false;
   }
 
-  slcTipoServicio.addEventListener("change", async function () {
+  async function cargarSelectPaquetes() {
     const idServicioSeleccionado = slcTipoServicio.value;
     if (idServicioSeleccionado === "duos" || idServicioSeleccionado === "trios" || idServicioSeleccionado === "cuarteto") {
       await cargarPaquetesMultiples(idServicioSeleccionado);
     } else {
       await cargarPaquetes(idServicioSeleccionado);
     }
+  }
+
+  slcTipoServicio.addEventListener("change", async function () {
+    cargarSelectPaquetes();
   });
 
   async function buscarCliente(nroDoc) {
@@ -649,10 +650,8 @@ window.addEventListener("DOMContentLoaded", async () => {
     await actualizarContrato(idContrato, idUsuario);
   });
 
-  $("#slcPaquetes").on("select2:select", function () {
-    console.log(slcPaquetes.value);
+  async function cargarDuracion() {
     const selectedValue = slcPaquetes.value.split(" - ");
-    console.log(selectedValue);
     idServicio = parseInt(selectedValue[0]);
     precioServicio = selectedValue[1];
     const duracionServicio = selectedValue[2];
@@ -673,6 +672,10 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     txtDuracion.value = duracionFormateada;
     slcPaquetes.value = idServicio;
+  }
+
+  $("#slcPaquetes").on("select2:select", function () {
+    cargarDuracion();
   });
 
   $("#slcPaquetesActualizar").on("select2:select", function () {
@@ -734,7 +737,6 @@ window.addEventListener("DOMContentLoaded", async () => {
       console.error("Error al cargar servicios:", error);
     }
   }
-
 
   document.querySelector("#btnBuscarCoordenadas").addEventListener("click", async () => {
     await mapa.iniciarMapa();
