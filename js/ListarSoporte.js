@@ -6,6 +6,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const Prioridad = document.querySelector("#slcPrioridad");
 
+  // Función para obtener el valor de periodo (ahora será texto)
+  function obtenerPeriodo() {
+    const periodoSelect = document.querySelector("#slcCambiosPeriodoCable");
+    return periodoSelect ? periodoSelect.value : "";
+  }
+
   async function obtenerDataSoporte(idsoport) {
     const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idsoport}`);
     const data = await respuesta.json();
@@ -39,6 +45,10 @@ document.addEventListener("DOMContentLoaded", () => {
       if (parametrosList) parametrosList.innerHTML = "";
       if (cambiosList) cambiosList.innerHTML = "";
 
+      // Obtener el valor del periodo
+      const periodo = obtenerPeriodo(); // Obtener el valor como texto
+      console.log("Valor de periodo:", periodo);
+
       // Procesar y formatear los datos
       const parametrosHTML = procesarDatos(soporteJson, 'parametros', tipoServicio);
       const cambiosHTML = procesarDatos(soporteJson, 'cambios', tipoServicio);
@@ -67,6 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
         cambiosList = document.querySelector(`${modalID} #cambiosList`);
         break;
       case "GPON":
+      case "FIBR": // Agregado caso para "FIBR" que es lo que se refiere a fibra
         modalID = "#editModalGPON";
         parametrosList = document.querySelector(`${modalID} #parametrosList`);
         cambiosList = document.querySelector(`${modalID} #cambiosList`);
@@ -88,16 +99,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Función para procesar los datos y generar el HTML
   function procesarDatos(soporteJson, campo, tipoServicio) {
-    const data = tipoServicio === "CABL" ? soporteJson[`${campo}cable`] : soporteJson[campo];
+    let data;
+
+    // Si el tipo de servicio es "CABL" (cable), usamos los campos "parametroscable" y "cambioscable"
+    if (tipoServicio === "CABL") {
+      data = soporteJson[`${campo}cable`];  // En el caso de "cable"
+    }
+    // Si el tipo de servicio es "GPON" o "FIBR", usamos los campos correspondientes "parametrosgpon" y "cambiosgpon"
+    else if (tipoServicio === "FIBR" || tipoServicio === "GPON") {
+      data = soporteJson[`${campo}gpon`];  // En el caso de "gpon"
+    } else {
+      data = soporteJson[campo];  // Para otros casos
+    }
+
     let html = "";
 
     if (data) {
       Object.entries(data).forEach(([key, value]) => {
-        html += `<li><strong>${key}:</strong> ${formatValue(value)}</li>`;
+        html += `<li><strong>${formatearClave(key)}:</strong> ${formatValue(value)}</li>`;
       });
     }
 
     return html;
+  }
+
+  // Función para formatear la clave de la lista de parámetros
+  function formatearClave(key) {
+    // Devolver la clave formateada (con espacios y mayúsculas adecuadas)
+    return key.replace(/([A-Z])/g, ' $1').toLowerCase().replace(/^./, str => str.toUpperCase());
   }
 
   // Función para formatear los valores de manera más legible
@@ -105,7 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (typeof value === "object" && !Array.isArray(value)) {
       // Si es un objeto, recorrer sus claves y valores
       return Object.entries(value)
-        .map(([key, val]) => `<strong>${key}:</strong> ${formatValue(val)}`)
+        .map(([key, val]) => `<strong>${formatearClave(key)}:</strong> ${formatValue(val)}`)
         .join('<br>');
     } else if (Array.isArray(value)) {
       // Si es un array, recorrer sus elementos

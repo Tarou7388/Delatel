@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
       $("#txtNrodocumento").value.length < 9 ||
       $("#txtNrodocumento").value.length > 11
     ) {
-      await showToast("Encontrado Correctamente", "SUCCESS");
+      await showToast("Registrado Correctamente", "SUCCESS");
     }
     else {
       await showToast("Ingrese un documento válido", "ERROR");
