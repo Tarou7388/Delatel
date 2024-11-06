@@ -11,6 +11,7 @@ window.addEventListener('DOMContentLoaded', function () {
   async function BuscarcontratoNDoc(numdocumento) {
     const respuesta = await fetch(`${config.HOST}/app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${numdocumento}`);
     const data = await respuesta.json();
+    console.log(data);
     $("#txtCliente").val(data[0].nombre);
     await obtenerContratosCliente(data[0].id_cliente);
   };
@@ -24,6 +25,7 @@ window.addEventListener('DOMContentLoaded', function () {
   const checkboxTextCambiosCatvGpon = document.getElementById('checkboxTextCambiosCatv');
 
   function actualizarSecciones(tipoPaquete) {
+    console.log(tipoPaquete)
     // Ocultar todas las secciones primero
     wisp.setAttribute('hidden', true);
     gpon.setAttribute('hidden', true);
@@ -37,7 +39,7 @@ window.addEventListener('DOMContentLoaded', function () {
       wisp.removeAttribute('hidden');
     } else if (tipoPaquete === 'FIBR') { // Cambiado de 'FRIB' a 'FIBR'
       gpon.removeAttribute('hidden');
-    } else if (tipoPaquete === 'CABl') { // Verifica que sea 'CABL'
+    } else if (tipoPaquete === 'CABL') { // Verifica que sea 'CABL'
       cable.removeAttribute('hidden');
     }
 
@@ -61,6 +63,7 @@ window.addEventListener('DOMContentLoaded', function () {
   async function obtenerContratosCliente(data) {
     const respuesta = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerContratoPorCliente&id=${data}`);
     const datos = await respuesta.json();
+    console.log(datos)
 
     const modalBody = document.querySelector('.modal-body ul'); // Lista dentro del modal
     modalBody.innerHTML = ''; // Limpiar contenido previo del modal
@@ -69,12 +72,12 @@ window.addEventListener('DOMContentLoaded', function () {
     datos.forEach((element) => {
       const li = document.createElement('li');
       li.classList.add('list-group-item');
-      li.textContent = `${element.servicio}`;
+      li.textContent = `${element.paquete}`;
       li.setAttribute('data-id-contrato', element.id_contrato); // Almacenar el id del contrato
-      li.setAttribute('data-tipo-paquete', element.tipo_paquete); // Almacenar el tipo de paquete
+      li.setAttribute('data-tipo-paquete', element.tipo_servicio); // Almacenar el tipo de paquete
 
       li.addEventListener('click', () => {
-        actualizarSecciones(element.tipo_paquete);
+        actualizarSecciones(element.tipo_servicio);
         window.idContratoSeleccionado = element.id_contrato; // Almacenar el ID del contrato en la variable global
       });
 
