@@ -43,26 +43,24 @@ SELECT
         ELSE e.ruc
     END AS num_identificacion,
     c.direccion_servicio,
-	t.paquete,
-    sv.tipo_servicio,
-    sv.servicio,
+	  t.paquete,
+    CONCAT_WS(' + ', sv.tipo_servicio, sv2.tipo_servicio, sv3.tipo_servicio, sv4.tipo_servicio) AS tipo_servicio,
     t.duracion
 FROM 
     tb_contratos c
-INNER JOIN 
-    tb_clientes cl ON c.id_cliente = cl.id_cliente
-LEFT JOIN 
-    tb_personas p ON cl.id_persona = p.id_persona
-LEFT JOIN 
-    tb_empresas e ON cl.id_cliente = e.id_empresa
-INNER JOIN 
-    tb_paquetes t ON c.id_paquete = t.id_paquete
-INNER JOIN 
-    tb_servicios sv ON t.id_servicio = sv.id_servicio
-WHERE 
-    c.inactive_at IS NULL
-ORDER BY 
-    c.id_contrato DESC;
+INNER JOIN tb_clientes cl ON c.id_cliente = cl.id_cliente
+LEFT JOIN tb_personas p ON cl.id_persona = p.id_persona
+LEFT JOIN tb_empresas e ON cl.id_cliente = e.id_empresa
+INNER JOIN tb_paquetes t ON c.id_paquete = t.id_paquete
+INNER JOIN tb_servicios sv ON t.id_servicio = sv.id_servicio
+LEFT JOIN tb_servicios sv2 ON t.id_servicio2 = sv2.id_servicio
+LEFT JOIN tb_servicios sv3 ON t.id_servicio3 = sv3.id_servicio
+LEFT JOIN tb_servicios sv4 ON t.id_servicio4 = sv4.id_servicio
+WHERE c.inactive_at IS NULL
+ORDER BY c.id_contrato DESC;
+
+SELECT * FROM vw_contratos_listar;
+
 
 DELIMITER $$
 
@@ -159,7 +157,11 @@ BEGIN
         ur_persona.nombres AS nombre_usuario_registro,
         ut_persona.nombres AS nombre_usuario_tecnico,
         c.direccion_servicio,
+        sv.id_servicio,
         CONCAT_WS(' + ', sv.tipo_servicio, sv2.tipo_servicio, sv3.tipo_servicio, sv4.tipo_servicio) AS tipo_servicio,
+        t.id_paquete,
+        t.paquete,
+        t.precio,
         c.referencia,
         c.coordenada,
         c.fecha_inicio,
@@ -245,13 +247,9 @@ DROP PROCEDURE IF EXISTS spu_contratos_actualizar$$
 CREATE PROCEDURE spu_contratos_actualizar(
     IN p_id_contrato INT,
     IN p_id_paquete INT,
-    IN p_id_sector INT,
     IN p_direccion_servicio VARCHAR(200),
     IN p_referencia VARCHAR(200),
     IN p_coordenada VARCHAR(25),
-    IN p_fecha_inicio DATE,
-    IN p_fecha_fin DATE,
-    IN p_fecha_registro DATE,
     IN p_nota TEXT,
     IN p_iduser_update INT
 )
@@ -259,13 +257,9 @@ BEGIN
     UPDATE tb_contratos
     SET
         id_paquete = p_id_paquete,
-        id_sector = p_id_sector,
         direccion_servicio = p_direccion_servicio,
         referencia = p_referencia,
         coordenada = p_coordenada,
-        fecha_inicio = p_fecha_inicio,
-        fecha_fin = p_fecha_fin,
-        fecha_registro = p_fecha_registro,
         nota = p_nota,
         iduser_update = p_iduser_update,
         update_at = NOW()

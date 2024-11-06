@@ -334,7 +334,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.getElementById("btnCancelar").addEventListener("click", () => {
-    window.location.href = `${config.HOST}views/Contratos/Index.php`;
+    window.location.href = `${config.HOST}views/Contratos/`;
   });
 
   document.getElementById("txtFecha").value = today;

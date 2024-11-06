@@ -23,6 +23,7 @@ $idContrato = $_GET['idContrato'];
 </div>
 
 <div class="container-fluid px-4">
+  
   <div class="form-container mt-3">
 
     <h1 class="mt-4">Formulario de Registro de Ficha de Cable</h1>
@@ -218,13 +219,14 @@ $idContrato = $_GET['idContrato'];
         <div class="row">
           <div class="col-12 text-center text-md-end mb-3">
             <button type="button" id="btnGuardar" class="btn btn-primary btn-sm">Guardar</button>
-            <button type="button" id="btnCancelar" class="btn btn-secondary btn-sm">Cancelar</button>
+            <button type="button" id="btnCancelar" class="btn btn-outline-secondary btn-sm">Cancelar</button>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+
 <script>
   const idContrato = <?= $idContrato ?>;
 </script>

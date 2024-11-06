@@ -528,7 +528,7 @@ document.addEventListener("DOMContentLoaded", () => {
       await guardar();
       showToast("Ficha de Instalación Guardarda Correctamente", "SUCCESS");
       setTimeout(() => {
-        window.location.href = `${config.HOST}views/Contratos/Index.php`;
+        window.location.href = `${config.HOST}views/Contratos/`;
       }, 2500);
     } else {
       showToast("La ficha de instalación ya ha sido guardada.", "WARNING");
@@ -562,7 +562,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   document.getElementById("btnCancelar").addEventListener("click", () => {
-    window.location.href = `${config.HOST}views/Contratos/Index.php`;
+    window.location.href = `${config.HOST}views/Contratos/`;
   });
 
   $("#txtIpRepetidor").on("input", function (event) {
