@@ -172,6 +172,7 @@
 
 <script type="module" src="../../js/Productos.js"></script>
 <script type="module" src="../../js/productosDatatable.js"></script>
+ 
 
 </body>
 
