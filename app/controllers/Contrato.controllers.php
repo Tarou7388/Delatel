@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         "referencia"          => Herramientas::sanitizarEntrada($datos['parametros']['referencia']),
         "coordenada"          => Herramientas::sanitizarEntrada($datos['parametros']['coordenada']),
         "fechaInicio"         => Herramientas::sanitizarEntrada($datos['parametros']['fechaInicio']),
-        "fechaFin"            => Herramientas::sanitizarEntrada($datos['parametros']['fechaFin']),
+        "fechaFin"            => json_encode($datos['parametros']['fechaFin']),
         "fechaRegistro"       => Herramientas::sanitizarEntrada($datos['parametros']['fechaRegistro']),
         "nota"                => Herramientas::sanitizarEntrada($datos['parametros']['nota']),
         "idUsuario"           => Herramientas::sanitizarEntrada($datos['parametros']['idUsuario'])

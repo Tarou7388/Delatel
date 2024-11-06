@@ -10,12 +10,9 @@ window.addEventListener("DOMContentLoaded", async () => {
   const sector = document.querySelector("#slcSector");
   const referencia = document.querySelector("#txtReferencia");
   const coordenada = document.querySelector("#txtCoordenadas");
-  //const slcSector = document.querySelector("#slcSector");
   const slcPaquetes = document.querySelector("#slcPaquetes");
   const slcPaquetesActualizar = document.querySelector("#slcPaquetesActualizar");
-  //const slcServicioActualizar = document.querySelector("#slcServicioActualizar");
   const txtNota = document.querySelector("#txtNota");
-  //const span = document.querySelector("#infoFecha");
   const accesos = await Herramientas.permisos();
   let lapsoTiempo = false;
   let fechaFin = null;
@@ -30,7 +27,6 @@ window.addEventListener("DOMContentLoaded", async () => {
   slcPaquetes.disabled = true;
   let tabla;
 
-  // Le avisa al select cuando se activa, elimina, actualiza o agrega un servicio
   document.addEventListener("servicioActivado", cargarServicios);
   document.addEventListener("servicioDesactivado", cargarServicios);
   document.addEventListener("servicioAgregado", cargarServicios);
@@ -92,22 +88,6 @@ window.addEventListener("DOMContentLoaded", async () => {
     slcPaquetes.disabled = false;
   }
 
-
-  /* async function cargarPaquetesActualizar(idServicio) {
-    const dataPaquetes = await fetchPaquetesPorServicio(idServicio);
-    console.log(dataPaquetes)
-    slcPaquetesActualizar.innerHTML = '<option value="" disabled selected>Seleccione un paquete</option>';
-    dataPaquetes
-      .filter(paquete => !paquete.inactive_at)
-      .forEach((paquete) => {
-        const option = document.createElement("option");
-        const id = `${paquete.id_paquete} - ${paquete.precio} - ${paquete.duracion}`;
-        option.value = id;
-        option.textContent = paquete.paquete;
-        slcPaquetesActualizar.appendChild(option);
-      });
-  } */
-
   async function cargarPaquetesMultiples(tipo) {
     const response = await fetch(
       `${config.HOST}app/controllers/Paquete.controllers.php?operacion=listarPaquetes`
@@ -142,36 +122,6 @@ window.addEventListener("DOMContentLoaded", async () => {
       await cargarPaquetes(idServicioSeleccionado);
     }
   });
-
-  /* $("#slcServicioActualizar").on("select2:select", async function (e) {
-    const idServicioActualizarSeleccionado = e.params.data.id;
-    await cargarPaquetesActualizar(idServicioActualizarSeleccionado);
-  });
-
-  $("#slcPaquetesActualizar").on("select2:select", function () {
-    const selectedValue = slcPaquetes.value.split(" - ");
-    console.log(selectedValue);
-    idServicio = parseInt(selectedValue[0]);
-    precioServicio = selectedValue[1];
-    const duracionServicio = selectedValue[2];
-
-    document.getElementById("txtPrecioActualizar").value = precioServicio;
-
-    let duracionFormateada = "Duracion no disponible";
-    if (duracionServicio) {
-      try {
-        const duracionObj = JSON.parse(duracionServicio);
-        duracionFormateada = Object.entries(duracionObj)
-          .map(([key, value]) => `${key.charAt(0).toUpperCase() + key.slice(1)}: ${value} meses`)
-          .join(", ");
-      } catch (e) {
-        console.error("Error al parsear la duración:", e);
-      }
-    }
-
-    txtDuracion.value = duracionFormateada;
-    slcPaquetes.value = idServicio;
-  }); */
 
   async function buscarCliente(nroDoc) {
     if (nroDoc == "") {
@@ -212,11 +162,6 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 
   async function registrarCliente() {
-    // if (accesos?.personas?.crear) {
-
-    // } else {
-    //   showToast("No tienes acceso para crear un cliente", "ERROR");
-    // }
     const params = new FormData();
     params.append("operacion", "registrarCliente");
     params.append("idPersona", idPersona);
@@ -242,18 +187,13 @@ window.addEventListener("DOMContentLoaded", async () => {
       const fechaRegistro = new Date().toISOString().split("T")[0];
       const nota = txtNota.value;
       const idUsuarioRegistro = user.idRol;
+      const duraciones = {};
+      const items = txtDuracion.value.split(', ');
 
-      // Verificación de los valores antes de hacer la solicitud
-      console.log("Verificando los valores antes de registrar el contrato:");
-      console.log("idCliente:", idCliente);
-      console.log("idServicio:", idServicio);
-      console.log("sector:", sector.value);
-      console.log("direccion:", direccion.value);
-      console.log("referencia:", referencia.value);
-      console.log("coordenada:", coordenada.value);
-      console.log("fechaFin:", fechaFin);
-      console.log("nota:", nota);
-      console.log("idUsuario:", user.idUsuario);
+      items.forEach(item => {
+        const [key, value] = item.split(': ');
+        duraciones[key] = parseInt(value.split(' ')[0], 10);
+      });
 
       if (!(await validarCampos())) {
         showToast("¡Llene todos los campos!", "INFO");
@@ -275,7 +215,7 @@ window.addEventListener("DOMContentLoaded", async () => {
                   referencia: referencia.value,
                   coordenada: coordenada.value,
                   fechaInicio: new Date().toISOString().split("T")[0],
-                  fechaFin: fechaFin,
+                  fechaFin: duraciones,
                   fechaRegistro: fechaRegistro,
                   nota: nota,
                   idUsuario: user.idUsuario,
@@ -287,6 +227,7 @@ window.addEventListener("DOMContentLoaded", async () => {
             }
           );
           const data = await response.json();
+          console.log(data);
           if (data.error) {
             console.log(data.error);
           } else {
@@ -348,7 +289,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         operacion: "actualizarContrato",
         parametros: {
           idContrato: idContrato,
-          idPaquete: idServicioActualizar,  
+          idPaquete: idServicioActualizar,
           direccionServicio: direccionServicio,
           referencia: referencia,
           coordenada: coordenada,
@@ -382,10 +323,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         showToast("Error al actualizar el contrato.", "ERROR");
       }
     }
-}
-
-
-
+  }
 
   async function cargarDatos() {
     const dataSectores = await fetchSectores();
@@ -544,7 +482,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   async function abrirModalEditar(idContrato) {
     const modal = new bootstrap.Modal(document.getElementById("modalEditarContrato"));
     modal.show();
-  
+
     try {
       // Paso 1: Obtener los detalles del contrato
       const response = await fetch(
@@ -552,7 +490,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       );
       const data = await response.json();
       console.log(data);
-  
+
       // Paso 2: Cargar los datos del contrato en el modal
       document.getElementById("txtIdContratoActualizar").value = data[0].id_contrato;
       document.getElementById("txtNombreActualizar").value = data[0].nombre_cliente;
@@ -561,48 +499,48 @@ window.addEventListener("DOMContentLoaded", async () => {
       document.getElementById("txtReferenciaActualizar").value = data[0].referencia;
       document.getElementById("txtCoordenadaActualizar").value = data[0].coordenada;
       document.getElementById("txtNotaActualizar").value = data[0].nota;
-  
+
       // Paso 3: Obtener el tipo de servicio del contrato
       const idServicio = data[0].id_servicio;
       console.log("ID del servicio del contrato:", idServicio);
-  
+
       // Llamar a la función que carga los tipos de servicio disponibles
       await cargarTipoServicioActualizar(idServicio);
-  
+
       // Paso 4: Llamar a la función que carga los paquetes relacionados al servicio
       await cargarPaquetesActualizar(idServicio);
-  
+
       // Paso 5: Seleccionar el paquete del contrato
       const slcPaquetes = document.getElementById("slcPaquetesActualizar");
       slcPaquetes.value = data[0].id_paquete;
-  
+
       // Paso 6: Configurar el select de Sector
       const slcSector = document.getElementById("slcSectorActualizar");
       const sectorId = data[0].id_sector;
       const sectorTexto = data[0].nombre_sector;
       let optionExists = false;
-  
+
       for (let i = 0; i < slcSector.options.length; i++) {
         if (slcSector.options[i].value == sectorId) {
           optionExists = true;
           break;
         }
       }
-  
+
       if (optionExists) {
         slcSector.value = sectorId;
       } else {
         const newOption = new Option(sectorTexto, sectorId, true, true);
         slcSector.add(newOption);
       }
-  
+
       $('#slcSectorActualizar').trigger('change');
-  
+
       // Cerrar el modal cuando se haga clic en el botón de cierre
       document.querySelector(".btn-close").addEventListener("click", () => {
         modal.hide();
       });
-  
+
       // Paso 7: Actualizar el precio cuando se selecciona un paquete
       slcPaquetes.addEventListener('change', (e) => {
         const paqueteId = e.target.value; // id de paquete
@@ -611,13 +549,12 @@ window.addEventListener("DOMContentLoaded", async () => {
           document.getElementById("txtPrecioActualizar").value = paqueteSeleccionado ? paqueteSeleccionado.precio : '0';
         }
       });
-  
+
     } catch (error) {
       console.error("Error al obtener los detalles del contrato:", error);
     }
   }
-  
-  // Esta función carga los tipos de servicio disponibles y los agrega al select
+
   async function cargarTipoServicioActualizar(idServicioSeleccionado) {
     try {
       const response = await fetch(
@@ -625,12 +562,12 @@ window.addEventListener("DOMContentLoaded", async () => {
       );
       const servicios = await response.json();
       console.log(servicios);
-  
+
       const slcTipoServicioActualizar = document.getElementById("slcTipoServicioActualizar");
-  
+
       // Limpiar el select y agregar la opción por defecto
       slcTipoServicioActualizar.innerHTML = '<option value="0" disabled selected>Seleccione</option>';
-  
+
       // Recorrer los servicios disponibles y agregar las opciones
       servicios.forEach((servicio) => {
         const option = document.createElement("option");
@@ -638,26 +575,25 @@ window.addEventListener("DOMContentLoaded", async () => {
         option.textContent = servicio.tipo_servicio;
         slcTipoServicioActualizar.appendChild(option);
       });
-  
+
       // Después de agregar las opciones, seleccionamos el tipo de servicio que corresponde
       slcTipoServicioActualizar.value = idServicioSeleccionado;
-  
+
       // Disparar el evento de cambio si es necesario
       $('#slcTipoServicioActualizar').trigger('change');
-  
+
     } catch (error) {
       console.error("Error al cargar los tipos de servicio:", error);
     }
   }
-  
-  // Función para cargar los paquetes correspondientes a un tipo de servicio
+
   async function cargarPaquetesActualizar(idServicio) {
     try {
       const dataPaquetes = await fetchPaquetesPorServicioActualizar(idServicio);
-  
+
       const slcPaquetes = document.getElementById("slcPaquetesActualizar");
       slcPaquetes.innerHTML = '<option value="" disabled selected>Seleccione un paquete</option>';
-  
+
       dataPaquetes
         .filter(paquete =>
           !paquete.id_servicio2 &&
@@ -672,15 +608,14 @@ window.addEventListener("DOMContentLoaded", async () => {
           option.textContent = paquete.paquete;
           slcPaquetes.appendChild(option);
         });
-  
+
       slcPaquetes.disabled = false;
-  
+
     } catch (error) {
       console.error("Error al cargar los paquetes:", error);
     }
   }
-  
-  // Función que obtiene los paquetes relacionados a un servicio
+
   async function fetchPaquetesPorServicioActualizar(idServicio) {
     const response = await fetch(
       `${config.HOST}app/controllers/Paquete.controllers.php?operacion=buscarPaquetePorIdServicio&idServicio=${idServicio}`
@@ -688,45 +623,6 @@ window.addEventListener("DOMContentLoaded", async () => {
     const data = await response.json();
     return data;
   }
-  
-  
-
-  /* document.querySelector("#txtFechaFinActualizar").addEventListener("input", () => {
-    const fechaInicioValue = document.querySelector(
-      "#txtFechaInicioActualizar"
-    ).value;
-    const txtFechaFinValue = document.querySelector(
-      "#txtFechaFinActualizar"
-    ).value;
-    const span = document.getElementById("mensajeFechaFin");
-
-    if (txtFechaFinValue > 3) {
-      lapsoTiempo = true;
-      const dateFechaInicio = new Date(fechaInicioValue);
-      const meses = parseInt(txtFechaFinValue, 10);
-
-      dateFechaInicio.setMonth(dateFechaInicio.getMonth() + meses);
-
-      const opciones = { year: "numeric", month: "2-digit", day: "2-digit" };
-      fechaFinActualizar = dateFechaInicio.toLocaleDateString(
-        "es-ES",
-        opciones
-      );
-
-      span.textContent = `La fecha de fin es: ${fechaFinActualizar}`;
-      span.classList.remove("invisible");
-      const partesFecha = fechaFinActualizar.split("/");
-      fechaFinActualizar = `${partesFecha[2]}-${partesFecha[1]}-${partesFecha[0]}`;
-    } else {
-      lapsoTiempo = false;
-      span.textContent = "La fecha de fin debe ser mayor a 3 meses";
-      span.classList.remove("invisible");
-    }
-    if (txtFechaFinValue == "") {
-      lapsoTiempo = false;
-      span.classList.add("invisible");
-    }
-  }); */
 
   (async () => {
     await getQueryParams();
@@ -785,14 +681,11 @@ window.addEventListener("DOMContentLoaded", async () => {
     idServicioActualizar = parseInt(selectedValue[0]);
     precioServicio = selectedValue[1];
 
-    // Asignar el precio al campo correspondiente
     document.getElementById("txtPrecioActualizar").value = precioServicio;
 
-    // Cambiar el valor del select (esto es redundante pero lo dejamos por si acaso)
     slcPaquetesActualizar.value = idServicioActualizar;
     console.log(idServicioActualizar);
   });
-
 
   $(".select2me").select2({ theme: "bootstrap-5", allowClear: true });
   $(".select2me").parent("div").children("span").children("span").children("span").css("height", " calc(3.5rem + 2px)");
