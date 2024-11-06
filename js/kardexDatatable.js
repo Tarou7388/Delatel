@@ -47,10 +47,22 @@ window.tablaKardex = $('#TbKardex').DataTable({
             className: 'btn btn-secondary me-2'
         }
     ],
+    processing: true,
+    serverSide: true,
     ajax: {
-        url: ruta,
-        type: 'GET',
-        dataSrc: ''
+      url: ruta,
+      type: "GET",
+      data: function (d) {
+        return {
+          draw: d.draw,
+          start: d.start,
+          length: d.length,
+          search: d.search.value,
+        };
+      },
+      dataSrc: function (json) {
+        return json.data;
+      },
     },
     columnDefs: [
         { targets: 0, width: '20%' },
