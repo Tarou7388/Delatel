@@ -216,7 +216,7 @@
 
                 <div class="col-md">
                   <div class="form-floating">
-                    <input type="number" class="form-control" id="txtPotenciaGpon" placeholder="Potencia" required> <!-- required -->
+                    <input type="number" class="form-control" id="txtPotenciaGpon" placeholder="Potencia" min="-30" max="24" required> <!-- required -->
                     <label for="txtPotenciaGpon">Potencia</label>
                   </div>
                 </div>
@@ -249,7 +249,7 @@
 
                 <div class="col-md">
                   <div class="form-floating">
-                    <input type="number" class="form-control" id="txtPotenciaGpon" placeholder="Potencia" required> <!-- required -->
+                    <input type="number" class="form-control" id="txtPotenciaGpon" placeholder="Potencia" min="-30" max="24" required> <!-- required -->
                     <label for="txtPotenciaGpon">Potencia</label>
                   </div>
                 </div>
@@ -305,7 +305,7 @@
 
                 <div class="col-md">
                   <div class="form-floating">
-                    <input type="number" class="form-control" id="txtCambiosPotenciaGpon" placeholder="Potencia"> <!-- required -->
+                    <input type="number" class="form-control" id="txtCambiosPotenciaGpon" min="-30" max="24" placeholder="Potencia"> <!-- required -->
                     <label for="txtCambiosPotenciaGpon">Potencia</label>
                   </div>
                 </div>
@@ -338,7 +338,7 @@
 
                 <div class="col-md">
                   <div class="form-floating">
-                    <input type="number" class="form-control" id="txtCambiosPotenciaGpon" placeholder="Potencia"> <!-- required -->
+                    <input type="number" class="form-control" id="txtCambiosPotenciaGpon" min="-30" max="24" placeholder="Potencia"> <!-- required -->
                     <label for="txtCambiosPotenciaGpon">Potencia</label>
                   </div>
                 </div>
@@ -411,7 +411,7 @@
               <div class="row g-2 mb-2">
                 <div class="col md-6">
                   <div class="form-floating">
-                    <input type="text" class="form-control" id="txtPotenciaCable" placeholder="Potencia"> <!-- required -->
+                    <input type="number" class="form-control" id="txtPotenciaCable" placeholder="Potencia" min="-50" max="-7"> <!-- required -->
                     <label for="txtPotenciaCable">Potencia</label>
                   </div>
                 </div>
@@ -524,7 +524,7 @@
               <div class="row g-2 mb-2">
                 <div class="col-md-6">
                   <div class="form-floating">
-                    <input type="text" class="form-control" id="txtCambiosPotenciaCable" placeholder="Potencia" required>
+                    <input type="number" class="form-control" id="txtCambiosPotenciaCable" placeholder="Potencia" min="-50" max="-7" required>
                     <label for="txtCambiosPotenciaCable">Potencia</label>
                   </div>
                 </div>
