@@ -43,6 +43,7 @@ if (isset($_GET["operacion"])) {
         "recordsFiltered" => $resultados['totalRegistros'], // Total de registros después de aplicar el filtro de búsqueda
         "data" => $resultados['kardex'] // Los registros de la consulta
       ];
+      echo json_encode($response);
       break;
 
     case "buscarStockId":
