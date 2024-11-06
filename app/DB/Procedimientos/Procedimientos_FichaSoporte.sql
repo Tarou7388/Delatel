@@ -1,5 +1,4 @@
 USE Delatel;
-
 DROP VIEW IF EXISTS vw_soporte_detalle;
 
 CREATE VIEW vw_soporte_detalle AS
@@ -16,14 +15,17 @@ SELECT
     c.direccion_servicio,
     r.id_usuario AS id_tecnico,
     p.nombres AS tecnico_nombres,
-    p.apellidos AS tecnico_apellidos
+    p.apellidos AS tecnico_apellidos,
+    srv.tipo_servicio
 FROM
     tb_soporte s
     JOIN tb_contratos c ON s.id_contrato = c.id_contrato
     JOIN tb_tipo_soporte ts ON s.id_tipo_soporte = ts.id_tipo_soporte
     JOIN tb_responsables r ON s.id_tecnico = r.id_responsable
     JOIN tb_usuarios u ON r.id_usuario = u.id_usuario
-    JOIN tb_personas p ON u.id_persona = p.id_persona;
+    JOIN tb_personas p ON u.id_persona = p.id_persona
+    JOIN tb_paquetes pk ON c.id_paquete = pk.id_paquete
+    JOIN tb_servicios srv ON pk.id_servicio = srv.id_servicio;
 
 DELIMITER $$
 

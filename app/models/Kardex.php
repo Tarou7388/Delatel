@@ -37,8 +37,11 @@ class Kardex extends Conexion
      */
     public function buscarStockId($params = [])
     {
-        $sql = "SELECT * FROM vw_kardex_listar WHERE id_producto = ?";
-        $values = array($params['idProducto']);
+        $sql = "SELECT * FROM vw_kardex_listar WHERE id_producto = ? AND id_almacen= ?";
+        $values = array(
+            $params['idProducto'],
+            $params['idAlmacen']
+        );
         return $this->consultaParametros($sql, $values);
     }
 
@@ -86,5 +89,4 @@ class Kardex extends Conexion
         $values = array($params['idProducto']);
         return $this->consultaParametros($sql, $values);
     }
-    
 }

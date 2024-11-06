@@ -70,11 +70,12 @@ BEGIN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Tipo de operación no encontrado.';
     END IF;
 
-    -- Obtener el saldo actual del producto específico o 0 si no existen registros previos
+    -- Obtener el saldo actual del producto específico por almacén o 0 si no existen registros previos
     SELECT COALESCE(saldo_total, 0)
     INTO v_saldo_kardex_actual
     FROM tb_kardex
     WHERE id_producto = p_id_producto
+    AND id_almacen = p_id_almacen
     ORDER BY create_at DESC
     LIMIT 1;
 
@@ -91,7 +92,7 @@ BEGIN
         SET v_nuevo_saldo = v_saldo_kardex_actual + p_cantidad;
     END IF;
 
-    -- Insertar el movimiento en el kardex
+    -- Insertar el movimiento en el kardex para el almacén específico
     INSERT INTO tb_kardex (
         id_almacen,
         id_producto,
@@ -115,8 +116,6 @@ BEGIN
         p_iduser_create
     );
 END$$
-
-
 
 DROP PROCEDURE IF EXISTS spu_kardex_buscar$$
 CREATE PROCEDURE spu_kardex_buscar(

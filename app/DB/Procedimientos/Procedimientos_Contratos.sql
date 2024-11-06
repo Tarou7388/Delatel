@@ -59,9 +59,6 @@ LEFT JOIN tb_servicios sv4 ON t.id_servicio4 = sv4.id_servicio
 WHERE c.inactive_at IS NULL
 ORDER BY c.id_contrato DESC;
 
-SELECT * FROM vw_contratos_listar;
-
-
 DELIMITER $$
 
 DROP PROCEDURE IF EXISTS spu_contratos_registrar$$
