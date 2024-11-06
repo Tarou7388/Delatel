@@ -57,18 +57,18 @@ document.addEventListener("DOMContentLoaded", function () {
     processing: true,
     serverSide: true,
     ajax: {
-      url: ruta,  
+      url: ruta,
       type: "GET",
       data: function (d) {
         return {
           draw: d.draw,
           start: d.start,
           length: d.length,
-          search: d.search.value,  
+          search: d.search.value,
         };
       },
       dataSrc: function (json) {
-        return json.data;  
+        return json.data;
       },
     },
     columns: [
@@ -110,7 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
     searching: true,
     info: true,
     lengthChange: false,
-  });  
+  });
 
   const slcEditarMarca = document.querySelector("#slcEditarMarca");
   const slcUnidadEditarMedida = document.querySelector("#slcUnidadEditarMedida");
@@ -231,4 +231,74 @@ document.addEventListener("DOMContentLoaded", function () {
       console.error("Error al cargar las Medidas:", error);
     }
   })();
+
+  $("#tblProductos tbody").on("click", ".btn-delete", async function () {
+    if (await ask("¿Desea  eliminar el producto?")) {
+      idProducto = $(this).data("id");
+      await eliminarProducto(idProducto);
+    }
+  });
+
+  async function eliminarProducto(id) {
+    const datosProducto = {
+      operacion: "EliminarProducto",
+      idProducto: id,
+      idUsuario: userid,
+    };
+
+    const response = await fetch(
+      `${config.HOST}app/controllers/Producto.controllers.php`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(datosProducto),
+      }
+    );
+    const data = await response.json();
+
+    if (data.Eliminado) {
+      tablaProductos.ajax.reload();
+      showToast("Eliminado Correctamente.", "SUCCESS");
+      idProducto = -1;
+    } else {
+      showToast("Error al eliminar el producto.", "ERROR");
+      idProducto = -1;
+    }
+
+  };
+
+
+  //Funcion para aplicarse al momento de retomar algun producto
+  async function rehabilitarProducto(id) {
+    const datosProducto = {
+      operacion: "ReactivarProducto",
+      idProducto: id,
+      idUsuario: userid,
+    };
+
+    const response = await fetch(
+      `${config.HOST}app/controllers/Producto.controllers.php`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(datosProducto),
+      }
+    );
+
+    const data = await response.json();
+
+    if (data.Activado) {
+      tablaProductos.ajax.reload();
+      showToast("Se ha reactivado Correctamente.", "SUCCESS");
+      idProducto = -1;
+    } else {
+      showToast("Error al reactivar el producto.", "ERROR");
+      idProducto = -1;
+    }
+
+  };
 });

@@ -13,9 +13,9 @@
 
           <div class="form-floating mb-2">
             <select class="form-select" id="slcEditarTipoProducto" name="marca" required>
-              <option disabled selected>Seleccione Marca</option>
+              <option disabled selected>Seleccione Tipo Producto</option>
             </select>
-            <label for="slcEditarTipoProducto">Marca</label>
+            <label for="slcEditarTipoProducto">Tipo de Producto</label>
           </div>
 
           <div class="form-group">

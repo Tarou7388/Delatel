@@ -148,4 +148,14 @@ class Producto extends Conexion
     $sql = "SELECT * FROM vw_tipo_productos";
     return $this->listarDatos($sql);
   }
+
+  public function EliminarProducto($params = []): bool
+  {
+    $sql = "CALL spu_productos_eliminar(?,?)";
+    $values = array(
+      $params['idProducto'],
+      $params['idUsuario']
+    );
+    return $this->registrar($sql, $values);
+  }
 }
