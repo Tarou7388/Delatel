@@ -360,104 +360,112 @@ window.addEventListener("DOMContentLoaded", async () => {
       slcSectorActualizar.appendChild(option);
     });
 
-    const dataContratos = await fetchContratos();
-    const tbody = document.querySelector("#listarContratos tbody");
-
-    function formatDuracion(duracion) {
-      try {
-        const duracionObj = JSON.parse(duracion);
-        return Object.entries(duracionObj)
-          .map(
-            ([key, value]) =>
-              `${key.charAt(0).toUpperCase() + key.slice(1)}: ${value} meses`
-          )
-          .join(", ");
-      } catch (e) {
-        return duracion;
-      }
-    }
-
-    dataContratos.forEach((contrato) => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td class="text-center">${contrato.nombre_cliente}</td>
-        <td class="text-center">${contrato.num_identificacion}</td>
-        <td class="text-center">${contrato.paquete}</td>
-        <td class="text-center">${contrato.direccion_servicio}</td>
-        <td class="text-center">${formatDuracion(contrato.duracion)}</td>
-        <td class="text-center">
-          <button class="btn btn-sm btn-warning btn-edit" data-idContrato="${contrato.id_contrato
-        }"><i class="fa-regular fa-pen-to-square icon-disabled"></i></button>
-          <button class="btn btn-sm btn-danger btnEliminar" data-idContrato=${contrato.id_contrato
-        }><i class="fa-regular fa-trash-can icon-disabled"></i></button>
-          <button class="btn btn-sm btn-primary btnGenerar" data-idContrato=${contrato.id_contrato
-        }><i class="fa-solid fa-file-pdf icon-disabled"></i></button>
-          <button class="btn btn-sm btn-success btnFicha" data-tipoServicio=${contrato.tipo_servicio
-        } data-idContrato=${contrato.id_contrato}>Ficha</button>
-        </td>
-      `;
-      tbody.appendChild(tr);
-    });
-
+    // Configura DataTable con procesamiento server-side
     var tabla = new DataTable("#listarContratos", {
       language: {
         url: `https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json`,
       },
-
-      ordering: false,
-      columnDefs: [
-        { width: "12.5%", targets: 0 },
-        { width: "12.5%", targets: 1 },
-        { width: "12.5%", targets: 2 },
-        { width: "14%", targets: 3 },
-        { width: "17%", targets: 4 },
-        { width: "14%", targets: 5 },
+      processing: true,
+      serverSide: true,
+      ajax: {
+        url: 'http://localhost/Delatel/app/controllers/Contrato.controllers.php?operacion=listarContratos', // Aquí debes poner la URL de tu endpoint que devuelve los datos
+        type: 'GET', 
+        data: function (d) {
+          console.log(d); 
+        },
+        dataSrc: function (json) {
+          return json.data;
+        }
+      },
+      columns: [
+        { data: 'nombre_cliente' },
+        { data: 'num_identificacion' },
+        { data: 'paquete' },
+        { data: 'direccion_servicio' },
+        {
+          data: 'duracion',
+          render: function (data) {
+            return formatDuracion(data);
+          }
+        },
+        {
+          data: null,
+          render: function (data, type, row) {
+            return `
+              <button class="btn btn-sm btn-warning btn-edit" data-idContrato="${row.id_contrato}">
+                <i class="fa-regular fa-pen-to-square icon-disabled"></i>
+              </button>
+              <button class="btn btn-sm btn-danger btnEliminar" data-idContrato="${row.id_contrato}">
+                <i class="fa-regular fa-trash-can icon-disabled"></i>
+              </button>
+              <button class="btn btn-sm btn-primary btnGenerar" data-idContrato="${row.id_contrato}">
+                <i class="fa-solid fa-file-pdf icon-disabled"></i>
+              </button>
+              <button class="btn btn-sm btn-success btnFicha" data-tipoServicio="${row.tipo_servicio}" data-idContrato="${row.id_contrato}">
+                Ficha
+              </button>
+            `;
+          }
+        }
       ],
+      columnDefs: [
+        { className: 'text-center', targets: [0, 1, 2, 3, 4, 5] },
+        { width: "200px", targets: [5]}
+      ],
+      drawCallback: function(settings) {
+        const botonesPdf = document.querySelectorAll(".btnGenerar");
+        const botonesEliminar = document.querySelectorAll(".btnEliminar");
+        const botonesFicha = document.querySelectorAll(".btnFicha");
+        const botonesEdit = document.querySelectorAll(".btn-edit");
+  
+        botonesFicha.forEach((boton) => {
+          boton.addEventListener("click", (event) => {
+            const idContrato = event.target.getAttribute("data-idContrato");
+            const tipoServicio = event.target.getAttribute("data-tipoServicio");
+            const tipoFicha = {
+              "FIBR + CABL": "FichaTecnicaGpon",
+              "CABL + FIBR": "FichaTecnicaGpon",
+              WISP: "FichaTecnicaWisp",
+              CABL: "FichaTecnicaCable",
+              FIBR: "FichaTecnicaGpon",
+            };
+            window.location.href = `${config.HOST}views/Contratos/${tipoFicha[tipoServicio]}?idContrato=${idContrato}`;
+          });
+        });
+  
+        botonesEdit.forEach((boton) => {
+          boton.addEventListener("click", (event) => {
+            const idContrato = event.target.getAttribute("data-idContrato");
+            abrirModalEditar(idContrato);
+          });
+        });
+  
+        botonesEliminar.forEach((boton) => {
+          boton.addEventListener("click", (event) => {
+            const idContrato = event.target.getAttribute("data-idContrato");
+            eliminar(idContrato, 1); 
+          });
+        });
+  
+        botonesPdf.forEach((boton) => {
+          boton.addEventListener("click", () => {
+            const idContrato = boton.getAttribute("data-idContrato");
+            window.open(`${config.HOST}views/reports/Contrato/soporte.php?id=${idContrato}`);
+          });
+        });
+      }
     });
-
-    const botonesPdf = document.querySelectorAll(".btnGenerar");
-    const botonesEliminar = document.querySelectorAll(".btnEliminar");
-    const botonesFicha = document.querySelectorAll(".btnFicha");
-    const botonesEdit = document.querySelectorAll(".btn-edit");
-
-    botonesFicha.forEach((boton) => {
-      boton.addEventListener("click", (event) => {
-        const idContrato = event.target.getAttribute("data-idContrato");
-        const tipoServicio = event.target.getAttribute("data-tipoServicio");
-        const tipoFicha = {
-          "FIBR + CABL": "FichaTecnicaGpon",
-          "CABL + FIBR": "FichaTecnicaGpon",
-          WISP: "FichaTecnicaWisp",
-          CABL: "FichaTecnicaCable",
-          FIBR: "FichaTecnicaGpon",
-        };
-        window.location.href = `${config.HOST}views/Contratos/${tipoFicha[tipoServicio]}?idContrato=${idContrato}`;
-      });
-    });
-
-    //Abre el modal de Actualizar
-    botonesEdit.forEach((boton) => {
-      boton.addEventListener("click", (event) => {
-        const idContrato = event.target.getAttribute("data-idContrato");
-        abrirModalEditar(idContrato);
-      });
-    });
-
-    botonesEliminar.forEach((boton) => {
-      boton.addEventListener("click", (event) => {
-        const idContrato = event.target.getAttribute("data-idContrato");
-        eliminar(idContrato, 1); //el uno se reemplaza por el IdUsuario
-      });
-    });
-
-    botonesPdf.forEach((boton) => {
-      boton.addEventListener("click", () => {
-        const idContrato = boton.getAttribute("data-idContrato");
-        window.open(
-          `${config.HOST}views/reports/Contrato/soporte.php?id=${idContrato}`
-        );
-      });
-    });
+  }
+  
+  function formatDuracion(duracion) {
+    try {
+      const duracionObj = JSON.parse(duracion);
+      return Object.entries(duracionObj)
+        .map(([key, value]) => `${key.charAt(0).toUpperCase() + key.slice(1)}: ${value} meses`)
+        .join(", ");
+    } catch (e) {
+      return duracion;
+    }
   }
 
   async function validarCampos() {

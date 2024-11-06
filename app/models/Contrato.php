@@ -55,14 +55,33 @@ class Contrato extends Conexion
      *
      * @return array El conjunto de resultados de la ejecución del procedimiento almacenado.
      */
-    public function listarContratos($columnas, $offset = 0, $limit = 10)
+    public function listarContratos($offset = 0, $limit = 10, $search = "")
     {
-        // Construimos la consulta SQL incluyendo directamente los valores de paginación
-        $sql = "SELECT " . implode(", ", $columnas) . " FROM vw_contratos_listar LIMIT $offset, $limit";
+        $sql = "SELECT * FROM vw_contratos_listar";
+        $sqlCount = "SELECT COUNT(*) AS total FROM vw_contratos_listar";
+        if ($search) {
+            $sql .= " WHERE nombre_cliente LIKE :search OR num_identificacion LIKE :search OR paquete LIKE :search OR direccion_servicio LIKE :search OR duracion LIKE :search";
+            $sqlCount .= " WHERE nombre_cliente LIKE :search OR num_identificacion LIKE :search OR paquete LIKE :search OR direccion_servicio LIKE :search OR duracion LIKE :search";
+        }
+        $sql .= " LIMIT :offset, :limit";
+        $stmt = $this->pdo->prepare($sql);
+        if ($search) {
+            $stmt->bindValue(':search', "%$search%", PDO::PARAM_STR);
+        }
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+        $contratos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmtCount = $this->pdo->prepare($sqlCount);
+        if ($search) {
+            $stmtCount->bindValue(':search', "%$search%", PDO::PARAM_STR);
+        }
+        $stmtCount->execute();
+        $totalRegistros = $stmtCount->fetch(PDO::FETCH_ASSOC)['total'];
 
-        // Llamamos a la función general de consulta sin parámetros adicionales
-        return $this->datosPaginados($sql);
+        return ['contratos' => $contratos, 'totalRegistros' => $totalRegistros];
     }
+
     /**
      * Elimina un contrato de la base de datos.
      *
