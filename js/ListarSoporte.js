@@ -18,100 +18,105 @@ document.addEventListener("DOMContentLoaded", () => {
       // Obtener los datos de soporte
       const soporteData = await obtenerDataSoporte(idsoport);
 
-      // Validar que la respuesta contenga datos y que soporteData[0] exista
+      // Validar la respuesta
       if (!soporteData || !soporteData[0] || !soporteData[0].soporte) {
         console.error("Datos de soporte no encontrados o JSON inválido");
         return;
       }
 
-      // Asegurarse de que el campo "soporte" sea un objeto JSON válido
       let soporteJson = soporteData[0].soporte;
 
+      // Parsear si es una cadena JSON
       if (typeof soporteJson === "string") {
         soporteJson = JSON.parse(soporteJson);
       }
 
-      // Selección del modal según el tipo de servicio
+      // Obtener el tipo de servicio y seleccionar el modal correspondiente
       const tipoServicio = soporteData[0].tipo_servicio;
-      let modalID = "";
-      let parametrosList, cambiosList;
+      const { modalID, parametrosList, cambiosList } = obtenerModal(tipoServicio);
 
-      switch (tipoServicio) {
-        case "WISP":
-          modalID = "#editModalWISP";
-          parametrosList = document.querySelector(`${modalID} #parametrosList`);
-          cambiosList = document.querySelector(`${modalID} #cambiosList`);
-          break;
-        case "GPON":
-          modalID = "#editModalGPON";
-          parametrosList = document.querySelector(`${modalID} #parametrosList`);
-          cambiosList = document.querySelector(`${modalID} #cambiosList`);
-          break;
-        case "CABL":
-          modalID = "#editModalCABLE";
-          parametrosList = document.querySelector("#parametrosListCable");
-          cambiosList = document.querySelector("#cambiosListCable");
-          break;
-        default:
-          modalID = "#editModalWISP";
-          parametrosList = document.querySelector(`${modalID} #parametrosList`);
-          cambiosList = document.querySelector(`${modalID} #cambiosList`);
-          break;
-      }
-
-      // Limpiar las listas si existen
+      // Limpiar los contenidos
       if (parametrosList) parametrosList.innerHTML = "";
       if (cambiosList) cambiosList.innerHTML = "";
 
-      // Renderizado personalizado para "CABLE"
-      if (tipoServicio === "CABL") {
-        if (soporteJson.parametroscable) {
-          Object.entries(soporteJson.parametroscable).forEach(([key, value]) => {
-            if (Array.isArray(value)) {
-              parametrosList.innerHTML += `<li><strong>${key}:</strong> ${value.join(", ")}</li>`;
-            } else if (typeof value === "object") {
-              parametrosList.innerHTML += `<li><strong>${key}:</strong> ${JSON.stringify(value)}</li>`;
-            } else {
-              parametrosList.innerHTML += `<li><strong>${key}:</strong> ${value}</li>`;
-            }
-          });
-        }
+      // Procesar y formatear los datos
+      const parametrosHTML = procesarDatos(soporteJson, 'parametros', tipoServicio);
+      const cambiosHTML = procesarDatos(soporteJson, 'cambios', tipoServicio);
 
-        if (soporteJson.cambioscable) {
-          Object.entries(soporteJson.cambioscable).forEach(([key, value]) => {
-            if (Array.isArray(value)) {
-              cambiosList.innerHTML += `<li><strong>${key}:</strong> ${value.join(", ")}</li>`;
-            } else if (typeof value === "object") {
-              cambiosList.innerHTML += `<li><strong>${key}:</strong> ${JSON.stringify(value)}</li>`;
-            } else {
-              cambiosList.innerHTML += `<li><strong>${key}:</strong> ${value}</li>`;
-            }
-          });
-        }
-      } else {
-        // Renderizado genérico para otros tipos de soporte
-        if (soporteJson.parametros) {
-          Object.entries(soporteJson.parametros).forEach(([key, value]) => {
-            parametrosList.innerHTML += `<li><strong>${key}:</strong> ${JSON.stringify(value)}</li>`;
-          });
-        }
+      // Insertar los contenidos en el modal
+      if (parametrosList) parametrosList.innerHTML = parametrosHTML;
+      if (cambiosList) cambiosList.innerHTML = cambiosHTML;
 
-        if (soporteJson.cambios) {
-          Object.entries(soporteJson.cambios).forEach(([key, value]) => {
-            cambiosList.innerHTML += `<li><strong>${key}:</strong> ${JSON.stringify(value)}</li>`;
-          });
-        }
-      }
-
-      // Mostrar el modal correspondiente
+      // Mostrar el modal
       $(modalID).modal("show");
+
     } catch (error) {
       console.error("Error al abrir el modal:", error);
     }
   }
 
+  // Función para obtener el modal y listas de parámetros y cambios
+  function obtenerModal(tipoServicio) {
+    let modalID = "";
+    let parametrosList, cambiosList;
 
+    switch (tipoServicio) {
+      case "WISP":
+        modalID = "#editModalWISP";
+        parametrosList = document.querySelector(`${modalID} #parametrosList`);
+        cambiosList = document.querySelector(`${modalID} #cambiosList`);
+        break;
+      case "GPON":
+        modalID = "#editModalGPON";
+        parametrosList = document.querySelector(`${modalID} #parametrosList`);
+        cambiosList = document.querySelector(`${modalID} #cambiosList`);
+        break;
+      case "CABL":
+        modalID = "#editModalCABLE";
+        parametrosList = document.querySelector("#parametrosListCable");
+        cambiosList = document.querySelector("#cambiosListCable");
+        break;
+      default:
+        modalID = "#editModalWISP";
+        parametrosList = document.querySelector(`${modalID} #parametrosList`);
+        cambiosList = document.querySelector(`${modalID} #cambiosList`);
+        break;
+    }
 
+    return { modalID, parametrosList, cambiosList };
+  }
+
+  // Función para procesar los datos y generar el HTML
+  function procesarDatos(soporteJson, campo, tipoServicio) {
+    const data = tipoServicio === "CABL" ? soporteJson[`${campo}cable`] : soporteJson[campo];
+    let html = "";
+
+    if (data) {
+      Object.entries(data).forEach(([key, value]) => {
+        html += `<li><strong>${key}:</strong> ${formatValue(value)}</li>`;
+      });
+    }
+
+    return html;
+  }
+
+  // Función para formatear los valores de manera más legible
+  function formatValue(value) {
+    if (typeof value === "object" && !Array.isArray(value)) {
+      // Si es un objeto, recorrer sus claves y valores
+      return Object.entries(value)
+        .map(([key, val]) => `<strong>${key}:</strong> ${formatValue(val)}`)
+        .join('<br>');
+    } else if (Array.isArray(value)) {
+      // Si es un array, recorrer sus elementos
+      return value
+        .map(v => (typeof v === "object" ? formatValue(v) : v))
+        .join('<br>');
+    } else {
+      // Si es un valor simple, mostrarlo directamente
+      return value;
+    }
+  }
 
   const table = inicializarDataTable(
     "#tblSoporteIncompleto",

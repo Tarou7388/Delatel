@@ -365,12 +365,6 @@ INSERT INTO tb_contactabilidad (id_persona, id_empresa, id_paquete, fecha_hora_c
 
 INSERT INTO tb_soporte (id_contrato, id_tipo_soporte, id_tecnico, fecha_hora_solicitud, fecha_hora_asistencia, descripcion_problema, descripcion_solucion, prioridad, soporte, iduser_create) VALUES 
 (1, 1, 1, '2024-01-10 15:00:00', '2024-10-09 17:05:29', "Daños en el cable", "Reemplazo del cable", 'Alta', 
-  '{"parametroscable":{"periodo":["mensual","contado"],"potencia":4,"sintonizador":2,"triplexor":{"requiere":true,"cantidad":1,"tipo":["activo","pasivo"]},"spliter":[{"cantidad":1,"tipo":"1x3"},{"cantidad":1,"tipo":"1x5"},{"cantidad":1,"tipo":"1x8"}],"cable":10,"conectores":1},"cambioscable":{"periodo":["mensual","contado"],"potencia":4,"sintonizador":2,"triplexor":{"requiere":true,"cantidad":1,"tipo":["activo","pasivo"]},"spliter":[{"cantidad":1,"tipo":"1x3"},{"cantidad":1,"tipo":"1x5"},{"cantidad":1,"tipo":"1x8"}],"cable":10,"conectores":1}}', 1),
-(2, 2, 2, '2024-02-16 11:00:00', '2024-02-16 12:30:00', "Daño X", null, 'Media', 
-  '{"parametros":{"base":"","ip":"","senal":""},"cambios":{"nuevaBase":"","nuevoIP":"","senal":""}}', 1),
-(3, 3, 3, '2024-03-21 09:30:00', '2024-03-21 10:00:00', "Daño X", null, 'Alta', 
-  '{"parametros":{"base":"","ip":"","senal":""},"cambios":{"nuevaBase":"","nuevoIP":"","senal":""}}', 1),
-(4, 1, 4, '2024-04-26 14:00:00', '2024-04-26 15:30:00', "Daño Y", null, 'Baja', 
-  '{"parametros":{"base":"","ip":"","senal":""},"cambios":{"nuevaBase":"","nuevoIP":"","senal":""}}', 1),
-(5, 2, 5, '2024-05-31 13:00:00', '2024-05-31 14:30:00', "Daño Z", null, 'Media', 
-  '{"parametros":{"base":"","ip":"","senal":""},"cambios":{"nuevaBase":"","nuevoIP":"","senal":""}}', 1);
+  '{"parametroscable":{"periodo":["mensual","contado"],"potencia":4,"sintonizador":2,"triplexor":{"requiere":true,"cantidad":1,"tipo":["activo","pasivo"]},"spliter":[{"cantidad":1,"tipo":"1x3"},{"cantidad":1,"tipo":"1x5"},{"cantidad":1,"tipo":"1x8"}],"cable":10,"conectores":1},"cambioscable":{"periodo":["mensual","contado"],"potencia":4,"sintonizador":2,"triplexor":{"requiere":true,"cantidad":1,"tipo":["activo","pasivo"]},"spliter":[{"cantidad":1,"tipo":"1x3"},{"cantidad":1,"tipo":"1x5"},{"cantidad":1,"tipo":"1x8"}],"cable":10,"conectores":1},"ajustes":["revisión","optimización"]}', 1),
+(16, 1, 1, '2024-01-10 15:00:00', '2024-10-09 17:05:29', "Daños en el cable", "Reemplazo del cable", 'Media', 
+  '{"parametroscable":{"periodo":["mensual","contado"],"potencia":4,"sintonizador":2,"triplexor":{"requiere":true,"cantidad":1,"tipo":["activo","pasivo"]},"spliter":[{"cantidad":1,"tipo":"1x3"},{"cantidad":1,"tipo":"1x5"},{"cantidad":1,"tipo":"1x8"}],"cable":10,"conectores":1},"cambioscable":{"periodo":["mensual","contado"],"potencia":4,"sintonizador":2,"triplexor":{"requiere":true,"cantidad":1,"tipo":["activo","pasivo"]},"spliter":[{"cantidad":1,"tipo":"1x3"},{"cantidad":1,"tipo":"1x5"},{"cantidad":1,"tipo":"1x8"}],"cable":10,"conectores":1},"ajustes":["revisión","optimización"]}', 1);
