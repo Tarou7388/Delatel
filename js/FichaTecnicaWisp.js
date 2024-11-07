@@ -1,10 +1,15 @@
 import config from "../env.js";
 window.addEventListener("DOMContentLoaded", () => {
+  const userid = user["idUsuario"];
 
-  async function registrar() {
+  var today = new Date().toISOString().split("T")[0];
+
+  document.getElementById("txtFecha").value = today;
+
+  /* async function registrar() {
     const antenas = document.getElementById('slcAntenas').value;
     const router = document.getElementById('slcRouter').value;
-    const frecuencia = ["2G", "5G"]; // Personalizar según la selección
+    const frecuencia = ["2G", "5G"]; 
     const base = document.getElementById('slcBase').value;
     const subBase = document.getElementById('slcSubBase').value;
     const signalStrength = document.getElementById('txtSignalStrength').value;
@@ -71,10 +76,10 @@ window.addEventListener("DOMContentLoaded", () => {
     } catch (error) {
       console.error('Error:', error);
     }
-  }
+  } */
 
-  document.getElementById('btnRegistrar').addEventListener('click', function (event) {
+  /* document.getElementById('btnRegistrar').addEventListener('click', function (event) {
     event.preventDefault();
     registrar(); 
-  });
+  }); */
 });
