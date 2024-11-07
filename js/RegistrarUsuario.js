@@ -139,36 +139,32 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   }
   async function RegistrarUsuario(idPersona) {
-    if (accesos?.usuarios?.crear) {
-      try {
-        const formData = new FormData();
-        formData.append("operacion", "registrarUsuarios");
-        formData.append("idPersona", idPersona);
-        formData.append("nombreUsuario", $("txtUsuario").value);
-        formData.append("clave", $("txtContrasenia").value);
-        formData.append("idUsuario", userid);
+    try {
+      const formData = new FormData();
+      formData.append("operacion", "registrarUsuarios");
+      formData.append("idPersona", idPersona);
+      formData.append("nombreUsuario", $("txtUsuario").value);
+      formData.append("clave", $("txtContrasenia").value);
+      formData.append("idUsuario", userid);
 
-        const respuesta = await fetch(
-          `${config.HOST}app/controllers/Usuario.controllers.php`,
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
-        const data = await respuesta.json();
-        //console.log(data.id_usuario);
-        if (data) {
-          showToast("Usuario registrado con éxito", "SUCCESS");
-          //console.log(data[0].id_usuario);
-          return data[0].id_usuario;
+      const respuesta = await fetch(
+        `${config.HOST}app/controllers/Usuario.controllers.php`,
+        {
+          method: "POST",
+          body: formData,
         }
-        else { showToast("Usuario ya registrado", "ERROR"); }
-
-      } catch (error) {
-        showToast("Error al registrar usuario:" + error, "ERROR");
+      );
+      const data = await respuesta.json();
+      //console.log(data.id_usuario);
+      if (data) {
+        showToast("Usuario registrado con éxito", "SUCCESS");
+        //console.log(data[0].id_usuario);
+        return data[0].id_usuario;
       }
-    } else{
-      showToast("No tienes permisos para registrar usuario","ERROR")
+      else { showToast("Usuario ya registrado", "ERROR"); }
+
+    } catch (error) {
+      showToast("Error al registrar usuario:" + error, "ERROR");
     }
   };
 
@@ -206,29 +202,33 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     const NombreUser = await VerificarUserN();
 
-    if (NombreUser) {
-      showToast("Nombre repetido, ingrese uno válido e inténtelo de nuevo", "ERROR");
-    } else {
-      if (!idPersonaEncontrada) {
-        const dni = $("txtNumDocumentoPersona").value;
-        if (!dni) {
-          showToast("Debes buscar una persona primero.", "WARNING");
-          return;
+    if (accesos?.usuarios?.crear) {
+      if (NombreUser) {
+        showToast("Nombre repetido, ingrese uno válido e inténtelo de nuevo", "ERROR");
+      } else {
+        if (!idPersonaEncontrada) {
+          const dni = $("txtNumDocumentoPersona").value;
+          if (!dni) {
+            showToast("Debes buscar una persona primero.", "WARNING");
+            return;
+          }
+
+          const idNuevaPersona = await RegistrarPersona(dni);
+
+          if (!idNuevaPersona) {
+            showToast("No se pudo registrar la persona.", "ERROR");
+            return;
+          }
+
+          idPersonaEncontrada = idNuevaPersona;
         }
 
-        const idNuevaPersona = await RegistrarPersona(dni);
+        const usuarioregistrado = await RegistrarUsuario(idPersonaEncontrada);
 
-        if (!idNuevaPersona) {
-          showToast("No se pudo registrar la persona.", "ERROR");
-          return;
-        }
-
-        idPersonaEncontrada = idNuevaPersona;
+        await registrarResponsable(usuarioregistrado);
       }
-
-      const usuarioregistrado = await RegistrarUsuario(idPersonaEncontrada);
-
-      await registrarResponsable(usuarioregistrado);
+    }else {
+      showToast("No tienes permisos para registrar usuario", "ERROR")
     }
   });
 

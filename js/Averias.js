@@ -39,6 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
       button.onclick = async () => {
         const respuestaContratos = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerContratoPorCliente&id=${cliente.id_cliente}`);
         const contratos = await respuestaContratos.json();
+        console.log(contratos)
       };
 
       cellContrato.appendChild(button);

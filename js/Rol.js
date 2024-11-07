@@ -303,45 +303,49 @@ window.addEventListener("DOMContentLoaded", async () => {
         console.error("Error:", error);
         showToast("No se pudo inhabilitar el rol", "ERROR");
       }
-    }else{
-      showToast("No tienes permisos de eliminar roles","ERROR")
+    } else {
+      showToast("No tienes permisos de eliminar roles", "ERROR")
     }
   }
 
   async function activarRol() {
-    const datos = {
-      operacion: "activarRol",
-      idRol: idRolActual,
-      idUsuario: userid,
-    };
-    console.log(datos);
+    if (accesos?.roles?.actualizar) {
+      const datos = {
+        operacion: "activarRol",
+        idRol: idRolActual,
+        idUsuario: userid,
+      };
+      console.log(datos);
 
-    try {
-      if (await ask("¿Desea Activar este Rol?")) {
-        const response = await fetch(
-          `${config.HOST}app/controllers/Rol.controllers.php`,
-          {
-            method: "PUT",
-            body: JSON.stringify(datos),
+      try {
+        if (await ask("¿Desea Activar este Rol?")) {
+          const response = await fetch(
+            `${config.HOST}app/controllers/Rol.controllers.php`,
+            {
+              method: "PUT",
+              body: JSON.stringify(datos),
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error(`Error ${response.status}: ${response.statusText}`);
           }
-        );
 
-        if (!response.ok) {
-          throw new Error(`Error ${response.status}: ${response.statusText}`);
+          const data = await response.json();
+
+          if (data.Activado) {
+            showToast("¡Rol activado correctamente!", "SUCCESS");
+            location.reload();
+          } else {
+            showToast("No se pudo activar el rol.", "ERROR");
+          }
         }
-
-        const data = await response.json();
-
-        if (data.Activado) {
-          showToast("¡Rol activado correctamente!", "SUCCESS");
-          location.reload();
-        } else {
-          showToast("No se pudo activar el rol.", "ERROR");
-        }
+      } catch (e) {
+        console.error("Error al activar el rol:", e);
+        showToast("Ocurrió un error al activar el rol", "ERROR");
       }
-    } catch (e) {
-      console.error("Error al activar el rol:", e);
-      showToast("Ocurrió un error al activar el rol", "ERROR");
+    }else{
+      showToast("No tienes permiso para reactivar el rol","ERROR")
     }
   }
 
@@ -462,8 +466,8 @@ window.addEventListener("DOMContentLoaded", async () => {
         console.error("Error:", error);
         showToast("No se pudo actualizar los permisos", "ERROR");
       }
-    }else{
-      showToast("No tienes permiso para actualizar permisos","ERROR")
+    } else {
+      showToast("No tienes permiso para actualizar permisos", "ERROR")
     }
   }
 
