@@ -226,7 +226,8 @@ BEGIN
         c.fecha_inicio,
         c.fecha_fin,
         c.nota,
-        c.direccion_servicio
+        c.direccion_servicio,
+        c.nota
     FROM 
         tb_contratos c
     JOIN 

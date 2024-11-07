@@ -1,4 +1,5 @@
 <?php require_once "../../header.php" ?>
+<?php $host = $_ENV['HOST']; ?>
 
 <div class="container-fluid px-4">
     <h1 class="mt-4">Almacenes</h1>
@@ -63,4 +64,5 @@
 
 <?php require_once "../../footer.php"; ?>
 </body>
+
 </html>
