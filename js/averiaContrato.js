@@ -1,3 +1,4 @@
+import config from "../env.js";
 document.addEventListener("DOMContentLoaded", async () => {
   // Obtén el id_cliente de la URL
   const urlParams = new URLSearchParams(window.location.search);
@@ -7,7 +8,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const respuesta = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerContratoPorCliente&id=${idCliente}`);
     const contratos = await respuesta.json();
 
-    const tbody = document.querySelector("#tablaContratos tbody");
+    const tbody = document.querySelector("#listarContratos tbody");
     contratos.forEach(contrato => {
       const row = document.createElement("tr");
 

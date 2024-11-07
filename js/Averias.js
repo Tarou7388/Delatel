@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
       button.textContent = "Ver Contrato";
       button.className = "btn btn-primary";
       button.onclick = () => {
-        window.location.href = `${config.HOST}views/Averias/table.php?id=${cliente.id_cliente}`;
+        window.location.href = `${config.HOST}views/Averias/table?id=${cliente.id_cliente}`
       };
       
 

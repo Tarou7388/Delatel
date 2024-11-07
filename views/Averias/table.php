@@ -28,7 +28,7 @@
 </div>
 
 <?php require_once "../../footer.php"; ?>
-<script type="module" src="../../js/Averias.js"></script>
+<script type="module" src="../../js/averiaContrato.js"></script>
 </body>
 
 </html>
