@@ -6,17 +6,12 @@
     <div class="col-12 col-md-6 text-start mb-4">
       <div class="mb-2 d-inline">
         <a href="<?= $host; ?>views/Soporte/">Inicio</a> /
-        <a href="<?= $host; ?>views/Soporte/registroSoporte">Registrar un Soporte</a> /
-        <a href="<?= $host; ?>views/Soporte/registroSoporte">Registrar un Soporte</a>
       </div>
     </div>
     <div class="col-12 col-md-6 text-end mb-4">
       <div class="d-inline">
-        <a href="<?= $host; ?>views/Soporte/registroSoporte" class="btn btn-primary me-2">
+        <a href="<?= $host; ?>views/Soporte/" class="btn btn-primary me-2">
           <i class="fa-solid fa-arrow-left"></i> Registrar Soporte
-        </a>
-        <a href="<?= $host; ?>views/Soporte/" class="btn btn-primary">
-          Inicio
         </a>
         <input type="date" class="form-control text-center d-inline" id="txtFecha" placeholder="Fecha" disabled style="width: auto;">
       </div>

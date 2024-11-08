@@ -214,6 +214,8 @@ document.addEventListener("DOMContentLoaded", async function () {
       } else {
         registrarContacto(data[0].id_persona);
       }
+    }else{
+      showToast("No tienes permiso para crear personas","ERROR")
     }
   }
 

@@ -72,13 +72,33 @@ window.addEventListener('DOMContentLoaded', function () {
     datos.forEach((element) => {
       const li = document.createElement('li');
       li.classList.add('list-group-item');
-      li.textContent = `${element.paquete}`;
-      li.setAttribute('data-id-contrato', element.id_contrato); // Almacenar el id del contrato
-      li.setAttribute('data-tipo-paquete', element.tipo_servicio); // Almacenar el tipo de paquete
+
+      const div = document.createElement('div');
+
+      const paquete = document.createElement('p');
+      paquete.textContent = `${element.paquete}`;
+      div.appendChild(paquete);
+
+      const Nota = document.createElement('p');
+      Nota.textContent = `${element.nota}`;
+      div.appendChild(Nota);
+
+      const tipoPaquete = document.createElement('p');
+      tipoPaquete.textContent = `Tipo de Paquete: ${element.paquete}`;
+      div.appendChild(tipoPaquete);
+
+      const tipoServicio= document.createElement('p');
+      tipoServicio.textContent = `Tipo de Servicio: ${element.tipo_servicio}`;
+      div.appendChild(tipoServicio);
+
+      li.appendChild(div);
+
+      li.setAttribute('data-id-contrato', element.id_contrato);
+      li.setAttribute('data-tipo-paquete', element.tipo_servicio);
 
       li.addEventListener('click', () => {
         actualizarSecciones(element.tipo_servicio);
-        window.idContratoSeleccionado = element.id_contrato; // Almacenar el ID del contrato en la variable global
+        window.idContratoSeleccionado = element.id_contrato;
       });
 
       modalBody.appendChild(li);

@@ -132,6 +132,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
 
       idUserTabla = -1;
+    } else {
+      showToast("No tienes permisos para actualizar un usuario","ERROR")
     }
   }
 
@@ -186,6 +188,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
       idresponsable = -1;
       idUserTabla = -1;
+    } else{
+      showToast("No tienes permisos para actualizar rol responsable","ERROR")
     }
 
   };
@@ -256,6 +260,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
 
       idUserTabla = -1;
+    }else{
+      showToast("No tienes permisos para eliminar usuario","ERROR")
     }
 
   };

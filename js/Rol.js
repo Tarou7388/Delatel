@@ -1,6 +1,7 @@
 import config from "../env.js";
+import * as Herramientas from "../js/Herramientas.js";
 
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("DOMContentLoaded", async () => {
   let idRolActual = -1;
   const userid = user["idUsuario"];
   const rol = document.getElementById("txtRol");
@@ -10,6 +11,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const btnAgregar = document.getElementById("btnAgregar");
   const btnContainer = document.createElement("div");
   const btnCancelarActualizacion = document.createElement("button");
+  const accesos = await Herramientas.permisos();
 
   /* 
   btnCancelarActualizacion.style.display = "none"; */
@@ -147,88 +149,95 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   async function registrarRoles() {
-    const json = await obtenerJsonPermisos();
+    if (accesos?.roles?.crear) {
+      const json = await obtenerJsonPermisos();
 
-    if (!rol.value.trim()) {
-      showToast("El campo Rol no puede estar vacío", "WARNING", 1500);
-      return;
-    }
+      if (!rol.value.trim()) {
+        showToast("El campo Rol no puede estar vacío", "WARNING", 1500);
+        return;
+      }
 
-    const datos = {
-      operacion: "registrarRoles",
-      rol: rol.value,
-      permisos: json,
-      idUsuario: userid,
-    };
+      const datos = {
+        operacion: "registrarRoles",
+        rol: rol.value,
+        permisos: json,
+        idUsuario: userid,
+      };
 
-    try {
-      const respuesta = await fetch(
-        `${config.HOST}app/controllers/Rol.controllers.php`,
-        {
-          method: "POST",
-          body: JSON.stringify(datos),
+      try {
+        const respuesta = await fetch(
+          `${config.HOST}app/controllers/Rol.controllers.php`,
+          {
+            method: "POST",
+            body: JSON.stringify(datos),
+          }
+        );
+
+        if (!respuesta.ok) {
+          throw new Error(`Error ${respuesta.status}: ${respuesta.statusText}`);
         }
-      );
 
-      if (!respuesta.ok) {
-        throw new Error(`Error ${respuesta.status}: ${respuesta.statusText}`);
+        const data = await respuesta.json();
+
+        if (data.guardado) {
+          showToast("El rol se ha agregado exitosamente", "SUCCESS", 1500);
+          location.reload();
+        } else {
+          console.log("No se pudo agregar el Rol");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        showToast("No se pudo agregar el rol", "ERROR");
       }
-
-      const data = await respuesta.json();
-
-      if (data.guardado) {
-        showToast("El rol se ha agregado exitosamente", "SUCCESS", 1500);
-        location.reload();
-      } else {
-        console.log("No se pudo agregar el Rol");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      showToast("No se pudo agregar el rol", "ERROR");
+    } else {
+      showToast("No tienes permisos para registrar Roles", "ERROR")
     }
   }
 
   async function actualizarRol() {
+    if (accesos?.roles?.actualizar) {
+      if (!rol.value.trim()) {
+        showToast("El campo Rol no puede estar vacío", "WARNING", 1500);
+        return;
+      }
 
-    if (!rol.value.trim()) {
-      showToast("El campo Rol no puede estar vacío", "WARNING", 1500);
-      return;
-    }
+      const datos = {
+        operacion: "actualizarRol",
+        rol: rol.value,
+        idUsuario: userid,
+        idRol: idRolActual,
+      };
 
-    const datos = {
-      operacion: "actualizarRol",
-      rol: rol.value,
-      idUsuario: userid,
-      idRol: idRolActual,
-    };
+      console.log("Datos enviados:", datos);
 
-    console.log("Datos enviados:", datos);
+      try {
+        const respuesta = await fetch(
+          `${config.HOST}app/controllers/Rol.controllers.php`,
+          {
+            method: "PUT",
+            body: JSON.stringify(datos),
+          }
+        );
 
-    try {
-      const respuesta = await fetch(
-        `${config.HOST}app/controllers/Rol.controllers.php`,
-        {
-          method: "PUT",
-          body: JSON.stringify(datos),
+        if (!respuesta.ok) {
+          throw new Error(`Error ${respuesta.status}: ${respuesta.statusText}`);
         }
-      );
 
-      if (!respuesta.ok) {
-        throw new Error(`Error ${respuesta.status}: ${respuesta.statusText}`);
+        const data = await respuesta.json();
+        console.log("Respuesta del servidor:", data);
+
+        if (data.Actualizado) {
+          showToast("El rol se ha actualizado exitosamente", "SUCCESS");
+          location.reload();
+        } else {
+          console.log("No se pudo Actualizar el Rol");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        showToast("No se pudo actualizar el rol", "ERROR");
       }
-
-      const data = await respuesta.json();
-      console.log("Respuesta del servidor:", data);
-
-      if (data.Actualizado) {
-        showToast("El rol se ha actualizado exitosamente", "SUCCESS");
-        location.reload();
-      } else {
-        console.log("No se pudo Actualizar el Rol");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      showToast("No se pudo actualizar el rol", "ERROR");
+    } else {
+      showToast("No tienes permisos para actualizar", "ERROR")
     }
   }
 
@@ -254,81 +263,89 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   async function eliminarRol() {
-    const datos = {
-      operacion: "eliminarRol",
-      idRol: idRolActual,
-      idUsuario: userid,
-    };
-    console.log(datos);
+    if (accesos?.roles?.eliminar) {
+      const datos = {
+        operacion: "eliminarRol",
+        idRol: idRolActual,
+        idUsuario: userid,
+      };
+      console.log(datos);
 
-    try {
-      if (await ask("¿Desea Eliminar este Rol?")) {
-        const respuesta = await fetch(
-          `${config.HOST}app/controllers/Rol.controllers.php`,
-          {
-            method: "PUT",
-            body: JSON.stringify(datos),
+      try {
+        if (await ask("¿Desea Eliminar este Rol?")) {
+          const respuesta = await fetch(
+            `${config.HOST}app/controllers/Rol.controllers.php`,
+            {
+              method: "PUT",
+              body: JSON.stringify(datos),
+            }
+          );
+
+          if (!respuesta.ok) {
+            throw new Error(`Error ${respuesta.status}: ${respuesta.statusText}`);
           }
-        );
 
-        if (!respuesta.ok) {
-          throw new Error(`Error ${respuesta.status}: ${respuesta.statusText}`);
+          const data = await respuesta.json();
+          if (data.Inhabilitado) {
+            showToast("El rol se ha inhabilitado exitosamente", "SUCCESS");
+            const fila = document
+              .querySelector(`button[data-idrol="${idRolActual}"]`)
+              .closest("tr");
+            fila.classList.add("disabled-role");
+
+            location.reload();
+
+          } else {
+            console.log("No se pudo inhabilitar el Rol");
+          }
         }
-
-        const data = await respuesta.json();
-        if (data.Inhabilitado) {
-          showToast("El rol se ha inhabilitado exitosamente", "SUCCESS");
-          const fila = document
-            .querySelector(`button[data-idrol="${idRolActual}"]`)
-            .closest("tr");
-          fila.classList.add("disabled-role");
-
-          location.reload();
-
-        } else {
-          console.log("No se pudo inhabilitar el Rol");
-        }
+      } catch (error) {
+        console.error("Error:", error);
+        showToast("No se pudo inhabilitar el rol", "ERROR");
       }
-    } catch (error) {
-      console.error("Error:", error);
-      showToast("No se pudo inhabilitar el rol", "ERROR");
+    } else {
+      showToast("No tienes permisos de eliminar roles", "ERROR")
     }
   }
 
   async function activarRol() {
-    const datos = {
-      operacion: "activarRol",
-      idRol: idRolActual,
-      idUsuario: userid,
-    };
-    console.log(datos);
+    if (accesos?.roles?.actualizar) {
+      const datos = {
+        operacion: "activarRol",
+        idRol: idRolActual,
+        idUsuario: userid,
+      };
+      console.log(datos);
 
-    try {
-      if (await ask("¿Desea Activar este Rol?")) {
-        const response = await fetch(
-          `${config.HOST}app/controllers/Rol.controllers.php`,
-          {
-            method: "PUT",
-            body: JSON.stringify(datos),
+      try {
+        if (await ask("¿Desea Activar este Rol?")) {
+          const response = await fetch(
+            `${config.HOST}app/controllers/Rol.controllers.php`,
+            {
+              method: "PUT",
+              body: JSON.stringify(datos),
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error(`Error ${response.status}: ${response.statusText}`);
           }
-        );
 
-        if (!response.ok) {
-          throw new Error(`Error ${response.status}: ${response.statusText}`);
+          const data = await response.json();
+
+          if (data.Activado) {
+            showToast("¡Rol activado correctamente!", "SUCCESS");
+            location.reload();
+          } else {
+            showToast("No se pudo activar el rol.", "ERROR");
+          }
         }
-
-        const data = await response.json();
-
-        if (data.Activado) {
-          showToast("¡Rol activado correctamente!", "SUCCESS");
-          location.reload();
-        } else {
-          showToast("No se pudo activar el rol.", "ERROR");
-        }
+      } catch (e) {
+        console.error("Error al activar el rol:", e);
+        showToast("Ocurrió un error al activar el rol", "ERROR");
       }
-    } catch (e) {
-      console.error("Error al activar el rol:", e);
-      showToast("Ocurrió un error al activar el rol", "ERROR");
+    }else{
+      showToast("No tienes permiso para reactivar el rol","ERROR")
     }
   }
 
@@ -391,62 +408,66 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   async function actualizarPermisos() {
-    const permisosActualizados = {};
-    const checkboxes = tbodyModal.querySelectorAll('input[type="checkbox"]');
-    permisosActualizados["actividad"] = document.querySelector("#selectActividad").value;
+    if (accesos?.permisos?.actualizar) {
+      const permisosActualizados = {};
+      const checkboxes = tbodyModal.querySelectorAll('input[type="checkbox"]');
+      permisosActualizados["actividad"] = document.querySelector("#selectActividad").value;
 
-    const modulos = {};
+      const modulos = {};
 
-    checkboxes.forEach((checkbox) => {
-      const [modulo, permiso] = checkbox.id.split("-");
-      if (!modulos[modulo]) {
-        modulos[modulo] = {};
-      }
-      if (checkbox.checked) {
-        modulos[modulo][permiso] = true;
-      }
-    });
-
-    for (const [modulo, permisos] of Object.entries(modulos)) {
-      if (Object.keys(permisos).length > 0) {
-        permisosActualizados[modulo] = permisos;
-      } else {
-        permisosActualizados[modulo] = [];
-      }
-    }
-
-    const datos = {
-      operacion: "actualizarPermisos",
-      idRol: idRolActual,
-      permisos: permisosActualizados,
-      idUsuario: userid,
-    };
-
-    try {
-      const respuesta = await fetch(
-        `${config.HOST}app/controllers/Rol.controllers.php`,
-        {
-          method: "PUT",
-          body: JSON.stringify(datos),
+      checkboxes.forEach((checkbox) => {
+        const [modulo, permiso] = checkbox.id.split("-");
+        if (!modulos[modulo]) {
+          modulos[modulo] = {};
         }
-      );
+        if (checkbox.checked) {
+          modulos[modulo][permiso] = true;
+        }
+      });
 
-      if (!respuesta.ok) {
-        throw new Error(`Error ${respuesta.status}: ${respuesta.statusText}`);
+      for (const [modulo, permisos] of Object.entries(modulos)) {
+        if (Object.keys(permisos).length > 0) {
+          permisosActualizados[modulo] = permisos;
+        } else {
+          permisosActualizados[modulo] = [];
+        }
       }
 
-      const data = await respuesta.json();
-      console.log("Respuesta del servidor:", data);
+      const datos = {
+        operacion: "actualizarPermisos",
+        idRol: idRolActual,
+        permisos: permisosActualizados,
+        idUsuario: userid,
+      };
 
-      if (data.guardado) {
-        showToast("Permisos actualizados correctamente.", "SUCCESS");
-        form.reset();
-      } else {
-        console.log("No se pudo actualizar los permisos");
+      try {
+        const respuesta = await fetch(
+          `${config.HOST}app/controllers/Rol.controllers.php`,
+          {
+            method: "PUT",
+            body: JSON.stringify(datos),
+          }
+        );
+
+        if (!respuesta.ok) {
+          throw new Error(`Error ${respuesta.status}: ${respuesta.statusText}`);
+        }
+
+        const data = await respuesta.json();
+        console.log("Respuesta del servidor:", data);
+
+        if (data.guardado) {
+          showToast("Permisos actualizados correctamente.", "SUCCESS");
+          form.reset();
+        } else {
+          console.log("No se pudo actualizar los permisos");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        showToast("No se pudo actualizar los permisos", "ERROR");
       }
-    } catch (error) {
-      console.error("Error:", error);
-      showToast("No se pudo actualizar los permisos", "ERROR");
+    } else {
+      showToast("No tienes permiso para actualizar permisos", "ERROR")
     }
   }
 

@@ -94,44 +94,45 @@ window.addEventListener("DOMContentLoaded", function () {
 
   async function cargarContratos() {
     contenido.innerHTML = `
-    <table class="table table-striped" id="tablaContratos">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nombre Cliente</th>
-          <th>Direccion</th>
-          <th>Paquete</th>
-          <th>Servicio</th>
-        </tr>
-      </thead>
-      <tbody id="tbodyContratos">
-      </tbody>
-    </table>
-    `
-    const tbodyContratos = document.getElementById("tbodyContratos");
-    const response = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=listarContratos`);
-    const data = await response.json();
-    data.forEach(contrato => {
-      tbodyContratos.innerHTML += `
-        <tr>
-          <td>${contrato.id_contrato}</td>
-          <td>${contrato.nombre_cliente}</td>
-          <td>${contrato.direccion_servicio}</td>
-          <td>${contrato.paquete}</td>
-          <td>${contrato.servicio}</td>
-        </tr>
-      `;
-    });
+      <table class="table table-striped" id="tablaContratos">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre Cliente</th>
+            <th>Direccion</th>
+            <th>Paquete</th>
+            <th>Servicio</th>
+          </tr>
+        </thead>
+        <tbody id="tbodyContratos">
+        </tbody>
+      </table>
+    `;
     $('#tablaContratos').DataTable({
+      processing: true,
+      serverSide: true,
+      ajax: {
+        url: `${config.HOST}app/controllers/Contrato.controllers.php?operacion=listarContratos`,
+        type: 'GET',
+        dataSrc: 'data' 
+      },
+      columns: [
+        { data: 'id_contrato' },      
+        { data: 'nombre_cliente' },    
+        { data: 'direccion_servicio' }, 
+        { data: 'paquete' },           
+        { data: 'tipo_servicio' }       
+      ],
       columnDefs: [
-        { targets: 0, visible: false }
+        { targets: 0, visible: false }, 
       ],
       language: {
         url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json",
       },
-      order: [[0, "desc"]]
-    });
+      order: [[0, 'desc']]  
+    });    
   }
+  
 
   async function cargarKardex() {
     contenido.innerHTML = `

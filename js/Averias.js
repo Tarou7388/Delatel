@@ -36,10 +36,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const button = document.createElement("button");
       button.textContent = "Ver Contrato";
       button.className = "btn btn-primary";
-      button.onclick = async () => {
-        const respuestaContratos = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerContratoPorCliente&id=${cliente.id_cliente}`);
-        const contratos = await respuestaContratos.json();
+      button.onclick = () => {
+        window.location.href = `${config.HOST}views/Averias/table?id=${cliente.id_cliente}`
       };
+      
 
       cellContrato.appendChild(button);
       row.appendChild(cellContrato);
