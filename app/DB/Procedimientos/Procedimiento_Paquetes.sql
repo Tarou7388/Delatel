@@ -1,16 +1,42 @@
 USE Delatel;
 
 DELIMITER $$
-DROP VIEW IF EXISTS vw_paquetes_listar$$
+DROP PROCEDURE IF EXISTS spu_paquetes_buscar_servicio$$
+
+DELIMITER $$
+
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS spu_paquetes_buscar_servicio$$
+
+CREATE PROCEDURE spu_paquetes_buscar_servicio(IN p_id_servicio JSON)
+BEGIN
+    SELECT 
+        p.id_paquete,
+        p.id_servicio, 
+        p.paquete,
+        p.precio,
+        p.duracion,
+        p.create_at,
+        p.update_at,
+        p.inactive_at,
+        p.iduser_create,
+        p.iduser_update,
+        p.iduser_inactive
+    FROM
+        tb_paquetes p
+    WHERE
+        JSON_CONTAINS(p_id_servicio, CAST(p.id_servicio AS CHAR));
+END $$
+
+CALL spu_paquetes_buscar_servicio('{"id_servicio": [1]}');
+
 CREATE VIEW vw_paquetes_listar AS
 SELECT
     p.id_paquete,
     p.id_servicio, 
-    p.id_servicio2,
-    p.id_servicio3, 
-    p.id_servicio4,
     p.paquete,
-    CONCAT_WS(' + ', s.tipo_servicio, s2.tipo_servicio, s3.tipo_servicio, s4.tipo_servicio) AS tipo_servicio,
+    s.tipo_servicio AS tipo_servicio,
     s.servicio,
     p.precio,
     p.duracion,
@@ -22,10 +48,7 @@ SELECT
     p.iduser_inactive
 FROM
     tb_paquetes p
-    LEFT JOIN tb_servicios s ON p.id_servicio = s.id_servicio
-    LEFT JOIN tb_servicios s2 ON p.id_servicio2 = s2.id_servicio
-    LEFT JOIN tb_servicios s3 ON p.id_servicio3 = s3.id_servicio
-    LEFT JOIN tb_servicios s4 ON p.id_servicio4 = s4.id_servicio;
+    LEFT JOIN tb_servicios s ON p.id_servicio = s.id_servicio;
 
 
 DROP PROCEDURE IF EXISTS spu_paquete_registrar$$

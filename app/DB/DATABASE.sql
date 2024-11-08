@@ -161,10 +161,7 @@ CREATE TABLE tb_responsables (
 
 CREATE TABLE tb_paquetes (
 	id_paquete      INT PRIMARY KEY AUTO_INCREMENT,
-    id_servicio     INT NOT NULL,
-    id_servicio2    INT NULL,
-    id_servicio3    INT NULL,
-    id_servicio4    INT NULL,
+    id_servicio     JSON NOT NULL,
     paquete         VARCHAR(250) NOT NULL,
     precio          DECIMAL(7,2) NOT NULL,
     duracion        JSON NOT NULL,
@@ -173,11 +170,7 @@ CREATE TABLE tb_paquetes (
     inactive_at     DATETIME NULL,
     iduser_create   INT NOT NULL,
     iduser_update   INT NULL, 
-    iduser_inactive INT NULL,
-    CONSTRAINT fk_paque_id_servicio FOREIGN KEY (id_servicio) REFERENCES tb_servicios (id_servicio),
-    CONSTRAINT fk_paque_id_servicio2 FOREIGN KEY (id_servicio2) REFERENCES tb_servicios (id_servicio),
-    CONSTRAINT fk_paque_id_servicio3 FOREIGN KEY (id_servicio3) REFERENCES tb_servicios (id_servicio),
-    CONSTRAINT fk_paque_id_servicio4 FOREIGN KEY (id_servicio4) REFERENCES tb_servicios (id_servicio)
+    iduser_inactive INT NULL
 ) ENGINE = InnoDB;
 
 
@@ -249,13 +242,13 @@ CREATE TABLE tb_soporte (
     id_soporte INT PRIMARY KEY AUTO_INCREMENT,
     id_contrato INT NOT NULL,
     id_tipo_soporte INT NOT NULL,
-    id_tecnico INT NOT NULL,
+    id_tecnico INT NULL,
     fecha_hora_solicitud DATETIME NOT NULL,
     fecha_hora_asistencia DATETIME NOT NULL,
     descripcion_problema TEXT NOT NULL,
     descripcion_solucion TEXT NULL,
     prioridad VARCHAR(50) NOT NULL,
-    soporte JSON NOT NULL,
+    soporte JSON NULL,
     create_at DATETIME NOT NULL DEFAULT NOW(),
     update_at DATETIME NULL,
     inactive_at DATETIME NULL,

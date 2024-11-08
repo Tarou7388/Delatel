@@ -33,8 +33,6 @@
 	</div>
 </div>
 
-<!-- Contenido del registro -->
-
 <div class="container-fluid px-4">
 	<div class="card d-none" id="divEmpresaCard">
 		<div class="card-header bg-secondary text-white">
