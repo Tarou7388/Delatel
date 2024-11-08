@@ -1,0 +1,16 @@
+.antena-header {
+  background-color: #007bff;
+  color: white;
+  border-radius: 10px;
+  padding: 1rem;
+}
+.router-header {
+  background-color: #28a745;
+  color: white;
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.btn-container {
+  margin-left: -15px;
+}

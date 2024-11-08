@@ -120,7 +120,8 @@ BEGIN
         END AS num_identificacion,
         t.paquete,
         CONCAT_WS(' + ', sv.tipo_servicio, sv2.tipo_servicio, sv3.tipo_servicio, sv4.tipo_servicio) AS tipo_servicio,
-        c.ficha_instalacion
+        c.ficha_instalacion,
+        t.precio
     FROM
         tb_contratos c
         INNER JOIN tb_clientes cl ON c.id_cliente = cl.id_cliente
