@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+date_default_timezone_set('America/Lima');
+
 class Herramientas
 {
     // Método para formatear fechas
@@ -38,8 +40,8 @@ class Herramientas
         $entrada = str_replace('RENAME', '', $entrada);
         $entrada = str_replace('REPLACE', '', $entrada);
         $entrada = str_replace('JOIN', '', $entrada);
-        $entrada = str_replace('HAVING', '', $entrada); 
-        
+        $entrada = str_replace('HAVING', '', $entrada);
+
         $entrada = str_replace('<?php', '', $entrada);
         $entrada = str_replace('?>', '', $entrada);
         $entrada = str_replace('(', '', $entrada);

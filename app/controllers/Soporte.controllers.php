@@ -15,13 +15,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
       echo json_encode($soporte->listarTipoSoporte());
       break;
     case 'FiltrarSoportePrioridad':
-      echo json_encode($soporte->FiltrarSoportePrioridad(["prioridad"=>$_GET['prioridad']]));
+      echo json_encode($soporte->FiltrarSoportePrioridad(["prioridad" => $_GET['prioridad']]));
       break;
     case 'listarSoporte':
       echo json_encode($soporte->listarSoporte());
       break;
     case 'ObtenerDatosSoporteByID':
-      echo json_encode($soporte->ObtenerDatosSoporteByID(["idSoporte"=>$_GET['idSoporte']]));
+      echo json_encode($soporte->ObtenerDatosSoporteByID(["idSoporte" => $_GET['idSoporte']]));
       break;
   }
 }
@@ -33,16 +33,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   switch ($operacion) {
     case 'registrarSoporte':
       $values = [
-        'idContrato' => Herramientas::sanitizarEntrada($datos['idContrato']),
-        'idTipoSoporte' => Herramientas::sanitizarEntrada($datos['idTipoSoporte']),
-        'idTecnico' => Herramientas::sanitizarEntrada($datos['idTecnico']),
-        'fechaHoraSolicitud' => $datos['fechaHoraSolicitud'],
-        'fechaHoraAsistencia' => $datos['fechaHoraAsistencia'],
-        'prioridad' => Herramientas::sanitizarEntrada($datos['prioridad']),
-        'soporte' => $datos['soporte'],
+        'idContrato'          => Herramientas::sanitizarEntrada($datos['idContrato']),
+        'fechaHoraSolicitud'  => date("Y-m-d H:i:s"),
         'descripcionProblema' => Herramientas::sanitizarEntrada($datos['descripcionProblema']),
         'descripcionSolucion' => Herramientas::sanitizarEntrada($datos['descripcionSolucion']),
-        'idUsuario' => Herramientas::sanitizarEntrada($datos['idUsuario'])
+        'idUsuario'           => Herramientas::sanitizarEntrada($datos['idUsuario'])
       ];
       $status = $soporte->registrarSoporte($values);
       echo json_encode([
