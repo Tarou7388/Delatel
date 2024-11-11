@@ -5,6 +5,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnAgregarRouter = document.getElementById("btnAgregarRouter");
   const routersContainer = document.getElementById("routersContainer");
   const saveButton = document.getElementById("saveButton");
+  // Check de Adelantado o cumpliendo el mes 
+  const chkAdelantadoVenta = document.getElementById('chkAdelantadoVenta');
+  const chkCumpliendoMesVenta = document.getElementById('chkCumpliendoMesVenta');
+  const chkAdelantadoAlquilado = document.getElementById('chkAdelantadoAlquilados');
+  const chkCumpliendoMesAlquilado = document.getElementById('chkCumpliendoMesAlquilados');
   const routerConfigModal = new bootstrap.Modal(document.getElementById('routerConfigModal'), {
     backdrop: 'static',
     keyboard: false
@@ -22,7 +27,6 @@ document.addEventListener("DOMContentLoaded", () => {
   let jsonDeuda = {};
   let jsonData = {};
   let flagFichaInstalacion = false;
-  let wan, mascara, puertaEnlace, dns1, dns2, lan, acceso, ssid, seguridad, otros;
 
   // Código para manejar la selección de operación (Venta o Alquiler)
   document.getElementById('slcOperacion').addEventListener('change', function () {
@@ -89,23 +93,51 @@ document.addEventListener("DOMContentLoaded", () => {
         // Cargar datos de configuración del router
         cargarRouters(installationData.ConfiRouter);
 
-        // Cargar datos de venta
-        const venta = installationData.venta;
-        document.getElementById("txtCostoAntenaVenta").value = venta.costoAntena;
-        document.getElementById("txtCostoRouterVenta").value = venta.costoRouter;
-        document.getElementById("txtSubTotalVenta").value = venta.subTotal;
-        document.getElementById("txtAdelantoVenta").value = venta.adelanto;
-        document.getElementById("txtSaldoEquipoVenta").value = venta.saldoEquipos;
-        document.getElementById("txtMaterialAdicionalVenta").value = venta.materialAdicional;
-        document.getElementById("txtMarcaVentaAntena").value = venta.antena.marca;
-        document.getElementById("txtModeloVentaAntena").value = venta.antena.modelo;
-        document.getElementById("txtMacVentaAntena").value = venta.antena.mac;
-        document.getElementById("txtDescripcionVentaAntena").value = venta.antena.descripcion;
-        document.getElementById("txtMarcaVentaRouter").value = venta.router.marca;
-        document.getElementById("txtModeloVentaRouter").value = venta.router.modelo;
-        document.getElementById("txtMacVentaRouter").value = venta.router.mac;
-        document.getElementById("txtDescripcionVentaRouter").value = venta.router.descripcion;
-        document.getElementById("txtDetalleVenta").value = venta.detalle;
+        // Cargar datos de venta o alquiler
+        // Mostrar y cargar datos de venta o alquiler
+        const frmVenta = document.getElementById('frmVenta');
+        const frmAlquiler = document.getElementById('frmAlquiler');
+
+        if (installationData.venta) {
+          frmVenta.classList.remove('hidden');
+          frmAlquiler.classList.add('hidden');
+          const venta = installationData.venta;
+          document.getElementById("txtCostoAntenaVenta").value = venta.costoAntena;
+          document.getElementById("txtCostoRouterVenta").value = venta.costoRouter;
+          document.getElementById("txtSubTotalVenta").value = venta.subTotal;
+          document.getElementById("txtAdelantoVenta").value = venta.adelanto;
+          document.getElementById("txtSaldoEquipoVenta").value = venta.saldoEquipos;
+          document.getElementById("txtMaterialAdicionalVenta").value = venta.materialAdicional;
+          document.getElementById("txtMarcaVentaAntena").value = venta.antena.marca;
+          document.getElementById("txtModeloVentaAntena").value = venta.antena.modelo;
+          document.getElementById("txtMacVentaAntena").value = venta.antena.mac;
+          document.getElementById("txtDescripcionVentaAntena").value = venta.antena.descripcion;
+          document.getElementById("txtMarcaVentaRouter").value = venta.router.marca;
+          document.getElementById("txtModeloVentaRouter").value = venta.router.modelo;
+          document.getElementById("txtMacVentaRouter").value = venta.router.mac;
+          document.getElementById("txtDescripcionVentaRouter").value = venta.router.descripcion;
+          document.getElementById("chkAdelantadoVenta").checked = venta.condicion["Adelantado"] === true;
+          document.getElementById("chkCumpliendoMesVenta").checked = venta.condicion["Cumpliendo el mes"] === true;
+          document.getElementById("txtDetalleVenta").value = venta.detalle;
+        } else if (installationData.alquilado) {
+          frmVenta.classList.add('hidden');
+          frmAlquiler.classList.remove('hidden');
+          const alquilado = installationData.alquilado;
+          document.getElementById("slcCondicionAlquilados").value = alquilado.condicion ? "Alquilado" : "Prestado";
+          document.getElementById("txtPeriodoAlquilados").value = alquilado.periodo;
+          document.getElementById("txtFechaInicioAlquilados").value = alquilado.fechaInicio;
+          document.getElementById("txtFechaFinAlquilados").value = alquilado.fechaFin;
+          document.getElementById("txtCostoAlquilerAlquilados").value = alquilado.costoAlquiler;
+          document.getElementById("txtMarcaAntenaAlquilados").value = alquilado.antena.marca;
+          document.getElementById("txtModeloAntenaAlquilados").value = alquilado.antena.modelo;
+          document.getElementById("txtMacAntenaAlquilados").value = alquilado.antena.mac;
+          document.getElementById("txtDescripcionAntenaAlquilados").value = alquilado.antena.descripcion;
+          document.getElementById("txtMarcaRouterAlquilados").value = alquilado.router.marca;
+          document.getElementById("txtModeloRouterAlquilados").value = alquilado.router.modelo;
+          document.getElementById("txtMacRouterAlquilados").value = alquilado.router.mac;
+          document.getElementById("txtDescripcionRouterAlquilados").value = alquilado.router.descripcion;
+          document.getElementById("txtDetalleAlquilados").value = alquilado.detalle;
+        }
 
         // Cargar datos de deuda
         const deuda = installationData.deuda;
@@ -127,65 +159,113 @@ document.addEventListener("DOMContentLoaded", () => {
 
   //Cargar routers
   function cargarRouters(confiRouter) {
+    const rowContainer = document.createElement("div");
+    rowContainer.classList.add("row");
+  
     confiRouter.forEach((router, index) => {
       const routerData = router.ConfiRouter;
+      const routerCol = document.createElement("div");
+      routerCol.classList.add("col-md-4", "mb-4");
+  
       const routerCard = document.createElement("div");
-      routerCard.classList.add("card", "mb-3");
-
+      routerCard.classList.add("card", "shadow-sm");
+      routerCard.style.maxWidth = '100%';
+  
       routerCard.innerHTML = `
-            <div class="card-header">
-                Router N° ${index + 1}
-            </div>
-            <div class="card-body">
-                <ul>
-                    <li><strong>WAN:</strong> ${routerData.wan}</li>
-                    <li><strong>Máscara:</strong> ${routerData.mascara}</li>
-                    <li><strong>Puerta de Enlace:</strong> ${routerData.puertaEnlace}</li>
-                    <li><strong>DNS 1:</strong> ${routerData.dns1}</li>
-                    <li><strong>DNS 2:</strong> ${routerData.dns2}</li>
-                    <li><strong>LAN Wireless:</strong> ${routerData.ConfiWireless.lan}</li>
-                    <li><strong>Acceso Wireless:</strong> ${routerData.ConfiWireless.acceso}</li>
-                    <li><strong>SSID:</strong> ${routerData.ConfiWireless.ssid}</li>
-                    <li><strong>Seguridad:</strong> ${routerData.ConfiWireless.seguridad}</li>
-                    <li><strong>Otros:</strong> ${routerData.ConfiWireless.otros}</li>
-                </ul>
-            </div>
-        `;
-
+        <div class="card-header text-white py-2">
+          <h5 class="card-title mb-0 d-flex justify-content-between align-items-center fs-6">
+            <span>Router N° ${index + 1}</span>
+          </h5>
+        </div>
+        <div class="card-body p-0">
+          <table class="table table-sm table-hover mb-0">
+            <tbody>
+              <tr>
+                <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>WAN</td>
+                <td class="py-1 px-2">${routerData.wan}</td>
+              </tr>
+              <tr>
+                <td class="py-1 px-2"><i class="fas fa-mask text-primary me-2"></i>Máscara</td>
+                <td class="py-1 px-2">${routerData.mascara}</td>
+              </tr>
+              <tr>
+                <td class="py-1 px-2"><i class="fas fa-door-open text-primary me-2"></i>Puerta de Enlace</td>
+                <td class="py-1 px-2">${routerData.puertaEnlace}</td>
+              </tr>
+              <tr>
+                <td class="py-1 px-2"><i class="fas fa-server text-primary me-2"></i>DNS 1</td>
+                <td class="py-1 px-2">${routerData.dns1}</td>
+              </tr>
+              <tr>
+                <td class="py-1 px-2"><i class="fas fa-server text-primary me-2"></i>DNS 2</td>
+                <td class="py-1 px-2">${routerData.dns2}</td>
+              </tr>
+              <tr>
+                <td class="py-1 px-2"><i class="fas fa-wifi text-primary me-2"></i>LAN Wireless</td>
+                <td class="py-1 px-2">${routerData.ConfiWireless.lan}</td>
+              </tr>
+              <tr>
+                <td class="py-1 px-2"><i class="fas fa-key text-primary me-2"></i>Acceso Wireless</td>
+                <td class="py-1 px-2">${routerData.ConfiWireless.acceso}</td>
+              </tr>
+              <tr>
+                <td class="py-1 px-2"><i class="fas fa-broadcast-tower text-primary me-2"></i>SSID</td>
+                <td class="py-1 px-2">${routerData.ConfiWireless.ssid}</td>
+              </tr>
+              <tr>
+                <td class="py-1 px-2"><i class="fas fa-shield-alt text-primary me-2"></i>Seguridad</td>
+                <td class="py-1 px-2">${routerData.ConfiWireless.seguridad}</td>
+              </tr>
+              <tr>
+                <td class="py-1 px-2"><i class="fas fa-info-circle text-primary me-2"></i>Otros</td>
+                <td class="py-1 px-2">${routerData.ConfiWireless.otros}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      `;
+  
       const deleteButton = document.createElement("button");
-      deleteButton.classList.add("btn", "btn-danger", "ms-2");
-      deleteButton.textContent = "Eliminar";
-
+      deleteButton.classList.add("btn", "btn-sm", "btn-outline-light", "mb-1", "me-2", "float-end");
+      deleteButton.style.backgroundColor = '#0459ad';
+      deleteButton.style.color = 'white';
+      deleteButton.innerHTML = '<i class="fas fa-trash-alt" style="color: white;"></i> Eliminar';
+  
       deleteButton.addEventListener("click", function () {
-        routersContainer.removeChild(routerCard);
+        rowContainer.removeChild(routerCol);
         routerCount--;
         actualizarNumeros();
-        jsonRouter.splice(index, 1);
+        jsonRouter.splice(routerCount, 1);
       });
-
+  
       routerCard.querySelector(".card-body").appendChild(deleteButton);
-      routersContainer.appendChild(routerCard);
+      routerCol.appendChild(routerCard);
+      rowContainer.appendChild(routerCol);
     });
+  
+    routersContainer.appendChild(rowContainer);
+    routerConfigModal.hide();
+    limpiarCampos();
   }
 
   // Función para agregar un nuevo router
   function agregarRouter() {
     routerCount++;
-
+  
     routerConfigModal.show();
-
+  
     saveButton.onclick = function () {
-      wan = document.getElementById("txtWanRouter").value;
-      mascara = document.getElementById("txtMascaraRouter").value;
-      puertaEnlace = document.getElementById("txtPuertaEnlaceRouter").value;
-      dns1 = document.getElementById("txtDns1Router").value;
-      dns2 = document.getElementById("txtDns2Router").value;
-      lan = document.getElementById("txtLanWireless").value;
-      acceso = document.getElementById("txtAccesoWireless").value;
-      ssid = document.getElementById("txtSsidWireless").value;
-      seguridad = document.getElementById("txtSeguridadWireless").value;
-      otros = document.getElementById("txtOtrosWireless").value;
-
+      const wan = document.getElementById("txtWanRouter").value;
+      const mascara = document.getElementById("txtMascaraRouter").value;
+      const puertaEnlace = document.getElementById("txtPuertaEnlaceRouter").value;
+      const dns1 = document.getElementById("txtDns1Router").value;
+      const dns2 = document.getElementById("txtDns2Router").value;
+      const lan = document.getElementById("txtLanWireless").value;
+      const acceso = document.getElementById("txtAccesoWireless").value;
+      const ssid = document.getElementById("txtSsidWireless").value;
+      const seguridad = document.getElementById("txtSeguridadWireless").value;
+      const otros = document.getElementById("txtOtrosWireless").value;
+  
       jsonRouter.push({
         wan,
         mascara,
@@ -198,46 +278,88 @@ document.addEventListener("DOMContentLoaded", () => {
         seguridad,
         otros
       });
-
+  
+      const routerCol = document.createElement("div");
+      routerCol.classList.add("col-md-4", "mb-4");
+  
       const routerCard = document.createElement("div");
-      routerCard.classList.add("card", "mb-3");
-
+      routerCard.classList.add("card", "shadow-sm");
+      routerCard.style.maxWidth = '100%';
+  
       routerCard.innerHTML = `
-        <div class="card-header">
-          Router N° ${routerCount}
+        <div class="card-header text-white py-2">
+          <h5 class="card-title mb-0 d-flex justify-content-between align-items-center fs-6">
+            <span>Router N° ${routerCount}</span>
+          </h5>
         </div>
-        <div class="card-body">
-          <ul>
-            <li><strong>WAN:</strong> ${wan}</li>
-            <li><strong>Máscara:</strong> ${mascara}</li>
-            <li><strong>Puerta de Enlace:</strong> ${puertaEnlace}</li>
-            <li><strong>DNS 1:</strong> ${dns1}</li>
-            <li><strong>DNS 2:</strong> ${dns2}</li>
-            <li><strong>LAN Wireless:</strong> ${lan}</li>
-            <li><strong>Acceso Wireless:</strong> ${acceso}</li>
-            <li><strong>SSID:</strong> ${ssid}</li>
-            <li><strong>Seguridad:</strong> ${seguridad}</li>
-            <li><strong>Otros:</strong> ${otros}</li>
-          </ul>
+        <div class="card-body p-0">
+          <table class="table table-sm table-hover mb-0">
+            <tbody>
+              <tr>
+                <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>WAN</td>
+                <td class="py-1 px-2">${wan}</td>
+              </tr>
+              <tr>
+                <td class="py-1 px-2"><i class="fas fa-mask text-primary me-2"></i>Máscara</td>
+                <td class="py-1 px-2">${mascara}</td>
+              </tr>
+              <tr>
+                <td class="py-1 px-2"><i class="fas fa-door-open text-primary me-2"></i>Puerta de Enlace</td>
+                <td class="py-1 px-2">${puertaEnlace}</td>
+              </tr>
+              <tr>
+                <td class="py-1 px-2"><i class="fas fa-server text-primary me-2"></i>DNS 1</td>
+                <td class="py-1 px-2">${dns1}</td>
+              </tr>
+              <tr>
+                <td class="py-1 px-2"><i class="fas fa-server text-primary me-2"></i>DNS 2</td>
+                <td class="py-1 px-2">${dns2}</td>
+              </tr>
+              <tr>
+                <td class="py-1 px-2"><i class="fas fa-wifi text-primary me-2"></i>LAN Wireless</td>
+                <td class="py-1 px-2">${lan}</td>
+              </tr>
+              <tr>
+                <td class="py-1 px-2"><i class="fas fa-key text-primary me-2"></i>Acceso Wireless</td>
+                <td class="py-1 px-2">${acceso}</td>
+              </tr>
+              <tr>
+                <td class="py-1 px-2"><i class="fas fa-broadcast-tower text-primary me-2"></i>SSID</td>
+                <td class="py-1 px-2">${ssid}</td>
+              </tr>
+              <tr>
+                <td class="py-1 px-2"><i class="fas fa-shield-alt text-primary me-2"></i>Seguridad</td>
+                <td class="py-1 px-2">${seguridad}</td>
+              </tr>
+              <tr>
+                <td class="py-1 px-2"><i class="fas fa-info-circle text-primary me-2"></i>Otros</td>
+                <td class="py-1 px-2">${otros}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       `;
-
+  
       const deleteButton = document.createElement("button");
-      deleteButton.classList.add("btn", "btn-danger", "ms-2");
-      deleteButton.textContent = "Eliminar";
-
+      deleteButton.classList.add("btn", "btn-sm", "btn-outline-light", "mb-1", "me-2", "float-end");
+      deleteButton.style.backgroundColor = '#0459ad';
+      deleteButton.style.color = 'white';
+      deleteButton.innerHTML = '<i class="fas fa-trash-alt" style="color: white;"></i> Eliminar';
+  
       deleteButton.addEventListener("click", function () {
-        routersContainer.removeChild(routerCard);
+        rowContainer.removeChild(routerCol);
         routerCount--;
         actualizarNumeros();
         jsonRouter.splice(routerCount, 1);
       });
-
+  
       routerCard.querySelector(".card-body").appendChild(deleteButton);
-      routersContainer.appendChild(routerCard);
-
+      routerCol.appendChild(routerCard);
+      const rowContainer = routersContainer.querySelector(".row");
+      rowContainer.appendChild(routerCol);
+  
       routerConfigModal.hide();
-
+  
       limpiarCampos();
     };
   }
@@ -267,8 +389,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  btnAgregarRouter.addEventListener("click", agregarRouter);
-
   function formatDns(input) {
     let value = input.value.replace(/\D/g, '');
     if (value.length > 4) {
@@ -277,26 +397,6 @@ document.addEventListener("DOMContentLoaded", () => {
     value = value.replace(/(\d{1,1})(?=\d)/g, '$1.');
     input.value = value;
   }
-
-  function formatIp(input) {
-    let value = input.value.replace(/\D/g, '');
-    if (value.length > 12) {
-      value = value.substring(0, 12);
-    }
-    if (value.length > 3) {
-      value = value.replace(/^(\d{1,3})(\d{1,2})$/, '$1.$2');
-    }
-    if (value.length > 6) {
-      value = value.replace(/^(\d{1,3})(\d{1,2})(\d{1,3})$/, '$1.$2.$3');
-    }
-    if (value.length > 9) {
-      value = value.replace(/^(\d{1,3})(\d{1,2})(\d{1,2})(\d{1,3})$/, '$1.$2.$3.$4');
-    }
-
-    input.value = value.substring(0, 15);
-  }
-
-  const fieldsIp = ['txtWanRouter', 'txtPuertaEnlaceRouter', 'txtLanWireless'];
   const fieldsDns = ['txtDns1Router', 'txtDns2Router'];
 
   fieldsDns.forEach(fieldId => {
@@ -306,43 +406,39 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  fieldsIp.forEach(fieldId => {
-    const inputField = document.getElementById(fieldId);
-    inputField.addEventListener('input', function () {
-      formatIp(inputField);
+  //Validacion de datos para ip
+  $(document).ready(function () {
+    $('#txtLanWireless, #txtWanRouter, #txtMascaraRouter, #txtPuertaEnlaceRouter').mask('0ZZ.0ZZ.0ZZ.0ZZ', {
+      translation: {
+        'Z': {
+          pattern: /[0-9]/,
+          optional: true
+        }
+      }
     });
+
+    //Validacion de datos para money
+    $(`#txtAdelantoVenta, 
+      #txtCostoAlquilerAlquilados, 
+      #txtSubTotalVenta, 
+      #txtSaldoEquipoVenta, 
+      #txtCostoAntenaVenta, 
+      #txtCostoRouterVenta`)
+      .mask('000.000.000.000.000,00', { reverse: true });
   });
 
+  function toggleCheckbox(checkbox1, checkbox2) {
+    checkbox1.addEventListener('change', function () {
+      if (checkbox1.checked) {
+        checkbox2.checked = false;
+      }
+    });
+  }
 
-  // Check de Adelantado o cumpliendo el mes 
-  const chkAdelantadoVenta = document.getElementById('chkAdelantadoVenta');
-  const chkCumpliendoMesVenta = document.getElementById('chkCumpliendoMesVenta');
-  const chkAdelantadoAlquilado = document.getElementById('chkAdelantadoAlquilados');
-  const chkCumpliendoMesAlquilado = document.getElementById('chkCumpliendoMesAlquilados');
-
-  chkAdelantadoVenta.addEventListener('change', function () {
-    if (chkAdelantadoVenta.checked) {
-      chkCumpliendoMesVenta.checked = false;
-    }
-  });
-
-  chkCumpliendoMesVenta.addEventListener('change', function () {
-    if (chkCumpliendoMesVenta.checked) {
-      chkAdelantadoVenta.checked = false;
-    }
-  });
-
-  chkAdelantadoAlquilado.addEventListener('change', function () {
-    if (chkAdelantadoAlquilado.checked) {
-      chkCumpliendoMesAlquilado.checked = false;
-    }
-  });
-
-  chkCumpliendoMesAlquilado.addEventListener('change', function () {
-    if (chkCumpliendoMesAlquilado.checked) {
-      chkAdelantadoAlquilado.checked = false;
-    }
-  });
+  toggleCheckbox(chkAdelantadoVenta, chkCumpliendoMesVenta);
+  toggleCheckbox(chkCumpliendoMesVenta, chkAdelantadoVenta);
+  toggleCheckbox(chkAdelantadoAlquilado, chkCumpliendoMesAlquilado);
+  toggleCheckbox(chkCumpliendoMesAlquilado, chkAdelantadoAlquilado);
 
   //Json Parametros 
   async function parametros() {
@@ -385,11 +481,17 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
     jsonData.parametros = jsonParametros.parametros;
+    if (!jsonData.ConfiRouter) {
+      jsonData.ConfiRouter = [];
+    }
   }
 
   //Json Router
   async function router() {
     if (!flagFichaInstalacion) {
+      let allFieldsFilled = true;
+      const updatedRouters = [];
+
       jsonRouter.forEach((router, index) => {
         if (
           router.wan === "" ||
@@ -404,27 +506,44 @@ document.addEventListener("DOMContentLoaded", () => {
           router.otros === ""
         ) {
           showToast(`Por Favor, llene todos los campos requeridos para el Router N° ${index + 1}.`, "WARNING", 1500);
+          allFieldsFilled = false;
         } else {
-          jsonRouter[index] = {
-            ConfiRouter: {
-              wan: router.wan,
-              mascara: router.mascara,
-              puertaEnlace: router.puertaEnlace,
-              dns1: router.dns1,
-              dns2: router.dns2,
-              ConfiWireless: {
-                lan: router.lan,
-                acceso: router.acceso,
-                ssid: router.ssid,
-                seguridad: router.seguridad,
-                otros: router.otros
-              }
-            }
-          }
+          updatedRouters.push({
+            wan: router.wan,
+            mascara: router.mascara,
+            puertaEnlace: router.puertaEnlace,
+            dns1: router.dns1,
+            dns2: router.dns2,
+            lan: router.lan,
+            acceso: router.acceso,
+            ssid: router.ssid,
+            seguridad: router.seguridad,
+            otros: router.otros
+          });
         }
       });
+
+      if (allFieldsFilled) {
+        console.log('Updated Routers:', updatedRouters);
+        jsonData.ConfiRouter = updatedRouters.map(router => ({
+          ConfiRouter: {
+            wan: router.wan,
+            mascara: router.mascara,
+            puertaEnlace: router.puertaEnlace,
+            dns1: router.dns1,
+            dns2: router.dns2,
+            ConfiWireless: {
+              lan: router.lan,
+              acceso: router.acceso,
+              ssid: router.ssid,
+              seguridad: router.seguridad,
+              otros: router.otros
+            }
+          }
+        }));
+        console.log('jsonData.ConfiRouter:', jsonData.ConfiRouter);
+      }
     }
-    jsonData.ConfiRouter = jsonRouter;
   }
 
   //Json Venta
@@ -466,7 +585,7 @@ document.addEventListener("DOMContentLoaded", () => {
       txtDetalleVenta === ""
     ) {
       showToast("Por Favor, llene todos los campos requeridos.", "WARNING", 1500);
-      return null; // Retornamos null si no se completan los campos
+      return null;
     } else {
       jsonVenta = {
         venta: {
@@ -476,7 +595,10 @@ document.addEventListener("DOMContentLoaded", () => {
           adelanto: txtAdelantoVenta,
           saldoEquipos: txtSaldoEquipoVenta,
           materialAdicional: txtMaterialAdicionalVenta,
-          condicion: chkAdelantadoVenta || chkCumpliendoMesVenta,
+          condicion: {
+            "Adelantado": chkAdelantadoVenta ? true : "",
+            "Cumpliendo el mes": chkCumpliendoMesVenta ? true : ""
+          },
           antena: {
             marca: txtMarcaVentaAntena,
             modelo: txtModeloVentaAntena,
@@ -494,6 +616,9 @@ document.addEventListener("DOMContentLoaded", () => {
       };
     }
     jsonData.venta = jsonVenta.venta;
+    if (!jsonData.ConfiRouter) {
+      jsonData.ConfiRouter = [];
+    }
   }
 
   //Json Alquilado
@@ -560,6 +685,9 @@ document.addEventListener("DOMContentLoaded", () => {
       };
     }
     jsonData.alquilado = jsonAlquilado.alquilado;
+    if (!jsonData.ConfiRouter) {
+      jsonData.ConfiRouter = [];
+    }
   }
 
   //Json Pago
@@ -581,7 +709,7 @@ document.addEventListener("DOMContentLoaded", () => {
         txtSaldoPendiente === "" ||
         txtDetalleDeuda === ""
       ) {
-        //showToast("Por Favor, llene todos los campos requeridos.", "WARNING", 1500);
+        showToast("Por Favor, llene todos los campos requeridos.", "WARNING", 1500);
         return;
       } else {
         jsonDeuda = {
@@ -598,6 +726,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
     jsonData.deuda = jsonDeuda.deuda;
+    if (!jsonData.ConfiRouter) {
+      jsonData.ConfiRouter = [];
+    }
   }
 
   //Función Registrar Ficha Wisp
@@ -629,9 +760,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!flagFichaInstalacion) {
       await registrarFichaWisp();
       showToast("Ficha de Instalación guardada correctamente", "SUCCESS");
-      /* setTimeout(() => {
+      setTimeout(() => {
         window.location.href = `${config.HOST}views/Contratos/`;
-      }, 2000); */
+      }, 2000);
     } else {
       showToast("Ficha de Instalación ya guardada", "INFO");
     }
@@ -640,6 +771,8 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("btnCancelar").addEventListener("click", () => {
     window.location.href = `${config.HOST}views/Contratos/`;
   });
+
+  btnAgregarRouter.addEventListener("click", agregarRouter);
 
 });
 
