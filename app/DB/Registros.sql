@@ -84,14 +84,14 @@ INSERT INTO tb_paquetes (id_servicio, paquete, precio, duracion, iduser_create) 
 ('{"id_servicio": [1]}', 'Instalación de CCTV para Seguridad Cable', '150.00', '{"CABL": 6}', 1),
 ('{"id_servicio": [3]}', 'Teleasistencia Técnica Fibra', '60.00', '{"FIBR": 10}', 1),
 ('{"id_servicio": [2]}', 'Acceso a Wi-Fi Público WISP', '30.00', '{"WISP": 10}', 1),
-('{"id_servicio": [1], "id_servicio2": 3}', 'Streaming de Video HD', '20.00', '{"CABL": 4, "FIBR": 10}', 1),
+('{"id_servicio": [1, 3]}', 'Streaming de Video HD', '20.00', '{"CABL": 4, "FIBR": 10}', 1),
 ('{"id_servicio": [3]}', 'Streaming de Música Fibra', '15.00', '{"FIBR": 10}', 1),
 ('{"id_servicio": [2]}', 'Capacitación en Tecnología Digital WISP', '100.00', '{"WISP": 10}', 1),
-('{"id_servicio": [1], "id_servicio2": 3}', 'Gestión de Redes Sociales', '200.00', '{"CABL": 4, "FIBR": 10}', 1),
-('{"id_servicio": [3], "id_servicio2": 1}', 'Publicidad en Línea Fibra', '300.00', '{"FIBR": 24, "CABL": 12}', 1),
-('{"id_servicio": [1], "id_servicio2": 3}', 'Soporte 24/7 para Clientes WISP', '250.00', '{"CABL": 4, "FIBR": 10}', 1),
-('{"id_servicio": [1], "id_servicio2": 3}', 'Desarrollo de Aplicaciones Web', '500.00', '{"CABL": 4, "FIBR": 10}', 1),
-('{"id_servicio": [3], "id_servicio2": 1}', 'Plataforma de E-learning para Empresas Fibra', '400.00', '{"FIBR": 24, "CABL": 12}', 1);
+('{"id_servicio": [1, 3]}', 'Gestión de Redes Sociales', '200.00', '{"CABL": 4, "FIBR": 10}', 1),
+('{"id_servicio": [3, 1]}', 'Publicidad en Línea Fibra', '300.00', '{"FIBR": 24, "CABL": 12}', 1),
+('{"id_servicio": [1, 3]}', 'Soporte 24/7 para Clientes WISP', '250.00', '{"CABL": 4, "FIBR": 10}', 1),
+('{"id_servicio": [1, 3]}', 'Desarrollo de Aplicaciones Web', '500.00', '{"CABL": 4, "FIBR": 10}', 1),
+('{"id_servicio": [3, 1]}', 'Plataforma de E-learning para Empresas Fibra', '400.00', '{"FIBR": 24, "CABL": 12}', 1);
 
 INSERT INTO tb_personas (tipo_doc, nro_doc, apellidos, nombres, telefono, nacionalidad, email, iduser_create) VALUES
 ('DNI', '12345678', 'Pérez García', 'Juan', '987654321', 'Peruano', 'juan.perezgarcia@example.com', 1),

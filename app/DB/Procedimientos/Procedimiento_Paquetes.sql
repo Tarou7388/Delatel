@@ -13,7 +13,9 @@ CREATE PROCEDURE spu_paquetes_buscar_servicio(IN p_id_servicio JSON)
 BEGIN
     SELECT 
         p.id_paquete,
-        p.id_servicio, 
+        p.id_servicio,
+        GROUP_CONCAT(s.servicio) AS servicios,
+        GROUP_CONCAT(s.tipo_servicio) AS tipos_servicio,
         p.paquete,
         p.precio,
         p.duracion,
@@ -25,8 +27,14 @@ BEGIN
         p.iduser_inactive
     FROM
         tb_paquetes p
-    WHERE
-        JSON_CONTAINS(p_id_servicio, CAST(p.id_servicio AS CHAR));
+        JOIN tb_servicios s ON JSON_CONTAINS(
+            p.id_servicio, 
+            CONCAT('{"id_servicio":', s.id_servicio, '}')
+        )
+    WHERE 
+        JSON_CONTAINS(p.id_servicio, JSON_UNQUOTE(JSON_EXTRACT(p_id_servicio, '$.id_servicio')), '$.id_servicio')
+    GROUP BY 
+        p.id_paquete;
 END $$
 
 CALL spu_paquetes_buscar_servicio('{"id_servicio": [1]}');

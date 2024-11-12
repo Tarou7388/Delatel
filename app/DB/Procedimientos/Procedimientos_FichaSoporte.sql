@@ -19,13 +19,13 @@ SELECT
     srv.tipo_servicio
 FROM
     tb_soporte s
-    JOIN tb_contratos c ON s.id_contrato = c.id_contrato
-    JOIN tb_tipo_soporte ts ON s.id_tipo_soporte = ts.id_tipo_soporte
-    JOIN tb_responsables r ON s.id_tecnico = r.id_responsable
-    JOIN tb_usuarios u ON r.id_usuario = u.id_usuario
-    JOIN tb_personas p ON u.id_persona = p.id_persona
-    JOIN tb_paquetes pk ON c.id_paquete = pk.id_paquete
-    JOIN tb_servicios srv ON pk.id_servicio = srv.id_servicio;
+    LEFT JOIN tb_contratos c ON s.id_contrato = c.id_contrato
+    LEFT JOIN tb_tipo_soporte ts ON s.id_tipo_soporte = ts.id_tipo_soporte
+    LEFT JOIN tb_responsables r ON s.id_tecnico = r.id_responsable
+    LEFT JOIN tb_usuarios u ON r.id_usuario = u.id_usuario
+    LEFT JOIN tb_personas p ON u.id_persona = p.id_persona
+    LEFT JOIN tb_paquetes pk ON c.id_paquete = pk.id_paquete
+    LEFT JOIN tb_servicios srv ON pk.id_servicio = srv.id_servicio;
 
 DELIMITER $$
 
@@ -46,12 +46,7 @@ DROP PROCEDURE IF EXISTS spu_registrar_fichasoporte$$
 
 CREATE PROCEDURE spu_registrar_fichasoporte(
     IN p_id_contrato INT,
-    IN p_id_tipo_soporte INT,
-    IN p_id_tecnico INT,
     IN p_fecha_hora_solicitud DATETIME,
-    IN p_fecha_hora_asistencia DATETIME,
-    IN p_prioridad VARCHAR(50),
-    IN p_soporte JSON,
     IN p_descripcion_problema TEXT,
     IN p_descripcion_solucion TEXT,
     IN p_iduser_create INT
@@ -59,12 +54,7 @@ CREATE PROCEDURE spu_registrar_fichasoporte(
 BEGIN
     INSERT INTO tb_soporte (
         id_contrato,
-        id_tipo_soporte,
-        id_tecnico,
         fecha_hora_solicitud,
-        fecha_hora_asistencia,
-        prioridad,
-        soporte,
         descripcion_problema,
         descripcion_solucion,
         create_at,
@@ -72,18 +62,17 @@ BEGIN
     )
     VALUES (
         p_id_contrato,
-        p_id_tipo_soporte,
-        p_id_tecnico,
         p_fecha_hora_solicitud,
-        p_fecha_hora_asistencia,
-        p_prioridad,
-        p_soporte,
         p_descripcion_problema,
-        NULLIF(p_descripcion_solucion,""),
+        CASE 
+            WHEN p_descripcion_solucion = '' THEN NULL 
+            ELSE p_descripcion_solucion 
+        END,
         NOW(),
         p_iduser_create
     );
 END $$
+
 
 DELIMITER $$
 
@@ -91,25 +80,21 @@ DROP PROCEDURE IF EXISTS spu_soporte_actualizar$$
 
 CREATE PROCEDURE spu_soporte_actualizar(
     IN p_id_soporte INT,
-    IN p_id_contrato INT,
-    IN p_id_tipo_soporte INT,
     IN p_id_tecnico INT,
+    IN p_id_tipo_soporte INT,
     IN p_fecha_hora_asistencia DATETIME,
-    IN p_prioridad VARCHAR(50),
+    IN prioridad VARCHAR(50),
     IN p_soporte JSON,
-    IN p_descripcion_solucion TEXT,
     IN p_iduser_update INT
 )
 BEGIN
     UPDATE tb_soporte
     SET
-        id_contrato = p_id_contrato,
-        id_tipo_soporte = p_id_tipo_soporte,
         id_tecnico = p_id_tecnico,
         fecha_hora_asistencia = p_fecha_hora_asistencia,
+        id_tipo_soporte = p_id_tipo_soporte,
         prioridad = p_prioridad,
         soporte = p_soporte,
-        descripcion_solucion = p_descripcion_solucion,
         update_at = NOW(),
         iduser_update = p_iduser_update
     WHERE id_soporte = p_id_soporte;
@@ -157,7 +142,7 @@ BEGIN
         tb_empresas e ON cl.id_empresa = e.id_empresa 
     WHERE 
         (p_prioridad IS NULL OR TRIM(p_prioridad) = '' OR LOWER(TRIM(s.prioridad)) = LOWER(TRIM(p_prioridad)))
-        AND LOWER(TRIM(s.prioridad)) != 'completo'
+        AND LOWER(TRIM(s.prioridad)) != 'completo' OR LOWER(TRIM(s.prioridad)) != 'incidencia'
     ORDER BY 
         DATE(s.fecha_hora_asistencia) ASC,
         CASE 

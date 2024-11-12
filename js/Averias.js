@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   (async () => {
     const respuesta = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=listarClientes`);
     const data = await respuesta.json();
+    console.log(data)
 
     const tbody = document.querySelector("#listarClienteyContratos tbody");
 

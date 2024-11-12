@@ -1,16 +1,26 @@
 .antena-header {
-  background-color: #007bff;
+  background-color: #ff9100;
   color: white;
   border-radius: 10px;
   padding: 1rem;
 }
 .router-header {
-  background-color: #28a745;
+  background-color: #227a36;
   color: white;
   border-radius: 10px;
   padding: 1rem;
 }
 
 .btn-container {
-  margin-left: -15px;
+  margin-left: -50px;
 }
+
+.hidden {
+  display: none;
+}
+
+.card-header{
+  background-color: #0459ad;
+  color: white;
+}
+

@@ -39,7 +39,8 @@
               <th class="text-center">Prioridad</th>
               <th class="text-center">Tipo Soporte</th>
               <th class="text-center">Nombre Cliente</th>
-              <th class="text-center">Técnico Cargo</th>
+              <th class="text-center">Dirección de Servicio</th>
+              <th class="text-center">Dirección de Servicio</th>
               <th class="text-center">Acciones</th>
             </tr>
           </thead>
