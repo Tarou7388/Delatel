@@ -27,25 +27,22 @@
         <h5>Datos del Cliente</h5>
         <div class="row g-2 mb-2">
           <div class="col-md">
-            <div class="input-group">
-              <div class="form-floating flex-fill">
-                <input type="tel" class="form-control" maxlength="11" minlength="11" pattern="[0-11]+" id="txtNrodocumento" placeholder="Numero Identificador" autofocus required>
-                <label>Número Identificador</label>
-              </div>
-              <button class="input-group-text btn btn-secondary" type="button" id="btnNrodocumento"><i class="fa-solid fa-magnifying-glass"></i></button>
+            <div class="form-floating flex-fill">
+              <input type="tel" class="form-control" maxlength="11" minlength="11" pattern="[0-11]+" id="txtNrodocumento" placeholder="Numero Identificador" disabled autofocus required>
+              <label>Número Identificador</label>
             </div>
           </div>
 
           <div class="col-md">
             <div class="form-floating">
-              <input type="text" class="form-control" id="txtCliente" placeholder="Cliente">
+              <input type="text" class="form-control" id="txtCliente" placeholder="Cliente" disabled>
               <label>Cliente</label>
             </div>
           </div>
 
           <div class="col-md">
             <div class="form-floating">
-              <input type="text" class="form-control" id="txtPlan" placeholder="Plan">
+              <input type="text" class="form-control" id="txtPlan" placeholder="Plan" disabled>
               <label>Plan</label>
             </div>
           </div>
@@ -110,7 +107,7 @@
 
             <div class="input-group">
               <div class="form-floating flex-fill">
-                <input type="text" id="txtNumSpliter" class="form-control">
+                <input type="text" id="txtNumSpliter" class="form-control" placeholder="Spliter">
                 <label>Spliter</label>
               </div>
               <select class="form-select" id="slcSpliter" aria-label="Selecciona una opción">
@@ -148,8 +145,10 @@
         <!-- Cuarta Fila -->
         <div>
           <div class="col-md">
-            <label>Estado Inicial</label>
-            <textarea type="text" class="form-control" id="txtaEstadoInicial" style="height: 100px" required></textarea>
+            <div class="form-floating">
+              <textarea type="text" class="form-control" id="txtaEstadoInicial" style="height: 100px" required></textarea>
+              <label>Estado Inicial</label>
+            </div>
           </div>
         </div>
 
@@ -159,22 +158,28 @@
         <div class="row g-2 mb-2">
 
           <div class="col-md">
-            <label>Periodo</label>
-            <select class="form-select" id="slcPeriodo" aria-label="Selecciona una opción">
-              <option selected disabled>Elige una opción</option>
-              <option value="1">Mensual</option>
-              <option value="2">Contado</option>
-            </select>
+            <div class="form-floating">
+              <select class="form-select" id="slcPeriodo" aria-label="Selecciona una opción">
+                <option selected disabled>Elige una opción</option>
+                <option value="1">Mensual</option>
+                <option value="2">Contado</option>
+              </select>
+              <label>Periodo</label>
+            </div>
           </div>
 
           <div class="col-md">
-            <label>Potencia</label>
-            <input type="text" class="form-control" id="txtPotencia" required>
+            <div class="form-floating">
+              <input type="text" class="form-control" id="txtPotencia" placeholder="Potencia" required>
+              <label>Potencia</label>
+            </div>
           </div>
 
           <div class="col-md">
-            <label>Sintonizador</label>
-            <input type="text" class="form-control" id="txtSintonizador">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="txtSintonizador" placeholder="Sintonizador">
+              <label>Sintonizador</label>
+            </div>
           </div>
 
         </div> <!-- Fin de Segunda Fila -->
@@ -185,9 +190,11 @@
         <div class="row g-2 mb-2">
 
           <div class="col-md">
-            <label>Triplexor</label>
             <div class="input-group">
-              <input type="text" id="txtNumTriplexor" class="form-control">
+              <div class="form-floating">
+                <input type="text" id="txtNumTriplexor" class="form-control" placeholder="Triplexor">
+                <label>Triplexor</label>
+              </div>
               <select class="form-select" id="slcTriplexor" aria-label="Selecciona una opción">
                 <option selected disabled>Elige una opción</option>
                 <option value="1">No</option>
@@ -198,9 +205,11 @@
           </div>
 
           <div class="col-md">
-            <label>Spliter</label>
             <div class="input-group">
-              <input type="text" id="txtNumSpliter" class="form-control">
+              <div class="form-floating">
+                <input type="text" id="txtNumSpliter" class="form-control" placeholder="Sliter">
+                <label>Spliter</label>
+              </div>
               <select class="form-select" id="slcSpliter" aria-label="Selecciona una opción">
                 <option selected disabled>Elige una opción</option>
                 <option value="1">1x3</option>
@@ -211,17 +220,21 @@
           </div>
 
           <div class="col-md">
-            <label>Cable</label>
             <div class="input-group">
-              <input type="text" class="form-control" id="txtCable">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="txtCable" placeholder="Cable">
+                <label>Cable</label>
+              </div>
               <input type="number" class="form-control" id="txtPrecioCable" disabled>
             </div>
           </div>
 
           <div class="col-md">
-            <label>Conectores</label>
             <div class="input-group">
-              <input type="number" class="form-control" id="txtConector">
+              <div class="form-floating">
+                <input type="number" class="form-control" id="txtConector" placeholder="Conectores">
+                <label>Conectores</label>
+              </div>
               <input type="number" class="form-control" id="txtPrecioConector" disabled>
             </div>
           </div> <!-- Fin de Tercera Fila -->
@@ -231,8 +244,10 @@
         <!-- Cuarta Fila -->
         <div>
           <div class="col-md">
-            <label>Procedimiento de Solución</label>
-            <textarea type="text" class="form-control" id="txtaProceSolucion" style="height: 100px" required></textarea>
+            <div class="form-floating">
+              <textarea type="text" class="form-control" id="txtaProceSolucion" style="height: 100px" required></textarea>
+              <label>Procedimiento de Solución</label>
+            </div>
           </div>
         </div>
 
@@ -242,4 +257,5 @@
   </div>
 </div>
 
+<script src="../../js/averiaCable.js" type="module"></script>
 <?php require_once "../../footer.php"; ?>
