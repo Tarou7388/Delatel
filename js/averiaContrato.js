@@ -54,11 +54,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             } else {
               // Verifica el tipo de servicio del contrato seleccionado y redirige a la vista correspondiente
               if (contratoSeleccionado.tipo_servicio == "CABL") {
-                window.location.href = `${config.HOST}views/Soporte/FichaAveriaCable?idContrato=${idContrato}`;
-              } else if (contratoSeleccionado.tipo_servicio == "WISP") {
+                window.location.href = `${config.HOST}views/Soporte/FichaAveriaCable?idContrato=${idContrato}`; 
+              } else if (contratoSeleccionado.tipo_servicio == "WISP") { 
                 window.location.href = `${config.HOST}views/Soporte/FichaWisp?idContrato=${idContrato}`;
-              } else if (contratoSeleccionado.tipo_servicio == "GPON") {
-                window.location.href = `${config.HOST}views/Soporte/FichaGpon?idContrato=${idContrato}`;
+              } else if (contratoSeleccionado.tipo_servicio == "GPON") { 
+                window.location.href = `${config.HOST}views/Soporte/FichaGpon?idContrato=${idContrato}`; 
               }
             }
           } catch (error) {
