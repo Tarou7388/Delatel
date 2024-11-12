@@ -241,21 +241,13 @@ CREATE TABLE tb_contactabilidad (
 CREATE TABLE tb_soporte (
     id_soporte INT PRIMARY KEY AUTO_INCREMENT,
     id_contrato INT NOT NULL,
-<<<<<<< HEAD
-    id_tipo_soporte INT NOT NULL,
-=======
     id_tipo_soporte INT NULL,
->>>>>>> 65736215a034708547fdb5d2a794fafdd6d0ae7d
     id_tecnico INT NULL,
     fecha_hora_solicitud DATETIME NOT NULL,
     fecha_hora_asistencia DATETIME NULL,
     descripcion_problema TEXT NOT NULL,
     descripcion_solucion TEXT NULL,
-<<<<<<< HEAD
-    prioridad VARCHAR(50) NOT NULL,
-=======
     prioridad VARCHAR(50) NULL DEFAULT "Incidencia",
->>>>>>> 65736215a034708547fdb5d2a794fafdd6d0ae7d
     soporte JSON NULL,
     create_at DATETIME NOT NULL DEFAULT NOW(),
     update_at DATETIME NULL,
