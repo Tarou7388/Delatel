@@ -2,7 +2,7 @@ import config from "../env.js";
 import { inicializarDataTable } from "./Herramientas.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("frmRegistroWisp");
+  const form = document.getElementById("frm-registro-gpon");
 
   let idSoporte = -1;
 
@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (idSoporte) {
       await obtenerProblema(idSoporte);
       crearSelectYBoton();
+      ArmadoJsonWisp();
     }
   })();
 
@@ -89,7 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
     rowDiv.appendChild(buttonDiv);
 
 
-    const solutionTextarea = document.getElementById("txtaProceSolucion");
+    const solutionTextarea = document.getElementById("txtaCambiosProceSolucion");
     solutionTextarea.parentNode.parentNode.appendChild(rowDiv);
   }
 
@@ -108,23 +109,54 @@ document.addEventListener("DOMContentLoaded", () => {
     return urlParams.get("idsoporte");
   }
 
-
   async function ArmadoJsonWisp() {
-    const respuesta = await fetch(`${config.HOST}Json/spWISP.json`);
+    const respuesta = await fetch(`${config.HOST}Json/spGpon.json`);
     const datos = await respuesta.json();
 
     console.log(datos);
 
-    // Obtiene los valores de los campos y los asigna al JSON de soporte
-    datos.parametros.base = document.getElementById("txtBase").value;
-    datos.parametros.ip = document.getElementById("txtIp").value;
-    datos.parametros.senal = document.getElementById("txtSenial").value;
+    const pppoe = document.getElementById("txtPppoe").value;
+    const potencia = document.getElementById("txtPotencia").value;
+    const potecia = document.getElementById("txtPotenciaDos").value;
+    const catv = document.getElementById("chkCatv").checked;
+    const clave = document.getElementById("txtClave").value;
+    const vlan = document.getElementById("txtVlan").value;
+    const ssid = document.getElementById("txtSsid").value;
+    const password = document.getElementById("txtPass").value;
+    const otros = document.getElementById("txtOtros").value;
 
-    datos.cambios.nuevaBase = document.getElementById("txtBaseNuevo").value;
-    datos.cambios.nuevoIP = document.getElementById("txtIpNuevo").value;
-    datos.cambios.senal = document.getElementById("txtSenialNuevo").value;
+    // Para los cambios técnicos
+    const pppoeCambio = document.getElementById("txtCambiosPppoe").value;
+    const potenciaCambio = document.getElementById("txtCambiosPotencia").value;
+    const poteciaCambio = document.getElementById("txtCambiosPotenciaDos").value;
+    const catvCambio = document.getElementById("chkCambiosCatv").checked;
+    const claveCambio = document.getElementById("txtCambiosClave").value;
+    const vlanCambio = document.getElementById("txtCambiosVlan").value;
+    const ssidCambio = document.getElementById("txtCambiosSsid").value;
+    const passwordCambio = document.getElementById("txtCambiosPass").value;
+    const otrosCambio = document.getElementById("txtCambiosOtros").value;
 
-    // Crea el objeto data con toda la información
+    datos.parametrosgpon.pppoe = pppoe;
+    datos.parametrosgpon.potecia = potecia;
+    datos.parametrosgpon.potencia = potencia;
+    datos.parametrosgpon.catv = catv;
+    datos.parametrosgpon.clave = clave;
+    datos.parametrosgpon.vlan = vlan;
+    datos.parametrosgpon.ssid = ssid;
+    datos.parametrosgpon.password = password;
+    datos.parametrosgpon.otros = otros;
+
+    datos.cambiosgpon.pppoe = pppoeCambio;
+    datos.cambiosgpon.potecia = poteciaCambio;
+    datos.cambiosgpon.potencia = potenciaCambio;
+    datos.cambiosgpon.catv = catvCambio;
+    datos.cambiosgpon.clave = claveCambio;
+    datos.cambiosgpon.vlan = vlanCambio;
+    datos.cambiosgpon.ssid = ssidCambio;
+    datos.cambiosgpon.password = passwordCambio;
+    datos.cambiosgpon.otros = otrosCambio;
+
+
     const data = {
       idSoporte: idSoporte,
       idTecnico: JSON.stringify(user['idUsuario']),
@@ -132,12 +164,12 @@ document.addEventListener("DOMContentLoaded", () => {
       prioridad: document.getElementById("slcPrioridad").value,
       soporte: datos,
       idUserUpdate: JSON.stringify(user['idUsuario']),
-      descripcion_solucion: document.getElementById("txtaProceSolucion").value
+      descripcion_solucion: document.getElementById("txtaCambiosProceSolucion").value
     };
 
     console.log(data)
 
-    return data; // Retorna el objeto data para ser usado en guardarSoporte
+    return data;
   }
 
   async function guardarSoporte(data) {
@@ -161,11 +193,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Agrega el evento submit para el formulario
+
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
-    const data = await ArmadoJsonWisp(); // Espera a que ArmadoJsonWisp devuelva los datos
-    await guardarSoporte(data); // Llama a guardarSoporte con el objeto data
+    const data = await ArmadoJsonWisp();
+    await guardarSoporte(data);
   });
 
 });

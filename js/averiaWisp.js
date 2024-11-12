@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let idSoporte = -1;
 
   (async function () {
-    idSoporte = await obtenerIdSoporteDeUrl();
+    const idSoporte = await obtenerIdSoporteDeUrl();
     if (idSoporte) {
       await obtenerProblema(idSoporte);
       crearSelectYBoton();

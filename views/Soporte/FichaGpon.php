@@ -29,8 +29,7 @@
           <div class="col-md">
             <label>Número Identificador</label>
             <div class="input-group">
-              <input type="tel" class="form-control" maxlength="11" minlength="11" pattern="[0-11]+" id="txtNrodocumento" autofocus required>
-              <button class="input-group-text btn btn-secondary" type="button" id="btnNrodocumento"><i class="fa-solid fa-magnifying-glass"></i></button>
+              <input type="text" class="form-control" maxlength="12" minlength="8" id="txtNrodocumento" disabled>
             </div>
           </div>
 
@@ -59,11 +58,11 @@
 
           <div class="col-md">
             <label>Potencia</label>
-            <input type="number" class="form-control" id="txtPotencia" required>
+            <input type="number" class="form-control" id="txtPotenciaDos" required>
           </div>
 
           <div class="col md-6 form-check form-switch d-flex align-items-center">
-            <input class="form-check-input ms-5"" type=" checkbox" id="chkCatv">
+            <input class="form-check-input ms-5" type="checkbox" id="chkCatv">
             <label class="form-check-label" for="chkCatv">CATV</label>
           </div>
 
@@ -94,7 +93,7 @@
 
           <div class="col-md">
             <label>SSID</label>
-            <input type="text" class="form-control" id="txtPotencia" required>
+            <input type="text" class="form-control" id="txtSsid" required>
           </div>
 
           <div class="col-md">
@@ -124,21 +123,21 @@
 
           <div class="col-md">
             <label>PPPoE</label>
-            <input type="text" class="form-control" id="txtPppoe" required>
+            <input type="text" class="form-control" id="txtCambiosPppoe" required>
           </div>
 
           <div class="col-md">
             <label>Potencia</label>
-            <input type="number" class="form-control" id="txtPotencia" required>
+            <input type="number" class="form-control" id="txtCambiosPotenciaDos" required>
           </div>
 
           <div class="col-md">
             <label>CATV</label>
-            <input type="text" class="form-control" id="txtCatv" placeholder="SI/NO" required>
+            <input type="text" class="form-control" id="txtCambiosCatv" placeholder="SI/NO" required>
           </div>
           <div class="col md-6 form-check form-switch d-flex align-items-center">
-            <input class="form-check-input ms-5"" type=" checkbox" id="chkCatv">
-            <label class="form-check-label" for="chkCatv">CATV</label>
+            <input class="form-check-input ms-5" type="checkbox" id="chkCambiosCatv">
+            <label class="form-check-label" for="chkCambiosCatv">CATV</label>
           </div>
 
         </div> <!-- Fin de la Primera Fila -->
@@ -148,17 +147,17 @@
 
           <div class="col-md">
             <label>Clave</label>
-            <input type="text" class="form-control" id="txtClave" required>
+            <input type="text" class="form-control" id="txtCambiosClave" required>
           </div>
 
           <div class="col-md">
             <label>VLAN</label>
-            <input type="number" class="form-control" id="txtVlan" required>
+            <input type="number" class="form-control" id="txtCambiosVlan" required>
           </div>
 
           <div class="col-md">
             <label>Potencia</label>
-            <input type="number" class="form-control" id="txtPotencia" required>
+            <input type="number" class="form-control" id="txtCambiosPotencia" required>
           </div> <!-- Fin de la Segunda Fila -->
 
         </div>
@@ -168,17 +167,17 @@
 
           <div class="col-md">
             <label>SSID</label>
-            <input type="text" class="form-control" id="txtSsid" required>
+            <input type="text" class="form-control" id="txtCambiosSsid" required>
           </div>
 
           <div class="col-md">
             <label>Password</label>
-            <input type="text" class="form-control" id="txtPass" required>
+            <input type="text" class="form-control" id="txtCambiosPass" required>
           </div>
 
           <div class="col-md">
             <label>Otros</label>
-            <input type="text" class="form-control" id="txtOtros" required>
+            <input type="text" class="form-control" id="txtCambiosOtros" required>
           </div>
 
         </div>
@@ -186,7 +185,7 @@
         <div>
           <div class="col-md">
             <label>Procedimiento de Solución</label>
-            <textarea type="text" class="form-control" id="txtaProceSolucion" style="height: 100px" required></textarea>
+            <textarea type="text" class="form-control" id="txtaCambiosProceSolucion" style="height: 100px" required></textarea>
           </div>
         </div> <!-- Fin de la Tercera Fila -->
 
@@ -196,7 +195,7 @@
 </div>
 <?php require_once "../../footer.php"; ?>
 
-<script type="module" src="../../js/averiaWisp.js"></script>
+<script type="module" src="../../js/averiaFIBR.js"></script>
 </body>
 
 </html>
