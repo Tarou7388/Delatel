@@ -1,6 +1,7 @@
 USE Delatel;
 DROP VIEW IF EXISTS vw_soporte_detalle;
 
+
 CREATE VIEW vw_soporte_detalle AS
 SELECT
     s.id_soporte,
@@ -12,11 +13,12 @@ SELECT
     s.descripcion_problema,
     s.descripcion_solucion,
     ts.tipo_soporte,
+    p_cliente.nro_doc,
     c.id_cliente,
     c.direccion_servicio,
     r.id_usuario AS id_tecnico,
-    p.nombres AS tecnico_nombres,
-    p.apellidos AS tecnico_apellidos,
+    p_tecnico.nombres AS tecnico_nombres,
+    p_tecnico.apellidos AS tecnico_apellidos,
     pk.id_paquete,      
     pk.id_servicio,     
     srv.tipo_servicio   
@@ -26,9 +28,12 @@ FROM
     LEFT JOIN tb_tipo_soporte ts ON s.id_tipo_soporte = ts.id_tipo_soporte
     LEFT JOIN tb_responsables r ON s.id_tecnico = r.id_responsable
     LEFT JOIN tb_usuarios u ON r.id_usuario = u.id_usuario
-    LEFT JOIN tb_personas p ON u.id_persona = p.id_persona
+    LEFT JOIN tb_personas p_tecnico ON u.id_persona = p_tecnico.id_persona
     LEFT JOIN tb_paquetes pk ON c.id_paquete = pk.id_paquete
-    LEFT JOIN tb_servicios srv ON pk.id_servicio = srv.id_servicio; 
+    LEFT JOIN tb_servicios srv ON pk.id_servicio = srv.id_servicio
+    LEFT JOIN tb_clientes cl ON c.id_cliente = cl.id_cliente
+    LEFT JOIN tb_personas p_cliente ON cl.id_persona = p_cliente.id_persona;
+
 
 
 
@@ -89,9 +94,10 @@ CREATE PROCEDURE spu_soporte_actualizar(
     IN p_id_tecnico INT,
     IN p_id_tipo_soporte INT,
     IN p_fecha_hora_asistencia DATETIME,
-    IN prioridad VARCHAR(50),
+    IN p_prioridad VARCHAR(50),
     IN p_soporte JSON,
-    IN p_iduser_update INT
+    IN p_iduser_update INT,
+    IN p_procedimiento_S TEXT
 )
 BEGIN
     UPDATE tb_soporte
@@ -102,7 +108,8 @@ BEGIN
         prioridad = p_prioridad,
         soporte = p_soporte,
         update_at = NOW(),
-        iduser_update = p_iduser_update
+        iduser_update = p_iduser_update,
+        descripcion_solucion = p_procedimiento_S
     WHERE id_soporte = p_id_soporte;
 END $$
 

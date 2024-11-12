@@ -6,16 +6,57 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const Prioridad = document.querySelector("#slcPrioridad");
 
-  function obtenerPeriodo() {
-    const periodoSelect = document.querySelector("#slcCambiosPeriodoCable");
-    return periodoSelect ? periodoSelect.value : "";
+
+  async function recorrerIdServicio(data,nrodoc) {
+    const modal = new bootstrap.Modal(document.getElementById('soporteModal'));
+    const modalBody = document.querySelector('#soporteModal .modal-body');
+    modalBody.innerHTML = '';
+
+    console.log(nrodoc);
+
+    const servicios = JSON.parse(data[0].id_servicio).id_servicio;
+
+    if (servicios.length > 1) {
+      servicios.forEach(async (id, index) => {
+        const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=obtenerServiciosId&idservicio=${id}`);
+        const nombres = await respuesta.json();
+
+        const div = document.createElement('div');
+        div.classList.add('my-2', 'p-2', 'border', 'rounded');
+        div.textContent = `Servicio ${index + 1}: ${nombres[0].tipo_servicio}`;
+
+        div.addEventListener('click', () => {
+          mostrarFichaServicio(nombres[0].tipo_servicio, data[0].id_soporte,nrodoc);
+        });
+
+        modalBody.appendChild(div);
+      });
+      modal.show();
+    } else if (servicios.length === 1) {
+      const id = servicios[0];
+      const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=obtenerServiciosId&idservicio=${id}`);
+      const nombres = await respuesta.json();
+      mostrarFichaServicio(nombres[0].tipo_servicio, data[0].id_soporte,nrodoc);
+    }
+  }
+
+  function mostrarFichaServicio(tipoServicio, id_soporte,nro_doc) {
+    if (tipoServicio === "WISP") {
+      window.location.href = `${config.HOST}views/Soporte/FichaWisp?idsoporte=${id_soporte}&doc=${nro_doc}`;
+    } else if (tipoServicio === "FIBR") {
+      window.location.href = `${config.HOST}views/Soporte/FichaGpon?idsoporte=${id_soporte}&doc=${nro_doc}`;
+    } else if (tipoServicio === "CABL") {
+      window.location.href = `${config.HOST}views/Soporte/FichaAveriaCable?idsoporte=${id_soporte}&doc=${nro_doc}`;
+    } else {
+      console.error("No se encontró el servicio y la ficha correspondiente");
+    }
   }
 
   async function obtenerDataSoporte(idsoport) {
     const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idsoport}`);
     const data = await respuesta.json();
-    console.log(data);
-    return data;
+    console.log(data[0].nro_doc);
+    await recorrerIdServicio(data,data[0].nro_doc);
   }
 
   const table = inicializarDataTable(
@@ -78,9 +119,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   $('.card-body').on('click', '.btnActualizar', function () {
     let id_soporte = $(this).data('id');
-    console.log("Se ha hecho clic en Editar con ID de soporte:", id_soporte); // Aquí se agrega el console.log
+    console.log("Se ha hecho clic en Editar con ID de soporte:", id_soporte);
     obtenerDataSoporte(id_soporte);
-    //window.location.href = `${config.HOST}views/Soporte/FichaAveriaCable`;
   });
 
   var today = new Date().toISOString().split('T')[0];

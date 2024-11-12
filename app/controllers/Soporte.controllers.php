@@ -23,6 +23,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     case 'ObtenerDatosSoporteByID':
       echo json_encode($soporte->ObtenerDatosSoporteByID(["idSoporte" => $_GET['idSoporte']]));
       break;
+    case 'obtenerServiciosId':
+      echo json_encode($soporte->obtenerServiciosId(["idservicio" => $_GET['idservicio']]));
+      break;
   }
 }
 
@@ -45,5 +48,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'message' => $status ? 'Soporte registrado correctamente' : 'Error al registrar soporte'
       ]);
       break;
+  }
+}
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+  $Json = file_get_contents('php://input');
+  $datos = json_decode($Json, true);
+  $operacion = ($datos['operacion']);
+
+  if ($operacion == 'actualizarSoporte') {
+    $values = [
+      'idSoporte'            => Herramientas::sanitizarEntrada($datos['data']['idSoporte']),
+      'idTecnico'            => Herramientas::sanitizarEntrada($datos['data']['idTecnico']),
+      'idTipoSoporte'        => Herramientas::sanitizarEntrada($datos['data']['idTipoSoporte']),
+      'fechaHoraAsistencia'  => date("Y-m-d H:i:s"),
+      'prioridad'            => Herramientas::sanitizarEntrada($datos['data']['prioridad']),
+      'soporte'              => $datos['data']['soporte'],
+      'idUserUpdate'         => Herramientas::sanitizarEntrada($datos['data']['idUserUpdate']),
+      'descripcion_solucion'         => Herramientas::sanitizarEntrada($datos['data']['descripcion_solucion'])
+    ];
+
+    $status = $soporte->actualizarSoporte($values);
+    echo json_encode([
+      'status' => $status ? 'success' : 'error',
+      'message' => $status ? 'Soporte actualizado correctamente' : 'Error al actualizar soporte'
+    ]);
   }
 }

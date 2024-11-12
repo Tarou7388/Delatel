@@ -30,16 +30,16 @@ document.addEventListener("DOMContentLoaded", () => {
       operacion: "registrarSoporte",
       idContrato: window.idContratoSeleccionado,
       idTipoSoporte: $("#slcTipoSoporte").value,
-      idTecnico: 1, // Este valor debe ser actualizado dinámicamente si es necesario
+      idTecnico: 1, 
       fechaHoraSolicitud: `${$("#txtFecha").value} ${new Date()
         .toISOString()
-        .slice(11, 19)}`, // Puedes generar la fecha y hora aquí si es necesario
+        .slice(11, 19)}`, 
       fechaHoraAsistencia: `${$("#txtFecha").value} ${new Date()
         .toISOString()
-        .slice(11, 19)}`, // Concatenación de strings para mayor claridad
+        .slice(11, 19)}`, 
       prioridad: $("#slcPrioridad").value,
-      soporte: jsondata, // Asegúrate de que jsondata esté definido antes de usarlo
-      idUsuario: 1, // Actualizar este valor según sea necesario
+      soporte: jsondata, 
+      idUsuario: 1, 
       descripcionProblema: $("#txtEstadoInicialWisp").value,
       descripcionSolucion: $("#txtProcedimientoWisp").value
     };

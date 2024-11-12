@@ -83,4 +83,29 @@ class Soporte extends Conexion
     $values = array($params['idSoporte']);
     return $this->consultaParametros($sql, $values);
   }
+
+  public function obtenerServiciosId($params = [])
+  {
+    $sql = "SELECT id_servicio, tipo_servicio FROM vw_servicios_listar WHERE id_servicio = ?";
+    $values = array($params['idservicio']);
+    return $this->consultaParametros($sql, $values);
+  }
+
+  public function actualizarSoporte($params = [])
+  {
+    $sql = "CALL spu_soporte_actualizar(?, ?, ?, ?, ?, ?, ?, ?)";
+
+    $values = [
+      $params['idSoporte'],
+      $params['idTecnico'],
+      $params['idTipoSoporte'],
+      $params['fechaHoraAsistencia'],
+      $params['prioridad'],
+      json_encode($params['soporte']),
+      $params['idUserUpdate'],
+      $params['descripcion_solucion']
+    ];
+
+    return $this->registrar($sql, $values);
+  }
 }

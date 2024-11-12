@@ -195,3 +195,8 @@
   </div>
 </div>
 <?php require_once "../../footer.php"; ?>
+
+<script type="module" src="../../js/averiaWisp.js"></script>
+</body>
+
+</html>

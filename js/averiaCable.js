@@ -3,6 +3,14 @@ import config from "../env.js";
 document.addEventListener("DOMContentLoaded", async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const idContrato = urlParams.get("idContrato");
+  const form = document.getElementById("frmRegistroWisp");
+
+  let idSoporte = -1;
+
+  if (obtenerIdSoporteDeUrl()) {
+    idSoporte = obtenerIdSoporteDeUrl();
+    crearSelectYBoton();
+  }
 
   if (idContrato) {
     try {
@@ -52,4 +60,116 @@ document.addEventListener("DOMContentLoaded", async () => {
       console.error("Error al obtener las averías:", error);
     }
   }
+
+  function crearSelectYBoton() {
+    const rowDiv = document.createElement("div");
+    rowDiv.className = "row g-2 mb-2";
+
+    const selectDiv = document.createElement("div");
+    selectDiv.className = "col-md ";
+
+    const labelSelect = document.createElement("label");
+    labelSelect.innerText = "Tipo de Soporte";
+    selectDiv.appendChild(labelSelect);
+
+    const selectSoporte = document.createElement("select");
+    selectSoporte.id = "slcTipoSoporte";
+    selectSoporte.className = "form-control";
+    selectSoporte.required = true;
+    selectDiv.appendChild(selectSoporte);
+    rowDiv.appendChild(selectDiv);
+
+    (async () => {
+      const respuesta = await fetch(`${config.HOST}/app/controllers/Soporte.controllers.php?operacion=listarTipoSoporte`);
+      const datos = await respuesta.json();
+      selectSoporte.innerHTML = "";
+      datos.forEach((element) => {
+        const option = new Option(
+          `${element.tipo_soporte}`,
+          element.id_tipo_soporte
+        );
+        selectSoporte.append(option);
+      });
+    })();
+
+
+    const selectPrioridadDiv = document.createElement("div");
+    selectPrioridadDiv.className = "col-md ";
+
+    const labelPrioridad = document.createElement("label");
+    labelPrioridad.innerText = "Prioridad";
+    selectPrioridadDiv.appendChild(labelPrioridad);
+
+    const selectPrioridad = document.createElement("select");
+    selectPrioridad.id = "slcPrioridad";
+    selectPrioridad.className = "form-control";
+    selectPrioridad.required = true;
+    selectPrioridadDiv.appendChild(selectPrioridad);
+    rowDiv.appendChild(selectPrioridadDiv);
+
+
+    const opcionesPrioridad = ["Alta", "Media", "Baja"];
+    opcionesPrioridad.forEach((prioridad) => {
+      const option = new Option(prioridad, prioridad.toLowerCase());
+      selectPrioridad.append(option);
+    });
+
+
+    const buttonDiv = document.createElement("div");
+    buttonDiv.className = "col-md d-flex align-items-end";
+
+    const guardarBtn = document.createElement("button");
+    guardarBtn.id = "btnGuardarFicha";
+    guardarBtn.className = "btn btn-primary";
+    guardarBtn.type = "submit";
+    guardarBtn.textContent = "Guardar Ficha";
+
+    buttonDiv.appendChild(guardarBtn);
+    rowDiv.appendChild(buttonDiv);
+
+
+    const solutionTextarea = document.getElementById("txtaProceSolucion");
+    solutionTextarea.parentNode.parentNode.appendChild(rowDiv);
+  }
+
+
+
+  function obtenerIdSoporteDeUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get("idsoporte");
+  }
+
+
+
+  async function ArmadoJsonWisp() {
+    const respuesta = await fetch(`${config.HOST}Json/spWISP.json`);
+    const datos = await respuesta.json();
+
+    datos.parametros.base = $("#txtBaseWisp").value;
+    datos.parametros.ip = $("#txtIpWisp").value;
+    datos.parametros.senal = $("#txtSenialWisp").value;
+
+    datos.cambios.nuevaBase = $("#txtCambiosBaseWisp").value;
+    datos.cambios.nuevoIP = $("#txtCambiosIpWisp").value;
+    datos.cambios.senal = $("#txtCambiosSenialWisp").value;
+
+    const data = {
+      "idSoporte": idSoporte,
+      "idTecnico": JSON.stringify(user['idUsuario']),
+      "idTipoSoporte": document.getElementById("slcTipoSoporte"),
+      "prioridad": document.getElementById("slcPrioridad"),
+      "soporte": datos,
+      "idUserUpdate": JSON.stringify(user['idUsuario']),
+    };
+
+
+    console.log(JSON.stringify(data));
+  }
+
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    ArmadoJsonWisp();
+  });
+
 });

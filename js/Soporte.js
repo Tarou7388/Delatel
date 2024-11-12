@@ -23,7 +23,6 @@ window.addEventListener('DOMContentLoaded', function () {
 
     const data = await response.json();
 
-    
   }
 
   async function obtenerContratosCliente(data) {

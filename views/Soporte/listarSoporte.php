@@ -1,4 +1,26 @@
 <?php require_once '../../header.php'; ?>
+
+
+<!-- Modal Structure -->
+<div class="modal fade" id="soporteModal" tabindex="-1" aria-labelledby="soporteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="soporteModalLabel">Detalles del Soporte</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="container text-justify"><strong>Se encontraron varios servicios, seleccione el que se hara mantenimiento:</strong></div>
+      <div class="modal-body">
+        <!-- Body vacía para añadir contenido dinámico -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <div class="container-fluid px-4">
   <h1 class="mt-4">Fichas a Completar</h1>
 
@@ -55,4 +77,5 @@
 </body>
 
 <script type="module" src="../../js/ListarSoporte.js"></script>
+
 </html>

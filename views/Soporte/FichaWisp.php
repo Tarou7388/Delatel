@@ -29,8 +29,7 @@
           <div class="col-md">
             <label>Número Identificador</label>
             <div class="input-group">
-              <input type="tel" class="form-control" maxlength="12" minlength="12" pattern="[0-12]+" id="txtNrodocumento" autofocus required>
-              <button class="input-group-text btn btn-secondary" type="button" id="btnNrodocumento"><i class="fa-solid fa-magnifying-glass"></i></button>
+              <input type="text" class="form-control" maxlength="12" minlength="8" id="txtNrodocumento" disabled>
             </div>
           </div>
 
@@ -72,7 +71,7 @@
         <div>
           <div class="col-md">
             <label>Estado Inicial</label>
-            <textarea type="text" class="form-control" id="txtaEstadoInicial" style="height: 100px" required></textarea>
+            <textarea type="text" class="form-control" id="txtaEstadoInicial" style="height: 100px" disabled></textarea>
           </div>
         </div> <!-- Fin de la Segunda Fila -->
 
@@ -84,17 +83,17 @@
 
           <div class="col-md">
             <label>Nueva Base</label>
-            <input type="text" class="form-control" id="txtBase" required>
+            <input type="text" class="form-control" id="txtBaseNuevo" required>
           </div>
 
           <div class="col-md">
             <label>Nuevo IP</label>
-            <input type="text" class="form-control" id="txtIp" required>
+            <input type="text" class="form-control" id="txtIpNuevo" required>
           </div>
 
           <div class="col-md">
             <label>Señal</label>
-            <input type="number" class="form-control" id="txtSenial" required>
+            <input type="number" class="form-control" id="txtSenialNuevo" required>
           </div>
 
         </div>
@@ -110,4 +109,11 @@
     </div>
   </div>
 </div>
+
+
 <?php require_once "../../footer.php"; ?>
+
+<script type="module" src="../../js/averiaWisp.js"></script>
+</body>
+
+</html>
