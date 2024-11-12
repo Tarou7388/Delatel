@@ -4,6 +4,7 @@ DROP VIEW IF EXISTS vw_soporte_detalle;
 CREATE VIEW vw_soporte_detalle AS
 SELECT
     s.id_soporte,
+    s.id_contrato,
     s.fecha_hora_solicitud,
     s.fecha_hora_asistencia,
     s.prioridad,
@@ -16,7 +17,9 @@ SELECT
     r.id_usuario AS id_tecnico,
     p.nombres AS tecnico_nombres,
     p.apellidos AS tecnico_apellidos,
-    srv.tipo_servicio
+    pk.id_paquete,      
+    pk.id_servicio,     
+    srv.tipo_servicio   
 FROM
     tb_soporte s
     LEFT JOIN tb_contratos c ON s.id_contrato = c.id_contrato
@@ -25,7 +28,10 @@ FROM
     LEFT JOIN tb_usuarios u ON r.id_usuario = u.id_usuario
     LEFT JOIN tb_personas p ON u.id_persona = p.id_persona
     LEFT JOIN tb_paquetes pk ON c.id_paquete = pk.id_paquete
-    LEFT JOIN tb_servicios srv ON pk.id_servicio = srv.id_servicio;
+    LEFT JOIN tb_servicios srv ON pk.id_servicio = srv.id_servicio; 
+
+
+
 
 DELIMITER $$
 

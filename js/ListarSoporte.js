@@ -79,7 +79,8 @@ document.addEventListener("DOMContentLoaded", () => {
   $('.card-body').on('click', '.btnActualizar', function () {
     let id_soporte = $(this).data('id');
     console.log("Se ha hecho clic en Editar con ID de soporte:", id_soporte); // Aquí se agrega el console.log
-    window.location.href = `${config.HOST}views/Soporte/FichaAveriaCable`;
+    obtenerDataSoporte(id_soporte);
+    //window.location.href = `${config.HOST}views/Soporte/FichaAveriaCable`;
   });
 
   var today = new Date().toISOString().split('T')[0];
