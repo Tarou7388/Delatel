@@ -8,7 +8,7 @@
         <a href="<?= $host; ?>views/Soporte/">Inicio</a> /
       </div>
     </div>
-    <div class="col-12 col-md-6 text-end mb-4">
+    <div class="col-12 col-md-6 text-md-end text-start mb-4">
       <div class="d-inline">
         <a href="<?= $host; ?>views/Soporte/" class="btn btn-primary me-2">
           <i class="fa-solid fa-arrow-left"></i> Registrar Soporte
@@ -33,13 +33,13 @@
     </div>
     <div class="card-body">
       <div class="table-responsive">
-        <table id="tblSoporteIncompleto" class="table table-striped table-bordered">
+        <table id="tblSoporteIncompleto" class="table table-striped table-bordered display nowrap">
           <thead>
             <tr>
               <th class="text-center">Prioridad</th>
               <th class="text-center">Tipo Soporte</th>
               <th class="text-center">Nombre Cliente</th>
-              <th class="text-center">Dirección de Servicio</th>
+              <th class="text-center">Hora de solicitud</th>
               <th class="text-center">Dirección de Servicio</th>
               <th class="text-center">Acciones</th>
             </tr>
@@ -51,64 +51,8 @@
   </div>
 </div>
 
-<!-- Modal WISP-->
-<div class="modal fade" id="editModalWISP" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="editModalLabel">Detalle del Soporte</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <h6>Parámetros</h6>
-        <ul id="parametrosList"></ul>
-        <h6>Cambios</h6>
-        <ul id="cambiosList"></ul>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Modal GPON-->
-<div class="modal fade" id="editModalGPON" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="editModalLabel">Detalle del Soporte</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <h6>Parámetros</h6>
-        <ul id="parametrosList"></ul>
-        <h6>Cambios</h6>
-        <ul id="cambiosList"></ul>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Modal CABLE-->
-<div class="modal fade" id="editModalCABLE" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="editModalLabel">Detalle del Soporte CABLE</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <h6>Parámetros</h6>
-        <ul id="parametrosListCable"></ul>
-        <h6>Cambios</h6>
-        <ul id="cambiosListCable"></ul>
-      </div>
-    </div>
-  </div>
-</div>
-
-
 <?php require_once "../../footer.php"; ?>
 </body>
 
 <script type="module" src="../../js/ListarSoporte.js"></script>
-
 </html>

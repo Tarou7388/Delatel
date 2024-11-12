@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
         title: "Tipo de Soporte",
         className: "text-center",
         render: function (data, type, row) {
-          return data ? data : '<i>No asignado</i>'; 
+          return data ? data : '<i>No asignado</i>';
         }
       },
       {
@@ -41,11 +41,19 @@ document.addEventListener("DOMContentLoaded", () => {
         className: "text-center"
       },
       {
+        data: "fecha_hora_solicitud",
+        title: "Hora de solicitud",
+        className: "text-center",
+        render: function (data, type, row) {
+          return data ? data : '<i>No asignado</i>';
+        }
+      },
+      {
         data: "nombre_tecnico",
         title: "Técnico a Cargo",
         className: "text-center",
         render: function (data, type, row) {
-          return data ? data : '<i>No asignado</i>'; 
+          return data ? data : '<i>No asignado</i>';
         }
       },
       {
@@ -61,8 +69,9 @@ document.addEventListener("DOMContentLoaded", () => {
       { width: "10%", targets: 0 },
       { width: "20%", targets: 1 },
       { width: "20%", targets: 2 },
-      { width: "25%", targets: 3 },
-      { width: "25%", targets: 4 }
+      { width: "20%", targets: 3 },
+      { width: "20%", targets: 4 },
+      { width: "10%", targets: 5 }
     ]
   );
 
@@ -70,6 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
   $('.card-body').on('click', '.btnActualizar', function () {
     let id_soporte = $(this).data('id');
     console.log("Se ha hecho clic en Editar con ID de soporte:", id_soporte); // Aquí se agrega el console.log
+    window.location.href = `${config.HOST}views/Soporte/FichaAveriaCable`;
   });
 
   var today = new Date().toISOString().split('T')[0];

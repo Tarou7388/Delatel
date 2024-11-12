@@ -4,7 +4,7 @@
 <div class="container-fluid px-4">
   <h2 class="mt-4">Registro de Incidencias</h2>
 
-  <!-- MODAL DE CONTRATOS -->
+  <!-- Modal de Busqueda Avanzada -->
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -13,16 +13,32 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <ul class="list-group">
-            <!-- AQUI SE CARGARAN LAS OPCIONES DE CONTRATOS -->
-          </ul>
+          <form id="searchForm">
+            <div class="form-floating mb-3">
+              <input type="text" class="form-control" id="txtnombreba" name="nombre" placeholder="Nombre">
+              <label for="nombre">Nombre</label>
+            </div>
+            <div class="form-floating mb-3">
+              <input type="text" class="form-control" id="txtapellidoba" name="apellido" placeholder="Apellido">
+              <label for="apellido">Apellido</label>
+            </div>
+
+            <div class="container">
+              <ul class="list-group mt-3" id="listMulticontratos">
+                <!-- Aquí se cargarán las si hay mas de uno que coincida -->
+              </ul>
+            </div>
+
+          </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-primary" id="buscarBtn">Buscar</button>
         </div>
       </div>
     </div>
   </div>
+
 
   <div class="row g-2 mb-2 align-items-center">
     <div class="col text-start">
@@ -42,8 +58,8 @@
     <div class="card-body">
       <form id="form-Incidencia">
         <!-- Sección de Número de Documento -->
-        <div class="row g-2 mb-2">
-          <div class="col-12 col-md">
+        <div class="row g-2 mb-3">
+          <div class="col-12 col-md-4">
             <div class="input-group">
               <div class="form-floating">
                 <input type="text" class="form-control" maxlength="12" minlength="8" id="txtNrodocumento" placeholder="Número de Documento" autofocus required>
@@ -52,26 +68,26 @@
               <button class="input-group-text btn btn-primary" type="button" id="btnNrodocumento">
                 <i class="fa-solid fa-magnifying-glass"></i>
               </button>
-              <button class="input-group-text btn btn-outline-info" type="button" id="btnBusquedaAvanzada">
+              <button
+                class="input-group-text btn btn-outline-info"
+                type="button"
+                id="btnBusquedaAvanzada"
+                data-bs-toggle="modal"
+                data-bs-target="#exampleModal">
                 <i class="fas fa-ellipsis-h"></i>
               </button>
+
             </div>
           </div>
 
-          <div class="col-12 col-md mt-2">
+          <div class="col-12 col-md-4 mt-2">
             <div class="form-floating">
               <input type="text" class="form-control" id="txtCliente" placeholder="Cliente" disabled required>
               <label for="txtCliente">Cliente</label>
             </div>
           </div>
 
-          <!-- <div class="col-12 col-md mt-2">
-            <div class="form-floating">
-              <button id="btnModal" type="button" class="btn btn-info w-100 py-3" data-bs-toggle="modal" data-bs-target="#exampleModal">Seleccionar</button>
-            </div>
-          </div> -->
-
-          <div class="col-12 col-md mt-2">
+          <div class="col-12 col-md-4 mt-2">
             <div class="form-floating">
               <select name="" id="slcContratos" class="form-control" required>
                 <option disabled selected>Seleccione un Contrato</option>
@@ -79,27 +95,14 @@
               <label for="slcContratos">Seleccione un Contrato</label>
             </div>
           </div>
-
-          <!-- <div class="col-12 col-md mt-2">
-            <div class="form-floating">
-              <select class="form-select" id="slcPrioridad" required>
-                <option disabled value="">Seleccione la Prioridad</option>
-                <option value="Alta">Alta</option>
-                <option value="Media">Media</option>
-                <option value="Baja">Baja</option>
-                <option value="Incidencia">Incidencia</option>
-              </select>
-              <label for="slcPrioridad">Prioridad:</label>
-            </div>
-          </div> -->
-
         </div>
+
 
         <hr>
 
         <!-- Sección de Observaciones y Contrato -->
         <div class="row g-3 mb-3">
-          <div class="col-12 col-md mt-2">
+          <div class="col-12">
             <div class="form-floating">
               <input type="text" class="form-control" id="txtContratoObservacion" placeholder="Contrato y Observacion" disabled required>
               <label for="txtContratoObservacion">Contrato y Observacion</label>
@@ -109,7 +112,7 @@
 
         <!-- Sección de Descripción -->
         <div class="row g-3 mb-3">
-          <div class="col">
+          <div class="col-12">
             <div class="form-floating">
               <textarea class="form-control" id="txtDescripcion" rows="3" placeholder="Descripción de la incidencia" style="height: 100px" required></textarea>
               <label for="txtDescripcion">Descripción</label>
@@ -119,7 +122,7 @@
 
         <!-- Sección de Solución -->
         <div class="row g-3 mb-3">
-          <div class="col">
+          <div class="col-12">
             <div class="form-floating">
               <textarea class="form-control" id="txtSolucion" rows="3" placeholder="Solución aplicada" style="height: 100px" required></textarea>
               <label for="txtSolucion">Solución</label>
@@ -138,7 +141,6 @@
           </a>
         </div>
       </form>
-
     </div>
   </div>
 </div>

@@ -11,8 +11,20 @@ window.addEventListener('DOMContentLoaded', function () {
   const txtSolucion = document.querySelector("#txtSolucion");
   const slcContratos = document.querySelector("#slcContratos");
   //const selectTpSoporte = document.querySelector("#slcTipoSoporte");
+
+  const txtnombreba = document.querySelector("#txtnombreba");
+  const txtapellidoba = document.querySelector("#txtapellidoba");
+  
   let dfFecha = document.getElementById('txtFecha');
   dfFecha.value = new Date().toISOString().split('T')[0];
+
+  async function busquedaAvanzada() {
+    const response = await fetch(``);
+
+    const data = await response.json();
+
+    
+  }
 
   async function obtenerContratosCliente(data) {
     const respuesta = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerContratoPorCliente&id=${data}`);
@@ -120,7 +132,7 @@ window.addEventListener('DOMContentLoaded', function () {
         headers: { "Content-Type": "application/json" }
       });
 
-    const data = await respuesta.text();
+    const data = await respuesta.json();
     console.log(data);
     if (data.status === "success") {
       showToast("Registrado Correctamente", "SUCCESS");
@@ -140,24 +152,5 @@ window.addEventListener('DOMContentLoaded', function () {
       await registrarIncidencia();
     }
   });
-
-  /***
-   * Esta funcion sera utilizada en otra vista
-   * 
-   */
-  // (async () => {
-  //   const respuesta = await fetch(`${config.HOST}/app/controllers/Soporte.controllers.php?operacion=listarTipoSoporte`);
-  //   const datos = await respuesta.json();
-
-  //   selectTpSoporte.innerHTML = "";  // No es necesario usar await aquí
-  //   datos.forEach((element) => {
-  //     const option = new Option(
-  //       `${element.tipo_soporte}`,
-  //       element.id_tipo_soporte
-  //     );
-  //     selectTpSoporte.append(option);
-  //   });
-  // })();
-
 
 });

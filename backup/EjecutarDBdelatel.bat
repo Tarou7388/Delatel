@@ -7,7 +7,7 @@ SET "SQL_FILE3=C:\xampp\htdocs\Delatel\app\DB\Registros.sql"
 SET "SQL_FOLDER=C:\xampp\htdocs\Delatel\app\DB\Procedimientos"
 SET "MYSQL_PATH=C:\xampp\mysql\bin"
 SET "USER=root"
-SET "PASSWORD="
+SET "PASSWORD="  REM La contraseña está vacía
 SET "DATABASE=Delatel"
 
 echo La ruta del archivo SQL es: %SQL_FILE%
@@ -16,20 +16,20 @@ REM Asegúrate de que el comando mysql esté accesible
 set PATH=%PATH%;%MYSQL_PATH%
 
 REM Elimina la base de datos si existe
-mysql -u "%USER%" -p"%PASSWORD%" --default-character-set=utf8 -e "DROP DATABASE IF EXISTS %DATABASE%;"
+mysql -u "%USER%" --default-character-set=utf8 -e "DROP DATABASE IF EXISTS %DATABASE%;"
 
 REM Ejecuta el archivo SQL en la base de datos 'Delatel'
-mysql -u "%USER%" -p"%PASSWORD%" --default-character-set=utf8 < "%SQL_FILE%"
+mysql -u "%USER%" --default-character-set=utf8 < "%SQL_FILE%"
 
 if ERRORLEVEL 1 (
     echo Error al ejecutar el archivo SQL.
 ) else (
-    mysql -u "%USER%" -p"%PASSWORD%" --default-character-set=utf8 < "%SQL_FILE2%"
-    mysql -u "%USER%" -p"%PASSWORD%" --default-character-set=utf8 < "%SQL_FILE3%"
+    mysql -u "%USER%" --default-character-set=utf8 < "%SQL_FILE2%"
+    mysql -u "%USER%" --default-character-set=utf8 < "%SQL_FILE3%"
     cd /d "%SQL_FOLDER%"
     for %%f in (*.sql) do (
         echo Ejecutando %%f...
-        mysql -u "%USER%" -p"%PASSWORD%" --default-character-set=utf8 "%DATABASE%" < "%%f"
+        mysql -u "%USER%" --default-character-set=utf8 "%DATABASE%" < "%%f"
         if ERRORLEVEL 1 (
             echo Error al ejecutar %%f
         ) else (

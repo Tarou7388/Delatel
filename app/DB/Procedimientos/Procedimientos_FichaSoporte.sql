@@ -107,6 +107,7 @@ CREATE PROCEDURE spu_soporte_filtrar_prioridad(
 )
 BEGIN
     SELECT 
+        s.fecha_hora_solicitud,
         s.fecha_hora_asistencia,
         s.id_soporte,
         s.prioridad,

@@ -1,9 +1,9 @@
 import config from "../env.js";
 export function inicializarDataTable(selector, ajaxUrl, columns, columnDefs) {
   return $(selector).DataTable({
+    responsive: true,
     language: {
       url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
-
     },
     ajax: {
       url: ajaxUrl,
