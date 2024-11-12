@@ -53,11 +53,11 @@ document.addEventListener("DOMContentLoaded", async () => {
               showToast("No tienes ninguna avería", "INFO");
             } else {
               // Verifica el tipo de servicio del contrato seleccionado y redirige a la vista correspondiente
-              if (contratoSeleccionado.tipo_servicio == "CABL") {
+              if (contratoSeleccionado.tipos_servicio == "CABL") {
                 window.location.href = `${config.HOST}views/Soporte/FichaAveriaCable?idContrato=${idContrato}`; 
-              } else if (contratoSeleccionado.tipo_servicio == "WISP") { 
+              } else if (contratoSeleccionado.tipos_servicio == "WISP") { 
                 window.location.href = `${config.HOST}views/Soporte/FichaWisp?idContrato=${idContrato}`;
-              } else if (contratoSeleccionado.tipo_servicio == "GPON") { 
+              } else if (contratoSeleccionado.tipos_servicio == "GPON") { 
                 window.location.href = `${config.HOST}views/Soporte/FichaGpon?idContrato=${idContrato}`; 
               }
             }
