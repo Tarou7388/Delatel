@@ -164,7 +164,6 @@ CREATE TABLE tb_paquetes (
     id_servicio     JSON NOT NULL,
     paquete         VARCHAR(250) NOT NULL,
     precio          DECIMAL(7,2) NOT NULL,
-    duracion        JSON NOT NULL,
     create_at       DATETIME NOT NULL DEFAULT NOW(),
     update_at       DATETIME NULL,
     inactive_at     DATETIME NULL,
