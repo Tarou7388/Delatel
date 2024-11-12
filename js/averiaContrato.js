@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         <td>${contrato.sector}</td>
         <td>${contrato.fecha_inicio}</td>
         <td>${contrato.fecha_fin}</td>
-        <td><button class=" btn btn-primary btn-averias" data-id="${contrato.id_contrato}">Ver Averías</button></td>
+        <td><button class="btn btn-primary btn-averias" data-id="${contrato.id_contrato}">Ver Averías</button></td>
       `;
 
       tbody.appendChild(row);
@@ -43,12 +43,23 @@ document.addEventListener("DOMContentLoaded", async () => {
         const idContrato = event.target.getAttribute("data-id");
         if (idContrato) {
           try {
+            // Busca el contrato específico dentro del array `contratos`
+            const contratoSeleccionado = contratos.find(contrato => contrato.id_contrato == parseInt(idContrato));
+
             const response = await fetch(`${config.HOST}app/controllers/Averias.controllers.php?operacion=buscarAveriaPorContrato&valor=${idContrato}`);
             const averias = await response.json();
-            if(averias == ""){
-              showToast("No tienes ninguna averia","INFO")
-            }else{
-              console.log(averias);
+
+            if (!averias || averias.length === 0) {
+              showToast("No tienes ninguna avería", "INFO");
+            } else {
+              // Verifica el tipo de servicio del contrato seleccionado y redirige a la vista correspondiente
+              if (contratoSeleccionado.tipo_servicio == "CABL") {
+                window.location.href = `${config.HOST}views/Soporte/FichaAveriaCable?idContrato=${idContrato}`;
+              } else if (contratoSeleccionado.tipo_servicio == "WISP") {
+                window.location.href = `${config.HOST}views/Soporte/FichaWisp?idContrato=${idContrato}`;
+              } else if (contratoSeleccionado.tipo_servicio == "GPON") {
+                window.location.href = `${config.HOST}views/Soporte/FichaGpon?idContrato=${idContrato}`;
+              }
             }
           } catch (error) {
             console.error("Error al obtener las averías:", error);
