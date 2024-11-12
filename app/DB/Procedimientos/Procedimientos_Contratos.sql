@@ -10,54 +10,62 @@ SELECT
         ELSE e.razon_social
     END AS nombre_cliente,
     c.direccion_servicio,
-    sv.tipo_servicio,
-    sv.servicio,
-	DATE(c.create_at) as fecha_creacion
-FROM 
+    GROUP_CONCAT(sv.tipo_servicio) AS tipos_servicio,
+    GROUP_CONCAT(sv.servicio) AS servicios,
+    DATE(c.create_at) as fecha_creacion
+FROM
     tb_contratos c
-INNER JOIN 
-    tb_clientes cl ON c.id_cliente = cl.id_cliente
-LEFT JOIN 
-    tb_personas p ON cl.id_persona = p.id_persona
-LEFT JOIN 
-    tb_empresas e ON cl.id_cliente = e.id_empresa
-INNER JOIN 
-    tb_paquetes t ON c.id_paquete = t.id_paquete
-INNER JOIN 
-    tb_servicios sv ON t.id_servicio = sv.id_servicio
-WHERE 
-    c.inactive_at IS NULL AND c.ficha_instalacion IS NULL
-ORDER BY 
-   c.create_at ASC;
+    INNER JOIN tb_clientes cl ON c.id_cliente = cl.id_cliente
+    LEFT JOIN tb_personas p ON cl.id_persona = p.id_persona
+    LEFT JOIN tb_empresas e ON cl.id_cliente = e.id_empresa
+    INNER JOIN tb_paquetes t ON c.id_paquete = t.id_paquete
+    INNER JOIN tb_servicios sv ON JSON_CONTAINS(
+            t.id_servicio, 
+            CONCAT('{"id_servicio":', sv.id_servicio, '}')
+        )
+WHERE
+    c.inactive_at IS NULL
+    AND c.ficha_instalacion IS NULL
+GROUP BY c.id_contrato, nombre_cliente, c.direccion_servicio, c.create_at
+ORDER BY c.create_at ASC;
+
+
 
 DROP VIEW IF EXISTS vw_contratos_listar;
 CREATE VIEW vw_contratos_listar AS
-SELECT 
+SELECT
     c.id_contrato,
-    CASE 
+    CASE
         WHEN cl.id_persona IS NOT NULL THEN p.nombres
         ELSE e.razon_social
     END AS nombre_cliente,
-    CASE 
+    CASE
         WHEN cl.id_persona IS NOT NULL THEN p.nro_doc
         ELSE e.ruc
     END AS num_identificacion,
     c.direccion_servicio,
-	  t.paquete,
-    CONCAT_WS(' + ', sv.tipo_servicio, sv2.tipo_servicio, sv3.tipo_servicio, sv4.tipo_servicio) AS tipo_servicio,
-    t.duracion
-FROM 
+    t.paquete,
+    t.precio,
+    GROUP_CONCAT(sv.tipo_servicio) AS tipos_servicio
+FROM
     tb_contratos c
-INNER JOIN tb_clientes cl ON c.id_cliente = cl.id_cliente
-LEFT JOIN tb_personas p ON cl.id_persona = p.id_persona
-LEFT JOIN tb_empresas e ON cl.id_cliente = e.id_empresa
-INNER JOIN tb_paquetes t ON c.id_paquete = t.id_paquete
-INNER JOIN tb_servicios sv ON t.id_servicio = sv.id_servicio
-LEFT JOIN tb_servicios sv2 ON t.id_servicio2 = sv2.id_servicio
-LEFT JOIN tb_servicios sv3 ON t.id_servicio3 = sv3.id_servicio
-LEFT JOIN tb_servicios sv4 ON t.id_servicio4 = sv4.id_servicio
-WHERE c.inactive_at IS NULL
+    INNER JOIN tb_clientes cl ON c.id_cliente = cl.id_cliente
+    LEFT JOIN tb_personas p ON cl.id_persona = p.id_persona
+    LEFT JOIN tb_empresas e ON cl.id_cliente = e.id_empresa
+    INNER JOIN tb_paquetes t ON c.id_paquete = t.id_paquete
+    INNER JOIN tb_servicios sv ON JSON_CONTAINS(t.id_servicio, JSON_OBJECT('id_servicio', sv.id_servicio))
+WHERE
+    c.inactive_at IS NULL
+GROUP BY
+    c.id_contrato,
+    nombre_cliente,
+    num_identificacion,
+    c.direccion_servicio,
+    t.paquete,
+    t.precio
 ORDER BY c.id_contrato DESC;
+
+
 
 DELIMITER $$
 
@@ -103,6 +111,7 @@ BEGIN
     );
 END $$
 
+
 DROP PROCEDURE IF EXISTS spu_fichatecnica_buscar_id$$
 CREATE PROCEDURE spu_fichatecnica_buscar_id(
     p_id_contrato INT
@@ -119,7 +128,7 @@ BEGIN
             ELSE e.ruc
         END AS num_identificacion,
         t.paquete,
-        CONCAT_WS(' + ', sv.tipo_servicio, sv2.tipo_servicio, sv3.tipo_servicio, sv4.tipo_servicio) AS tipo_servicio,
+        GROUP_CONCAT(sv.tipo_servicio) AS tipos_servicio,
         c.ficha_instalacion,
         t.precio
     FROM
@@ -128,12 +137,10 @@ BEGIN
         LEFT JOIN tb_personas p ON cl.id_persona = p.id_persona
         LEFT JOIN tb_empresas e ON cl.id_cliente = e.id_empresa
         INNER JOIN tb_paquetes t ON c.id_paquete = t.id_paquete
-        LEFT JOIN tb_servicios sv ON t.id_servicio = sv.id_servicio
-        LEFT JOIN tb_servicios sv2 ON t.id_servicio2 = sv2.id_servicio
-        LEFT JOIN tb_servicios sv3 ON t.id_servicio3 = sv3.id_servicio
-        LEFT JOIN tb_servicios sv4 ON t.id_servicio4 = sv4.id_servicio
+        LEFT JOIN tb_servicios sv ON JSON_CONTAINS(t.id_servicio, JSON_OBJECT('id_servicio', sv.id_servicio))
     WHERE c.id_contrato = p_id_contrato AND c.inactive_at IS NULL;
 END $$
+
 
 DROP PROCEDURE IF EXISTS spu_contrato_buscar_id$$
 CREATE PROCEDURE spu_contrato_buscar_id(
@@ -156,7 +163,7 @@ BEGIN
         ut_persona.nombres AS nombre_usuario_tecnico,
         c.direccion_servicio,
         sv.id_servicio,
-        CONCAT_WS(' + ', sv.tipo_servicio, sv2.tipo_servicio, sv3.tipo_servicio, sv4.tipo_servicio) AS tipo_servicio,
+        GROUP_CONCAT(sv.tipo_servicio) AS tipos_servicio,
         t.id_paquete,
         t.paquete,
         t.precio,
@@ -172,10 +179,7 @@ BEGIN
         LEFT JOIN tb_personas p ON cl.id_persona = p.id_persona
         LEFT JOIN tb_empresas e ON cl.id_cliente = e.id_empresa
         INNER JOIN tb_paquetes t ON c.id_paquete = t.id_paquete
-        LEFT JOIN tb_servicios sv ON t.id_servicio = sv.id_servicio
-        LEFT JOIN tb_servicios sv2 ON t.id_servicio2 = sv2.id_servicio
-        LEFT JOIN tb_servicios sv3 ON t.id_servicio3 = sv3.id_servicio
-        LEFT JOIN tb_servicios sv4 ON t.id_servicio4 = sv4.id_servicio
+        LEFT JOIN tb_servicios sv ON JSON_CONTAINS(t.id_servicio, JSON_OBJECT('id_servicio', sv.id_servicio))
         INNER JOIN tb_sectores s ON c.id_sector = s.id_sector
         INNER JOIN tb_responsables ur ON c.id_usuario_registro = ur.id_responsable
         INNER JOIN tb_usuarios ur_usuario ON ur.id_usuario = ur_usuario.id_usuario
@@ -219,7 +223,7 @@ CREATE PROCEDURE spu_contratos_buscar_cliente(IN p_id_cliente INT)
 BEGIN
     SELECT 
         c.id_contrato, 
-        sv.tipo_servicio,
+        GROUP_CONCAT(sv.tipo_servicio) AS tipos_servicio,
         s.sector, 
         p.paquete,
         c.id_usuario_registro,
@@ -235,12 +239,20 @@ BEGIN
         tb_paquetes p ON c.id_paquete = p.id_paquete
     JOIN 
         tb_sectores s ON c.id_sector = s.id_sector
-    JOIN 
-        tb_servicios sv ON p.id_servicio = sv.id_servicio
+    LEFT JOIN tb_servicios sv ON JSON_CONTAINS(p.id_servicio, JSON_OBJECT('id_servicio', sv.id_servicio))
     WHERE 
-        c.id_cliente = p_id_cliente AND c.inactive_at IS NULL;
+        c.id_cliente = p_id_cliente AND c.inactive_at IS NULL
+    GROUP BY
+        c.id_contrato,
+        s.sector,
+        p.paquete,
+        c.id_usuario_registro,
+        c.referencia,
+        c.fecha_inicio,
+        c.fecha_fin,
+        c.nota,
+        c.direccion_servicio;
 END$$
-
 
 DROP PROCEDURE IF EXISTS spu_contratos_actualizar$$
 CREATE PROCEDURE spu_contratos_actualizar(
