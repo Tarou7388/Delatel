@@ -133,7 +133,7 @@
         <div class="row g-3 mb-3">
           <div class="col-12">
             <div class="form-floating">
-              <textarea class="form-control" id="txtSolucion" rows="3" placeholder="Solución aplicada" style="height: 100px" required></textarea>
+              <textarea class="form-control" id="txtSolucion" rows="3" placeholder="Solución aplicada" style="height: 100px"></textarea>
               <label for="txtSolucion">Solución</label>
             </div>
           </div>

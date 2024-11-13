@@ -37,7 +37,7 @@ window.addEventListener('DOMContentLoaded', function () {
       datos.forEach((element) => {
         const option = document.createElement('option');
         option.value = element.id_contrato;
-        option.textContent = `${element.tipo_servicio} - ${element.direccion_servicio}`;
+        option.textContent = `${element.direccion_servicio}`;
         option.dataset.nota = element.nota;
         option.dataset.direccion = element.direccion_servicio;
         slcContratos.appendChild(option);
