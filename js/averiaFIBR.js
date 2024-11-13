@@ -136,6 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const passwordCambio = document.getElementById("txtCambiosPass").value;
     const otrosCambio = document.getElementById("txtCambiosOtros").value;
 
+    // Ahora puedes crear tu objeto o lo que necesites hacer con estos valores.
     datos.parametrosgpon.pppoe = pppoe;
     datos.parametrosgpon.potecia = potecia;
     datos.parametrosgpon.potencia = potencia;
