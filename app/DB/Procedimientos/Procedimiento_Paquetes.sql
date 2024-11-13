@@ -84,7 +84,7 @@ CREATE PROCEDURE spu_paquete_actualizar(
 BEGIN
 	UPDATE tb_paquetes 
     SET 
-		    id_servicio = p_id_servicio,
+		id_servicio = p_id_servicio,
         paquete = p_paquete,
         precio = p_precio,
         iduser_update = p_iduser_update,
