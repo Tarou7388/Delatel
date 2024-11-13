@@ -9,47 +9,47 @@ require_once '../models/Rol.php'; // Asegúrate de incluir tu modelo de roles
 // Función para cargar permisos
 function cargarPermisos($idRol)
 {
-    // Crear una instancia del modelo de roles
-    $rolModel = new Rol();
+		// Crear una instancia del modelo de roles
+		$rolModel = new Rol();
 
-    // Obtener los permisos desde la base de datos
-    $params = ['idRol' => $idRol];
-    $resultado = $rolModel->listarPermisosIdRol($params);
+		// Obtener los permisos desde la base de datos
+		$params = ['idRol' => $idRol];
+		$resultado = $rolModel->listarPermisosIdRol($params);
 
-    // Convertir el resultado en un array de permisos
+		// Convertir el resultado en un array de permisos
 
-    return $resultado;
+		return $resultado;
 }
 
 // Función para obtener accesos filtrados
 function obtenerAccesosFiltrados($idRol, $permissions)
 {
-    // Definir accesos basados en permisos
-    $accesosV2 = [
-        ["ruta" => "Contratos", "texto" => "Contratos", "icono" => "fa-solid fa-file-contract", "rutasAnexas" => ["FichaTecnicaCable", "FichaTecnicaGpon", "FichaTecnicaWisp"]],
-        ["ruta" => "Inventariado", "texto" => "Inventariado", "icono" => "fa-solid fa-warehouse"],
-        ["ruta" => "Personas", "texto" => "Personas", "icono" => "fa-solid fa-user"],
-        ["ruta" => "Productos", "texto" => "Productos", "icono" => "fa-solid fa-boxes-stacked"],
-        ["ruta" => "Roles", "texto" => "Roles", "icono" => "fa-regular fa-address-card"],
-        ["ruta" => "Soporte", "texto" => "Soporte", "icono" => "fa-solid fa-wrench","rutasAnexas" => ["registroSoporte","SoporteEscritorio","listarSoporte","FichaAveriaCable","FichaGpon","FichaWisp"]],
-        ["ruta" => 'Usuarios', "texto" => "Usuarios", "icono" => "fa-solid fa-users", "rutasAnexas" => ["registrar"]],
-        ["ruta" => 'Averias',"texto"=>"Averias","icono"=>"fa-solid fa-wrench","rutasAnexas" => ["table"]],
-        ["ruta" => 'Paquetes',"texto"=>"Paquetes","icono"=>"fa-solid fa-box-open"],
-        ["ruta" => "Almacen", "texto" => "Almacen", "icono" => "fa-solid fa-warehouse"]
-    ];
+		// Definir accesos basados en permisos
+		$accesosV2 = [
+				["ruta" => "Contratos", "texto" => "Contratos", "icono" => "fa-solid fa-file-contract", "rutasAnexas" => ["FichaTecnicaCable", "FichaTecnicaGpon", "FichaTecnicaWisp"]],
+				["ruta" => "Inventariado", "texto" => "Inventariado", "icono" => "fa-solid fa-warehouse"],
+				["ruta" => "Personas", "texto" => "Personas", "icono" => "fa-solid fa-user"],
+				["ruta" => "Productos", "texto" => "Productos", "icono" => "fa-solid fa-boxes-stacked"],
+				["ruta" => "Roles", "texto" => "Roles", "icono" => "fa-regular fa-address-card"],
+				["ruta" => "Soporte", "texto" => "Soporte", "icono" => "fa-solid fa-wrench", "rutasAnexas" => ["registroSoporte", "SoporteEscritorio", "listarSoporte", "FichaAveriaCable", "FichaGpon", "FichaWisp"]],
+				["ruta" => 'Usuarios', "texto" => "Usuarios", "icono" => "fa-solid fa-users", "rutasAnexas" => ["registrar"]],
+				/* ["ruta" => 'Averias',"texto"=>"Averias","icono"=>"fa-solid fa-wrench","rutasAnexas" => ["table"]], */
+				["ruta" => 'Paquetes', "texto" => "Paquetes", "icono" => "fa-solid fa-box-open"],
+				["ruta" => "Almacen", "texto" => "Almacen", "icono" => "fa-solid fa-warehouse"]
+		];
 
-    // Añadir "Actividades" directamente a los accesos filtrados
-    $accesosFiltrados = [
-        ["ruta" => "views", "texto" => "Actividades", "icono" => "fa-solid fa-chart-line"]
-    ];
+		// Añadir "Actividades" directamente a los accesos filtrados
+		$accesosFiltrados = [
+				["ruta" => "views", "texto" => "Actividades", "icono" => "fa-solid fa-chart-line"]
+		];
 
-    // Filtrar accesos basados en permisos
-    foreach ($accesosV2 as $acceso) {
-        $modulo = strtolower($acceso['texto']);
-        if (isset($permissions[$modulo]) && isset($permissions[$modulo]['leer']) && $permissions[$modulo]['leer'] == "1") {
-            $accesosFiltrados[] = $acceso;
-        }
-    }
+		// Filtrar accesos basados en permisos
+		foreach ($accesosV2 as $acceso) {
+				$modulo = strtolower($acceso['texto']);
+				if (isset($permissions[$modulo]) && isset($permissions[$modulo]['leer']) && $permissions[$modulo]['leer'] == "1") {
+						$accesosFiltrados[] = $acceso;
+				}
+		}
 
-    return $accesosFiltrados;
+		return $accesosFiltrados;
 }

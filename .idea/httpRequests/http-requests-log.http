@@ -1,0 +1,53 @@
+GET http://localhost/Delatel/app/controllers/Producto.controllers.php?operacion=buscarProductoBarra&codigoBarra=1234567890123
+Accept: application/json
+User-Agent: IntelliJ HTTP Client/PhpStorm 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Cookie: PHPSESSID=6plpep1hf0dngn6auomf5qe6cm
+content-length: 0
+
+<> 2024-11-13T165058.200.html
+
+###
+
+GET http://localhost/Delatel/app/controllers/Producto.controllers.php?operacion=buscarProductoBarra&codigoBarra=1234567890123
+Accept: application/json
+User-Agent: IntelliJ HTTP Client/PhpStorm 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Cookie: PHPSESSID=6plpep1hf0dngn6auomf5qe6cm
+content-length: 0
+
+<> 2024-11-13T165014.500.html
+
+###
+
+GET http://localhost/Delatel/app/controllers/Producto.controllers.php?operacion=buscarProductoBarra&codigoBarra=1234567890123
+Accept: application/json
+User-Agent: IntelliJ HTTP Client/PhpStorm 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Cookie: PHPSESSID=6plpep1hf0dngn6auomf5qe6cm
+content-length: 0
+
+<> 2024-11-13T164957.500.html
+
+###
+
+GET http://localhost/Delatel/app/controllers/Producto.controllers.php?operacion=BuscarProductoBarra&codigoBarra=1234567890123
+Accept: application/json
+User-Agent: IntelliJ HTTP Client/PhpStorm 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+content-length: 0
+
+<> 2024-11-13T164806.200.html
+
+###
+
+GET http://localhost/Delatel/app/controllers/Producto.conreoller.php?operacion=BuscarProductoBarra&codigoBarra=1234567890123
+Accept: application/json
+User-Agent: IntelliJ HTTP Client/PhpStorm 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+content-length: 0
+
+<> 2024-11-13T164747.404.html
+
+###
+

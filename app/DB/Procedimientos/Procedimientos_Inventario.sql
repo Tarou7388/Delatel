@@ -113,3 +113,23 @@ CREATE VIEW vw_productos_detalle AS
     WHERE 
         p.inactive_at IS NULL;
         
+DROP PROCEDURE IF EXISTS spu_productos_buscar_barra$$
+
+CREATE PROCEDURE spu_productos_buscar_barra(
+    IN p_codigo_barra VARCHAR(120)
+)
+BEGIN
+    SELECT
+        p.id_producto,
+        p.modelo,
+        p.precio_actual,
+        m.marca
+    FROM
+        tb_productos p
+    INNER JOIN
+        tb_marca m ON p.id_marca = m.id_marca
+    WHERE
+        p.codigo_barra = p_codigo_barra
+    AND
+        p.inactive_at IS NULL;
+END $$

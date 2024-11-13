@@ -486,6 +486,42 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  async function productoBarraBuscar(cajatxt){
+    const caja = document.getElementById(cajatxt);
+    const response = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarra&codigoBarra=${caja.value}`);
+    const data = await response.json();
+    return data;
+  }
+
+  document.querySelector('#txtMacAntenaAlquilados').addEventListener('change', async function () {
+    const datos = await productoBarraBuscar('txtMacAntenaAlquilados');
+    console.log(datos);
+    document.querySelector('#txtMarcaAntenaAlquilados').value = datos[0].marca;
+    document.querySelector('#txtModeloAntenaAlquilados').value = datos[0].modelo;
+  });
+
+  document.querySelector('#txtMacRouterAlquilados').addEventListener('change', async function () {
+    const datos = await productoBarraBuscar('txtMacRouterAlquilados');
+    console.log(datos);
+    document.querySelector('#txtMarcaRouterAlquilados').value = datos[0].marca;
+    document.querySelector('#txtModeloRouterAlquilados').value = datos[0].modelo;
+  });
+
+  document.querySelector('#txtMacVentaRouter').addEventListener('change', async function () {
+    const datos = await productoBarraBuscar('txtMacVentaRouter');
+    console.log(datos);
+    txtMarcaVentaAntena.value = datos[0].marca;
+    txtModeloVentaAntena.value = datos[0].modelo;
+  });
+
+  document.querySelector('#txtMacVentaAntena').addEventListener('change', async function () {
+    const datos = await productoBarraBuscar('txtMacVentaAntena');
+    console.log(datos);
+    txtMarcaVentaRouter.value = datos[0].marca;
+    txtModeloVentaRouter.value = datos[0].modelo;
+  });
+
+
   //Json Router
   async function router() {
     if (!flagFichaInstalacion) {
@@ -603,12 +639,14 @@ document.addEventListener("DOMContentLoaded", () => {
             marca: txtMarcaVentaAntena,
             modelo: txtModeloVentaAntena,
             mac: txtMacVentaAntena,
+            serial: document.querySelector('#txtSerialVentaAntena').value,
             descripcion: txtDescripcionVentaAntena
           },
           router: {
             marca: txtMarcaVentaRouter,
             modelo: txtModeloVentaRouter,
             mac: txtMacVentaRouter,
+            serial: document.querySelector('#txtSerialVentaRouter').value,
             descripcion: txtDescripcionVentaRouter
           },
           detalle: txtDetalleVenta,
@@ -667,17 +705,19 @@ document.addEventListener("DOMContentLoaded", () => {
           fechaInicio: txtFechaInicioAlquilado,
           fechaFin: txtFechaFinAlquilado,
           costoAlquiler: txtCostoAlquilerAlquilado,
-          condicion: chkAdelantadoAlquilado || chkCumpliendoMesAlquilados,
+          condicionTiempo: chkAdelantadoAlquilado || chkCumpliendoMesAlquilados,
           antena: {
             marca: txtMarcaAntenaAlquilado,
             modelo: txtModeloAntenaAlquilado,
             mac: txtMacAntenaAlquilado,
+            serial: document.querySelector('#txtSerialAlquiladoAntena').value,
             descripcion: txtDescripcionAntenaAlquilado
           },
           router: {
             marca: txtMarcaRouterAlquilado,
             modelo: txtModeloRouterAlquilado,
             mac: txtMacRouterAlquilado,
+            serial: document.querySelector('#txtSerialAlquiladoRouter').value,
             descripcion: txtDescripcionRouterAlquilado
           },
           detalle: txtDetalleAlquilado,
