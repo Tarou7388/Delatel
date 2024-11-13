@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     case 'registrarContrato':
       $datosEnviar = [
         "idCliente"           => Herramientas::sanitizarEntrada($datos['parametros']['idCliente']),
-        "idTarifario"         => Herramientas::sanitizarEntrada($datos['parametros']['idTarifario']),
+        "idPaquete"           => Herramientas::sanitizarEntrada($datos['parametros']['idPaquete']),
         "idSector"            => Herramientas::sanitizarEntrada($datos['parametros']['idSector']),
         "direccion"           => Herramientas::sanitizarEntrada($datos['parametros']['direccion']),
         "referencia"          => Herramientas::sanitizarEntrada($datos['parametros']['referencia']),

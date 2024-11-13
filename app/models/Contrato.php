@@ -36,7 +36,7 @@ class Contrato extends Conexion
         $sql = "CALL spu_contratos_registrar(?,?,?,?,?,?,?,?,?,?,?)";
         $values = array(
             $params['idCliente'],
-            $params['idTarifario'],
+            $params['idPaquete'],
             $params['idSector'],
             $params['direccion'],
             $params['referencia'],

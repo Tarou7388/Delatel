@@ -70,14 +70,11 @@ window.addEventListener("DOMContentLoaded", async () => {
     slcPaquetes.innerHTML = '<option value="" disabled selected>Seleccione un paquete</option>';
     dataPaquetes
       .filter(paquete =>
-        !paquete.id_servicio2 &&
-        !paquete.id_servicio3 &&
-        !paquete.id_servicio4 &&
         !paquete.inactive_at
       )
       .forEach((paquete) => {
         const option = document.createElement("option");
-        const id = `${paquete.id_paquete} - ${paquete.precio} - ${paquete.duracion}`;
+        const id = `${paquete.id_paquete} - ${paquete.precio}`;
         option.value = id;
         option.textContent = paquete.paquete;
         slcPaquetes.appendChild(option);
@@ -103,7 +100,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     paquetesFiltrados.forEach((paquete) => {
       const option = document.createElement("option");
-      const id = `${paquete.id_paquete} - ${paquete.precio} - ${paquete.duracion}`;
+      const id = `${paquete.id_paquete} - ${paquete.precio}`;
       option.value = id;
       option.textContent = paquete.paquete;
       slcPaquetes.appendChild(option);
@@ -188,13 +185,8 @@ window.addEventListener("DOMContentLoaded", async () => {
       const fechaRegistro = new Date().toISOString().split("T")[0];
       const nota = txtNota.value;
       const idUsuarioRegistro = user.idRol;
-      const duraciones = {};
       const items = txtDuracion.value.split(', ');
-
-      items.forEach(item => {
-        const [key, value] = item.split(': ');
-        duraciones[key] = parseInt(value.split(' ')[0], 10);
-      });
+      const idPaquete = slcPaquetes.value.split(' - ')[0];
 
       if (!(await validarCampos())) {
         showToast("¡Llene todos los campos!", "INFO");
@@ -202,26 +194,30 @@ window.addEventListener("DOMContentLoaded", async () => {
         showToast("¡La fecha de fin debe ser mayor a 3 meses!", "INFO");
       } else {
         try {
+          const datosEnvio = {
+            operacion: "registrarContrato",
+            parametros: {
+              idCliente: idCliente,
+              idPaquete: idPaquete,
+              idSector: sector.value,
+              direccion: direccion.value,
+              referencia: referencia.value,
+              coordenada: coordenada.value,
+              fechaInicio: new Date().toISOString().split("T")[0],
+              fechaFin: null,
+              fechaRegistro: fechaRegistro,
+              nota: nota,
+              idUsuario: user.idUsuario,
+            },
+          };
+
+          console.log("Datos enviados para registrar el contrato:", JSON.stringify(datosEnvio, null, 2));
+
           const response = await fetch(
             `${config.HOST}app/controllers/Contrato.controllers.php`,
             {
               method: "POST",
-              body: JSON.stringify({
-                operacion: "registrarContrato",
-                parametros: {
-                  idCliente: idCliente,
-                  idTarifario: idServicio,
-                  idSector: sector.value,
-                  direccion: direccion.value,
-                  referencia: referencia.value,
-                  coordenada: coordenada.value,
-                  fechaInicio: new Date().toISOString().split("T")[0],
-                  fechaFin: duraciones,
-                  fechaRegistro: fechaRegistro,
-                  nota: nota,
-                  idUsuario: user.idUsuario,
-                },
-              }),
+              body: JSON.stringify(datosEnvio),
               headers: {
                 "Content-Type": "application/json",
               },
@@ -430,7 +426,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  function formatDuracion(duracion) {
+  /* function formatDuracion(duracion) {
     try {
       const duracionObj = JSON.parse(duracion);
       return Object.entries(duracionObj)
@@ -439,7 +435,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     } catch (e) {
       return duracion;
     }
-  }
+  } */
 
   async function validarCampos() {
     if (
@@ -592,9 +588,6 @@ window.addEventListener("DOMContentLoaded", async () => {
 
       dataPaquetes
         .filter(paquete =>
-          !paquete.id_servicio2 &&
-          !paquete.id_servicio3 &&
-          !paquete.id_servicio4 &&
           !paquete.inactive_at
         )
         .forEach((paquete) => {
@@ -645,32 +638,15 @@ window.addEventListener("DOMContentLoaded", async () => {
     await actualizarContrato(idContrato, idUsuario);
   });
 
-  async function cargarDuracion() {
+  async function cargarPrecio() {
     const selectedValue = slcPaquetes.value.split(" - ");
     idServicio = parseInt(selectedValue[0]);
     precioServicio = selectedValue[1];
-    const duracionServicio = selectedValue[2];
-
     precio.value = precioServicio;
-
-    let duracionFormateada = "Duracion no disponible";
-    if (duracionServicio) {
-      try {
-        const duracionObj = JSON.parse(duracionServicio);
-        duracionFormateada = Object.entries(duracionObj)
-          .map(([key, value]) => `${key.charAt(0).toUpperCase() + key.slice(1)}: ${value} meses`)
-          .join(", ");
-      } catch (e) {
-        console.error("Error al parsear la duración:", e);
-      }
-    }
-
-    txtDuracion.value = duracionFormateada;
-    slcPaquetes.value = idServicio;
-  }
+  } 
 
   $("#slcPaquetes").on("select2:select", function () {
-    cargarDuracion();
+    cargarPrecio();
   });
 
   $("#slcPaquetesActualizar").on("select2:select", function () {
