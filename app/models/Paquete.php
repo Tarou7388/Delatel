@@ -136,7 +136,7 @@ class Paquete extends Conexion
   {
     $sql = "CALL spu_paquete_buscar_idServicio(?)";
     $values = array(
-      $params['idServicio']
+      json_encode(array('id_servicio' => $params['idServicio']))
     );
     return $this->consultaParametros($sql, $values);
   }
