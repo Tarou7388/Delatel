@@ -166,8 +166,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const data = await response.json();
 
         if (data.eliminado) {
-            showToast("¡Servicio eliminado correctamente!", "SUCCESS", 1500);
-            obtenerServicios();
+          showToast("¡Servicio eliminado correctamente!", "SUCCESS", 1500);
+          obtenerServicios();
 
           // Emitir evento personalizado
           const event = new CustomEvent("servicioDesactivado", {
@@ -325,6 +325,11 @@ document.addEventListener("DOMContentLoaded", () => {
   document
     .getElementById("modalServicio")
     .addEventListener("hidden.bs.modal", limpiarFormulario);
+
+  $('#modalServicio').modal({
+    backdrop: 'static',
+    keyboard: false
+  });
 
   obtenerServicios();
 });

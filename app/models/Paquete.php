@@ -30,7 +30,7 @@ class Paquete extends Conexion
   {
     $sql = "CALL spu_paquete_registrar(?,?,?,?)";
     $values = array(
-      $params['idServicio'],
+      json_encode(['id_servicio' => $params['idServicio']]),
       $params['paquete'],
       $params['precio'],
       $params['idUsuario']
@@ -72,10 +72,10 @@ class Paquete extends Conexion
    */
   public function actualizarPaquete($params = [])
   {
-    $sql = "CALL spu_paquete_actualizar(?,?,?,?,?,?,?,?,?)";
+    $sql = "CALL spu_paquete_actualizar(?,?,?,?,?)";
     $values = array(
       $params['idPaquete'],
-      $params['idServicio'],
+      json_encode(['id_servicio' => $params['idServicio']]),
       $params['paquete'],
       $params['precio'],
       $params['idUsuario']

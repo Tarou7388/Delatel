@@ -114,7 +114,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   $("#tablaPaquetes tbody").on("click", ".btn-edit", async function () {
     const idPaquete = $(this).data("id");
 
-    console.log(idPaquete);
     try {
       const response = await fetch(
         `${config.HOST}app/controllers/Paquete.controllers.php?operacion=buscarPaqueteId&idPaquete=` +
@@ -125,13 +124,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       $("#txtPaqueteActualizar").val(paquete[0].paquete);
       $("#txtPrecioActualizar").val(paquete[0].precio);
 
+      // Parsear el campo id_servicio que viene como JSON string
+      const idServicioJson = JSON.parse(paquete[0].id_servicio);
+      const selectedServices = idServicioJson.id_servicio;
+
       // Establecer los valores de los servicios en el selector
-      const selectedServices = [
-        paquete[0].id_servicio,
-      ].filter((id) => id !== null);
       $("#slcTipoServicioActualizar").val(selectedServices).trigger("change");
 
-      idServicio = paquete[0].id_servicio;
+      idServicio = selectedServices;
 
       $("#modalActualizarPaquete").modal("show");
     } catch (error) {
@@ -185,10 +185,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const datosEnviar = {
         operacion: "registrarPaquete",
         parametros: {
-          idServicio: selectedServices[0] || null,
-          idServicio2: selectedServices[1] || null,
-          idServicio3: selectedServices[2] || null,
-          idServicio4: selectedServices[3] || null,
+          idServicio: selectedServices.map(Number),
           paquete: paquete,
           precio: precio,
           idUsuario: userid,
@@ -226,7 +223,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
   // Función Actualizar
   async function actualizarPaquete(idPaquete) {
-    console.log(accesos)
     if (accesos?.paquetes?.actualizar) {
       if (!(await validarCampos("actualizacion"))) {
         return;
@@ -240,10 +236,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         operacion: "actualizarPaquete",
         parametros: {
           idPaquete: idPaquete,
-          idServicio: selectedServices[0] || null,
-          idServicio2: selectedServices[1] || null,
-          idServicio3: selectedServices[2] || null,
-          idServicio4: selectedServices[3] || null,
+          idServicio: selectedServices.map(Number), // Convertir los valores a enteros
           paquete: paquete,
           precio: precio,
           idUsuario: userid,
@@ -389,4 +382,37 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   });
 
+  $(document).ready(function () {
+    $('#modalAgregarPaquete').modal({
+      backdrop: 'static',
+      keyboard: false
+    });
+  
+    $('#modalActualizarPaquete').modal({
+      backdrop: 'static',
+      keyboard: false
+    });
+  
+    $('#slcTipoServicio').select2({
+      theme: 'bootstrap-5',
+      placeholder: 'Seleccione',
+      width: '100%' 
+    }).next('.select2-container').css({
+      'font-size': '1.2em', 
+      'min-height': '40px'  
+    });
+  
+    $('#slcTipoServicioActualizar').select2({
+      theme: 'bootstrap-5',
+      placeholder: 'Seleccione',
+      width: '100%' 
+    }).next('.select2-container').css({
+      'font-size': '1.2em', 
+      'min-height': '40px'  
+    });
+  });
+
+  $('#btnCancelarRegistrar').on('click', function () {
+    limpiarModal();
+  });
 });
