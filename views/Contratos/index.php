@@ -201,8 +201,8 @@
 
           <div class="col-md-4">
             <div class="form-floating">
-              <input type="text" class="form-control" id="txtDuracion" name="Duracion" disabled>
-              <label for="txtDuracion" class="form-label">Duración (Meses)</label>
+              <input type="date" class="form-control" id="txtDuracion" placeholder="duracion" name="Duracion" >
+              <label for="txtDuracion" class="form-label">Duración</label>
             </div>
           </div>
 
