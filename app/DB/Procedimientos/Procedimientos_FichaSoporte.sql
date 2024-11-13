@@ -148,6 +148,8 @@ END $$
 
 DROP PROCEDURE IF EXISTS spu_soporte_filtrar_prioridad$$
 
+DROP PROCEDURE IF EXISTS spu_soporte_filtrar_prioridad$$
+
 CREATE PROCEDURE spu_soporte_filtrar_prioridad(
     IN p_prioridad VARCHAR(50)
 )
@@ -189,13 +191,13 @@ BEGIN
         tb_empresas e ON cl.id_empresa = e.id_empresa 
     WHERE 
         (p_prioridad IS NULL OR TRIM(p_prioridad) = '' OR LOWER(TRIM(s.prioridad)) = LOWER(TRIM(p_prioridad)))
-        AND LOWER(TRIM(s.prioridad)) != 'completo' OR LOWER(TRIM(s.prioridad)) != 'incidencia'
+        AND LOWER(TRIM(s.prioridad)) IN ('alta', 'media', 'baja')
     ORDER BY 
         DATE(s.fecha_hora_asistencia) ASC,
         CASE 
-            WHEN LOWER(TRIM(s.prioridad)) = 'Alta' THEN 1
-            WHEN LOWER(TRIM(s.prioridad)) = 'Media' THEN 2
-            WHEN LOWER(TRIM(s.prioridad)) = 'Baja' THEN 3
+            WHEN LOWER(TRIM(s.prioridad)) = 'alta' THEN 1
+            WHEN LOWER(TRIM(s.prioridad)) = 'media' THEN 2
+            WHEN LOWER(TRIM(s.prioridad)) = 'baja' THEN 3
             ELSE 4
         END;
 END;
