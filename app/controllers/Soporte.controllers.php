@@ -40,6 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'fechaHoraSolicitud'  => date("Y-m-d H:i:s"),
         'descripcionProblema' => Herramientas::sanitizarEntrada($datos['descripcionProblema']),
         'descripcionSolucion' => Herramientas::sanitizarEntrada($datos['descripcionSolucion']),
+        'prioridad'           => Herramientas::sanitizarEntrada($datos['prioridad']),
         'idUsuario'           => Herramientas::sanitizarEntrada($datos['idUsuario'])
       ];
       $status = $soporte->registrarSoporte($values);
@@ -50,7 +51,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       break;
   }
 }
-
 
 if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
   $Json = file_get_contents('php://input');
@@ -63,7 +63,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
       'idTecnico'            => Herramientas::sanitizarEntrada($datos['data']['idTecnico']),
       'idTipoSoporte'        => Herramientas::sanitizarEntrada($datos['data']['idTipoSoporte']),
       'fechaHoraAsistencia'  => date("Y-m-d H:i:s"),
-      'prioridad'            => Herramientas::sanitizarEntrada($datos['data']['prioridad']),
       'soporte'              => $datos['data']['soporte'],
       'idUserUpdate'         => Herramientas::sanitizarEntrada($datos['data']['idUserUpdate']),
       'descripcion_solucion'         => Herramientas::sanitizarEntrada($datos['data']['descripcion_solucion'])

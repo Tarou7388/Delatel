@@ -55,28 +55,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     })();
 
-
-    const selectPrioridadDiv = document.createElement("div");
-    selectPrioridadDiv.className = "col-md ";
-
-    const labelPrioridad = document.createElement("label");
-    labelPrioridad.innerText = "Prioridad";
-    selectPrioridadDiv.appendChild(labelPrioridad);
-
-    const selectPrioridad = document.createElement("select");
-    selectPrioridad.id = "slcPrioridad";
-    selectPrioridad.className = "form-control";
-    selectPrioridad.required = true;
-    selectPrioridadDiv.appendChild(selectPrioridad);
-    rowDiv.appendChild(selectPrioridadDiv);
-
-
-    const opcionesPrioridad = ["Alta", "Media", "Baja"];
-    opcionesPrioridad.forEach((prioridad) => {
-      const option = new Option(prioridad, prioridad.toLowerCase());
-      selectPrioridad.append(option);
-    });
-
     const buttonDiv = document.createElement("div");
     buttonDiv.className = "col-md d-flex align-items-end";
 
@@ -162,7 +140,6 @@ document.addEventListener("DOMContentLoaded", () => {
       idSoporte: idSoporte,
       idTecnico: JSON.stringify(user['idUsuario']),
       idTipoSoporte: document.getElementById("slcTipoSoporte").value,
-      prioridad: document.getElementById("slcPrioridad").value,
       soporte: datos,
       idUserUpdate: JSON.stringify(user['idUsuario']),
       descripcion_solucion: document.getElementById("txtaCambiosProceSolucion").value

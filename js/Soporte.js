@@ -119,6 +119,7 @@ window.addEventListener('DOMContentLoaded', function () {
       idContrato: idContratoSeleccionado,
       descripcionProblema: txtDescripcion.value,
       descripcionSolucion: txtSolucion.value,
+      prioridad: slcPrioridad.value,
       idUsuario: user["idUsuario"]
     }
 

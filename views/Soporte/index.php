@@ -9,7 +9,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Selecciona un Plan</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Busqueda Avanzada</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -57,9 +57,10 @@
     </div>
     <div class="card-body">
       <form id="form-Incidencia">
-        <!-- Sección de Número de Documento -->
+        <!-- Row for Documento, Cliente, Contrato, and Prioridad -->
         <div class="row g-2 mb-3">
-          <div class="col-12 col-md-4">
+          <!-- Número de Documento -->
+          <div class="col-12 col-md-3">
             <div class="input-group">
               <div class="form-floating">
                 <input type="text" class="form-control" maxlength="12" minlength="8" id="txtNrodocumento" placeholder="Número de Documento" autofocus required>
@@ -68,39 +69,47 @@
               <button class="input-group-text btn btn-primary" type="button" id="btnNrodocumento">
                 <i class="fa-solid fa-magnifying-glass"></i>
               </button>
-              <button
-                class="input-group-text btn btn-outline-info"
-                type="button"
-                id="btnBusquedaAvanzada"
-                data-bs-toggle="modal"
-                data-bs-target="#exampleModal">
+              <button class="input-group-text btn btn-outline-info" type="button" id="btnBusquedaAvanzada" hidden data-bs-toggle="modal" data-bs-target="#exampleModal">
                 <i class="fas fa-ellipsis-h"></i>
               </button>
-
             </div>
           </div>
 
-          <div class="col-12 col-md-4 mt-2">
+          <!-- Cliente -->
+          <div class="col-12 col-md-3">
             <div class="form-floating">
               <input type="text" class="form-control" id="txtCliente" placeholder="Cliente" disabled required>
               <label for="txtCliente">Cliente</label>
             </div>
           </div>
 
-          <div class="col-12 col-md-4 mt-2">
+          <!-- Contrato -->
+          <div class="col-12 col-md-3">
             <div class="form-floating">
-              <select name="" id="slcContratos" class="form-control" required>
+              <select id="slcContratos" class="form-control" required>
                 <option disabled selected>Seleccione un Contrato</option>
               </select>
               <label for="slcContratos">Seleccione un Contrato</label>
             </div>
           </div>
-        </div>
 
+          <!-- Prioridad -->
+          <div class="col-12 col-md-3">
+            <div class="form-floating">
+              <select id="slcPrioridad" class="form-control" required>
+                <option value="Incidencia" selected>Incidencia</option>
+                <option value="Alta">Alta</option>
+                <option value="Media">Media</option>
+                <option value="Baja">Baja</option>
+              </select>
+              <label for="slcPrioridad">Prioridad</label>
+            </div>
+          </div>
+        </div>
 
         <hr>
 
-        <!-- Sección de Observaciones y Contrato -->
+        <!-- Observaciones y Contrato -->
         <div class="row g-3 mb-3">
           <div class="col-12">
             <div class="form-floating">
@@ -110,7 +119,7 @@
           </div>
         </div>
 
-        <!-- Sección de Descripción -->
+        <!-- Descripción -->
         <div class="row g-3 mb-3">
           <div class="col-12">
             <div class="form-floating">
@@ -120,7 +129,7 @@
           </div>
         </div>
 
-        <!-- Sección de Solución -->
+        <!-- Solución -->
         <div class="row g-3 mb-3">
           <div class="col-12">
             <div class="form-floating">
@@ -130,17 +139,27 @@
           </div>
         </div>
 
+        <!-- Solucionado Switch -->
+        <div class="row g-3 mb-3" hidden>
+          <div class="col-12">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="chkSolucionado">
+              <label class="form-check-label" for="chkSolucionado">Solucionado</label>
+            </div>
+          </div>
+        </div>
+
         <hr>
 
-        <!-- Botones de acción -->
+        <!-- Action Buttons -->
         <div class="container text-end">
-          <button class="btn btn-secondary">Ficha Soporte</button>
           <button type="submit" class="btn btn-primary">Registrar</button>
           <a href="<?= $host; ?>views/Soporte/listarSoporte" class="btn btn-primary me-2">
             Listar Soporte <i class="fa-solid fa-arrow-right"></i>
           </a>
         </div>
       </form>
+
     </div>
   </div>
 </div>

@@ -28,13 +28,14 @@ class Soporte extends Conexion
    */
   public function registrarSoporte($params = [])
   {
-    $sql = "CALL spu_registrar_fichasoporte(?,?,?,?,?)";
+    $sql = "CALL spu_registrar_fichasoporte(?,?,?,?,?,?)";
     //$soporteJson = json_encode($params['soporte']);
     $values = array(
       $params['idContrato'],
       $params['fechaHoraSolicitud'],
       $params['descripcionProblema'],
       $params['descripcionSolucion'],
+      $params['prioridad'],
       $params['idUsuario']
     );
     return $this->registrar($sql, $values);
@@ -93,19 +94,28 @@ class Soporte extends Conexion
 
   public function actualizarSoporte($params = [])
   {
-    $sql = "CALL spu_soporte_actualizar(?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "CALL spu_soporte_actualizar(?, ?, ?, ?, ?, ?, ?)";
 
     $values = [
       $params['idSoporte'],
       $params['idTecnico'],
       $params['idTipoSoporte'],
       $params['fechaHoraAsistencia'],
-      $params['prioridad'],
       json_encode($params['soporte']),
       $params['idUserUpdate'],
       $params['descripcion_solucion']
     ];
 
     return $this->registrar($sql, $values);
+  }
+
+  public function buscarporNombre($params = [])
+  {
+    $sql = "SELECT * FROM vw_contratos_listar WHERE id_servicio = ? AND CONCAT(apellido, ' ', nombre) LIKE ?";
+    $values = array(
+      $params['nombre'],
+      $params['apellido'],
+    );
+    return $this->consultaParametros($sql, $values);
   }
 }

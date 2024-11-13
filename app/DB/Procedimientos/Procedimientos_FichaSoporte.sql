@@ -1,7 +1,8 @@
 USE Delatel;
+
+
+
 DROP VIEW IF EXISTS vw_soporte_detalle;
-
-
 CREATE VIEW vw_soporte_detalle AS
 SELECT
     s.id_soporte,
@@ -39,6 +40,37 @@ FROM
 
 
 DELIMITER $$
+DROP PROCEDURE IF EXISTS spu_tbsoporte_buscar_nombreRazon$$
+CREATE PROCEDURE spu_tbsoporte_buscar_nombreRazon(
+    IN p_apellido VARCHAR(30),
+    IN p_nombre VARCHAR(30)
+)
+BEGIN
+    DECLARE v_dni VARCHAR(15);
+    DECLARE v_telefono_persona CHAR(9);
+    DECLARE v_ruc VARCHAR(11);
+    DECLARE v_telefono_empresa CHAR(9);
+
+    SELECT nro_doc, telefono INTO v_dni, v_telefono_persona
+    FROM tb_personas
+    WHERE apellidos COLLATE utf8mb4_spanish_ci = p_apellido COLLATE utf8mb4_spanish_ci
+      AND nombres COLLATE utf8mb4_spanish_ci = p_nombre COLLATE utf8mb4_spanish_ci;
+
+    IF v_dni IS NOT NULL THEN
+        SELECT v_dni AS numero_dni, v_telefono_persona AS telefono_persona;
+    ELSE
+        SELECT ruc, telefono INTO v_ruc, v_telefono_empresa
+        FROM tb_empresas
+        WHERE razon_social COLLATE utf8mb4_spanish_ci = CONCAT(p_nombre, ' ', p_apellido) COLLATE utf8mb4_spanish_ci
+        LIMIT 1;
+
+        IF v_ruc IS NOT NULL THEN
+            SELECT v_ruc AS ruc_empresa, v_telefono_empresa AS telefono_empresa;
+        ELSE
+            SELECT 'No se encontró el DNI ni el RUC de la empresa' AS mensaje;
+        END IF;
+    END IF;
+END $$
 
 DROP PROCEDURE IF EXISTS spu_tipo_soporte_registrar$$
 
@@ -60,6 +92,7 @@ CREATE PROCEDURE spu_registrar_fichasoporte(
     IN p_fecha_hora_solicitud DATETIME,
     IN p_descripcion_problema TEXT,
     IN p_descripcion_solucion TEXT,
+    IN p_prioridad VARCHAR(50),
     IN p_iduser_create INT
 )
 BEGIN
@@ -68,6 +101,7 @@ BEGIN
         fecha_hora_solicitud,
         descripcion_problema,
         descripcion_solucion,
+        prioridad,
         create_at,
         iduser_create
     )
@@ -79,6 +113,7 @@ BEGIN
             WHEN p_descripcion_solucion = '' THEN NULL 
             ELSE p_descripcion_solucion 
         END,
+        p_prioridad,
         NOW(),
         p_iduser_create
     );
@@ -94,7 +129,6 @@ CREATE PROCEDURE spu_soporte_actualizar(
     IN p_id_tecnico INT,
     IN p_id_tipo_soporte INT,
     IN p_fecha_hora_asistencia DATETIME,
-    IN p_prioridad VARCHAR(50),
     IN p_soporte JSON,
     IN p_iduser_update INT,
     IN p_procedimiento_S TEXT
@@ -105,7 +139,6 @@ BEGIN
         id_tecnico = p_id_tecnico,
         fecha_hora_asistencia = p_fecha_hora_asistencia,
         id_tipo_soporte = p_id_tipo_soporte,
-        prioridad = p_prioridad,
         soporte = p_soporte,
         update_at = NOW(),
         iduser_update = p_iduser_update,
