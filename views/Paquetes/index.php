@@ -139,7 +139,7 @@
               <th class="text-center">Paquete</th>
               <th class="text-center">Precio</th>
               <th class="text-center">Tipo de Servicio</th>
-              <th class="text-center">Duración</th>
+              <th class="text-center">Servicios</th>
               <th class="text-center">Acciones</th>
             </tr>
           </thead>

@@ -25,27 +25,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         { data: "paquete", title: "Paquete", className: "text-center" },
         { data: "precio", title: "Precio", className: "text-center" },
         {
-          data: "tipo_servicio",
+          data: "tipos_servicio",
           title: "Tipo de Servicio",
           className: "text-center",
         },
         {
-          data: "duracion",
-          title: "Duración",
+          data: "servicios",
+          title: "Servicios",
           className: "text-center",
-          render: function (data) {
-            try {
-              const duracionObj = JSON.parse(data);
-              return Object.entries(duracionObj)
-                .map(
-                  ([key, value]) =>
-                    `${key.charAt(0).toUpperCase() + key.slice(1)}: ${value} meses`
-                )
-                .join(", ");
-            } catch (e) {
-              return data;
-            }
-          },
         },
         {
           data: null,
@@ -86,14 +73,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Cargar datos de servicios en los selectores
     cargarServicios();
 
-    // Deshabilitar la caja de texto de duración 2
-    $("#slcTipoServicioActualizar, #slcTipoServicio").on("change", function () {
-      deshabilitarDuracion2(this.id);
-    });
-
-    deshabilitarDuracion2("slcTipoServicio");
-    deshabilitarDuracion2("slcTipoServicioActualizar");
-
     // Validar números positivos en los campos de entrada
     $("#txtPrecio, #txtPrecioActualizar").on("input", function () {
       validarNumerosPositivos(this);
@@ -129,15 +108,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     $("#txtPrecioActualizar").val("");
     $("#slcTipoServicio").val("").trigger("change");
     $("#slcTipoServicioActualizar").val("").trigger("change");
-
-    deshabilitarDuracion2("slcTipoServicio");
-    deshabilitarDuracion2("slcTipoServicioActualizar");
   }
 
   // Evento para abrir el modal de actualización
   $("#tablaPaquetes tbody").on("click", ".btn-edit", async function () {
     const idPaquete = $(this).data("id");
 
+    console.log(idPaquete);
     try {
       const response = await fetch(
         `${config.HOST}app/controllers/Paquete.controllers.php?operacion=buscarPaqueteId&idPaquete=` +
@@ -151,23 +128,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       // Establecer los valores de los servicios en el selector
       const selectedServices = [
         paquete[0].id_servicio,
-        paquete[0].id_servicio2,
-        paquete[0].id_servicio3,
-        paquete[0].id_servicio4,
       ].filter((id) => id !== null);
       $("#slcTipoServicioActualizar").val(selectedServices).trigger("change");
 
       idServicio = paquete[0].id_servicio;
-
-      // Parsear y mostrar las duraciones
-      const duracionObj = JSON.parse(paquete[0].duracion);
-      actualizarCajasDeTexto("Actualizar");
-      selectedServices.forEach((servicio, index) => {
-        const nombreCortoServicio = $(`#slcTipoServicioActualizar option[value="${servicio}"]`).data("nombre-corto");
-        $(`#txtDuracionServicioActualizar${index + 1}`).val(duracionObj[nombreCortoServicio] || "");
-      });
-
-      deshabilitarDuracion2("slcTipoServicioActualizar");
 
       $("#modalActualizarPaquete").modal("show");
     } catch (error) {
@@ -175,54 +139,26 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  // Función meses actualizada
-  async function meses(contexto) {
-    const selectedServices = $(`#slcTipoServicio${contexto === "actualizacion" ? "Actualizar" : ""}`).val() || [];
-    let jsonMeses = {};
-
-    selectedServices.forEach((servicio, index) => {
-      const nombreCortoServicio = $(`#slcTipoServicio${contexto === "actualizacion" ? "Actualizar" : ""} option[value="${servicio}"]`).data("nombre-corto");
-      const duracion = document.querySelector(`#txtDuracionServicio${contexto === "actualizacion" ? "Actualizar" : ""}${index + 1}`).value;
-      if (duracion) {
-        jsonMeses[nombreCortoServicio] = parseInt(duracion, 10);
-      }
-    });
-
-    if (Object.keys(jsonMeses).length === 0) {
-      return null;
-    }
-
-    return jsonMeses;
-  }
-
   // Validar Campos
   async function validarCampos(contexto) {
-    let paquete, precio, tipoServicio, duracionServicio;
+    let paquete, precio, tipoServicio;
 
     if (contexto === "registro") {
       paquete = document.querySelector("#txtPaquete");
       precio = document.querySelector("#txtPrecio");
       tipoServicio = document.querySelector("#slcTipoServicio");
-      duracionServicio = document.querySelector("#txtDuracionServicio1");
     } else if (contexto === "actualizacion") {
       paquete = document.querySelector("#txtPaqueteActualizar");
       precio = document.querySelector("#txtPrecioActualizar");
       tipoServicio = document.querySelector("#slcTipoServicioActualizar");
-      duracionServicio = document.querySelector("#txtDuracionServicioActualizar1");
     }
 
     if (
       !paquete || !paquete.value.trim() ||
       !precio || !precio.value.trim() ||
-      !tipoServicio || !tipoServicio.value.trim() ||
-      !duracionServicio || !duracionServicio.value.trim()
+      !tipoServicio || !tipoServicio.value.trim()
     ) {
       showToast("Todos los campos son obligatorios", "WARNING");
-      return false;
-    }
-
-    if (parseFloat(duracionServicio.value) < 3) {
-      showToast("La duración no puede ser menor a 3 meses.", "WARNING");
       return false;
     }
 
@@ -233,12 +169,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function registrarPaquete() {
     if (accesos?.paquetes?.crear) {
       if (!(await validarCampos("registro"))) {
-        return;
-      }
-
-      const jsonMeses = await meses("registro");
-      if (!jsonMeses) {
-        showToast("Error al obtener la duración", "ERROR");
         return;
       }
 
@@ -261,7 +191,6 @@ document.addEventListener("DOMContentLoaded", async () => {
           idServicio4: selectedServices[3] || null,
           paquete: paquete,
           precio: precio,
-          duracion: jsonMeses,
           idUsuario: userid,
         },
       };
@@ -303,12 +232,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
       }
 
-      const jsonMeses = await meses("actualizacion");
-      if (!jsonMeses) {
-        showToast("Error al obtener la duración", "ERROR");
-        return;
-      }
-
       const paquete = document.querySelector("#txtPaqueteActualizar").value;
       const precio = document.querySelector("#txtPrecioActualizar").value;
       const selectedServices = $("#slcTipoServicioActualizar").val() || [];
@@ -323,7 +246,6 @@ document.addEventListener("DOMContentLoaded", async () => {
           idServicio4: selectedServices[3] || null,
           paquete: paquete,
           precio: precio,
-          duracion: jsonMeses,
           idUsuario: userid,
         },
       };
@@ -429,69 +351,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       slcTipoServicio.on("change", function () {
         idServicio = parseInt($(this).val(), 10);
-        actualizarCajasDeTexto();
       });
 
       slcTipoServicioActualizar.on("change", function () {
         idServicio = parseInt($(this).val(), 10);
-        actualizarCajasDeTexto("Actualizar");
       });
     } catch (error) {
       console.error("Error al cargar servicios:", error);
-    }
-  }
-
-  function actualizarCajasDeTexto(contexto = "") {
-    const serviciosContainer = $(`#serviciosContainer${contexto}`);
-    const selectedServices = $(`#slcTipoServicio${contexto}`).val() || [];
-
-    serviciosContainer.empty();
-
-    selectedServices.forEach((servicio, index) => {
-      const nombreCortoServicio = $(`#slcTipoServicio${contexto} option[value="${servicio}"]`).data("nombre-corto");
-      const inputHtml = `
-        <div class="form-floating mb-2">
-          <input type="number" class="form-control" id="txtDuracionServicio${contexto}${index + 1}" placeholder="Duración del Servicio ${nombreCortoServicio}" required>
-          <label for="txtDuracionServicio${contexto}${index + 1}">Duración del Servicio ${nombreCortoServicio} (Meses)</label>
-        </div>
-      `;
-      serviciosContainer.append(inputHtml);
-    });
-  }
-
-  $(document).ready(function () {
-    cargarServicios();
-  
-    $("#slcTipoServicio").on("change", function () {
-      if ($(this).val().length > 4) {
-        showToast("No se pueden añadir más de 4 servicios", "WARNING");
-        $(this).val($(this).val().slice(0, 4)).trigger("change");
-      }
-      idServicio = parseInt($(this).val(), 10);
-      actualizarCajasDeTexto();
-    });
-  
-    $("#slcTipoServicioActualizar").on("change", function () {
-      if ($(this).val().length > 4) {
-        showToast("No se pueden añadir más de 4 servicios", "WARNING");
-        $(this).val($(this).val().slice(0, 4)).trigger("change");
-      }
-      idServicio = parseInt($(this).val(), 10);
-      actualizarCajasDeTexto("Actualizar");
-    });
-  });
-
-  function deshabilitarDuracion2(selectorId) {
-    const idServicio = $(`#${selectorId}`).val();
-    const txtDuracion2 = selectorId.includes("Actualizar")
-      ? $("#txtDuracion2Actualizar")
-      : $("#txtDuracion2");
-
-    if (idServicio === "3") {
-      txtDuracion2.prop("disabled", false);
-    } else {
-      txtDuracion2.prop("disabled", true);
-      txtDuracion2.val("");
     }
   }
 
@@ -520,7 +386,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     $("#slcTipoServicioActualizar").on("change", function () {
       idServicio = parseInt($(this).val(), 10);
-      actualizarCajasDeTexto("Actualizar");
     });
   });
 

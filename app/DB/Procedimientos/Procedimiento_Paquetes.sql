@@ -143,8 +143,7 @@ END $$
 
 /* Procedimiento buscar por Servicio  */
 DROP PROCEDURE IF EXISTS spu_paquete_buscar_idServicio$$
-
-CREATE PROCEDURE spu_paquete_buscar_idServicio(IN p_id_servicio INT)
+CREATE PROCEDURE spu_paquete_buscar_idServicio(IN p_id_servicio JSON)
 BEGIN 
     SELECT 
         p.id_servicio,
@@ -159,7 +158,7 @@ BEGIN
             p.id_servicio, JSON_QUOTE(CAST(s.id_servicio AS CHAR))
         )
     WHERE 
-        JSON_CONTAINS(p.id_servicio, JSON_QUOTE(CAST(p_id_servicio AS CHAR)))
+        JSON_CONTAINS(p.id_servicio, JSON_UNQUOTE(JSON_EXTRACT(p_id_servicio, '$.id_servicio')), '$.id_servicio')
     GROUP BY 
         p.id_paquete;
 END $$

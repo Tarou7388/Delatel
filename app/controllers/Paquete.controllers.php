@@ -17,12 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     case 'registrarPaquete':
       $datosEnviar = [
           "idServicio"    => Herramientas::sanitizarEntrada($datos['parametros']["idServicio"]),
-          "idServicio2"   => isset($datos['parametros']["idServicio2"]) ? Herramientas::sanitizarEntrada($datos['parametros']["idServicio2"]) : null,
-          "idServicio3"   => isset($datos['parametros']["idServicio3"]) ? Herramientas::sanitizarEntrada($datos['parametros']["idServicio3"]) : null,
-          "idServicio4"   => isset($datos['parametros']["idServicio4"]) ? Herramientas::sanitizarEntrada($datos['parametros']["idServicio4"]) : null,
           "paquete"       => Herramientas::sanitizarEntrada($datos['parametros']["paquete"]),
           "precio"        => Herramientas::sanitizarEntrada($datos['parametros']["precio"]),
-          "duracion"      => json_encode($datos['parametros']["duracion"]),
           "idUsuario"     => Herramientas::sanitizarEntrada($datos['parametros']["idUsuario"])
       ];
       $resultado = $paquete->registrarPaquete($datosEnviar);
@@ -57,12 +53,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
       $datosActualizar = [
         "idPaquete"         => Herramientas::sanitizarEntrada($datos['parametros']["idPaquete"]),
         "idServicio"        => Herramientas::sanitizarEntrada($datos['parametros']["idServicio"]),
-        "idServicio2"   => isset($datos['parametros']["idServicio2"]) ? Herramientas::sanitizarEntrada($datos['parametros']["idServicio2"]) : null,
-        "idServicio3"   => isset($datos['parametros']["idServicio3"]) ? Herramientas::sanitizarEntrada($datos['parametros']["idServicio3"]) : null,
-        "idServicio4"   => isset($datos['parametros']["idServicio4"]) ? Herramientas::sanitizarEntrada($datos['parametros']["idServicio4"]) : null,
         "paquete"           => Herramientas::sanitizarEntrada($datos['parametros']["paquete"]),
         "precio"            => Herramientas::sanitizarEntrada($datos['parametros']["precio"]),
-        "duracion"          => json_encode($datos['parametros']["duracion"]),
         "idUsuario"   => Herramientas::sanitizarEntrada($datos['parametros']["idUsuario"])
       ];
       $resultado = $paquete->actualizarPaquete($datosActualizar);

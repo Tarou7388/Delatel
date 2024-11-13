@@ -288,8 +288,8 @@
               <th class="text-center">Cliente</th>
               <th class="text-center">Número de Doc</th>
               <th class="text-center">Paquete</th>
-              <th class="text-center">Dirección</th>
-              <th class="text-center">Duración</th>
+              <th class="text-center">Precio</th>
+              <th class="text-center">Servicio</th>
               <th class="text-center">Acciones</th>
             </tr>
           </thead>

@@ -356,30 +356,25 @@ window.addEventListener("DOMContentLoaded", async () => {
         { data: 'nombre_cliente' },
         { data: 'num_identificacion' },
         { data: 'paquete' },
-        { data: 'direccion_servicio' },
-        {
-          data: 'duracion',
-          render: function (data) {
-            return formatDuracion(data);
-          }
-        },
+        { data: 'precio' },
+        { data: 'tipos_servicio' },
         {
           data: null,
           render: function (data, type, row) {
             return `
-              <button class="btn btn-sm btn-warning btn-edit" data-idContrato="${row.id_contrato}">
-                <i class="fa-regular fa-pen-to-square icon-disabled"></i>
-              </button>
-              <button class="btn btn-sm btn-danger btnEliminar" data-idContrato="${row.id_contrato}">
-                <i class="fa-regular fa-trash-can icon-disabled"></i>
-              </button>
-              <button class="btn btn-sm btn-primary btnGenerar" data-idContrato="${row.id_contrato}">
-                <i class="fa-solid fa-file-pdf icon-disabled"></i>
-              </button>
-              <button class="btn btn-sm btn-success btnFicha" data-tipoServicio="${row.tipo_servicio}" data-idContrato="${row.id_contrato}">
-                Ficha
-              </button>
-            `;
+          <button class="btn btn-sm btn-warning btn-edit" data-idContrato="${row.id_contrato}">
+          <i class="fa-regular fa-pen-to-square icon-disabled"></i>
+          </button>
+          <button class="btn btn-sm btn-danger btnEliminar" data-idContrato="${row.id_contrato}">
+          <i class="fa-regular fa-trash-can icon-disabled"></i>
+          </button>
+          <button class="btn btn-sm btn-primary btnGenerar" data-idContrato="${row.id_contrato}">
+          <i class="fa-solid fa-file-pdf icon-disabled"></i>
+          </button>
+          <button class="btn btn-sm btn-success btnFicha" data-tipoServicio="${row.tipos_servicio}" data-idContrato="${row.id_contrato}">
+          Ficha
+          </button>
+        `;
           }
         }
       ],

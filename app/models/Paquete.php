@@ -28,15 +28,11 @@ class Paquete extends Conexion
    */
   public function registrarPaquete($params = [])
   {
-    $sql = "CALL spu_paquete_registrar(?,?,?,?,?,?,?,?)";
+    $sql = "CALL spu_paquete_registrar(?,?,?,?)";
     $values = array(
       $params['idServicio'],
-      $params['idServicio2'],
-      $params['idServicio3'],
-      $params['idServicio4'],
       $params['paquete'],
       $params['precio'],
-      $params['duracion'],
       $params['idUsuario']
     );
     return $this->registrar($sql, $values);
@@ -80,12 +76,8 @@ class Paquete extends Conexion
     $values = array(
       $params['idPaquete'],
       $params['idServicio'],
-      $params['idServicio2'],
-      $params['idServicio3'],
-      $params['idServicio4'],
       $params['paquete'],
       $params['precio'],
-      $params['duracion'],
       $params['idUsuario']
     );
     return $this->registrar($sql, $values);
