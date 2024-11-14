@@ -1,7 +1,6 @@
 USE Delatel;
 
 
-
 DROP VIEW IF EXISTS vw_soporte_detalle;
 CREATE VIEW vw_soporte_detalle AS
 SELECT
@@ -20,8 +19,7 @@ SELECT
     r.id_usuario AS id_tecnico,
     p_tecnico.nombres AS tecnico_nombres,
     p_tecnico.apellidos AS tecnico_apellidos,
-    pk.id_paquete,      
-    pk.id_servicio,     
+    pk.id_paquete,
     srv.tipo_servicio   
 FROM
     tb_soporte s
@@ -34,10 +32,6 @@ FROM
     LEFT JOIN tb_servicios srv ON pk.id_servicio = srv.id_servicio
     LEFT JOIN tb_clientes cl ON c.id_cliente = cl.id_cliente
     LEFT JOIN tb_personas p_cliente ON cl.id_persona = p_cliente.id_persona;
-
-
-
-
 
 DELIMITER $$
 DROP PROCEDURE IF EXISTS spu_tbsoporte_buscar_nombreRazon$$
@@ -147,16 +141,15 @@ BEGIN
 END $$
 
 DROP PROCEDURE IF EXISTS spu_soporte_filtrar_prioridad$$
-
-DROP PROCEDURE IF EXISTS spu_soporte_filtrar_prioridad$$
-
-CREATE PROCEDURE spu_soporte_filtrar_prioridad(
+CREATE PROCEDURE spu_soporte_filtrar_prioridad (
     IN p_prioridad VARCHAR(50)
 )
 BEGIN
-    SELECT 
+    SELECT
         s.fecha_hora_solicitud,
         s.fecha_hora_asistencia,
+        c.direccion_servicio,
+        sct.sector,
         s.id_soporte,
         s.prioridad,
         s.soporte,
@@ -175,6 +168,8 @@ BEGIN
         tb_soporte s
     LEFT JOIN 
         tb_contratos c ON s.id_contrato = c.id_contrato
+    INNER JOIN
+        tb_sectores sct ON c.id_contrato = sct.id_sector
     LEFT JOIN 
         tb_tipo_soporte ts ON s.id_tipo_soporte = ts.id_tipo_soporte
     LEFT JOIN 
@@ -188,16 +183,7 @@ BEGIN
     LEFT JOIN 
         tb_personas p_cliente ON cl.id_persona = p_cliente.id_persona 
     LEFT JOIN 
-        tb_empresas e ON cl.id_empresa = e.id_empresa 
-    WHERE 
-        (p_prioridad IS NULL OR TRIM(p_prioridad) = '' OR LOWER(TRIM(s.prioridad)) = LOWER(TRIM(p_prioridad)))
-        AND LOWER(TRIM(s.prioridad)) IN ('alta', 'media', 'baja')
-    ORDER BY 
-        DATE(s.fecha_hora_asistencia) ASC,
-        CASE 
-            WHEN LOWER(TRIM(s.prioridad)) = 'alta' THEN 1
-            WHEN LOWER(TRIM(s.prioridad)) = 'media' THEN 2
-            WHEN LOWER(TRIM(s.prioridad)) = 'baja' THEN 3
-            ELSE 4
-        END;
+        tb_empresas e ON cl.id_empresa = e.id_empresa
+    WHERE
+        (p_prioridad = "" OR s.prioridad = p_prioridad);
 END;
