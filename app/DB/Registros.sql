@@ -373,12 +373,17 @@ INSERT INTO tb_contactabilidad (id_persona, id_empresa, id_paquete, fecha_hora_c
 (NULL, 39, 20, '2024-02-17 13:00:00', 'Calle Sucre 444, Chincha Alta', 'Se realizó el mantenimiento solicitado.', 1),
 (40, NULL, 21, '2024-02-19 10:30:00', 'Av. Arica 765, Chincha Alta', 'Se acordó una renovación del plan actual.', 1);
 
-INSERT INTO tb_soporte (id_contrato, id_tipo_soporte, id_tecnico, fecha_hora_solicitud, fecha_hora_asistencia, descripcion_problema, descripcion_solucion, prioridad, soporte, iduser_create) VALUES 
-(1, 1, 1, '2024-01-10 15:00:00', '2024-10-09 17:05:29', "Daños en el cable", "Reemplazo del cable", 'Alta', 
-  '{"parametroscable":{"periodo":["mensual"],"potencia":4,"sintonizador":2,"triplexor":{"requiere":true,"cantidad":1,"tipo":["activo","pasivo"]},"spliter":[{"cantidad":1,"tipo":"1x3"},{"cantidad":1,"tipo":"1x5"},{"cantidad":1,"tipo":"1x8"}],"cable":10,"conectores":1},"cambioscable":{"periodo":["mensual","contado"],"potencia":4,"sintonizador":2,"triplexor":{"requiere":true,"cantidad":1,"tipo":["activo","pasivo"]},"spliter":[{"cantidad":1,"tipo":"1x3"},{"cantidad":1,"tipo":"1x5"},{"cantidad":1,"tipo":"1x8"}],"cable":10,"conectores":1},"ajustes":["revisión","optimización"]}', 1),
-(16, 1, 1, '2024-01-10 15:00:00', '2024-10-09 17:05:29', "Daños en el cable", "Reemplazo del cable", 'Media', 
-  '{"parametroscable":{"periodo":["contado"],"potencia":4,"sintonizador":2,"triplexor":{"requiere":true,"cantidad":1,"tipo":["activo","pasivo"]},"spliter":[{"cantidad":1,"tipo":"1x3"},{"cantidad":1,"tipo":"1x5"},{"cantidad":1,"tipo":"1x8"}],"cable":10,"conectores":1},"cambioscable":{"periodo":["mensual","contado"],"potencia":4,"sintonizador":2,"triplexor":{"requiere":true,"cantidad":1,"tipo":["activo","pasivo"]},"spliter":[{"cantidad":1,"tipo":"1x3"},{"cantidad":1,"tipo":"1x5"},{"cantidad":1,"tipo":"1x8"}],"cable":10,"conectores":1},"ajustes":["revisión","optimización"]}', 1),
-(12,null,null,"2024-10-09 17:05:29",null,"No funciona C",null,"Incidencia",null,1),
-(13,null,null,"2024-10-09 17:05:29",null,"No funciona B",null,"Incidencia",null,1),
-(14,null,null,"2024-10-09 17:05:29",null,"No funciona D",null,"Incidencia",null,1),
-(15,null,null,"2024-10-09 17:05:29",null,"No funciona E",null,"Incidencia",null,1);
+INSERT INTO tb_soporte (id_contrato, id_tipo_soporte, id_tecnico, fecha_hora_solicitud, fecha_hora_asistencia, descripcion_problema, descripcion_solucion, prioridad, soporte, iduser_create) VALUES
+-- Soportes para contrato 1
+(1, 1, 1, '2024-02-01 10:00:00', '2024-02-01 12:30:00', "Problema de señal intermitente", "Reemplazo de antena", 'Alta', '{"diagnostico":{"cable":"dañado","conexion":"débil"},"reparaciones":["antena"]}', 1),
+(1, 2, 1, '2024-02-15 14:00:00', '2024-02-15 16:00:00', "Pérdida de conexión", "Reinicialización de equipo", 'Media', '{"diagnostico":{"modem":"reconfigurado","conexiones":"ajustadas"},"ajustes":["reconfiguración"]}', 1),
+(1, 3, 1, '2024-03-10 09:00:00', '2024-03-10 10:30:00', "Velocidad de internet baja", "Optimización de red", 'Baja', '{"ajustes":["optimización","revisión"]}', 1),
+(2, 1, 1, '2024-02-02 11:00:00', '2024-02-02 13:30:00', "Corte en el servicio", "Reemplazo de cable", 'Alta', '{"parametroscable":{"potencia":5,"triplexor":{"requiere":true,"cantidad":1,"tipo":["activo"]}}}', 1),
+(2, 2, 1, '2024-02-20 15:30:00', '2024-02-20 16:30:00', "Señal de TV borrosa", "Cambio de sintonizador", 'Media', '{"cambioscable":{"potencia":3,"sintonizador":1}}', 1),
+(2, 3, 1, '2024-03-12 14:00:00', '2024-03-12 15:00:00', "Problema en la conexión WiFi", "Actualización de router", 'Baja', '{"ajustes":["actualización"]}', 1),
+(3, 1, 1, '2024-02-05 09:30:00', '2024-02-05 11:30:00', "Sin señal de internet", "Ajuste en el cableado", 'Alta', '{"cable":"desgastado","reparaciones":["cableado"]}', 1),
+(3, 2, 1, '2024-02-18 13:45:00', '2024-02-18 14:45:00', "Interferencia en llamada", "Ajuste de antena", 'Media', '{"ajustes":["antena","frecuencia"]}', 1),
+(3, 3, 1, '2024-03-20 08:30:00', '2024-03-20 10:00:00', "Revisión periódica", "Inspección de equipo", 'Baja', '{"inspección":["equipo"]}', 1),
+(4, 1, 1, '2024-02-07 10:00:00', '2024-02-07 12:00:00', "Problema de configuración", "Reconfiguración de red", 'Alta', '{"configuracion":{"equipo":"reconfigurado"},"ajustes":["frecuencia"]}', 1),
+(4, 2, 1, '2024-03-10 14:00:00', '2024-03-10 15:30:00', "Señal de TV débil", "Ajuste de señal", 'Media', '{"diagnostico":["ajuste"],"componentes":["antena"]}', 1),
+(4, 3, 1, '2024-04-15 09:30:00', '2024-04-15 10:45:00', "Interrupción de servicio", "Verificación de conexión", 'Baja', '{"diagnostico":["conexión","modem"]}', 1);
