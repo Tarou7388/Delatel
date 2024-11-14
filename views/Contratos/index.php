@@ -201,13 +201,6 @@
 
           <div class="col-md-4">
             <div class="form-floating">
-              <input type="date" class="form-control" id="txtDuracion" placeholder="duracion" name="Duracion" >
-              <label for="txtDuracion" class="form-label">Duración</label>
-            </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="form-floating">
               <input type="number" class="form-control" id="txtPrecio" value="0" placeholder="Precio" disabled>
               <label for="txtPrecio" class="form-label">Precio</label>
             </div>
@@ -222,17 +215,16 @@
             </div>
           </div>
 
-        </div>
-
-        <div class="row mt-2">
-
-
           <div class="col-md-4">
             <div class="form-floating">
               <input type="text" class="form-control" id="txtDireccion" placeholder="Dirección de Servicio">
               <label for="txtDireccion" class="form-label">Dirección de Servicio</label>
             </div>
           </div>
+
+        </div>
+
+        <div class="row mt-2">
 
           <div class="col-md-4">
             <div class="form-floating">
@@ -250,6 +242,13 @@
               <button class="btn btn-primary" type="button" id="btnBuscarCoordenadas" data-bs-toggle="modal" data-bs-target="#ModalMapa">
                 <i class="fa-solid fa-magnifying-glass"></i>
               </button>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-floating">
+              <input type="date" class="form-control" id="txtFechaFin" placeholder="Fecha Fin" name="Fecha Fin">
+              <label for="txtFechaFin" class="form-label">Fecha Fin</label>
             </div>
           </div>
 

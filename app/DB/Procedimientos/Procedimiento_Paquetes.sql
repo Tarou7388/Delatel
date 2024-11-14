@@ -155,10 +155,16 @@ BEGIN
     FROM 
         tb_paquetes p
         LEFT JOIN tb_servicios s ON JSON_CONTAINS(
-            p.id_servicio, JSON_QUOTE(CAST(s.id_servicio AS CHAR))
+            p.id_servicio, CONCAT(
+                '{"id_servicio":', s.id_servicio, '}'
+            )
         )
     WHERE 
-        JSON_CONTAINS(p.id_servicio, JSON_UNQUOTE(JSON_EXTRACT(p_id_servicio, '$.id_servicio')), '$.id_servicio')
+        JSON_CONTAINS(p.id_servicio, CONCAT(
+            '{"id_servicio":', JSON_UNQUOTE(JSON_EXTRACT(p_id_servicio, '$.id_servicio')), '}'
+        ))
     GROUP BY 
         p.id_paquete;
 END $$
+
+CALL spu_paquete_buscar_idServicio('{"id_servicio": 1}');

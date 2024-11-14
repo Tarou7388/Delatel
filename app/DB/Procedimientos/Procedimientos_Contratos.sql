@@ -36,7 +36,7 @@ CREATE VIEW vw_contratos_listar AS
 SELECT
     c.id_contrato,
     CASE
-        WHEN cl.id_persona IS NOT NULL THEN p.nombres
+        WHEN cl.id_persona IS NOT NULL THEN CONCAT(p.nombres, ' ', p.apellidos)
         ELSE e.razon_social
     END AS nombre_cliente,
     CASE

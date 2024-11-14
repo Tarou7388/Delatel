@@ -60,8 +60,8 @@ class Contrato extends Conexion
         $sql = "SELECT * FROM vw_contratos_listar";
         $sqlCount = "SELECT COUNT(*) AS total FROM vw_contratos_listar";
         if ($search) {
-            $sql .= " WHERE nombre_cliente LIKE :search OR num_identificacion LIKE :search OR paquete LIKE :search OR direccion_servicio LIKE :search OR duracion LIKE :search";
-            $sqlCount .= " WHERE nombre_cliente LIKE :search OR num_identificacion LIKE :search OR paquete LIKE :search OR direccion_servicio LIKE :search OR duracion LIKE :search";
+            $sql .= " WHERE nombre_cliente LIKE :search OR num_identificacion LIKE :search OR paquete LIKE :search OR direccion_servicio LIKE :search";
+            $sqlCount .= " WHERE nombre_cliente LIKE :search OR num_identificacion LIKE :search OR paquete LIKE :search OR direccion_servicio LIKE :search";
         }
         $sql .= " LIMIT :offset, :limit";
         $stmt = $this->pdo->prepare($sql);

@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       document.getElementById("txtNumFicha").value = data[0].id_contrato;
 
-      tipoServicio = data[0].tipo_servicio;
+      tipoServicio = data[0].tipos_servicio;
       const nombreCliente = data[0].nombre_cliente.split(", ");
       const usuario =
         (
@@ -328,7 +328,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
     console.log(jsonCosto);
 
-    if (typeof tipoServicio !== "undefined" && (tipoServicio === "FIBR + CABL" || tipoServicio === "CABL + FIBR")) {
+    if (typeof tipoServicio !== "undefined" && (tipoServicio === "FIBR,CABL" || tipoServicio === "CABL,FIBR")) {
       const txtCantCable = document.querySelector("#txtCantCable").value;
       const txtPrecioCable = document.querySelector("#txtPrecioCable").value;
       const txtPrecioConector =
@@ -473,7 +473,7 @@ document.addEventListener("DOMContentLoaded", () => {
       jsonData.fibraoptica.repetidores = jsonRepetidor;
     }
     console.log(tipoServicio);
-    if (tipoServicio === "FIBR + CABL" || tipoServicio === "CABL + FIBR") {
+    if (tipoServicio === "FIBR,CABL" || tipoServicio === "CABL,FIBR") {
       if (numeroSintotizadores > 0) {
         jsonCable.sintonizadores = jsonSintotizador;
       }
