@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (idCliente) {
     const respuesta = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerContratoPorCliente&id=${idCliente}`);
     const contratos = await respuesta.json();
+    console.log(contratos)
 
     const tbody = document.querySelector("#listarContratos tbody");
     contratos.forEach(contrato => {
@@ -44,9 +45,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Agrega evento para cada botón de averías
     document.querySelectorAll(".btn-averias").forEach(button => {
-      button.addEventListener("click", (event) => {
+      button.addEventListener("click", async (event) => {
         const idContrato = event.target.getAttribute("data-id");
-        if (idContrato) {
+
+        // Hacer fetch al controlador para obtener las averías del contrato
+        const respuesta = await fetch(`${config.HOST}app/controllers/Averias.controllers.php?operacion=buscarAveriaPorContrato&valor=${idContrato}`);
+        const data = await respuesta.json();
+        console.log(data)
+        if(data ==""){
+          showToast("No tiene averias")
+        }else{
           window.location.href = `${config.HOST}views/Reportes/listarAverias?idContrato=${idContrato}&nombreCliente=${encodeURIComponent(nombreCliente)}`;
         }
       });

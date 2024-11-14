@@ -14,17 +14,6 @@ if (isset($_GET['operacion'])) {
       if (!empty($valor)) {
         $resultados = $averias->buscarAveriaPorContrato(['idContrato' => $valor]);
         echo json_encode($resultados);
-        // if ($resultados) {
-        //   echo json_encode([
-        //     "estado" => "Exitoso",
-        //     "data" => $resultados
-        //   ]);
-        // } else {
-        //   echo json_encode([
-        //     "estado" => "error",
-        //     "mensaje" => "No se encontraron averías para este contrato."
-        //   ]);
-        // }
       } else {
         echo json_encode([
           "estado" => "error",
