@@ -4,6 +4,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Obtén el id_cliente de la URL
   const urlParams = new URLSearchParams(window.location.search);
   const idCliente = urlParams.get("id");
+  const nombreCliente = urlParams.get("nombre");
+
+  if (nombreCliente) {
+    document.getElementById("nombreCliente").textContent = decodeURIComponent(nombreCliente);
+  }
 
   if (idCliente) {
     const respuesta = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerContratoPorCliente&id=${idCliente}`);
@@ -39,31 +44,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Agrega evento para cada botón de averías
     document.querySelectorAll(".btn-averias").forEach(button => {
-      button.addEventListener("click", async (event) => {
+      button.addEventListener("click", (event) => {
         const idContrato = event.target.getAttribute("data-id");
         if (idContrato) {
-          try {
-            // Busca el contrato específico dentro del array `contratos`
-            const contratoSeleccionado = contratos.find(contrato => contrato.id_contrato == parseInt(idContrato));
-
-            const response = await fetch(`${config.HOST}app/controllers/Averias.controllers.php?operacion=buscarAveriaPorContrato&valor=${idContrato}`);
-            const averias = await response.json();
-
-            if (!averias || averias.length === 0) {
-              showToast("No tienes ninguna avería", "INFO");
-            } else {
-              // Verifica el tipo de servicio del contrato seleccionado y redirige a la vista correspondiente
-              if (contratoSeleccionado.tipos_servicio == "CABL") {
-                window.location.href = `${config.HOST}views/Soporte/FichaAveriaCable?idContrato=${idContrato}`; 
-              } else if (contratoSeleccionado.tipos_servicio == "WISP") { 
-                window.location.href = `${config.HOST}views/Soporte/FichaWisp?idContrato=${idContrato}`;
-              } else if (contratoSeleccionado.tipos_servicio == "GPON") { 
-                window.location.href = `${config.HOST}views/Soporte/FichaGpon?idContrato=${idContrato}`; 
-              }
-            }
-          } catch (error) {
-            console.error("Error al obtener las averías:", error);
-          }
+          window.location.href = `${config.HOST}views/Reportes/listarAverias?idContrato=${idContrato}&nombreCliente=${encodeURIComponent(nombreCliente)}`;
         }
       });
     });

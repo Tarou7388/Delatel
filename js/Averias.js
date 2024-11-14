@@ -38,9 +38,9 @@ document.addEventListener("DOMContentLoaded", () => {
       button.textContent = "Ver Contrato";
       button.className = "btn btn-primary";
       button.onclick = () => {
-        window.location.href = `${config.HOST}views/Averias/table?id=${cliente.id_cliente}`
+        const nombreCliente = encodeURIComponent(cliente.nombre_cliente); // Codifica el nombre para URL
+        window.location.href = `${config.HOST}views/Reportes/table?id=${cliente.id_cliente}&nombre=${nombreCliente}`;
       };
-      
 
       cellContrato.appendChild(button);
       row.appendChild(cellContrato);

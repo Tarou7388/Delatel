@@ -4,20 +4,18 @@
   <div class="form-container mt-4">
     <div class="card">
       <div class="card-header">
-        
+        <h5 id="nombreCliente"></h5>
       </div>
       <div class="card-body">
         <div class="table-responsive">
-          <table id="listarContratos" class="table mt-4">
+          <table id="listarAverias" class="table mt-4">
             <thead>
               <tr>
-                <th>Paquete</th>
-                <th>Dirección</th>
-                <th>Referencia</th>
-                <th>Sector</th>
-                <th>Fecha Inicio</th>
-                <th>Fecha Fin</th>
-                <th>AVerias</th>
+                <th>#</th>
+                <th>Nombre Tecnico</th>
+                <th>fecha y hora solicitud</th>
+                <th>fecha y hora asistencia</th>
+                <th>Detalles</th>
               </tr>
             </thead>
             <tbody>
@@ -31,7 +29,7 @@
 </div>
 
 <?php require_once "../../footer.php"; ?>
-<script type="module" src="../../js/averiaContrato.js"></script>
+<script type="module" src="../../js/listarAverias.js"></script>
 </body>
 
 </html>
