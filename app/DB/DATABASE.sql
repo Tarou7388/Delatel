@@ -202,7 +202,7 @@ CREATE TABLE tb_contratos (
     ficha_instalacion JSON NULL,
     coordenada VARCHAR(50),
     fecha_inicio DATE NULL,
-    fecha_fin JSON NULL,
+    fecha_fin DATE NULL,
     fecha_registro DATE NOT NULL,
     nota TEXT NULL,
     create_at DATETIME NOT NULL DEFAULT NOW(),
