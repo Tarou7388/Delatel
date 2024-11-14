@@ -279,7 +279,8 @@ CREATE TABLE tb_incidencias (
 CREATE TABLE tb_almacen (
 	id_almacen       INT PRIMARY KEY AUTO_INCREMENT,
 	nombre_almacen   VARCHAR(65) NOT NULL,
-	ubicacion        VARCHAR(120) NULL,
+	ubicacion        VARCHAR(120) NOT NULL,
+	coordenada       VARCHAR(50) NOT NULL,
 	inactive_at      DATETIME NULL,
 	iduser_inactive  INT NULL,
 	create_at        DATETIME NOT NULL DEFAULT NOW(),

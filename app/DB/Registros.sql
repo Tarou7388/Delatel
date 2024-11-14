@@ -181,9 +181,9 @@ INSERT INTO tb_empresas (ruc, representante_legal, razon_social, nombre_comercia
 ('24234567890', 'Daniela Ortiz', 'Servicios Médicos S.A.C.', 'MedServ', '576543210', 'info@medserv.com', 1),
 ('24345678901', 'Gustavo Peña', 'Consultores en Ventas', 'VentasConsult', '565432109', 'contacto@ventasconsult.com', 1);
 
-INSERT INTO tb_almacen (nombre_almacen, ubicacion, create_at, iduser_create) VALUES
-('Almacen 1', NULL, NOW(), 1),
-('Almacen 2', NULL, NOW(), 1);
+INSERT INTO tb_almacen (nombre_almacen, ubicacion,coordenada, create_at, iduser_create) VALUES
+('Almacen 1', "Av 123","-1", NOW(), 1),
+('Almacen 2', "Av 123456","-1", NOW(), 1);
 
 
 INSERT INTO tb_marca (marca, create_at, iduser_create) VALUES

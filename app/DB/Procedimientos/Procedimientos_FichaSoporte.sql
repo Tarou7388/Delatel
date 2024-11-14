@@ -20,7 +20,8 @@ SELECT
     p_tecnico.nombres AS tecnico_nombres,
     p_tecnico.apellidos AS tecnico_apellidos,
     pk.id_paquete,
-    srv.tipo_servicio   
+    pk.id_servicio,  -- Renombrado para especificar el origen
+    srv.tipo_servicio
 FROM
     tb_soporte s
     LEFT JOIN tb_contratos c ON s.id_contrato = c.id_contrato
@@ -32,6 +33,7 @@ FROM
     LEFT JOIN tb_servicios srv ON pk.id_servicio = srv.id_servicio
     LEFT JOIN tb_clientes cl ON c.id_cliente = cl.id_cliente
     LEFT JOIN tb_personas p_cliente ON cl.id_persona = p_cliente.id_persona;
+
 
 DELIMITER $$
 DROP PROCEDURE IF EXISTS spu_tbsoporte_buscar_nombreRazon$$

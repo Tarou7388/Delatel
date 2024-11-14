@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
     modalBody.innerHTML = '';
 
     console.log(nrodoc);
-
+    console.log(data);
     const servicios = JSON.parse(data[0].id_servicio).id_servicio;
 
     if (servicios.length > 1) {
@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
   async function obtenerDataSoporte(idsoport) {
     const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idsoport}`);
     const data = await respuesta.json();
-    console.log(data[0].nro_doc);
+    console.log(data[0]);
     await recorrerIdServicio(data,data[0].nro_doc);
   }
 
