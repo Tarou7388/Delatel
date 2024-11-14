@@ -251,5 +251,5 @@
   </div>
 </div>
 
-<script src="../../js/averiaCable.js" type="module"></script>
+<script src="../../js/SoporteCable.js" type="module"></script>
 <?php require_once "../../footer.php"; ?>

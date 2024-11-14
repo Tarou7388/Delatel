@@ -31,7 +31,7 @@ function obtenerAccesosFiltrados($idRol, $permissions)
 				["ruta" => "Personas", "texto" => "Personas", "icono" => "fa-solid fa-user"],
 				["ruta" => "Productos", "texto" => "Productos", "icono" => "fa-solid fa-boxes-stacked"],
 				["ruta" => "Roles", "texto" => "Roles", "icono" => "fa-regular fa-address-card"],
-				["ruta" => "Soporte", "texto" => "Soporte", "icono" => "fa-solid fa-wrench", "rutasAnexas" => ["registroSoporte", "SoporteEscritorio", "listarSoporte", "FichaAveriaCable", "FichaGpon", "FichaWisp"]],
+				["ruta" => "Soporte", "texto" => "Soporte", "icono" => "fa-solid fa-wrench", "rutasAnexas" => ["registroSoporte", "SoporteEscritorio", "listarSoporte", "SoporteCABL", "SoporteFIBR", "SoporteWISP"]],
 				["ruta" => 'Usuarios', "texto" => "Usuarios", "icono" => "fa-solid fa-users", "rutasAnexas" => ["registrar"]],
 				["ruta" => 'Reportes',"texto"=>"Reportes","icono"=>"fa-solid fa-wrench","rutasAnexas" => ["table","listarAverias"]],
 				["ruta" => 'Paquetes', "texto" => "Paquetes", "icono" => "fa-solid fa-box-open"],

@@ -147,8 +147,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 
-  async function ArmadoJsonWisp() {
-    const respuesta = await fetch(`${config.HOST}Json/spCable.json`);
+  async function ArmadoJsonCable() {
+    const respuesta = await fetch(`${config.HOST}Json/spCABL.json`);
     const datos = await respuesta.json();
 
     datos.parametroscable.periodo = document.getElementById("slcPeriodo").value === "1" ? "mensual" : "contado";
@@ -195,8 +195,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return data;
   }
 
-
-
   async function guardarSoporte(data) {
     try {
       const response = await fetch(`${config.HOST}/app/controllers/Soporte.controllers.php`, {
@@ -221,7 +219,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Agrega el evento submit para el formulario
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
-    const data = await ArmadoJsonWisp(); // Espera a que ArmadoJsonWisp devuelva los datos
+    const data = await ArmadoJsonCable();
     console.log(data)
     await guardarSoporte(data); // Llama a guardarSoporte con el objeto data
   });

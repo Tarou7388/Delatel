@@ -87,8 +87,8 @@ document.addEventListener("DOMContentLoaded", () => {
     return urlParams.get("idsoporte");
   }
 
-  async function ArmadoJsonWisp() {
-    const respuesta = await fetch(`${config.HOST}Json/spGpon.json`);
+  async function ArmadoJsonGpon() {
+    const respuesta = await fetch(`${config.HOST}Json/spGPON.json`);
     const datos = await respuesta.json();
 
     console.log(datos);
@@ -174,7 +174,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
-    const data = await ArmadoJsonWisp();
+    const data = await ArmadoJsonGpon();
     await guardarSoporte(data);
   });
 

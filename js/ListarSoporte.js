@@ -41,15 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function mostrarFichaServicio(tipoServicio, id_soporte,nro_doc) {
-    if (tipoServicio === "WISP") {
-      window.location.href = `${config.HOST}views/Soporte/FichaWisp?idsoporte=${id_soporte}&doc=${nro_doc}`;
-    } else if (tipoServicio === "FIBR") {
-      window.location.href = `${config.HOST}views/Soporte/FichaGpon?idsoporte=${id_soporte}&doc=${nro_doc}`;
-    } else if (tipoServicio === "CABL") {
-      window.location.href = `${config.HOST}views/Soporte/FichaAveriaCable?idsoporte=${id_soporte}&doc=${nro_doc}`;
-    } else {
-      console.error("No se encontró el servicio y la ficha correspondiente");
-    }
+    window.location.href = `${config.HOST}views/Soporte/Soporte${tipoServicio}?idsoporte=${id_soporte}&doc=${nro_doc}`;
   }
 
   async function obtenerDataSoporte(idsoport) {

@@ -195,7 +195,7 @@
 </div>
 <?php require_once "../../footer.php"; ?>
 
-<script type="module" src="../../js/averiaFIBR.js"></script>
+<script type="module" src="../../js/SoporteFibr.js"></script>
 </body>
 
 </html>
