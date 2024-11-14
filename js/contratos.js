@@ -61,7 +61,6 @@ window.addEventListener("DOMContentLoaded", async () => {
       `${config.HOST}app/controllers/Paquete.controllers.php?operacion=buscarPaquetePorIdServicio&idServicio=${idServicio}`
     );
     const data = await response.json();
-    console.log("Paquetes por servicio:", data);
     return data;
   }
 
@@ -222,6 +221,11 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   async function registrarContrato() {
     if (accesos?.contratos?.crear) {
+      const confirmacion = await ask("¿Desea registrar el nuevo contrato?", "Contratos");
+      if (!confirmacion) {
+        return; 
+      }
+
       const fechaRegistro = new Date().toISOString().split("T")[0];
       const nota = txtNota.value;
       const idUsuarioRegistro = user.idRol;
@@ -426,9 +430,6 @@ window.addEventListener("DOMContentLoaded", async () => {
           boton.addEventListener("click", (event) => {
             const idContrato = event.target.getAttribute("data-idContrato");
             const tipoServicio = event.target.getAttribute("data-tipoServicio");
-
-            console.log("tipo_servicio:", tipoServicio);
-
             const tipoFicha = {
               "FIBR,CABL": "FichaTecnicaGpon",
               "CABL,FIBR": "FichaTecnicaGpon",
@@ -508,7 +509,6 @@ window.addEventListener("DOMContentLoaded", async () => {
         `${config.HOST}app/controllers/Contrato.controllers.php?operacion=buscarContratoId&id=${idContrato}`
       );
       const data = await response.json();
-      console.log(data);
 
       // Paso 2: Cargar los datos del contrato en el modal
       document.getElementById("txtIdContratoActualizar").value = data[0].id_contrato;
@@ -521,7 +521,6 @@ window.addEventListener("DOMContentLoaded", async () => {
 
       // Paso 3: Obtener el tipo de servicio del contrato
       const idServicio = data[0].id_servicio;
-      console.log("ID del servicio del contrato:", idServicio);
 
       // Llamar a la función que carga los tipos de servicio disponibles
       await cargarTipoServicioActualizar(idServicio);
@@ -580,7 +579,6 @@ window.addEventListener("DOMContentLoaded", async () => {
         `${config.HOST}app/controllers/Servicio.controllers.php?operacion=listarServicio`
       );
       const servicios = await response.json();
-      console.log(servicios);
 
       const slcTipoServicioActualizar = document.getElementById("slcTipoServicioActualizar");
 
@@ -677,7 +675,6 @@ window.addEventListener("DOMContentLoaded", async () => {
   });
 
   $("#slcPaquetesActualizar").on("select2:select", function () {
-    console.log(slcPaquetesActualizar.value);
     const selectedValue = slcPaquetesActualizar.value.split(" - ");
     idServicioActualizar = parseInt(selectedValue[0]);
     precioServicio = selectedValue[1];
@@ -685,7 +682,6 @@ window.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("txtPrecioActualizar").value = precioServicio;
 
     slcPaquetesActualizar.value = idServicioActualizar;
-    console.log(idServicioActualizar);
   });
 
   $(".select2me").select2({ theme: "bootstrap-5", allowClear: true });
