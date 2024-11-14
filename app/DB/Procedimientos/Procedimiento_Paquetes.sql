@@ -166,5 +166,3 @@ BEGIN
     GROUP BY 
         p.id_paquete;
 END $$
-
-CALL spu_paquete_buscar_idServicio('{"id_servicio": 1}');
