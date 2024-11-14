@@ -200,6 +200,7 @@ BEGIN
     UPDATE 
     tb_contratos 
     SET inactive_at = NOW(),
+    fecha_fin = NOW(),
     iduser_inactive = p_iduser_inactive
     WHERE id_contrato = p_id_contrato;
 END $$
@@ -261,6 +262,7 @@ CREATE PROCEDURE spu_contratos_actualizar(
     IN p_direccion_servicio VARCHAR(200),
     IN p_referencia VARCHAR(200),
     IN p_coordenada VARCHAR(25),
+    IN p_fecha_fin DATE,
     IN p_nota TEXT,
     IN p_iduser_update INT
 )
@@ -271,6 +273,7 @@ BEGIN
         direccion_servicio = p_direccion_servicio,
         referencia = p_referencia,
         coordenada = p_coordenada,
+        fecha_fin = p_fecha_fin,
         nota = p_nota,
         iduser_update = p_iduser_update,
         update_at = NOW()

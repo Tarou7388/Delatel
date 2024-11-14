@@ -52,6 +52,18 @@
 
             <div class="col-md-4">
               <div class="form-floating">
+                <input type="date" class="form-control" id="txtFechaFinActualizar" placeholder="Fecha Fin">
+                <label for="txtFechaFinActualizar">Fecha Fin</label>
+              </div>
+            </div>
+
+
+          </div>
+
+          <div class="row mb-2">
+
+            <div class="col-md-3">
+              <div class="form-floating">
                 <select id="slcTipoServicioActualizar" class="form-select" aria-label="Tipo Servicio" disabled>
                   <option value="0" disabled selected>Seleccione</option>
                 </select>
@@ -59,25 +71,7 @@
               </div>
             </div>
 
-            <!-- <div class="col-md-4 mt-2">
-              <div class="form-floating">
-                <input type="date" class="form-control" id="txtFechaInicioActualizar" name="fechaInicio" required>
-                <label for="txtFechaInicioActualizar">Fecha de Inicio</label>
-              </div>
-            </div> -->
-
-            <!-- <div class="col-md-4 mt-2">
-              <div class="form-floating">
-                <input type="number" class="form-control" id="txtFechaFinActualizar" name="fechaFin" max="24" min="3" required>
-                <label for="txtFechaFinActualizar" class="form-label">Fecha de Fin (Meses)</label>
-                <span id="mensajeFechaFin" class="invisible"></span>
-              </div>
-            </div> -->
-          </div>
-
-          <div class="row mb-2">
-
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="form-floating">
                 <select class="form-select select2me" id="slcPaquetesActualizar" aria-label="Paquetes">
                   <option value="0" disabled selected>Seleccione</option>
@@ -86,14 +80,14 @@
               </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="form-floating">
                 <input type="number" class="form-control" id="txtPrecioActualizar" value="0" placeholder="Precio" disabled>
                 <label for="txtPrecioActualizar" class="form-label">Precio</label>
               </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="form-floating">
                 <select class="form-select select2me" id="slcSectorActualizar" aria-label="Sectores" disabled>
                   <option value="0" disabled selected>Sectores</option>
@@ -101,6 +95,7 @@
                 <label for="slcSectorActualizar" class="form-label">Sectores</label>
               </div>
             </div>
+
           </div>
 
           <div class="row mb-2">

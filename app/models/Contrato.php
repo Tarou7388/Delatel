@@ -97,7 +97,7 @@ class Contrato extends Conexion
     {
         $sql = "CALL spu_contratos_eliminar(?,?)";
         $values = array(
-            $params['id'],
+            $params['idContrato'],
             $params['idUsuario']
         );
         return $this->registrar($sql, $values);
@@ -205,13 +205,14 @@ class Contrato extends Conexion
      */
     public function actualizarContrato($params = [])
     {
-        $sql = "CALL spu_contratos_actualizar(?,?,?,?,?,?,?)";
+        $sql = "CALL spu_contratos_actualizar(?,?,?,?,?,?,?,?)";
         $values = array(
             $params['idContrato'],
             $params['idPaquete'],
             $params['direccionServicio'],
             $params['referencia'],
             $params['coordenada'],
+            $params['fechaFin'],
             $params['nota'],
             $params['idUsuarioUpdate']
         );

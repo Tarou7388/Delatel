@@ -36,7 +36,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     const params = Object.fromEntries(urlParams.entries());
     if (params.nroDoc) {
       nroDoc.value = params.nroDoc;
-      nroDoc.disabled = true;
+      //nroDoc.disabled = true;
       coordenada.value = params.coordenadas;
       direccion.value = params.direccion;
       referencia.value = params.referencia;
@@ -297,7 +297,7 @@ window.addEventListener("DOMContentLoaded", async () => {
             body: JSON.stringify({
               operacion: "eliminarContrato",
               parametros: {
-                id: idContrato,
+                idContrato: idContrato,
                 idUsuario: idUsuario,
               },
             }),
@@ -321,6 +321,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       const direccionServicio = document.querySelector("#txtDireccionActualizar").value;
       const referencia = document.querySelector("#txtReferenciaActualizar").value;
       const coordenada = document.querySelector("#txtCoordenadaActualizar").value;
+      const fechaFin = document.querySelector("#txtFechaFinActualizar").value;
       const nota = document.querySelector("#txtNotaActualizar").value;
 
       // Crear el objeto de datos para enviar al servidor
@@ -332,6 +333,7 @@ window.addEventListener("DOMContentLoaded", async () => {
           direccionServicio: direccionServicio,
           referencia: referencia,
           coordenada: coordenada,
+          fechaFin: fechaFin,
           nota: nota,
           idUsuarioUpdate: idUsuario,
         },
