@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   (async () => {
     const respuesta = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=listarClientes`);
     const data = await respuesta.json();
-    console.log(data)
+    console.log(data);
 
     const tbody = document.querySelector("#listarClienteyContratos tbody");
 
@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
       cellNombre.textContent = cliente.nombre_cliente;
       row.appendChild(cellNombre);
 
-      // Columna código del cliente
+      // Columna número de documento
       const cellDocumento = document.createElement("td");
       cellDocumento.className = "text-center";
       cellDocumento.textContent = cliente.codigo_cliente;
@@ -33,17 +33,36 @@ document.addEventListener("DOMContentLoaded", () => {
       // Columna contrato
       const cellContrato = document.createElement("td");
       cellContrato.className = "text-center";
-
-      const button = document.createElement("button");
-      button.textContent = "Ver Contrato";
-      button.className = "btn btn-primary";
-      button.onclick = () => {
-        const nombreCliente = encodeURIComponent(cliente.nombre_cliente); // Codifica el nombre para URL
-        window.location.href = `${config.HOST}views/Reportes/tablaReporte?id=${cliente.id_cliente}&nombre=${nombreCliente}`;
+      const contratoButton = document.createElement("button");
+      contratoButton.textContent = "Ver Contrato";
+      contratoButton.className = "btn btn-primary";
+      contratoButton.onclick = () => {
+        const nombreCliente = encodeURIComponent(cliente.nombre_cliente);
+        window.location.href = `${config.HOST}views/Reportes/tablaContrato?id=${cliente.id_cliente}&nombre=${nombreCliente}`;
       };
-
-      cellContrato.appendChild(button);
+      cellContrato.appendChild(contratoButton);
       row.appendChild(cellContrato);
+
+      // Columna detalles (botón para abrir el modal)
+      const cellDetalle = document.createElement("td");
+      cellDetalle.className = "text-center";
+      const detalleButton = document.createElement("button");
+      detalleButton.textContent = "Ver Detalles";
+      detalleButton.className = "btn btn-secondary";
+      detalleButton.setAttribute("data-bs-toggle", "modal");
+      detalleButton.setAttribute("data-bs-target", "#detallePersona");
+      detalleButton.onclick = () => {
+        // Asigna los datos al modal
+        document.querySelector("#nombrePersona").textContent = cliente.nombre_cliente;
+        document.querySelector(".modal-body").innerHTML = `
+          <p><strong>Nombre:</strong> ${cliente.nombre_cliente}</p>
+          <p><strong>Número de Documento:</strong> ${cliente.codigo_cliente}</p>
+          <p><strong>Otros datos:</strong> ${cliente.otro_dato || "No disponible"}</p>
+        `;
+      };
+      cellDetalle.appendChild(detalleButton);
+      row.appendChild(cellDetalle);
+
       tbody.appendChild(row);
     });
 
@@ -53,7 +72,8 @@ document.addEventListener("DOMContentLoaded", () => {
       searching: true,
       ordering: true,
       info: true,
-      autoWidth: false
+      autoWidth: false,
     });
   })();
 });
+  

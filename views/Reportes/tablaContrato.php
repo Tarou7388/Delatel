@@ -31,7 +31,7 @@
 </div>
 
 <?php require_once "../../footer.php"; ?>
-<script type="module" src="../../js/tablaReporte.js"></script>
+<script type="module" src="../../js/tablaContrato.js"></script>
 </body>
 
 </html>
