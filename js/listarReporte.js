@@ -51,13 +51,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         let vistaURL = "";
         switch (tipoServicio) {
           case "CABL":
-            vistaURL = `${config.HOST}views/Soporte/FichaAveriaCable?idSoporte=${idSoporte}&nombreCliente=${encodeURIComponent(nombreCliente)}`;
+            vistaURL = `${config.HOST}views/Soporte/SoporteCABL?idSoporte=${idSoporte}&nombreCliente=${encodeURIComponent(nombreCliente)}`;
             break;
           case "WISP":
-            vistaURL = `${config.HOST}views/Soporte/FichaWisp?idSoporte=${idSoporte}&nombreCliente=${encodeURIComponent(nombreCliente)}`;
+            vistaURL = `${config.HOST}views/Soporte/SoporteWISP?idSoporte=${idSoporte}&nombreCliente=${encodeURIComponent(nombreCliente)}`;
             break;
           case "GPON":
-            vistaURL = `${config.HOST}views/Soporte/FichaGpon?idSoporte=${idSoporte}&nombreCliente=${encodeURIComponent(nombreCliente)}`;
+            vistaURL = `${config.HOST}views/Soporte/SoporteFIBR?idSoporte=${idSoporte}&nombreCliente=${encodeURIComponent(nombreCliente)}`;
             break;
           default:
             showToast("Tipo de servicio no reconocido", "ERROR");

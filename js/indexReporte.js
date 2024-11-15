@@ -1,5 +1,5 @@
 import config from "../env.js";
-import * as Herramientas from "../js/Herramientas.js";
+import * as Herramientas from "./Herramientas.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   (async () => {
@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
       button.className = "btn btn-primary";
       button.onclick = () => {
         const nombreCliente = encodeURIComponent(cliente.nombre_cliente); // Codifica el nombre para URL
-        window.location.href = `${config.HOST}views/Reportes/table?id=${cliente.id_cliente}&nombre=${nombreCliente}`;
+        window.location.href = `${config.HOST}views/Reportes/tablaReporte?id=${cliente.id_cliente}&nombre=${nombreCliente}`;
       };
 
       cellContrato.appendChild(button);

@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if(data ==""){
           showToast("No tiene averias")
         }else{
-          window.location.href = `${config.HOST}views/Reportes/listarAverias?idContrato=${idContrato}&nombreCliente=${encodeURIComponent(nombreCliente)}`;
+          window.location.href = `${config.HOST}views/Reportes/listarReporte?idContrato=${idContrato}&nombreCliente=${encodeURIComponent(nombreCliente)}`;
         }
       });
     });
