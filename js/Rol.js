@@ -332,8 +332,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
           if (data.Activado) {
             showToast("¡Rol activado correctamente!", "SUCCESS");
-            limpiarFormulario();
-            recargarTabla();
+            location.reload();
           } else {
             showToast("No se pudo activar el rol.", "ERROR");
           }

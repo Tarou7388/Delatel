@@ -9,6 +9,8 @@ $options->set('isRemoteEnabled', true);
 
 $dompdf = new Dompdf($options);
 
+$fechaActual = date('d/m/Y');
+
 ob_start();
 include 'contenidoPDF.php';
 include 'estilosPDF.html';
@@ -30,7 +32,6 @@ $servicio = $resultado['servicio'];
 $nombreSector = $resultado['nombre_sector'];
 $referencia = $resultado['referencia'];
 $numIdentificacion = $resultado['num_identificacion']; */
-
 
 $content = ob_get_clean();
 $dompdf->loadHtml($content);

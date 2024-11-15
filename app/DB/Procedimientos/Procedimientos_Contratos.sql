@@ -78,7 +78,7 @@ CREATE PROCEDURE spu_contratos_registrar(
     IN p_referencia VARCHAR(200),
     IN p_coordenada VARCHAR(50),
     IN p_fecha_inicio DATE,
-    IN p_fecha_fin JSON,
+    IN p_fecha_fin DATE,
     IN p_fecha_registro DATE,
     IN p_nota TEXT,
     IN p_iduser_create INT
