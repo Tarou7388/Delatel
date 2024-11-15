@@ -42,55 +42,108 @@ document.addEventListener("DOMContentLoaded", async function () {
     return data;
   }
 
+  function agregarOpcion(selectElement, value, text, disabled = false, selected = false) {
+    const option = document.createElement("option");
+    option.value = value;
+    option.textContent = text;
+    option.disabled = disabled;
+    option.selected = selected;
+    selectElement.appendChild(option);
+  }
+
   async function cargarPaquetes(idServicio) {
     const dataPaquetes = await fetchPaquetesPorServicio(idServicio);
-    slcPaquetes.innerHTML = '<option value="" disabled selected>Seleccione un paquete</option>';
-    dataPaquetes
-      .filter(paquete =>
-        !paquete.id_servicio2 &&
-        !paquete.id_servicio3 &&
-        !paquete.id_servicio4 &&
-        !paquete.inactive_at
-      )
-      .forEach((paquete) => {
+    slcPaquetes.innerHTML = '';
+    const paquetesFiltrados = dataPaquetes.filter(paquete => {
+      const servicios = JSON.parse(paquete.id_servicio).id_servicio;
+      return servicios.length === 1 && !paquete.inactive_at;
+    });
+
+    if (paquetesFiltrados.length === 0) {
+      const option = document.createElement("option");
+      option.value = "";
+      option.textContent = "No hay paquetes disponibles";
+      option.disabled = true;
+      slcPaquetes.appendChild(option);
+    } else {
+      const optionSeleccionar = document.createElement("option");
+      optionSeleccionar.value = "";
+      optionSeleccionar.textContent = "Seleccione un paquete";
+      optionSeleccionar.disabled = true;
+      optionSeleccionar.selected = true;
+      slcPaquetes.appendChild(optionSeleccionar);
+
+      paquetesFiltrados.forEach(paquete => {
         const option = document.createElement("option");
         const id = `${paquete.id_paquete}`;
         option.value = id;
         option.textContent = paquete.paquete;
         slcPaquetes.appendChild(option);
       });
+    }
     slcPaquetes.disabled = false;
   }
 
   async function cargarPaquetesMultiples(tipo) {
-    const response = await fetch(
-      `${config.HOST}app/controllers/Paquete.controllers.php?operacion=listarPaquetes`
-    );
-    const dataPaquetes = await response.json();
-    slcPaquetes.innerHTML = '<option value="" disabled selected>Seleccione un paquete</option>';
+    try {
+      slcPaquetes.disabled = true;
+      const response = await fetch(
+        `${config.HOST}app/controllers/Paquete.controllers.php?operacion=listarPaquetes`
+      );
+      const dataPaquetes = await response.json();
+      slcPaquetes.innerHTML = '<option value="" disabled selected>Seleccione un paquete</option>';
 
-    let paquetesFiltrados = [];
-    if (tipo === "duos") {
-      paquetesFiltrados = dataPaquetes.filter(paquete => paquete.id_servicio && paquete.id_servicio2 && !paquete.id_servicio3 && !paquete.id_servicio4 && !paquete.inactive_at);
-    } else if (tipo === "trios") {
-      paquetesFiltrados = dataPaquetes.filter(paquete => paquete.id_servicio && paquete.id_servicio2 && paquete.id_servicio3 && !paquete.id_servicio4 && !paquete.inactive_at);
-    } else if (tipo === "cuarteto") {
-      paquetesFiltrados = dataPaquetes.filter(paquete => paquete.id_servicio && paquete.id_servicio2 && paquete.id_servicio3 && paquete.id_servicio4 && !paquete.inactive_at);
+      let paquetesFiltrados = [];
+      if (tipo === "duos") {
+        paquetesFiltrados = dataPaquetes.filter(paquete => {
+          const servicios = JSON.parse(paquete.id_servicio).id_servicio;
+          return servicios.length === 2 && !paquete.inactive_at;
+        });
+      } else if (tipo === "trios") {
+        paquetesFiltrados = dataPaquetes.filter(paquete => {
+          const servicios = JSON.parse(paquete.id_servicio).id_servicio;
+          return servicios.length === 3 && !paquete.inactive_at;
+        });
+      } else if (tipo === "cuarteto") {
+        paquetesFiltrados = dataPaquetes.filter(paquete => {
+          const servicios = JSON.parse(paquete.id_servicio).id_servicio;
+          return servicios.length === 4 && !paquete.inactive_at;
+        });
+      }
+
+      if (paquetesFiltrados.length === 0) {
+        const option = document.createElement("option");
+        option.value = "";
+        option.textContent = "No hay paquetes disponibles";
+        option.disabled = true;
+        slcPaquetes.appendChild(option);
+      } else {
+        const optionSeleccionar = document.createElement("option");
+        optionSeleccionar.value = "";
+        optionSeleccionar.textContent = "Seleccione un paquete";
+        optionSeleccionar.disabled = true;
+        optionSeleccionar.selected = true;
+        slcPaquetes.appendChild(optionSeleccionar);
+
+        paquetesFiltrados.forEach(paquete => {
+          const option = document.createElement("option");
+          const id = `${paquete.id_paquete}`;
+          option.value = id;
+          option.textContent = paquete.paquete;
+          slcPaquetes.appendChild(option);
+        });
+      }
+      slcPaquetes.disabled = false;
+    } catch (error) {
+      console.error("Error al cargar los paquetes:", error);
     }
-
-    paquetesFiltrados.forEach((paquete) => {
-      const option = document.createElement("option");
-      const id = `${paquete.id_paquete}`;
-      option.value = id;
-      option.textContent = paquete.paquete;
-      slcPaquetes.appendChild(option);
-    });
-    slcPaquetes.disabled = false;
   }
 
   slcTipoServicio.addEventListener("change", async function () {
     const idServicioSeleccionado = slcTipoServicio.value;
-    if (idServicioSeleccionado === "duos" || idServicioSeleccionado === "trios" || idServicioSeleccionado === "cuarteto") {
+    const tiposMultiples = ["duos", "trios", "cuarteto"];
+
+    if (tiposMultiples.includes(idServicioSeleccionado)) {
       await cargarPaquetesMultiples(idServicioSeleccionado);
     } else {
       await cargarPaquetes(idServicioSeleccionado);
@@ -233,35 +286,21 @@ document.addEventListener("DOMContentLoaded", async function () {
         `${config.HOST}app/controllers/Servicio.controllers.php?operacion=listarServicio`
       );
       const servicios = await response.json();
-      console.log(servicios);
 
-      const slcTipoServicio = $("#slcTipoServicioEmpresa");
+      slcTipoServicio.innerHTML = '<option value="" disabled selected>Seleccione</option>';
 
-      slcTipoServicio.empty();
-
-      slcTipoServicio.append(
-        '<option value="" disabled selected>Seleccione</option>'
-      );
-
-      servicios
-        .filter((servicio) => servicio.inactive_at === null)
-        .forEach((servicio) => {
-          const option = `<option value="${servicio.id_servicio}">${servicio.tipo_servicio} (${servicio.servicio})</option>`;
-          slcTipoServicio.append(option);
+      const serviciosActivos = servicios.filter(servicio => servicio.inactive_at === null);
+      if (serviciosActivos.length === 0) {
+        agregarOpcion(slcTipoServicio, "", "No hay servicios disponibles", true);
+      } else {
+        serviciosActivos.forEach(servicio => {
+          agregarOpcion(slcTipoServicio, servicio.id_servicio, `${servicio.tipo_servicio} (${servicio.servicio})`);
         });
 
-      slcTipoServicio.append('<option value="duos">Duos</option>');
-      slcTipoServicio.append('<option value="trios">Trios</option>');
-      slcTipoServicio.append('<option value="cuarteto">Cuarteto</option>');
-
-      slcTipoServicio.on("change", function () {
-        const idServicio = $(this).val();
-        if (idServicio === "duos" || idServicio === "trios" || idServicio === "cuarteto") {
-          cargarPaquetesMultiples(idServicio);
-        } else {
-          cargarPaquetes(idServicio);
-        }
-      });
+        agregarOpcion(slcTipoServicio, "duos", "Duos");
+        agregarOpcion(slcTipoServicio, "trios", "Trios");
+        agregarOpcion(slcTipoServicio, "cuarteto", "Cuarteto");
+      }
     } catch (error) {
       console.error("Error al cargar servicios:", error);
     }
