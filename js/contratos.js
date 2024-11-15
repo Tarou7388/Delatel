@@ -240,6 +240,15 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 
   async function registrarCliente() {
+    if (!idPersona && !idEmpresa) {
+      showToast("Debe proporcionar un ID de persona o empresa.", "INFO");
+      return;
+    }
+    if (!direccion.value.trim() || !referencia.value.trim() || !coordenada.value.trim()) {
+      showToast("¡Llene todos los campos!", "INFO");
+      return;
+    }
+  
     const params = new FormData();
     params.append("operacion", "registrarCliente");
     params.append("idPersona", idPersona);
@@ -248,7 +257,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     params.append("referencia", referencia.value);
     params.append("idUsuario", user.idUsuario);
     params.append("coordenadas", coordenada.value);
-
+  
     const response = await fetch(
       `${config.HOST}app/controllers/Cliente.controllers.php`,
       {
