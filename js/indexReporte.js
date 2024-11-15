@@ -55,11 +55,31 @@ document.addEventListener("DOMContentLoaded", () => {
         // Asigna los datos al modal
         document.querySelector("#nombrePersona").textContent = cliente.nombre_cliente;
         document.querySelector(".modal-body").innerHTML = `
-          <p><strong>Nombre:</strong> ${cliente.nombre_cliente}</p>
-          <p><strong>Número de Documento:</strong> ${cliente.codigo_cliente}</p>
-          <p><strong>Otros datos:</strong> ${cliente.otro_dato || "No disponible"}</p>
+          <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+              <td style="font-weight: bold; padding: 5px;">Número de Documento:</td>
+              <td style="padding: 5px;">${cliente.codigo_cliente || "No disponible"}</td>
+            </tr>
+            <tr>
+              <td style="font-weight: bold; padding: 5px;">Correo electrónico:</td>
+              <td style="padding: 5px;">${cliente.email_cliente || "No disponible"}</td>
+            </tr>
+            <tr>
+              <td style="font-weight: bold; padding: 5px;">Número de contacto:</td>
+              <td style="padding: 5px;">${cliente.telefono_cliente || "No disponible"}</td>
+            </tr>
+            <tr>
+              <td style="font-weight: bold; padding: 5px;">Dirección:</td>
+              <td style="padding: 5px;">${cliente.direccion_cliente || "No disponible"}</td>
+            </tr>
+            <tr>
+              <td style="font-weight: bold; padding: 5px;">Coordenadas:</td>
+              <td style="padding: 5px;">${cliente.coordenadas_cliente || "No disponible"}</td>
+            </tr>
+          </table>
         `;
       };
+
       cellDetalle.appendChild(detalleButton);
       row.appendChild(cellDetalle);
 
@@ -76,4 +96,3 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   })();
 });
-  

@@ -49,23 +49,24 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // Redirige a la vista correspondiente según el tipo de servicio
         let vistaURL = "";
-        switch (tipoServicio) {
-          case "CABL":
-            vistaURL = `${config.HOST}views/Soporte/SoporteCABL?idSoporte=${idSoporte}&nombreCliente=${encodeURIComponent(nombreCliente)}`;
-            break;
-          case "WISP":
-            vistaURL = `${config.HOST}views/Soporte/SoporteWISP?idSoporte=${idSoporte}&nombreCliente=${encodeURIComponent(nombreCliente)}`;
-            break;
-          case "GPON":
-            vistaURL = `${config.HOST}views/Soporte/SoporteFIBR?idSoporte=${idSoporte}&nombreCliente=${encodeURIComponent(nombreCliente)}`;
-            break;
-          default:
-            showToast("Tipo de servicio no reconocido", "ERROR");
-            return;
-        }
+        console.log(tipoServicio)
+        // switch (tipoServicio) {
+        //   case "CABL":
+        //     vistaURL = `${config.HOST}views/Soporte/SoporteCABL?idSoporte=${idSoporte}&nombreCliente=${encodeURIComponent(nombreCliente)}`;
+        //     break;
+        //   case "WISP":
+        //     vistaURL = `${config.HOST}views/Soporte/SoporteWISP?idSoporte=${idSoporte}&nombreCliente=${encodeURIComponent(nombreCliente)}`;
+        //     break;
+        //   case "GPON":
+        //     vistaURL = `${config.HOST}views/Soporte/SoporteFIBR?idSoporte=${idSoporte}&nombreCliente=${encodeURIComponent(nombreCliente)}`;
+        //     break;
+        //   default:
+        //     showToast("Tipo de servicio no reconocido", "ERROR");
+        //     return;
+        // }
 
         // Redirige a la URL determinada
-        window.location.href = vistaURL;
+        //window.location.href = vistaURL;
       });
     });
   }
