@@ -52,8 +52,9 @@
 
             <div class="col-md-4">
               <div class="form-floating">
-                <input type="date" class="form-control" id="txtFechaFinActualizar" placeholder="Fecha Fin">
-                <label for="txtFechaFinActualizar">Fecha Fin</label>
+                <input type="number" class="form-control" id="txtMesesActualizar" placeholder="Meses" name="Meses">
+                <label for="txtMesesActualizar" class="form-label">Fecha Fin (meses)</label>
+                <span id="txtFechaFinActualizar" name="Fecha Fin"></span>
               </div>
             </div>
 
@@ -116,7 +117,7 @@
 
             <div class="col-md-4">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtCoordenadaActualizar" placeholder="Coordenada" name="coordenada">
+                <input type="text" class="form-control" id="txtCoordenadaActualizar" placeholder="Coordenada" name="coordenada" disabled>
                 <label for="txtCoordenadaActualizar" class="form-label">Coordenada</label>
               </div>
             </div>
@@ -140,7 +141,6 @@
     </div>
   </div>
 </div>
-
 
 <div class="container-fluid px-4">
   <h1 class="mt-4">Contratos</h1>
@@ -242,8 +242,9 @@
 
           <div class="col-md-4">
             <div class="form-floating">
-              <input type="date" class="form-control" id="txtFechaFin" placeholder="Fecha Fin" name="Fecha Fin">
-              <label for="txtFechaFin" class="form-label">Fecha Fin</label>
+              <input type="number" class="form-control" id="txtMeses" placeholder="Meses" name="Meses">
+              <label for="txtMeses" class="form-label">Fecha Fin (meses)</label>
+              <span id="txtFechaFin" name="Fecha Fin"></span>
             </div>
           </div>
 

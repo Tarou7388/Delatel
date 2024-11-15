@@ -36,7 +36,7 @@ CREATE VIEW vw_contratos_listar AS
 SELECT
     c.id_contrato,
     CASE
-        WHEN cl.id_persona IS NOT NULL THEN CONCAT(p.nombres, ' ', p.apellidos)
+        WHEN cl.id_persona IS NOT NULL THEN CONCAT(p.apellidos, ', ', p.nombres)
         ELSE e.razon_social
     END AS nombre_cliente,
     CASE
@@ -162,7 +162,7 @@ BEGIN
         ur_persona.nombres AS nombre_usuario_registro,
         ut_persona.nombres AS nombre_usuario_tecnico,
         c.direccion_servicio,
-        sv.id_servicio,
+        CONCAT('{"id_servicio": [', GROUP_CONCAT(sv.id_servicio), ']}') AS id_servicio,
         GROUP_CONCAT(sv.tipo_servicio) AS tipos_servicio,
         t.id_paquete,
         t.paquete,
@@ -188,7 +188,9 @@ BEGIN
         LEFT JOIN tb_usuarios ut_usuario ON ut.id_usuario = ut_usuario.id_usuario
         LEFT JOIN tb_personas ut_persona ON ut_usuario.id_persona = ut_persona.id_persona
     WHERE
-        c.id_contrato = p_id_contrato AND c.inactive_at IS NULL;
+        c.id_contrato = p_id_contrato AND c.inactive_at IS NULL
+    GROUP BY
+        c.id_contrato;
 END $$
 
 DROP PROCEDURE IF EXISTS spu_contratos_eliminar$$
