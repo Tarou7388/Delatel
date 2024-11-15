@@ -1,6 +1,5 @@
 USE Delatel;
 
-
 DROP VIEW IF EXISTS vw_soporte_detalle;
 CREATE VIEW vw_soporte_detalle AS
 SELECT
@@ -13,14 +12,14 @@ SELECT
     s.descripcion_problema,
     s.descripcion_solucion,
     ts.tipo_soporte,
-    p_cliente.nro_doc,
+    COALESCE(p_cliente.nro_doc, emp.ruc) AS nro_doc,
     c.id_cliente,
     c.direccion_servicio,
     r.id_usuario AS id_tecnico,
     p_tecnico.nombres AS tecnico_nombres,
     p_tecnico.apellidos AS tecnico_apellidos,
     pk.id_paquete,
-    pk.id_servicio,  -- Renombrado para especificar el origen
+    pk.id_servicio,
     srv.tipo_servicio
 FROM
     tb_soporte s
@@ -32,41 +31,8 @@ FROM
     LEFT JOIN tb_paquetes pk ON c.id_paquete = pk.id_paquete
     LEFT JOIN tb_servicios srv ON pk.id_servicio = srv.id_servicio
     LEFT JOIN tb_clientes cl ON c.id_cliente = cl.id_cliente
+    LEFT JOIN tb_empresas emp ON cl.id_empresa = emp.id_empresa
     LEFT JOIN tb_personas p_cliente ON cl.id_persona = p_cliente.id_persona;
-
-
-DELIMITER $$
-DROP PROCEDURE IF EXISTS spu_tbsoporte_buscar_nombreRazon$$
-CREATE PROCEDURE spu_tbsoporte_buscar_nombreRazon(
-    IN p_apellido VARCHAR(30),
-    IN p_nombre VARCHAR(30)
-)
-BEGIN
-    DECLARE v_dni VARCHAR(15);
-    DECLARE v_telefono_persona CHAR(9);
-    DECLARE v_ruc VARCHAR(11);
-    DECLARE v_telefono_empresa CHAR(9);
-
-    SELECT nro_doc, telefono INTO v_dni, v_telefono_persona
-    FROM tb_personas
-    WHERE apellidos COLLATE utf8mb4_spanish_ci = p_apellido COLLATE utf8mb4_spanish_ci
-      AND nombres COLLATE utf8mb4_spanish_ci = p_nombre COLLATE utf8mb4_spanish_ci;
-
-    IF v_dni IS NOT NULL THEN
-        SELECT v_dni AS numero_dni, v_telefono_persona AS telefono_persona;
-    ELSE
-        SELECT ruc, telefono INTO v_ruc, v_telefono_empresa
-        FROM tb_empresas
-        WHERE razon_social COLLATE utf8mb4_spanish_ci = CONCAT(p_nombre, ' ', p_apellido) COLLATE utf8mb4_spanish_ci
-        LIMIT 1;
-
-        IF v_ruc IS NOT NULL THEN
-            SELECT v_ruc AS ruc_empresa, v_telefono_empresa AS telefono_empresa;
-        ELSE
-            SELECT 'No se encontró el DNI ni el RUC de la empresa' AS mensaje;
-        END IF;
-    END IF;
-END $$
 
 DROP PROCEDURE IF EXISTS spu_tipo_soporte_registrar$$
 

@@ -10,19 +10,29 @@ window.addEventListener('DOMContentLoaded', function () {
   const txtDescripcion = document.querySelector("#txtDescripcion");
   const txtSolucion = document.querySelector("#txtSolucion");
   const slcContratos = document.querySelector("#slcContratos");
-  //const selectTpSoporte = document.querySelector("#slcTipoSoporte");
+  const txtnombrebAvz = document.querySelector("#txtnombrebAvz");
+  const txtapellidobAvz = document.querySelector("#txtapellidobAvz");
+  const btnBusquedaAvanzada = document.querySelector("#btnBusquedaAvanzada");
+  const myModal = new bootstrap.Modal(document.getElementById('exampleModal'));
+  const btnModal = document.getElementById('ModeloAbrir');
+  document.getElementById('txtFecha').value = new Date().toISOString().split('T')[0];
 
-  const txtnombreba = document.querySelector("#txtnombreba");
-  const txtapellidoba = document.querySelector("#txtapellidoba");
-  
-  let dfFecha = document.getElementById('txtFecha');
-  dfFecha.value = new Date().toISOString().split('T')[0];
-
-  async function busquedaAvanzada() {
-    const response = await fetch(``);
+  /**
+   * Funcion hecha para obtener el nro de documento de un cliente (PERSONA)
+   */
+  async function busquedaAvanzada(nombre, apellido) {
+    const response = await fetch(`${config.HOST}/app/controllers/Cliente.controllers.php?operacion=buscarPorNombreApellido&nombres=${nombre}&apellidos=${apellido}`);
 
     const data = await response.json();
 
+    if (data[0]) {
+      const dni = document.getElementById('txtNrodocumento').value = data[0].codigo_cliente;
+      await BuscarcontratoNDoc(dni);
+      myModal.hide();
+    }
+    else {
+      showToast("No se encontraron resultados, verifique los campos", "ERROR");
+    }
   }
 
   async function obtenerContratosCliente(data) {
@@ -69,9 +79,14 @@ window.addEventListener('DOMContentLoaded', function () {
   async function BuscarcontratoNDoc(numdocumento) {
     const respuesta = await fetch(`${config.HOST}/app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${numdocumento}`);
     const data = await respuesta.json();
-    console.log(data);
-    $("#txtCliente").val(data[0].nombre);
-    await obtenerContratosCliente(data[0].id_cliente);
+    if (data[0]) {
+      console.log();
+      $("#txtCliente").val(data[0].nombre);
+      await obtenerContratosCliente(data[0].id_cliente);
+    } else {
+      showToast("No se encontraron resultados, verifique el Documento ingresado", "INFO");
+    }
+
   };
 
   /**
@@ -153,4 +168,7 @@ window.addEventListener('DOMContentLoaded', function () {
     }
   });
 
+  btnBusquedaAvanzada.addEventListener("click", async () => await busquedaAvanzada(txtnombrebAvz.value, txtapellidobAvz.value))
+
+  btnModal.addEventListener("click", async () => myModal.show())
 });

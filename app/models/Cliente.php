@@ -148,4 +148,13 @@ class Cliente extends Conexion
         return $this->listarDatos($sql);
     }
 
+    public function buscarNombreyApellido($params = [])
+    {
+        $sql = "CALL spu_cliente_buscar_nombreapp(?,?)";
+        $values = array(
+            $params['nombres'],
+            $params['apellidos']
+        );
+        return $this->consultaParametros($sql, $values);
+    }
 }

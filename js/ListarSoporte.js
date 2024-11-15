@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
       servicios.forEach(async (id, index) => {
         const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=obtenerServiciosId&idservicio=${id}`);
         const nombres = await respuesta.json();
-
+        console.log(nombres);
         const div = document.createElement('div');
         div.classList.add('my-2', 'p-2', 'border', 'rounded');
         div.textContent = `Servicio ${index + 1}: ${nombres[0].tipo_servicio}`;
@@ -71,12 +71,17 @@ document.addEventListener("DOMContentLoaded", () => {
       {
         data: "nombre_cliente",
         title: "Nombre del Cliente",
-        className: "text-center"
+        className: "text-start"
+      },
+      {
+        data: "direccion_servicio",
+        title: "Dirección",
+        className: "text-start"
       },
       {
         data: "fecha_hora_solicitud",
         title: "Hora de solicitud",
-        className: "text-center",
+        className: "text-end",
         render: function (data, type, row) {
           return data ? data : '<i>No asignado</i>';
         }
@@ -99,11 +104,12 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     ],
     [
-      { width: "10%", targets: 0 },
-      { width: "20%", targets: 1 },
-      { width: "20%", targets: 2 },
+      { width: "4%", targets: 0 },
+      { width: "10%", targets: 1 },
+      { width: "30%", targets: 2 },
       { width: "20%", targets: 3 },
-      { width: "20%", targets: 4 },
+      { width: "10%", targets: 4 },
+      { width: "20%", targets: 5 },
       { width: "10%", targets: 5 }
     ]
   );

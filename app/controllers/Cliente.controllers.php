@@ -30,11 +30,11 @@ if (isset($_GET['operacion'])) {
       break;
     case 'buscarClienteExistencia':
       $nroDoc = Herramientas::sanitizarEntrada($_GET['nroDoc']);
-      if(strlen($nroDoc) == 8 || strlen($nroDoc) == 9){
+      if (strlen($nroDoc) == 8 || strlen($nroDoc) == 9) {
         $resultado = $persona->buscarPersonaClienteDni(["nroDoc" => $_GET['nroDoc']]);
-      }else if(strlen($nroDoc) == 11){
+      } else if (strlen($nroDoc) == 11) {
         $resultado = $empresa->buscarEmpresaClienteRuc(["ruc" => $_GET['nroDoc']]);
-      }else{
+      } else {
         $resultado = ["error" => "Valor no válido"];
       }
       echo json_encode($resultado);
@@ -43,6 +43,13 @@ if (isset($_GET['operacion'])) {
       $resultado = $cliente->listarClientes();
       echo json_encode($resultado);
       break;
+    case 'buscarPorNombreApellido':
+      $datos = Herramientas::sanitizarEntrada([
+        "nombres" => $_GET['nombres'],
+        "apellidos" => $_GET['apellidos']
+      ]);
+      $resultado = $cliente->buscarNombreyApellido($datos);
+      echo json_encode($resultado);
   }
 }
 
@@ -51,11 +58,11 @@ if (isset($_POST['operacion'])) {
     case 'registrarCliente':
       $idPersona = null;
       $idEmpresa = null;
-      if(isset($_POST['idEmpresa']) && $_POST['idEmpresa'] != ''){
+      if (isset($_POST['idEmpresa']) && $_POST['idEmpresa'] != '') {
         $idEmpresa = $_POST['idEmpresa'];
         $idPersona = null;
       }
-      if(isset($_POST['idPersona']) && $_POST['idPersona'] != ''){
+      if (isset($_POST['idPersona']) && $_POST['idPersona'] != '') {
         $idPersona = $_POST['idPersona'];
         $idEmpresa = null;
       }

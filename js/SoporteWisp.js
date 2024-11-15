@@ -142,7 +142,9 @@ document.addEventListener("DOMContentLoaded", () => {
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const data = await ArmadoJsonWisp(); // Espera a que ArmadoJsonWisp devuelva los datos
-    await guardarSoporte(data); // Llama a guardarSoporte con el objeto data
+    if (await guardarSoporte(data)) {// Llama a guardarSoporte con el objeto data
+      window.location.href = `${config.HOST}views/Soporte/`;// Redirecciona a la página de soporte tras lograrse el registro del JSON exitoso
+    }
   });
 
 });

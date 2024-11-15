@@ -41,6 +41,20 @@ BEGIN
 END $$
 
 DELIMITER $$
+
+DROP PROCEDURE IF EXISTS spu_cliente_buscar_NombreApp;
+
+CREATE PROCEDURE spu_cliente_buscar_NombreApp(
+    p_nombre VARCHAR(50),
+    p_apellido VARCHAR(50)
+)
+BEGIN
+    SELECT codigo_cliente 
+    FROM vw_clientes_obtener 
+    WHERE nombre_cliente = CONCAT(p_nombre, ", ",p_apellido );
+END$$
+
+DELIMITER $$
 DROP PROCEDURE IF EXISTS spu_cliente_buscar_nrodoc$$
 CREATE PROCEDURE spu_cliente_buscar_nrodoc(IN p_documento VARCHAR(15))
 BEGIN

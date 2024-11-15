@@ -15,31 +15,30 @@
         <div class="modal-body">
           <form id="searchForm">
             <div class="form-floating mb-3">
-              <input type="text" class="form-control" id="txtnombreba" name="nombre" placeholder="Nombre">
+              <input type="text" class="form-control" id="txtnombrebAvz" name="nombre" placeholder="Nombre">
               <label for="nombre">Nombre</label>
             </div>
             <div class="form-floating mb-3">
-              <input type="text" class="form-control" id="txtapellidoba" name="apellido" placeholder="Apellido">
+              <input type="text" class="form-control" id="txtapellidobAvz" name="apellido" placeholder="Apellido">
               <label for="apellido">Apellido</label>
             </div>
 
             <div class="container">
               <ul class="list-group mt-3" id="listMulticontratos">
-                <!-- Aquí se cargarán las si hay mas de uno que coincida -->
+                <!-- Aquí se cargarán las si hay más de uno que coincida -->
               </ul>
             </div>
-
           </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-          <button type="button" class="btn btn-primary" id="buscarBtn">Buscar</button>
+          <button type="button" class="btn btn-primary" id="btnBusquedaAvanzada">Buscar</button>
         </div>
       </div>
     </div>
   </div>
 
-
+  <!-- Breadcumbs -->
   <div class="row g-2 mb-2 align-items-center">
     <div class="col text-start">
       <a href="<?= $host; ?>views/Soporte/">Inicio</a> /
@@ -51,6 +50,7 @@
     </div>
   </div>
 
+  <!-- Formulario de Registro de Incidencias -->
   <div class="card mb-4">
     <div class="card-header">
       <i class="fas fa-table me-1"></i> Complete los Datos de la Incidencia
@@ -64,12 +64,12 @@
             <div class="input-group">
               <div class="form-floating">
                 <input type="text" class="form-control" maxlength="12" minlength="8" id="txtNrodocumento" placeholder="Número de Documento" autofocus required>
-                <label for="txtNrodocumento">Número de Documento</label>
+                <label for="txtNrodocumento"> <span style="color: red;">*</span> Número de Documento</label>
               </div>
               <button class="input-group-text btn btn-primary" type="button" id="btnNrodocumento">
                 <i class="fa-solid fa-magnifying-glass"></i>
               </button>
-              <button class="input-group-text btn btn-outline-info" type="button" id="btnBusquedaAvanzada" hidden data-bs-toggle="modal" data-bs-target="#exampleModal">
+              <button class="input-group-text btn btn-outline-info" type="button" id="ModeloAbrir">
                 <i class="fas fa-ellipsis-h"></i>
               </button>
             </div>
@@ -86,23 +86,28 @@
           <!-- Contrato -->
           <div class="col-12 col-md-3">
             <div class="form-floating">
-              <select id="slcContratos" class="form-control" required>
+              <select id="slcContratos" class="form-select" required>
                 <option disabled selected>Seleccione un Contrato</option>
+                <!-- Agregar opciones dinámicas si es necesario -->
               </select>
-              <label for="slcContratos">Seleccione un Contrato</label>
+              <label for="slcContratos">
+                <span style="color: red;">*</span> Seleccione un Contrato
+              </label>
             </div>
           </div>
 
           <!-- Prioridad -->
           <div class="col-12 col-md-3">
             <div class="form-floating">
-              <select id="slcPrioridad" class="form-control" required>
+              <select id="slcPrioridad" class="form-select" required>
                 <option value="Incidencia" selected>Incidencia</option>
                 <option value="Alta">Alta</option>
                 <option value="Media">Media</option>
                 <option value="Baja">Baja</option>
               </select>
-              <label for="slcPrioridad">Prioridad</label>
+              <label for="slcPrioridad">
+                <span style="color: red;">*</span> Prioridad
+              </label>
             </div>
           </div>
         </div>
@@ -114,7 +119,7 @@
           <div class="col-12">
             <div class="form-floating">
               <input type="text" class="form-control" id="txtContratoObservacion" placeholder="Contrato y Observacion" disabled required>
-              <label for="txtContratoObservacion">Contrato y Observacion</label>
+              <label for="txtContratoObservacion"> <span style="color: red;">*</span> Contrato y Observacion</label>
             </div>
           </div>
         </div>
@@ -123,8 +128,10 @@
         <div class="row g-3 mb-3">
           <div class="col-12">
             <div class="form-floating">
-              <textarea class="form-control" id="txtDescripcion" rows="3" placeholder="Descripción de la incidencia" style="height: 100px" required></textarea>
-              <label for="txtDescripcion">Descripción</label>
+              <textarea class="form-control" id="txtDescripcion" rows="3" placeholder="Descripción de la incidencia" style="height: 100px" required aria-required="true"></textarea>
+              <label for="txtDescripcion">
+                <span style="color: red;">*</span> Descripción
+              </label>
             </div>
           </div>
         </div>
@@ -134,12 +141,12 @@
           <div class="col-12">
             <div class="form-floating">
               <textarea class="form-control" id="txtSolucion" rows="3" placeholder="Solución aplicada" style="height: 100px"></textarea>
-              <label for="txtSolucion">Solución</label>
+              <label for="txtDescripcion">Proceso</label>
             </div>
           </div>
         </div>
 
-        <!-- Solucionado Switch -->
+        <!-- Solucionado Switch (hidden) -->
         <div class="row g-3 mb-3" hidden>
           <div class="col-12">
             <div class="form-check form-switch">
@@ -151,15 +158,14 @@
 
         <hr>
 
-        <!-- Action Buttons -->
-        <div class="container text-end">
+        <!-- Botones de Acción -->
+        <div class="text-end">
           <button type="submit" class="btn btn-primary">Registrar</button>
-          <a href="<?= $host; ?>views/Soporte/listarSoporte" class="btn btn-primary me-2">
+          <a href="<?= $host; ?>views/Soporte/listarSoporte" class="btn btn-primary">
             Listar Soporte <i class="fa-solid fa-arrow-right"></i>
           </a>
         </div>
       </form>
-
     </div>
   </div>
 </div>
