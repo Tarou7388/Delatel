@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (idSoporte) {
       await obtenerProblema(idSoporte);
       crearSelectYBoton();
-      ArmadoJsonWisp();
+      ArmadoJsonGpon();
     }
   })();
 

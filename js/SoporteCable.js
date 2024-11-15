@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (idSoporte) {
       await obtenerProblema(idSoporte);
       crearSelectYBoton();
-      await ArmadoJsonWisp();
+      await ArmadoJsonCable();
     } else {
       const urlParams = new URLSearchParams(window.location.search);
       const idContrato = urlParams.get("idContrato");
