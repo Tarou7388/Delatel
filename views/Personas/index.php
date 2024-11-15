@@ -97,7 +97,7 @@
 					</div>
 					<div class="col-md-3">
 						<div class="form-floating">
-							<input type="email" class="form-control" id="txtEmail" name="email" placeholder="Email" required>
+							<input type="email" class="form-control" id="txtEmail" name="email" placeholder="Email">
 							<label for="txtEmail">Email</label>
 						</div>
 					</div>
@@ -186,7 +186,7 @@
 					</div>
 					<div class="col-md-4">
 						<div class="form-floating">
-							<input type="email" class="form-control" id="txtEmailPersona" placeholder="Email" required>
+							<input type="email" class="form-control" id="txtEmailPersona" placeholder="Email">
 							<label for="txtEmailPersona">Email</label>
 						</div>
 					</div>

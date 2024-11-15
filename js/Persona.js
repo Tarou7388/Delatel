@@ -218,7 +218,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   function verificarCamposPersona() {
     const camposPersona = [
       slcTipoDocumento, txtNumDocumentoPersona, txtNombresPersona,
-      txtApellidosPersona, txtTelefono, txtEmail,
+      txtApellidosPersona, txtTelefono,
       txtDireccion, txtReferencia, txtcoordenadasPersona,
     ];
     let bandera = {

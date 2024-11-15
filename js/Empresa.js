@@ -153,7 +153,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   async function verificarCampos() {
     const campos = [
       txtRuc, txtRepresentanteLegal, txtRazonSocial,
-      txtNombreComercial, txtTelefono, txtEmail,
+      txtNombreComercial, txtTelefono, 
       txtDireccion, txtReferencia, txtCoordenadas
     ];
 
