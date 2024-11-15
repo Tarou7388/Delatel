@@ -28,7 +28,7 @@
           </tbody>
         </table>
 
-        <h3>Reporte Generado el día: <span class="caja-texto3"></span> / <span class="caja-texto3"></span> / <span class="caja-texto3"></span></h3>
+        <h3>Reporte Generado el día: <span class="caja-texto3 fecha-reporte"><?= $fechaActual; ?></span></h3>
 
         <h4><img src="<?= $HOST; ?>image/iconoLista.png" class="icono" alt=""> 1) ¿QUÉ ESTÁS CONTRATANDO?</h4>
         <p><strong>DELAFIBER (DELATEL PERU)</strong>, con domicilio en Calle San Jose 103 – Grocio Prado - Chincha – Ica con RUC; se compromete a prestar el Servicio de acceso a internet fijo Postpago</p>

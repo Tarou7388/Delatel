@@ -303,6 +303,8 @@ window.addEventListener("DOMContentLoaded", async () => {
           },
         };
 
+        console.log(datosEnvio);
+
         const response = await fetch(
           `${config.HOST}app/controllers/Contrato.controllers.php`,
           {
