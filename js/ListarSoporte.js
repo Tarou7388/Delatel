@@ -58,12 +58,12 @@ document.addEventListener("DOMContentLoaded", () => {
       {
         data: "prioridad",
         title: "Prioridad",
-        className: "text-center"
+        className: "text-center user-select-none"
       },
       {
         data: "tipo_soporte",
         title: "Tipo de Soporte",
-        className: "text-center",
+        className: "text-center user-select-none",
         render: function (data, type, row) {
           return data ? data : '<i>No asignado</i>';
         }
@@ -71,17 +71,17 @@ document.addEventListener("DOMContentLoaded", () => {
       {
         data: "nombre_cliente",
         title: "Nombre del Cliente",
-        className: "text-start"
+        className: "text-start user-select-none"
       },
       {
         data: "direccion_servicio",
         title: "Dirección",
-        className: "text-start"
+        className: "text-start user-select-none"
       },
       {
         data: "fecha_hora_solicitud",
         title: "Hora de solicitud",
-        className: "text-end",
+        className: "text-end user-select-none",
         render: function (data, type, row) {
           return data ? data : '<i>No asignado</i>';
         }
@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
       {
         data: "nombre_tecnico",
         title: "Técnico a Cargo",
-        className: "text-center",
+        className: "text-center user-select-none",
         render: function (data, type, row) {
           return data ? data : '<i>No asignado</i>';
         }

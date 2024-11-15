@@ -1,6 +1,7 @@
 USE Delatel;
 
 DROP VIEW IF EXISTS vw_soporte_detalle;
+
 CREATE VIEW vw_soporte_detalle AS
 SELECT
     s.id_soporte,
@@ -34,6 +35,8 @@ FROM
     LEFT JOIN tb_empresas emp ON cl.id_empresa = emp.id_empresa
     LEFT JOIN tb_personas p_cliente ON cl.id_persona = p_cliente.id_persona;
 
+DELIMITER $$
+
 DROP PROCEDURE IF EXISTS spu_tipo_soporte_registrar$$
 
 CREATE PROCEDURE spu_tipo_soporte_registrar(
@@ -43,11 +46,11 @@ CREATE PROCEDURE spu_tipo_soporte_registrar(
 BEGIN
     INSERT INTO tb_tipo_soporte (tipo_soporte, iduser_create)
     VALUES (p_tipo_soporte, p_iduser_create);
-END $$
+END$$
 
 DELIMITER $$
 
-DROP PROCEDURE IF EXISTS spu_registrar_fichasoporte$$
+DROP PROCEDURE IF EXISTS spu_registrar_fichasoporte;
 
 CREATE PROCEDURE spu_registrar_fichasoporte(
     IN p_id_contrato INT,
@@ -81,10 +84,7 @@ BEGIN
     );
 END $$
 
-
-DELIMITER $$
-
-DROP PROCEDURE IF EXISTS spu_soporte_actualizar$$
+DROP PROCEDURE IF EXISTS spu_soporte_actualizar;
 
 CREATE PROCEDURE spu_soporte_actualizar(
     IN p_id_soporte INT,
@@ -108,7 +108,8 @@ BEGIN
     WHERE id_soporte = p_id_soporte;
 END $$
 
-DROP PROCEDURE IF EXISTS spu_soporte_filtrar_prioridad$$
+DROP PROCEDURE IF EXISTS spu_soporte_filtrar_prioridad;
+
 CREATE PROCEDURE spu_soporte_filtrar_prioridad (
     IN p_prioridad VARCHAR(50)
 )
@@ -154,4 +155,4 @@ BEGIN
         tb_empresas e ON cl.id_empresa = e.id_empresa
     WHERE
         (p_prioridad = "" OR s.prioridad = p_prioridad);
-END;
+END $$
