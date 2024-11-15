@@ -12,7 +12,6 @@ window.addEventListener("DOMContentLoaded", async () => {
   const btnContainer = document.createElement("div");
   const btnCancelarActualizacion = document.createElement("button");
   const accesos = await Herramientas.permisos();
-
   /* 
   btnCancelarActualizacion.style.display = "none"; */
   btnContainer.className = "d-flex justify-content-end mt-2";
@@ -34,11 +33,96 @@ window.addEventListener("DOMContentLoaded", async () => {
       const respuesta = await fetch(`${config.HOST}app/controllers/Rol.controllers.php?operacion=listarRoles`);
       const datos = await respuesta.json();
       listarRol(datos);
-      tabla();
+      tabla(); 
     } catch (e) {
       console.error(e);
     }
-  };
+  }
+
+  function listarRol(datos) {
+    const tbody = document.querySelector("#mostrar");
+    tbody.innerHTML = "";
+    datos.forEach((element) => {
+      const tr = document.createElement("tr");
+      if (element.inactive_at !== null) {
+        tr.classList.add("disabled-role");
+      }
+      const thid = document.createElement("td");
+      thid.textContent = element.rol;
+      tr.appendChild(thid);
+
+
+      tbody.appendChild(tr);
+  
+      tbody.appendChild(tr);
+      const tdBoton = document.createElement("td");
+      const boton = document.createElement("button");
+      boton.setAttribute("class", "btnPermisos btn btn-primary");
+      boton.setAttribute("data-bs-toggle", "modal");
+      boton.setAttribute("data-idRol", element.id_rol);
+      boton.setAttribute("data-bs-target", "#mdlPermisos");
+      boton.textContent = "Permisos";
+      tdBoton.appendChild(boton);
+      tr.appendChild(tdBoton);
+  
+      const tdAcciones = document.createElement("td");
+  
+      // Botón Actualizar
+      const botonActualizar = document.createElement("button");
+      botonActualizar.setAttribute("class", "btnActualizar btn btn-warning me-2");
+      botonActualizar.setAttribute("data-idRol", element.id_rol);
+  
+      const iconoLapiz = document.createElement("i");
+      iconoLapiz.setAttribute("class", "fa-regular fa-pen-to-square");
+      iconoLapiz.style.pointerEvents = "none";
+  
+      botonActualizar.appendChild(iconoLapiz);
+  
+      // Botón Eliminar
+      const botonInhabilitar = document.createElement("button");
+      botonInhabilitar.setAttribute("class", "btnInhabilitar btn btn-danger me-2");
+      botonInhabilitar.setAttribute("data-idRol", element.id_rol);
+  
+      const iconoEliminar = document.createElement("i");
+      iconoEliminar.setAttribute("class", "fa-regular fa-trash-can");
+      iconoEliminar.style.pointerEvents = "none";
+  
+      botonInhabilitar.appendChild(iconoEliminar);
+  
+      // Botón Activar
+      const botonActivar = document.createElement("button");
+      botonActivar.setAttribute("class", "btnActivar btn btn-success");
+      botonActivar.setAttribute("data-idRol", element.id_rol);
+  
+      const iconoActivar = document.createElement("i");
+      iconoActivar.setAttribute("class", "fa-solid fa-check");
+      iconoActivar.style.pointerEvents = "none";
+  
+      botonActivar.appendChild(iconoActivar);
+  
+      // Agregar botones a la columna de acciones
+      tdAcciones.appendChild(botonActualizar);
+      tdAcciones.appendChild(botonInhabilitar);
+      tdAcciones.appendChild(botonActivar);
+      tr.appendChild(tdAcciones);
+  
+      // Deshabilitar otros botones si el registro está deshabilitado
+      if (element.inactive_at !== null) {
+        boton.disabled = true;
+        botonActualizar.disabled = true;
+        botonInhabilitar.disabled = true;
+        botonActivar.disabled = false;
+      } else {
+        botonActivar.disabled = true;
+      }
+  
+      tbody.appendChild(tr);
+    });
+    permisosBoton(".btnPermisos");
+    actualizarBoton(".btnActualizar");
+    inhabilitarBoton(".btnInhabilitar");
+    activarBoton(".btnActivar");
+  }
 
   async function tabla() {
     if ($.fn.DataTable.isDataTable("#tablaRol")) {
@@ -61,87 +145,6 @@ window.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  async function listarRol(datos) {
-    tbody.innerHTML = "";
-    datos.forEach((element) => {
-      const tr = document.createElement("tr");
-      if (element.inactive_at !== null) {
-        tr.classList.add("disabled-role");
-      }
-      const thid = document.createElement("td");
-      thid.textContent = element.rol;
-      tr.appendChild(thid);
-
-      tbody.appendChild(tr);
-      const tdBoton = document.createElement("td");
-      const boton = document.createElement("button");
-      boton.setAttribute("class", "btnPermisos btn btn-primary");
-      boton.setAttribute("data-bs-toggle", "modal");
-      boton.setAttribute("data-idRol", element.id_rol);
-      boton.setAttribute("data-bs-target", "#mdlPermisos");
-      boton.textContent = "Permisos";
-      tdBoton.appendChild(boton);
-      tr.appendChild(tdBoton);
-
-      const tdAcciones = document.createElement("td");
-
-      // Botón Actualizar
-      const botonActualizar = document.createElement("button");
-      botonActualizar.setAttribute("class", "btnActualizar btn btn-warning me-2");
-      botonActualizar.setAttribute("data-idRol", element.id_rol);
-
-      const iconoLapiz = document.createElement("i");
-      iconoLapiz.setAttribute("class", "fa-regular fa-pen-to-square");
-      iconoLapiz.style.pointerEvents = "none";
-
-      botonActualizar.appendChild(iconoLapiz);
-
-      // Botón Eliminar
-      const botonInhabilitar = document.createElement("button");
-      botonInhabilitar.setAttribute("class", "btnInhabilitar btn btn-danger me-2");
-      botonInhabilitar.setAttribute("data-idRol", element.id_rol);
-
-      const iconoEliminar = document.createElement("i");
-      iconoEliminar.setAttribute("class", "fa-regular fa-trash-can");
-      iconoEliminar.style.pointerEvents = "none";
-
-      botonInhabilitar.appendChild(iconoEliminar);
-
-      // Botón Activar
-      const botonActivar = document.createElement("button");
-      botonActivar.setAttribute("class", "btnActivar btn btn-success");
-      botonActivar.setAttribute("data-idRol", element.id_rol);
-
-      const iconoActivar = document.createElement("i");
-      iconoActivar.setAttribute("class", "fa-solid fa-check");
-      iconoActivar.style.pointerEvents = "none";
-
-      botonActivar.appendChild(iconoActivar);
-
-      // Agregar botones a la columna de acciones
-      tdAcciones.appendChild(botonActualizar);
-      tdAcciones.appendChild(botonInhabilitar);
-      tdAcciones.appendChild(botonActivar);
-      tr.appendChild(tdAcciones);
-
-      // Deshabilitar otros botones si el registro está deshabilitado
-      if (element.inactive_at !== null) {
-        boton.disabled = true;
-        botonActualizar.disabled = true;
-        botonInhabilitar.disabled = true;
-        botonActivar.disabled = false;
-      } else {
-        botonActivar.disabled = true;
-      }
-
-      tbody.appendChild(tr);
-    });
-    permisosBoton(".btnPermisos");
-    actualizarBoton(".btnActualizar");
-    inhabilitarBoton(".btnInhabilitar");
-    activarBoton(".btnActivar");
-  }
-
   async function obtenerJsonPermisos() {
     const respuesta = await fetch(`${config.HOST}Json/permisos.json`);
     const datos = await respuesta.json();
@@ -151,19 +154,19 @@ window.addEventListener("DOMContentLoaded", async () => {
   async function registrarRoles() {
     if (accesos?.roles?.crear) {
       const json = await obtenerJsonPermisos();
-
+  
       if (!rol.value.trim()) {
         showToast("El campo Rol no puede estar vacío", "WARNING", 1500);
         return;
       }
-
+  
       const datos = {
         operacion: "registrarRoles",
         rol: rol.value,
         permisos: json,
         idUsuario: userid,
       };
-
+  
       try {
         const respuesta = await fetch(
           `${config.HOST}app/controllers/Rol.controllers.php`,
@@ -172,13 +175,13 @@ window.addEventListener("DOMContentLoaded", async () => {
             body: JSON.stringify(datos),
           }
         );
-
+  
         if (!respuesta.ok) {
           throw new Error(`Error ${respuesta.status}: ${respuesta.statusText}`);
         }
-
+  
         const data = await respuesta.json();
-
+  
         if (data.guardado) {
           showToast("El rol se ha agregado exitosamente", "SUCCESS", 1500);
           location.reload();
@@ -208,8 +211,6 @@ window.addEventListener("DOMContentLoaded", async () => {
         idRol: idRolActual,
       };
 
-      console.log("Datos enviados:", datos);
-
       try {
         const respuesta = await fetch(
           `${config.HOST}app/controllers/Rol.controllers.php`,
@@ -224,7 +225,6 @@ window.addEventListener("DOMContentLoaded", async () => {
         }
 
         const data = await respuesta.json();
-        console.log("Respuesta del servidor:", data);
 
         if (data.Actualizado) {
           showToast("El rol se ha actualizado exitosamente", "SUCCESS");
@@ -244,13 +244,12 @@ window.addEventListener("DOMContentLoaded", async () => {
   async function actualizarBoton(clase) {
     const botones = document.querySelectorAll(clase);
     botones.forEach((boton) => {
-      boton.addEventListener("click", (event) => {
+      boton.addEventListener("click", async (event) => {
         const idRol = parseInt(event.target.dataset.idrol);
         const fila = event.target.closest("tr");
         const Rol = fila.querySelector("td").textContent;
         document.getElementById("txtRol").value = Rol;
         idRolActual = idRol;
-        console.log(idRolActual);
         actualizarBotones();
 
         btnCancelarActualizacion.id = "btnCancelarActualizacion";
@@ -269,7 +268,6 @@ window.addEventListener("DOMContentLoaded", async () => {
         idRol: idRolActual,
         idUsuario: userid,
       };
-      console.log(datos);
 
       try {
         if (await ask("¿Desea Eliminar este Rol?")) {
@@ -315,7 +313,6 @@ window.addEventListener("DOMContentLoaded", async () => {
         idRol: idRolActual,
         idUsuario: userid,
       };
-      console.log(datos);
 
       try {
         if (await ask("¿Desea Activar este Rol?")) {
@@ -335,7 +332,8 @@ window.addEventListener("DOMContentLoaded", async () => {
 
           if (data.Activado) {
             showToast("¡Rol activado correctamente!", "SUCCESS");
-            location.reload();
+            limpiarFormulario();
+            recargarTabla();
           } else {
             showToast("No se pudo activar el rol.", "ERROR");
           }
@@ -344,8 +342,8 @@ window.addEventListener("DOMContentLoaded", async () => {
         console.error("Error al activar el rol:", e);
         showToast("Ocurrió un error al activar el rol", "ERROR");
       }
-    }else{
-      showToast("No tienes permiso para reactivar el rol","ERROR")
+    } else {
+      showToast("No tienes permiso para reactivar el rol", "ERROR")
     }
   }
 
@@ -365,7 +363,6 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     // Insertar el select antes de la tabla
     contenido.insertBefore(selectActividad, contenido.querySelector(".table"));
-    console.log(datos);
 
     let isFirstModule = true;
     document.querySelector("#selectActividad").value = datos.actividad;
@@ -408,7 +405,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 
   async function actualizarPermisos() {
-    if (accesos?.permisos?.actualizar) {
+    if (accesos?.roles?.actualizar) {
       const permisosActualizados = {};
       const checkboxes = tbodyModal.querySelectorAll('input[type="checkbox"]');
       permisosActualizados["actividad"] = document.querySelector("#selectActividad").value;
@@ -454,7 +451,6 @@ window.addEventListener("DOMContentLoaded", async () => {
         }
 
         const data = await respuesta.json();
-        console.log("Respuesta del servidor:", data);
 
         if (data.guardado) {
           showToast("Permisos actualizados correctamente.", "SUCCESS");
@@ -556,12 +552,12 @@ window.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  function permisosBoton(clase) {
+  async function permisosBoton(clase) {
     const botones = document.querySelectorAll(clase);
     botones.forEach((boton) => {
       boton.addEventListener("click", async (event) => {
         const idRol = Number(event.target.dataset.idrol);
-        tablaModal(idRol);
+        await tablaModal(idRol);
         idRolActual = idRol;
       });
     });
@@ -700,6 +696,10 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  rol.addEventListener("input", actualizarBotones);
+  document.getElementById('mdlPermisos').addEventListener('hidden.bs.modal', () => {
+    idRolActual = -1;
+    actualizarBotones();
+  });
 
+  rol.addEventListener("input", actualizarBotones);
 });
