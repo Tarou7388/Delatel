@@ -75,6 +75,39 @@ CREATE TABLE tb_sectores (
     CONSTRAINT secto_fk_id_distrito FOREIGN KEY (id_distrito) REFERENCES tb_distritos (id_distrito)
 ) ENGINE = InnoDB;
 
+CREATE TABLE tb_mufas(
+    id_mufa INT PRIMARY KEY AUTO_INCREMENT,
+    id_sector INT NOT NULL,
+    nombre VARCHAR(60) NOT NULL,
+    descripcion VARCHAR(100) NOT NULL,
+    coordenadas VARCHAR(50) NOT NULL,
+    direccion VARCHAR(200) NOT NULL,
+    create_at DATETIME NOT NULL DEFAULT NOW(),
+    update_at DATETIME NULL,
+    inactive_at DATETIME NULL,
+    iduser_create INT NOT NULL,
+    iduser_update INT NULL,
+    iduser_inactive INT NULL,
+    CONSTRAINT mufa_uk_mufa UNIQUE (nombre),
+    CONSTRAINT mufa_fk_id_sector FOREIGN KEY (id_sector) REFERENCES tb_sectores (id_sector)
+) ENGINE = InnoDB;
+
+CREATE TABLE tb_cajas(
+    id_caja INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(30) NOT NULL,
+    descripcion VARCHAR(100) NOT NULL,
+    numero_entradas TINYINT NOT NULL,
+    id_mufa INT NOT NULL,
+    coordenadas VARCHAR(50) NOT NULL,
+    create_at DATETIME NOT NULL DEFAULT NOW(),
+    update_at DATETIME NULL,
+    inactive_at DATETIME NULL,
+    iduser_create INT NOT NULL,
+    iduser_update INT NULL,
+    iduser_inactive INT NULL,
+    CONSTRAINT caja_fk_id_sector FOREIGN KEY (id_mufa) REFERENCES tb_mufas (id_mufa)
+) ENGINE = InnoDB;
+
 CREATE TABLE tb_personas (
     id_persona INT PRIMARY KEY AUTO_INCREMENT,
     tipo_doc CHAR(3) NOT NULL,
@@ -94,22 +127,6 @@ CREATE TABLE tb_personas (
     CONSTRAINT perso_ck_tipo_doc CHECK (
         tipo_doc IN ('DNI', 'PAS', 'CAR')
     )
-) ENGINE = InnoDB;
-
-CREATE TABLE tb_cajas(
-    id_caja INT PRIMARY KEY AUTO_INCREMENT,
-    nombre VARCHAR(30) NOT NULL,
-    descripcion VARCHAR(100) NOT NULL,
-    numero_entradas TINYINT NOT NULL,
-    id_sector INT NOT NULL,
-    coordenadas VARCHAR(50) NOT NULL,
-    create_at DATETIME NOT NULL DEFAULT NOW(),
-    update_at DATETIME NULL,
-    inactive_at DATETIME NULL,
-    iduser_create INT NOT NULL,
-    iduser_update INT NULL,
-    iduser_inactive INT NULL,
-    CONSTRAINT caja_fk_id_sector FOREIGN KEY (id_sector) REFERENCES tb_sectores (id_sector)
 ) ENGINE = InnoDB;
 
 CREATE TABLE tb_empresas (

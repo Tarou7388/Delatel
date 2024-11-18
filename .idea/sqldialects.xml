@@ -2,24 +2,24 @@
 <project version="4">
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/app/DB/DATABASE.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimiento_Averias.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimiento_Contactabilidad.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimiento_Marcas.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimiento_Paquetes.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimiento_Permisos.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimiento_Averias.sql" dialect="MariaDB" />
+    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimiento_Contactabilidad.sql" dialect="MariaDB" />
+    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimiento_Marcas.sql" dialect="MariaDB" />
+    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimiento_Paquetes.sql" dialect="MariaDB" />
+    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimiento_Permisos.sql" dialect="MariaDB" />
     <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimiento_Responsables.sql" dialect="MariaDB" />
-    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimiento_Sectores.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimiento_Servicios.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimientos_Cajas.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimientos_Clientes.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimientos_Contratos.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimientos_Empresas.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimientos_FichaSoporte.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimientos_Inventario.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimientos_Personas.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimientos_Roles.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimientos_Usuarios.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimientos_kardex.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Views.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimiento_Sectores.sql" dialect="MariaDB" />
+    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimiento_Servicios.sql" dialect="MariaDB" />
+    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimientos_Cajas.sql" dialect="MariaDB" />
+    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimientos_Clientes.sql" dialect="MariaDB" />
+    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimientos_Contratos.sql" dialect="MariaDB" />
+    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimientos_Empresas.sql" dialect="MariaDB" />
+    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimientos_FichaSoporte.sql" dialect="MariaDB" />
+    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimientos_Inventario.sql" dialect="MariaDB" />
+    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimientos_Personas.sql" dialect="MariaDB" />
+    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimientos_Roles.sql" dialect="MariaDB" />
+    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimientos_Usuarios.sql" dialect="MariaDB" />
+    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimientos_kardex.sql" dialect="MariaDB" />
+    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Views.sql" dialect="MariaDB" />
   </component>
 </project>
