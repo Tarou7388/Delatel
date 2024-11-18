@@ -108,14 +108,4 @@ class Soporte extends Conexion
 
     return $this->registrar($sql, $values);
   }
-
-  public function buscarporNombre($params = [])
-  {
-    $sql = "SELECT * FROM vw_contratos_listar WHERE id_servicio = ? AND CONCAT(apellido, ' ', nombre) LIKE ?";
-    $values = array(
-      $params['nombre'],
-      $params['apellido'],
-    );
-    return $this->consultaParametros($sql, $values);
-  }
 }

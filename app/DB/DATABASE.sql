@@ -264,7 +264,7 @@ CREATE TABLE tb_soporte (
     descripcion_problema TEXT NOT NULL,
     descripcion_solucion TEXT NULL,
     prioridad VARCHAR(50) NULL DEFAULT "Incidencia",
-    soporte JSON NULL,
+    soporte JSON NULL DEFAULT '{}',
     create_at DATETIME NOT NULL DEFAULT NOW(),
     update_at DATETIME NULL,
     inactive_at DATETIME NULL,

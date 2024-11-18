@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function mostrarFichaServicio(tipoServicio, id_soporte,nro_doc) {
-    window.location.href = `${config.HOST}views/Soporte/Soporte${tipoServicio}?idsoporte=${id_soporte}&doc=${nro_doc}`;
+    window.location.href = `${config.HOST}views/Soporte/Soporte${tipoServicio}?idsoporte=${id_soporte}&doc=${nro_doc}&tiposervicio=${tipoServicio}`;
   }
 
   async function obtenerDataSoporte(idsoport) {

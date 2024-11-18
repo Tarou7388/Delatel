@@ -3,24 +3,16 @@ import { inicializarDataTable } from "./Herramientas.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("frmRegistroWisp");
+  const urlParams = new URLSearchParams(window.location.search);
+  const serv = urlParams.get("tiposervicio");
 
   let idSoporte = -1;
 
-  (async function () {
-    const idSoporte = await obtenerIdSoporteDeUrl();
-    if (idSoporte) {
-      await obtenerProblema(idSoporte);
-      crearSelectYBoton();
-    }
-  })();
+  async function obtenerIdSoporteDeUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    rellenarDocNombre(urlParams.get("doc"));
 
-
-  async function obtenerProblema(idSoporte) {
-    const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
-    const data = await respuesta.json();
-    console.log(data);
-
-    $("#txtaEstadoInicial").val(data[0].descripcion_problema);
+    return urlParams.get("idsoporte");
   }
 
   function crearSelectYBoton() {
@@ -71,6 +63,14 @@ document.addEventListener("DOMContentLoaded", () => {
     solutionTextarea.parentNode.parentNode.appendChild(rowDiv);
   }
 
+  async function obtenerProblema(idSoporte) {
+    const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
+    const data = await respuesta.json();
+    console.log(data);
+
+    $("#txtaEstadoInicial").val(data[0].descripcion_problema);
+  }
+
   async function rellenarDocNombre(doct) {
     const respuesta = await fetch(`${config.HOST}/app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${doct}`);
     const data = await respuesta.json();
@@ -79,43 +79,42 @@ document.addEventListener("DOMContentLoaded", () => {
     $("#txtNrodocumento").val(doct);
   }
 
-  async function obtenerIdSoporteDeUrl() {
-    const urlParams = new URLSearchParams(window.location.search);
-    rellenarDocNombre(urlParams.get("doc"));
-
-    return urlParams.get("idsoporte");
-  }
+  (async function () {
+    idSoporte = await obtenerIdSoporteDeUrl();
+    if (idSoporte) {
+      await obtenerProblema(idSoporte);
+      crearSelectYBoton();
+    }
+  })();
 
 
   async function ArmadoJsonWisp() {
-    const respuesta = await fetch(`${config.HOST}Json/spWISP.json`);
-    const datos = await respuesta.json();
+    const Response = await fetch(`${config.HOST}/app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
+    const result = await Response.json();
 
-    console.log(datos);
+    let soporte = result[0].soporte ? JSON.parse(result[0].soporte) : {};
 
-    // Obtiene los valores de los campos y los asigna al JSON de soporte
-    datos.parametros.base = document.getElementById("txtBase").value;
-    datos.parametros.ip = document.getElementById("txtIp").value;
-    datos.parametros.senal = document.getElementById("txtSenial").value;
+    // Verificar si 'serv' ya existe entre las claves de 'soporte'
+    const existeClave = Object.keys(soporte).includes(serv);
 
-    datos.cambios.nuevaBase = document.getElementById("txtBaseNuevo").value;
-    datos.cambios.nuevoIP = document.getElementById("txtIpNuevo").value;
-    datos.cambios.senal = document.getElementById("txtSenialNuevo").value;
+    if (!existeClave) {
+      soporte[serv] = {
+        parametros: {
+          base: document.getElementById("txtBase").value,
+          ip: document.getElementById("txtIp").value,
+          senal: document.getElementById("txtSenial").value,
+        },
+        cambios: {
+          nuevaBase: document.getElementById("txtBaseNuevo").value,
+          nuevoIP: document.getElementById("txtIpNuevo").value,
+          senal: document.getElementById("txtSenialNuevo").value,
+        },
+      };
+    }
 
-    // Crea el objeto data con toda la información
-    const data = {
-      idSoporte: idSoporte,
-      idTecnico: JSON.stringify(user['idUsuario']),
-      idTipoSoporte: document.getElementById("slcTipoSoporte").value,
-      soporte: datos,
-      idUserUpdate: JSON.stringify(user['idUsuario']),
-      descripcion_solucion: document.getElementById("txtaProceSolucion").value
-    };
-
-    console.log(data)
-
-    return data; // Retorna el objeto data para ser usado en guardarSoporte
+    return soporte; 
   }
+
 
   async function guardarSoporte(data) {
     try {
@@ -126,28 +125,28 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         body: JSON.stringify({
           operacion: 'actualizarSoporte',
-          data,
+          data: {
+            idSoporte: idSoporte,
+            idTecnico: user['idUsuario'],
+            idTipoSoporte: document.getElementById("slcTipoSoporte").value,
+            soporte: data,
+            idUserUpdate: user['idUsuario'],
+            descripcion_solucion: document.getElementById("txtaProceSolucion").value,
+          },
         }),
       });
 
       const result = await response.json();
       console.log(result.status);
-      if (result.status == "success") {// Llama a guardarSoporte con el objeto data
-        window.location.href = `${config.HOST}views/Soporte/`;// Redirecciona a la página de soporte tras lograrse el registro del JSON exitoso
-      }
-
     } catch (error) {
       console.error('Error en la solicitud:', error);
     }
   }
 
-  // Agrega el evento submit para el formulario
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
-    const data = await ArmadoJsonWisp(); // Espera a que ArmadoJsonWisp devuelva los datos
-    if (await guardarSoporte(data)) {// Llama a guardarSoporte con el objeto data
-      window.location.href = `${config.HOST}views/Soporte/`;// Redirecciona a la página de soporte tras lograrse el registro del JSON exitoso
-    }
+    const data = await ArmadoJsonWisp();
+    await guardarSoporte(data)
   });
 
 });
