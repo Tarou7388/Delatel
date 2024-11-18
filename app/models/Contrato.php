@@ -233,4 +233,23 @@ class Contrato extends Conexion
         $sql = "SELECT * FROM vw_fichainstalacion_filtrar";
         return $this->listarDatos($sql);
     }
+
+    /**
+     * Obtiene el PDF de un contrato por su ID.
+     *
+     * Este método ejecuta un procedimiento almacenado para obtener el PDF
+     * de un contrato en la base de datos utilizando el ID proporcionado en los parámetros.
+     *
+     * @param array $params Un arreglo asociativo que contiene el ID del contrato.
+     *                      Ejemplo: ['id' => 123]
+     * @return mixed El resultado de la consulta a la base de datos.
+     */
+    public function obtenerPDF($params = [])
+    {
+        $sql = "CALL spu_contratos_pdf(?)";
+        $values = array(
+            $params['id']
+        );
+        return $this->consultaParametros($sql, $values);
+    }
 }

@@ -281,3 +281,36 @@ BEGIN
         update_at = NOW()
     WHERE id_contrato = p_id_contrato;
 END $$
+
+DROP PROCEDURE IF EXISTS spu_contratos_pdf$$
+CREATE PROCEDURE spu_contratos_pdf(IN p_id_contrato INT)
+BEGIN
+    SELECT 
+        cl.id_cliente AS IdCliente,
+        IFNULL(CONCAT(p.nombres, ' ', p.apellidos), e.razon_social) AS NombreCliente,
+        IFNULL(p.nro_doc, e.ruc) AS NumeroDocumento,
+        IFNULL(p.email, e.email) AS Correo,
+        IFNULL(p.telefono, e.telefono) AS Telefono,
+        cl.direccion AS DireccionPersona,
+        co.direccion_servicio AS DireccionContrato,
+        CASE 
+            WHEN e.ruc IS NOT NULL THEN e.ruc
+            WHEN LENGTH(p.nro_doc) = 8 THEN 'Peruano'
+            ELSE 'Extranjero'
+        END AS Nacionalidad,
+        IFNULL(e.representante_legal, '') AS RepresentanteLegal,
+        pa.paquete AS NombrePaquete,
+        co.nota
+    FROM 
+        tb_contratos co
+    JOIN 
+        tb_clientes cl ON co.id_cliente = cl.id_cliente
+    LEFT JOIN 
+        tb_personas p ON cl.id_persona = p.id_persona
+    LEFT JOIN 
+        tb_empresas e ON cl.id_empresa = e.id_empresa
+    LEFT JOIN 
+        tb_paquetes pa ON co.id_paquete = pa.id_paquete
+    WHERE 
+        co.id_contrato = p_id_contrato;
+END$$ 

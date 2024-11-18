@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (idSoporte) {
       await obtenerProblema(idSoporte);
       crearSelectYBoton();
-      await ArmadoJsonWisp();
+      await ArmadoJsonCable();
     } else {
       const urlParams = new URLSearchParams(window.location.search);
       const idContrato = urlParams.get("idContrato");
@@ -209,11 +209,14 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       const result = await response.json();
-      console.log(result);
-
+      console.log(result.status);
+      if (result.status == "success") {// Llama a guardarSoporte con el objeto data
+        window.location.href = `${config.HOST}views/Soporte/`;// Redirecciona a la página de soporte tras lograrse el registro del JSON exitoso
+      }
     } catch (error) {
       console.error('Error en la solicitud:', error);
     }
+
   }
 
   // Agrega el evento submit para el formulario
@@ -221,7 +224,7 @@ document.addEventListener("DOMContentLoaded", () => {
     event.preventDefault();
     const data = await ArmadoJsonCable();
     console.log(data)
-    await guardarSoporte(data); // Llama a guardarSoporte con el objeto data
+    await guardarSoporte(data)
   });
 
 });

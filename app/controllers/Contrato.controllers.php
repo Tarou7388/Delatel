@@ -38,6 +38,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
       $resultado = $contrato->listarFichaInstalacionFiltro();
       echo json_encode($resultado);
       break;
+    case 'obtenerPDF':
+      $resultado = $contrato->obtenerPDF(['id' => Herramientas::sanitizarEntrada($_GET['id'])]);
+      echo json_encode($resultado);
+      break;
   }
 }
 

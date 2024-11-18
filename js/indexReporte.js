@@ -5,7 +5,6 @@ document.addEventListener("DOMContentLoaded", () => {
   (async () => {
     const respuesta = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=listarClientes`);
     const data = await respuesta.json();
-    console.log(data);
 
     const tbody = document.querySelector("#listarClienteyContratos tbody");
 
@@ -84,6 +83,62 @@ document.addEventListener("DOMContentLoaded", () => {
       row.appendChild(cellDetalle);
 
       tbody.appendChild(row);
+    });
+    document.getElementById("printButton").addEventListener("click", () => {
+      const modalContent = document.querySelector("#detallePersona .modal-content").innerHTML;
+      const printWindow = window.open("", "", "width=800,height=600");
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>Imprimir Detalles del Cliente</title>
+            <style>
+              body { font-family: Arial, sans-serif; }
+              table { width: 100%; border-collapse: collapse; }
+              td { padding: 5px; border: 1px solid #ddd; }
+              .modal-header, .modal-footer { display: none; }
+            </style>
+          </head>
+          <body>
+            ${modalContent}
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
+      printWindow.print();
+    });
+
+    // Evento de clic para el botón de exportación a PDF
+    document.getElementById("pdfButton").addEventListener("click", () => {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      const modalContent = document.querySelector("#detallePersona .modal-body");
+
+      doc.html(modalContent, {
+        callback: function (doc) {
+          doc.save("detalle_cliente.pdf");
+        },
+        x: 10,
+        y: 10,
+        html2canvas: {
+          scale: 0.35
+        }
+      });
+    });
+    // Evento de clic para el botón de exportación a Excel
+    document.getElementById("excelButton").addEventListener("click", () => {
+      const modalContent = document.querySelector("#detallePersona .modal-body").innerHTML;
+
+      // Crear una tabla temporal y agregar el contenido del modal
+      const tempTable = document.createElement('table');
+      tempTable.innerHTML = modalContent;
+
+      // Convertir la tabla temporal en una hoja de cálculo
+      const worksheet = XLSX.utils.table_to_sheet(tempTable);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "DetalleCliente");
+
+      // Guardar el archivo Excel
+      XLSX.writeFile(workbook, "detalle_cliente.xlsx");
     });
 
     $('#listarClienteyContratos').DataTable({

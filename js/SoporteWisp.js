@@ -131,7 +131,10 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       const result = await response.json();
-      console.log(result);
+      console.log(result.status);
+      if (result.status == "success") {// Llama a guardarSoporte con el objeto data
+        window.location.href = `${config.HOST}views/Soporte/`;// Redirecciona a la página de soporte tras lograrse el registro del JSON exitoso
+      }
 
     } catch (error) {
       console.error('Error en la solicitud:', error);

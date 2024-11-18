@@ -1,5 +1,5 @@
 <?php
-  $HOST = "http://localhost/DELATEL/"; 
+$HOST = "http://localhost/DELATEL/";
 ?>
 
 <table style="width: 100%; table-layout: fixed; border-collapse: collapse;">
@@ -36,29 +36,28 @@
 
         <h4><img src="<?= $HOST; ?>image/iconoUsuario.png" class="icono" alt=""> 2) DATOS DEL ABONADO</h4>
         <p>Nombre / Razón Social: </p>
-        <p><span class="caja-texto2"></span></p>
+        <p><span class="caja-texto2"><b><?= $resultado[0]['NombreCliente']; ?></b></span></p>
         <p>Tipo y Número de documento de Identificación:</p>
-        <p><span class="caja-texto2"></span></p>
+        <p><span class="caja-texto2"><b><?= $resultado[0]['NumeroDocumento']; ?></b></span></p>
         <p>Nacionalidad:</p>
-        <p><span class="caja-texto2"></span></p>
+        <p><span class="caja-texto2"><b><?= $resultado[0]['Nacionalidad']; ?></b></span></p>
         <p>Representante legal o apoderado:</p>
-        <p><span class="caja-texto2"></span></p>
+        <p><span class="caja-texto2"><b><?= $resultado[0]['RepresentanteLegal']; ?></b></span></p>
         <p>Tipo y número de documento de identificación <br> del representante legal o apoderado:</p>
         <p><span class="caja-texto2"></span></p>
         <p>Correo electrónico para recibir comunicaciones y recibos:</p>
-        <p><span class="caja-texto2"></span></p>
+        <p><span class="caja-texto2"><b><?= $resultado[0]['Correo']; ?></b></span></p>
         <p>Número de contacto:</p>
-        <p><span class="caja-texto2"></span></p>
+        <p><span class="caja-texto2"><b><?= $resultado[0]['Telefono']; ?></b></span></p>
         <p>Dirección de Instalación:</p>
-        <p><span class="caja-texto2"></span></p>
+        <p><span class="caja-texto2"><b><?= $resultado[0]['DireccionContrato']; ?></b></span></p>
         <p>Dirección de Facturación</p>
-        <p><span class="caja-texto2"></span></p>
+        <p><span class="caja-texto2"><b><?= $resultado[0]['DireccionPersona']; ?></b></span></p>
 
         <br>
         <h4><img src="<?= $HOST; ?>image/iconoCelular.png" class="icono" alt=""> 3) SERVICIO CONTRATADO</h4>
-        <p>Código de cliente: <span class="caja-texto"></span></p>
-        <p>Nombre del Plan tarifario: <span class="caja-texto"></span></p>
-        <p>Detalle del servicio: <span class="caja-texto"></span></p>
+        <p>Código de cliente: <b><?= $resultado[0]['IdCliente']; ?></b></p>
+        <p>Nombre del Plan tarifario: <b><?= $resultado[0]['NombrePaquete']; ?></b></p>
         <strong class="radio">Nuevo Servicio <input type="checkbox" class="check"></strong>
         <strong class="radio">Adelantado <input type="checkbox" class="check"></strong>
 
