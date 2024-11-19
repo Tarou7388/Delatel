@@ -1,4 +1,4 @@
-<?php require_once '../../header.php'; ?>
+  <?php require_once '../../header.php'; ?>
 
 <div class="container-fluid px-4">
   <h1 class="mt-4">Control de Averías WISP</h1>

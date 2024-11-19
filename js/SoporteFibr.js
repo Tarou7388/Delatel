@@ -121,10 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function ArmadoJsonGpon() {
-    const response = await fetch(
-      `${config.HOST}/app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`
-    );
-
+    const response = await fetch(`${config.HOST}/app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
     const result = await response.json();
 
     let soporte = result[0].soporte ? JSON.parse(result[0].soporte) : {};
