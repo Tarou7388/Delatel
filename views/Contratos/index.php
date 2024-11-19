@@ -9,6 +9,10 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
+      <div class="input-group mb-3">
+        <input type="text" id="CoordenadaModel" class="form-control" placeholder="Coordenada" aria-label="Coordenada">
+        <button class="btn btn-outline-secondary" type="button" id="buscarBtn">Buscar</button>
+      </div>
       <div class="modal-body">
         <div id="map" style="height: 700px;">
 
@@ -16,7 +20,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary" id="btnGuardarCoordenadas" data-dismiss="modal" disabled>Guardar cambios</button>
+        <button type="button" class="btn btn-primary" id="btnGuardarModalMapa" data-dismiss="modal" disabled>Guardar cambios</button>
       </div>
     </div>
   </div>
@@ -231,8 +235,8 @@
           <div class="col-md-4">
             <div class="input-group">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtCoordenadas" placeholder="Referencia" required disabled>
-                <label for="txtCoordenadas">Coordenadas</label>
+                <input type="text" class="form-control" id="txtCoordenadasMapa" placeholder="Referencia" required disabled>
+                <label for="txtCoordenadasMapa">Coordenadas</label>
               </div>
               <button class="btn btn-primary" type="button" id="btnBuscarCoordenadas" data-bs-toggle="modal" data-bs-target="#ModalMapa">
                 <i class="fa-solid fa-magnifying-glass"></i>

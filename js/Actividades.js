@@ -38,7 +38,10 @@ window.addEventListener("DOMContentLoaded", function () {
     contenido.innerHTML = `
     <div id="map" style="height: 700px;"></div>
     `;
-    await mapa.iniciarMapa();
+    const params = { cajas: true, mufas: true }
+    const id = "map"
+    const renderizado = "pagina"
+    await mapa.iniciarMapa(params, id, renderizado);
   }
 
   async function cargarSoporte() {
@@ -114,25 +117,25 @@ window.addEventListener("DOMContentLoaded", function () {
       ajax: {
         url: `${config.HOST}app/controllers/Contrato.controllers.php?operacion=listarContratos`,
         type: 'GET',
-        dataSrc: 'data' 
+        dataSrc: 'data'
       },
       columns: [
-        { data: 'id_contrato' },      
-        { data: 'nombre_cliente' },    
-        { data: 'direccion_servicio' }, 
-        { data: 'paquete' },           
-        { data: 'tipo_servicio' }       
+        { data: 'id_contrato' },
+        { data: 'nombre_cliente' },
+        { data: 'direccion_servicio' },
+        { data: 'paquete' },
+        { data: 'tipo_servicio' }
       ],
       columnDefs: [
-        { targets: 0, visible: false }, 
+        { targets: 0, visible: false },
       ],
       language: {
         url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json",
       },
-      order: [[0, 'desc']]  
-    });    
+      order: [[0, 'desc']]
+    });
   }
-  
+
 
   async function cargarKardex() {
     contenido.innerHTML = `

@@ -284,28 +284,22 @@ INSERT INTO tb_sectores (id_distrito, sector, iduser_create) VALUES
 (110201, 'Los Ángeles', 1);
 
 INSERT INTO tb_mufas (id_sector, nombre, descripcion, coordenadas, direccion, create_at, iduser_create) VALUES
-(11, 'Mufa 1', 'Cerca del estadio', '-13.390019838079903, -76.14898062581466', 'Av 123', NOW(), 1),
-(19, 'Mufa 2', 'Plaza san Isidro', '-13.396082705347906, -76.13534364004165', 'Av 123456', NOW(), 1),
-(6, 'Mufa 3', 'Cerca de la Plaza', '-13.4277387660967, -76.16422117136221', 'Av 123', NOW(), 1),
-(6, 'Mufa 4', 'San Nicolas', '-13.432393655576314, -76.1627322889994', 'Av 123456', NOW(), 1),
-(11, 'Mufa 5', 'Prolongacion Cañete', '-13.393627228237747, -76.14441531745013', 'Av 123', NOW(), 1),
-(19, 'Mufa 6', 'Tecnologico Chincha', '-13.404627155707574, -76.13712932116213', 'Av 123456', NOW(), 1),
-(20, 'Mufa 7', 'Los Bancarios', '-13.42826126892918, -76.135733419194', 'Av 123', NOW(), 1),
-(20, 'Mufa 8', 'Plaza Chincha', '-13.41819520203595, -76.13222851544388', 'Av 123456', NOW(), 1),
-(20, 'Mufa 9', 'Parque Toledo', '-13.417732015444551, -76.11985007949754', 'Av 123', NOW(), 1),
-(26, 'Mufa 10', 'Plaza de pueblo nuevo', '-13.404169746696624, -76.12736834665132', 'Av 123456', NOW(), 1);
+(11, 'Mufa 1', 'Cerca del estadio', '-13.41287751332741, -76.15387988372802', 'Av 123', NOW(), 1),
+(19, 'Mufa 2', 'Plaza san Isidro', '-13.429027241634715, -76.14961981773376', 'Av 123456', NOW(), 1),
+(6, 'Mufa 3', 'Cerca de la Plaza', '-13.404169746696624, -76.12736834665132', 'Av 123', NOW(), 1),
+(6, 'Mufa 4', 'San Nicolas', '-13.42830253845429, -76.12306531088652', 'Av 123456', NOW(), 1)
 
 INSERT INTO tb_cajas(nombre, descripcion, numero_entradas, id_mufa, coordenadas, iduser_create) VALUES
 ('Caja 1', 'Cerca del estadio', 16, 1, '-13.390019838079903, -76.14898062581466', 1),
 ('Caja 2', 'Plaza san Isidro', 8, 2, '-13.396082705347906, -76.13534364004165', 1),
 ('Caja 3', 'Cerca de la Plaza', 8, 3, '-13.4277387660967, -76.16422117136221', 1),
 ('Caja 4', 'San Nicolas', 16, 4, '-13.432393655576314, -76.1627322889994', 1),
-('Caja 5', 'Prolongacion Cañete', 16, 5, '-13.393627228237747, -76.14441531745013', 1),
-('Caja 6', 'Tecnologico Chincha', 8, 6, '-13.404627155707574, -76.13712932116213', 1),
-('Caja 7', 'Los Bancarios', 8, 7, '-13.42826126892918, -76.135733419194', 1),
-('Caja 8', 'Plaza Chincha', 16, 8, '-13.41819520203595, -76.13222851544388', 1),
-('Caja 9', 'Parque Toledo', 8, 9, '-13.417732015444551, -76.11985007949754', 1),
-('Caja 10', 'Plaza de pueblo nuevo', 16, 10, '-13.404169746696624, -76.12736834665132', 1);
+('Caja 5', 'Prolongacion Cañete', 16, 1, '-13.393627228237747, -76.14441531745013', 1),
+('Caja 6', 'Tecnologico Chincha', 8, 2, '-13.404627155707574, -76.13712932116213', 1),
+('Caja 7', 'Los Bancarios', 8, 3, '-13.42826126892918, -76.135733419194', 1),
+('Caja 8', 'Plaza Chincha', 16, 4, '-13.41819520203595, -76.13222851544388', 1),
+('Caja 9', 'Parque Toledo', 8, 1, '-13.417732015444551, -76.11985007949754', 1),
+('Caja 10', 'Plaza de pueblo nuevo', 16, 2, '-13.404169746696624, -76.12736834665132', 1);
 
 INSERT INTO tb_responsables (id_usuario, id_rol,iduser_create) VALUES
 (1, 1,1),

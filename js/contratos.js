@@ -248,7 +248,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       showToast("¡Llene todos los campos!", "INFO");
       return;
     }
-  
+
     const params = new FormData();
     params.append("operacion", "registrarCliente");
     params.append("idPersona", idPersona);
@@ -257,7 +257,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     params.append("referencia", referencia.value);
     params.append("idUsuario", user.idUsuario);
     params.append("coordenadas", coordenada.value);
-  
+
     const response = await fetch(
       `${config.HOST}app/controllers/Cliente.controllers.php`,
       {
@@ -565,7 +565,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   async function abrirModalEditar(idContrato) {
     const modal = new bootstrap.Modal(document.getElementById("modalEditarContrato"));
     modal.show();
-  
+
     try {
       const response = await fetch(
         `${config.HOST}app/controllers/Contrato.controllers.php?operacion=buscarContratoId&id=${idContrato}`
@@ -593,10 +593,10 @@ window.addEventListener("DOMContentLoaded", async () => {
           fechaFinSpan.textContent = "No cuenta con fecha de fin";
         }
       }
-  
+
       const idServicio = JSON.parse(data[0].id_servicio).id_servicio;
       const tiposServicio = data[0].tipos_servicio.split(',').length;
-  
+
       if (tiposServicio === 2) {
         await cargarTipoServicioActualizar('duos');
         await cargarPaquetesMultiplesActualizar("duos", data[0].id_paquete);
@@ -610,26 +610,26 @@ window.addEventListener("DOMContentLoaded", async () => {
         await cargarTipoServicioActualizar(idServicio);
         await cargarPaquetesActualizar(idServicio, data[0].id_paquete);
       }
-  
+
       const slcSector = document.getElementById("slcSectorActualizar");
       const sectorId = data[0].id_sector;
       const sectorTexto = data[0].nombre_sector;
       let optionExists = false;
-  
+
       for (let i = 0; i < slcSector.options.length; i++) {
         if (slcSector.options[i].value == sectorId) {
           optionExists = true;
           break;
         }
       }
-  
+
       if (optionExists) {
         slcSector.value = sectorId;
       } else {
         const newOption = new Option(sectorTexto, sectorId, true, true);
         slcSector.add(newOption);
       }
-  
+
       $('#slcSectorActualizar').trigger('change');
       document.querySelector(".btn-close").addEventListener("click", () => {
         modal.hide();
@@ -637,7 +637,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
 
       slcPaquetes.addEventListener('change', (e) => {
-        const paqueteId = e.target.value; 
+        const paqueteId = e.target.value;
         if (paqueteId) {
           const paqueteSeleccionado = paquetesActualizar.find(p => p.id_paquete == paqueteId);
           document.getElementById("txtPrecioActualizar").value = paqueteSeleccionado ? paqueteSeleccionado.precio : '0';
@@ -645,7 +645,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       });
 
       slcPaquetes.addEventListener('change', (e) => {
-        const paqueteId = e.target.value; 
+        const paqueteId = e.target.value;
         if (paqueteId) {
           const paqueteSeleccionado = paquetesActualizar.find(p => p.id_paquete == paqueteId);
           document.getElementById("txtPrecioActualizar").value = paqueteSeleccionado ? paqueteSeleccionado.precio : '0';
@@ -671,7 +671,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         `${config.HOST}app/controllers/Servicio.controllers.php?operacion=listarServicio`
       );
       const servicios = await response.json();
-  
+
       const slcTipoServicioActualizar = document.getElementById("slcTipoServicioActualizar");
       slcTipoServicioActualizar.innerHTML = '<option value="0" disabled selected>Seleccione</option>';
       const opcionesAdicionales = [
@@ -679,14 +679,14 @@ window.addEventListener("DOMContentLoaded", async () => {
         { id_servicio: 'trios', tipo_servicio: 'Tríos' },
         { id_servicio: 'cuarteto', tipo_servicio: 'Cuarteto' }
       ];
-  
+
       opcionesAdicionales.forEach((servicio) => {
         const option = document.createElement("option");
         option.value = servicio.id_servicio;
         option.textContent = servicio.tipo_servicio;
         slcTipoServicioActualizar.appendChild(option);
       });
-  
+
       servicios.forEach((servicio) => {
         const option = document.createElement("option");
         option.value = servicio.id_servicio;
@@ -695,22 +695,22 @@ window.addEventListener("DOMContentLoaded", async () => {
       });
       slcTipoServicioActualizar.value = idServicioSeleccionado;
       $('#slcTipoServicioActualizar').trigger('change');
-  
+
     } catch (error) {
       console.error("Error al cargar los tipos de servicio:", error);
     }
   }
 
   async function cargarPaquetesActualizar(idServicio, idPaqueteSeleccionado) {
-    dataPaquetes = await fetchPaquetesPorServicioActualizar(idServicio); 
+    dataPaquetes = await fetchPaquetesPorServicioActualizar(idServicio);
     const slcPaquetes = document.getElementById("slcPaquetesActualizar");
     slcPaquetes.innerHTML = '<option value="" disabled selected>Seleccione un paquete</option>';
-  
+
     const paquetesFiltrados = dataPaquetes.filter(paquete => {
       const servicios = JSON.parse(paquete.id_servicio).id_servicio;
       return servicios.length === 1 && !paquete.inactive_at;
     });
-  
+
     if (paquetesFiltrados.length === 0) {
       const option = document.createElement("option");
       option.value = "";
@@ -725,9 +725,9 @@ window.addEventListener("DOMContentLoaded", async () => {
         slcPaquetes.appendChild(option);
       });
     }
-  
+
     slcPaquetes.value = idPaqueteSeleccionado;
-  
+
     const paqueteSeleccionado = dataPaquetes.find(p => p.id_paquete == idPaqueteSeleccionado);
     document.getElementById("txtPrecioActualizar").value = paqueteSeleccionado ? paqueteSeleccionado.precio : '0';
   }
@@ -736,10 +736,10 @@ window.addEventListener("DOMContentLoaded", async () => {
     const response = await fetch(
       `${config.HOST}app/controllers/Paquete.controllers.php?operacion=listarPaquetes`
     );
-    dataPaquetes = await response.json(); 
+    dataPaquetes = await response.json();
     const slcPaquetes = document.getElementById("slcPaquetesActualizar");
     slcPaquetes.innerHTML = '<option value="" disabled selected>Seleccione un paquete</option>';
-  
+
     let paquetesFiltrados = [];
     if (tipo === "duos") {
       paquetesFiltrados = dataPaquetes.filter(paquete => {
@@ -757,7 +757,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         return servicios.length === 4 && !paquete.inactive_at;
       });
     }
-  
+
     if (paquetesFiltrados.length === 0) {
       const option = document.createElement("option");
       option.value = "";
@@ -772,9 +772,9 @@ window.addEventListener("DOMContentLoaded", async () => {
         slcPaquetes.appendChild(option);
       });
     }
-  
+
     slcPaquetes.value = idPaqueteSeleccionado;
-  
+
     const paqueteSeleccionado = dataPaquetes.find(p => p.id_paquete == idPaqueteSeleccionado);
     document.getElementById("txtPrecioActualizar").value = paqueteSeleccionado ? paqueteSeleccionado.precio : '0';
   }
@@ -834,7 +834,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   $("#slcPaquetesActualizar").on("select2:select", function () {
     const paqueteId = slcPaquetesActualizar.value;
     const paqueteSeleccionado = dataPaquetes.find(p => p.id_paquete == paqueteId);
-  
+
     if (paqueteSeleccionado) {
       document.getElementById("txtPrecioActualizar").value = paqueteSeleccionado.precio;
     } else {
@@ -890,12 +890,10 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 
   document.querySelector("#btnBuscarCoordenadas").addEventListener("click", async () => {
-    await mapa.iniciarMapa();
-  });
-
-  document.querySelector("#btnGuardarCoordenadas").addEventListener("click", () => {
-    document.querySelector("#txtCoordenadas").value = `${mapa.marcadorMasCercano.coordenadas}`;
-    $('#ModalMapa').modal('hide');
+    const params = { cajas: true, mufas: true }
+    const id = "map"
+    const renderizado = "modal"
+    mapa.iniciarMapa(params, id, renderizado);
   });
 
   cargarServicios();
