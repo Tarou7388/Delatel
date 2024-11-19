@@ -3,30 +3,38 @@
 $idContrato = $_GET['idContrato'];
 ?>
 
+<link rel="stylesheet" href="../../css/fichaCable.css">
+
 <!-- Modal de Sintotizador -->
 <div class="modal fade" id="mdlSintotizador" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Añadir Sintotizador</h1>
+        <h1 class="modal-title fs-5" id="exampleModalLabel">
+          <i class="fas fa-plus-circle"></i> Añadir Sintotizador
+        </h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" id="mdlSintotizadorBody">
         <!-- Aquí se agregarán las cartas -->
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" id="btnAñadirSintotizador" class="btn btn-primary">Añadir</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <i class="fas fa-times"></i> Cancelar
+        </button>
+        <button type="button" id="btnAñadirSintotizador" class="btn btn-primary">
+          <i class="fas fa-check"></i> Añadir
+        </button>
       </div>
     </div>
   </div>
 </div>
 
-<div class="container-fluid px-4">
+<div class="container-fluid px-5">
   
   <div class="form-container mt-3">
 
-    <h1 class="mt-4">Formulario de Registro de Ficha de Cable</h1>
+    <h1 class="mt-4"><i class="fas fa-file-alt"></i> Formulario de Registro de Ficha de Cable</h1>
     <div class="row g-2 mb-2 justify-content-end">
       <div class="col-sm-1">
         <input type="text" class="form-control text-center" id="txtNumFicha" placeholder="N°" disabled>
@@ -40,7 +48,7 @@ $idContrato = $_GET['idContrato'];
     <div class="conteiner">
       <div class="card mb-4">
         <div class="card-header">
-          <h6 class="card-title">Cable</h6>
+          <h4 class="card-title">Cable</h4>
         </div>
         <div class="card-body">
           <div class="row g-3 mb-3">
@@ -79,10 +87,10 @@ $idContrato = $_GET['idContrato'];
               </div>
             </div>
           </div>
-          <label class="form-label mt-2">Cantidad de implementos</label>
+          <b> Cantidad de implementos</b>
           <div class="mb-3">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mdlSintotizador">
-              Añadir Sintotizador
+              <i class="fas fa-plus-circle"></i> Añadir Sintotizador
             </button>
           </div>
           <div class="row g-3 mb-3">
@@ -146,15 +154,15 @@ $idContrato = $_GET['idContrato'];
 </div>
 
 <!-- Card: Otros -->
-<div class="container-fluid px-4">
+<div class="container-fluid px-5">
   <!-- Card: Otros -->
   <div class="conteiner">
     <div class="card mb-4">
       <div class="card-header">
-        <h6 class="card-title">Otros:</h6>
+        <h4 class="card-title">Otros</h4>
       </div>
       <div class="card-body">
-        <label class="form-label mt-2">Costos</label>
+        <h5>Costos</h5>
         <div class="row g-2 mb-2">
           <div class="col-md">
             <div class="form-floating">
@@ -183,7 +191,7 @@ $idContrato = $_GET['idContrato'];
             </div>
           </div>
         </div>
-        <label class="form-label mt-2">Medición en caja NAP</label>
+        <h5> Medición en caja NAP</h5>
         <div class="row g-3 mb-3">
 
           <div class="col-md-6">
@@ -200,7 +208,7 @@ $idContrato = $_GET['idContrato'];
           </div>
 
         </div>
-        <label class="form-label mt-2">Medición en interior de casa</label>
+        <h5> Medición en interior de casa</h5>
         <div class="row g-3 mb-3">
           <div class="col-md-6">
             <div class="form-floating">
@@ -217,9 +225,13 @@ $idContrato = $_GET['idContrato'];
         </div>
         <!-- Botones -->
         <div class="row">
-          <div class="col-12 text-center text-md-end mb-3">
-            <button type="button" id="btnGuardar" class="btn btn-primary btn-sm">Guardar</button>
-            <button type="button" id="btnCancelar" class="btn btn-outline-secondary btn-sm">Cancelar</button>
+          <div class="col-12 text-center text-md-end mb-3 btn-container">
+            <button type="button" id="btnGuardar" class="btn btn-success px-4 py-2">
+              <i class="fas fa-save"></i> Guardar
+            </button>
+            <button type="button" id="btnCancelar" class="btn btn-outline-secondary px-4 py-2">
+              <i class="fas fa-times"></i> Cancelar
+            </button>
           </div>
         </div>
       </div>

@@ -28,54 +28,53 @@ $HOST = "http://localhost/DELATEL/";
           </tbody>
         </table>
 
-        <h3>Reporte Generado el día: <span class="caja-texto3 fecha-reporte"><?= $fechaActual; ?></span></h3>
+        <h3>Reporte Generado el día: <?= $fechaActual; ?></h3>
 
         <h4><img src="<?= $HOST; ?>image/iconoLista.png" class="icono" alt=""> 1) ¿QUÉ ESTÁS CONTRATANDO?</h4>
         <p><strong>DELAFIBER (DELATEL PERU)</strong>, con domicilio en Calle San Jose 103 – Grocio Prado - Chincha – Ica con RUC; se compromete a prestar el Servicio de acceso a internet fijo Postpago</p>
 
-
         <h4><img src="<?= $HOST; ?>image/iconoUsuario.png" class="icono" alt=""> 2) DATOS DEL ABONADO</h4>
-        <p>Nombre / Razón Social: </p>
-        <p><span class="caja-texto2"><b><?= $resultado[0]['NombreCliente']; ?></b></span></p>
-        <p>Tipo y Número de documento de Identificación:</p>
-        <p><span class="caja-texto2"><b><?= $resultado[0]['NumeroDocumento']; ?></b></span></p>
-        <p>Nacionalidad:</p>
-        <p><span class="caja-texto2"><b><?= $resultado[0]['Nacionalidad']; ?></b></span></p>
-        <p>Representante legal o apoderado:</p>
-        <p><span class="caja-texto2"><b><?= $resultado[0]['RepresentanteLegal']; ?></b></span></p>
-        <p>Tipo y número de documento de identificación <br> del representante legal o apoderado:</p>
-        <p><span class="caja-texto2"></span></p>
-        <p>Correo electrónico para recibir comunicaciones y recibos:</p>
-        <p><span class="caja-texto2"><b><?= $resultado[0]['Correo']; ?></b></span></p>
-        <p>Número de contacto:</p>
-        <p><span class="caja-texto2"><b><?= $resultado[0]['Telefono']; ?></b></span></p>
-        <p>Dirección de Instalación:</p>
-        <p><span class="caja-texto2"><b><?= $resultado[0]['DireccionContrato']; ?></b></span></p>
-        <p>Dirección de Facturación</p>
-        <p><span class="caja-texto2"><b><?= $resultado[0]['DireccionPersona']; ?></b></span></p>
-
+        <p><b>Nombre / Razón Social:</b></p>
+        <p><span class="caja-texto2"><?= $resultado[0]['NombreCliente']; ?></span></p>
+        <p><b>Tipo y Número de documento de Identificación:</b></p>
+        <p><span class="caja-texto2"><?= $resultado[0]['NumeroDocumento']; ?></span></p>
+        <p><b>Nacionalidad:</b></p>
+        <p><span class="caja-texto2"><?= $resultado[0]['Nacionalidad']; ?></span></p>
+        <p><b>Representante legal o apoderado:</b></p>
+        <p><span class="caja-texto2"><?= $resultado[0]['RepresentanteLegal']; ?></span></p>
+        <!-- <p>Tipo y número de documento de identificación <br> del representante legal o apoderado:</p>
+        <p><span class="caja-texto2"></span></p> -->
+        <p><b>Correo electrónico:</b></p>
+        <p><span class="caja-texto2"><?= $resultado[0]['Correo']; ?></span></p>
+        <p><b>Número de contacto:</b></p>
+        <p><span class="caja-texto2"><?= $resultado[0]['Telefono']; ?></b></span></p>
+        <p><b>Dirección de Instalación:</b></p>
+        <p><span class="caja-texto2"><?= $resultado[0]['DireccionContrato']; ?></span></p>
+        <p><b>Dirección de Facturación:</b></p>
+        <p><span class="caja-texto2"><?= $resultado[0]['DireccionPersona']; ?></span></p>
         <br>
         <h4><img src="<?= $HOST; ?>image/iconoCelular.png" class="icono" alt=""> 3) SERVICIO CONTRATADO</h4>
-        <p>Código de cliente: <b><?= $resultado[0]['IdCliente']; ?></b></p>
-        <p>Nombre del Plan tarifario: <b><?= $resultado[0]['NombrePaquete']; ?></b></p>
+        <p><b>Código de cliente:</b> <?= $resultado[0]['IdCliente']; ?></p>
+        <p><b>Nombre del Plan tarifario:</b> <?= $resultado[0]['NombrePaquete']; ?></p>
+        <p><b>Detalle del Servicio:</b> <?= $resultado[0]['nota']; ?></p>
         <strong class="radio">Nuevo Servicio <input type="checkbox" class="check"></strong>
-        <strong class="radio">Adelantado <input type="checkbox" class="check"></strong>
+        <strong class="radio">Recurrente <input type="checkbox" class="check" checked></strong>
 
       </td>
 
       <!-- Segundo Contenedor -->
       <td style="vertical-align: top; padding-left: 15px;">
         <h4><img src="<?= $HOST; ?>image/iconoLupa.png" class="icono" alt=""> 4) ¿QUÉ DEBES SABER DE TU PLAN?</h4>
-        <p>Renta Fija <input type="checkbox" class="check"> de.... <span class="caja-texto"></span></p>
+        <p>Renta Fija: $/. <?= $resultado[0]['PrecioPaquete']; ?></p>
         <p>El pago se realiza por: </p>
         <strong class="radio">Mes Vencido <input type="checkbox" class="check"></strong>
-        <strong class="radio">Mes Adelantado <input type="checkbox" class="check"></strong>
+        <strong class="radio">Mes Adelantado <input type="checkbox" class="check" checked></strong>
         <p>Costo de reconexión por falta de pago: <span class="caja-texto"></span></p>
         </p>
         <p>Último día de pago: <span class="caja-texto"></span></p>
         </p>
         <p>¿Existe plazo de permanencia?</p>
-        <strong class="radio"><input type="checkbox" class="check"> Sí, 6 meses</strong>
+        <strong class="radio"><input type="checkbox" class="check" checked> Sí, 6 meses</strong>
         <strong class="radio"><input type="checkbox" class="check"> No</strong>
         <br>
         <strong class="radio">Tarifa de Instalación:</strong>
@@ -197,6 +196,8 @@ $HOST = "http://localhost/DELATEL/";
 
         <br>
         <br>
+        <br>
+        <br>
         <table>
           <colgroup>
             <col style="width: 50%;">
@@ -207,34 +208,26 @@ $HOST = "http://localhost/DELATEL/";
           <tbody>
             <tr>
               <td>
-                <p class="label">_______________</p>
+                <p class="label" style="margin-left: 25px;">_______________</p>
               </td>
               <td>
-                <p class="label">_______________</p>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <p class="label">DELATEL</p>
-              </td>
-              <td>
-                <p class="label">ABONADO</p>
+                <p class="label" style="margin-left: 25px;">_______________</p>
               </td>
             </tr>
             <tr>
               <td>
-                <p class="text-center" style="margin-left: 50px;">Fecha: / / </p>
+                <p class="label" style="margin-left: 25px;">DELATEL</p>
               </td>
               <td>
-                <p class="text-center" style="margin-left: 50px;">Hora: / / </p>
+                <p class="label" style="margin-left: 25px;">ABONADO</p>
               </td>
             </tr>
             <tr>
               <td>
-                <p class="text-center" style="margin-left: 50px;">(dd/mm/aaaa)</p>
+                <p class="text-center" style="margin-left: 25px;">Fecha: <?= $fechaActual; ?></p>
               </td>
               <td>
-                <p class="text-center" style="margin-left: 50px;">(hh/mm/ss)</p>
+                <p class="text-center" style="margin-left: 25px;">Hora: <?= $horaActual; ?></p>
               </td>
             </tr>
           </tbody>

@@ -24,3 +24,18 @@
   color: white;
 }
 
+.btn-primary {
+  background-color: #0459ad;
+  border-color: #0459ad;
+}
+
+.btn-outline-secondary {
+  border-color: #6c757d;
+  color: #6c757d;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #6c757d;
+  color: white;
+}
+

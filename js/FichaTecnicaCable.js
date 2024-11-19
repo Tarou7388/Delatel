@@ -82,10 +82,22 @@ document.addEventListener("DOMContentLoaded", () => {
           card.className = "card mt-2";
           card.innerHTML = `
             <div class="card-body">
-                <h5 class="card-title">Sintonizador</h5>
-                <p class="card-text"><strong>Marca y Modelo:</strong> ${sintonizador.marcaModelo}</p>
-                <p class="card-text"><strong>Serie:</strong> ${sintonizador.serie}</p>
-                <button class="btn btn-danger btn-sm mt-2 btnEliminar">Eliminar</button>
+              <h5 class="card-title"><i class="fa-solid fa-desktop" style="color: #0459ad;"></i> Sintonizador</h5>
+              <p class="card-text" style="color: gray;">
+                Marca y Modelo:
+                <span style="background-color: #d3d3d3; border-radius: 10px; padding: 2px 5px; color: black;">
+                  ${sintonizador.marcaModelo}
+                </span>
+              </p>
+              <p class="card-text" style="color: gray;">
+                Serie:
+                <span style="background-color: #d3d3d3; border-radius: 10px; padding: 2px 5px; color: black;">
+                  ${sintonizador.serie}
+                </span>
+              </p>
+              <button class="btn btn-danger btn-sm mt-2 btnEliminar">
+                <i class="fas fa-times"></i> Eliminar
+              </button>
             </div>
           `;
           document.getElementById("mdlSintotizadorBody").appendChild(card);
@@ -168,7 +180,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const txtCatvNap = document.querySelector("#txtCatvNap").value;
     const txtGponCasa = document.querySelector("#txtGponCasa").value;
     const txtCatvCasa = document.querySelector("#txtCatvCasa").value;
-  
+
     const jsonCosto = {
       nap: {
         gpon: txtGponNap,
@@ -179,13 +191,13 @@ document.addEventListener("DOMContentLoaded", () => {
         catv: txtCatvCasa,
       },
     };
-  
+
     if (typeof tipoPaquete !== "undefined" && tipoPaquete === "CABL") {
       const txtCantCable = document.querySelector("#txtCantCable").value;
       const txtPrecioCable = document.querySelector("#txtPrecioCable").value;
       const txtPrecioConector = document.querySelector("#txtPrecioConector").value;
       const txtCantConector = document.querySelector("#txtCantConector").value;
-  
+
       const jsonCostoCable = {
         numerosintotizadores: parseInt(txtCantSintotizador) || 0,
         costoAlquilerSintotizador: parseFloat(txtCostoAlquiler) || 0,
@@ -196,7 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
       };
       jsonCosto.cableCosto = jsonCostoCable;
     }
-  
+
     return jsonCosto;
   }
 
@@ -231,13 +243,25 @@ document.addEventListener("DOMContentLoaded", () => {
     const card = document.createElement("div");
     card.className = "card mt-2";
     card.innerHTML = `
-            <div class="card-body">
-                <h5 class="card-title">Sintonizador</h5>
-                <p class="card-text"><strong>Marca y Modelo:</strong> ${marcaModelo}</p>
-                <p class="card-text"><strong>Serie:</strong> ${serie}</p>
-                <button class="btn btn-danger btn-sm mt-2 btnEliminar">Eliminar</button>
-            </div>
-        `;
+        <div class="card-body">
+          <h5 class="card-title"><i class="fa-solid fa-desktop" style="color: #0459ad;"></i> Sintonizador</h5>
+          <p class="card-text" style="color: gray;">
+            Marca y Modelo:
+            <span style="background-color: #d3d3d3; border-radius: 10px; padding: 2px 5px; color: black;">
+            ${marcaModelo}
+            </span>
+          </p>
+          <p class="card-text" style="color: gray;">
+            Serie:
+            <span style="background-color: #d3d3d3; border-radius: 10px; padding: 2px 5px; color: black;">
+              ${serie}
+            </span>
+          </p>
+          <button class="btn btn-danger btn-sm mt-2 btnEliminar">
+            <i class="fas fa-times"></i> Eliminar
+          </button>
+        </div>
+      `;
 
     document.getElementById("mdlSintotizadorBody").appendChild(card);
 
@@ -254,7 +278,7 @@ document.addEventListener("DOMContentLoaded", () => {
   async function guardar() {
     await cable();
     jsonCosto = await costos();
-    
+
     if (numeroSintotizadores > 0) {
       jsonCable.sintonizadores = jsonSintotizador;
     }

@@ -1,102 +1,29 @@
-/* Ajustar el ancho máximo del contenedor */
+.card-header {
+    background-color: #0459ad;
+    color: white;
+}
+
+.modal-header {
+    background-color: #0459ad;
+    color: white;
+}
+
+.btn-primary {
+    background-color: #0459ad;
+    border-color: #0459ad;
+}
+
+.btn-outline-secondary {
+    border-color: #6c757d;
+    color: #6c757d;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #6c757d;
+    color: white;
+}
+
 .container {
-    max-width: 1200px; /* Ajusta este valor según tus necesidades */
+    max-width: 1200px; 
     margin: 0 auto;
-}
-
-/* Asegurarse de que las columnas no se expandan demasiado */
-.row {
-    --bs-gutter-x: 1rem; /* Ajusta el espaciado horizontal entre columnas */
-}
-
-.col {
-    flex: 1;
-}
-
-/* Ajustes para columnas específicas */
-.col-md-6, .col-md-9 {
-    flex: 0 0 100%;
-    max-width: 100%;
-}
-
-/* Ajustar la altura de los botones en pantallas grandes */
-.btn {
-    font-size: 1rem; /* Ajusta el tamaño de la fuente del botón */
-    padding: 0.75rem 1.25rem; /* Ajusta el relleno del botón */
-}
-
-/* Asegurarse de que los inputs ocupen todo el ancho del contenedor */
-.form-control {
-    width: 100%;
-}
-
-/* Asegurarse de que los selects ocupen todo el ancho del contenedor */
-.form-select {
-    width: 100%;
-}
-
-/* Ajustar los margenes y el padding de los elementos del formulario */
-.form-label {
-    margin-bottom: 0.5rem; /* Ajusta el margen inferior del label */
-}
-
-.mb-2 {
-    margin-bottom: 1rem; /* Ajusta el margen inferior de los elementos */
-}
-
-.mt-2 {
-    margin-top: 1rem; /* Ajusta el margen superior de los elementos */
-}
-
-.card-body {
-    padding: 1.25rem; /* Ajusta el padding dentro de las tarjetas */
-}
-
-/* Ajustes para los modales */
-.modal-dialog {
-    max-width: 90%; /* Asegura que el modal no sea demasiado ancho */
-    margin: 1.75rem auto;
-}
-
-.modal-body {
-    padding: 1.25rem; /* Ajusta el padding dentro del cuerpo del modal */
-}
-
-/* Ajustar los tamaños de fuente en pantallas grandes */
-.modal-title, .card-title, h2 {
-    font-size: 1.25rem; /* Ajusta el tamaño de la fuente de los títulos */
-}
-
-/* Ajustar el espacio entre los elementos en pantallas grandes */
-.g-3 {
-    gap: 1rem; /* Ajusta el espacio entre los elementos en la grilla */
-}
-/* Estilos generales para los botones */
-.btn {
-    font-size: 1rem; /* Tamaño de fuente por defecto */
-    padding: 0.75rem 1.25rem; /* Relleno por defecto */
-    max-width: 100%; /* Ajuste del ancho al contenedor */
-    display: inline-block; /* Para que los botones se alineen en línea */
-    text-align: center; /* Alinear texto al centro */
-}
-
-/* Media Query para pantallas más grandes que 490x930 píxeles */
-@media (min-width: 490px) and (min-height: 930px) {
-    .btn {
-        max-width: 150px; /* Ancho máximo para pantallas medianas */
-    }
-}
-
-/* Media Query para pantallas más grandes que 768 píxeles de ancho */
-@media (min-width: 768px) {
-    .btn {
-        max-width: 200px; /* Ancho máximo para pantallas grandes */
-    }
-}
-
-/* Media Query para pantallas muy grandes (ejemplo) */
-@media (min-width: 1200px) {
-    .btn {
-        max-width: 250px; /* Ancho máximo para pantallas muy grandes */
-    }
 }

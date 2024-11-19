@@ -10,7 +10,9 @@ $options->set('isRemoteEnabled', true);
 
 $dompdf = new Dompdf($options);
 
+date_default_timezone_set('America/Lima');
 $fechaActual = date('d/m/Y');
+$horaActual = date('H:i:s');
 
 $contrato = new Contrato();
 $resultado = ($contrato->obtenerPDF(["id" => $_GET['id']]));

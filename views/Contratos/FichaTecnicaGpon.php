@@ -5,18 +5,24 @@ $idContrato = $_GET['idContrato'];
 <link rel="stylesheet" href="../../css/gpon.css">
 
 <div class="modal fade" id="mdlSintotizador" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered w-50">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Añadir Sintonizador</h1>
+        <h1 class="modal-title fs-5" id="exampleModalLabel">
+          <i class="fas fa-plus-circle"></i> Añadir Sintotizador
+        </h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" id="mdlSintotizadorBody">
         <!-- Aquí se agregarán las cartas -->
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" id="btnAñadirSintotizador" class="btn btn-primary">Añadir</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <i class="fas fa-times"></i> Cancelar
+        </button>
+        <button type="button" id="btnAñadirSintotizador" class="btn btn-primary">
+          <i class="fas fa-check"></i> Añadir
+        </button>
       </div>
     </div>
   </div>
@@ -26,7 +32,9 @@ $idContrato = $_GET['idContrato'];
   <div class="modal-dialog modal-dialog-centered w-50">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Añadir Repetidor</h1>
+        <h1 class="modal-title fs-5" id="exampleModalLabel">
+          <i class="fas fa-plus-circle"></i> Añadir Repetidor
+        </h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" id="mdlRepetidorBody">
@@ -48,7 +56,9 @@ $idContrato = $_GET['idContrato'];
               <input type="text" class="form-control" id="txtMarcaModeloRepetidor" placeholder="Marca - Modelo">
               <label for="lblMarcaModeloRepetidor">Marca - Modelo</label>
             </div>
-            <button class="btn btn-outline-primary" type="button" id="btnEscanearRepetidor">Escanear</button>
+            <button class="btn btn-outline-primary" type="button" id="btnEscanearRepetidor">
+              <i class="fas fa-search"></i> Escanear
+            </button>
           </div>
         </div>
         <div class="mb-2">
@@ -65,18 +75,22 @@ $idContrato = $_GET['idContrato'];
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" id="btnAñadirRepetidor" class="btn btn-primary">Guardar</button>
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+          <i class="fas fa-times"></i> Cancelar
+        </button>
+        <button type="button" id="btnAñadirRepetidor" class="btn btn-primary">
+          <i class="fas fa-check"></i> Guardar
+        </button>
       </div>
     </div>
   </div>
 </div>
 
-<div class="container-fluid px-4">
+<div class="container-fluid px-5">
 
   <div class="form-container mt-3">
 
-    <h1 class="mt-4">Formulario de Registro de Ficha Técnica</h1>
+    <h1 class="mt-4"><i class="fas fa-file-alt"></i> Formulario de Registro de Ficha Técnica</h1>
 
     <div class="row g-2 mb-2 justify-content-end">
       <div class="col-sm-1">
@@ -91,10 +105,10 @@ $idContrato = $_GET['idContrato'];
       <div class="conteiner">
         <div class="card mb-4">
           <div class="card-header">
-            <h6 class="card-title">Fibra Óptica</h6>
+            <h4 class="card-title">Fibra Óptica</h4>
           </div>
           <div class="card-body">
-            <label class="form-label">Datos del servicio</label>
+            <h5>Datos del servicio</h5>
 
             <div class="row g-3 mb-2">
               <div class="col md-6">
@@ -105,7 +119,7 @@ $idContrato = $_GET['idContrato'];
               </div>
               <div class="col md-6">
                 <div class="form-floating">
-                  <input type="text" class="form-control" id="txtClaveAcceso" disabled=true placeholder="Clave de acceso"> <!-- Crear de manera automatica -->
+                  <input type="text" class="form-control" id="txtClaveAcceso" disabled=true placeholder="Clave de acceso"> 
                   <label for="lblClaveAcceso">Clave de Acceso</label>
                 </div>
               </div>
@@ -124,7 +138,8 @@ $idContrato = $_GET['idContrato'];
                 </div>
               </div>
             </div>
-            <label class="form-label mt-2">Datos del Modén</label>
+            <h5> Datos del Modén</h5>
+
             <div class="row g-3 mb-2">
               <div class="col md-6">
                 <div class="form-floating">
@@ -145,16 +160,18 @@ $idContrato = $_GET['idContrato'];
                   <input type="text" class="form-control" id="txtMarcaModelo" placeholder="Marca - Modelo">
                   <label for="lblMarcaModelo">Marca - Modelo</label>
                 </div>
-                <button class="btn btn-outline-primary" type="button" id="btnEscanearModen">Escanear</button>
-              </div>
-            </div>
-            <div class="mb-2">
-              <div class="form-floating">
-                <input type="text" class="form-control" id="txtSerieModen" placeholder="Serie">
-                <label for="lblSerie">Serie</label>
+                <button class="btn btn-outline-primary" type="button" id="btnEscanearModen">
+                  <i class="fas fa-search"></i> Escanear
+                </button>
               </div>
             </div>
             <div class="row g-3 mb-2">
+              <div class="col md-2">
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="txtSerieModen" placeholder="Serie">
+                  <label for="lblSerie">Serie</label>
+                </div>
+              </div>
               <div class="col md-6">
                 <div class="form-floating">
                   <select type="text" class="form-select" id="slcBanda" placeholder="Banda">
@@ -165,24 +182,28 @@ $idContrato = $_GET['idContrato'];
                   <label for="">Banda</label>
                 </div>
               </div>
-              <div class="col md-6">
+              <div class="col md-9">
                 <div class="form-floating">
                   <input type="number" class="form-control" id="txtAntenas" placeholder="Antena#" min="2" max="10">
                   <label for="lblAntena">N°Antena</label>
                 </div>
               </div>
-              <div class="col md-6 form-check form-switch d-flex align-items-center">
+              <div class="col-md-3 form-check form-switch d-flex align-items-center mt-custom">
                 <input class="form-check-input" type="checkbox" id="chkCatv">
                 <label class="form-check-label" for="chkCatv">CATV</label>
               </div>
-              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mdlRepetidor">
-                Añadir Repetidor
-              </button>
+              <div class="col-12 text-start">
+                <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal" data-bs-target="#mdlRepetidor">
+                  <i class="fas fa-plus-circle"></i> Añadir Repetidor
+                </button>
+              </div>
               <div id="cardContainer" class="container mt-4" hidden=true>
                 <div class="row" id="cardsRow">
                   <!-- Aquí se añadirán las cards -->
                 </div>
-                <button class="btn btn-danger" type="button" id="eliminarRepetidor">Eliminar</button>
+                <button class="btn btn-danger" type="button" id="eliminarRepetidor">
+                  <i class="fas fa-trash"></i> Eliminar
+                </button>
               </div>
               <div class="mt-4">
                 <div class="form-floating">
@@ -198,12 +219,12 @@ $idContrato = $_GET['idContrato'];
   </div>
 </div>
 
-<div class="container-fluid px-4" id="contenidoCable">
+<div class="container-fluid px-5" id="contenidoCable">
   <!-- Card: Cable -->
   <div class="conteiner">
     <div class="card mb-4">
       <div class="card-header">
-        <h6 class="card-title">Cable</h6>
+        <h4 class="card-title">Cable</h4>
       </div>
       <div class="card-body">
         <div class="row g-2 mb-2">
@@ -230,10 +251,10 @@ $idContrato = $_GET['idContrato'];
             </div>
           </div>
         </div>
-        <label class="form-label mt-2">Cantidad de implementos</label>
+        <h5> Cantidad de implementos</h5>
         <div class="mb-3">
           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mdlSintotizador">
-            Añadir Sintonizador
+            <i class="fas fa-plus-circle"></i> Añadir Sintonizador
           </button>
         </div>
         <div class="row g-3 mb-3">
@@ -296,15 +317,15 @@ $idContrato = $_GET['idContrato'];
   </div>
 </div>
 
-<div class="container-fluid px-4" id="contenidoCable">
+<div class="container-fluid px-5" id="contenidoCable">
   <!-- Card: Otros -->
   <div class="conteiner">
     <div class="card mb-4">
       <div class="card-header">
-        <h6 class="card-title">Otros:</h6>
+        <h4 class="card-title">Otros</h4>
       </div>
       <div class="card-body">
-        <label class="form-label mt-2">Costos</label>
+        <h5>Costos</h5>
         <div class="row g-2 mb-2">
           <div class="col-md">
             <div class="form-floating">
@@ -345,7 +366,7 @@ $idContrato = $_GET['idContrato'];
             </div>
           </div>
         </div>
-        <label class="form-label mt-2">Medición en caja NAP</label>
+        <h5> Medición en caja NAP</h5>
         <div class="row g-2 mb-2">
 
           <div class="col-md">
@@ -362,7 +383,7 @@ $idContrato = $_GET['idContrato'];
           </div>
 
         </div>
-        <label class="form-label mt-2">Medición en interior de casa</label>
+        <h5> Medición en interior de casa</h5>
         <div class="row g-2 mb-2">
           <div class="col-md">
             <div class="form-floating">
@@ -379,9 +400,13 @@ $idContrato = $_GET['idContrato'];
         </div>
         <!-- Botones -->
         <div class="row">
-          <div class="col-12 text-center text-md-end mb-3">
-            <button type="button" id="btnGuardar" class="btn btn-primary btn-sm">Guardar</button>
-            <button type="button" id="btnCancelar" class="btn btn-outline-secondary btn-sm">Cancelar</button>
+          <div class="col-12 text-center text-md-end mb-3 btn-container">
+            <button type="button" id="btnGuardar" class="btn btn-success px-4 py-2">
+              <i class="fas fa-save"></i> Guardar
+            </button>
+            <button type="button" id="btnCancelar" class="btn btn-outline-secondary px-4 py-2">
+              <i class="fas fa-times"></i> Cancelar
+            </button>
           </div>
         </div>
       </div>

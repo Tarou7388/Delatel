@@ -300,6 +300,7 @@ BEGIN
         END AS Nacionalidad,
         IFNULL(e.representante_legal, '') AS RepresentanteLegal,
         pa.paquete AS NombrePaquete,
+        pa.precio AS PrecioPaquete,
         co.nota
     FROM 
         tb_contratos co
