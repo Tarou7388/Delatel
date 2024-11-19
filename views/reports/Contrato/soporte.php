@@ -15,18 +15,30 @@ $fechaActual = date('d/m/Y');
 $horaActual = date('H:i:s');
 
 $contrato = new Contrato();
-$resultado = ($contrato->obtenerPDF(["id" => $_GET['id']]));
+$resultado = $contrato->obtenerPDF(["id" => $_GET['id']]);
 
 if (empty($resultado)) {
   echo '<script>alert("No se encontraron registros para el producto seleccionado.");</script>';
   exit;
 }
 
+
+$nombreCliente = $resultado[0]['NombreCliente'];
+$nombreArchivo = $nombreCliente . '.pdf';
+
+
+$nombreArchivo = preg_replace('/[^A-Za-z0-9_\-ñÑ]/', '_', $nombreArchivo);
+
 ob_start();
 include 'contenidoPDF.php';
 include 'estilosPDF.html';
 $content = ob_get_clean();
 
+if ($content === false) {
+  echo '<script>alert("Error al generar el contenido del PDF.");</script>';
+  exit;
+}
+
 $dompdf->loadHtml($content);
 $dompdf->render();
-$dompdf->stream("delatel.pdf", array('Attachment' => 0));
+$dompdf->stream($nombreArchivo, array('Attachment' => 0));

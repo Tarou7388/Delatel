@@ -20,7 +20,7 @@ $HOST = "http://localhost/DELATEL/";
           <thead></thead>
           <tbody>
             <tr>
-              <td><img src="<?= $HOST; ?>image/logo.png" class="logo" alt="Logo"></td>
+              <td><img src="<?= $HOST; ?>image/Logo_Empresa_Delatel.svg" class="logo" alt="Logo"></td>
               <td>
                 <h3 style="margin: 10px 0; flex-grow: 1;">CONTRATO DE PRESTACIÓN DEL SERVICIO DE ACCESO A INTERNET FIJO POSTPAGO</h3>
               </td>

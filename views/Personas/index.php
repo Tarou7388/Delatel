@@ -119,7 +119,7 @@
 					<div class="col-md-6">
 						<div class="input-group">
 							<div class="form-floating">
-								<input type="text" class="form-control" id="txtCoordenadas" placeholder="Referencia" required disabled>
+								<input type="text" class="form-control" id="txtCoordenadas" placeholder="Referencia" required>
 								<label for="txtCoordenadas">Coordenadas</label>
 							</div>
 							<button class="btn btn-primary" type="button" id="btnBuscarCoordenadasEmpresa" data-toggle="modal" data-target="#ModalMapa"><i class="fa-solid fa-magnifying-glass"></i></button>
@@ -146,7 +146,7 @@
 				<div class="row mb-3">
 					<div class="col-md-4">
 						<div class="form-floating">
-							<select class="form-select" id="slcTipoDocumento" aria-label="Tipo de Documento">
+							<select class="form-select" id="slcTipoDocumento" aria-label="Tipo de Documento" disabled>
 								<option value="" disabled selected>Seleccione</option>
 								<option value="DNI">DNI</option>
 								<option value="CAR">Carnét de Extranjería</option>

@@ -294,7 +294,7 @@ BEGIN
         cl.direccion AS DireccionPersona,
         co.direccion_servicio AS DireccionContrato,
         CASE 
-            WHEN e.ruc IS NOT NULL THEN e.ruc
+            WHEN e.ruc IS NOT NULL THEN 'Empresa Peruana'
             WHEN LENGTH(p.nro_doc) = 8 THEN 'Peruano'
             ELSE 'Extranjero'
         END AS Nacionalidad,
