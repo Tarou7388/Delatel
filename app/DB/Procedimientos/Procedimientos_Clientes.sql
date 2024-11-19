@@ -191,3 +191,20 @@ BEGIN
 END $$
 
 DELIMITER ;
+
+DROP PROCEDURE IF EXISTS spu_buscar_datos_cliente_id$$
+
+CREATE PROCEDURE spu_buscar_datos_cliente_id(
+    p_id_cliente INT
+)
+SELECT 
+    c.id_cliente,
+    c.direccion,
+    c.referencia,
+    c.coordenadas,
+    CONCAT(p.apellidos, ', ', p.nombres) AS nombre,
+    p.email,
+    p.telefono
+FROM
+    INNER JOIN tb_personas p ON c.id_persona = p.id_persona
+    INNER JOIN tb_cliente c on c.id_cliente = p.id_cliente
