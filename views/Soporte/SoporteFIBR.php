@@ -27,20 +27,26 @@
         <h5>Datos del Usuario</h5>
         <div class="row g-2 mb-2">
           <div class="col-md">
-            <label>Número Identificador</label>
             <div class="input-group">
-              <input type="text" class="form-control" maxlength="12" minlength="8" id="txtNrodocumento" disabled>
+              <div class="form-floating">
+                <input type="text" class="form-control" maxlength="12" minlength="8" id="txtNrodocumento" placeholder="a" disabled>
+                <label>Número Identificador</label>
+              </div>
             </div>
           </div>
 
           <div class="col-md">
-            <label>Cliente</label>
-            <input type="text" class="form-control" id="txtCliente" disabled>
+            <div class="form-floating">
+              <input type="text" class="form-control" id="txtCliente" placeholder="a" disabled>
+              <label>Cliente</label>
+            </div>
           </div>
 
           <div class="col-md">
-            <label>Plan</label>
-            <input type="text" class="form-control" id="txtPlan" disabled>
+            <div class="form-floating">
+              <input type="text" class="form-control" id="txtPlan" placeholder="a" disabled>
+              <label>Plan</label>
+            </div>
           </div>
 
         </div> <!-- Fin de la Primera Fila -->
@@ -50,40 +56,51 @@
         <!-- Segunda Fila -->
         <h5>Parámetros Técnicos</h5>
         <div class="row g-2 mb-2">
+          <div class="col-md">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="txtPppoe" placeholder="a" required>
+              <label for="txtPppoe">PPPoE</label>
+            </div>
+          </div>
 
           <div class="col-md">
-            <label>PPPoE</label>
-            <input type="text" class="form-control" id="txtPppoe" required>
+            <div class="form-floating">
+              <input type="number" class="form-control" id="txtPotenciaDos" placeholder="a" required>
+              <label for="txtPotenciaDos">Potencia</label>
+            </div>
           </div>
 
-          <div class="col-md">
-            <label>Potencia</label>
-            <input type="number" class="form-control" id="txtPotenciaDos" required>
+          <div class="col-md d-flex align-items-center">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="chkCatv">
+              <label class="form-check-label" for="chkCatv">CATV</label>
+            </div>
           </div>
-
-          <div class="col md-6 form-check form-switch d-flex align-items-center">
-            <input class="form-check-input ms-5" type="checkbox" id="chkCatv">
-            <label class="form-check-label" for="chkCatv">CATV</label>
-          </div>
-
-        </div> <!-- Fin de la Segunda Fila -->
+        </div>
+        <!-- Fin de la Segunda Fila -->
 
         <!-- Tercera Fila -->
         <div class="row g-2 mb-2">
 
           <div class="col-md">
-            <label>Clave</label>
-            <input type="text" class="form-control" id="txtClave" required>
+            <div class="form-floating">
+              <input type="text" class="form-control" id="txtClave" placeholder="A" required>
+              <label>Clave</label>
+            </div>
           </div>
 
           <div class="col-md">
-            <label>VLAN</label>
-            <input type="number" class="form-control" id="txtVlan" required>
+            <div class="form-floating">
+              <input type="number" class="form-control" id="txtVlan" placeholder="A" required>
+              <label>VLAN</label>
+            </div>
           </div>
 
           <div class="col-md">
-            <label>Potencia</label>
-            <input type="number" class="form-control" id="txtPotencia" required>
+            <div class="form-floating">
+              <input type="number" class="form-control" id="txtPotencia" placeholder="A" required>
+              <label>Potencia</label>
+            </div>
           </div> <!-- Fin de Tercera Fila -->
 
         </div>
@@ -92,25 +109,33 @@
         <div class="row g-2 mb-2">
 
           <div class="col-md">
-            <label>SSID</label>
-            <input type="text" class="form-control" id="txtSsid" required>
+            <div class="form-floating">
+              <input type="text" class="form-control" id="txtSsid" placeholder="A" required>
+              <label>SSID</label>
+            </div>
           </div>
 
           <div class="col-md">
-            <label>Password</label>
-            <input type="text" class="form-control" id="txtPass" required>
+            <div class="form-floating">
+              <input type="text" class="form-control" id="txtPass" placeholder="A" required>
+              <label>Password</label>
+            </div>
           </div>
 
           <div class="col-md">
-            <label>Otros</label>
-            <input type="text" class="form-control" id="txtOtros" required>
+            <div class="form-floating">
+              <input type="text" class="form-control" id="txtOtros" placeholder="A" required>
+              <label>Otros</label>
+            </div>
           </div>
 
         </div>
         <div>
           <div class="col-md">
-            <label>Estado Inicial</label>
-            <textarea type="text" class="form-control" id="txtaEstadoInicial" style="height: 100px" required></textarea>
+            <div class="form-floating">
+              <textarea type="text" class="form-control" id="txtaEstadoInicial" style="height: 100px" placeholder="A" required></textarea>
+              <label>Estado Inicial</label>
+            </div>
           </div>
         </div> <!-- Fin de Cuarta Fila -->
 
@@ -122,18 +147,24 @@
         <div class="row g-2 mb-2">
 
           <div class="col-md">
-            <label>PPPoE</label>
-            <input type="text" class="form-control" id="txtCambiosPppoe" required>
+            <div class="form-floating">
+              <input type="text" class="form-control" id="txtCambiosPppoe" placeholder="A" required>
+              <label>PPPoE</label>
+            </div>
           </div>
 
           <div class="col-md">
-            <label>Potencia</label>
-            <input type="number" class="form-control" id="txtCambiosPotenciaDos" required>
+            <div class="form-floating">
+              <input type="number" class="form-control" id="txtCambiosPotenciaDos" placeholder="A" required>
+              <label>Potencia</label>
+            </div>
           </div>
 
           <div class="col-md">
-            <label>CATV</label>
-            <input type="text" class="form-control" id="txtCambiosCatv" placeholder="SI/NO" required>
+            <div class="form-floating">
+              <input type="text" class="form-control" id="txtCambiosCatv" placeholder="SI/NO" required>
+              <label>CATV</label>
+            </div>
           </div>
           <div class="col md-6 form-check form-switch d-flex align-items-center">
             <input class="form-check-input ms-5" type="checkbox" id="chkCambiosCatv">
@@ -146,18 +177,24 @@
         <div class="row g-2 mb-2">
 
           <div class="col-md">
-            <label>Clave</label>
-            <input type="text" class="form-control" id="txtCambiosClave" required>
+            <div class="form-floating">
+              <input type="text" class="form-control" id="txtCambiosClave" placeholder="A" required>
+              <label>Clave</label>
+            </div>
           </div>
 
           <div class="col-md">
-            <label>VLAN</label>
-            <input type="number" class="form-control" id="txtCambiosVlan" required>
+            <div class="form-floating">
+              <input type="number" class="form-control" id="txtCambiosVlan" placeholder="A" required>
+              <label>VLAN</label>
+            </div>
           </div>
 
           <div class="col-md">
-            <label>Potencia</label>
-            <input type="number" class="form-control" id="txtCambiosPotencia" required>
+            <div class="form-floating">
+              <input type="number" class="form-control" id="txtCambiosPotencia" placeholder="A" required>
+              <label>Potencia</label>
+            </div>
           </div> <!-- Fin de la Segunda Fila -->
 
         </div>
@@ -166,26 +203,34 @@
         <div class="row g-2 mb-2">
 
           <div class="col-md">
-            <label>SSID</label>
-            <input type="text" class="form-control" id="txtCambiosSsid" required>
+            <div class="form-floating">
+              <input type="text" class="form-control" id="txtCambiosSsid" placeholder="A" required>
+              <label>SSID</label>
+            </div>
           </div>
 
           <div class="col-md">
-            <label>Password</label>
-            <input type="text" class="form-control" id="txtCambiosPass" required>
+            <div class="form-floating">
+              <input type="text" class="form-control" id="txtCambiosPass" placeholder="A" required>
+              <label>Password</label>
+            </div>
           </div>
 
           <div class="col-md">
-            <label>Otros</label>
-            <input type="text" class="form-control" id="txtCambiosOtros" required>
+            <div class="form-floating">
+              <input type="text" class="form-control" id="txtCambiosOtros" placeholder="A" required>
+              <label>Otros</label>
+            </div>
           </div>
 
         </div>
 
         <div>
           <div class="col-md">
-            <label>Procedimiento de Solución</label>
-            <textarea type="text" class="form-control" id="txtaCambiosProceSolucion" style="height: 100px" required></textarea>
+            <div class="form-floating">
+              <textarea type="text" class="form-control" id="txtaCambiosProceSolucion" style="height: 100px" placeholder="A" required></textarea>
+              <label>Procedimiento de Solución</label>
+            </div>
           </div>
         </div> <!-- Fin de la Tercera Fila -->
 
