@@ -64,48 +64,48 @@ window.addEventListener("DOMContentLoaded", async () => {
       boton.textContent = "Permisos";
       tdBoton.appendChild(boton);
       tr.appendChild(tdBoton);
-  
+
       const tdAcciones = document.createElement("td");
-  
+
       // Botón Actualizar
       const botonActualizar = document.createElement("button");
       botonActualizar.setAttribute("class", "btnActualizar btn btn-warning me-2");
       botonActualizar.setAttribute("data-idRol", element.id_rol);
-  
+
       const iconoLapiz = document.createElement("i");
       iconoLapiz.setAttribute("class", "fa-regular fa-pen-to-square");
       iconoLapiz.style.pointerEvents = "none";
-  
+
       botonActualizar.appendChild(iconoLapiz);
-  
+
       // Botón Eliminar
       const botonInhabilitar = document.createElement("button");
       botonInhabilitar.setAttribute("class", "btnInhabilitar btn btn-danger me-2");
       botonInhabilitar.setAttribute("data-idRol", element.id_rol);
-  
+
       const iconoEliminar = document.createElement("i");
       iconoEliminar.setAttribute("class", "fa-regular fa-trash-can");
       iconoEliminar.style.pointerEvents = "none";
-  
+
       botonInhabilitar.appendChild(iconoEliminar);
-  
+
       // Botón Activar
       const botonActivar = document.createElement("button");
       botonActivar.setAttribute("class", "btnActivar btn btn-success");
       botonActivar.setAttribute("data-idRol", element.id_rol);
-  
+
       const iconoActivar = document.createElement("i");
       iconoActivar.setAttribute("class", "fa-solid fa-check");
       iconoActivar.style.pointerEvents = "none";
-  
+
       botonActivar.appendChild(iconoActivar);
-  
+
       // Agregar botones a la columna de acciones
       tdAcciones.appendChild(botonActualizar);
       tdAcciones.appendChild(botonInhabilitar);
       tdAcciones.appendChild(botonActivar);
       tr.appendChild(tdAcciones);
-  
+
       // Deshabilitar otros botones si el registro está deshabilitado
       if (element.inactive_at !== null) {
         boton.disabled = true;
@@ -115,7 +115,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       } else {
         botonActivar.disabled = true;
       }
-  
+
       tbody.appendChild(tr);
     });
     permisosBoton(".btnPermisos");
@@ -154,19 +154,27 @@ window.addEventListener("DOMContentLoaded", async () => {
   async function registrarRoles() {
     if (accesos?.roles?.crear) {
       const json = await obtenerJsonPermisos();
-  
+
       if (!rol.value.trim()) {
         showToast("El campo Rol no puede estar vacío", "WARNING", 1500);
         return;
       }
-  
+
+      // Verificar si el rol ya existe
+      const rolesExistentes = await fetch(`${config.HOST}app/controllers/Rol.controllers.php?operacion=listarRoles`);
+      const roles = await rolesExistentes.json();
+      if (roles.some(r => r.rol.toLowerCase() === rol.value.trim().toLowerCase())) {
+        showToast("El rol ya existe", "INFO", 1500);
+        return;
+      }
+
       const datos = {
         operacion: "registrarRoles",
         rol: rol.value,
         permisos: json,
         idUsuario: userid,
       };
-  
+
       try {
         const respuesta = await fetch(
           `${config.HOST}app/controllers/Rol.controllers.php`,
@@ -175,13 +183,13 @@ window.addEventListener("DOMContentLoaded", async () => {
             body: JSON.stringify(datos),
           }
         );
-  
+
         if (!respuesta.ok) {
           throw new Error(`Error ${respuesta.status}: ${respuesta.statusText}`);
         }
-  
+
         const data = await respuesta.json();
-  
+
         if (data.guardado) {
           showToast("El rol se ha agregado exitosamente", "SUCCESS", 1500);
           location.reload();
@@ -201,6 +209,14 @@ window.addEventListener("DOMContentLoaded", async () => {
     if (accesos?.roles?.actualizar) {
       if (!rol.value.trim()) {
         showToast("El campo Rol no puede estar vacío", "WARNING", 1500);
+        return;
+      }
+
+      // Verificar si el rol ya existe
+      const rolesExistentes = await fetch(`${config.HOST}app/controllers/Rol.controllers.php?operacion=listarRoles`);
+      const roles = await rolesExistentes.json();
+      if (roles.some(r => r.rol.toLowerCase() === rol.value.trim().toLowerCase() && r.id_rol !== idRolActual)) {
+        showToast("El rol ya existe", "INFO", 1500);
         return;
       }
 
