@@ -27,20 +27,24 @@
         <h5>Datos del Usuario</h5>
         <div class="row g-2 mb-2">
           <div class="col-md">
-            <label>Número Identificador</label>
-            <div class="input-group">
-              <input type="text" class="form-control" maxlength="12" minlength="8" id="txtNrodocumento" disabled required>
+            <div class="form-floating">
+              <input type="text" class="form-control" maxlength="12" minlength="8" id="txtNrodocumento" placeholder="a" disabled>
+              <label>Número Identificador</label>
             </div>
           </div>
 
           <div class="col-md">
-            <label>Cliente</label>
-            <input type="text" class="form-control" id="txtCliente" disabled required>
+            <div class="form-floating">
+              <input type="text" class="form-control" id="txtCliente" placeholder="a" disabled>
+              <label>Cliente</label>
+            </div>
           </div>
 
           <div class="col-md">
-            <label>Plan</label>
-            <input type="text" class="form-control" id="txtPlan" disabled required>
+            <div class="form-floating">
+              <input type="text" class="form-control" id="txtPlan" placeholder="a" disabled>
+              <label>Plan</label>
+            </div>
           </div>
         </div>
         <hr>
@@ -143,7 +147,7 @@
           <div class="col-md">
             <div class="form-floating">
               <select class="form-select" id="slcPeriodoCambio" aria-label="Selecciona una opción" required>
-                <option value=""  selected disabled>Elige una opción</option>
+                <option value="" selected disabled>Elige una opción</option>
                 <option value="1">Mensual</option>
                 <option value="2">Contado</option>
               </select>
@@ -189,7 +193,7 @@
                 <label>Spliter</label>
               </div>
               <select class="form-select" id="slcSpliterCambio" aria-label="Selecciona una opción" required>
-                <option  value="" selected disabled>Elige una opción</option>
+                <option value="" selected disabled>Elige una opción</option>
                 <option value="1">1x3</option>
                 <option value="2">1x5</option>
                 <option value="3">1x8</option>
