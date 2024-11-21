@@ -166,4 +166,13 @@ class Cliente extends Conexion
         );
         return $this->consultaParametros($sql, $values);
     }
+
+    public function buscarClientebyIdPersona($params = [])
+    {
+        $sql = "CALL spu_buscar_datos_cliente_idpersona(?)";
+        $values = array(
+            $params['idPersona']
+        );
+        return $this->consultaParametros($sql, $values);
+    }
 }

@@ -1,6 +1,6 @@
 <?php
 require '../../../vendor/autoload.php';
-require_once '../../../app/models/Contrato.php';
+require_once '../../../app/models/Cliente.php';
 
 //extensiones de dompdf
 use Dompdf\Dompdf;
@@ -19,8 +19,8 @@ $fechaActual = date('d/m/Y');
 $horaActual = date('H:i:s');
 
 //obtener datos del contrato
-$contrato = new Contrato();
-$resultado = ($contrato->obtenerPDF(["id" => $_GET['id']]));
+$cliente = new Cliente();
+$resultado = ($cliente->buscarClientebyIdPersona(["id" => $_GET['idPersona']]));
 
 //si no se encuentra el contrato
 if (empty($resultado)) {
@@ -37,4 +37,4 @@ $content = ob_get_clean();
 //nombre del documento
 $dompdf->loadHtml($content);
 $dompdf->render();
-$dompdf->stream("delatel.pdf", array('Attachment' => 0));
+$dompdf->stream("persona.pdf", array('Attachment' => 0));
