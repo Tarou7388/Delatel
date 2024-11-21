@@ -51,32 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
       detalleButton.setAttribute("data-bs-toggle", "modal");
       detalleButton.setAttribute("data-bs-target", "#detallePersona");
       detalleButton.onclick = () => {
-        // Asigna los datos al modal
-        document.querySelector("#nombrePersona").textContent = cliente.nombre_cliente;
-        document.querySelector(".modal-body").innerHTML = `
-          <table style="width: 100%; border-collapse: collapse;">
-            <tr>
-              <td style="font-weight: bold; padding: 5px;">Número de Documento:</td>
-              <td style="padding: 5px;">${cliente.codigo_cliente || "No disponible"}</td>
-            </tr>
-            <tr>
-              <td style="font-weight: bold; padding: 5px;">Correo electrónico:</td>
-              <td style="padding: 5px;">${cliente.email_cliente || "No disponible"}</td>
-            </tr>
-            <tr>
-              <td style="font-weight: bold; padding: 5px;">Número de contacto:</td>
-              <td style="padding: 5px;">${cliente.telefono_cliente || "No disponible"}</td>
-            </tr>
-            <tr>
-              <td style="font-weight: bold; padding: 5px;">Dirección:</td>
-              <td style="padding: 5px;">${cliente.direccion_cliente || "No disponible"}</td>
-            </tr>
-            <tr>
-              <td style="font-weight: bold; padding: 5px;">Coordenadas:</td>
-              <td style="padding: 5px;">${cliente.coordenadas_cliente || "No disponible"}</td>
-            </tr>
-          </table>
-        `;
+        window.location.href = `${config.HOST}views/reports/Persona/personas.php?id=${cliente.id_cliente}`;
       };
 
       cellDetalle.appendChild(detalleButton);

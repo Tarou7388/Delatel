@@ -23,16 +23,28 @@ $HOST = "http://localhost/DELATEL/";
       <tr>
         <td><?php echo $persona['nombre']; ?></td>
         <td><?php echo $persona['apellido']; ?></td>
+      </tr>
+      <tr>
         <td><?php echo $persona['correo']; ?></td>
         <td><?php echo $persona['telefono']; ?></td>
+      </tr>
+      <tr>
         <td><?php echo $persona['fecha_nacimiento']; ?></td>
         <td><?php echo $persona['genero']; ?></td>
+      </tr>
+      <tr>
         <td><?php echo $persona['estado_civil']; ?></td>
         <td><?php echo $persona['departamento']; ?></td>
+      </tr>
+      <tr>
         <td><?php echo $persona['provincia']; ?></td>
         <td><?php echo $persona['distrito']; ?></td>
+      </tr>
+      <tr>
         <td><?php echo $persona['direccion']; ?></td>
         <td><?php echo $persona['referencia']; ?></td>
+      </tr>
+      <tr>
         <td><?php echo $persona['fecha_registro']; ?></td>
       </tr>
     <?php
