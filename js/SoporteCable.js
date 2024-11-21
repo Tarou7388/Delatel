@@ -103,15 +103,13 @@ document.addEventListener("DOMContentLoaded", () => {
           if (averias.length === 0) {
             showToast("No tienes ninguna avería", "INFO");
           } else {
-            const averia = averias[0]; // Asumimos que solo obtienes una avería por contrato
+            const averia = averias[0];
             const soporteData = JSON.parse(averia.soporte);
 
-            // Asignar valores a los campos de "Datos del Cliente"
             document.getElementById("txtNrodocumento").value = averia.id_soporte;
             document.getElementById("txtCliente").value = averia;
             document.getElementById("txtFecha").value = averia.fecha_hora_solicitud.split(" ")[0];
 
-            // Parámetros Técnicos
             document.getElementById("slcPeriodo").value = soporteData.parametroscable.periodo[0];
             document.getElementById("txtPotencia").value = soporteData.parametroscable.potencia;
             document.getElementById("txtSintonizador").value = soporteData.parametroscable.sintonizador;
@@ -122,10 +120,8 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("txtCable").value = soporteData.parametroscable.cable;
             document.getElementById("txtConector").value = soporteData.parametroscable.conectores;
 
-            // Estado Inicial
             document.getElementById("txtaEstadoInicial").value = averia.descripcion_solucion;
 
-            // Cambios Técnicos
             document.getElementById("slcPeriodo").value = soporteData.cambioscable.periodo[0];
             document.getElementById("txtPotencia").value = soporteData.cambioscable.potencia;
             document.getElementById("txtSintonizador").value = soporteData.cambioscable.sintonizador;
@@ -136,7 +132,6 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("txtCable").value = soporteData.cambioscable.cable;
             document.getElementById("txtConector").value = soporteData.cambioscable.conectores;
 
-            // Procedimiento de Solución
             document.getElementById("txtaProceSolucion").value = averia.descripcion_solucion;
           }
         } catch (error) {

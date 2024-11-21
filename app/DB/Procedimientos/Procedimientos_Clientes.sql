@@ -190,7 +190,7 @@ BEGIN
     );
 END $$
 
-DELIMITER ;
+DELIMITER $$
 
 DROP PROCEDURE IF EXISTS spu_buscar_datos_cliente_id$$
 
@@ -206,7 +206,7 @@ BEGIN
             e.nombre_comercial
         ) AS nombre_cliente,
         COALESCE(p.nro_doc, e.ruc) AS identificador_cliente,
-        COALESCE(p.nacionalidad) AS nacionalidad,
+        p.nacionalidad,  -- no COALESCE if you don't need a default value for nacionalidad
         p.tipo_doc,
         COALESCE(p.telefono, e.telefono) AS telefono,
         COALESCE(p.email, e.email) AS email,
@@ -219,4 +219,6 @@ BEGIN
         LEFT JOIN tb_empresas e ON c.id_empresa = e.id_empresa
     WHERE
         c.id_cliente = p_id_cliente;
-END
+END$$
+
+DELIMITER ;

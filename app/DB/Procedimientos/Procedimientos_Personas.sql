@@ -1,3 +1,4 @@
+
 USE Delatel;
 
 DELIMITER $$
@@ -101,19 +102,18 @@ CREATE PROCEDURE spu_persona_cliente_existencia(
     IN p_dni VARCHAR(15)
 )
 BEGIN
-    SELECT p.id_persona, p.nombres, p.apellidos, c.id_cliente FROM
-    tb_personas p LEFT JOIN tb_clientes c ON p.id_persona = c.id_persona
+    SELECT p.id_persona, p.nombres, p.apellidos, c.id_cliente 
+    FROM tb_personas p 
+    LEFT JOIN tb_clientes c ON p.id_persona = c.id_persona
     WHERE p.nro_doc = p_dni;
 END $$
 
-DELIMITER ;
-
 DROP PROCEDURE IF EXISTS spu_personas_listar_por_id$$
-
 CREATE PROCEDURE spu_personas_listar_por_id(
     IN p_id_persona INT
 )
 BEGIN
     SELECT * FROM tb_personas WHERE id_persona = p_id_persona;
-END
+END $$
 
+DELIMITER ;

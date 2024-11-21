@@ -165,6 +165,7 @@ window.addEventListener('DOMContentLoaded', function () {
     event.preventDefault();
     if (await ask("¿Desea Registrar esta incidencia?")) {
       await registrarIncidencia();
+      formIncidencia.reset();
     }
   });
 

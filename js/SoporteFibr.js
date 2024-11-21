@@ -187,7 +187,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const result = await response.json();
       if (result.status === "success") {
         console.log("Soporte actualizado correctamente.");
-
+        
       } else {
         console.error("Error al guardar soporte:", result.message);
       }

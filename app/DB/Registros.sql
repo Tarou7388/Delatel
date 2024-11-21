@@ -287,7 +287,7 @@ INSERT INTO tb_mufas (id_sector, nombre, descripcion, coordenadas, direccion, cr
 (11, 'Mufa 1', 'Cerca del estadio', '-13.41287751332741, -76.15387988372802', 'Av 123', NOW(), 1),
 (19, 'Mufa 2', 'Plaza san Isidro', '-13.429027241634715, -76.14961981773376', 'Av 123456', NOW(), 1),
 (6, 'Mufa 3', 'Cerca de la Plaza', '-13.404169746696624, -76.12736834665132', 'Av 123', NOW(), 1),
-(6, 'Mufa 4', 'San Nicolas', '-13.42830253845429, -76.12306531088652', 'Av 123456', NOW(), 1)
+(6, 'Mufa 4', 'San Nicolas', '-13.42830253845429, -76.12306531088652', 'Av 123456', NOW(), 1);
 
 INSERT INTO tb_cajas(nombre, descripcion, numero_entradas, id_mufa, coordenadas, iduser_create) VALUES
 ('Caja 1', 'Cerca del estadio', 16, 1, '-13.390019838079903, -76.14898062581466', 1),
