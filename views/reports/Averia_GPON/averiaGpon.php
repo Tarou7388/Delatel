@@ -1,25 +1,26 @@
 <?php
-$HOST = "http://localhost/DELATEL"; 
+$HOST = "http://localhost/DELATEL";
 ?>
 
 <img src="<?= $HOST ?>/image/headerAveriaGpon.png" class="image-header">
 
 <div>
-  <table style="margin-bottom:20px;">
+
+  <table class="tabla2">
     <tbody>
       <tr>
-        <td style="width: 756px;">
-          <span class="input" style="margin-right: 170px;"></span>
-          Fecha: 
-          <span class="input" style="margin-left: 20px;"></span>
-        </td> 
+        <td class="text-center">N°:</td>
+        <td></td>
+        <td class="text-center">Fecha:</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
+
 </div>
 
 <div>
-  <table class="tabla2" style="margin-bottom:150px;">
+  <table class="tabla2">
     <thead>
       <tr>
         <td colspan="4" class="text-center thead-cabecera"><strong>DATOS DEL USUARIO</strong></td>
@@ -43,20 +44,20 @@ $HOST = "http://localhost/DELATEL";
         <td></td>
       </tr>
       <tr>
-        <td rowspan="3" class="text-center">PLAN:</td>
-        <td rowspan="3" colspan="3"></td>
+        <td class="text-center">PLAN:</td>
+        <td></td>
+        <td class="text-center">OTROS:</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
 </div>
 
-<br>
-
 <div>
   <table class="tabla2">
     <thead>
       <tr>
-        <td colspan="6" class="text-center thead-cabecera"><strong>PARAMETROS TECNICOS</strong></td>
+        <td colspan="2" class="text-center thead-cabecera"><strong>PARAMETROS TECNICOS</strong></td>
       </tr>
     </thead>
     <tbody>
@@ -88,19 +89,17 @@ $HOST = "http://localhost/DELATEL";
         <td colspan="6" class="text-center thead-cabecera-2">ESTADO INICIAL</td>
       </tr>
       <tr>
-        <td rowspan="20" colspan="6"></td>
+        <td rowspan="10" colspan="6"></td>
       </tr>
     </tbody>
   </table>
 </div>
 
-<br>
-
 <div>
-  <table class="tabla2" style="margin-bottom:100px;">
+  <table class="tabla2">
     <thead>
       <tr>
-        <td colspan="6" class="text-center thead-cabecera"><strong>CAMBIOS TECNICOS GPON</strong></td>
+        <td colspan="2" class="text-center thead-cabecera"><strong>CAMBIOS TECNICOS GPON</strong></td>
       </tr>
     </thead>
     <tbody>
@@ -113,6 +112,14 @@ $HOST = "http://localhost/DELATEL";
         <td></td>
       </tr>
       <tr>
+        <td class="text-center">CLAVE:</td>
+        <td></td>
+        <td class="text-center">VLAN:</td>
+        <td></td>
+        <td class="text-center">POTENCIA:</td>
+        <td></td>
+      </tr>
+      <tr>
         <td class="text-center">SSID:</td>
         <td></td>
         <td class="text-center">PASSWORD:</td>
@@ -121,16 +128,14 @@ $HOST = "http://localhost/DELATEL";
         <td></td>
       </tr>
       <tr>
-        <td colspan="6" class="text-center thead-cabecera-6">PROCEDIMIENTO DE SOLUCIÓN</td>
+        <td colspan="6" class="text-center thead-cabecera">PROCEDIMIENTO DE SOLUCIÓN</td>
       </tr>
       <tr>
-        <td rowspan="20" colspan="6"></td>
+        <td rowspan="10" colspan="6"></td>
       </tr>
     </tbody>
   </table>
 </div>
-
-<br>
 
 <div>
   <table class="tabla2">
@@ -145,18 +150,18 @@ $HOST = "http://localhost/DELATEL";
   </table>
 </div>
 
-<br>
-
 <div>
-  <table class="tabla2">
+  <table style="margin-top:50px; width: 100%;">
     <tbody>
       <tr>
-        <td><p class="text-center">V°B° CLIENTE</p></td>
-        <td><p class="text-center">TECNICO</p></td>
-      </tr>
-      <tr>
-        <td rowspan="8"><p class="text-center">_________________________________</p></td>
-        <td rowspan="8"><p class="text-center">_________________________________</p></td> 
+        <td class="no-border">
+          <span style="display: block;">__________________________</span>
+          <span>V°B° CLIENTE</span>
+        </td>
+        <td class="no-border">
+          <span style="display: block;">__________________________</span>
+          <span>TECNICO</span>
+        </td>
       </tr>
     </tbody>
   </table>

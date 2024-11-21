@@ -11,7 +11,7 @@ $HOST = "http://localhost/DELATEL/";
   <tbody>
     <tr>
       <!-- Primer Contenedor -->
-      <td style="vertical-align: top; padding-right: 15px;">
+      <td style="vertical-align: top; padding-right: 5px;">
         <table>
           <colgroup>
             <col style="width: 50%;">
@@ -52,6 +52,7 @@ $HOST = "http://localhost/DELATEL/";
         <p><span class="caja-texto2"><?= $resultado[0]['DireccionContrato']; ?></span></p>
         <p><b>Dirección de Facturación:</b></p>
         <p><span class="caja-texto2"><?= $resultado[0]['DireccionPersona']; ?></span></p>
+
         <br>
         <h4><img src="<?= $HOST; ?>image/iconoCelular.png" class="icono" alt=""> 3) SERVICIO CONTRATADO</h4>
         <p><b>Código de cliente:</b> <?= $resultado[0]['IdCliente']; ?></p>
@@ -63,7 +64,7 @@ $HOST = "http://localhost/DELATEL/";
       </td>
 
       <!-- Segundo Contenedor -->
-      <td style="vertical-align: top; padding-left: 15px;">
+      <td style="vertical-align: top; padding-left: 5px;">
         <h4><img src="<?= $HOST; ?>image/iconoLupa.png" class="icono" alt=""> 4) ¿QUÉ DEBES SABER DE TU PLAN?</h4>
         <p>Renta Fija: $/. <?= $resultado[0]['PrecioPaquete']; ?></p>
         <p>El pago se realiza por: </p>
@@ -76,7 +77,6 @@ $HOST = "http://localhost/DELATEL/";
         <p>¿Existe plazo de permanencia?</p>
         <strong class="radio"><input type="checkbox" class="check" checked> Sí, 6 meses</strong>
         <strong class="radio"><input type="checkbox" class="check"> No</strong>
-        <br>
         <strong class="radio">Tarifa de Instalación:</strong>
         <p>Al contado: S/.<span class="caja-texto"></span></p>
 
@@ -122,7 +122,7 @@ $HOST = "http://localhost/DELATEL/";
 
 
     <tr>
-      <td style="vertical-align: top; padding-right: 15px;">
+      <td style="vertical-align: top; padding-right: 5px;">
         <h4><img src="<?= $HOST; ?>image/iconoHerramienta.png" class="icono" alt=""> 6) INSTALACIÓN DEL SERVICIO</h4>
         <p>En caso el servicio requiera de instalación, se realiza en el plazo máximo de 15 días hábiles desde la contratación, previa coordinación con el cliente.</p>
         <h4><img src="<?= $HOST; ?>image/iconoBoleta.png" class="icono" alt=""> 7) RECIBO Y PAGO DEL SERVICIO</h4>
@@ -138,7 +138,7 @@ $HOST = "http://localhost/DELATEL/";
         <p>- Debes permitir al personal de DELATEL, el ingreso a tu domicilio para la instalación, verificación o reparación del servicio, así como el retiro de los equipos si fuera el caso.</p>
 
       </td>
-      <td style="vertical-align: top; padding-left: 15px;">
+      <td style="vertical-align: top; padding-left: 5px;">
         <p>- Se te entregara los equipos de comunicación en perfecto estado y se compromete a devolver en las mismas condiciones, salvo el desgaste que el uso normal del tiempo.</p>
         <p>- Si el equipo se daña por descuido del usuario como son: golpes, caída de agua, cortó circuito y/o manipulaciones EL ARRENDATARIO asumirá el costo de la reparación y/o la totalidad del equipo.</p>
         <h4><img src="<?= $HOST; ?>image/iconoRegistro.png" class="icono" alt=""> 9) MODIFICACIÓN DEL CONTRATO</h4>
@@ -180,7 +180,7 @@ $HOST = "http://localhost/DELATEL/";
 
 
     <tr>
-      <td style="vertical-align: top; padding-left: 15px;">
+      <td style="vertical-align: top; padding-left: 5px;">
         <h4><img src="<?= $HOST; ?>image/iconoUsuario.png" class="icono" alt=""> 12) USO DE TUS DATOS PERSONALES</h4>
         <p><strong>DELATEL realiza el tratamiento de tus datos personales </strong>para la ejecución y prestación del servicio.
           Para ello, debe informarte sobre las condiciones para el tratamiento de tus datos personales y debe solicitar tu consentimiento
@@ -193,6 +193,8 @@ $HOST = "http://localhost/DELATEL/";
           de tu huella dactilar o mediante otro tipo de firma digital en la versión digital del presente contrato. <strong>La cartilla y anexo
             adjunto forma parte del contrato.</strong>
         </p>
+        <br>
+        <p><strong>Fecha del Contrato:</strong> <?= $resultado[0]['FechaCreacion']; ?></p>
 
         <br>
         <br>
@@ -222,19 +224,11 @@ $HOST = "http://localhost/DELATEL/";
                 <p class="label" style="margin-left: 25px;">ABONADO</p>
               </td>
             </tr>
-            <tr>
-              <td>
-                <p class="text-center" style="margin-left: 25px;">Fecha: <?= $fechaActual; ?></p>
-              </td>
-              <td>
-                <p class="text-center" style="margin-left: 25px;">Hora: <?= $horaActual; ?></p>
-              </td>
-            </tr>
           </tbody>
         </table>
       </td>
 
-      <td style="vertical-align: top; padding-left: 15px;">
+      <td style="vertical-align: top; padding-left: 5px;">
 
         <table class="tabla">
           <colgroup>

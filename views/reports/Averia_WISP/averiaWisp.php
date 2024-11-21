@@ -1,19 +1,18 @@
 <?php
-$HOST = "http://localhost/DELATEL"; 
+$HOST = "http://localhost/DELATEL";
 ?>
 
 <img src="<?= $HOST ?>/image/headerAveriaWisp.png" class="image-header" alt="">
 
 <div>
 
-  <table style="margin-bottom:30px;">
+  <table class="tabla2">
     <tbody>
       <tr>
-        <td style="width: 756px;">
-          <span class="input" style="margin-right: 170px;"></span>
-          Fecha: 
-          <span class="input" style="margin-left: 10px;"></span>
-        </td>  
+        <td class="text-center">N°:</td>
+        <td></td>
+        <td class="text-center">Fecha:</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -21,7 +20,7 @@ $HOST = "http://localhost/DELATEL";
 </div>
 
 <div>
-  <table class="tabla2" style="margin-bottom:10px;">
+  <table class="tabla2">
     <thead>
       <tr>
         <td colspan="4" class="text-center thead-cabecera"><strong>DATOS DEL USUARIO</strong></td>
@@ -45,18 +44,20 @@ $HOST = "http://localhost/DELATEL";
         <td></td>
       </tr>
       <tr>
-        <td rowspan="3" class="text-center">PLAN:</td>
-        <td rowspan="3" colspan="3"></td>
+        <td class="text-center">PLAN:</td>
+        <td></td>
+        <td class="text-center">OTROS:</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
 </div>
 
 <div>
-  <table class="tabla2" style="margin-bottom:10px;">
+  <table class="tabla2">
     <thead>
       <tr>
-        <td colspan="6" class="text-center thead-cabecera"><strong>PARAMETROS WIRELESS</strong></td>
+        <td colspan="2" class="text-center thead-cabecera"><strong>PARAMETROS WIRELESS</strong></td>
       </tr>
     </thead>
     <tbody>
@@ -69,7 +70,7 @@ $HOST = "http://localhost/DELATEL";
         <td></td>
       </tr>
       <tr>
-        <td colspan="6" class="text-center thead-cabecera-6">ESTADO INICIAL</td>
+        <td colspan="6" class="text-center thead-cabecera-2">ESTADO INICIAL</td>
       </tr>
       <tr>
         <td rowspan="20" colspan="6"></td>
@@ -79,23 +80,23 @@ $HOST = "http://localhost/DELATEL";
 </div>
 
 <div>
-  <table class="tabla2" style="margin-bottom:100px;">
+  <table class="tabla2">
     <thead>
       <tr>
-        <td colspan="6" class="text-center thead-cabecera"><strong>CAMBIOS WIRELESS</strong></td>
+        <td colspan="2" class="text-center thead-cabecera"><strong>CAMBIOS WIRELESS</strong></td>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td class="text-center">NUEVA BASE:</td>
+        <td class="text-center">N° BASE:</td>
         <td></td>
-        <td class="text-center">NUEVO IP:</td>
+        <td class="text-center">N° IP:</td>
         <td></td>
         <td class="text-center">SEÑAL:</td>
         <td></td>
       </tr>
       <tr>
-        <td colspan="6" class="text-center thead-cabecera-6">ESTADO INICIAL</td>
+        <td colspan="6" class="text-center thead-cabecera">PROCEDIMIENTO DE SOLUCIÓN</td>
       </tr>
       <tr>
         <td rowspan="20" colspan="6"></td>
@@ -117,18 +118,18 @@ $HOST = "http://localhost/DELATEL";
   </table>
 </div>
 
-<br>
-
 <div>
-  <table class="tabla2">
+  <table style="margin-top:50px; width: 100%;">
     <tbody>
       <tr>
-        <td><p class="text-center">V°B° CLIENTE</p></td>
-        <td><p class="text-center">TECNICO</p></td>
-      </tr>
-      <tr>
-        <td rowspan="8"><p class="text-center">_________________________________</p></td>
-        <td rowspan="8"><p class="text-center">_________________________________</p></td> 
+        <td class="no-border">
+          <span style="display: block;">__________________________</span>
+          <span>V°B° CLIENTE</span>
+        </td>
+        <td class="no-border">
+          <span style="display: block;">__________________________</span>
+          <span>TECNICO</span>
+        </td>
       </tr>
     </tbody>
   </table>

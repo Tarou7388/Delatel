@@ -1,11 +1,11 @@
 USE Delatel;
 
 DROP VIEW IF EXISTS vw_fichainstalacion_filtrar;
-CREATE VIEW vw_fichainstalacion_filtrar
-AS
-SELECT 
+
+CREATE VIEW vw_fichainstalacion_filtrar AS
+SELECT
     c.id_contrato,
-    CASE 
+    CASE
         WHEN cl.id_persona IS NOT NULL THEN p.nombres
         ELSE e.razon_social
     END AS nombre_cliente,
@@ -20,18 +20,25 @@ FROM
     LEFT JOIN tb_empresas e ON cl.id_cliente = e.id_empresa
     INNER JOIN tb_paquetes t ON c.id_paquete = t.id_paquete
     INNER JOIN tb_servicios sv ON JSON_CONTAINS(
-            t.id_servicio, 
-            CONCAT('{"id_servicio":', sv.id_servicio, '}')
+        t.id_servicio,
+        CONCAT(
+            '{"id_servicio":',
+            sv.id_servicio,
+            '}'
         )
+    )
 WHERE
     c.inactive_at IS NULL
     AND c.ficha_instalacion IS NULL
-GROUP BY c.id_contrato, nombre_cliente, c.direccion_servicio, c.create_at
+GROUP BY
+    c.id_contrato,
+    nombre_cliente,
+    c.direccion_servicio,
+    c.create_at
 ORDER BY c.create_at ASC;
 
-
-
 DROP VIEW IF EXISTS vw_contratos_listar;
+
 CREATE VIEW vw_contratos_listar AS
 SELECT
     c.id_contrato,
@@ -53,7 +60,10 @@ FROM
     LEFT JOIN tb_personas p ON cl.id_persona = p.id_persona
     LEFT JOIN tb_empresas e ON cl.id_cliente = e.id_empresa
     INNER JOIN tb_paquetes t ON c.id_paquete = t.id_paquete
-    INNER JOIN tb_servicios sv ON JSON_CONTAINS(t.id_servicio, JSON_OBJECT('id_servicio', sv.id_servicio))
+    INNER JOIN tb_servicios sv ON JSON_CONTAINS(
+        t.id_servicio,
+        JSON_OBJECT('id_servicio', sv.id_servicio)
+    )
 WHERE
     c.inactive_at IS NULL
 GROUP BY
@@ -65,11 +75,10 @@ GROUP BY
     t.precio
 ORDER BY c.id_contrato DESC;
 
-
-
 DELIMITER $$
 
 DROP PROCEDURE IF EXISTS spu_contratos_registrar$$
+
 CREATE PROCEDURE spu_contratos_registrar(
     IN p_id_cliente INT,
     IN p_id_paquete INT,
@@ -111,8 +120,8 @@ BEGIN
     );
 END $$
 
-
 DROP PROCEDURE IF EXISTS spu_fichatecnica_buscar_id$$
+
 CREATE PROCEDURE spu_fichatecnica_buscar_id(
     p_id_contrato INT
 )
@@ -141,8 +150,8 @@ BEGIN
     WHERE c.id_contrato = p_id_contrato AND c.inactive_at IS NULL;
 END $$
 
-
 DROP PROCEDURE IF EXISTS spu_contrato_buscar_id$$
+
 CREATE PROCEDURE spu_contrato_buscar_id(
     p_id_contrato INT
 )
@@ -194,6 +203,7 @@ BEGIN
 END $$
 
 DROP PROCEDURE IF EXISTS spu_contratos_eliminar$$
+
 CREATE PROCEDURE spu_contratos_eliminar(
     p_id_contrato INT,
     p_iduser_inactive INT
@@ -208,6 +218,7 @@ BEGIN
 END $$
 
 DROP PROCEDURE IF EXISTS spu_ficha_tecnica_registrar$$
+
 CREATE PROCEDURE spu_ficha_tecnica_registrar(
     p_id_contrato INT,
     p_ficha_instalacion JSON,
@@ -222,6 +233,7 @@ BEGIN
 END $$
 
 DROP PROCEDURE IF EXISTS spu_contratos_buscar_cliente$$
+
 CREATE PROCEDURE spu_contratos_buscar_cliente(IN p_id_cliente INT)
 BEGIN
     SELECT 
@@ -258,6 +270,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS spu_contratos_actualizar$$
+
 CREATE PROCEDURE spu_contratos_actualizar(
     IN p_id_contrato INT,
     IN p_id_paquete INT,
@@ -283,6 +296,7 @@ BEGIN
 END $$
 
 DROP PROCEDURE IF EXISTS spu_contratos_pdf$$
+
 CREATE PROCEDURE spu_contratos_pdf(IN p_id_contrato INT)
 BEGIN
     SELECT 
@@ -301,7 +315,8 @@ BEGIN
         IFNULL(e.representante_legal, '') AS RepresentanteLegal,
         pa.paquete AS NombrePaquete,
         pa.precio AS PrecioPaquete,
-        co.nota
+        co.nota,
+        co.create_at AS FechaCreacion
     FROM 
         tb_contratos co
     JOIN 
@@ -314,4 +329,6 @@ BEGIN
         tb_paquetes pa ON co.id_paquete = pa.id_paquete
     WHERE 
         co.id_contrato = p_id_contrato;
-END$$ 
+END$$
+
+CALL spu_contratos_pdf (1);
