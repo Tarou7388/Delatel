@@ -1,4 +1,5 @@
 import config from "../env.js";
+import { FichaSoporte, inicializarDataTable } from "./Herramientas.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("form-cable");
@@ -63,10 +64,13 @@ document.addEventListener("DOMContentLoaded", () => {
     solutionTextarea.parentNode.parentNode.appendChild(rowDiv);
   }
 
-  async function rellenarDocNombre(doct) {
+  async function LlenarDatos(doct) {
     const respuesta = await fetch(`${config.HOST}/app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${doct}`);
     const data = await respuesta.json();
     console.log(data);
+
+    console.log(FichaSoporte(doct));
+    
     $("#txtCliente").val(data[0].nombre);
     $("#txtNrodocumento").val(doct);
   }
@@ -74,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
   async function obtenerIdSoporteDeUrl() {
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get("doc")) {
-      rellenarDocNombre(urlParams.get("doc"));
+      LlenarDatos(urlParams.get("doc"));
     }
 
     if (urlParams.get("idsoporte")) {

@@ -128,6 +128,17 @@ window.addEventListener('DOMContentLoaded', function () {
     event.target.value = formattedInput.slice(0, 15);
   };
 
+  async function PrioridadAcciones(val) {
+    if(val==="Incidencia")
+    {
+      txtSolucion.setAttribute("required", "true"); 
+      console.log("Requerido");
+    } else {
+      txtSolucion.removeAttribute("required");
+      console.log("Removido");
+    }
+  }
+
   async function registrarIncidencia() {
     const datos = {
       operacion: "registrarSoporte",
@@ -170,6 +181,8 @@ window.addEventListener('DOMContentLoaded', function () {
   });
 
   btnBusquedaAvanzada.addEventListener("click", async () => await busquedaAvanzada(txtnombrebAvz.value, txtapellidobAvz.value))
+
+  slcPrioridad.addEventListener("change", async () => PrioridadAcciones(slcPrioridad.value));
 
   btnModal.addEventListener("click", async () => myModal.show())
 });

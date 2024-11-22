@@ -64,7 +64,7 @@
             <div class="input-group">
               <div class="form-floating">
                 <input type="text" class="form-control" maxlength="12" minlength="8" id="txtNrodocumento" placeholder="Número de Documento" autofocus required>
-                <label for="txtNrodocumento"> <span style="color: red;">*</span> Número de Documento</label>
+                <label for="txtNrodocumento"> <span style="color: red;">*</span> Número Identificador</label>
               </div>
               <button class="input-group-text btn btn-primary" type="button" id="btnNrodocumento">
                 <i class="fa-solid fa-magnifying-glass"></i>
@@ -141,7 +141,7 @@
           <div class="col-12">
             <div class="form-floating">
               <textarea class="form-control" id="txtSolucion" rows="3" placeholder="Solución aplicada" style="height: 100px"></textarea>
-              <label for="txtDescripcion">Proceso</label>
+              <label for="txtSolucion">Proceso</label>
             </div>
           </div>
         </div>

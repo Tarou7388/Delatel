@@ -156,3 +156,21 @@ BEGIN
     WHERE
         (p_prioridad = "" OR s.prioridad = p_prioridad);
 END $$
+
+DROP PROCEDURE IF EXISTS spu_soporte_ficha_doc$$
+CREATE PROCEDURE spu_soporte_ficha_doc (
+    IN p_identificacion VARCHAR(15)
+)
+BEGIN
+    SELECT 
+        ct.ficha_instalacion
+    FROM tb_contratos ct
+    INNER JOIN tb_clientes cl ON ct.id_cliente = cl.id_cliente
+    LEFT JOIN tb_personas p ON cl.id_persona = p.id_persona
+    LEFT JOIN tb_empresas e ON cl.id_empresa = e.id_empresa
+    WHERE 
+        (p.nro_doc = p_identificacion AND p.tipo_doc = 'DNI') OR
+        (e.ruc = p_identificacion);
+END $$
+
+CALL spu_soporte_ficha_doc(45678903)

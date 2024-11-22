@@ -26,6 +26,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     case 'obtenerServiciosId':
       echo json_encode($soporte->obtenerServiciosId(["idservicio" => $_GET['idservicio']]));
       break;
+    case 'obtenerfichaSoporteporDoc':
+      echo json_encode($soporte->obtenerfichaSoporteporDoc(["nroDoc" => $_GET['nroDoc']]));
+      break;
   }
 }
 

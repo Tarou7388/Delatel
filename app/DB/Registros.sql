@@ -376,12 +376,3 @@ INSERT INTO tb_contactabilidad (id_persona, id_empresa, id_paquete, fecha_hora_c
 (38, NULL, 19, '2024-02-15 15:45:00', 'Av. Nicolás de Piérola 654, Chincha Alta', 'Cliente solicitó una visita técnica adicional.', 1),
 (NULL, 39, 20, '2024-02-17 13:00:00', 'Calle Sucre 444, Chincha Alta', 'Se realizó el mantenimiento solicitado.', 1),
 (40, NULL, 21, '2024-02-19 10:30:00', 'Av. Arica 765, Chincha Alta', 'Se acordó una renovación del plan actual.', 1);
-
-INSERT INTO tb_soporte (id_contrato, id_tipo_soporte, id_tecnico, fecha_hora_solicitud, fecha_hora_asistencia, descripcion_problema, descripcion_solucion, prioridad, soporte, iduser_create) VALUES
--- Soportes para contrato 1
-(1, 1, 1, '2024-02-01 10:00:00', '2024-02-01 12:30:00', "Problema de señal intermitente", "Reemplazo de antena", 'Alta', '{"diagnostico":{"cable":"dañado","conexion":"débil"},"reparaciones":["antena"]}', 1),
-(1, 2, 1, '2024-02-15 14:00:00', '2024-02-15 16:00:00', "Pérdida de conexión", "Reinicialización de equipo", 'Media', '{"diagnostico":{"modem":"reconfigurado","conexiones":"ajustadas"},"ajustes":["reconfiguración"]}', 1),
-(1, 3, 1, '2024-03-10 09:00:00', '2024-03-10 10:30:00', "Velocidad de internet baja", "Optimización de red", 'Baja', '{"ajustes":["optimización","revisión"]}', 1),
-(2, 1, 1, '2024-02-02 11:00:00', '2024-02-02 13:30:00', "Corte en el servicio", "Reemplazo de cable", 'Alta', '{"parametroscable":{"potencia":5,"triplexor":{"requiere":true,"cantidad":1,"tipo":["activo"]}}}', 1),
-(2, 2, 1, '2024-02-20 15:30:00', '2024-02-20 16:30:00', "Señal de TV borrosa", "Cambio de sintonizador", 'Media', '{"cambioscable":{"potencia":3,"sintonizador":1}}', 1),
-(2, 3, 1, '2024-03-12 14:00:00', '2024-03-12 15:00:00', "Problema en la conexión WiFi", "Actualización de router", 'Baja', '{"ajustes":["actualización"]}', 1);

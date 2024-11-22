@@ -13,8 +13,15 @@ export function inicializarDataTable(selector, ajaxUrl, columns, columnDefs) {
     columnDefs: columnDefs
   });
 }
+
 export async function permisos() {
   const response = await fetch(`${config.HOST}app/controllers/Usuario.controllers.php?operacion=obtenerPermisos`);
+  const data = await response.json()
+  return data
+}
+
+export async function FichaSoporte(Value) {
+  const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=obtenerfichaSoporteporDoc&nroDoc=${Value}`);
   const data = await response.json()
   return data
 }
