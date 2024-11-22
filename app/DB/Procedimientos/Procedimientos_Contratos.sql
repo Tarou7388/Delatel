@@ -330,3 +330,5 @@ BEGIN
     WHERE 
         co.id_contrato = p_id_contrato;
 END$$
+
+DELIMITER ;
