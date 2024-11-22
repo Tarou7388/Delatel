@@ -220,20 +220,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const slcBanda = document.querySelector("#slcBanda").value;
     const txtAntenas = document.querySelector("#txtAntenas").value;
     const chkCatv = document.querySelector("#chkCatv").checked;
-    const txtaDetallesModen =
-      document.querySelector("#txtaDetallesModen").value;
+    const txtaDetallesModen = document.querySelector("#txtaDetallesModen").value;
+
     if (!flagFichaInstalacion) {
-      if (
-        txtUsuario === "" ||
-        txtPlan === "" ||
-        txtClaveAcceso === "" ||
-        txtPotencia === "" ||
-        txtSsdi === "" ||
-        txtSeguridad === "" ||
-        txtMarcaModelo === "" ||
-        slcBanda === "" ||
-        txtAntenas === ""
-      ) {
+      if (txtUsuario === "" || txtPlan === "" || txtClaveAcceso === "" || txtPotencia === "" || txtSsdi === "" || txtSeguridad === "" || txtMarcaModelo === "" || slcBanda === "" || txtAntenas === "") {
         showToast("Por favor, llene todos los campos.", "WARNING");
         return;
       } else {
@@ -262,17 +252,13 @@ document.addEventListener("DOMContentLoaded", () => {
   async function cable() {
     const txtPagoInst = document.querySelector("#txtPagoInst").value;
     const txtPotencia = document.querySelector("#txtPotenciaCable").value;
-    const slcTriplexor = document
-      .querySelector("#slcTriplexor")
-      .value.split(",");
+    const slcTriplexor = document.querySelector("#slcTriplexor").value.split(",");
     const txtCantConector = document.querySelector("#txtCantConector").value;
-    const txtPrecioConector =
-      document.querySelector("#txtPrecioConector").value;
+    const txtPrecioConector = document.querySelector("#txtPrecioConector").value;
     const txtSpliter = document.querySelector("#txtSpliter").value;
     const slcSpliter = document.querySelector("#slcSpliter").value;
     const txtCantCable = document.querySelector("#txtCantCable").value;
     const txtPrecioCable = document.querySelector("#txtPrecioCable").value;
-
     if (
       txtPagoInst === "" ||
       txtPotencia === "" ||
@@ -473,17 +459,76 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("mdlSintotizadorBody").appendChild(card);
 
-    card
-      .querySelector(".btnEliminar")
-      .addEventListener("click", async function () {
-        card.remove();
-        await ActualizarCantidadSintotizador();
-        numeroSintotizadores--;
-        jsonSintotizador.pop();
-      });
-
+    card.querySelector(".btnEliminar").addEventListener("click", async function () {
+      card.remove();
+      await ActualizarCantidadSintotizador();
+      numeroSintotizadores--;
+      jsonSintotizador.pop();
+    });
     await ActualizarCantidadSintotizador();
   }
+  //Evento de escaneo de código de barras fibra óptica
+  document.getElementById('btnEscanearModen').addEventListener('click', async function (event) {
+    event.preventDefault();
+    const codigoBarra = document.getElementById('txtMarcaModelo').value;
+
+    if (codigoBarra.trim() === "") {
+      showToast("Por favor, ingrese un código de barras.");
+      return;
+    }
+    try {
+      const response = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarra&codigoBarra=${encodeURIComponent(codigoBarra)}`);
+      const resultado = await response.json();
+      console.log('Resultado:', resultado);
+
+      if (Array.isArray(resultado) && resultado.length > 0) {
+        const producto = resultado[0];
+        if (producto && producto.marca && producto.modelo) {
+          const textoFinal = `${codigoBarra} - ${producto.marca} - ${producto.modelo}`;
+          document.getElementById('txtMarcaModelo').value = textoFinal;
+          showToast(`Producto encontrado: ${producto.marca} - ${producto.modelo}`,"SUCCESS");
+        } else {
+          showToast("Producto no encontrado o datos incompletos.", "INFO");
+        }
+      } else {
+        showToast("Producto no encontrado", "INFO");
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      showToast("Hubo un error al buscar el producto.", "ERROR");
+    }
+  });
+  //Evento de escaneo de código de barras repetidor
+  document.getElementById('btnEscanearRepetidor').addEventListener('click', async function (event) {
+    event.preventDefault();
+    const codigoBarra = document.getElementById('txtMarcaModeloRepetidor').value;
+
+    if (codigoBarra.trim() === "") {
+      showToast("Por favor, ingrese un código de barras.");
+      return;
+    }
+    try {
+      const response = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarra&codigoBarra=${encodeURIComponent(codigoBarra)}`);
+      const resultado = await response.json();
+      console.log('Resultado:', resultado);
+
+      if (Array.isArray(resultado) && resultado.length > 0) {
+        const producto = resultado[0];
+        if (producto && producto.marca && producto.modelo) {
+          const textoFinal = `${codigoBarra} - ${producto.marca} - ${producto.modelo}`;
+          document.getElementById('txtMarcaModeloRepetidor').value = textoFinal;
+          showToast(`Producto encontrado: ${producto.marca} - ${producto.modelo}`,"SUCCESS");
+        } else {
+          showToast("Producto no encontrado o datos incompletos.", "INFO");
+        }
+      } else {
+        showToast("Producto no encontrado o datos incompletos.", "INFO");
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      showToast("Hubo un error al buscar el producto.", "ERROR");
+    }
+  });
 
   async function guardar() {
     await fibraOptica();
@@ -521,17 +566,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   txtCantConector.addEventListener("input", calcularCostos);
 
-  document
-    .getElementById("btnAñadirSintotizador")
-    .addEventListener("click", function () {
-      AgregarSintotizador();
-    });
+  document.getElementById("btnAñadirSintotizador").addEventListener("click", function () {
+    AgregarSintotizador();
+  });
 
-  document
-    .getElementById("btnAñadirRepetidor")
-    .addEventListener("click", async function () {
-      AgregarRepetidor();
-    });
+  document.getElementById("btnAñadirRepetidor").addEventListener("click", async function () {
+    AgregarRepetidor();
+  });
 
   document.querySelector("#eliminarRepetidor").addEventListener("click", () => {
     const card = document.querySelector(`#carta${numeroRepetidores}`);

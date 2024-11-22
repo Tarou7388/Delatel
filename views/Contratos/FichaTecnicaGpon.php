@@ -57,7 +57,7 @@ $idContrato = $_GET['idContrato'];
               <label for="lblMarcaModeloRepetidor">Marca - Modelo</label>
             </div>
             <button class="btn btn-outline-primary" type="button" id="btnEscanearRepetidor">
-              <i class="fas fa-search"></i> Escanear
+              <i class="fas fa-search"></i> Buscar
             </button>
           </div>
         </div>
@@ -161,7 +161,7 @@ $idContrato = $_GET['idContrato'];
                   <label for="lblMarcaModelo">Marca - Modelo</label>
                 </div>
                 <button class="btn btn-outline-primary" type="button" id="btnEscanearModen">
-                  <i class="fas fa-search"></i> Escanear
+                  <i class="fas fa-search"></i> Buscar
                 </button>
               </div>
             </div>
