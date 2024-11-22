@@ -8,6 +8,7 @@ let marcadoresCajas = [];
 let marcadoresMufas = [];
 let datosMufas = [];
 
+export let idCaja = null;
 export let idSector = null;
 
 async function obtenerDatosPlano(url) {
@@ -96,8 +97,8 @@ export async function iniciarMapa(params = { cajas: true, mufas: true }, id = "m
         subArray.forEach(circulo => {
           circulo.addListener('click', async (e) => {
             const marcadorMasCercano = await buscarMarcadorCercano(datosCajas[circulo.idValue], (marcador) => marcador.numero_entradas > 0);
+            idCaja = marcadorMasCercano.id_caja;
             if (marcadorMasCercano) {
-              console.log(marcadorMasCercano.id_mufa);
               datosMufas.forEach(subArray => {
                 subArray.forEach(mufa => {
                   if (mufa.id_mufa == marcadorMasCercano.id_mufa) {
@@ -115,14 +116,17 @@ export async function iniciarMapa(params = { cajas: true, mufas: true }, id = "m
           const modal = bootstrap.Modal.getInstance(document.getElementById('ModalMapa'));
           if(document.getElementById('txtCoordenadasMapa')) {
             document.getElementById('txtCoordenadasMapa').value = `${marcadorCoordenada.lat()},${marcadorCoordenada.lng()}`;
+            const evento = new Event('input');
+            document.getElementById('txtCoordenadasMapa').dispatchEvent(evento);
           }
           if(document.getElementById('txtCoordenadas')) {
             document.getElementById('txtCoordenadas').value = `${marcadorCoordenada.lat()},${marcadorCoordenada.lng()}`;
           }
           if(document.getElementById('txtCoordenadasPersona')) {
             document.getElementById('txtCoordenadasPersona').value = `${marcadorCoordenada.lat()},${marcadorCoordenada.lng()}`;
+            const evento = new Event('input');
+            document.getElementById('txtCoordenadasPersona').dispatchEvent(evento);
           }
-          modal.hide();
         }
       });
       break;
@@ -137,7 +141,6 @@ export async function iniciarMapa(params = { cajas: true, mufas: true }, id = "m
 async function lineasMufas(){
   const response = await fetch(`${config.HOST}app/controllers/Lineas.controllers.php?operacion=getLineas`);
   const data = await response.json();
-  console.log(data[0]);
   data.forEach(linea => {
     const line = new google.maps.Polyline({
       path: linea.coordenadas,
@@ -166,7 +169,6 @@ export async function actualizarMapa(id = "map2") {
     cajas: document.getElementById('checkCajas').checked,
     mufas: document.getElementById('checkMufas').checked
   };
-  console.log(params);
   eliminarElementosAnidados(circulosCajas);
   eliminarElementosAnidados(marcadoresCajas);
   eliminarElementosAnidados(marcadoresMufas);

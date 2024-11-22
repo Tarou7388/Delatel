@@ -8,7 +8,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   const direccion = document.querySelector("#txtDireccion");
   const sector = document.querySelector("#slcSector");
   const referencia = document.querySelector("#txtReferencia");
-  const coordenada = document.querySelector("#txtCoordenadas");
+  const coordenada = document.querySelector("#txtCoordenadasMapa");
   const slcPaquetes = document.querySelector("#slcPaquetes");
   const slcPaquetesActualizar = document.querySelector("#slcPaquetesActualizar");
   const txtNota = document.querySelector("#txtNota");
@@ -16,11 +16,11 @@ window.addEventListener("DOMContentLoaded", async () => {
   const fechaFin = document.querySelector("#txtFechaFin");
   const fechaFinActualizar = document.querySelector("#txtFechaFinActualizar");
   const accesos = await Herramientas.permisos();
-  let lapsoTiempo = false;
+
+  let idSector = null;
+  let idCaja = null;
   let precioServicio = 0;
   let idCliente = null;
-  let idServicio = 0;
-  let idServicioActualizar = 0;
   let idPersona = "";
   let idEmpresa = "";
   slcPaquetes.disabled = true;
@@ -74,16 +74,13 @@ window.addEventListener("DOMContentLoaded", async () => {
   async function getQueryParams() {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-
     const params = Object.fromEntries(urlParams.entries());
     if (params.nroDoc) {
       nroDoc.value = params.nroDoc;
       coordenada.value = params.coordenadas;
       direccion.value = params.direccion;
       referencia.value = params.referencia;
-      const optionToSelect = slcPaquetes.querySelector(
-        `option[value="${params.paquete}"]`
-      );
+      const optionToSelect = document.querySelector(`#slcSector option[value="${params.idSector}"]`);
       if (optionToSelect) {
         optionToSelect.selected = true;
       }
@@ -795,8 +792,9 @@ window.addEventListener("DOMContentLoaded", async () => {
   });
 
   (async () => {
-    await getQueryParams();
     await cargarDatos();
+    await cargarServicios();
+    await getQueryParams();
   })();
 
   document.querySelector("#btnRegistrar").addEventListener("click", async (event) => {
@@ -818,6 +816,15 @@ window.addEventListener("DOMContentLoaded", async () => {
     const idUsuario = user.idUsuario;
     const idPaquete = document.getElementById("slcPaquetesActualizar").value;
     await actualizarContrato(idContrato, idUsuario, idPaquete);
+  });
+
+  coordenada.addEventListener("input", async function () {
+    idSector = mapa.idSector;
+    idCaja = mapa.idCaja;
+    const optionToSelect = document.querySelector(`#slcSector option[value="${idSector}"]`);
+    if (optionToSelect) {
+      optionToSelect.selected = true;
+    }
   });
 
   async function cargarPrecio() {
@@ -842,10 +849,10 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  $(".select2me").select2({ theme: "bootstrap-5", allowClear: true });
+  /* $(".select2me").select2({ theme: "bootstrap-5", allowClear: true });
   $(".select2me").parent("div").children("span").children("span").children("span").css("height", " calc(3.5rem + 2px)");
   $(".select2me").parent("div").children("span").children("span").children("span").children("span").css("margin-top", "18px");
-  $(".select2me").parent("div").find("label").css("z-index", "1");
+  $(".select2me").parent("div").find("label").css("z-index", "1"); */
 
   async function cargarServicios() {
     try {
@@ -896,5 +903,4 @@ window.addEventListener("DOMContentLoaded", async () => {
     mapa.iniciarMapa(params, id, renderizado);
   });
 
-  cargarServicios();
 });

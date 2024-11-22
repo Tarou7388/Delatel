@@ -22,7 +22,10 @@ document.addEventListener("DOMContentLoaded", async function () {
   const txtDireccion = document.getElementById("txtDireccionPersona");
   const txtReferencia = document.getElementById("txtReferenciaPersona");
   const btnBuscar = document.getElementById("btnBuscar");
+
+  let idCaja = null;
   let dniActual = null;
+  let idSector = null;
 
   slcPaquetes.disabled = true;
 
@@ -299,7 +302,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       setTimeout(async () => {
         frmPersonas.reset();
         if (await ask("¿Desea registrar un contrato?")) {
-          window.location.href = `${config.HOST}views/Contratos?nroDoc=${dniActual}&idObjeto=${idPersona}&Servicio=${Servicio}&Paquete=${Paquete}&referencia=${referencia}&coordenadas=${coordenadas}&direccion=${direccion}`;
+          window.location.href = `${config.HOST}views/Contratos?nroDoc=${dniActual}&idObjeto=${idPersona}&Servicio=${Servicio}&Paquete=${Paquete}&referencia=${referencia}&coordenadas=${coordenadas}&direccion=${direccion}&idCaja=${idCaja}&idSector=${idSector}`;
         }
       }, 650);
     }
@@ -369,6 +372,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   (() => {
     manejarDocumentoNacionalidad();
+    cargarServicios();
   })();
 
   $(".select2me").select2({ theme: "bootstrap-5", placeholder: "Seleccione", allowClear: true });
@@ -428,5 +432,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   }
 
-  cargarServicios();
+  document.querySelector("#txtCoordenadasPersona").addEventListener("input", async () => {
+    idSector = mapa.idSector;
+    idCaja = mapa.idCaja;
+  });
 });

@@ -20,7 +20,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary" id="btnGuardarModalMapa" data-dismiss="modal" disabled>Guardar cambios</button>
+        <button type="button" class="btn btn-primary" id="btnGuardarModalMapa" data-bs-dismiss="modal" disabled>Guardar cambios</button>
       </div>
     </div>
   </div>
@@ -207,7 +207,7 @@
 
           <div class="col-md-4">
             <div class="form-floating">
-              <select class="form-select select2me" id="slcSector" aria-label=Sectores>
+              <select class="form-select select2me" id="slcSector" aria-label=Sectores disabled>
                 <option value="0" disabled selected>Seleccione</option>
               </select>
               <label for="slcSector" class="form-label">Sectores</label>
