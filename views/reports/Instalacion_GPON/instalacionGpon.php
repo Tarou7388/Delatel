@@ -1,21 +1,19 @@
 <?php
-$HOST = "http://localhost/DELATEL"; 
+$HOST = "http://localhost/DELATEL";
 ?>
 
 <img src="<?= $HOST ?>/image/headerInstalacionGpon.png" class="image-header" alt="">
 <div class="container">
-  <table>
+  <table class="tabla2">
     <tbody>
       <tr>
-        <td style="width: 756px;">
-          <span class="input" style="margin-right: 280px;"></span>
-          Fecha: 
-          <span class="input" style="margin-left: 10px;"></span>
-        </td>        
+        <td class="text-center">N°:</td>
+        <td></td>
+        <td class="text-center">Fecha:</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
-  <br>
   <table class="tabla2">
     <thead>
       <tr>
@@ -23,43 +21,43 @@ $HOST = "http://localhost/DELATEL";
       </tr>
     </thead>
     <tbody>
-        <tr>
-          <td class="text-center">CLIENTE:</td>
-          <td></td>
-          <td class="text-center">DNI:</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td class="text-center">DIRECCION:</td>
-          <td></td>
-          <td class="text-center">CELULAR:</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td class="text-center">REFERENCIA:</td>
-          <td></td>
-          <td class="text-center">ZONA:</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td class="text-center">PLAN:</td>
-          <td></td>
-          <td class="text-center">PRECIO:</td>
-          <td></td>
-        </tr>
+      <tr>
+        <td class="text-center">CLIENTE:</td>
+        <td></td>
+        <td class="text-center">DNI:</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td class="text-center">DIRECCION:</td>
+        <td></td>
+        <td class="text-center">CELULAR:</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td class="text-center">REFERENCIA:</td>
+        <td></td>
+        <td class="text-center">ZONA:</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td class="text-center">PLAN:</td>
+        <td></td>
+        <td class="text-center">PRECIO:</td>
+        <td></td>
+      </tr>
     </tbody>
   </table>
 </div>
-<br>
+
 <div class="container">
   <table class="tabla2">
     <thead>
       <tr>
-        <td colspan="4" class="text-center thead-cabecera-2"><strong>CONEXIÓN FTTH - FIBRA OPTICA</strong></td>
+        <td colspan="4" class="text-center thead-cabecera"><strong>CONEXIÓN FTTH - FIBRA OPTICA</strong></td>
       </tr>
       <tr>
-        <td colspan="2" class="text-center thead-cabecera-4"><strong>MODO PPPoE</strong></td>
-        <td colspan="2" class="text-center thead-cabecera-5"><strong>DETALLES EQUIPO</strong></td>
+        <td colspan="2" class="text-center thead-cabecera"><strong>MODO PPPoE</strong></td>
+        <td colspan="2" class="text-center thead-cabecera-2"><strong>DETALLES EQUIPO</strong></td>
       </tr>
     </thead>
     <tbody>
@@ -100,12 +98,12 @@ $HOST = "http://localhost/DELATEL";
     </tbody>
   </table>
 </div>
-<br>
+
 <div class="container">
   <table class="tabla2">
     <thead>
       <tr>
-        <td colspan="4" class="text-center thead-cabecera-3"><strong>EQUIPOS ADICIONALES WIFI</strong></td>
+        <td colspan="4" class="text-center thead-cabecera"><strong>EQUIPOS ADICIONALES WIFI</strong></td>
       </tr>
     </thead>
     <tbody>
@@ -145,11 +143,11 @@ $HOST = "http://localhost/DELATEL";
   </table>
 </div>
 
-<div class="container" style="margin-bottom: 200px;">
+<div class="container">
   <table class="tabla2">
     <thead>
       <tr>
-        <td colspan="7" class="text-center thead-cabecera-6"><strong>TRASMISIÓN DE DATOS DIGITAL</strong></td>
+        <td colspan="7" class="text-center thead-cabecera-3"><strong>TRASMISIÓN DE DATOS DIGITAL</strong></td>
       </tr>
     </thead>
     <tbody>
@@ -159,7 +157,7 @@ $HOST = "http://localhost/DELATEL";
         <td class="text-center">SINTONIZADOR:</td>
         <td colspan="2"></td>
         <td colspan="2"></td>
-      </tr> 
+      </tr>
       <tr>
         <td class="text-center">PAGO INST:</td>
         <td></td>
@@ -190,29 +188,30 @@ $HOST = "http://localhost/DELATEL";
       </tr>
       <tr>
         <td class="text-center">PAGO DIGITAL:</td>
-        <td colspan="6"></td>
+        <td></td>
+        <td class="text-center">DETALLES: </tdclass=>
+        <td colspan="4"></td>
       </tr>
-      <tr>
+      <!-- <tr>
         <td colspan="1" class="text-center">DETALLES: </td>
         <td colspan="6"></td>
-      </tr>
+      </tr> -->
     </tbody>
   </table>
 </div>
-<br>
 
 <div class="container">
   <table class="tabla2">
     <thead>
       <tr>
-        <td colspan="4" class="text-center thead-cabecera-7"><strong>EQUIPOS ADICIONALES DIGITALES - OTROS</strong></td>
+        <td colspan="4" class="text-center thead-cabecera-3"><strong>EQUIPOS ADICIONALES DIGITALES - OTROS</strong></td>
       </tr>
     </thead>
     <tbody>
       <tr>
         <td class="text-center">SINTONIZADOR:</td>
         <td></td>
-        <td colspan="2"><h3 class="text-center thead-cabecera-5">MEDICIÓN EN CAJA NAP</h3></td>
+        <td colspan="2" class="text-center thead-cabecera-4"><strong>MEDICIÓN EN CAJA NAP</strong></td>
       </tr>
       <tr>
         <td class="text-center">COSTO ALQUILER:</td>
@@ -229,7 +228,7 @@ $HOST = "http://localhost/DELATEL";
       <tr>
         <td class="text-center">CABLE:</td>
         <td></td>
-        <td colspan="2" class="text-center thead-cabecera-5"><h3>MEDICIÓN EN INTERIOR DE LA CASA</h3></td>
+        <td colspan="2" class="text-center thead-cabecera-4"><strong>MEDICIÓN EN INTERIOR DE LA CASA</strong></td>
       </tr>
       <tr>
         <td class="text-center">CONECT:</td>
@@ -244,7 +243,7 @@ $HOST = "http://localhost/DELATEL";
         <td></td>
       </tr>
       <tr>
-        <td colspan="4" class="text-center thead-cabecera-5"><h3>CONEXIÓN PLANTA EXTERNA</h3></td>
+        <td colspan="4" class="text-center thead-cabecera-4"><strong>CONEXIÓN PLANTA EXTERNA</strong></td>
       </tr>
       <tr>
         <td class="text-center">PUERTO:</td>
@@ -259,12 +258,12 @@ $HOST = "http://localhost/DELATEL";
     </tbody>
   </table>
 </div>
-<br>
-<div class="container" style="margin-bottom: 300px;">
+
+<div class="container">
   <table class="tabla2">
     <thead>
       <tr>
-        <td colspan="4" class="text-center thead-cabecera-5"><strong>DETALLES DE COSTOS</strong></td>
+        <td colspan="4" class="text-center thead-cabecera"><strong>DETALLES DE COSTOS</strong></td>
       </tr>
     </thead>
     <tbody>
@@ -310,7 +309,7 @@ $HOST = "http://localhost/DELATEL";
         <td></td>
       </tr>
       <tr>
-        <td colspan="3" class="text-center thead-cabecera-4"><strong>FICHA DE CONTROL INTERNO PARA TODOS LOS MODOS DE INSTALACIONES</strong></td>
+        <td colspan="3" class="text-center thead-cabecera-2"><strong>FICHA DE CONTROL INTERNO PARA TODOS LOS MODOS DE INSTALACIONES</strong></td>
         <td class="text-center">N°</td>
       </tr>
     </tbody>

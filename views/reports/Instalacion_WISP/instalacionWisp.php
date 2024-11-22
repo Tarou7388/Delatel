@@ -1,19 +1,17 @@
 <?php
-$HOST = "http://localhost/DELATEL"; 
+$HOST = "http://localhost/DELATEL";
 ?>
 
 <img src="<?= $HOST ?>/image/headerInstalacionWisp.png" class="image-header" alt="">
 
 <div>
-  <table>
+  <table class="tabla2">
     <tbody>
       <tr>
-        <td style="width: 756px;">
-          TRONCAL:
-          <span class="input" style="margin-right: 170px;"></span>
-          Fecha: 
-          <span class="input" style="margin-left: 10px;"></span>
-        </td>        
+        <td class="text-center">Troncal:</td>
+        <td></td>
+        <td class="text-center">Fecha:</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -23,51 +21,54 @@ $HOST = "http://localhost/DELATEL";
   <table class="tabla2">
     <thead>
       <tr>
-        <td colspan="4" class="text-center thead-cabecera-5"><strong>DATOS DEL USUARIO</strong></td>
+        <td colspan="6" class="text-center thead-cabecera"><strong>DATOS DEL USUARIO</strong></td>
       </tr>
     </thead>
     <tbody>
       <tr>
         <td class="text-center">NOMBRES:</td>
-        <td></td>
+        <td colspan="2"></td>
         <td class="text-center">DNI:</td>
-        <td></td>
+        <td colspan="2"></td>
       </tr>
       <tr>
         <td class="text-center">APELLIDOS:</td>
-        <td></td>
+        <td colspan="2"></td>
         <td class="text-center">CELULAR 1:</td>
-        <td></td>
+        <td colspan="2"></td>
       </tr>
       <tr>
         <td class="text-center">DIRECCIÓN:</td>
-        <td></td>
+        <td colspan="2"></td>
         <td class="text-center">ZONA:</td>
-        <td></td>
+        <td colspan="2"></td>
       </tr>
       <tr>
-        <td class="text-center">UBICACIÓN:</td>
-        <td colspan="3"></td>
+        <td class="text-center">DISTRITO:</td>
+        <td></td>
+        <td class="text-center">PROVINCIA:</td>
+        <td></td>
+        <td class="text-center">DPTO:</td>
+        <td></td>
       </tr>
       <tr>
         <td class="text-center">PLAN CONTRATADO:</td>
-        <td></td>
+        <td colspan="2"></td>
         <td class="text-center">COSTO:</td>
-        <td></td>
+        <td colspan="2"></td>
       </tr>
     </tbody>
   </table>
-
 </div>
 
-<br>
+</div>
 
 <div>
 
   <table class="tabla2">
     <thead>
       <tr>
-        <td colspan="5" class="text-center thead-cabecera-7"><strong>PARAMETROS TECNICOS</strong></td>
+        <td colspan="5" class="text-center thead-cabecera"><strong>PARAMETROS TECNICOS</strong></td>
       </tr>
     </thead>
     <tbody>
@@ -100,13 +101,12 @@ $HOST = "http://localhost/DELATEL";
   </table>
 
 </div>
-<br>
 
 <div>
   <table class="tabla2">
     <thead>
       <tr>
-        <td colspan="2" class="text-center thead-cabecera-5"><strong>MODO ROUTER</strong></td>
+        <td colspan="2" class="text-center thead-cabecera"><strong>MODO ROUTER</strong></td>
         <td colspan="2" class="text-center thead-cabecera-2"><strong>CONF. WIRELESS</strong></td>
       </tr>
     </thead>
@@ -145,21 +145,19 @@ $HOST = "http://localhost/DELATEL";
   </table>
 </div>
 
-<br>
-
 <div>
-  <table class="tabla2" style="margin-bottom: 200px;">
+  <table class="tabla2">
     <thead>
       <tr>
-        <td colspan="6" class="text-center thead-cabecera-6"><strong>DETALLE EQUIPOS VENTA</strong></td>
+        <td colspan="6" class="text-center thead-cabecera"><strong>DETALLE EQUIPOS VENTA</strong></td>
       </tr>
     </thead>
     <tbody>
       <tr>
         <td class="text-center">COSTO ANTENA:</td>
         <td></td>
-        <td colspan="2" class="text-center"><strong>ANTENA</strong></td>
-        <td colspan="2" class="text-center"><strong>ROUTER</strong></td>
+        <td colspan="2" class="text-center thead-cabecera-3"><strong>ANTENA</strong></td>
+        <td colspan="2" class="text-center thead-cabecera-4"><strong>ROUTER</strong></td>
       </tr>
       <tr>
         <td class="text-center">COSTO ROUTER:</td>
@@ -218,15 +216,15 @@ $HOST = "http://localhost/DELATEL";
   <table class="tabla2">
     <thead>
       <tr>
-        <td colspan="6" class="text-center thead-cabecera-5"><strong>DETALLE EQUIPOS ALQUILADOS / PRESTADOS</strong></td>
+        <td colspan="6" class="text-center thead-cabecera"><strong>DETALLE EQUIPOS ALQUILADOS / PRESTADOS</strong></td>
       </tr>
     </thead>
     <tbody>
       <tr>
         <td class="text-center">CONDICIÓN:</td>
         <td></td>
-        <td colspan="2" class="text-center"><strong>ANTENA</strong></td>
-        <td colspan="2" class="text-center"><strong>ROUTER</strong></td>
+        <td colspan="2" class="text-center thead-cabecera-3"><strong>ANTENA</strong></td>
+        <td colspan="2" class="text-center thead-cabecera-4"><strong>ROUTER</strong></td>
       </tr>
       <tr>
         <td class="text-center">PERIODO:</td>
@@ -275,14 +273,11 @@ $HOST = "http://localhost/DELATEL";
     </tbody>
   </table>
 </div>
-
-<br>
-<br>
 <div>
   <table class="tabla2">
     <thead>
       <tr>
-        <td colspan="3" class="text-center thead-cabecera-4">FICHAS DE CONTROL INTERNO PARA TODOS LOS MODOS DE INSTALACIONES</td>
+        <td colspan="3" class="text-center thead-cabecera">FICHAS DE CONTROL INTERNO PARA TODOS LOS MODOS DE INSTALACIONES</td>
         <td class="text-center">N°</td>
         <td></td>
       </tr>
