@@ -17,7 +17,7 @@ if (!isset($_SESSION['login']) || $_SESSION['login']['estado'] == false) {
   $rutaCompleta = array_filter($rutaCompleta);
 
   $vistaActual = parse_url(end($rutaCompleta), PHP_URL_PATH);
-  if($vistaActual == ''){
+  if ($vistaActual == '') {
     $vistaActual = $rutaCompleta[count($rutaCompleta) - 1];
   }
   $listaAcceso = $_SESSION['login']['accesos'];
@@ -48,6 +48,7 @@ if (!isset($_SESSION['login']) || $_SESSION['login']['estado'] == false) {
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -59,6 +60,8 @@ if (!isset($_SESSION['login']) || $_SESSION['login']['estado'] == false) {
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
   <link href="https://cdn.datatables.net/v/dt/dt-2.1.3/datatables.min.css" rel="stylesheet">
+  <link href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
   <link href="<?= $host ?>/css/styles.css" rel="stylesheet" />
   <link rel="stylesheet" href="<?= $host ?>/css/estilos.css">
 </head>

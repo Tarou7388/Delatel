@@ -51,14 +51,21 @@ $idContrato = $_GET['idContrato'];
           </div>
         </div>
         <div class="mb-2">
-          <div class="input-group">
-            <div class="form-floating">
-              <input type="text" class="form-control" id="txtMarcaModeloRepetidor" placeholder="Marca - Modelo">
-              <label for="lblMarcaModeloRepetidor">Marca - Modelo</label>
-            </div>
-            <button class="btn btn-outline-primary" type="button" id="btnEscanearRepetidor">
-              <i class="fas fa-search"></i> Buscar
-            </button>
+          <div class="form-floating">
+            <input type="text" class="form-control" id="txtCodigoBarrasRepetidor" placeholder="Codigo de barras">
+            <label for="lblCodigoBarrasRepetidor">Codigo de barras</label>
+          </div>
+        </div>
+        <div class="mb-2">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="txtMarcaRepetidor" placeholder="a" disabled>
+            <label for="lblMarcaRepetidor">Marca</label>
+          </div>
+        </div>
+        <div class="mb-2">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="txtModeloRepetidor" placeholder="a" disabled>
+            <label for="lblModeloRepetidor">Modelo</label>
           </div>
         </div>
         <div class="mb-2">
@@ -119,7 +126,7 @@ $idContrato = $_GET['idContrato'];
               </div>
               <div class="col md-6">
                 <div class="form-floating">
-                  <input type="text" class="form-control" id="txtClaveAcceso" disabled=true placeholder="Clave de acceso"> 
+                  <input type="text" class="form-control" id="txtClaveAcceso" disabled=true placeholder="Clave de acceso">
                   <label for="lblClaveAcceso">Clave de Acceso</label>
                 </div>
               </div>
@@ -154,17 +161,27 @@ $idContrato = $_GET['idContrato'];
                 </div>
               </div>
             </div>
-            <div class="mb-2">
-              <div class="input-group">
-                <div class="form-floating flex-fill">
-                  <input type="text" class="form-control" id="txtMarcaModelo" placeholder="Marca - Modelo">
-                  <label for="lblMarcaModelo">Marca - Modelo</label>
+            <div class="row g-3 mb-2">
+              <div class="col-4 mb-2">
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="txtCodigoBarra" placeholder="Codigo de barra">
+                  <label for="lblCodigoBarra">Codigo de barras</label>
                 </div>
-                <button class="btn btn-outline-primary" type="button" id="btnEscanearModen">
-                  <i class="fas fa-search"></i> Buscar
-                </button>
+              </div>
+              <div class="col-4 mb-2">
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="txtMarca" placeholder="Marca" disabled>
+                  <label for="marca">Marca</label>
+                </div>
+              </div>
+              <div class=" col-4 mb-2">
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="txtModelo" placeholder="Modelo" disabled>
+                  <label for="lblModelo">Modelo</label>
+                </div>
               </div>
             </div>
+
             <div class="row g-3 mb-2">
               <div class="col md-2">
                 <div class="form-floating">
@@ -214,7 +231,6 @@ $idContrato = $_GET['idContrato'];
             </div>
           </div>
         </div>
-      </div>
     </form>
   </div>
 </div>
