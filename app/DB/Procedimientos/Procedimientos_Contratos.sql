@@ -330,5 +330,3 @@ BEGIN
     WHERE 
         co.id_contrato = p_id_contrato;
 END$$
-
-CALL spu_contratos_pdf (1);
