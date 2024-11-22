@@ -1,11 +1,14 @@
 import config from "../env.js";
-let Map, Circle, AdvancedMarkerElement, mapa
+let Map, Circle, Polyline, AdvancedMarkerElement, mapa
 let datosCajas = [];
 let marcador = null;
 let marcadorCoordenada = null
 let circulosCajas = [];
 let marcadoresCajas = [];
 let marcadoresMufas = [];
+let datosMufas = [];
+
+export let idSector = null;
 
 async function obtenerDatosPlano(url) {
   const respuesta = await fetch(url);
@@ -62,8 +65,10 @@ async function buscarMarcadorCercano(arreglo, condicion = () => true) {
 
 export async function iniciarMapa(params = { cajas: true, mufas: true }, id = "map", renderizado = "modal") {
   const posicionInicial = { lat: -13.417077, lng: -76.136585 };
-  ({ Map, Circle } = await google.maps.importLibrary("maps"));
+  ({ Map, Circle, Polyline } = await google.maps.importLibrary("maps"));
   ({ AdvancedMarkerElement } = await google.maps.importLibrary("marker"));
+
+  lineasMufas();
 
   mapa = new Map(document.getElementById(id), {
     zoom: 13,
@@ -91,8 +96,15 @@ export async function iniciarMapa(params = { cajas: true, mufas: true }, id = "m
         subArray.forEach(circulo => {
           circulo.addListener('click', async (e) => {
             const marcadorMasCercano = await buscarMarcadorCercano(datosCajas[circulo.idValue], (marcador) => marcador.numero_entradas > 0);
-            console.log(marcadorMasCercano);
             if (marcadorMasCercano) {
+              console.log(marcadorMasCercano.id_mufa);
+              datosMufas.forEach(subArray => {
+                subArray.forEach(mufa => {
+                  if (mufa.id_mufa == marcadorMasCercano.id_mufa) {
+                    idSector = mufa.id_sector;
+                  }
+                });
+              });
               document.getElementById('btnGuardarModalMapa').disabled = false;
             }
           });
@@ -101,8 +113,15 @@ export async function iniciarMapa(params = { cajas: true, mufas: true }, id = "m
       document.getElementById('btnGuardarModalMapa').addEventListener('click', () => {
         if (marcadorCoordenada != null) {
           const modal = bootstrap.Modal.getInstance(document.getElementById('ModalMapa'));
-          const txtCoordenadasMapa = document.getElementById('txtCoordenadasMapa');
-          txtCoordenadasMapa.value = `${marcadorCoordenada.lat()},${marcadorCoordenada.lng()}`;
+          if(document.getElementById('txtCoordenadasMapa')) {
+            document.getElementById('txtCoordenadasMapa').value = `${marcadorCoordenada.lat()},${marcadorCoordenada.lng()}`;
+          }
+          if(document.getElementById('txtCoordenadas')) {
+            document.getElementById('txtCoordenadas').value = `${marcadorCoordenada.lat()},${marcadorCoordenada.lng()}`;
+          }
+          if(document.getElementById('txtCoordenadasPersona')) {
+            document.getElementById('txtCoordenadasPersona').value = `${marcadorCoordenada.lat()},${marcadorCoordenada.lng()}`;
+          }
           modal.hide();
         }
       });
@@ -115,6 +134,20 @@ export async function iniciarMapa(params = { cajas: true, mufas: true }, id = "m
   }
 }
 
+async function lineasMufas(){
+  const response = await fetch(`${config.HOST}app/controllers/Lineas.controllers.php?operacion=getLineas`);
+  const data = await response.json();
+  console.log(data[0]);
+  data.forEach(linea => {
+    const line = new google.maps.Polyline({
+      path: linea.coordenadas,
+      geodesic: true,
+      strokeColor: "#FF0000",
+    });
+    line.setMap(mapa);
+  });
+}
+
 async function eventocajas() {
   const datos = await obtenerDatosAnidado(`${config.HOST}app/controllers/Caja.controllers.php?operacion=listarCajas`);
   datosCajas = datos;
@@ -125,6 +158,7 @@ async function eventocajas() {
 async function eventomufas() {
   const datos = await obtenerDatosAnidado(`${config.HOST}app/controllers/Mufas.controllers.php?operacion=listarMufas`);
   marcadoresMufas = await marcadoresAnidado(datos, "mufa");
+  datosMufas = datos;
 }
 
 export async function actualizarMapa(id = "map2") {

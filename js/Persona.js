@@ -392,14 +392,11 @@ document.addEventListener("DOMContentLoaded", async function () {
   });
 
   document.querySelector("#btnBuscarCoordenadas").addEventListener("click", async () => {
-    await mapa.iniciarMapa();
-    await mapa.obtenerDatos();
+    const params = { cajas: true, mufas: true }
+    const id = "map"
+    const renderizado = "modal"
+    mapa.iniciarMapa(params, id, renderizado);
   })
-
-  document.querySelector("#btnGuardarCoordenadas").addEventListener("click", () => {
-    txtcoordenadasPersona.value = `${mapa.marcadorMasCercano.coordenadas}`;
-    document.querySelector("#txtCoordenadas").value = `${mapa.marcadorMasCercano.coordenadas}`;
-  });
 
   btnBuscar.addEventListener("click", () => {
     ObtenerDataDNI("obtenerDni", txtNumDocumentoPersona.value);
