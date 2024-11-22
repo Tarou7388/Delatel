@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
       };
     }
 
-    return soporte; 
+    return soporte;
   }
 
 
@@ -146,7 +146,10 @@ document.addEventListener("DOMContentLoaded", () => {
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const data = await ArmadoJsonWisp();
-    await guardarSoporte(data)
+    if (await ask("¿Desea guardar la ficha?")) {
+      await guardarSoporte(data)
+      window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
+    }
   });
 
 });

@@ -172,5 +172,3 @@ BEGIN
         (p.nro_doc = p_identificacion AND p.tipo_doc = 'DNI') OR
         (e.ruc = p_identificacion);
 END $$
-
-CALL spu_soporte_ficha_doc(45678903)

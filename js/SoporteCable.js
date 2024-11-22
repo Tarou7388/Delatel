@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
     rowDiv.appendChild(buttonDiv);
 
 
-    const solutionTextarea = document.getElementById("txtaProceSolucion");
+    const solutionTextarea = document.getElementById("txtaEstadoFinal");
     solutionTextarea.parentNode.parentNode.appendChild(rowDiv);
   }
 
@@ -69,10 +69,25 @@ document.addEventListener("DOMContentLoaded", () => {
     const data = await respuesta.json();
     console.log(data);
 
-    console.log(FichaSoporte(doct));
-    
-    $("#txtCliente").val(data[0].nombre);
-    $("#txtNrodocumento").val(doct);
+
+    const datacable = await FichaSoporte(doct);
+    const CableData = JSON.parse(datacable[0].ficha_instalacion).cable;
+    const Plan = JSON.parse(datacable[0].ficha_instalacion).fibraoptica.plan
+    console.log(Plan)
+    console.log(CableData);
+    console.log(CableData.potencia);
+    console.log(CableData.sintonizadores.length);
+    console.log(CableData.spliter);
+    console.log(CableData.triplexor);
+
+    let cantidadSintonizador = CableData.sintonizadores.length;
+
+    document.getElementById("txtPotencia").value = CableData.potencia;
+    document.getElementById("txtPlan").value = Plan;
+    document.getElementById("txtSintonizador").value = cantidadSintonizador;
+
+    document.getElementById("txtCliente").value = data[0].nombre;
+    document.getElementById("txtNrodocumento").value = doct;
   }
 
   async function obtenerIdSoporteDeUrl() {
@@ -114,7 +129,6 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("txtCliente").value = averia;
             document.getElementById("txtFecha").value = averia.fecha_hora_solicitud.split(" ")[0];
 
-            document.getElementById("slcPeriodo").value = soporteData.parametroscable.periodo[0];
             document.getElementById("txtPotencia").value = soporteData.parametroscable.potencia;
             document.getElementById("txtSintonizador").value = soporteData.parametroscable.sintonizador;
             document.getElementById("txtNumTriplexor").value = soporteData.parametroscable.triplexor.cantidad;
@@ -126,7 +140,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
             document.getElementById("txtaEstadoInicial").value = averia.descripcion_solucion;
 
-            document.getElementById("slcPeriodo").value = soporteData.cambioscable.periodo[0];
             document.getElementById("txtPotencia").value = soporteData.cambioscable.potencia;
             document.getElementById("txtSintonizador").value = soporteData.cambioscable.sintonizador;
             document.getElementById("txtNumTriplexor").value = soporteData.cambioscable.triplexor.cantidad;
@@ -136,7 +149,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("txtCable").value = soporteData.cambioscable.cable;
             document.getElementById("txtConector").value = soporteData.cambioscable.conectores;
 
-            document.getElementById("txtaProceSolucion").value = averia.descripcion_solucion;
+            document.getElementById("txtaEstadoFinal").value = averia.descripcion_solucion;
           }
         } catch (error) {
           console.error("Error al obtener las averías:", error);
@@ -150,20 +163,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const result = await Response.json();
 
     let soporte = result[0].soporte ? JSON.parse(result[0].soporte) : {};
-    
+
     const existeClave = Object.keys(soporte).includes(serv);
 
     if (!existeClave) {
       soporte[serv] = {
         parametroscable: {
-          periodo: document.getElementById("slcPeriodo").value === "1" ? "mensual" : "contado",
           potencia: parseInt(document.getElementById("txtPotencia").value) || 0,
           sintonizador: parseInt(document.getElementById("txtSintonizador").value) || 0,
-          triplexor: {
-            requiere: document.getElementById("txtNumTriplexor").value !== '',
-            cantidad: parseInt(document.getElementById("txtNumTriplexor").value) || 0,
-            tipo: document.getElementById("slcTriplexor").value === "2" ? "activo" : "pasivo",
-          },
+          triplexor: document.getElementById("slcTriplexor").value === "2" ? "activo" :
+            (document.getElementById("slcTriplexorCambio").value === "3" ? "pasivo" : "no lleva"),
           spliter: [
             { cantidad: parseInt(document.getElementById("txtNumSpliter").value) || 0, tipo: document.getElementById("slcSpliter").value }
           ],
@@ -171,14 +180,10 @@ document.addEventListener("DOMContentLoaded", () => {
           conectores: parseInt(document.getElementById("txtConector").value) || 0,
         },
         cambioscable: {
-          periodo: document.getElementById("slcPeriodoCambio").value === "1" ? "mensual" : "contado",
           potencia: parseInt(document.getElementById("txtPotenciaCambio").value) || 0,
           sintonizador: parseInt(document.getElementById("txtSintonizadorCambio").value) || 0,
-          triplexor: {
-            requiere: document.getElementById("txtNumTriplexorCambio").value !== '',
-            cantidad: parseInt(document.getElementById("txtNumTriplexorCambio").value) || 0,
-            tipo: document.getElementById("slcTriplexorCambio").value === "2" ? "activo" : "pasivo",
-          },
+          triplexor: document.getElementById("slcTriplexorCambio").value === "2" ? "activo" :
+            (document.getElementById("slcTriplexorCambio").value === "3" ? "pasivo" : "no lleva"),
           spliter: [
             { cantidad: parseInt(document.getElementById("txtNumSpliterCambio").value) || 0, tipo: document.getElementById("slcSpliterCambio").value }
           ],
@@ -205,7 +210,7 @@ document.addEventListener("DOMContentLoaded", () => {
             idTipoSoporte: document.getElementById("slcTipoSoporte").value,
             soporte: data,
             idUserUpdate: user['idUsuario'],
-            descripcion_solucion: document.getElementById("txtaProceSolucion").value,
+            descripcion_solucion: document.getElementById("txtaEstadoFinal").value,
           },
         }),
       });
@@ -225,7 +230,12 @@ document.addEventListener("DOMContentLoaded", () => {
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const data = await ArmadoJsonCable();
-    await guardarSoporte(data)
+    if(await ask("¿Desea guardar la ficha?"))
+    {
+      await guardarSoporte(data);
+      
+      window.location.href = `${config.HOST}views/Soporte/listarSoporte`; 
+    }
   });
 
 });

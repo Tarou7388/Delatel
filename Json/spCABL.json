@@ -5,7 +5,6 @@
     "sintonizador": 2,
     "triplexor": {
       "requiere": true,
-      "cantidad": 1,
       "tipo": ["activo", "pasivo"]
     },
     "spliter": [

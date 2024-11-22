@@ -187,7 +187,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const result = await response.json();
       if (result.status === "success") {
         console.log("Soporte actualizado correctamente.");
-        
+
       } else {
         console.error("Error al guardar soporte:", result.message);
       }
@@ -199,6 +199,9 @@ document.addEventListener("DOMContentLoaded", () => {
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const data = await ArmadoJsonGpon();
-    await guardarSoporte(data);
+    if (await ask("¿Desea guardar la ficha?")) {
+      await guardarSoporte(data)
+      window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
+    }
   });
 });
