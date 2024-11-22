@@ -193,7 +193,6 @@ END $$
 DELIMITER $$
 
 DROP PROCEDURE IF EXISTS spu_buscar_datos_cliente_id$$
-
 CREATE PROCEDURE spu_buscar_datos_cliente_id 
 (
     p_id_cliente INT
@@ -206,8 +205,11 @@ BEGIN
             e.nombre_comercial
         ) AS nombre_cliente,
         COALESCE(p.nro_doc, e.ruc) AS identificador_cliente,
-        p.nacionalidad,  -- no COALESCE if you don't need a default value for nacionalidad
-        p.tipo_doc,
+        p.nacionalidad,  
+        CASE 
+            WHEN p.nro_doc IS NOT NULL THEN p.tipo_doc
+            ELSE 'RUC'
+        END AS tipo_doc,
         COALESCE(p.telefono, e.telefono) AS telefono,
         COALESCE(p.email, e.email) AS email,
         c.direccion,

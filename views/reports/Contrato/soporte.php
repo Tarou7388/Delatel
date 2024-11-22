@@ -22,7 +22,6 @@ if (empty($resultado)) {
   exit;
 }
 
-
 $nombreCliente = $resultado[0]['NombreCliente'];
 $nombreArchivo = $nombreCliente . '.pdf';
 

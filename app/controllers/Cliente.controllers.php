@@ -50,6 +50,13 @@ if (isset($_GET['operacion'])) {
       ]);
       $resultado = $cliente->buscarNombreyApellido($datos);
       echo json_encode($resultado);
+      break;
+    case 'buscarClienteId':
+      $resultado = $cliente->buscarClientebyId([
+        'id' => Herramientas::sanitizarEntrada($_GET['id'])
+      ]);
+      echo json_encode($resultado);
+      break;
   }
 }
 

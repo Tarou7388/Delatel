@@ -48,10 +48,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const detalleButton = document.createElement("button");
       detalleButton.textContent = "Ver Detalles";
       detalleButton.className = "btn btn-secondary";
-      detalleButton.setAttribute("data-bs-toggle", "modal");
-      detalleButton.setAttribute("data-bs-target", "#detallePersona");
       detalleButton.onclick = () => {
-        window.location.href = `${config.HOST}views/reports/Persona/personas.php?id=${cliente.id_cliente}`;
+        window.location.href = `${config.HOST}views/reports/Cliente/soporte.php?id=${cliente.id_cliente}`;
       };
 
       cellDetalle.appendChild(detalleButton);
@@ -80,40 +78,6 @@ document.addEventListener("DOMContentLoaded", () => {
       `);
       printWindow.document.close();
       printWindow.print();
-    });
-
-    // Evento de clic para el botón de exportación a PDF
-    document.getElementById("pdfButton").addEventListener("click", () => {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-      const modalContent = document.querySelector("#detallePersona .modal-body");
-
-      doc.html(modalContent, {
-        callback: function (doc) {
-          doc.save("detalle_cliente.pdf");
-        },
-        x: 10,
-        y: 10,
-        html2canvas: {
-          scale: 0.35
-        }
-      });
-    });
-    // Evento de clic para el botón de exportación a Excel
-    document.getElementById("excelButton").addEventListener("click", () => {
-      const modalContent = document.querySelector("#detallePersona .modal-body").innerHTML;
-
-      // Crear una tabla temporal y agregar el contenido del modal
-      const tempTable = document.createElement('table');
-      tempTable.innerHTML = modalContent;
-
-      // Convertir la tabla temporal en una hoja de cálculo
-      const worksheet = XLSX.utils.table_to_sheet(tempTable);
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "DetalleCliente");
-
-      // Guardar el archivo Excel
-      XLSX.writeFile(workbook, "detalle_cliente.xlsx");
     });
 
     $('#listarClienteyContratos').DataTable({
