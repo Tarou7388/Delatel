@@ -56,30 +56,20 @@ document.addEventListener("DOMContentLoaded", () => {
         const installationData = JSON.parse(data[0].ficha_instalacion);
         const fibra = installationData.fibraoptica;
         const cable = installationData.cable;
-        document.getElementById("txtPotenciaFibra").value =
-          fibra.potencia || "";
+        document.getElementById("txtPotenciaFibra").value = fibra.potencia || "";
         document.getElementById("txtSsdi").value = fibra.moden?.ssid || "";
-        document.getElementById("txtSeguridad").value =
-          fibra.moden?.seguridad || "";
-        document.getElementById("txtMarcaModelo").value =
-          fibra.moden?.marca || "";
-        document.getElementById("txtSerieModen").value =
-          fibra.moden?.serie || "";
+        document.getElementById("txtSeguridad").value = fibra.moden?.seguridad || "";
+        document.getElementById("txtCodigoBarra").value = fibra.moden?.codigobarra || "";
+        document.getElementById("txtSerieModen").value = fibra.moden?.serie || "";
         document.getElementById("slcBanda").value = fibra.moden?.banda || "";
-        document.getElementById("txtAntenas").value =
-          fibra.moden?.numeroantena || "";
+        document.getElementById("txtAntenas").value = fibra.moden?.numeroantena || "";
         document.getElementById("chkCatv").checked = fibra.moden?.catv || false;
-        document.getElementById("txtaDetallesModen").value =
-          fibra.detalles || "";
+        document.getElementById("txtaDetallesModen").value = fibra.detalles || "";
         if (fibra.repetidores && fibra.repetidores.length > 0) {
-          document.getElementById("txtSsidRepetidor").value =
-            fibra.repetidores[0].ssid;
-          document.getElementById("txtContraseniaRepetidor").value =
-            fibra.repetidores[0].contrasenia;
-          document.getElementById("txtMarcaModeloRepetidor").value =
-            fibra.repetidores[0].marca;
-          document.getElementById("txtIpRepetidor").value =
-            fibra.repetidores[0].ip;
+          document.getElementById("txtSsidRepetidor").value = fibra.repetidores[0].ssid;
+          document.getElementById("txtContraseniaRepetidor").value = fibra.repetidores[0].contrasenia;
+          document.getElementById("txtMarcaModeloRepetidor").value = fibra.repetidores[0].marca;
+          document.getElementById("txtIpRepetidor").value = fibra.repetidores[0].ip;
 
           const cardContainer = document.getElementById("cardContainer");
           cardContainer.removeAttribute("hidden");
@@ -372,10 +362,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const ssid = document.getElementById("txtSsidRepetidor").value;
     const contrasenia = document.getElementById("txtContraseniaRepetidor").value;
-    const marcaModelo = document.getElementById("txtMarcaModeloRepetidor").value;
+    const codigoBarra = document.getElementById("txtCodigoBarrasRepetidor").value;
+    const modelo = document.getElementById("txtModeloRepetidor").value;
+    const marca = document.getElementById("txtMarcaRepetidor").value;
     const ip = document.getElementById("txtIpRepetidor").value;
 
-    if (ssid === "" || contrasenia === "" || marcaModelo === "" || ip === "") {
+    if (ssid === "" || contrasenia === "" || codigoBarra === "" || ip === "") {
       showToast("Por favor, llene todos los campos.", "WARNING");
       return;
     } else {
@@ -384,7 +376,9 @@ document.addEventListener("DOMContentLoaded", () => {
         numero: numeroRepetidores,
         ssid: ssid,
         contrasenia: contrasenia,
-        marca: marcaModelo,
+        codigoBarra: codigoBarra,
+        modelo: modelo,
+        marca: marca,
         ip: ip,
       };
       jsonRepetidor.push(repetidor);
@@ -401,12 +395,20 @@ document.addEventListener("DOMContentLoaded", () => {
                           </div>
                       </div>
                       <div class="row">
-                          <div class="col-6">
-                              <p class="card-text"><strong>Producto:</strong> ${marcaModelo}</p>
-                          </div>
-                          <div class="col-6">
-                              <p class="card-text"><strong>IP:</strong> ${ip}</p>
-                          </div>
+                        <div class="col-6">
+                          <p class="card-text"><strong>Codigo de Barra:</strong> ${codigoBarra}</p>
+                        </div> 
+                        <div class="col-6">
+                          <p class="card-text"><strong>Modelo:</strong> ${modelo}</p>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-6">
+                          <p class="card-text"><strong>Marca:</strong> ${marca}</p>
+                        </div>
+                        <div class="col-6">
+                          <p class="card-text"><strong>IP:</strong> ${ip}</p>
+                        </div>
                       </div>
                   </div>
               </div>
@@ -417,7 +419,9 @@ document.addEventListener("DOMContentLoaded", () => {
       contenidoCarta.appendChild(nuevoRepetidor);
       document.getElementById("txtSsidRepetidor").value = "";
       document.getElementById("txtContraseniaRepetidor").value = "";
-      document.getElementById("txtMarcaModeloRepetidor").value = "";
+      document.getElementById("txtCodigoBarrasRepetidor").value = "";
+      document.getElementById("txtMarcaRepetidor").value = "";
+      document.getElementById("txtModeloRepetidor").value = "";
       document.getElementById("txtIpRepetidor").value = "";
       document.getElementById("txtSerieRepetidor").value = "";
       $("#mdlRepetidor").modal("hide");
@@ -468,25 +472,25 @@ document.addEventListener("DOMContentLoaded", () => {
     await ActualizarCantidadSintotizador();
   }
   //Evento de escaneo de código de barras fibra óptica
-  document.getElementById('btnEscanearModen').addEventListener('click', async function (event) {
-    event.preventDefault();
-    const codigoBarra = document.getElementById('txtMarcaModelo').value;
+  document.getElementById('txtCodigoBarra').addEventListener('input', async function () {
+    const codigoBarra = this.value.trim();
 
-    if (codigoBarra.trim() === "") {
-      showToast("Por favor, ingrese un código de barras.");
-      return;
+    if (codigoBarra === "") {
+      return; // Si está vacío, no hacemos nada
     }
+
     try {
       const response = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarra&codigoBarra=${encodeURIComponent(codigoBarra)}`);
       const resultado = await response.json();
-      console.log('Resultado:', resultado);
 
       if (Array.isArray(resultado) && resultado.length > 0) {
         const producto = resultado[0];
         if (producto && producto.marca && producto.modelo) {
-          const textoFinal = `${codigoBarra} - ${producto.marca} - ${producto.modelo}`;
-          document.getElementById('txtMarcaModelo').value = textoFinal;
-          showToast(`Producto encontrado: ${producto.marca} - ${producto.modelo}`,"SUCCESS");
+          const marca = producto.marca;
+          const modelo = producto.modelo;
+          document.getElementById('txtMarca').value = marca;
+          document.getElementById('txtModelo').value = modelo;
+          showToast(`Producto encontrado: ${producto.marca} - ${producto.modelo}`, "SUCCESS");
         } else {
           showToast("Producto no encontrado o datos incompletos.", "INFO");
         }
@@ -498,26 +502,27 @@ document.addEventListener("DOMContentLoaded", () => {
       showToast("Hubo un error al buscar el producto.", "ERROR");
     }
   });
-  //Evento de escaneo de código de barras repetidor
-  document.getElementById('btnEscanearRepetidor').addEventListener('click', async function (event) {
-    event.preventDefault();
-    const codigoBarra = document.getElementById('txtMarcaModeloRepetidor').value;
 
-    if (codigoBarra.trim() === "") {
-      showToast("Por favor, ingrese un código de barras.");
-      return;
+  //Evento de escaneo de código de barras repetidor
+  document.getElementById('txtCodigoBarrasRepetidor').addEventListener('input', async function () {
+    const codigoBarra = this.value.trim();
+
+    if (codigoBarra === "") {
+      return; // No hacer nada si el campo está vacío
     }
+
     try {
       const response = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarra&codigoBarra=${encodeURIComponent(codigoBarra)}`);
       const resultado = await response.json();
-      console.log('Resultado:', resultado);
 
       if (Array.isArray(resultado) && resultado.length > 0) {
         const producto = resultado[0];
         if (producto && producto.marca && producto.modelo) {
-          const textoFinal = `${codigoBarra} - ${producto.marca} - ${producto.modelo}`;
-          document.getElementById('txtMarcaModeloRepetidor').value = textoFinal;
-          showToast(`Producto encontrado: ${producto.marca} - ${producto.modelo}`,"SUCCESS");
+          const marca = producto.marca;
+          const modelo = producto.modelo;
+          document.getElementById('txtMarcaRepetidor').value = marca;
+          document.getElementById('txtModeloRepetidor').value = modelo;
+          showToast(`Producto encontrado: ${producto.marca} - ${producto.modelo}`, "SUCCESS");
         } else {
           showToast("Producto no encontrado o datos incompletos.", "INFO");
         }
@@ -529,6 +534,7 @@ document.addEventListener("DOMContentLoaded", () => {
       showToast("Hubo un error al buscar el producto.", "ERROR");
     }
   });
+
 
   async function guardar() {
     await fibraOptica();
