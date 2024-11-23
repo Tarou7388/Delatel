@@ -91,20 +91,12 @@ $HOST = "http://localhost/DELATEL/";
           </colgroup>
           <thead>
             <tr class="bg-info tex-light">
-              <th colspan="2" class="text-center">Bajada (Descarga) Mbp/s <img src="<?= $HOST; ?>image/iconoFlechaAbajo.png" class="icono" alt=""> </th>
-              <th colspan="2" class="text-center">Subida (Carga) Mbp/s <img src="<?= $HOST; ?>image/iconoFlechaArriba.png" class="icono" alt=""></th>
+              <th class="text-center">Bajada (Descarga) Mbp/s <img src="<?= $HOST; ?>image/iconoFlechaAbajo.png" class="icono" alt=""> </th>
+              <th class="text-center">Subida (Carga) Mbp/s <img src="<?= $HOST; ?>image/iconoFlechaArriba.png" class="icono" alt=""></th>
             </tr>
           </thead>
           <tbody>
             <tr style="border: 1px solid #fff;">
-              <td style="border: 1px solid #fff;" class="text-center">Máxima</td>
-              <td style="border: 1px solid #fff;" class="text-center">Mínima Garantizada</td>
-              <td style="border: 1px solid #fff;" class="text-center">Máxima</td>
-              <td style="border: 1px solid #fff;" class="text-center">Mínima Garantizada</td>
-            </tr>
-            <tr style="border: 1px solid #fff;">
-              <td style="border: 1px solid #fff;" class="input"></td>
-              <td style="border: 1px solid #fff;" class="input"></td>
               <td style="border: 1px solid #fff;" class="input"></td>
               <td style="border: 1px solid #fff;" class="input"></td>
             </tr>

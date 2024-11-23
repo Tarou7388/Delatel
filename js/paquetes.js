@@ -4,7 +4,7 @@ import * as Herramientas from "../js/Herramientas.js";
 document.addEventListener("DOMContentLoaded", async () => {
   const userid = user["idUsuario"];
   let idServicio = 0;
-  const accesos = await Herramientas.permisos()
+  const accesos = await Herramientas.permisos();
 
   const ruta = `${config.HOST}app/controllers/Paquete.controllers.php?operacion=listarPaquetes`;
 
@@ -108,6 +108,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     $("#txtPrecioActualizar").val("");
     $("#slcTipoServicio").val("").trigger("change");
     $("#slcTipoServicioActualizar").val("").trigger("change");
+    $("#serviciosContainer").empty();
   }
 
   // Evento para abrir el modal de actualización
@@ -120,18 +121,31 @@ document.addEventListener("DOMContentLoaded", async () => {
         idPaquete
       );
       const paquete = await response.json();
+      console.log("Paquete:", paquete);
       $("#txtIdPaquete").val(paquete[0].id_paquete);
       $("#txtPaqueteActualizar").val(paquete[0].paquete);
       $("#txtPrecioActualizar").val(paquete[0].precio);
 
-      // Parsear el campo id_servicio que viene como JSON string
       const idServicioJson = JSON.parse(paquete[0].id_servicio);
       const selectedServices = idServicioJson.id_servicio;
 
-      // Establecer los valores de los servicios en el selector
       $("#slcTipoServicioActualizar").val(selectedServices).trigger("change");
 
       idServicio = selectedServices;
+
+      setTimeout(() => {
+        const velocidad = JSON.parse(paquete[0].velocidad);
+
+        if (selectedServices.includes(3)) {
+          $("#txtbajadaMaximaActualizar").val(velocidad.bajada.maxima);
+          $("#txtbajadaMinimaActualizar").val(velocidad.bajada.minima_garantizada);
+          $("#txtsubidaMaximaActualizar").val(velocidad.subida.maxima);
+          $("#txtsubidaMinimaActualizar").val(velocidad.subida.minima_garantizada);
+        } else if (selectedServices.includes(2)) {
+          $("#txtbajadaActualizar").val(velocidad.bajada);
+          $("#txtsubidaActualizar").val(velocidad.subida);
+        }
+      }, 500);
 
       $("#modalActualizarPaquete").modal("show");
     } catch (error) {
@@ -182,15 +196,38 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
       }
 
+      // Construir el objeto de velocidad
+      let velocidad = {};
+      if (selectedServices.includes("3")) {
+        velocidad = {
+          bajada: {
+            maxima: document.querySelector("#txtbajadaMaxima").value || 0,
+            minima_garantizada: document.querySelector("#txtbajadaMinima").value || 0
+          },
+          subida: {
+            maxima: document.querySelector("#txtsubidaMaxima").value || 0,
+            minima_garantizada: document.querySelector("#txtsubidaMinima").value || 0
+          }
+        };
+      } else if (selectedServices.includes("2")) {
+        velocidad = {
+          bajada: document.querySelector("#txtbajadaMaxima").value || 0,
+          subida: document.querySelector("#txtsubidaMaxima").value || 0
+        };
+      }
+
       const datosEnviar = {
         operacion: "registrarPaquete",
         parametros: {
           idServicio: selectedServices.map(Number),
           paquete: paquete,
           precio: precio,
+          velocidad: velocidad,
           idUsuario: userid,
         },
       };
+
+      console.log("Datos a enviar:", datosEnviar);
 
       try {
         const respuesta = await fetch(`${config.HOST}app/controllers/Paquete.controllers.php`, {
@@ -221,6 +258,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     }
   }
+
   // Función Actualizar
   async function actualizarPaquete(idPaquete) {
     if (accesos?.paquetes?.actualizar) {
@@ -232,13 +270,33 @@ document.addEventListener("DOMContentLoaded", async () => {
       const precio = document.querySelector("#txtPrecioActualizar").value;
       const selectedServices = $("#slcTipoServicioActualizar").val() || [];
 
+      let velocidad = {};
+      if (selectedServices.includes("3")) {
+        velocidad = {
+          bajada: {
+            maxima: document.querySelector("#txtbajadaMaximaActualizar").value || 0,
+            minima_garantizada: document.querySelector("#txtbajadaMinimaActualizar").value || 0
+          },
+          subida: {
+            maxima: document.querySelector("#txtsubidaMaximaActualizar").value || 0,
+            minima_garantizada: document.querySelector("#txtsubidaMinimaActualizar").value || 0
+          }
+        };
+            } else if (selectedServices.includes("2")) {
+        velocidad = {
+          bajada: document.querySelector("#txtbajadaActualizar").value || 0,
+          subida: document.querySelector("#txtsubidaActualizar").value || 0
+        };
+      }
+
       const datos = {
         operacion: "actualizarPaquete",
         parametros: {
           idPaquete: idPaquete,
-          idServicio: selectedServices.map(Number), // Convertir los valores a enteros
+          idServicio: selectedServices.map(Number),
           paquete: paquete,
           precio: precio,
+          velocidad: velocidad,
           idUsuario: userid,
         },
       };
@@ -342,12 +400,141 @@ document.addEventListener("DOMContentLoaded", async () => {
           slcTipoServicioActualizar.append(option);
         });
 
+      const wispServiceId = "2";
+
+      function handleServiceChange(selector) {
+        const selectedServices = selector.val();
+        const isWispSelected = selectedServices.includes(wispServiceId);
+
+        selector.find("option").each(function () {
+          const optionValue = $(this).val();
+          if (isWispSelected) {
+            if (optionValue !== wispServiceId) {
+              $(this).prop("disabled", true);
+            }
+          } else {
+            if (selectedServices.length > 0 && optionValue === wispServiceId) {
+              $(this).prop("disabled", true);
+            } else {
+              $(this).prop("disabled", false);
+            }
+          }
+        });
+
+        selector.trigger("change.select2");
+      }
+
       slcTipoServicio.on("change", function () {
-        idServicio = parseInt($(this).val(), 10);
+        handleServiceChange($(this));
+        const selectedServices = $(this).val();
+        serviciosContainer.empty();
+
+        if (selectedServices.includes("3")) {
+          const labels = [
+            { id: "bajadaMaxima", label: "Bajada Máxima", placeholder: "Bajada Máxima" },
+            { id: "bajadaMinima", label: "Bajada Mínima Garantizada", placeholder: "Bajada Mínima Garantizada" },
+            { id: "subidaMaxima", label: "Subida Máxima", placeholder: "Subida Máxima" },
+            { id: "subidaMinima", label: "Subida Mínima Garantizada", placeholder: "Subida Mínima Garantizada" }
+          ];
+          let row = $('<div class="row g-2"></div>');
+          labels.forEach((item, index) => {
+            row.append(`
+                <div class="col-md-6">
+                  <div class="form-floating mb-2">
+                    <input type="text" class="form-control" id="txt${item.id}" placeholder="${item.placeholder}" required>
+                    <label for="txt${item.id}">${item.label}</label>
+                  </div>
+                </div>
+              `);
+            if (index % 2 === 1) {
+              serviciosContainer.append(row);
+              row = $('<div class="row g-2"></div>');
+            }
+          });
+          if (labels.length % 2 !== 0) {
+            serviciosContainer.append(row);
+          }
+        } else if (selectedServices.includes("2")) {
+          const labels = [
+            { id: "bajadaMaxima", label: "Bajada", placeholder: "Bajada" },
+            { id: "subidaMaxima", label: "Subida", placeholder: "Subida" }
+          ];
+          let row = $('<div class="row g-2"></div>');
+          labels.forEach((item, index) => {
+            row.append(`
+                <div class="col-md-6">
+                  <div class="form-floating mb-2">
+                    <input type="text" class="form-control" id="txt${item.id}" placeholder="${item.placeholder}" required>
+                    <label for="txt${item.id}">${item.label}</label>
+                  </div>
+                </div>
+              `);
+            if (index % 2 === 1) {
+              serviciosContainer.append(row);
+              row = $('<div class="row g-2"></div>');
+            }
+          });
+          if (labels.length % 2 !== 0) {
+            serviciosContainer.append(row);
+          }
+        }
       });
 
       slcTipoServicioActualizar.on("change", function () {
-        idServicio = parseInt($(this).val(), 10);
+        handleServiceChange($(this));
+        const selectedServices = $(this).val();
+        const serviciosContainerActualizar = $("#serviciosContainerActualizar");
+        serviciosContainerActualizar.empty();
+
+        if (selectedServices.includes("3")) {
+          const labels = [
+            { id: "bajadaMaximaActualizar", label: "Bajada Máxima", placeholder: "Bajada Máxima" },
+            { id: "bajadaMinimaActualizar", label: "Bajada Mínima Garantizada", placeholder: "Bajada Mínima Garantizada" },
+            { id: "subidaMaximaActualizar", label: "Subida Máxima", placeholder: "Subida Máxima" },
+            { id: "subidaMinimaActualizar", label: "Subida Mínima Garantizada", placeholder: "Subida Mínima Garantizada" }
+          ];
+          let row = $('<div class="row g-2"></div>');
+          labels.forEach((item, index) => {
+            row.append(`
+              <div class="col-md-6">
+                <div class="form-floating mb-2">
+                  <input type="text" class="form-control" id="txt${item.id}" placeholder="${item.placeholder}" required>
+                  <label for="txt${item.id}">${item.label}</label>
+                </div>
+              </div>
+            `);
+            if (index % 2 === 1) {
+              serviciosContainerActualizar.append(row);
+              row = $('<div class="row g-2"></div>');
+            }
+          });
+          if (labels.length % 2 !== 0) {
+            serviciosContainerActualizar.append(row);
+          }
+        } else if (selectedServices.includes("2")) {
+          const labels = [
+            { id: "bajadaActualizar", label: "Bajada Máxima", placeholder: "Bajada Máxima" },
+            { id: "subidaActualizar", label: "Subida Máxima", placeholder: "Subida Máxima" }
+          ];
+          let row = $('<div class="row g-2"></div>');
+          labels.forEach((item, index) => {
+            row.append(`
+              <div class="col-md-6">
+                <div class="form-floating mb-2">
+                  <input type="text" class="form-control" id="txt${item.id}" placeholder="${item.placeholder}" required>
+                  <label for="txt${item.id}">${item.label}</label>
+                </div>
+              </div>
+            `);
+            if (index % 2 === 1) {
+              serviciosContainerActualizar.append(row);
+              row = $('<div class="row g-2"></div>');
+            }
+          });
+          if (labels.length % 2 !== 0) {
+            serviciosContainerActualizar.append(row);
+          }
+        }
       });
     } catch (error) {
       console.error("Error al cargar servicios:", error);
@@ -387,28 +574,28 @@ document.addEventListener("DOMContentLoaded", async () => {
       backdrop: 'static',
       keyboard: false
     });
-  
+
     $('#modalActualizarPaquete').modal({
       backdrop: 'static',
       keyboard: false
     });
-  
+
     $('#slcTipoServicio').select2({
       theme: 'bootstrap-5',
       placeholder: 'Seleccione',
-      width: '100%' 
+      width: '100%'
     }).next('.select2-container').css({
-      'font-size': '1.2em', 
-      'min-height': '40px'  
+      'font-size': '1.2em',
+      'min-height': '40px'
     });
-  
+
     $('#slcTipoServicioActualizar').select2({
       theme: 'bootstrap-5',
       placeholder: 'Seleccione',
-      width: '100%' 
+      width: '100%'
     }).next('.select2-container').css({
-      'font-size': '1.2em', 
-      'min-height': '40px'  
+      'font-size': '1.2em',
+      'min-height': '40px'
     });
   });
 

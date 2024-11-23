@@ -21,7 +21,7 @@
             <label for="txtPrecio">Precio</label>
           </div>
 
-          <label for="slcTipoServicio" class="form-label">Tipo de Servicio</label>
+          <label for="slcTipoServicio" class="form-label">Tipo de Servicio:</label>
           <div class="form-floating mb-2">
             <select class="js-example-basic-multiple form-select" name="states[]" id="slcTipoServicio" multiple="multiple" style="width: 100%;" required>
             </select>

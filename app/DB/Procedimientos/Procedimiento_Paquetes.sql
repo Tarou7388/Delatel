@@ -14,6 +14,7 @@ BEGIN
         GROUP_CONCAT(s.tipo_servicio) AS tipos_servicio,
         p.paquete,
         p.precio,
+        p.velocidad, 
         p.create_at,
         p.update_at,
         p.inactive_at,
@@ -43,6 +44,7 @@ SELECT
     GROUP_CONCAT(s.tipo_servicio) AS tipos_servicio,
     p.paquete,
     p.precio,
+    p.velocidad,
     p.create_at,
     p.update_at,
     p.inactive_at,
@@ -64,11 +66,12 @@ CREATE PROCEDURE spu_paquete_registrar(
     IN p_id_servicio JSON,
     IN p_paquete VARCHAR(250),
     IN p_precio DECIMAL(7,2),
+    IN p_velocidad JSON,
     IN p_iduser_create INT
 )
 BEGIN
-    INSERT INTO tb_paquetes (id_servicio, paquete, precio, iduser_create) 
-    VALUES (p_id_servicio, p_paquete, p_precio, p_iduser_create);
+    INSERT INTO tb_paquetes (id_servicio, paquete, precio, velocidad, iduser_create) 
+    VALUES (p_id_servicio, p_paquete, p_precio, p_velocidad, p_iduser_create);
 END $$
 
 /* Procedimiento Actualizar */
@@ -79,6 +82,7 @@ CREATE PROCEDURE spu_paquete_actualizar(
     p_id_servicio JSON,
     p_paquete VARCHAR(250),
     p_precio DECIMAL(7,2),
+    p_velocidad JSON,
     p_iduser_update INT
 )
 BEGIN
@@ -87,6 +91,7 @@ BEGIN
 		id_servicio = p_id_servicio,
         paquete = p_paquete,
         precio = p_precio,
+        velocidad = p_velocidad,
         iduser_update = p_iduser_update,
         update_at = NOW()
 	WHERE
@@ -123,6 +128,7 @@ BEGIN
         GROUP_CONCAT(s.tipo_servicio) AS tipos_servicio,
         p.paquete,
         p.precio,
+        p.velocidad,
         p.create_at,
         p.update_at,
         p.inactive_at,
@@ -150,6 +156,7 @@ BEGIN
         p.id_paquete, 
         p.paquete, 
         p.precio, 
+        p.velocidad,
         GROUP_CONCAT(s.tipo_servicio) AS tipos_servicio,
         p.inactive_at
     FROM 
