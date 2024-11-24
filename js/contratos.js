@@ -13,8 +13,6 @@ window.addEventListener("DOMContentLoaded", async () => {
   const slcPaquetesActualizar = document.querySelector("#slcPaquetesActualizar");
   const txtNota = document.querySelector("#txtNota");
   const txtMeses = document.querySelector("#txtMeses");
-  const fechaFin = document.querySelector("#txtFechaFin");
-  const fechaFinActualizar = document.querySelector("#txtFechaFinActualizar");
   const accesos = await Herramientas.permisos();
 
   let idSector = null;
@@ -26,45 +24,6 @@ window.addEventListener("DOMContentLoaded", async () => {
   slcPaquetes.disabled = true;
   let tabla;
   let dataPaquetes = [];
-
-  txtMeses.addEventListener("input", calcularFechaFin);
-  txtMesesActualizar.addEventListener("input", calcularFechaFinActualizar);
-
-  function calcularFechaFin() {
-    const meses = parseInt(txtMeses.value, 10);
-    if (isNaN(meses)) {
-      fechaFin.textContent = "";
-      fechaFin.value = "";
-      return;
-    }
-    const fechaActual = new Date();
-    fechaActual.setMonth(fechaActual.getMonth() + meses);
-    const year = fechaActual.getFullYear();
-    const month = String(fechaActual.getMonth() + 1).padStart(2, '0');
-    const day = String(fechaActual.getDate()).padStart(2, '0');
-    const mesesNombres = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
-    const mesNombre = mesesNombres[fechaActual.getMonth()];
-    fechaFin.textContent = `${day} de ${mesNombre} de ${year}`;
-    fechaFin.value = `${year}-${month}-${day}`;
-  }
-
-  function calcularFechaFinActualizar() {
-    const meses = parseInt(txtMesesActualizar.value, 10);
-    if (isNaN(meses)) {
-      fechaFinActualizar.textContent = "";
-      fechaFinActualizar.value = "";
-      return;
-    }
-    const fechaActual = new Date();
-    fechaActual.setMonth(fechaActual.getMonth() + meses);
-    const year = fechaActual.getFullYear();
-    const month = String(fechaActual.getMonth() + 1).padStart(2, '0');
-    const day = String(fechaActual.getDate()).padStart(2, '0');
-    const mesesNombres = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
-    const mesNombre = mesesNombres[fechaActual.getMonth()];
-    fechaFinActualizar.textContent = `${day} de ${mesNombre} de ${year}`;
-    fechaFinActualizar.value = `${year}-${month}-${day}`;
-  }
 
   document.addEventListener("servicioActivado", cargarServicios);
   document.addEventListener("servicioDesactivado", cargarServicios);
@@ -272,19 +231,11 @@ window.addEventListener("DOMContentLoaded", async () => {
       const nota = txtNota.value;
       const idUsuarioRegistro = user.idRol;
       const idPaquete = slcPaquetes.value.split(' - ')[0];
-      const fechaActual = new Date();
-      const fechaMinimaFin = new Date(fechaActual);
-      fechaMinimaFin.setMonth(fechaMinimaFin.getMonth() + 3);
-
-      const fechaFinContrato = new Date(fechaFin.value);
 
       if (!(await validarCampos())) {
         showToast("¡Llene todos los campos!", "INFO");
         return;
-      } else if (fechaFinContrato < fechaMinimaFin) {
-        showToast("¡La fecha de fin debe ser al menos 3 meses después de la fecha de registro!", "INFO");
-        return;
-      }
+      } 
 
       const confirmacion = await ask("¿Desea registrar el nuevo contrato?", "Contratos");
       if (!confirmacion) {
@@ -302,7 +253,6 @@ window.addEventListener("DOMContentLoaded", async () => {
             referencia: referencia.value,
             coordenada: coordenada.value,
             fechaInicio: new Date().toISOString().split("T")[0],
-            fechaFin: fechaFin.value || null,
             fechaRegistro: fechaRegistro,
             nota: nota,
             idUsuario: user.idUsuario,
@@ -376,16 +326,6 @@ window.addEventListener("DOMContentLoaded", async () => {
       const referencia = document.querySelector("#txtReferenciaActualizar").value;
       const coordenada = document.querySelector("#txtCoordenadaActualizar").value;
       const nota = document.querySelector("#txtNotaActualizar").value;
-      const fechaFin = new Date(fechaFinActualizar.value);
-
-      const fechaActual = new Date();
-      const tresMesesDespues = new Date(fechaActual.setMonth(fechaActual.getMonth() + 3));
-
-      if (fechaFin < tresMesesDespues) {
-        showToast("La fecha de fin debe ser al menos 3 meses mayor a la fecha actual.", "INFO");
-        return;
-      }
-
       const datosEnvio = {
         operacion: "actualizarContrato",
         parametros: {
@@ -394,7 +334,6 @@ window.addEventListener("DOMContentLoaded", async () => {
           direccionServicio: direccionServicio,
           referencia: referencia,
           coordenada: coordenada,
-          fechaFin: fechaFinActualizar.value || null,
           nota: nota,
           idUsuarioUpdate: idUsuario,
         },
@@ -516,7 +455,12 @@ window.addEventListener("DOMContentLoaded", async () => {
         botonesPdf.forEach((boton) => {
           boton.addEventListener("click", () => {
             const idContrato = boton.getAttribute("data-idContrato");
-            window.open(`${config.HOST}views/reports/Contrato/soporte.php?id=${idContrato}`);
+            const tipoServicio = boton.closest('tr').querySelector('td:nth-child(5)').textContent.trim();
+            if (tipoServicio === "WISP") {
+              window.open(`${config.HOST}views/reports/Contrato_WISP/soporte.php?id=${idContrato}`);
+            } else {
+              window.open(`${config.HOST}views/reports/Contrato/soporte.php?id=${idContrato}`);
+            }
           });
         });
       }
@@ -553,8 +497,6 @@ window.addEventListener("DOMContentLoaded", async () => {
     slcTipoServicio.value = "";
     txtNota.value = "";
     txtMeses.value = "";
-    fechaFin.textContent = "";
-    fechaFin.value = "";
     slcPaquetes.disabled = true;
     $('#slcPaquetes').val(null).trigger('change');
   }
@@ -574,22 +516,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       document.getElementById("txtDireccionActualizar").value = data[0].direccion_servicio;
       document.getElementById("txtReferenciaActualizar").value = data[0].referencia;
       document.getElementById("txtCoordenadaActualizar").value = data[0].coordenada;
-      document.getElementById("txtFechaFinActualizar").value = data[0].fecha_fin || "";
       document.getElementById("txtNotaActualizar").value = data[0].nota;
-      const fechaFinSpan = document.querySelector("#txtFechaFinActualizar");
-      if (fechaFinSpan) {
-        if (data[0].fecha_fin) {
-          const fechaFin = new Date(data[0].fecha_fin);
-          if (!isNaN(fechaFin.getTime())) {
-            fechaFin.setDate(fechaFin.getDate() + 1);
-            fechaFinSpan.textContent = fechaFin.toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' });
-          } else {
-            fechaFinSpan.textContent = "No cuenta con fecha de fin";
-          }
-        } else {
-          fechaFinSpan.textContent = "No cuenta con fecha de fin";
-        }
-      }
 
       const idServicio = JSON.parse(data[0].id_servicio).id_servicio;
       const tiposServicio = data[0].tipos_servicio.split(',').length;
@@ -829,16 +756,19 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   async function cargarPrecio() {
     const selectedValue = slcPaquetes.value.split(" - ");
-    idServicio = parseInt(selectedValue[0]);
-    precioServicio = selectedValue[1];
-    precio.value = precioServicio;
+    if (selectedValue.length > 1) {
+      precioServicio = selectedValue[1];
+      precio.value = precioServicio;
+    } else {
+      precio.value = '0';
+    }
   }
 
-  $("#slcPaquetes").on("select2:select", function () {
+  $("#slcPaquetes").on("change", function () {
     cargarPrecio();
   });
 
-  $("#slcPaquetesActualizar").on("select2:select", function () {
+  $("#slcPaquetesActualizar").on("change", function () {
     const paqueteId = slcPaquetesActualizar.value;
     const paqueteSeleccionado = dataPaquetes.find(p => p.id_paquete == paqueteId);
 

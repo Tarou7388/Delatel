@@ -33,7 +33,7 @@ class Contrato extends Conexion
      */
     public function registrarContrato($params = [])
     {
-        $sql = "CALL spu_contratos_registrar(?,?,?,?,?,?,?,?,?,?,?)";
+        $sql = "CALL spu_contratos_registrar(?,?,?,?,?,?,?,?,?,?)";
         $values = array(
             $params['idCliente'],
             $params['idPaquete'],
@@ -42,7 +42,6 @@ class Contrato extends Conexion
             $params['referencia'],
             $params['coordenada'],
             $params['fechaInicio'],
-            $params['fechaFin'],
             $params['fechaRegistro'],
             $params['nota'],
             $params['idUsuario']
@@ -205,14 +204,13 @@ class Contrato extends Conexion
      */
     public function actualizarContrato($params = [])
     {
-        $sql = "CALL spu_contratos_actualizar(?,?,?,?,?,?,?,?)";
+        $sql = "CALL spu_contratos_actualizar(?,?,?,?,?,?,?)";
         $values = array(
             $params['idContrato'],
             $params['idPaquete'],
             $params['direccionServicio'],
             $params['referencia'],
             $params['coordenada'],
-            $params['fechaFin'],
             $params['nota'],
             $params['idUsuarioUpdate']
         );

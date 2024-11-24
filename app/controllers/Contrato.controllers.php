@@ -59,7 +59,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         "referencia"          => Herramientas::sanitizarEntrada($datos['parametros']['referencia']),
         "coordenada"          => Herramientas::sanitizarEntrada($datos['parametros']['coordenada']),
         "fechaInicio"         => Herramientas::sanitizarEntrada($datos['parametros']['fechaInicio']),
-        "fechaFin"            => Herramientas::sanitizarEntrada($datos['parametros']['fechaFin']),
         "fechaRegistro"       => Herramientas::sanitizarEntrada($datos['parametros']['fechaRegistro']),
         "nota"                => Herramientas::sanitizarEntrada($datos['parametros']['nota']),
         "idUsuario"           => Herramientas::sanitizarEntrada($datos['parametros']['idUsuario'])
@@ -95,7 +94,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
         "direccionServicio"  => Herramientas::sanitizarEntrada($datos['parametros']['direccionServicio']),
         "referencia"         => Herramientas::sanitizarEntrada($datos['parametros']['referencia']),
         "coordenada"         => Herramientas::sanitizarEntrada($datos['parametros']['coordenada']),
-        "fechaFin"           => Herramientas::sanitizarEntrada($datos['parametros']['fechaFin']),
         "nota"               => Herramientas::sanitizarEntrada($datos['parametros']['nota']),
         "idUsuarioUpdate"    => Herramientas::sanitizarEntrada($datos['parametros']['idUsuarioUpdate'])
       ];

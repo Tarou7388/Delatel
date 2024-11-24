@@ -56,19 +56,6 @@
 
             <div class="col-md-4">
               <div class="form-floating">
-                <input type="number" class="form-control" id="txtMesesActualizar" placeholder="Meses" name="Meses">
-                <label for="txtMesesActualizar" class="form-label">Fecha Fin (meses)</label>
-                <span id="txtFechaFinActualizar" name="Fecha Fin"></span>
-              </div>
-            </div>
-
-
-          </div>
-
-          <div class="row mb-2">
-
-            <div class="col-md-3">
-              <div class="form-floating">
                 <select id="slcTipoServicioActualizar" class="form-select" aria-label="Tipo Servicio" disabled>
                   <option value="0" disabled selected>Seleccione</option>
                 </select>
@@ -76,7 +63,11 @@
               </div>
             </div>
 
-            <div class="col-md-3">
+          </div>
+
+          <div class="row mb-2">
+
+            <div class="col-md-4">
               <div class="form-floating">
                 <select class="form-select select2me" id="slcPaquetesActualizar" aria-label="Paquetes">
                   <option value="0" disabled selected>Seleccione</option>
@@ -85,14 +76,25 @@
               </div>
             </div>
 
-            <div class="col-md-3">
+            <div class="col-md-4">
               <div class="form-floating">
                 <input type="number" class="form-control" id="txtPrecioActualizar" value="0" placeholder="Precio" disabled>
                 <label for="txtPrecioActualizar" class="form-label">Precio</label>
               </div>
             </div>
 
-            <div class="col-md-3">
+            <div class="col-md-4">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="txtCoordenadaActualizar" placeholder="Coordenada" name="coordenada" disabled>
+                <label for="txtCoordenadaActualizar" class="form-label">Coordenada</label>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="row mb-2">
+
+            <div class="col-md-4">
               <div class="form-floating">
                 <select class="form-select select2me" id="slcSectorActualizar" aria-label="Sectores" disabled>
                   <option value="0" disabled selected>Sectores</option>
@@ -100,10 +102,6 @@
                 <label for="slcSectorActualizar" class="form-label">Sectores</label>
               </div>
             </div>
-
-          </div>
-
-          <div class="row mb-2">
 
             <div class="col-md-4">
               <div class="form-floating">
@@ -116,13 +114,6 @@
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtReferenciaActualizar" placeholder="Referencia" name="referencia">
                 <label for="txtReferenciaActualizar" class="form-label">Referencia</label>
-              </div>
-            </div>
-
-            <div class="col-md-4">
-              <div class="form-floating">
-                <input type="text" class="form-control" id="txtCoordenadaActualizar" placeholder="Coordenada" name="coordenada" disabled>
-                <label for="txtCoordenadaActualizar" class="form-label">Coordenada</label>
               </div>
             </div>
 
@@ -159,7 +150,7 @@
 
           <span class="text-end invisible" id="infoFecha">a</span>
 
-          <div class="col-md-3">
+          <div class="col-md-4">
             <div class="input-group">
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtNumDoc" name="documento" placeholder="Número de Documento" required>
@@ -169,28 +160,19 @@
             </div>
           </div>
 
-          <div class="col-md-3">
+          <div class="col-md-4">
             <div class="form-floating">
               <input type="text" class="form-control" id="txtNombre" name="nombre" placeholder="Nombre de Cliente" required disabled>
               <label for="txtNombre" class="form-label">Nombre de Cliente</label>
             </div>
           </div>
 
-          <div class="col-md-3">
+          <div class="col-md-4">
             <div class="form-floating">
               <select class="form-select" id="slcTipoServicio" aria-label="Servicios">
                 <option value="0" disabled selected>Seleccione</option>
               </select>
               <label for="slcServicios">Servicios</label>
-            </div>
-          </div>
-
-          <div class="col-md-3">
-            <div class="form-floating">
-              <select class="form-select select2me" id="slcPaquetes" aria-label=Servicios>
-                <option value="0" disabled selected>Seleccione</option>
-              </select>
-              <label for="slcPaquetes" class="form-label">Paquetes</label>
             </div>
           </div>
 
@@ -200,10 +182,35 @@
 
           <div class="col-md-4">
             <div class="form-floating">
+              <select class="form-select select2me" id="slcPaquetes" aria-label=Servicios>
+                <option value="0" disabled selected>Seleccione</option>
+              </select>
+              <label for="slcPaquetes" class="form-label">Paquetes</label>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-floating">
               <input type="number" class="form-control" id="txtPrecio" value="0" placeholder="Precio" disabled>
               <label for="txtPrecio" class="form-label">Precio</label>
             </div>
           </div>
+
+          <div class="col-md-4">
+            <div class="input-group">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="txtCoordenadasMapa" placeholder="Referencia" required disabled>
+                <label for="txtCoordenadasMapa">Coordenadas</label>
+              </div>
+              <button class="btn btn-primary" type="button" id="btnBuscarCoordenadas" data-bs-toggle="modal" data-bs-target="#ModalMapa">
+                <i class="fa-solid fa-magnifying-glass"></i>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="row mt-2">
 
           <div class="col-md-4">
             <div class="form-floating">
@@ -221,34 +228,10 @@
             </div>
           </div>
 
-        </div>
-
-        <div class="row mt-2">
-
           <div class="col-md-4">
             <div class="form-floating">
               <input type="text" class="form-control" id="txtReferencia" placeholder="Referencia" name="referencia">
               <label for="referencia" class="form-label">Referencia</label>
-            </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="input-group">
-              <div class="form-floating">
-                <input type="text" class="form-control" id="txtCoordenadasMapa" placeholder="Referencia" required disabled>
-                <label for="txtCoordenadasMapa">Coordenadas</label>
-              </div>
-              <button class="btn btn-primary" type="button" id="btnBuscarCoordenadas" data-bs-toggle="modal" data-bs-target="#ModalMapa">
-                <i class="fa-solid fa-magnifying-glass"></i>
-              </button>
-            </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="form-floating">
-              <input type="number" class="form-control" id="txtMeses" placeholder="Meses" name="Meses">
-              <label for="txtMeses" class="form-label">Fecha Fin (meses)</label>
-              <span id="txtFechaFin" name="Fecha Fin"></span>
             </div>
           </div>
 

@@ -87,7 +87,6 @@ CREATE PROCEDURE spu_contratos_registrar(
     IN p_referencia VARCHAR(200),
     IN p_coordenada VARCHAR(50),
     IN p_fecha_inicio DATE,
-    IN p_fecha_fin DATE,
     IN p_fecha_registro DATE,
     IN p_nota TEXT,
     IN p_iduser_create INT
@@ -101,7 +100,6 @@ BEGIN
         referencia,
         coordenada,
         fecha_inicio,
-        fecha_fin,
         fecha_registro,
         nota,
         id_usuario_registro
@@ -113,7 +111,6 @@ BEGIN
         p_referencia,
         p_coordenada,
         p_fecha_inicio,
-        p_fecha_fin,
         p_fecha_registro,
         p_nota,
         p_iduser_create
@@ -179,7 +176,6 @@ BEGIN
         c.referencia,
         c.coordenada,
         c.fecha_inicio,
-        c.fecha_fin,
         c.fecha_registro,
         c.nota
     FROM
@@ -211,10 +207,11 @@ CREATE PROCEDURE spu_contratos_eliminar(
 BEGIN
     UPDATE 
     tb_contratos 
-    SET inactive_at = NOW(),
-    fecha_fin = NOW(),
-    iduser_inactive = p_iduser_inactive
-    WHERE id_contrato = p_id_contrato;
+    SET 
+        inactive_at = NOW(),
+        iduser_inactive = p_iduser_inactive
+    WHERE 
+        id_contrato = p_id_contrato;
 END $$
 
 DROP PROCEDURE IF EXISTS spu_ficha_tecnica_registrar$$
@@ -244,7 +241,6 @@ BEGIN
         c.id_usuario_registro,
         c.referencia,
         c.fecha_inicio,
-        c.fecha_fin,
         c.nota,
         c.direccion_servicio,
         c.nota
@@ -264,7 +260,6 @@ BEGIN
         c.id_usuario_registro,
         c.referencia,
         c.fecha_inicio,
-        c.fecha_fin,
         c.nota,
         c.direccion_servicio;
 END$$
@@ -277,7 +272,6 @@ CREATE PROCEDURE spu_contratos_actualizar(
     IN p_direccion_servicio VARCHAR(200),
     IN p_referencia VARCHAR(200),
     IN p_coordenada VARCHAR(25),
-    IN p_fecha_fin DATE,
     IN p_nota TEXT,
     IN p_iduser_update INT
 )
@@ -288,7 +282,6 @@ BEGIN
         direccion_servicio = p_direccion_servicio,
         referencia = p_referencia,
         coordenada = p_coordenada,
-        fecha_fin = p_fecha_fin,
         nota = p_nota,
         iduser_update = p_iduser_update,
         update_at = NOW()
@@ -315,6 +308,7 @@ BEGIN
         IFNULL(e.representante_legal, '') AS RepresentanteLegal,
         pa.paquete AS NombrePaquete,
         pa.precio AS PrecioPaquete,
+        pa.velocidad AS VelocidadPaquete,
         co.nota,
         co.create_at AS FechaCreacion
     FROM 
@@ -331,4 +325,4 @@ BEGIN
         co.id_contrato = p_id_contrato;
 END$$
 
-DELIMITER ;
+DELIMITER;

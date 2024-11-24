@@ -103,10 +103,10 @@ $HOST = "http://localhost/DELATEL/";
               <td style="border: 1px solid #fff;" class="text-center">Mínima Garantizada</td>
             </tr>
             <tr style="border: 1px solid #fff;">
-              <td style="border: 1px solid #fff;" class="input"></td>
-              <td style="border: 1px solid #fff;" class="input"></td>
-              <td style="border: 1px solid #fff;" class="input"></td>
-              <td style="border: 1px solid #fff;" class="input"></td>
+              <td style="border: 1px solid #fff;" class="input text-center"><?= $velocidadPaquete['bajada']['maxima']; ?></td>
+              <td style="border: 1px solid #fff;" class="input text-center"><?= $velocidadPaquete['bajada']['minima_garantizada']; ?></td>
+              <td style="border: 1px solid #fff;" class="input text-center"><?= $velocidadPaquete['subida']['maxima']; ?></td>
+              <td style="border: 1px solid #fff;" class="input text-center"><?= $velocidadPaquete['subida']['minima_garantizada']; ?></td>
             </tr>
           </tbody>
         </table>
