@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       // Añade las columnas correspondientes y el botón para ver el PDF
       row.innerHTML = `
+        <td>${contrato.tipos_servicio}</td>
         <td>${contrato.paquete}</td>
         <td>${contrato.direccion_servicio}</td>
         <td>${contrato.fecha_inicio}</td>

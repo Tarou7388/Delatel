@@ -12,6 +12,7 @@
           <table id="listarContratos" class="table mt-4">
             <thead>
               <tr>
+                <th>Servicio</th>
                 <th>Paquete</th>
                 <th>Dirección</th>
                 <th>Fecha Inicio</th>
