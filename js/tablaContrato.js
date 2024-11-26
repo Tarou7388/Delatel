@@ -69,9 +69,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.querySelectorAll(".btn-pdf").forEach(boton => {
       boton.addEventListener("click", async () => {
         const idContrato = boton.getAttribute("data-idContrato");
+        if(contratos[0].tipos_servicio == "WISP"){
+          window.open(`${config.HOST}views/reports/Contrato_WISP/soporte.php?id=${idContrato}`, "_blank");
 
-        // Abre el PDF en una nueva pestaña
-        window.open(`${config.HOST}views/reports/Contrato/soporte.php?id=${idContrato}`, "_blank");
+        }else{
+          window.open(`${config.HOST}views/reports/Contrato/soporte.php?id=${idContrato}`, "_blank");
+        }
       });
     });
   }

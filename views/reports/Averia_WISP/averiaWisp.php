@@ -1,5 +1,5 @@
 <?php
-$HOST = "http://localhost/DELATEL";
+$HOST = "http://localhost/Delatel";
 ?>
 
 <img src="<?= $HOST ?>/image/headerAveriaWisp.png" class="image-header" alt="">

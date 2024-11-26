@@ -161,16 +161,16 @@ document.addEventListener("DOMContentLoaded", () => {
   function cargarRouters(confiRouter) {
     const rowContainer = document.createElement("div");
     rowContainer.classList.add("row");
-  
+
     confiRouter.forEach((router, index) => {
       const routerData = router.ConfiRouter;
       const routerCol = document.createElement("div");
       routerCol.classList.add("col-md-4", "mb-4");
-  
+
       const routerCard = document.createElement("div");
       routerCard.classList.add("card", "shadow-sm");
       routerCard.style.maxWidth = '100%';
-  
+
       routerCard.innerHTML = `
         <div class="card-header text-white py-2">
           <h5 class="card-title mb-0 d-flex justify-content-between align-items-center fs-6">
@@ -224,25 +224,25 @@ document.addEventListener("DOMContentLoaded", () => {
           </table>
         </div>
       `;
-  
+
       const deleteButton = document.createElement("button");
       deleteButton.classList.add("btn", "btn-sm", "btn-outline-light", "mb-1", "me-2", "float-end");
       deleteButton.style.backgroundColor = '#0459ad';
       deleteButton.style.color = 'white';
       deleteButton.innerHTML = '<i class="fas fa-trash-alt" style="color: white;"></i> Eliminar';
-  
+
       deleteButton.addEventListener("click", function () {
         rowContainer.removeChild(routerCol);
         routerCount--;
         actualizarNumeros();
         jsonRouter.splice(routerCount, 1);
       });
-  
+
       routerCard.querySelector(".card-body").appendChild(deleteButton);
       routerCol.appendChild(routerCard);
       rowContainer.appendChild(routerCol);
     });
-  
+
     routersContainer.appendChild(rowContainer);
     routerConfigModal.hide();
     limpiarCampos();
@@ -251,9 +251,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // Función para agregar un nuevo router
   function agregarRouter() {
     routerCount++;
-  
+
     routerConfigModal.show();
-  
+
     saveButton.onclick = function () {
       const wan = document.getElementById("txtWanRouter").value;
       const mascara = document.getElementById("txtMascaraRouter").value;
@@ -265,7 +265,12 @@ document.addEventListener("DOMContentLoaded", () => {
       const ssid = document.getElementById("txtSsidWireless").value;
       const seguridad = document.getElementById("txtSeguridadWireless").value;
       const otros = document.getElementById("txtOtrosWireless").value;
-  
+
+      if (!wan || !mascara || !puertaEnlace || !dns1 || !dns2 || !lan || !acceso || !ssid || !seguridad || !otros) {
+        showToast("Complete los campos", "INFO");
+        return; // Interrumpir la ejecución
+      }
+
       jsonRouter.push({
         wan,
         mascara,
@@ -278,90 +283,93 @@ document.addEventListener("DOMContentLoaded", () => {
         seguridad,
         otros
       });
-  
       const routerCol = document.createElement("div");
       routerCol.classList.add("col-md-4", "mb-4");
-  
+
       const routerCard = document.createElement("div");
       routerCard.classList.add("card", "shadow-sm");
       routerCard.style.maxWidth = '100%';
-  
+
       routerCard.innerHTML = `
-        <div class="card-header text-white py-2">
-          <h5 class="card-title mb-0 d-flex justify-content-between align-items-center fs-6">
-            <span>Router N° ${routerCount}</span>
-          </h5>
-        </div>
-        <div class="card-body p-0">
-          <table class="table table-sm table-hover mb-0">
-            <tbody>
-              <tr>
-                <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>WAN</td>
-                <td class="py-1 px-2">${wan}</td>
-              </tr>
-              <tr>
-                <td class="py-1 px-2"><i class="fas fa-mask text-primary me-2"></i>Máscara</td>
-                <td class="py-1 px-2">${mascara}</td>
-              </tr>
-              <tr>
-                <td class="py-1 px-2"><i class="fas fa-door-open text-primary me-2"></i>Puerta de Enlace</td>
-                <td class="py-1 px-2">${puertaEnlace}</td>
-              </tr>
-              <tr>
-                <td class="py-1 px-2"><i class="fas fa-server text-primary me-2"></i>DNS 1</td>
-                <td class="py-1 px-2">${dns1}</td>
-              </tr>
-              <tr>
-                <td class="py-1 px-2"><i class="fas fa-server text-primary me-2"></i>DNS 2</td>
-                <td class="py-1 px-2">${dns2}</td>
-              </tr>
-              <tr>
-                <td class="py-1 px-2"><i class="fas fa-wifi text-primary me-2"></i>LAN Wireless</td>
-                <td class="py-1 px-2">${lan}</td>
-              </tr>
-              <tr>
-                <td class="py-1 px-2"><i class="fas fa-key text-primary me-2"></i>Acceso Wireless</td>
-                <td class="py-1 px-2">${acceso}</td>
-              </tr>
-              <tr>
-                <td class="py-1 px-2"><i class="fas fa-broadcast-tower text-primary me-2"></i>SSID</td>
-                <td class="py-1 px-2">${ssid}</td>
-              </tr>
-              <tr>
-                <td class="py-1 px-2"><i class="fas fa-shield-alt text-primary me-2"></i>Seguridad</td>
-                <td class="py-1 px-2">${seguridad}</td>
-              </tr>
-              <tr>
-                <td class="py-1 px-2"><i class="fas fa-info-circle text-primary me-2"></i>Otros</td>
-                <td class="py-1 px-2">${otros}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      `;
-  
+          <div class="card-header text-white py-2">
+            <h5 class="card-title mb-0 d-flex justify-content-between align-items-center fs-6">
+              <span>Router N° ${routerCount}</span>
+            </h5>
+          </div>
+          <div class="card-body p-0">
+            <table class="table table-sm table-hover mb-0">
+              <tbody>
+                <tr>
+                  <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>WAN</td>
+                  <td class="py-1 px-2">${wan}</td>
+                </tr>
+                <tr>
+                  <td class="py-1 px-2"><i class="fas fa-mask text-primary me-2"></i>Máscara</td>
+                  <td class="py-1 px-2">${mascara}</td>
+                </tr>
+                <tr>
+                  <td class="py-1 px-2"><i class="fas fa-door-open text-primary me-2"></i>Puerta de Enlace</td>
+                  <td class="py-1 px-2">${puertaEnlace}</td>
+                </tr>
+                <tr>
+                  <td class="py-1 px-2"><i class="fas fa-server text-primary me-2"></i>DNS 1</td>
+                  <td class="py-1 px-2">${dns1}</td>
+                </tr>
+                <tr>
+                  <td class="py-1 px-2"><i class="fas fa-server text-primary me-2"></i>DNS 2</td>
+                  <td class="py-1 px-2">${dns2}</td>
+                </tr>
+                <tr>
+                  <td class="py-1 px-2"><i class="fas fa-wifi text-primary me-2"></i>LAN Wireless</td>
+                  <td class="py-1 px-2">${lan}</td>
+                </tr>
+                <tr>
+                  <td class="py-1 px-2"><i class="fas fa-key text-primary me-2"></i>Acceso Wireless</td>
+                  <td class="py-1 px-2">${acceso}</td>
+                </tr>
+                <tr>
+                  <td class="py-1 px-2"><i class="fas fa-broadcast-tower text-primary me-2"></i>SSID</td>
+                  <td class="py-1 px-2">${ssid}</td>
+                </tr>
+                <tr>
+                  <td class="py-1 px-2"><i class="fas fa-shield-alt text-primary me-2"></i>Seguridad</td>
+                  <td class="py-1 px-2">${seguridad}</td>
+                </tr>
+                <tr>
+                  <td class="py-1 px-2"><i class="fas fa-info-circle text-primary me-2"></i>Otros</td>
+                  <td class="py-1 px-2">${otros}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        `;
+      showToast("Agregado correctamente","SUCCESS",1500);
       const deleteButton = document.createElement("button");
       deleteButton.classList.add("btn", "btn-sm", "btn-outline-light", "mb-1", "me-2", "float-end");
       deleteButton.style.backgroundColor = '#0459ad';
       deleteButton.style.color = 'white';
       deleteButton.innerHTML = '<i class="fas fa-trash-alt" style="color: white;"></i> Eliminar';
-  
+
       deleteButton.addEventListener("click", function () {
-        rowContainer.removeChild(routerCol);
-        routerCount--;
-        actualizarNumeros();
-        jsonRouter.splice(routerCount, 1);
+        ask("¿Está seguro de eliminar este router?", "Ficha Técnica Wisp").then((respuesta) => {
+          if (respuesta) {
+            rowContainer.removeChild(routerCol);
+            routerCount--;
+            actualizarNumeros();
+            jsonRouter.splice(routerCount, 1);
+          }
+        });
       });
-  
+
       routerCard.querySelector(".card-body").appendChild(deleteButton);
       routerCol.appendChild(routerCard);
       const rowContainer = routersContainer.querySelector(".row");
       rowContainer.appendChild(routerCol);
-  
+
       routerConfigModal.hide();
-  
+
       limpiarCampos();
-    };
+    }
   }
 
   // Limpiar campos de configuración del router
@@ -486,7 +494,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  async function productoBarraBuscar(cajatxt){
+  async function productoBarraBuscar(cajatxt) {
     const caja = document.getElementById(cajatxt);
     const response = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarra&codigoBarra=${caja.value}`);
     const data = await response.json();

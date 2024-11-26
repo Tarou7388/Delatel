@@ -1,8 +1,8 @@
 <?php
-$HOST = "http://localhost/DELATEL/";
+$HOST = "http://localhost/Delatel/";
 ?>
 <h3>CLIENTE: <?= $resultado[0]['nombre_cliente']; ?></h3>
-<img src="<?= $HOST ?>/image/Logo_Empresa_Delatel.svg" class="image-header" alt="">
+<img src="<?= $HOST ?>/image/Logo_Empresa_Delatel.svg" class="image-header" alt="Logo Empresa">
 
 <table class="tabla">
   <colgroup>

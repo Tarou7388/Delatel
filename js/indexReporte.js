@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
       detalleButton.textContent = "Ver Detalles";
       detalleButton.className = "btn btn-secondary";
       detalleButton.onclick = () => {
-        window.location.href = `${config.HOST}views/reports/Cliente/soporte.php?id=${cliente.id_cliente}`;
+        window.open(`${config.HOST}views/reports/Cliente/soporte.php?id=${cliente.id_cliente}`, "_blank");
       };
 
       cellDetalle.appendChild(detalleButton);
