@@ -582,7 +582,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     } catch (error) {
       console.error("Error al obtener los detalles del contrato:", error);
     }
-  }
+  };
 
 
   async function fetchPaquetesPorServicioActualizar(idServicio) {

@@ -138,7 +138,6 @@ export async function iniciarMapa(params = { cajas: true, mufas: true }, id = "m
 async function lineasMufas(){
   const response = await fetch(`${config.HOST}app/controllers/Lineas.controllers.php?operacion=getLineas`);
   const data = await response.json();
-  console.log(data);
   data.forEach(linea => {
     const line = new google.maps.Polyline({
       path: linea.coordenadas,
