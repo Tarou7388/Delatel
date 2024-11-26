@@ -76,7 +76,6 @@ GROUP BY
 ORDER BY c.id_contrato DESC;
 
 DELIMITER $$
-
 DROP PROCEDURE IF EXISTS spu_contratos_registrar$$
 
 CREATE PROCEDURE spu_contratos_registrar(
@@ -115,8 +114,9 @@ BEGIN
         p_nota,
         p_iduser_create
     );
-END $$
+END$$
 
+DELIMITER $$
 DROP PROCEDURE IF EXISTS spu_fichatecnica_buscar_id$$
 
 CREATE PROCEDURE spu_fichatecnica_buscar_id(
@@ -145,8 +145,9 @@ BEGIN
         INNER JOIN tb_paquetes t ON c.id_paquete = t.id_paquete
         LEFT JOIN tb_servicios sv ON JSON_CONTAINS(t.id_servicio, JSON_OBJECT('id_servicio', sv.id_servicio))
     WHERE c.id_contrato = p_id_contrato AND c.inactive_at IS NULL;
-END $$
+END$$
 
+DELIMITER $$
 DROP PROCEDURE IF EXISTS spu_contrato_buscar_id$$
 
 CREATE PROCEDURE spu_contrato_buscar_id(
@@ -196,8 +197,9 @@ BEGIN
         c.id_contrato = p_id_contrato AND c.inactive_at IS NULL
     GROUP BY
         c.id_contrato;
-END $$
+END$$
 
+DELIMITER $$
 DROP PROCEDURE IF EXISTS spu_contratos_eliminar$$
 
 CREATE PROCEDURE spu_contratos_eliminar(
@@ -212,8 +214,9 @@ BEGIN
         iduser_inactive = p_iduser_inactive
     WHERE 
         id_contrato = p_id_contrato;
-END $$
+END$$
 
+DELIMITER $$
 DROP PROCEDURE IF EXISTS spu_ficha_tecnica_registrar$$
 
 CREATE PROCEDURE spu_ficha_tecnica_registrar(
@@ -227,8 +230,9 @@ BEGIN
     SET ficha_instalacion = p_ficha_instalacion,
     id_usuario_registro = p_id_usuario_registro
     WHERE id_contrato = p_id_contrato;
-END $$
+END$$
 
+DELIMITER $$
 DROP PROCEDURE IF EXISTS spu_contratos_buscar_cliente$$
 
 CREATE PROCEDURE spu_contratos_buscar_cliente(IN p_id_cliente INT)
@@ -264,6 +268,7 @@ BEGIN
         c.direccion_servicio;
 END$$
 
+DELIMITER $$
 DROP PROCEDURE IF EXISTS spu_contratos_actualizar$$
 
 CREATE PROCEDURE spu_contratos_actualizar(
@@ -286,10 +291,10 @@ BEGIN
         iduser_update = p_iduser_update,
         update_at = NOW()
     WHERE id_contrato = p_id_contrato;
-END $$
+END$$
 
+DELIMITER $$
 DROP PROCEDURE IF EXISTS spu_contratos_pdf$$
-
 CREATE PROCEDURE spu_contratos_pdf(IN p_id_contrato INT)
 BEGIN
     SELECT 
@@ -310,7 +315,8 @@ BEGIN
         pa.precio AS PrecioPaquete,
         pa.velocidad AS VelocidadPaquete,
         co.nota,
-        co.create_at AS FechaCreacion
+        co.create_at AS FechaCreacion,
+        co.ficha_instalacion AS FichaTecnica
     FROM 
         tb_contratos co
     JOIN 
@@ -324,5 +330,3 @@ BEGIN
     WHERE 
         co.id_contrato = p_id_contrato;
 END$$
-
-DELIMITER;

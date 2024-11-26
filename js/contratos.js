@@ -432,7 +432,7 @@ window.addEventListener("DOMContentLoaded", async () => {
               "CABL,FIBR": "FichaTecnicaGpon",
               WISP: "FichaTecnicaWisp",
               CABL: "FichaTecnicaCable",
-              FIBR: "FichaTecnicaGpon",
+              FIBR: "FichaTecnicaFibra",
             };
             window.location.href = `${config.HOST}views/Contratos/${tipoFicha[tipoServicio]}?idContrato=${idContrato}`;
           });
