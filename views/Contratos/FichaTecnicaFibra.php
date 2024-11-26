@@ -95,14 +95,14 @@ $idContrato = $_GET['idContrato'];
           <div class="card-body">
             <h5>Datos del Servicio</h5>
 
-            <div class="row g-3 mb-2">
-              <div class="col md-6">
+            <div class="row g-2 mb-2">
+              <div class="col-12 col-md-6">
                 <div class="form-floating">
                   <input type="text" class="form-control" id="txtUsuario" placeholder="Usuario" disabled=true>
                   <label for="lblUsuario">Usuario</label>
                 </div>
               </div>
-              <div class="col md-6">
+              <div class="col-12 col-md-6">
                 <div class="form-floating">
                   <input type="text" class="form-control" id="txtClaveAcceso" disabled=true placeholder="Clave de acceso">
                   <label for="lblClaveAcceso">Clave de Acceso</label>
@@ -110,14 +110,14 @@ $idContrato = $_GET['idContrato'];
               </div>
             </div>
 
-            <div class="row g-3 mb-2">
-              <div class="col md-9">
+            <div class="row g-2 mb-2">
+              <div class="col-12 col-md-6">
                 <div class="form-floating">
                   <input type="text" class="form-control" disabled=true id="txtPlan" placeholder="Plan">
                   <label for="lblPlan">Plan</label>
                 </div>
               </div>
-              <div class="col md-3">
+              <div class="col-12 col-md-6">
                 <div class="form-floating">
                   <input type="number" class="form-control" id="txtPotenciaFibra" placeholder="Potencia" min="-30" max="24">
                   <label for="lblPotenciaFibra">Potencia</label>
@@ -126,34 +126,34 @@ $idContrato = $_GET['idContrato'];
             </div>
             <h5> Datos del Modén</h5>
 
-            <div class="row g-3 mb-2">
-              <div class="col md-6">
+            <div class="row g-2 mb-2">
+              <div class="col-12 col-md-6">
                 <div class="form-floating">
                   <input type="text" class="form-control" id="txtSsdi" placeholder="SSDI">
                   <label for="lblSsdi">SSDI</label>
                 </div>
               </div>
-              <div class="col md-6">
+              <div class="col-12 col-md-6">
                 <div class="form-floating">
                   <input type="text" class="form-control" id="txtSeguridad" placeholder="Contraseña">
                   <label for="lblSeguridad">Seguridad</label>
                 </div>
               </div>
             </div>
-            <div class="row g-3 mb-2">
-              <div class="col-4 mb-2">
+            <div class="row g-2 mb-2">
+              <div class="col-12 col-md-4">
                 <div class="form-floating">
                   <input type="text" class="form-control" id="txtCodigoBarra" placeholder="Codigo de barra">
                   <label for="lblCodigoBarra">Codigo de barras</label>
                 </div>
               </div>
-              <div class="col-4 mb-2">
+              <div class="col-12 col-md-4">
                 <div class="form-floating">
                   <input type="text" class="form-control" id="txtMarca" placeholder="Marca" disabled>
                   <label for="marca">Marca</label>
                 </div>
               </div>
-              <div class=" col-4 mb-2">
+              <div class="col-12 col-md-4">
                 <div class="form-floating">
                   <input type="text" class="form-control" id="txtModelo" placeholder="Modelo" disabled>
                   <label for="lblModelo">Modelo</label>
@@ -209,10 +209,11 @@ $idContrato = $_GET['idContrato'];
                 </div>
               </div>
             </div>
+
           </div>
         </div>
         <div class="row">
-          <div class="col-12 text-center text-md-end mb-3 btn-container">
+          <div class="col-12 text-center text-md-end mb-3 btn-container d-grid gap-2 d-md-flex justify-content-md-end">
             <button type="button" id="btnReporte" class="btn btn-info px-4 py-2">
               <i class="fas fa-file-alt"></i> Generar Reporte
             </button>
