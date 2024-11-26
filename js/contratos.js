@@ -37,11 +37,14 @@ window.addEventListener("DOMContentLoaded", async () => {
     if (params.nroDoc) {
       nroDoc.value = params.nroDoc;
       coordenada.value = params.coordenadas;
+      coordenada.dispatchEvent(new Event('change', { bubbles: true }));
       direccion.value = params.direccion;
       referencia.value = params.referencia;
       const optionToSelect = document.querySelector(`#slcSector option[value="${params.idSector}"]`);
       if (optionToSelect) {
         optionToSelect.selected = true;
+        const selectElement = document.querySelector("#slcSector");
+        selectElement.dispatchEvent(new Event('change'));
       }
     }
   }
@@ -235,7 +238,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       if (!(await validarCampos())) {
         showToast("¡Llene todos los campos!", "INFO");
         return;
-      } 
+      }
 
       const confirmacion = await ask("¿Desea registrar el nuevo contrato?", "Contratos");
       if (!confirmacion) {
@@ -581,6 +584,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+
   async function fetchPaquetesPorServicioActualizar(idServicio) {
     const response = await fetch(
       `${config.HOST}app/controllers/Paquete.controllers.php?operacion=buscarPaquetePorIdServicio&idServicio=${idServicio}`
@@ -745,12 +749,16 @@ window.addEventListener("DOMContentLoaded", async () => {
     await actualizarContrato(idContrato, idUsuario, idPaquete);
   });
 
-  coordenada.addEventListener("input", async function () {
+  coordenada.addEventListener("change", async function () {
+    console.log(coordenada.value);
     idSector = mapa.idSector;
     idCaja = mapa.idCaja;
     const optionToSelect = document.querySelector(`#slcSector option[value="${idSector}"]`);
+    console.log(optionToSelect);
     if (optionToSelect) {
       optionToSelect.selected = true;
+      const selectElement = document.querySelector("#slcSector");
+      selectElement.dispatchEvent(new Event('change'));
     }
   });
 

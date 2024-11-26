@@ -107,45 +107,29 @@ if (!isset($_SESSION['login']) || $_SESSION['login']['estado'] == false) {
 
             <?php
             foreach ($listaAcceso as $acceso) {
-              if ($acceso['texto'] == 'Actividades') continue;
-
-              if ($acceso['texto'] == 'Inventariado') {
-                echo "
-                    <a class='nav-link' href='#' data-bs-toggle='collapse' data-bs-target='#collapseInventariado' aria-expanded='false' aria-controls='collapseInventariado'>
-                        <div class='sb-nav-link-icon'><i class='fa-solid {$acceso['icono']}'></i></div>
-                        {$acceso['texto']}
-                    </a>
-                    <div id='collapseInventariado' class='collapse'>
-                        <a class='nav-link ps-5' href='http://localhost/Delatel/views/{$acceso['ruta']}'>
-                            <div class='sb-nav-link-icon'><i class='fa-solid {$acceso['icono']}'></i></div>
-                            {$acceso['texto']}
-                    </a>";
-
-                foreach ($listaAcceso as $accesoProducto) {
-                  if ($accesoProducto['texto'] == 'Productos') {
-                    echo "
-                        <a class='nav-link ps-5' href='http://localhost/Delatel/views/{$accesoProducto['ruta']}'>
-                            <div class='sb-nav-link-icon'><i class='fa-solid {$accesoProducto['icono']}'></i></div>
-                            {$accesoProducto['texto']}
-                        </a>";
-                  }
-                  if ($accesoProducto['texto'] == 'Almacen') {
-                    echo "
-                        <a class='nav-link ps-5' href='http://localhost/Delatel/views/{$accesoProducto['ruta']}'>
-                            <div class='sb-nav-link-icon'><i class='fa-solid {$accesoProducto['icono']}'></i></div>
-                            {$accesoProducto['texto']}
-                        </a>";
-                  }
-                }
-
-                echo "</div>";
-              } else {
-                if ($acceso['texto'] != 'Productos' && $acceso['texto'] != 'Almacen' && strpos($acceso['ruta'], 'views') === false) {
+              if (strpos($acceso['ruta'], 'views') === false) {
+                $accesoJson = json_encode($acceso);
+                echo "<script>console.log({$accesoJson})</script>";
+                if ($acceso['Desplegable'] == true) {
                   echo "
-                      <a class='nav-link' href='http://localhost/Delatel/views/{$acceso['ruta']}'>
-                          <div class='sb-nav-link-icon'><i class='fa-solid {$acceso['icono']}'></i></div>
-                          {$acceso['texto']}
-                      </a>";
+                  <a class='nav-link' href='#' data-bs-toggle='collapse' data-bs-target='#collapseInventariado' aria-expanded='false' aria-controls='collapseInventariado'>
+                    <div class='sb-nav-link-icon'><i class='fa-solid {$acceso['icono']}'></i></div>
+                    {$acceso['texto']}
+                  </a>
+                  <div id='collapseInventariado' class='collapse'>";
+                  for ($i = 0; $i < count($acceso['rutasAnexas']); $i++) {
+                    echo "<a class='nav-link ps-5' href='{$host}/views/{$acceso['ruta']}/{$acceso['rutasAnexas'][$i]}'>
+                    <div class='sb-nav-link-icon'><i class='fa-solid {$acceso['IconoAnexo'][$i]}'></i></div>
+                    {$acceso['rutasAnexas'][$i]}
+                    </a>";
+                  };
+                  echo "</div>";
+                } else {
+                  echo "
+                  <a class='nav-link' href='{$host}/views/{$acceso['ruta']}'>
+                    <div class='sb-nav-link-icon'><i class='fa-solid {$acceso['icono']}'></i></div>
+                    {$acceso['texto']}
+                  </a>";
                 }
               }
             }

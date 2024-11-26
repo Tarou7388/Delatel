@@ -116,16 +116,13 @@ export async function iniciarMapa(params = { cajas: true, mufas: true }, id = "m
           const modal = bootstrap.Modal.getInstance(document.getElementById('ModalMapa'));
           if(document.getElementById('txtCoordenadasMapa')) {
             document.getElementById('txtCoordenadasMapa').value = `${marcadorCoordenada.lat()},${marcadorCoordenada.lng()}`;
-            const evento = new Event('input');
-            document.getElementById('txtCoordenadasMapa').dispatchEvent(evento);
+            document.getElementById('txtCoordenadasMapa').dispatchEvent(new Event('change', { bubbles: true }));
           }
           if(document.getElementById('txtCoordenadas')) {
             document.getElementById('txtCoordenadas').value = `${marcadorCoordenada.lat()},${marcadorCoordenada.lng()}`;
           }
           if(document.getElementById('txtCoordenadasPersona')) {
             document.getElementById('txtCoordenadasPersona').value = `${marcadorCoordenada.lat()},${marcadorCoordenada.lng()}`;
-            const evento = new Event('input');
-            document.getElementById('txtCoordenadasPersona').dispatchEvent(evento);
           }
         }
       });
