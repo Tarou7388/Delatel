@@ -221,6 +221,7 @@ CREATE TABLE tb_contratos (
     coordenada VARCHAR(50),
     fecha_inicio DATE NULL,
     fecha_registro DATE NOT NULL,
+    fecha_fin DATE NULL,
     nota TEXT NULL,
     create_at DATETIME NOT NULL DEFAULT NOW(),
     update_at DATETIME NULL,

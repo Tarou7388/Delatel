@@ -211,11 +211,11 @@ BEGIN
     tb_contratos 
     SET 
         inactive_at = NOW(),
-        iduser_inactive = p_iduser_inactive
+        iduser_inactive = p_iduser_inactive,
+        fecha_fin = NOW()
     WHERE 
         id_contrato = p_id_contrato;
 END$$
-
 DELIMITER $$
 DROP PROCEDURE IF EXISTS spu_ficha_tecnica_registrar$$
 
