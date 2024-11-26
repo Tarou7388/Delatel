@@ -67,15 +67,22 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Agrega evento para cada botón "Ver PDF"
     document.querySelectorAll(".btn-pdf").forEach(boton => {
-      boton.addEventListener("click", async () => {
+      boton.addEventListener("click", () => {
         const idContrato = boton.getAttribute("data-idContrato");
-        if(contratos[0].tipos_servicio == "WISP"){
-          window.open(`${config.HOST}views/reports/Contrato_WISP/soporte.php?id=${idContrato}`, "_blank");
+        // Busca el contrato correspondiente en el array
+        const contrato = contratos.find(c => c.id_contrato == idContrato);
 
-        }else{
-          window.open(`${config.HOST}views/reports/Contrato/soporte.php?id=${idContrato}`, "_blank");
+        if (contrato) {
+          if (contrato.tipos_servicio === "WISP") {
+            window.open(`${config.HOST}views/reports/Contrato_WISP/soporte.php?id=${idContrato}`, "_blank");
+          } else {
+            window.open(`${config.HOST}views/reports/Contrato/soporte.php?id=${idContrato}`, "_blank");
+          }
+        } else {
+          showToast("Contrato no encontrado.");
         }
       });
     });
+
   }
 });
