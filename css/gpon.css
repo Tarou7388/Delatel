@@ -1,29 +1,97 @@
 .card-header {
-    background-color: #014080;
-    color: white;
+  background-color: #014080;
+  color: white;
 }
 
 .modal-header {
-    background-color: #014080;
-    color: white;
+  background-color: #014080;
+  color: white;
 }
 
 .btn-primary {
-    background-color: #014080;
-    border-color: #014080;
+  background-color: #014080;
+  border-color: #014080;
 }
 
-.btn-outline-secondary {
-    border-color: #6c757d;
-    color: #6c757d;
+.repetidor-card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  width: 100%;
+  max-width: 400px;
+  font-family: Arial, sans-serif;
+  margin-bottom: 8px; 
 }
 
-.btn-outline-secondary:hover {
-    background-color: #6c757d;
-    color: white;
+.repetidor-card .header {
+  background-color: #014080;
+  color: white;
+  padding: 12px; 
 }
 
-.container {
-    max-width: 1200px; 
-    margin: 0 auto;
+.repetidor-card .title {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.repetidor-card .content {
+  padding: 20px; 
+}
+
+.repetidor-card .row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.repetidor-card .field {
+  flex-basis: 48%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding-left: 24px; 
+}
+
+.repetidor-card .icon {
+  position: absolute;
+  left: 0;
+  top: 2px;
+  width: 20px;
+  height: 20px;
+  color: #014080;
+}
+
+.repetidor-card .field label {
+  font-size: 0.875rem;
+  color: #7f8c8d;
+  margin-bottom: 4px;
+}
+
+.repetidor-card .field span {
+  font-size: 1rem;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.repetidor-card .password {
+  background-color: #ecf0f1;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+@media (max-width: 480px) {
+  .repetidor-card .row {
+    flex-direction: column;
+  }
+  
+  .repetidor-card .field {
+    margin-bottom: 8px; 
+  }
+}
+
+.card-status {
+  font-weight: bold;
+  margin-left: 10px;
 }
