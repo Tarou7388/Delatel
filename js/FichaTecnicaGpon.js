@@ -60,6 +60,8 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("txtSsdi").value = fibra.moden?.ssid || "";
         document.getElementById("txtSeguridad").value = fibra.moden?.seguridad || "";
         document.getElementById("txtCodigoBarra").value = fibra.moden?.codigobarra || "";
+        document.getElementById("txtMarca").value = fibra.moden?.marca || "";
+        document.getElementById("txtModelo").value = fibra.moden?.modelo || "";
         document.getElementById("txtSerieModen").value = fibra.moden?.serie || "";
         document.getElementById("slcBanda").value = fibra.moden?.banda || "";
         document.getElementById("txtAntenas").value = fibra.moden?.numeroantena || "";
@@ -68,7 +70,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (fibra.repetidores && fibra.repetidores.length > 0) {
           document.getElementById("txtSsidRepetidor").value = fibra.repetidores[0].ssid;
           document.getElementById("txtContraseniaRepetidor").value = fibra.repetidores[0].contrasenia;
-          document.getElementById("txtMarcaModeloRepetidor").value = fibra.repetidores[0].marca;
+          document.getElementById("txtCodigoBarrasRepetidor").value = fibra.repetidores[0].codigoBarra;
+          document.getElementById("txtMarcaRepetidor").value = fibra.repetidores[0].marca;
+          document.getElementById("txtModeloRepetidor").value = fibra.repetidores[0].modelo;
+          document.getElementById("txtSerieRepetidor").value = fibra.repetidores[0].serie;
           document.getElementById("txtIpRepetidor").value = fibra.repetidores[0].ip;
 
           const cardContainer = document.getElementById("cardContainer");
@@ -205,7 +210,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const txtPotencia = document.querySelector("#txtPotenciaFibra").value;
     const txtSsdi = document.querySelector("#txtSsdi").value;
     const txtSeguridad = document.querySelector("#txtSeguridad").value;
-    const txtMarcaModelo = document.querySelector("#txtMarcaModelo").value;
+    const txtCodigoBarra = document.querySelector("#txtCodigoBarra").value;
+    const txtMarca = document.querySelector("#txtMarca").value;
+    const txtModelo = document.querySelector("#txtModelo").value;
     const txtSerieModen = document.querySelector("#txtSerieModen").value;
     const slcBanda = document.querySelector("#slcBanda").value;
     const txtAntenas = document.querySelector("#txtAntenas").value;
@@ -213,7 +220,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const txtaDetallesModen = document.querySelector("#txtaDetallesModen").value;
 
     if (!flagFichaInstalacion) {
-      if (txtUsuario === "" || txtPlan === "" || txtClaveAcceso === "" || txtPotencia === "" || txtSsdi === "" || txtSeguridad === "" || txtMarcaModelo === "" || slcBanda === "" || txtAntenas === "") {
+      if (txtUsuario === "" || txtPlan === "" || txtClaveAcceso === "" || txtPotencia === "" || txtSsdi === "" || txtSeguridad === "" || txtCodigoBarra === "" || slcBanda === "" || txtAntenas === "") {
         showToast("Por favor, llene todos los campos.", "WARNING");
         return;
       } else {
@@ -226,7 +233,9 @@ document.addEventListener("DOMContentLoaded", () => {
             moden: {
               ssid: txtSsdi,
               seguridad: txtSeguridad,
-              marca: txtMarcaModelo,
+              codigoBarra: parseInt(txtCodigoBarra),
+              marca: txtMarca,
+              modelo: txtModelo,
               serie: txtSerieModen,
               banda: slcBanda.split(","),
               numeroantena: parseInt(txtAntenas),
@@ -363,8 +372,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const ssid = document.getElementById("txtSsidRepetidor").value;
     const contrasenia = document.getElementById("txtContraseniaRepetidor").value;
     const codigoBarra = document.getElementById("txtCodigoBarrasRepetidor").value;
-    const modelo = document.getElementById("txtModeloRepetidor").value;
-    const marca = document.getElementById("txtMarcaRepetidor").value;
+    const marca = document.getElementById("txtMarcaRepetidor")?.value;
+    const modelo = document.getElementById("txtModeloRepetidor")?.value;
+    const serie = document.getElementById("txtSerieRepetidor")?.value;
     const ip = document.getElementById("txtIpRepetidor").value;
 
     if (ssid === "" || contrasenia === "" || codigoBarra === "" || ip === "") {
@@ -379,6 +389,7 @@ document.addEventListener("DOMContentLoaded", () => {
         codigoBarra: codigoBarra,
         modelo: modelo,
         marca: marca,
+        serie: serie,
         ip: ip,
       };
       jsonRepetidor.push(repetidor);
@@ -535,7 +546,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-
   async function guardar() {
     await fibraOptica();
     await cable();
@@ -630,6 +640,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("btnCancelar").addEventListener("click", () => {
     window.location.href = `${config.HOST}views/Contratos/`;
+  });
+
+  document.getElementById("btnReporte").addEventListener("click", () => {
+    window.open(`${config.HOST}views/reports/Instalacion_GPON/soporte.php?id=${idContrato}`, '_blank');
   });
 
   $("#txtIpRepetidor").on("input", function (event) {

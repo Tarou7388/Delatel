@@ -12,7 +12,6 @@ $dompdf = new Dompdf($options);
 
 date_default_timezone_set('America/Lima');
 $fechaActual = date('d/m/Y');
-$horaActual = date('H:i:s');
 
 $contrato = new Contrato();
 $resultado = $contrato->obtenerPDF(["id" => $_GET['id']]);
@@ -25,8 +24,10 @@ if (empty($resultado)) {
 $nombreCliente = $resultado[0]['NombreCliente'];
 $nombreArchivo = $nombreCliente . '.pdf';
 
-
 $nombreArchivo = preg_replace('/[^A-Za-z0-9_\-ñÑ]/', '_', $nombreArchivo);
+
+$velocidadPaqueteJson = $resultado[0]['VelocidadPaquete'];
+$velocidadPaquete = json_decode($velocidadPaqueteJson, true);
 
 ob_start();
 include 'contenidoPDF.php';
@@ -41,3 +42,4 @@ if ($content === false) {
 $dompdf->loadHtml($content);
 $dompdf->render();
 $dompdf->stream($nombreArchivo, array('Attachment' => 0));
+?>

@@ -1,0 +1,27 @@
+{
+  "fibraoptica":{
+    "usuario":"VERQUI22",
+    "claveacceso":"@VERQUI22",
+    "plan":"Soporte 24\/7 para Clientes WISP",
+    "potencia":-7,
+    "moden":{
+      "ssid":"FAMILIA",
+      "seguridad":"123456",
+      "marca":"PHYHOME",
+      "serie":"P18",
+      "banda":["2G","5G"],
+      "numeroantena":8,
+      "catv":true
+    },
+    "detalles":"",
+    "repetidores":[
+      {
+        "numero":1,
+        "ssid":"VERONICA",
+        "contrasenia":"123456",
+        "marca":"PHYHOME",
+        "ip":"192.168.100.20"
+      }
+    ]
+  }
+}

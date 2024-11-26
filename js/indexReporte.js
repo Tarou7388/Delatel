@@ -57,28 +57,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       tbody.appendChild(row);
     });
-    document.getElementById("printButton").addEventListener("click", () => {
-      const modalContent = document.querySelector("#detallePersona .modal-content").innerHTML;
-      const printWindow = window.open("", "", "width=800,height=600");
-      printWindow.document.write(`
-        <html>
-          <head>
-            <title>Imprimir Detalles del Cliente</title>
-            <style>
-              body { font-family: Arial, sans-serif; }
-              table { width: 100%; border-collapse: collapse; }
-              td { padding: 5px; border: 1px solid #ddd; }
-              .modal-header, .modal-footer { display: none; }
-            </style>
-          </head>
-          <body>
-            ${modalContent}
-          </body>
-        </html>
-      `);
-      printWindow.document.close();
-      printWindow.print();
-    });
 
     $('#listarClienteyContratos').DataTable({
       paging: true,

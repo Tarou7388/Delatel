@@ -93,11 +93,10 @@ $idContrato = $_GET['idContrato'];
   </div>
 </div>
 
-<div class="container-fluid px-5">
+<div class="container-fluid px-3">
+  <div class="form-container">
 
-  <div class="form-container mt-3">
-
-    <h1 class="mt-4"><i class="fas fa-file-alt"></i> Formulario de Registro de Ficha Técnica</h1>
+    <h1 class="mt-4"><i class="fas fa-file-alt"></i> Formulario de Registro de Ficha Técnica Gpon</h1>
 
     <div class="row g-2 mb-2 justify-content-end">
       <div class="col-sm-1">
@@ -235,7 +234,7 @@ $idContrato = $_GET['idContrato'];
   </div>
 </div>
 
-<div class="container-fluid px-5" id="contenidoCable">
+<div class="container-fluid" id="contenidoCable">
   <!-- Card: Cable -->
   <div class="conteiner">
     <div class="card mb-4">
@@ -333,7 +332,7 @@ $idContrato = $_GET['idContrato'];
   </div>
 </div>
 
-<div class="container-fluid px-5" id="contenidoCable">
+<div class="container-fluid" id="contenidoCable">
   <!-- Card: Otros -->
   <div class="conteiner">
     <div class="card mb-4">
@@ -417,6 +416,9 @@ $idContrato = $_GET['idContrato'];
         <!-- Botones -->
         <div class="row">
           <div class="col-12 text-center text-md-end mb-3 btn-container">
+            <button type="button" id="btnReporte" class="btn btn-info px-4 py-2">
+              <i class="fas fa-file-alt"></i> Generar Reporte
+            </button>
             <button type="button" id="btnGuardar" class="btn btn-success px-4 py-2">
               <i class="fas fa-save"></i> Guardar
             </button>

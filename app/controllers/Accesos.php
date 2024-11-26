@@ -27,7 +27,7 @@ function obtenerAccesosFiltrados($idRol, $permissions)
 		// Definir accesos basados en permisos
 		$accesosV2 = [
 				["ruta" => "Administracion", "texto" => "Administración", "icono" => "fa-solid fa-cogs"],
-				["ruta" => "Contratos", "texto" => "Contratos", "icono" => "fa-solid fa-file-contract", "rutasAnexas" => ["FichaTecnicaCable", "FichaTecnicaGpon", "FichaTecnicaWisp"]],
+				["ruta" => "Contratos", "texto" => "Contratos", "icono" => "fa-solid fa-file-contract", "rutasAnexas" => ["FichaTecnicaCable", "FichaTecnicaGpon", "FichaTecnicaWisp", "FichaTecnicaFibra"]],
 				["ruta" => "Inventariado", "texto" => "Inventariado", "icono" => "fa-solid fa-warehouse"],
 				["ruta" => "Personas", "texto" => "Personas", "icono" => "fa-solid fa-user"],
 				["ruta" => "Productos", "texto" => "Productos", "icono" => "fa-solid fa-boxes-stacked"],

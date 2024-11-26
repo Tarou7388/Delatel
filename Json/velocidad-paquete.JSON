@@ -1,0 +1,12 @@
+{
+  "velocidad": {
+    "bajada": {
+      "maxima": 100,
+      "minima_garantizada": 50
+    },
+    "subida": {
+      "maxima": 50,
+      "minima_garantizada": 25
+    }
+  }
+}

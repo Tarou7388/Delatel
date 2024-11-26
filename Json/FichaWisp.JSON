@@ -1,29 +1,86 @@
 {
-  "parametrosgenerales":{
-    "antenas": "marca",
+  "parametrosgenerales": {
     "router": "marca",
-    "frecuencia":["2G","5G"],
-    "base": "Distrito (Chincha)",
-    "subbase":"Sector (Rosedal)",
+    "frecuencia": ["2.4GHZ", "5GHZ"],
+    "base": "Distrito (Pueblo Nuevo)",
+    "subbase": "Sector (San Isidro)",
     "signalstrengh": ".-55 dBm",
-    "noisefloor":".-98 dBm",
-    "transmitccq":96.8,
-    "tx/rxrate":72.22
+    "noisefloor": ".-98 dBm",
+    "transmitccq": 96.8,
+    "txRate": 72.22,
+    "rxRate": 72.22
   },
-  "configuracionred":{
-    "wan":"172.16.16.159",
-    "mascara":"255.255.255.0",
-    "puertaenlace":"172.16.16.1",
-    "dns1":"8.8.8.8",
-    "dns2":"8.8.4.4"
+  "ConfiRouter": {
+    "wan": "172.16.16.159",
+    "mascara": "255.255.255.0",
+    "puertaenlace": "172.16.16.1",
+    "dns1": "8.8.8.8",
+    "dns2": "8.8.4.4"
   },
-  "configuracionlan":{
-    "lan":"192.168.10.1",
-    "acceso" :123456,
-    "ssid":"NombreRed",
-    "seguridad":"contraseña",
-    "otros":"Detalles",
-    "instalador":"NombreInstalador",
-    "fecha":"26/08/2022"
+  "ConfiWireless": {
+    "lan": "192.168.10.1",
+    "acceso": 123456,
+    "ssid": "NombreRed",
+    "seguridad": "contraseña",
+    "otros": "Detalles"
+  },
+  "venta": {
+    "costoAntena": 0,
+    "costoRouter": 0,
+    "subTotal": 0,
+    "adelanto": 0,
+    "saldoEquipos": 0,
+    "materialAdicional": "Detalles",
+    "condicion": {
+      "Adelantado": true,
+      "Cumpliendo el mes": true
+    },
+    "antena": {
+      "marca": "marca",
+      "modelo": "modelo",
+      "mac": "mac",
+      "serial": "serial",
+      "descripcion": "descripcion"
+    },
+    "router": {
+      "marca": "marca",
+      "modelo": "modelo",
+      "mac": "mac",
+      "serial": "serial",
+      "descripcion": "descripcion"
+    },
+    "detalle": "detalle"
+  },
+  "alquilado": {
+    "condicion": "Alquilado",
+    "periodo": "periodo",
+    "fechaInicio": "fechaInicio",
+    "fechaFin": "fechaFin",
+    "costoAlquiler": 0,
+    "condicionTiempo": true,
+    "antena": {
+      "marca": "marca",
+      "modelo": "modelo",
+      "mac": "mac",
+      "serial": "serial",
+      "descripcion": "descripcion"
+    },
+    "router": {
+      "marca": "marca",
+      "modelo": "modelo",
+      "mac": "mac",
+      "serial": "serial",
+      "descripcion": "descripcion"
+    },
+    "detalle": "detalle"
+  },
+  "deuda": {
+    "pagoServicio": 0,
+    "adelantoEquipo": 0,
+    "costoAlquiler": 0,
+    "materialAdicional": "materialAdicional",
+    "totalCancelado": 0,
+    "saldoPendiente": 0,
+    "detalle": "detalle"
   }
 }

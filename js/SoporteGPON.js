@@ -102,9 +102,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!respuesta.ok) throw new Error("Error al buscar cliente");
       const data = await respuesta.json();
 
-      const dataFbibr = await FichaSoporte(doct);
-      console.log(dataFbibr);
-
       if (data.length > 0) {
         $("#txtCliente").val(data[0].nombre);
         $("#txtNrodocumento").val(doct);

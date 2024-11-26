@@ -22,7 +22,6 @@
               <input type="text" class="form-control" id="txtapellidobAvz" name="apellido" placeholder="Apellido">
               <label for="apellido">Apellido</label>
             </div>
-
             <div class="container">
               <ul class="list-group mt-3" id="listMulticontratos">
                 <!-- Aquí se cargarán las si hay más de uno que coincida -->

@@ -15,10 +15,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $operacion = Herramientas::sanitizarEntrada($datos['operacion']);
   switch ($operacion) {
     case 'registrarPaquete':
+      $velocidad = $datos['parametros']['velocidad'];
+      
       $datosEnviar = [
         "idServicio"    => array_map('intval', Herramientas::sanitizarEntrada($datos['parametros']["idServicio"])), 
         "paquete"       => Herramientas::sanitizarEntrada($datos['parametros']["paquete"]),
         "precio"        => Herramientas::sanitizarEntrada($datos['parametros']["precio"]),
+        "velocidad"     => $velocidad, 
         "idUsuario"     => Herramientas::sanitizarEntrada($datos['parametros']["idUsuario"])
       ];
       $resultado = $paquete->registrarPaquete($datosEnviar);
@@ -50,11 +53,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
   $operacion = Herramientas::sanitizarEntrada($datos['operacion']);
   switch ($operacion) {
     case "actualizarPaquete":
+      $velocidad = $datos['parametros']['velocidad'];
+      
       $datosActualizar = [
         "idPaquete"         => Herramientas::sanitizarEntrada($datos['parametros']["idPaquete"]),
         "idServicio"        => array_map('intval', Herramientas::sanitizarEntrada($datos['parametros']["idServicio"])),
         "paquete"           => Herramientas::sanitizarEntrada($datos['parametros']["paquete"]),
         "precio"            => Herramientas::sanitizarEntrada($datos['parametros']["precio"]),
+        "velocidad"         => $velocidad, 
         "idUsuario"         => Herramientas::sanitizarEntrada($datos['parametros']["idUsuario"])
       ];
       $resultado = $paquete->actualizarPaquete($datosActualizar);

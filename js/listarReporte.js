@@ -80,8 +80,6 @@ function actualizarModal(idSoporte, tipoServicio, idReporte) {
 
     // Agregar un evento click para seleccionar el div
     div.addEventListener("click", () => {
-      // Aquí puedes manejar lo que sucede cuando se selecciona la opción
-      alert(`Seleccionaste el servicio: ${servicio}`);
       let vistaURL = "";
 
       switch (servicio) {

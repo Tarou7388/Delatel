@@ -28,36 +28,36 @@ $HOST = "http://localhost/DELATEL/";
           </tbody>
         </table>
 
-        <!-- <h3>Reporte Generado el día: <?= $fechaActual; ?></h3> -->
+        <h3>Reporte Generado el día: <?= $fechaActual; ?></h3>
 
         <h4><img src="<?= $HOST; ?>image/lista_wisp.svg" class="icono" alt=""> 1) ¿QUÉ ESTÁS CONTRATANDO?</h4>
         <p><strong>GRUPO TECNOLOGICO COMPUIVAN</strong>, con domicilio en Calle Italia 273 - Chincha - Ica, con RUC 20535000132; se compromete a prestar servicio de acceso a internet fijo.</p>
 
         <h4><img src="<?= $HOST; ?>image/iconoUsuario.svg" class="icono" alt=""> 2) DATOS DEL ABONADO</h4>
         <p><b>Nombre / Razón Social:</b></p>
-        <p><span class="caja-texto2"></span></p>
+        <p><span class="caja-texto2"><?= $resultado[0]['NombreCliente']; ?></span></p>
         <p><b>Tipo y Número de documento de Identificación:</b></p>
-        <p><span class="caja-texto2"></span></p>
+        <p><span class="caja-texto2"><?= $resultado[0]['NumeroDocumento']; ?></span></p>
         <p><b>Nacionalidad:</b></p>
-        <p><span class="caja-texto2"></span></p>
+        <p><span class="caja-texto2"><?= $resultado[0]['Nacionalidad']; ?></span></p>
         <p><b>Representante legal o apoderado:</b></p>
-        <p><span class="caja-texto2"></span></p>
+        <p><span class="caja-texto2"><?= $resultado[0]['RepresentanteLegal']; ?></span></p>
         <!-- <p>Tipo y número de documento de identificación <br> del representante legal o apoderado:</p>
         <p><span class="caja-texto2"></span></p> -->
         <p><b>Correo electrónico:</b></p>
-        <p><span class="caja-texto2"></span></p>
+        <p><span class="caja-texto2"><?= $resultado[0]['Correo']; ?></span></p>
         <p><b>Número de contacto:</b></p>
-        <p><span class="caja-texto2"></b></span></p>
+        <p><span class="caja-texto2"><?= $resultado[0]['Telefono']; ?></b></span></p>
         <p><b>Dirección de Instalación:</b></p>
-        <p><span class="caja-texto2"></span></p>
+        <p><span class="caja-texto2"><?= $resultado[0]['DireccionContrato']; ?></span></p>
         <p><b>Dirección de Facturación:</b></p>
-        <p><span class="caja-texto2"></span></p>
+        <p><span class="caja-texto2"><?= $resultado[0]['DireccionPersona']; ?></span></p>
 
         <br>
         <h4><img src="<?= $HOST; ?>image/iconoCelular.svg" class="icono" alt=""> 3) SERVICIO CONTRATADO</h4>
-        <p><b>Código de cliente:</b></p>
-        <p><b>Nombre del Plan tarifario:</b> </p>
-        <p><b>Detalle del Servicio:</b> </p>
+        <p><b>Código de cliente:</b> <?= $resultado[0]['IdCliente']; ?></p>
+        <p><b>Nombre del Plan tarifario:</b> <?= $resultado[0]['NombrePaquete']; ?></p>
+        <p><b>Detalle del Servicio:</b> <?= $resultado[0]['nota']; ?></p>
         <strong class="radio">Nuevo Servicio <input type="checkbox" class="check"></strong>
         <strong class="radio">Recurrente <input type="checkbox" class="check" checked></strong>
 
@@ -66,7 +66,7 @@ $HOST = "http://localhost/DELATEL/";
       <!-- Segundo Contenedor -->
       <td style="vertical-align: top; padding-left: 5px;">
         <h4><img src="<?= $HOST; ?>image/iconoLupa.svg" class="icono" alt=""> 4) ¿QUÉ DEBES SABER DE TU PLAN?</h4>
-        <p>Renta Fija: $/.</p>
+        <p>Renta Fija: $/. <?= $resultado[0]['PrecioPaquete']; ?></p>
         <p>El pago se realiza por: </p>
         <strong class="radio">Mes Vencido <input type="checkbox" class="check"></strong>
         <strong class="radio">Mes Adelantado <input type="checkbox" class="check" checked></strong>
@@ -91,22 +91,14 @@ $HOST = "http://localhost/DELATEL/";
           </colgroup>
           <thead>
             <tr class="bg-info tex-light">
-              <th colspan="2" class="text-center">Bajada (Descarga) Mbp/s <img src="<?= $HOST; ?>image/iconoFlechaAbajo.png" class="icono" alt=""> </th>
-              <th colspan="2" class="text-center">Subida (Carga) Mbp/s <img src="<?= $HOST; ?>image/iconoFlechaArriba.png" class="icono" alt=""></th>
+              <th class="text-center">Bajada (Descarga) Mbp/s <img src="<?= $HOST; ?>image/iconoFlechaAbajo.png" class="icono" alt=""> </th>
+              <th class="text-center">Subida (Carga) Mbp/s <img src="<?= $HOST; ?>image/iconoFlechaArriba.png" class="icono" alt=""></th>
             </tr>
           </thead>
           <tbody>
             <tr style="border: 1px solid #fff;">
-              <td style="border: 1px solid #fff;" class="text-center">Máxima</td>
-              <td style="border: 1px solid #fff;" class="text-center">Mínima Garantizada</td>
-              <td style="border: 1px solid #fff;" class="text-center">Máxima</td>
-              <td style="border: 1px solid #fff;" class="text-center">Mínima Garantizada</td>
-            </tr>
-            <tr style="border: 1px solid #fff;">
-              <td style="border: 1px solid #fff;" class="input"></td>
-              <td style="border: 1px solid #fff;" class="input"></td>
-              <td style="border: 1px solid #fff;" class="input"></td>
-              <td style="border: 1px solid #fff;" class="input"></td>
+              <td style="border: 1px solid #fff;" class="input text-center"><?= $velocidadPaquete['bajada']; ?></td>
+              <td style="border: 1px solid #fff;" class="input text-center"><?= $velocidadPaquete['bajada']; ?></td>
             </tr>
           </tbody>
         </table>
@@ -194,7 +186,7 @@ $HOST = "http://localhost/DELATEL/";
             adjunto forma parte del contrato.</strong>
         </p>
         <br>
-        <p><strong>Fecha del Contrato:</strong></p>
+        <p><strong>Fecha del Contrato:</strong> <?= $resultado[0]['FechaCreacion']; ?></p>
 
         <br>
         <br>
