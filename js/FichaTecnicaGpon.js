@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (fibra.repetidores && fibra.repetidores.length > 0) {
           document.getElementById("txtSsidRepetidor").value = fibra.repetidores[0].ssid;
           document.getElementById("txtContraseniaRepetidor").value = fibra.repetidores[0].contrasenia;
-          document.getElementById("txtMarcaModeloRepetidor").value = fibra.repetidores[0].marca;
+          document.getElementById("txtCodigoBarrasRepetidor").value = fibra.repetidores[0].marca;
           document.getElementById("txtIpRepetidor").value = fibra.repetidores[0].ip;
 
           const cardContainer = document.getElementById("cardContainer");
