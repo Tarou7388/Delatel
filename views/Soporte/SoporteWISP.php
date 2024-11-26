@@ -4,13 +4,11 @@
     <h1 class="mt-4">Control de Averías WISP</h1>
 
     <div class="row g-3 mb-2">
-      <div class="row g-3 mb-2">
-        <div class="col md-6">
-          <input type="text" class="form-control" id="txtNumFicha" placeholder="N°" disabled>
-        </div>
-        <div class="col md-6">
-          <input type="date" class="form-control" id="txtFecha" placeholder="Fecha" disabled>
-        </div>
+      <div class="col-md-6">
+        <input type="text" class="form-control" id="txtNumFicha" placeholder="N°" disabled>
+      </div>
+      <div class="col-md-6">
+        <input type="date" class="form-control" id="txtFecha" placeholder="Fecha" disabled>
       </div>
     </div>
 
@@ -48,7 +46,6 @@
                 <label>Plan</label>
               </div>
             </div>
-
           </div> <!-- Fin de la Primera Fila -->
 
           <hr>
@@ -56,7 +53,6 @@
           <!-- Segunda Fila -->
           <h5>Parámetros Wireless</h5>
           <div class="row g-2 mb-2">
-
             <div class="col-md">
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtBase" placeholder="Fecha" required>
@@ -77,15 +73,12 @@
                 <label>Señal</label>
               </div>
             </div>
-
           </div>
 
-          <div>
-            <div class="col-md">
-              <div class="form-floating">
-                <textarea type="text" class="form-control" id="txtaEstadoInicial" style="height: 100px" placeholder="Fecha" disabled></textarea>
-                <label>Estado Inicial</label>
-              </div>
+          <div class="col-md">
+            <div class="form-floating">
+              <textarea type="text" class="form-control" id="txtaEstadoInicial" style="height: 100px" placeholder="Fecha" disabled></textarea>
+              <label>Estado Inicial</label>
             </div>
           </div> <!-- Fin de la Segunda Fila -->
 
@@ -94,7 +87,6 @@
           <!-- Tercera Fila -->
           <h5>Cambios Wireless</h5>
           <div class="row g-2 mb-2">
-
             <div class="col-md">
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtBaseNuevo" placeholder="Fecha" required>
@@ -115,15 +107,12 @@
                 <label>Señal</label>
               </div>
             </div>
-
           </div>
 
-          <div>
-            <div class="col-md">
-              <div class="form-floating">
-                <textarea type="text" class="form-control" id="txtaProceSolucion" style="height: 100px" placeholder="Fecha" required></textarea>
-                <label>Procedimiento de Solución</label>
-              </div>
+          <div class="col-md">
+            <div class="form-floating">
+              <textarea type="text" class="form-control" id="txtaProceSolucion" style="height: 100px" placeholder="Fecha" required></textarea>
+              <label>Procedimiento de Solución</label>
             </div>
           </div> <!-- Fin de la Tercera Fila -->
 
@@ -132,10 +121,8 @@
     </div>
   </div>
 
-
   <?php require_once "../../footer.php"; ?>
 
   <script type="module" src="../../js/SoporteWisp.js"></script>
   </body>
-
   </html>
