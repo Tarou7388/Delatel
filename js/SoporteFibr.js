@@ -105,6 +105,17 @@ document.addEventListener("DOMContentLoaded", () => {
       const dataFbibr = await FichaSoporte(doct);
       console.log(dataFbibr);
 
+      const fichaInstalacion = dataFbibr.find(item => {
+        const ficha = JSON.parse(item.ficha_instalacion);
+        return ficha.parametros !== undefined;
+      });
+  
+      if (fichaInstalacion) {
+        const parametros = JSON.parse(fichaInstalacion.ficha_instalacion);
+        console.log(parametros);
+      }
+
+
       if (data.length > 0) {
         $("#txtCliente").val(data[0].nombre);
         $("#txtNrodocumento").val(doct);

@@ -28,10 +28,11 @@ class Soporte extends Conexion
    */
   public function registrarSoporte($params = [])
   {
-    $sql = "CALL spu_registrar_fichasoporte(?,?,?,?,?,?)";
+    $sql = "CALL spu_registrar_fichasoporte(?,?,?,?,?,?,?)";
     //$soporteJson = json_encode($params['soporte']);
     $values = array(
       $params['idContrato'],
+      $params['id_tecnico'],
       $params['fechaHoraSolicitud'],
       $params['descripcionProblema'],
       $params['descripcionSolucion'],

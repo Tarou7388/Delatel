@@ -40,6 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     case 'registrarSoporte':
       $values = [
         'idContrato'          => Herramientas::sanitizarEntrada($datos['idContrato']),
+        'id_tecnico'          => Herramientas::sanitizarEntrada($datos['id_tecnico']),
         'fechaHoraSolicitud'  => date("Y-m-d H:i:s"),
         'descripcionProblema' => Herramientas::sanitizarEntrada($datos['descripcionProblema']),
         'descripcionSolucion' => Herramientas::sanitizarEntrada($datos['descripcionSolucion']),

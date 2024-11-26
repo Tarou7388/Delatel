@@ -1,6 +1,7 @@
 import config from '../env.js';
 
 window.window.idContratoSeleccionado = null;
+let tecnicoid = null;
 
 window.addEventListener('DOMContentLoaded', function () {
   const botonbuscar = document.querySelector('#btnNrodocumento');
@@ -47,7 +48,7 @@ window.addEventListener('DOMContentLoaded', function () {
       datos.forEach((element) => {
         const option = document.createElement('option');
         option.value = element.id_contrato;
-        option.textContent = `${element.direccion_servicio}`;
+        option.textContent = ` | ${element.tipos_servicio} |${element.direccion_servicio}`;
         option.dataset.nota = element.nota;
         option.dataset.direccion = element.direccion_servicio;
         slcContratos.appendChild(option);
@@ -132,9 +133,11 @@ window.addEventListener('DOMContentLoaded', function () {
     if(val==="Incidencia")
     {
       txtSolucion.setAttribute("required", "true"); 
+      tecnicoid = user["idUsuario"];
       console.log("Requerido");
     } else {
       txtSolucion.removeAttribute("required");
+      tecnicoid = null;
       console.log("Removido");
     }
   }
@@ -143,6 +146,7 @@ window.addEventListener('DOMContentLoaded', function () {
     const datos = {
       operacion: "registrarSoporte",
       idContrato: idContratoSeleccionado,
+      id_tecnico: tecnicoid,
       descripcionProblema: txtDescripcion.value,
       descripcionSolucion: txtSolucion.value,
       prioridad: slcPrioridad.value,

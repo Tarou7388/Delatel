@@ -1,5 +1,5 @@
 import config from "../env.js";
-import { inicializarDataTable } from "./Herramientas.js";
+import { FichaSoporte, inicializarDataTable } from "./Herramientas.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("frmRegistroWisp");
@@ -78,6 +78,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const datawisp = await FichaSoporte(doct);
     console.log(datawisp);
+
+    const fichaInstalacion = datawisp.find(item => {
+      const ficha = JSON.parse(item.ficha_instalacion);
+      return ficha.parametros !== undefined;
+    });
+
+    if (fichaInstalacion) {
+      const parametros = JSON.parse(fichaInstalacion.ficha_instalacion).ConfiRouter[0].ConfiRouter;
+      console.log(parametros);
+    }
+
 
     $("#txtCliente").val(data[0].nombre);
     $("#txtNrodocumento").val(doct);

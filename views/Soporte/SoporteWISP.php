@@ -3,15 +3,6 @@
   <div class="container-fluid px-4">
     <h1 class="mt-4">Control de Averías WISP</h1>
 
-    <div class="row g-3 mb-2">
-      <div class="col-md-6">
-        <input type="text" class="form-control" id="txtNumFicha" placeholder="N°" disabled>
-      </div>
-      <div class="col-md-6">
-        <input type="date" class="form-control" id="txtFecha" placeholder="Fecha" disabled>
-      </div>
-    </div>
-
     <br>
 
     <div class="card mb-4">
@@ -125,4 +116,5 @@
 
   <script type="module" src="../../js/SoporteWisp.js"></script>
   </body>
+
   </html>

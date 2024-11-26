@@ -54,6 +54,7 @@ DROP PROCEDURE IF EXISTS spu_registrar_fichasoporte;
 
 CREATE PROCEDURE spu_registrar_fichasoporte(
     IN p_id_contrato INT,
+    IN p_id_tecnico INT,
     IN p_fecha_hora_solicitud DATETIME,
     IN p_descripcion_problema TEXT,
     IN p_descripcion_solucion TEXT,
@@ -63,6 +64,7 @@ CREATE PROCEDURE spu_registrar_fichasoporte(
 BEGIN
     INSERT INTO tb_soporte (
         id_contrato,
+        id_tecnico,
         fecha_hora_solicitud,
         descripcion_problema,
         descripcion_solucion,
@@ -72,6 +74,10 @@ BEGIN
     )
     VALUES (
         p_id_contrato,
+        CASE 
+            WHEN p_id_tecnico = '' THEN NULL 
+            ELSE p_id_tecnico 
+        END,
         p_fecha_hora_solicitud,
         p_descripcion_problema,
         CASE 
