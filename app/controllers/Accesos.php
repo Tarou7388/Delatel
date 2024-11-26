@@ -26,6 +26,7 @@ function obtenerAccesosFiltrados($idRol, $permissions)
 {
 		// Definir accesos basados en permisos
 		$accesosV2 = [
+				["ruta" => "Administracion", "texto" => "Administración", "icono" => "fa-solid fa-cogs"],
 				["ruta" => "Contratos", "texto" => "Contratos", "icono" => "fa-solid fa-file-contract", "rutasAnexas" => ["FichaTecnicaCable", "FichaTecnicaGpon", "FichaTecnicaWisp"]],
 				["ruta" => "Inventariado", "texto" => "Inventariado", "icono" => "fa-solid fa-warehouse"],
 				["ruta" => "Personas", "texto" => "Personas", "icono" => "fa-solid fa-user"],
@@ -38,7 +39,6 @@ function obtenerAccesosFiltrados($idRol, $permissions)
 				["ruta" => "Almacen", "texto" => "Almacen", "icono" => "fa-solid fa-warehouse"]
 		];
 
-		// Añadir "Actividades" directamente a los accesos filtrados
 		$accesosFiltrados = [
 				["ruta" => "views", "texto" => "Actividades", "icono" => "fa-solid fa-chart-line"]
 		];

@@ -849,10 +849,10 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  /* $(".select2me").select2({ theme: "bootstrap-5", allowClear: true });
+  $(".select2me").select2({ theme: "bootstrap-5", allowClear: true });
   $(".select2me").parent("div").children("span").children("span").children("span").css("height", " calc(3.5rem + 2px)");
   $(".select2me").parent("div").children("span").children("span").children("span").children("span").css("margin-top", "18px");
-  $(".select2me").parent("div").find("label").css("z-index", "1"); */
+  $(".select2me").parent("div").find("label").css("z-index", "1");
 
   async function cargarServicios() {
     try {
