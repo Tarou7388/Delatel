@@ -63,20 +63,8 @@ $idContrato = $_GET['idContrato'];
         <h6 class="card-title text-white">Parámetros Técnicos</h6>
       </div>
       <div class="card-body">
+
         <div class="row g-2 mb-2">
-          <div class="col-md">
-            <div class="form-group">
-              <div class="form-floating">
-                <select id="slcRouterParametros" class="form-select" required>
-                  <option value="0" selected disabled>Seleccione</option>
-                  <option value="router 1">Router 1</option>
-                  <option value="router 2">Router 2</option>
-                  <option value="router 3">Router 3</option>
-                </select>
-                <label for="slcRouterParametros">Router</label>
-              </div>
-            </div>
-          </div>
           <div class="col-md">
             <div class="form-floating">
               <select id="slcFrecuenciaParametros" class="form-select" required>
@@ -96,9 +84,6 @@ $idContrato = $_GET['idContrato'];
               <label for="slcBaseParametros">Base</label>
             </div>
           </div>
-        </div>
-
-        <div class="row g-2 mb-2">
           <div class="col-md">
             <div class="form-floating">
               <select id="slcSubBaseParametros" class="form-select" required>
@@ -110,44 +95,48 @@ $idContrato = $_GET['idContrato'];
               <label for="slcSubBaseParametros">Sub-Base</label>
             </div>
           </div>
+        </div>
+
+        <div class="row g-2 mb-2">
           <div class="col-md input-group">
             <div class="form-floating">
-              <input type="text" id="txtSignalStrengthParametros" class="form-control"
-                placeholder="Signal Strength" required>
+              <input type="number" id="txtSignalStrengthParametros" class="form-control"
+                placeholder="Signal Strength" required min="-90" max="-20">
               <label for="txtSignalStrengthParametros">Signal Strength</label>
             </div>
             <span class="input-group-text">dBm</span>
           </div>
           <div class="col-md input-group">
             <div class="form-floating">
-              <input type="text" id="txtNoiseFloorParametros" class="form-control"
-                placeholder="Noise Floor" required>
+              <input type="number" id="txtNoiseFloorParametros" class="form-control"
+                placeholder="Noise Floor" required min="-100" max="-30">
               <label for="txtNoiseFloorParametros">Noise Floor</label>
             </div>
             <span class="input-group-text">dBm</span>
           </div>
-        </div>
-
-        <div class="row g-2 mb-2">
           <div class="col-md input-group">
             <div class="form-floating">
               <input type="text" id="txtTransmiTccqParametros" class="form-control"
-                placeholder="Transmit CCQ" required>
+                placeholder="Transmit CCQ" required min="40" max="100">
               <label for="txtTransmiTccqParametros">Transmit CCQ</label>
             </div>
             <span class="input-group-text">%</span>
           </div>
+        </div>
+
+        <div class="row g-2 mb-2">
+
           <div class="col-md">
             <div class="form-floating">
-              <input type="text" id="txtTxRateParametros" class="form-control" placeholder="TX Rate"
-                required>
+              <input type="number" id="txtTxRateParametros" class="form-control" placeholder="TX Rate"
+                required min="20.00" max="90.00">
               <label for="txtTxRateParametros">TX Rate</label>
             </div>
           </div>
           <div class="col-md">
             <div class="form-floating">
-              <input type="text" id="txtRxRateParametros" class="form-control" placeholder="RX Rate"
-                required>
+              <input type="number" id="txtRxRateParametros" class="form-control" placeholder="RX Rate"
+                required min="20.00" max="90.00">
               <label for="txtRxRateParametros">RX Rate</label>
             </div>
           </div>
@@ -181,6 +170,28 @@ $idContrato = $_GET['idContrato'];
         <div class="container">
           <!-- Modo Router -->
           <h5 class="mb-3">Modo Router</h5>
+
+          <div class="row g-2 mb-2">
+            <div class="col-md">
+              <div class="form-floating">
+                <input type="text" id="txtCodigoBarraRouter" class="form-control" value="" placeholder="Código de Barra" required>
+                <label for="txtCodigoBarraRouter">Código de Barra</label>
+              </div>
+            </div>
+            <div class="col-md">
+              <div class="form-floating">
+                <input type="text" id="txtModeloRouter" class="form-control" value="" placeholder="Modelo" disabled>
+                <label for="txtModeloRouter">Modelo</label>
+              </div>
+            </div>
+            <div class="col-md">
+              <div class="form-floating">
+                <input type="text" id="txtMarcaRouter" class="form-control" value="" placeholder="MARCA" disabled>
+                <label for="txtMarcaRouter">Marca</label>
+              </div>
+            </div>
+          </div>
+
           <div class="row g-2 mb-2">
             <div class="col-md">
               <div class="form-floating">
@@ -328,18 +339,22 @@ $idContrato = $_GET['idContrato'];
                   <label for="txtCostoRouterVenta">Costo Router</label>
                 </div>
               </div>
+
               <div class="col-12 col-md-4 mt-1">
                 <div class="form-floating">
-                  <input type="text" id="txtMarcaVentaAntena" class="form-control"
-                    placeholder="Marca">
-                  <label for="txtMarcaVentaAntena" class="form-label mb-0">Marca</label>
+                  <input type="text" class="form-control" id="txtMacVentaRouter"
+                    placeholder="MAC">
+                  <label for="txtMacVentaRouter">MAC</label>
                 </div>
               </div>
+
               <div class="col-12 col-md-4 mt-1">
-                <div class="form-floating">
-                  <input type="text" id="txtMarcaVentaRouter" class="form-control"
-                    placeholder="Marca">
-                  <label for="txtMarcaVentaRouter" class="form-label mb-0">Marca</label>
+                <div class="input-group">
+                  <div class="form-floating flex-fill">
+                    <input type="text" class="form-control" id="txtMacVentaAntena"
+                      placeholder="MAC">
+                    <label for="txtMacVentaAntena">MAC</label>
+                  </div>
                 </div>
               </div>
             </div>
@@ -353,18 +368,20 @@ $idContrato = $_GET['idContrato'];
                   <label for="txtSubTotalVenta">SubTotal</label>
                 </div>
               </div>
+
               <div class="col-12 col-md-4 mt-1">
                 <div class="form-floating">
-                  <input type="text" id="txtModeloVentaAntena" placeholder="Modelo"
-                    class="form-control">
-                  <label for="txtModeloVentaAntena">Modelo</label>
+                  <input type="text" id="txtMarcaVentaAntena" class="form-control"
+                    placeholder="Marca" disabled>
+                  <label for="txtMarcaVentaAntena" class="form-label mb-0">Marca</label>
                 </div>
               </div>
+
               <div class="col-12 col-md-4 mt-1">
                 <div class="form-floating">
-                  <input type="text" id="txtModeloVentaRouter" placeholder="Modelo"
-                    class="form-control">
-                  <label for="txtModeloVentaRouter">Modelo</label>
+                  <input type="text" id="txtMarcaVentaRouter" class="form-control"
+                    placeholder="Marca" disabled>
+                  <label for="txtMarcaVentaRouter" class="form-label mb-0">Marca</label>
                 </div>
               </div>
             </div>
@@ -380,31 +397,17 @@ $idContrato = $_GET['idContrato'];
               </div>
 
               <div class="col-12 col-md-4 mt-1">
-                <div class="input-group">
-                  <div class="form-floating flex-fill">
-                    <input type="text" class="form-control" id="txtMacVentaRouter"
-                      placeholder="MAC">
-                    <label for="txtMacVentaRouter">MAC</label>
-                  </div>
-                  <div class="form-floating flex-fill">
-                    <input type="text" class="form-control" id="txtSerialVentaRouter"
-                      placeholder="Serial">
-                    <label for="txtSerialVentaRouter">Serial</label>
-                  </div>
+                <div class="form-floating">
+                  <input type="text" id="txtModeloVentaAntena" placeholder="Modelo"
+                    class="form-control" disabled>
+                  <label for="txtModeloVentaAntena">Modelo</label>
                 </div>
               </div>
               <div class="col-12 col-md-4 mt-1">
-                <div class="input-group">
-                  <div class="form-floating flex-fill">
-                    <input type="text" class="form-control" id="txtMacVentaAntena"
-                      placeholder="MAC">
-                    <label for="txtMacVentaAntena">MAC</label>
-                  </div>
-                  <div class="form-floating flex-fill">
-                    <input type="text" class="form-control" id="txtSerialVentaAntena"
-                      placeholder="Serial">
-                    <label for="txtSerialVentaAntena">Serial</label>
-                  </div>
+                <div class="form-floating">
+                  <input type="text" id="txtModeloVentaRouter" placeholder="Modelo"
+                    class="form-control" disabled>
+                  <label for="txtModeloVentaRouter">Modelo</label>
                 </div>
               </div>
             </div>
@@ -420,6 +423,31 @@ $idContrato = $_GET['idContrato'];
               </div>
               <div class="col-12 col-md-4 mt-1">
                 <div class="form-floating">
+                  <input type="text" class="form-control" id="txtSerialVentaRouter"
+                    placeholder="Serial">
+                  <label for="txtSerialVentaRouter">Serial</label>
+                </div>
+              </div>
+              <div class="col-12 col-md-4 mt-1">
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="txtSerialVentaAntena"
+                    placeholder="Serial">
+                  <label for="txtSerialVentaAntena">Serial</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Fila de Material Adicional -->
+            <div class="row mb-2">
+              <div class="col-12 col-md-4 mt-1">
+                <div class="form-floating">
+                  <input type="text" min="0" class="form-control" id="txtMaterialAdicionalVenta"
+                    placeholder="Material Adicional">
+                  <label for="txtMaterialAdicionalVenta">Material Adicional</label>
+                </div>
+              </div>
+              <div class="col-12 col-md-4 mt-1">
+                <div class="form-floating">
                   <input type="text" class="form-control" id="txtDescripcionVentaAntena"
                     placeholder="Descripción">
                   <label for="txtDescripcionVentaAntena">Descripción</label>
@@ -431,20 +459,6 @@ $idContrato = $_GET['idContrato'];
                     placeholder="Descripción">
                   <label for="txtDescripcionVentaRouter">Descripción</label>
                 </div>
-              </div>
-            </div>
-
-            <!-- Fila de Material Adicional -->
-            <div class="row mb-2">
-              <div class="col-12 col-md-4 mt-1">
-                <div class="form-floating">
-                  <input type="text" min="0" class="form-control" id="txtMaterialAdicionalVenta"
-                    placeholder="txtMaterialAdicional">
-                  <label for="txtMaterialAdicionalVenta">Material Adicional</label>
-                </div>
-              </div>
-              <div class="col-12 col-md-8 mt-1">
-                <input type="text" class="form-control py-3">
               </div>
             </div>
 
@@ -485,17 +499,7 @@ $idContrato = $_GET['idContrato'];
           <div class="card-body">
 
             <div class="row mb-2">
-              <div class="col-12 col-md-4 mt-1">
-                <div class="form-floating">
-                  <select class="form-select" id="slcCondicionAlquilados"
-                    aria-label="Condición de equipos">
-                    <option value="" selected disabled>Seleccione</option>
-                    <option value="Alquilado">Alquilado</option>
-                    <option value="Prestado">Prestado</option>
-                  </select>
-                  <label for="slcCondicionAlquilados">Condición</label>
-                </div>
-              </div>
+              <div class="col-12 col-md-4 mt-1"></div>
               <div class="col-12 col-md-4 mt-1">
                 <div class="antena-header p-3 text-center border py-3">Antena</div>
               </div>
@@ -507,22 +511,44 @@ $idContrato = $_GET['idContrato'];
             <div class="row mb-2">
               <div class="col-12 col-md-4 mt-1">
                 <div class="form-floating">
-                  <input type="text" class="form-control" id="txtPeriodoAlquilados"
-                    placeholder="Periodo">
+                  <select class="form-select" id="slcCondicionAlquilados" aria-label="Condición de equipos">
+                    <option value="" selected disabled>Seleccione</option>
+                    <option value="Alquilado">Alquilado</option>
+                    <option value="Prestado">Prestado</option>
+                  </select>
+                  <label for="slcCondicionAlquilados">Condición</label>
+                </div>
+              </div>
+              <div class="col-12 col-md-4 mt-1">
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="txtMacAntenaAlquilados" placeholder="MAC">
+                  <label for="txtMacAntenaAlquilados">MAC</label>
+                </div>
+              </div>
+              <div class="col-12 col-md-4 mt-1">
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="txtMacRouterAlquilados" placeholder="MAC">
+                  <label for="txtMacRouterAlquilados">MAC</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-2">
+              <div class="col-12 col-md-4 mt-1">
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="txtPeriodoAlquilados" placeholder="Periodo">
                   <label for="txtPeriodoAlquilados">Periodo</label>
                 </div>
               </div>
               <div class="col-12 col-md-4 mt-1">
                 <div class="form-floating">
-                  <input type="text" id="txtMarcaAntenaAlquilados" class="form-control"
-                    placeholder="Marca">
-                  <label for="txtMarcaAlquilados" class="form-label mb-0">Marca</label>
+                  <input type="text" id="txtMarcaAntenaAlquilados" class="form-control" placeholder="Marca">
+                  <label for="txtMarcaAntenaAlquilados" class="form-label mb-0">Marca</label>
                 </div>
               </div>
               <div class="col-12 col-md-4 mt-1">
                 <div class="form-floating">
-                  <input type="text" id="txtMarcaRouterAlquilados" class="form-control"
-                    placeholder="Marca">
+                  <input type="text" id="txtMarcaRouterAlquilados" class="form-control" placeholder="Marca">
                   <label for="txtMarcaRouterAlquilados" class="form-label mb-0">Marca</label>
                 </div>
               </div>
@@ -531,23 +557,20 @@ $idContrato = $_GET['idContrato'];
             <div class="row mb-2">
               <div class="col-12 col-md-4 mt-1">
                 <div class="form-floating">
-                  <input type="date" class="form-control" id="txtFechaInicioAlquilados"
-                    placeholder="Fecha de Inicio">
+                  <input type="date" class="form-control" id="txtFechaInicioAlquilados" placeholder="Fecha de Inicio">
                   <label for="txtFechaInicioAlquilados">Fecha de Inicio</label>
                 </div>
               </div>
               <div class="col-12 col-md-4 mt-1">
                 <div class="form-floating">
-                  <input type="text" id="txtModeloAntenaAlquilados" placeholder="Modelo"
-                    class="form-control">
-                  <label class="form-label mb-0" id="txtModeloAntenaAlquilados">Modelo</label>
+                  <input type="text" id="txtModeloAntenaAlquilados" placeholder="Modelo" class="form-control">
+                  <label for="txtModeloAntenaAlquilados" class="form-label mb-0">Modelo</label>
                 </div>
               </div>
               <div class="col-12 col-md-4 mt-1">
                 <div class="form-floating">
-                  <input type="text" id="txtModeloRouterAlquilados" placeholder="Modelo"
-                    class="form-control">
-                  <label class="form-label mb-0" id="txtModeloRouterAlquilados">Modelo</label>
+                  <input type="text" id="txtModeloRouterAlquilados" placeholder="Modelo" class="form-control">
+                  <label for="txtModeloRouterAlquilados" class="form-label mb-0">Modelo</label>
                 </div>
               </div>
             </div>
@@ -555,37 +578,20 @@ $idContrato = $_GET['idContrato'];
             <div class="row mb-2">
               <div class="col-12 col-md-4 mt-1">
                 <div class="form-floating">
-                  <input type="date" class="form-control" id="txtFechaFinAlquilados"
-                    placeholder="Fecha de Fin">
+                  <input type="date" class="form-control" id="txtFechaFinAlquilados" placeholder="Fecha de Fin">
                   <label for="txtFechaFinAlquilados">Fecha de Termino</label>
                 </div>
               </div>
               <div class="col-12 col-md-4 mt-1">
-                <div class="input-group">
-                  <div class="form-floating flex-fill">
-                    <input type="text" class="form-control" id="txtMacAntenaAlquilados"
-                      placeholder="MAC">
-                    <label for="txtMacAntenaAlquilados">MAC</label>
-                  </div>
-                  <div class="form-floating flex-fill">
-                    <input type="text" class="form-control" id="txtSerialAntenaAlquilados"
-                      placeholder="Serial">
-                    <label for="txtSerialAntenaAlquilados">Serial</label>
-                  </div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="txtSerialAntenaAlquilados" placeholder="Serial">
+                  <label for="txtSerialAntenaAlquilados">Serial</label>
                 </div>
               </div>
               <div class="col-12 col-md-4 mt-1">
-                <div class="input-group">
-                  <div class="form-floating flex-fill">
-                    <input type="text" class="form-control" id="txtMacRouterAlquilados"
-                      placeholder="MAC">
-                    <label for="txtMacRouterAlquilados">MAC</label>
-                  </div>
-                  <div class="form-floating flex-fill">
-                    <input type="text" class="form-control" id="txtSerialRouterAlquilados"
-                      placeholder="Serial">
-                    <label for="txtSerialRouterAlquilados">Serial</label>
-                  </div>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="txtSerialRouterAlquilados" placeholder="Serial">
+                  <label for="txtSerialRouterAlquilados">Serial</label>
                 </div>
               </div>
             </div>
@@ -593,22 +599,19 @@ $idContrato = $_GET['idContrato'];
             <div class="row mb-2">
               <div class="col-12 col-md-4 mt-1">
                 <div class="form-floating">
-                  <input type="text" class="form-control" min="0" id="txtCostoAlquilerAlquilados"
-                    placeholder="Costo Alquiler">
+                  <input type="text" class="form-control" min="0" id="txtCostoAlquilerAlquilados" placeholder="Costo Alquiler">
                   <label for="txtCostoAlquilerAlquilados">Costo Alquiler</label>
                 </div>
               </div>
               <div class="col-12 col-md-4 mt-1">
                 <div class="form-floating">
-                  <input type="text" class="form-control" id="txtDescripcionAntenaAlquilados"
-                    placeholder="Descripción">
+                  <input type="text" class="form-control" id="txtDescripcionAntenaAlquilados" placeholder="Descripción">
                   <label for="txtDescripcionAntenaAlquilados">Descripción</label>
                 </div>
               </div>
               <div class="col-12 col-md-4 mt-1">
                 <div class="form-floating">
-                  <input type="text" class="form-control" id="txtDescripcionRouterAlquilados"
-                    placeholder="Descripción">
+                  <input type="text" class="form-control" id="txtDescripcionRouterAlquilados" placeholder="Descripción">
                   <label for="txtDescripcionRouterAlquilados">Descripción</label>
                 </div>
               </div>
@@ -624,8 +627,7 @@ $idContrato = $_GET['idContrato'];
                 </div>
                 <div class="form-check form-check-inline">
                   <input class="form-check-input" type="checkbox" id="chkCumpliendoMesAlquilados">
-                  <label class="form-check-label" for="chkCumpliendoAlquilados">Cumpliendo el
-                    Mes</label>
+                  <label class="form-check-label" for="chkCumpliendoMesAlquilados">Cumpliendo el Mes</label>
                 </div>
               </div>
             </div>
@@ -634,9 +636,8 @@ $idContrato = $_GET['idContrato'];
             <div class="row">
               <div class="col-12">
                 <div class="form-floating">
-                  <textarea class="form-control" rows="3" id="txtDetalleAlquilados"
-                    placeholder="Detalles"></textarea>
-                  <label class="form-label" for="txtDetalleAlquilados">Detalles</label>
+                  <textarea class="form-control" rows="3" id="txtDetalleAlquilados" placeholder="Detalles"></textarea>
+                  <label for="txtDetalleAlquilados">Detalles</label>
                 </div>
               </div>
             </div>
@@ -716,6 +717,9 @@ $idContrato = $_GET['idContrato'];
 <!-- Botones -->
 <div class="row">
   <div class="col-12 text-center text-md-end mb-3 btn-container">
+    <button type="button" id="btnReporte" class="btn btn-info px-4 py-2">
+      <i class="fas fa-file-alt"></i> Generar Reporte
+    </button>
     <button type="button" id="btnRegistrar" class="btn btn-success px-4 py-2">
       <i class="fas fa-save"></i> Guardar
     </button>

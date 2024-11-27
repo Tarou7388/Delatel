@@ -32,7 +32,7 @@ $fichaTecnicaJson = $resultado[0]['FichaTecnica'];
 $fichaTecnica = json_decode($fichaTecnicaJson, true);
 
 ob_start();
-include 'instalacionWisp.php';
+include 'contenido.php';
 include 'estilos.html';
 $content = ob_get_clean();
 

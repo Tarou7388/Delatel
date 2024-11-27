@@ -74,13 +74,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
       tipoPaquete = data[0].tipo_servicio;
 
-
       if (data[0].ficha_instalacion) {
         const installationData = JSON.parse(data[0].ficha_instalacion);
 
         // Cargar datos de parámetros
         const parametros = installationData.parametros;
-        document.getElementById("slcRouterParametros").value = parametros.router.join(", ");
         document.getElementById("slcFrecuenciaParametros").value = parametros.frecuencia.join(", ");
         document.getElementById("slcBaseParametros").value = parametros.base.join(", ");
         document.getElementById("slcSubBaseParametros").value = parametros.subBase.join(", ");
@@ -93,7 +91,9 @@ document.addEventListener("DOMContentLoaded", () => {
         // Cargar datos de configuración del router
         cargarRouters(installationData.ConfiRouter);
 
-        // Cargar datos de venta o alquiler
+        // Actualizar el contador de routers
+        routerCount = installationData.ConfiRouter.length;
+
         // Mostrar y cargar datos de venta o alquiler
         const frmVenta = document.getElementById('frmVenta');
         const frmAlquiler = document.getElementById('frmAlquiler');
@@ -111,10 +111,12 @@ document.addEventListener("DOMContentLoaded", () => {
           document.getElementById("txtMarcaVentaAntena").value = venta.antena.marca;
           document.getElementById("txtModeloVentaAntena").value = venta.antena.modelo;
           document.getElementById("txtMacVentaAntena").value = venta.antena.mac;
+          document.getElementById("txtSerialVentaAntena").value = venta.antena.serial;
           document.getElementById("txtDescripcionVentaAntena").value = venta.antena.descripcion;
           document.getElementById("txtMarcaVentaRouter").value = venta.router.marca;
           document.getElementById("txtModeloVentaRouter").value = venta.router.modelo;
           document.getElementById("txtMacVentaRouter").value = venta.router.mac;
+          document.getElementById("txtSerialVentaRouter").value = venta.router.serial;
           document.getElementById("txtDescripcionVentaRouter").value = venta.router.descripcion;
           document.getElementById("chkAdelantadoVenta").checked = venta.condicion["Adelantado"] === true;
           document.getElementById("chkCumpliendoMesVenta").checked = venta.condicion["Cumpliendo el mes"] === true;
@@ -131,11 +133,15 @@ document.addEventListener("DOMContentLoaded", () => {
           document.getElementById("txtMarcaAntenaAlquilados").value = alquilado.antena.marca;
           document.getElementById("txtModeloAntenaAlquilados").value = alquilado.antena.modelo;
           document.getElementById("txtMacAntenaAlquilados").value = alquilado.antena.mac;
+          document.getElementById("txtSerialAntenaAlquilados").value = alquilado.antena.serial;
           document.getElementById("txtDescripcionAntenaAlquilados").value = alquilado.antena.descripcion;
           document.getElementById("txtMarcaRouterAlquilados").value = alquilado.router.marca;
           document.getElementById("txtModeloRouterAlquilados").value = alquilado.router.modelo;
           document.getElementById("txtMacRouterAlquilados").value = alquilado.router.mac;
+          document.getElementById("txtSerialRouterAlquilados").value = alquilado.router.serial;
           document.getElementById("txtDescripcionRouterAlquilados").value = alquilado.router.descripcion;
+          document.getElementById("chkAdelantadoAlquilados").checked = alquilado.condicionTiempo["Adelantado"] === true;
+          document.getElementById("chkCumpliendoMesAlquilados").checked = alquilado.condicionTiempo["Cumpliendo el mes"] === true;
           document.getElementById("txtDetalleAlquilados").value = alquilado.detalle;
         }
 
@@ -157,10 +163,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   })();
 
-  //Cargar routers
   function cargarRouters(confiRouter) {
     const rowContainer = document.createElement("div");
     rowContainer.classList.add("row");
+
+    // Primero, vacía el contenedor de routers para evitar duplicados al recargar
+    routersContainer.innerHTML = '';
 
     confiRouter.forEach((router, index) => {
       const routerData = router.ConfiRouter;
@@ -180,6 +188,18 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="card-body p-0">
           <table class="table table-sm table-hover mb-0">
             <tbody>
+              <tr>
+                <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>Código de Barra</td>
+                <td class="py-1 px-2">${routerData.codigoBarra}</td>
+              </tr>
+              <tr>
+                <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>Modelo</td>
+                <td class="py-1 px-2">${routerData.modelo}</td>
+              </tr>
+              <tr>
+                <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>Marca</td>
+                <td class="py-1 px-2">${routerData.marca}</td>
+              </tr>
               <tr>
                 <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>WAN</td>
                 <td class="py-1 px-2">${routerData.wan}</td>
@@ -232,10 +252,9 @@ document.addEventListener("DOMContentLoaded", () => {
       deleteButton.innerHTML = '<i class="fas fa-trash-alt" style="color: white;"></i> Eliminar';
 
       deleteButton.addEventListener("click", function () {
-        rowContainer.removeChild(routerCol);
-        routerCount--;
-        actualizarNumeros();
-        jsonRouter.splice(routerCount, 1);
+        routersContainer.removeChild(routerCol);
+        jsonRouter.splice(index, 1); // Eliminar router de jsonRouter
+        actualizarNumeros(); // Actualizar el contador de routers
       });
 
       routerCard.querySelector(".card-body").appendChild(deleteButton);
@@ -246,15 +265,20 @@ document.addEventListener("DOMContentLoaded", () => {
     routersContainer.appendChild(rowContainer);
     routerConfigModal.hide();
     limpiarCampos();
+    actualizarNumeros();
+
+    // Agregar console.log para mostrar los routers existentes
+    console.log("Routers existentes:", confiRouter);
   }
 
   // Función para agregar un nuevo router
   function agregarRouter() {
-    routerCount++;
-
     routerConfigModal.show();
 
     saveButton.onclick = function () {
+      const codigoBarra = document.getElementById("txtCodigoBarraRouter").value;
+      const modelo = document.getElementById("txtModeloRouter").value;
+      const marca = document.getElementById("txtMarcaRouter").value;
       const wan = document.getElementById("txtWanRouter").value;
       const mascara = document.getElementById("txtMascaraRouter").value;
       const puertaEnlace = document.getElementById("txtPuertaEnlaceRouter").value;
@@ -271,7 +295,10 @@ document.addEventListener("DOMContentLoaded", () => {
         return; // Interrumpir la ejecución
       }
 
-      jsonRouter.push({
+      const newRouter = {
+        codigoBarra,
+        modelo,
+        marca,
         wan,
         mascara,
         puertaEnlace,
@@ -282,7 +309,11 @@ document.addEventListener("DOMContentLoaded", () => {
         ssid,
         seguridad,
         otros
-      });
+      };
+
+      jsonRouter.push(newRouter);
+      routerCount++;
+
       const routerCol = document.createElement("div");
       routerCol.classList.add("col-md-4", "mb-4");
 
@@ -291,59 +322,71 @@ document.addEventListener("DOMContentLoaded", () => {
       routerCard.style.maxWidth = '100%';
 
       routerCard.innerHTML = `
-          <div class="card-header text-white py-2">
-            <h5 class="card-title mb-0 d-flex justify-content-between align-items-center fs-6">
-              <span>Router N° ${routerCount}</span>
-            </h5>
-          </div>
-          <div class="card-body p-0">
-            <table class="table table-sm table-hover mb-0">
-              <tbody>
-                <tr>
-                  <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>WAN</td>
-                  <td class="py-1 px-2">${wan}</td>
-                </tr>
-                <tr>
-                  <td class="py-1 px-2"><i class="fas fa-mask text-primary me-2"></i>Máscara</td>
-                  <td class="py-1 px-2">${mascara}</td>
-                </tr>
-                <tr>
-                  <td class="py-1 px-2"><i class="fas fa-door-open text-primary me-2"></i>Puerta de Enlace</td>
-                  <td class="py-1 px-2">${puertaEnlace}</td>
-                </tr>
-                <tr>
-                  <td class="py-1 px-2"><i class="fas fa-server text-primary me-2"></i>DNS 1</td>
-                  <td class="py-1 px-2">${dns1}</td>
-                </tr>
-                <tr>
-                  <td class="py-1 px-2"><i class="fas fa-server text-primary me-2"></i>DNS 2</td>
-                  <td class="py-1 px-2">${dns2}</td>
-                </tr>
-                <tr>
-                  <td class="py-1 px-2"><i class="fas fa-wifi text-primary me-2"></i>LAN Wireless</td>
-                  <td class="py-1 px-2">${lan}</td>
-                </tr>
-                <tr>
-                  <td class="py-1 px-2"><i class="fas fa-key text-primary me-2"></i>Acceso Wireless</td>
-                  <td class="py-1 px-2">${acceso}</td>
-                </tr>
-                <tr>
-                  <td class="py-1 px-2"><i class="fas fa-broadcast-tower text-primary me-2"></i>SSID</td>
-                  <td class="py-1 px-2">${ssid}</td>
-                </tr>
-                <tr>
-                  <td class="py-1 px-2"><i class="fas fa-shield-alt text-primary me-2"></i>Seguridad</td>
-                  <td class="py-1 px-2">${seguridad}</td>
-                </tr>
-                <tr>
-                  <td class="py-1 px-2"><i class="fas fa-info-circle text-primary me-2"></i>Otros</td>
-                  <td class="py-1 px-2">${otros}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        `;
-      showToast("Agregado correctamente","SUCCESS",1500);
+        <div class="card-header text-white py-2">
+          <h5 class="card-title mb-0 d-flex justify-content-between align-items-center fs-6">
+            <span>Router N° ${routerCount}</span>
+          </h5>
+        </div>
+        <div class="card-body p-0">
+          <table class="table table-sm table-hover mb-0">
+            <tbody>
+              <tr>
+                <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>Código de Barra</td>
+                <td class="py-1 px-2">${codigoBarra}</td>
+              </tr>
+              <tr>
+                <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>Modelo</td>
+                <td class="py-1 px-2">${modelo}</td>
+              </tr>
+              <tr>
+                <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>Marca</td>
+                <td class="py-1 px-2">${marca}</td>
+              </tr>
+              <tr>
+                <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>WAN</td>
+                <td class="py-1 px-2">${wan}</td>
+              </tr>
+              <tr>
+                <td class="py-1 px-2"><i class="fas fa-mask text-primary me-2"></i>Máscara</td>
+                <td class="py-1 px-2">${mascara}</td>
+              </tr>
+              <tr>
+                <td class="py-1 px-2"><i class="fas fa-door-open text-primary me-2"></i>Puerta de Enlace</td>
+                <td class="py-1 px-2">${puertaEnlace}</td>
+              </tr>
+              <tr>
+                <td class="py-1 px-2"><i class="fas fa-server text-primary me-2"></i>DNS 1</td>
+                <td class="py-1 px-2">${dns1}</td>
+              </tr>
+              <tr>
+                <td class="py-1 px-2"><i class="fas fa-server text-primary me-2"></i>DNS 2</td>
+                <td class="py-1 px-2">${dns2}</td>
+              </tr>
+              <tr>
+                <td class="py-1 px-2"><i class="fas fa-wifi text-primary me-2"></i>LAN Wireless</td>
+                <td class="py-1 px-2">${lan}</td>
+              </tr>
+              <tr>
+                <td class="py-1 px-2"><i class="fas fa-key text-primary me-2"></i>Acceso Wireless</td>
+                <td class="py-1 px-2">${acceso}</td>
+              </tr>
+              <tr>
+                <td class="py-1 px-2"><i class="fas fa-broadcast-tower text-primary me-2"></i>SSID</td>
+                <td class="py-1 px-2">${ssid}</td>
+              </tr>
+              <tr>
+                <td class="py-1 px-2"><i class="fas fa-shield-alt text-primary me-2"></i>Seguridad</td>
+                <td class="py-1 px-2">${seguridad}</td>
+              </tr>
+              <tr>
+                <td class="py-1 px-2"><i class="fas fa-info-circle text-primary me-2"></i>Otros</td>
+                <td class="py-1 px-2">${otros}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      `;
+      showToast("Agregado correctamente", "SUCCESS", 1500);
       const deleteButton = document.createElement("button");
       deleteButton.classList.add("btn", "btn-sm", "btn-outline-light", "mb-1", "me-2", "float-end");
       deleteButton.style.backgroundColor = '#0459ad';
@@ -353,18 +396,17 @@ document.addEventListener("DOMContentLoaded", () => {
       deleteButton.addEventListener("click", function () {
         ask("¿Está seguro de eliminar este router?", "Ficha Técnica Wisp").then((respuesta) => {
           if (respuesta) {
-            rowContainer.removeChild(routerCol);
-            routerCount--;
+            routersContainer.removeChild(routerCol);
+            jsonRouter.splice(jsonRouter.indexOf(newRouter), 1);
+            routerCount--; // Decrementar el contador de routers
             actualizarNumeros();
-            jsonRouter.splice(routerCount, 1);
           }
         });
       });
 
       routerCard.querySelector(".card-body").appendChild(deleteButton);
       routerCol.appendChild(routerCard);
-      const rowContainer = routersContainer.querySelector(".row");
-      rowContainer.appendChild(routerCol);
+      routersContainer.appendChild(routerCol);
 
       routerConfigModal.hide();
 
@@ -389,10 +431,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // Actualizar los números de los routers
   function actualizarNumeros() {
     const routerCards = routersContainer.querySelectorAll(".card");
-    routerCount = routerCards.length;
-
     routerCards.forEach((card, index) => {
-      const cardHeader = card.querySelector(".card-header");
+      const cardHeader = card.querySelector(".card-header span");
       cardHeader.textContent = `Router N° ${index + 1}`;
     });
   }
@@ -450,7 +490,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   //Json Parametros 
   async function parametros() {
-    const slcRouter = document.getElementById('slcRouterParametros').value;
     const slcFrecuencia = document.getElementById('slcFrecuenciaParametros').value;
     const slcBase = document.getElementById('slcBaseParametros').value;
     const slcSubBase = document.getElementById('slcSubBaseParametros').value;
@@ -461,7 +500,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const txtRxRate = parseFloat(document.getElementById('txtRxRateParametros').value);
     if (!flagFichaInstalacion) {
       if (
-        slcRouter === "" ||
         slcFrecuencia === "" ||
         slcBase === "" ||
         slcSubBase === "" ||
@@ -475,7 +513,6 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         jsonParametros = {
           parametros: {
-            router: slcRouter.split(","),
             frecuencia: slcFrecuencia.split(","),
             base: slcBase.split(","),
             subBase: slcSubBase.split(","),
@@ -498,37 +535,41 @@ document.addEventListener("DOMContentLoaded", () => {
     const caja = document.getElementById(cajatxt);
     const response = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarra&codigoBarra=${caja.value}`);
     const data = await response.json();
+    console.log(data);
     return data;
   }
 
+  document.querySelector('#txtCodigoBarraRouter').addEventListener('change', async function () {
+    const datos = await productoBarraBuscar('txtCodigoBarraRouter');
+    document.querySelector('#txtMarcaRouter').value = datos[0].marca;
+    document.querySelector('#txtModeloRouter').value = datos[0].modelo;
+  });
+
   document.querySelector('#txtMacAntenaAlquilados').addEventListener('change', async function () {
     const datos = await productoBarraBuscar('txtMacAntenaAlquilados');
-    console.log(datos);
     document.querySelector('#txtMarcaAntenaAlquilados').value = datos[0].marca;
     document.querySelector('#txtModeloAntenaAlquilados').value = datos[0].modelo;
   });
 
   document.querySelector('#txtMacRouterAlquilados').addEventListener('change', async function () {
     const datos = await productoBarraBuscar('txtMacRouterAlquilados');
-    console.log(datos);
     document.querySelector('#txtMarcaRouterAlquilados').value = datos[0].marca;
     document.querySelector('#txtModeloRouterAlquilados').value = datos[0].modelo;
   });
 
   document.querySelector('#txtMacVentaRouter').addEventListener('change', async function () {
     const datos = await productoBarraBuscar('txtMacVentaRouter');
-    console.log(datos);
     txtMarcaVentaAntena.value = datos[0].marca;
     txtModeloVentaAntena.value = datos[0].modelo;
+    txtCostoAntenaVenta.value = datos[0].precio_actual;
   });
 
   document.querySelector('#txtMacVentaAntena').addEventListener('change', async function () {
     const datos = await productoBarraBuscar('txtMacVentaAntena');
-    console.log(datos);
     txtMarcaVentaRouter.value = datos[0].marca;
     txtModeloVentaRouter.value = datos[0].modelo;
+    txtCostoRouterVenta.value = datos[0].precio_actual;
   });
-
 
   //Json Router
   async function router() {
@@ -538,6 +579,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
       jsonRouter.forEach((router, index) => {
         if (
+          router.codigoBarra === "" ||
+          router.modelo === "" ||
+          router.marca === "" ||
           router.wan === "" ||
           router.mascara === "" ||
           router.puertaEnlace === "" ||
@@ -553,6 +597,9 @@ document.addEventListener("DOMContentLoaded", () => {
           allFieldsFilled = false;
         } else {
           updatedRouters.push({
+            codigoBarra: router.codigoBarra,
+            modelo: router.modelo,
+            marca: router.marca,
             wan: router.wan,
             mascara: router.mascara,
             puertaEnlace: router.puertaEnlace,
@@ -562,15 +609,19 @@ document.addEventListener("DOMContentLoaded", () => {
             acceso: router.acceso,
             ssid: router.ssid,
             seguridad: router.seguridad,
-            otros: router.otros
+            otros: router.otros,
+            isNew: router.isNew
           });
         }
       });
 
       if (allFieldsFilled) {
-        console.log('Updated Routers:', updatedRouters);
-        jsonData.ConfiRouter = updatedRouters.map(router => ({
+        //jsonData.ConfiRouter = jsonData.ConfiRouter || [];
+        jsonData.ConfiRouter = jsonData.ConfiRouter.concat(updatedRouters.map(router => ({
           ConfiRouter: {
+            codigoBarra: router.codigoBarra,
+            modelo: router.modelo,
+            marca: router.marca,
             wan: router.wan,
             mascara: router.mascara,
             puertaEnlace: router.puertaEnlace,
@@ -582,10 +633,10 @@ document.addEventListener("DOMContentLoaded", () => {
               ssid: router.ssid,
               seguridad: router.seguridad,
               otros: router.otros
-            }
+            },
+            isNew: router.isNew
           }
-        }));
-        console.log('jsonData.ConfiRouter:', jsonData.ConfiRouter);
+        })));
       }
     }
   }
@@ -713,19 +764,22 @@ document.addEventListener("DOMContentLoaded", () => {
           fechaInicio: txtFechaInicioAlquilado,
           fechaFin: txtFechaFinAlquilado,
           costoAlquiler: txtCostoAlquilerAlquilado,
-          condicionTiempo: chkAdelantadoAlquilado || chkCumpliendoMesAlquilados,
+          condicionTiempo : {
+            "Adelantado": chkAdelantadoAlquilado ? true : "",
+            "Cumpliendo el mes": chkCumpliendoMesAlquilados ? true : ""
+          },
           antena: {
             marca: txtMarcaAntenaAlquilado,
             modelo: txtModeloAntenaAlquilado,
             mac: txtMacAntenaAlquilado,
-            serial: document.querySelector('#txtSerialAlquiladoAntena').value,
+            serial: document.querySelector('#txtSerialAntenaAlquilados').value,
             descripcion: txtDescripcionAntenaAlquilado
           },
           router: {
             marca: txtMarcaRouterAlquilado,
             modelo: txtModeloRouterAlquilado,
             mac: txtMacRouterAlquilado,
-            serial: document.querySelector('#txtSerialAlquiladoRouter').value,
+            serial: document.querySelector('#txtSerialRouterAlquilados').value,
             descripcion: txtDescripcionRouterAlquilado
           },
           detalle: txtDetalleAlquilado,
@@ -786,6 +840,28 @@ document.addEventListener("DOMContentLoaded", () => {
     await venta();
     await alquilado_prestado();
     await deuda();
+
+    jsonData.ConfiRouter = jsonRouter.map(router => ({
+      ConfiRouter: {
+        codigoBarra: router.codigoBarra,
+        modelo: router.modelo,
+        marca: router.marca,
+        wan: router.wan,
+        mascara: router.mascara,
+        puertaEnlace: router.puertaEnlace,
+        dns1: router.dns1,
+        dns2: router.dns2,
+        ConfiWireless: {
+          lan: router.lan,
+          acceso: router.acceso,
+          ssid: router.ssid,
+          seguridad: router.seguridad,
+          otros: router.otros
+        },
+        isNew: router.isNew
+      }
+    }));
+
     const data = {
       operacion: "guardarFichaInstalacion",
       fichaInstalacion: jsonData,
@@ -804,7 +880,11 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log(datos);
   }
 
-  document.getElementById('btnRegistrar').addEventListener('click', async () => {
+  document.getElementById('btnRegistrar').addEventListener('click', async (event) => {
+    if (!validarFormulario()) {
+      event.preventDefault();
+      return;
+    }
     if (!flagFichaInstalacion) {
       await registrarFichaWisp();
       showToast("Ficha de Instalación guardada correctamente", "SUCCESS");
@@ -820,7 +900,58 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = `${config.HOST}views/Contratos/`;
   });
 
+  document.getElementById("btnReporte").addEventListener("click", () => {
+    window.open(`${config.HOST}views/reports/Instalacion_WISP/soporte.php?id=${idContrato}`, '_blank');
+  });
+
   btnAgregarRouter.addEventListener("click", agregarRouter);
+
+  function validarFormulario() {
+    const signalStrength = parseFloat(document.getElementById('txtSignalStrengthParametros').value);
+    const noiseFloor = parseFloat(document.getElementById('txtNoiseFloorParametros').value);
+    const txRate = parseFloat(document.getElementById('txtTxRateParametros').value);
+    const rxRate = parseFloat(document.getElementById('txtRxRateParametros').value);
+    const transmiTccq = parseFloat(document.getElementById('txtTransmiTccqParametros').value);
+    const fechaInicioAlquilados = document.getElementById('txtFechaInicioAlquilados').value;
+    const today = new Date().toISOString().split("T")[0];
+    const frmAlquiler = document.getElementById('frmAlquiler');
+
+    if (signalStrength < -90 || signalStrength > -20) {
+      showToast("El valor de Signal Strength debe estar entre -90 y -20.", "INFO");
+      return false;
+    }
+    if (noiseFloor < -100 || noiseFloor > -30) {
+      showToast("El valor de Noise Floor debe estar entre -100 y -30.", "INFO");
+      return false;
+    }
+    if (txRate < 20.00 || txRate > 90.00) {
+      showToast("El valor de Tx Rate debe estar entre 20.00 y 90.00.", "INFO");
+      return false;
+    }
+    if (rxRate < 20.00 || rxRate > 90.00) {
+      showToast("El valor de Rx Rate debe estar entre 20.00 y 90.00.", "INFO");
+      return false;
+    }
+    if (transmiTccq < 40 || transmiTccq > 100) {
+      showToast("El valor de Transmit CCQ debe estar entre 40 y 100.", "INFO");
+      return false;
+    }
+    if (!frmAlquiler.classList.contains('hidden') && fechaInicioAlquilados < today) {
+      showToast("La fecha de inicio no puede ser menor a la fecha actual.", "INFO");
+      return false;
+    }
+    return true;
+  }
+
+  function calcularSubtotal() {
+    const adelanto = parseFloat(document.getElementById('txtAdelantoVenta').value) || 0;
+    const materialAdicional = parseFloat(document.getElementById('txtMaterialAdicionalVenta').value) || 0;
+    const subtotal = adelanto + materialAdicional;
+    document.getElementById('txtSubTotalVenta').value = subtotal.toFixed(2);
+  }
+
+  document.getElementById('txtAdelantoVenta').addEventListener('input', calcularSubtotal);
+  document.getElementById('txtMaterialAdicionalVenta').addEventListener('input', calcularSubtotal);
 
 });
 

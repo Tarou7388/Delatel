@@ -31,7 +31,7 @@ $idContrato = $_GET['idContrato'];
 </div>
 
 <div class="container-fluid px-5">
-  
+
   <div class="form-container mt-3">
 
     <h1 class="mt-4"><i class="fas fa-file-alt"></i> Formulario de Registro de Ficha de Cable</h1>
@@ -226,6 +226,9 @@ $idContrato = $_GET['idContrato'];
         <!-- Botones -->
         <div class="row">
           <div class="col-12 text-center text-md-end mb-3 btn-container">
+            <button type="button" id="btnReporte" class="btn btn-info px-4 py-2">
+              <i class="fas fa-file-alt"></i> Generar Reporte
+            </button>
             <button type="button" id="btnGuardar" class="btn btn-success px-4 py-2">
               <i class="fas fa-save"></i> Guardar
             </button>

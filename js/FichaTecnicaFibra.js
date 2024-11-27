@@ -39,6 +39,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Cargar datos de la ficha de instalación
       const fichaInstalacion = JSON.parse(data[0].ficha_instalacion);
+      if (!fichaInstalacion || !fichaInstalacion.fibraOptica) {
+        showToast('No se encontraron datos de fibra óptica', "INFO");
+        return;
+      }
       const fibraOptica = fichaInstalacion.fibraOptica;
 
       document.getElementById("txtUsuario").value = fibraOptica.usuario;
@@ -77,58 +81,58 @@ document.addEventListener('DOMContentLoaded', () => {
         const nuevoRepetidor = document.createElement("div");
         nuevoRepetidor.classList.add("col-12", "col-md-6", "col-lg-3");
         nuevoRepetidor.innerHTML = `
-          <div class="card repetidor-card mb-2" id="carta${repetidor.numero}">
-            <div class="header">
-              <h2 class="title">Repetidor - N° ${repetidor.numero}</h2>
-            </div>
-            <div class="content">
-              <div class="row">
-                <div class="field">
-                  <i class="fas fa-wifi icon"></i>
-                  <label>SSID:</label>
-                  <span>${repetidor.ssid}</span>
+                <div class="card repetidor-card mb-2" id="carta${repetidor.numero}">
+                    <div class="header">
+                        <h2 class="title">Repetidor - N° ${repetidor.numero}</h2>
+                    </div>
+                    <div class="content">
+                        <div class="row">
+                            <div class="field">
+                                <i class="fas fa-wifi icon"></i>
+                                <label>SSID:</label>
+                                <span>${repetidor.ssid}</span>
+                            </div>
+                            <div class="field">
+                                <i class="fas fa-lock icon"></i>
+                                <label>Contraseña:</label>
+                                <span class="password">${repetidor.contrasenia}</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="field">
+                                <i class="fas fa-server icon"></i>
+                                <label>Serie:</label>
+                                <span>${repetidor.serie}</span>
+                            </div>
+                            <div class="field">
+                                <i class="fas fa-desktop icon"></i>
+                                <label>Modelo:</label>
+                                <span>${repetidor.modelo}</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="field">
+                                <i class="fas fa-box icon"></i>
+                                <label>Marca:</label>
+                                <span>${repetidor.marca}</span>
+                            </div>
+                            <div class="field">
+                                <i class="fas fa-network-wired icon"></i>
+                                <label>IP:</label>
+                                <span>${repetidor.ip}</span>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="field">
+                                <i class="fas fa-barcode icon"></i>
+                                <label>Código de Barra:</label>
+                                <span>${repetidor.codigoBarra}</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="field">
-                  <i class="fas fa-lock icon"></i>
-                  <label>Contraseña:</label>
-                  <span class="password">${repetidor.contrasenia}</span>
-                </div>
-              </div>
-              <div class="row">
-                <div class="field">
-                  <i class="fas fa-server icon"></i>
-                  <label>Serie:</label>
-                  <span>${repetidor.serie}</span>
-                </div>
-                <div class="field">
-                  <i class="fas fa-desktop icon"></i>
-                  <label>Modelo:</label>
-                  <span>${repetidor.modelo}</span>
-                </div>
-              </div>
-              <div class="row">
-                <div class="field">
-                  <i class="fas fa-box icon"></i>
-                  <label>Marca:</label>
-                  <span>${repetidor.marca}</span>
-                </div>
-                <div class="field">
-                  <i class="fas fa-network-wired icon"></i>
-                  <label>IP:</label>
-                  <span>${repetidor.ip}</span>
-                </div>
-              </div>
-              <hr>
-              <div class="row">
-                <div class="field">
-                  <i class="fas fa-barcode icon"></i>
-                  <label>Código de Barra:</label>
-                  <span>${repetidor.codigoBarra}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
+            `;
         contenidoCarta.appendChild(nuevoRepetidor);
       });
 
@@ -178,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
           catv: chkCatv,
         },
         detallesModen: txtaDetallesModen,
-        repetidores: jsonRepetidor 
+        repetidores: jsonRepetidor
       }
     }
   }
@@ -317,7 +321,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const codigoBarra = this.value.trim();
 
     if (codigoBarra === "") {
-      return; 
+      return;
     }
 
     try {
@@ -434,7 +438,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.getElementById("btnReporte").addEventListener("click", () => {
-    window.open(`${config.HOST}views/reports/Instalacion_GPON/soporte.php?id=${idContrato}`, '_blank');
+    window.open(`${config.HOST}views/reports/Contrato_FIBRA/fichaInstalacion.php?id=${idContrato}`, '_blank');
   });
 
   $("#txtIpRepetidor").on("input", function (event) {

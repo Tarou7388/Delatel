@@ -76,6 +76,7 @@ GROUP BY
 ORDER BY c.id_contrato DESC;
 
 DELIMITER $$
+
 DROP PROCEDURE IF EXISTS spu_contratos_registrar$$
 
 CREATE PROCEDURE spu_contratos_registrar(
@@ -117,6 +118,7 @@ BEGIN
 END$$
 
 DELIMITER $$
+
 DROP PROCEDURE IF EXISTS spu_fichatecnica_buscar_id$$
 
 CREATE PROCEDURE spu_fichatecnica_buscar_id(
@@ -148,6 +150,7 @@ BEGIN
 END$$
 
 DELIMITER $$
+
 DROP PROCEDURE IF EXISTS spu_contrato_buscar_id$$
 
 CREATE PROCEDURE spu_contrato_buscar_id(
@@ -200,6 +203,7 @@ BEGIN
 END$$
 
 DELIMITER $$
+
 DROP PROCEDURE IF EXISTS spu_contratos_eliminar$$
 
 CREATE PROCEDURE spu_contratos_eliminar(
@@ -216,7 +220,9 @@ BEGIN
     WHERE 
         id_contrato = p_id_contrato;
 END$$
+
 DELIMITER $$
+
 DROP PROCEDURE IF EXISTS spu_ficha_tecnica_registrar$$
 
 CREATE PROCEDURE spu_ficha_tecnica_registrar(
@@ -233,6 +239,7 @@ BEGIN
 END$$
 
 DELIMITER $$
+
 DROP PROCEDURE IF EXISTS spu_contratos_buscar_cliente$$
 
 CREATE PROCEDURE spu_contratos_buscar_cliente(IN p_id_cliente INT)
@@ -269,6 +276,7 @@ BEGIN
 END$$
 
 DELIMITER $$
+
 DROP PROCEDURE IF EXISTS spu_contratos_actualizar$$
 
 CREATE PROCEDURE spu_contratos_actualizar(
@@ -298,6 +306,7 @@ DROP PROCEDURE IF EXISTS spu_contratos_pdf$$
 CREATE PROCEDURE spu_contratos_pdf(IN p_id_contrato INT)
 BEGIN
     SELECT 
+        co.id_contrato,
         cl.id_cliente AS IdCliente,
         IFNULL(CONCAT(p.nombres, ' ', p.apellidos), e.razon_social) AS NombreCliente,
         IFNULL(p.nro_doc, e.ruc) AS NumeroDocumento,
@@ -305,6 +314,7 @@ BEGIN
         IFNULL(p.telefono, e.telefono) AS Telefono,
         cl.direccion AS DireccionPersona,
         co.direccion_servicio AS DireccionContrato,
+        co.referencia AS Referencia,
         CASE 
             WHEN e.ruc IS NOT NULL THEN 'Empresa Peruana'
             WHEN LENGTH(p.nro_doc) = 8 THEN 'Peruano'
@@ -316,7 +326,11 @@ BEGIN
         pa.velocidad AS VelocidadPaquete,
         co.nota,
         co.create_at AS FechaCreacion,
-        co.ficha_instalacion AS FichaTecnica
+        co.ficha_instalacion AS FichaTecnica,
+        s.sector AS Sector,
+        d.departamento AS Departamento,
+        pr.provincia AS Provincia,
+        di.distrito AS Distrito
     FROM 
         tb_contratos co
     JOIN 
@@ -327,6 +341,14 @@ BEGIN
         tb_empresas e ON cl.id_empresa = e.id_empresa
     LEFT JOIN 
         tb_paquetes pa ON co.id_paquete = pa.id_paquete
+    LEFT JOIN 
+        tb_sectores s ON co.id_sector = s.id_sector
+    LEFT JOIN 
+        tb_distritos di ON s.id_distrito = di.id_distrito
+    LEFT JOIN 
+        tb_provincias pr ON di.id_provincia = pr.id_provincia
+    LEFT JOIN 
+        tb_departamentos d ON pr.id_departamento = d.id_departamento
     WHERE 
         co.id_contrato = p_id_contrato;
 END$$
