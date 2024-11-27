@@ -78,7 +78,7 @@
           <div class="col-12 col-md-3">
             <div class="form-floating">
               <input type="text" class="form-control" id="txtCliente" placeholder="Cliente" disabled required>
-              <label for="txtCliente">Cliente</label>
+              <label for="txtCliente"><span style="color: red;">*</span>  Cliente</label>
             </div>
           </div>
 
@@ -99,7 +99,8 @@
           <div class="col-12 col-md-3">
             <div class="form-floating">
               <select id="slcPrioridad" class="form-select" required>
-                <option value="Incidencia" selected>Incidencia</option>
+                <option value="" selected disabled>Seleccione...</option>
+                <option value="Incidencia">Incidencia</option>
                 <option value="Alta">Alta</option>
                 <option value="Media">Media</option>
                 <option value="Baja">Baja</option>

@@ -46,21 +46,21 @@
           <div class="row g-2 mb-2">
             <div class="col-md">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtBase" placeholder="Fecha" required>
+                <input type="text" class="form-control" id="txtBase" placeholder="Base" required disabled>
                 <label>Base</label>
               </div>
             </div>
 
             <div class="col-md">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtIp" placeholder="Fecha" required>
+                <input type="text" class="form-control" id="txtIp" placeholder="IP" required disabled>
                 <label>IP</label>
               </div>
             </div>
 
             <div class="col-md">
               <div class="form-floating">
-                <input type="number" class="form-control" id="txtSenial" placeholder="Fecha" required>
+                <input type="number" class="form-control" id="txtSenial" placeholder="Señal" required disabled>
                 <label>Señal</label>
               </div>
             </div>

@@ -130,13 +130,16 @@ window.addEventListener('DOMContentLoaded', function () {
   };
 
   async function PrioridadAcciones(val) {
-    if(val==="Incidencia")
-    {
-      txtSolucion.setAttribute("required", "true"); 
+    if (val === "Incidencia") {
+      txtSolucion.setAttribute("required", "true");
+      txtSolucion.removeAttribute("disabled");
+
       tecnicoid = user["idUsuario"];
       console.log("Requerido");
     } else {
       txtSolucion.removeAttribute("required");
+      txtSolucion.setAttribute("disabled", "true");
+      txtSolucion.value = "";
       tecnicoid = null;
       console.log("Removido");
     }
@@ -178,9 +181,17 @@ window.addEventListener('DOMContentLoaded', function () {
 
   formIncidencia.addEventListener("submit", async (event) => {
     event.preventDefault();
-    if (await ask("¿Desea Registrar esta incidencia?")) {
-      await registrarIncidencia();
-      formIncidencia.reset();
+    const txtcliente = document.getElementById('txtCliente').value;
+    console.log(txtcliente);
+
+    if (txtcliente != "") {
+      if (await ask("¿Desea Registrar esta incidencia?")) {
+        await registrarIncidencia();
+        formIncidencia.reset();
+
+      }
+    } else {
+      showToast("El campo cliente no puede estar vacío", "ERROR");
     }
   });
 

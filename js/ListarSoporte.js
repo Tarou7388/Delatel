@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const Prioridad = document.querySelector("#slcPrioridad");
 
 
-  async function recorrerIdServicio(data,nrodoc) {
+  async function recorrerIdServicio(data, nrodoc) {
     const modal = new bootstrap.Modal(document.getElementById('soporteModal'));
     const modalBody = document.querySelector('#soporteModal .modal-body');
     modalBody.innerHTML = '';
@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
         div.textContent = `Servicio ${index + 1}: ${nombres[0].tipo_servicio}`;
 
         div.addEventListener('click', () => {
-          mostrarFichaServicio(nombres[0].tipo_servicio, data[0].id_soporte,nrodoc);
+          mostrarFichaServicio(nombres[0].tipo_servicio, data[0].id_soporte, nrodoc);
         });
 
         modalBody.appendChild(div);
@@ -36,11 +36,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const id = servicios[0];
       const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=obtenerServiciosId&idservicio=${id}`);
       const nombres = await respuesta.json();
-      mostrarFichaServicio(nombres[0].tipo_servicio, data[0].id_soporte,nrodoc);
+      mostrarFichaServicio(nombres[0].tipo_servicio, data[0].id_soporte, nrodoc);
     }
   }
 
-  function mostrarFichaServicio(tipoServicio, id_soporte,nro_doc) {
+  function mostrarFichaServicio(tipoServicio, id_soporte, nro_doc) {
     window.location.href = `${config.HOST}views/Soporte/Soporte${tipoServicio}?idsoporte=${id_soporte}&doc=${nro_doc}&tiposervicio=${tipoServicio}`;
   }
 
@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idsoport}`);
     const data = await respuesta.json();
     console.log(data[0]);
-    await recorrerIdServicio(data,data[0].nro_doc);
+    await recorrerIdServicio(data, data[0].nro_doc);
   }
 
   const table = inicializarDataTable(
@@ -99,7 +99,9 @@ document.addEventListener("DOMContentLoaded", () => {
         title: "Acciones",
         className: "text-center",
         render: function (data, type, row) {
-          return `<button class="btnActualizar btn btn-primary" data-id="${row.id_soporte}">Atender</button>`;
+          const prioridad = row.prioridad ? row.prioridad.trim().toLowerCase() : "";
+          const isDisabled = prioridad === "incidencia" ? "disabled" : "";
+          return `<button class="btnActualizar btn btn-primary" data-id="${row.id_soporte}" ${isDisabled}>Atender</button>`;
         }
       }
     ],
@@ -110,7 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
       { width: "20%", targets: 3 },
       { width: "10%", targets: 4 },
       { width: "20%", targets: 5 },
-      { width: "10%", targets: 5 }
+      { width: "10%", targets: 6 }
     ]
   );
 
