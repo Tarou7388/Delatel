@@ -4,7 +4,7 @@ DROP VIEW IF EXISTS vw_clientes_obtener;
 CREATE VIEW vw_clientes_obtener AS
 SELECT
     c.id_cliente,
-    COALESCE(CONCAT(p.nombres, ", ", p.apellidos), e.nombre_comercial) AS nombre_cliente,
+    COALESCE(CONCAT(p.nombres, ", ", p.apellidos), e.razon_social) AS nombre_cliente,
     COALESCE(p.nro_doc, e.ruc) AS codigo_cliente, 
     COALESCE(p.email, e.email) AS email_cliente,
     COALESCE(p.telefono, e.telefono) AS telefono_cliente,
@@ -45,13 +45,22 @@ DELIMITER $$
 DROP PROCEDURE IF EXISTS spu_cliente_buscar_NombreApp;
 
 CREATE PROCEDURE spu_cliente_buscar_NombreApp(
-    p_nombre VARCHAR(50),
-    p_apellido VARCHAR(50)
+    IN p_nombre VARCHAR(50),
+    IN p_apellido VARCHAR(50)
 )
 BEGIN
-    SELECT codigo_cliente 
-    FROM vw_clientes_obtener 
-    WHERE nombre_cliente = CONCAT(p_nombre, ", ",p_apellido );
+    IF p_apellido = '' THEN
+        -- Si solo se proporciona el nombre
+        SELECT codigo_cliente, nombre_cliente, telefono_cliente
+        FROM vw_clientes_obtener
+        WHERE nombre_cliente LIKE CONCAT('%', p_nombre, '%');
+    ELSE
+        -- Si se proporciona tanto nombre como apellido
+        SELECT codigo_cliente, nombre_cliente, telefono_cliente
+        FROM vw_clientes_obtener
+        WHERE nombre_cliente LIKE CONCAT('%', p_nombre, '%')
+          AND nombre_cliente LIKE CONCAT('%', p_apellido, '%');
+    END IF;
 END$$
 
 DELIMITER $$

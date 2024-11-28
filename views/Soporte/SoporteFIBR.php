@@ -46,19 +46,19 @@
           <div class="row g-3 mb-3 align-items-center">
             <div class="col-md-4">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtPppoe" placeholder="PPPoE" required>
+                <input type="text" class="form-control" id="txtPppoe" placeholder="PPPoE" disabled required>
                 <label for="txtPppoe">PPPoE</label>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-floating">
-                <input type="number" class="form-control" id="txtPotenciaDos" placeholder="Potencia" required>
+                <input type="number" class="form-control" id="txtPotenciaDos" placeholder="Potencia" disabled required>
                 <label for="txtPotenciaDos">Potencia</label>
               </div>
             </div>
             <div class="col-md-4 d-flex align-items-center">
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" id="chkCatv">
+                <input class="form-check-input" type="checkbox" id="chkCatv" disabled>
                 <label class="form-check-label ms-2" for="chkCatv">CATV</label>
               </div>
             </div>
@@ -68,19 +68,19 @@
           <div class="row g-3 mb-3 align-items-center">
             <div class="col-md-4">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtClave" placeholder="Clave" required>
+                <input type="text" class="form-control" id="txtClave" placeholder="Clave" disabled required>
                 <label for="txtClave">Clave</label>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-floating">
-                <input type="number" class="form-control" id="txtVlan" placeholder="VLAN" required>
+                <input type="number" class="form-control" id="txtVlan" placeholder="VLAN" disabled required>
                 <label for="txtVlan">VLAN</label>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-floating">
-                <input type="number" class="form-control" id="txtPotencia" placeholder="Potencia" required>
+                <input type="number" class="form-control" id="txtPotencia" placeholder="Potencia" disabled required>
                 <label for="txtPotencia">Potencia</label>
               </div>
             </div>
@@ -90,19 +90,19 @@
           <div class="row g-3 mb-3 align-items-center">
             <div class="col-md-4">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtSsid" placeholder="SSID" required>
+                <input type="text" class="form-control" id="txtSsid" placeholder="SSID" disabled required>
                 <label for="txtSsid">SSID</label>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtPass" placeholder="Password" required>
+                <input type="text" class="form-control" id="txtPass" placeholder="Password" disabled required>
                 <label for="txtPass">Password</label>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtOtros" placeholder="Otros" required>
+                <input type="text" class="form-control" id="txtOtros" placeholder="Otros" disabled required>
                 <label for="txtOtros">Otros</label>
               </div>
             </div>
@@ -112,12 +112,13 @@
           <div class="row g-3 mb-3">
             <div class="col-md-12">
               <div class="form-floating">
-                <textarea class="form-control" id="txtaEstadoInicial" style="height: 100px;" placeholder="Estado Inicial" required></textarea>
+                <textarea class="form-control" id="txtaEstadoInicial" style="height: 100px;" placeholder="Estado Inicial" disabled required></textarea>
                 <label for="txtaEstadoInicial">Estado Inicial</label>
               </div>
             </div>
           </div>
         </div>
+
 
         <hr>
 

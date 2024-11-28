@@ -1,5 +1,5 @@
 import config from "../env.js";
-import { inicializarDataTable } from "./Herramientas.js";
+import { FichaSoporte, inicializarDataTable } from "./Herramientas.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("frm-registro-gpon");
@@ -99,21 +99,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const respuesta = await fetch(
         `${config.HOST}/app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${doct}`
       );
-      if (!respuesta.ok) throw new Error("Error al buscar cliente");
+      
       const data = await respuesta.json();
 
       const dataFbibr = await FichaSoporte(doct);
       console.log(dataFbibr);
-
-      const fichaInstalacion = dataFbibr.find(item => {
-        const ficha = JSON.parse(item.ficha_instalacion);
-        return ficha.parametros !== undefined;
-      });
-  
-      if (fichaInstalacion) {
-        const parametros = JSON.parse(fichaInstalacion.ficha_instalacion);
-        console.log(parametros);
-      }
 
 
       if (data.length > 0) {
@@ -130,7 +120,8 @@ document.addEventListener("DOMContentLoaded", () => {
   async function obtenerIdSoporteDeUrl() {
     const urlParams = new URLSearchParams(window.location.search);
     const doc = urlParams.get("doc");
-    if (doc) await rellenarDocNombre(doc);
+    console.log(doc);
+    await rellenarDocNombre(doc);
     return urlParams.get("idsoporte");
   }
 
