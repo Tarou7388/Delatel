@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
       idSoporte = await obtenerIdSoporteDeUrl();
       if (idSoporte) {
         await obtenerProblema(idSoporte);
+        await datosfichaFibra(idSoporte);
         crearSelectYBoton();
         ArmadoJsonGpon();
       }
@@ -99,12 +100,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const respuesta = await fetch(
         `${config.HOST}/app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${doct}`
       );
-      
+
       const data = await respuesta.json();
-
-      const dataFbibr = await FichaSoporte(doct);
-      console.log(dataFbibr);
-
 
       if (data.length > 0) {
         $("#txtCliente").val(data[0].nombre);
@@ -115,6 +112,11 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (error) {
       console.error("Error en rellenarDocNombre:", error);
     }
+  }
+
+  async function datosfichaFibra(idSoporte) {
+    const dataFbibr = await FichaSoporte(idSoporte);
+    console.log(dataFbibr);
   }
 
   async function obtenerIdSoporteDeUrl() {

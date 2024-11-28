@@ -72,15 +72,15 @@ document.addEventListener("DOMContentLoaded", () => {
   async function rellenarDocNombre(doct) {
     const respuesta = await fetch(`${config.HOST}/app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${doct}`);
     const data = await respuesta.json();
-    await datosFichaWisp(doct);
+    
     $("#txtCliente").val(data[0].nombre);
     $("#txtNrodocumento").val(doct);
   }
 
   async function datosFichaWisp(doct) {
     const datawisp = await FichaSoporte(doct);
-    //$("#txtPlan").val(JSON.parse(datawisp[0].ficha_instalacion).parametros.plan);
-    console.log(JSON.parse(datawisp[0].ficha_instalacion).parametros.base[0]);
+    $("#txtPlan").val(JSON.parse(datawisp[0].ficha_instalacion).parametros.plan);
+    console.log(JSON.parse(datawisp[0].ficha_instalacion).parametros);
     
     $("#txtBase").val(JSON.parse(datawisp[0].ficha_instalacion).parametros.base[0]);
   
@@ -88,10 +88,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const ficha = JSON.parse(item.ficha_instalacion);
       return ficha.parametros !== undefined;
     });
+
+    console.log(JSON.parse(fichaInstalacion.ficha_instalacion));
     
     if (fichaInstalacion) {
       const ficha = JSON.parse(fichaInstalacion.ficha_instalacion); // Definir la ficha aquí
       const parametros = ficha.ConfiRouter;
+      console.log(parametros);
       const routers = parametros;
       console.log(routers.length);
   
@@ -126,8 +129,8 @@ document.addEventListener("DOMContentLoaded", () => {
     
         form.parentNode.insertBefore(routerSelectDiv, form);
       } else {
-        console.log(routers[0]);
-        $("#txtIp").val(routers[0].wan);
+        $("#txtIp").val(routers[0].ConfiRouter.wan);
+        $("#txtSenial").val(ficha.parametros.signalStrength);
       }
     }
   }
@@ -137,6 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
     idSoporte = await obtenerIdSoporteDeUrl();
     if (idSoporte) {
       await obtenerProblema(idSoporte);
+      await datosFichaWisp(idSoporte);
       crearSelectYBoton();
     }
   })();

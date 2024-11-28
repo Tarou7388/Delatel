@@ -21,7 +21,8 @@ SELECT
     p_tecnico.apellidos AS tecnico_apellidos,
     pk.id_paquete,
     pk.id_servicio,
-    srv.tipo_servicio
+    GROUP_CONCAT(srv.tipo_servicio) AS tipos_servicio,  -- Apply GROUP_CONCAT for service types
+    GROUP_CONCAT(srv.servicio) AS servicios
 FROM
     tb_soporte s
     LEFT JOIN tb_contratos c ON s.id_contrato = c.id_contrato
@@ -30,7 +31,14 @@ FROM
     LEFT JOIN tb_usuarios u ON r.id_usuario = u.id_usuario
     LEFT JOIN tb_personas p_tecnico ON u.id_persona = p_tecnico.id_persona
     LEFT JOIN tb_paquetes pk ON c.id_paquete = pk.id_paquete
-    LEFT JOIN tb_servicios srv ON pk.id_servicio = srv.id_servicio
+    LEFT JOIN tb_servicios srv ON JSON_CONTAINS(
+        pk.id_servicio,
+        CONCAT(
+            '{"id_servicio":',
+            srv.id_servicio,
+            '}'
+        )
+    )
     LEFT JOIN tb_clientes cl ON c.id_cliente = cl.id_cliente
     LEFT JOIN tb_empresas emp ON cl.id_empresa = emp.id_empresa
     LEFT JOIN tb_personas p_cliente ON cl.id_persona = p_cliente.id_persona;
@@ -165,16 +173,16 @@ END $$
 
 DROP PROCEDURE IF EXISTS spu_soporte_ficha_doc$$
 CREATE PROCEDURE spu_soporte_ficha_doc (
-    IN p_identificacion VARCHAR(15)
+    IN p_idsoporte INT
 )
 BEGIN
     SELECT 
         ct.ficha_instalacion
-    FROM tb_contratos ct
+    FROM tb_soporte s
+    INNER JOIN tb_contratos ct ON s.id_contrato = ct.id_contrato
     INNER JOIN tb_clientes cl ON ct.id_cliente = cl.id_cliente
     LEFT JOIN tb_personas p ON cl.id_persona = p.id_persona
     LEFT JOIN tb_empresas e ON cl.id_empresa = e.id_empresa
     WHERE 
-        (p.nro_doc = p_identificacion) OR
-        (e.ruc = p_identificacion);
+        s.id_soporte = p_idsoporte;
 END $$

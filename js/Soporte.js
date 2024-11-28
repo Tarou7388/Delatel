@@ -23,32 +23,25 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // Función: Búsqueda avanzada
   async function busquedaAvanzada(nombre, apellido) {
-    // Validación de campos vacíos
     if (!nombre.trim()) {
       showToast("Por favor complete los campos de búsqueda avanzada", "INFO");
       return;
     }
-  
+
     try {
       console.log("Iniciando búsqueda avanzada...");
-  
-      // Realizamos la consulta al servidor
       const response = await fetch(`${config.HOST}/app/controllers/Cliente.controllers.php?operacion=buscarPorNombreApellido&nombres=${encodeURIComponent(nombre)}&apellidos=${encodeURIComponent(apellido)}`);
       const data = await response.json();
-  
       console.log("Resultado de búsqueda avanzada:", data);
-  
+
       if (data.length > 1) {
-        // Si hay más de un resultado, mostramos un selector en el modal
         mostrarSelectorResultados(data);
       } else if (data.length === 1) {
-        // Si hay un único resultado, rellenamos el documento y buscamos contratos
         const dni = data[0].codigo_cliente;
         document.getElementById('txtNrodocumento').value = dni;
         await BuscarcontratoNDoc(dni);
         myModal.hide();
       } else {
-        // Si no hay resultados
         showToast("No se encontraron resultados, verifique los campos", "ERROR");
       }
     } catch (error) {
@@ -56,27 +49,23 @@ window.addEventListener('DOMContentLoaded', () => {
       showToast("Ocurrió un error al realizar la búsqueda avanzada", "ERROR");
     }
   }
-  
+
   function mostrarSelectorResultados(data) {
-    // Crear un selector de resultados
     const select = document.createElement('select');
     select.classList.add('form-select', 'mb-3');
     select.id = 'selectResultados';
-  
-    // Añadimos las opciones al selector
+
     data.forEach(cliente => {
       const option = document.createElement('option');
       option.value = cliente.codigo_cliente;
       option.textContent = `${cliente.nombre_cliente} - ${cliente.telefono_cliente}`;
       select.appendChild(option);
     });
-  
-    // Insertamos el selector en el modal
+
     const modalBody = document.querySelector('.modal-body');
-    modalBody.innerHTML = ""; // Limpiamos el modal antes de insertar
+    modalBody.innerHTML = "";
     modalBody.appendChild(select);
-  
-    // Escuchamos el evento de cambio
+
     select.addEventListener('change', async () => {
       const selectedDni = select.value;
       document.getElementById('txtNrodocumento').value = selectedDni;
@@ -85,7 +74,6 @@ window.addEventListener('DOMContentLoaded', () => {
       myModal.hide();
     });
   }
-  
 
   // Función: Obtener contratos de cliente
   async function obtenerContratosCliente(clienteId) {
@@ -114,6 +102,7 @@ window.addEventListener('DOMContentLoaded', () => {
         if (datos.length === 1) {
           slcContratos.selectedIndex = 1;
           const unicoContrato = datos[0];
+          console.log(unicoContrato);
           txtContratoObservacion.value = `${unicoContrato.nota} | ${unicoContrato.direccion_servicio}`;
           idContratoSeleccionado = unicoContrato.id_contrato;
         }
@@ -124,6 +113,18 @@ window.addEventListener('DOMContentLoaded', () => {
       console.error("Error al obtener contratos:", error);
       showToast("Ocurrió un error al obtener los contratos", "ERROR");
     }
+
+    slcContratos.addEventListener('change', () => {
+      idContratoSeleccionado = slcContratos.value;
+      const selectedOption = slcContratos.options[slcContratos.selectedIndex];
+      if (selectedOption.value) {
+        const nota = selectedOption.dataset.nota;
+        const direccion = selectedOption.dataset.direccion;
+        txtContratoObservacion.value = `${nota} | ${direccion}`;
+      } else {
+        txtContratoObservacion.value = '';
+      }
+    });
   }
 
   // Función: Buscar contrato por documento
