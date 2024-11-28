@@ -91,7 +91,7 @@ document.addEventListener("DOMContentLoaded", function () {
       },
       {
         data: "codigo_barra",
-        title: "Código de Barra",
+        title: "MAC",
         className: "text-center",
       },
       {
