@@ -20,10 +20,7 @@ class Kardex extends Conexion
    */
   public function listarKardex($offset = 0, $limit = 10, $search = "")
   {
-    // Consulta SQL para obtener los datos del kardex
     $sql = "SELECT * FROM vw_kardex_listar";
-
-    // Consulta para contar el total de registros
     $sqlCount = "SELECT COUNT(*) AS total FROM vw_kardex_listar";
 
     // Si hay búsqueda, se filtran los campos
@@ -35,7 +32,8 @@ class Kardex extends Conexion
                   OR nombre_marca LIKE :search 
                   OR tipo_operacion LIKE :search 
                   OR tipo_movimiento LIKE :search 
-                  OR nombre_almacen LIKE :search";
+                  OR nombre_almacen LIKE :search
+                  OR creado_por LIKE :search";  // Nuevo filtro agregado
       $sqlCount .= " WHERE id_kardex LIKE :search 
                        OR id_producto LIKE :search 
                        OR modelo LIKE :search 
@@ -43,47 +41,37 @@ class Kardex extends Conexion
                        OR nombre_marca LIKE :search 
                        OR tipo_operacion LIKE :search 
                        OR tipo_movimiento LIKE :search 
-                       OR nombre_almacen LIKE :search";
+                       OR nombre_almacen LIKE :search
+                       OR creado_por LIKE :search";  // Nuevo filtro agregado
     }
 
     // Agregamos el LIMIT y OFFSET para la paginación
     $sql .= " LIMIT :offset, :limit";
-
-    // Preparamos la consulta para obtener los resultados
     $stmt = $this->pdo->prepare($sql);
 
     // Enlazamos los valores de búsqueda si se proporcionan
     if ($search) {
       $stmt->bindValue(':search', "%$search%", PDO::PARAM_STR);
     }
-
     // Enlazamos los valores de offset y limit para la paginación
     $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
     $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
-
-    // Ejecutamos la consulta
     $stmt->execute();
 
     // Recuperamos los resultados en un arreglo asociativo
     $kardex = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // Preparamos la consulta para contar el total de registros
     $stmtCount = $this->pdo->prepare($sqlCount);
 
     // Enlazamos los valores de búsqueda también en la consulta de contar registros
     if ($search) {
       $stmtCount->bindValue(':search', "%$search%", PDO::PARAM_STR);
     }
-
-    // Ejecutamos la consulta de contar registros
     $stmtCount->execute();
-
     // Obtenemos el total de registros
     $totalRegistros = $stmtCount->fetch(PDO::FETCH_ASSOC)['total'];
-
-    // Devolvemos los resultados y el total de registros
     return ['kardex' => $kardex, 'totalRegistros' => $totalRegistros];
   }
+
 
   /**
    * Busca información de stock por ID de producto.

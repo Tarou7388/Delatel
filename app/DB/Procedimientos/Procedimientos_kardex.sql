@@ -1,9 +1,9 @@
 USE Delatel;
 
-
 DELIMITER $$
 
 DROP PROCEDURE IF EXISTS spu_listar_tipo_operacion$$
+
 CREATE PROCEDURE spu_listar_tipo_operacion(IN tipo_movimiento CHAR(1))
 BEGIN
     SELECT id_tipooperacion, descripcion, movimiento 
@@ -12,6 +12,7 @@ BEGIN
 END $$
 
 DROP VIEW IF EXISTS vw_kardex_listar$$
+
 CREATE VIEW vw_kardex_listar AS
 SELECT
     k.id_kardex,
@@ -31,19 +32,24 @@ SELECT
     k.create_at AS fecha_creacion,
     k.id_almacen,
     a.nombre_almacen,
-    CASE 
+    CONCAT(pe.nombres,' ',pe.apellidos) AS creado_por,
+    CASE
         WHEN toper.movimiento = 'E' THEN 'ENTRADA'
         WHEN toper.movimiento = 'S' THEN 'SALIDA'
     END AS tipo_movimiento
-FROM tb_productos p
+FROM
+    tb_productos p
     JOIN tb_kardex k ON p.id_producto = k.id_producto
     JOIN tb_tipoproducto tp ON p.id_tipo = tp.id_tipo
     JOIN tb_marca m ON p.id_marca = m.id_marca
     JOIN tb_tipooperacion toper ON k.id_tipooperacion = toper.id_tipooperacion
     JOIN tb_almacen a ON k.id_almacen = a.id_almacen
+    LEFT JOIN tb_personas pe ON k.iduser_create = pe.id_persona
 ORDER BY k.create_at DESC;
 
+
 DROP PROCEDURE IF EXISTS spu_kardex_registrar$$
+
 CREATE PROCEDURE spu_kardex_registrar(
     IN p_id_almacen INT, 
     IN p_id_producto INT,
@@ -118,6 +124,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS spu_kardex_buscar$$
+
 CREATE PROCEDURE spu_kardex_buscar(
     IN p_id_producto INT
 )

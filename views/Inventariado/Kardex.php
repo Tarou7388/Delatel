@@ -119,6 +119,7 @@
 							<th class="text-center">Cantidad</th>
 							<th class="text-center">Saldo Total</th>
 							<th class="text-center">Valor Único Histórico</th>
+							<th class="text-center">Encargado</th>
 						</tr>
 					</thead>
 					<tbody>
