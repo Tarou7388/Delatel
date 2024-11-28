@@ -116,7 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function datosfichaFibra(idSoporte) {
     const dataFbibr = await FichaSoporte(idSoporte);
-    console.log(dataFbibr);
+    console.log(dataFbibr.ficha_instalacion);
   }
 
   async function obtenerIdSoporteDeUrl() {
