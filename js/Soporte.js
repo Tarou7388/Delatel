@@ -1,7 +1,7 @@
 import config from '../env.js';
 
 window.idContratoSeleccionado = null;
-let tecnicoid = "";
+let tecnicoid = 0;
 
 window.addEventListener('DOMContentLoaded', () => {
   // Referencias a los elementos del DOM
@@ -162,7 +162,7 @@ window.addEventListener('DOMContentLoaded', () => {
       txtSolucion.removeAttribute("required");
       txtSolucion.setAttribute("disabled", "true");
       txtSolucion.value = "";
-      tecnicoid = "";
+      tecnicoid = 0;
       console.log("Campo Solución deshabilitado");
     }
   }

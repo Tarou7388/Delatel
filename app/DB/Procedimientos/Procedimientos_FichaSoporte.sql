@@ -83,7 +83,7 @@ BEGIN
     VALUES (
         p_id_contrato,
         CASE 
-            WHEN p_id_tecnico = '' THEN NULL 
+            WHEN p_id_tecnico = 0 THEN NULL 
             ELSE p_id_tecnico 
         END,
         p_fecha_hora_solicitud,
