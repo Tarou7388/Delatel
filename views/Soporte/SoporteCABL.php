@@ -3,7 +3,7 @@
 <div class="container-fluid px-4">
   <h1 class="mt-4">Soporte de Cable</h1>
 
-  <div class="row g-3 mb-2">
+  <div class="row g-3 mb-2" hidden> <!-- hidden  para posterior uso, si no, sera eliminado-->
     <div class="col-md">
       <div class="form-floating">
         <input type="text" class="form-control" id="txtNumFicha" placeholder="N°" disabled>
@@ -71,7 +71,7 @@
           <div class="row g-2 mb-2">
             <div class="col-md">
               <div class="form-floating">
-                <select class="form-select" id="slcTriplexor" aria-label="Selecciona una opción" required>
+                <select class="form-select" id="slcTriplexor" aria-label="Selecciona una opción" required disabled>
                   <option selected disabled>Elige una opción</option>
                   <option value="1">No lleva</option>
                   <option value="2">Activo</option>
@@ -83,15 +83,15 @@
             <div class="col-md">
               <div class="input-group">
                 <div class="form-floating flex-fill">
-                  <input type="text" id="txtNumSpliter" class="form-control" placeholder="Spliter" required>
+                  <input type="text" id="txtNumSpliter" class="form-control" placeholder="Spliter" required disabled>
                   <label for="txtNumSpliter">Número Spliter</label>
                 </div>
                 <div class="form-floating">
-                  <select class="form-select" id="slcSpliter" aria-label="Selecciona una opción" required>
+                  <select class="form-select" id="slcSpliter" aria-label="Selecciona una opción" required disabled> 
                     <option value="" selected disabled>Elige una opción</option>
-                    <option value="1">1x3</option>
-                    <option value="2">1x5</option>
-                    <option value="3">1x8</option>
+                    <option value="1x3">1x3</option>
+                    <option value="1x5">1x5</option>
+                    <option value="1x8">1x8</option>
                   </select>
                   <label for="slcSpliter">Spliter</label>
                 </div>
@@ -100,7 +100,7 @@
             <div class="col-md">
               <div class="input-group">
                 <div class="form-floating flex-fill">
-                  <input type="text" class="form-control" id="txtCable" placeholder="Cable" required>
+                  <input type="text" class="form-control" id="txtCable" placeholder="Cable" required disabled>
                   <label for="txtCable">Cable</label>
                 </div>
                 <div class="form-floating">
@@ -112,7 +112,7 @@
             <div class="col-md">
               <div class="input-group">
                 <div class="form-floating flex-fill">
-                  <input type="number" class="form-control" id="txtConector" placeholder="Conectores" required>
+                  <input type="number" class="form-control" id="txtConector" placeholder="Conectores" required disabled>
                   <label for="txtConector">Conectores</label>
                 </div>
                 <div class="form-floating">
