@@ -31,6 +31,11 @@ $velocidadPaquete = json_decode($velocidadPaqueteJson, true);
 $fichaTecnicaJson = $resultado[0]['FichaTecnica'];
 $fichaTecnica = json_decode($fichaTecnicaJson, true);
 
+if (empty($fichaTecnica)) {
+  echo '<script>alert("La ficha técnica está vacía."); window.location.href = "../../Contratos/";</script>';
+  exit;
+}
+
 ob_start();
 include 'instalacionWisp.php';
 include 'estilos.html';

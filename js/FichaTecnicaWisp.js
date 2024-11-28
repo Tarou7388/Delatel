@@ -182,7 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
       routerCard.innerHTML = `
         <div class="card-header text-white py-2">
           <h5 class="card-title mb-0 d-flex justify-content-between align-items-center fs-6">
-            <span>Router N° ${index + 1}</span>
+            <span>Router N° ${routerData.numero}</span>
           </h5>
         </div>
         <div class="card-body p-0">
@@ -290,12 +290,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const seguridad = document.getElementById("txtSeguridadWireless").value;
       const otros = document.getElementById("txtOtrosWireless").value;
 
-      if (!wan || !mascara || !puertaEnlace || !dns1 || !dns2 || !lan || !acceso || !ssid || !seguridad || !otros) {
+      if (!wan || !mascara || !puertaEnlace || !dns1 || !dns2 || !lan || !acceso || !ssid || !seguridad) {
         showToast("Complete los campos", "INFO");
-        return; // Interrumpir la ejecución
+        return;
       }
 
-      const newRouter = {
+      const router = {
+        numero: routerCount + 1,
         codigoBarra,
         modelo,
         marca,
@@ -311,8 +312,16 @@ document.addEventListener("DOMContentLoaded", () => {
         otros
       };
 
-      jsonRouter.push(newRouter);
-      routerCount++;
+      // Verificar si el router ya existe
+      const existingRouterIndex = jsonRouter.findIndex(r => r.numero === router.numero);
+      if (existingRouterIndex !== -1) {
+        // Actualizar el router existente
+        jsonRouter[existingRouterIndex] = router;
+      } else {
+        // Agregar un nuevo router
+        routerCount++;
+        jsonRouter.push(router);
+      }
 
       const routerCol = document.createElement("div");
       routerCol.classList.add("col-md-4", "mb-4");
@@ -324,7 +333,7 @@ document.addEventListener("DOMContentLoaded", () => {
       routerCard.innerHTML = `
         <div class="card-header text-white py-2">
           <h5 class="card-title mb-0 d-flex justify-content-between align-items-center fs-6">
-            <span>Router N° ${routerCount}</span>
+            <span>Router N° ${router.numero}</span>
           </h5>
         </div>
         <div class="card-body p-0">
@@ -386,6 +395,7 @@ document.addEventListener("DOMContentLoaded", () => {
           </table>
         </div>
       `;
+
       showToast("Agregado correctamente", "SUCCESS", 1500);
       const deleteButton = document.createElement("button");
       deleteButton.classList.add("btn", "btn-sm", "btn-outline-light", "mb-1", "me-2", "float-end");
@@ -397,8 +407,8 @@ document.addEventListener("DOMContentLoaded", () => {
         ask("¿Está seguro de eliminar este router?", "Ficha Técnica Wisp").then((respuesta) => {
           if (respuesta) {
             routersContainer.removeChild(routerCol);
-            jsonRouter.splice(jsonRouter.indexOf(newRouter), 1);
-            routerCount--; // Decrementar el contador de routers
+            jsonRouter.splice(jsonRouter.indexOf(router), 1);
+            routerCount--;
             actualizarNumeros();
           }
         });
@@ -409,7 +419,6 @@ document.addEventListener("DOMContentLoaded", () => {
       routersContainer.appendChild(routerCol);
 
       routerConfigModal.hide();
-
       limpiarCampos();
     }
   }
@@ -490,6 +499,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   //Json Parametros 
   async function parametros() {
+    const txtPaquete = document.getElementById('txtPaquete').value;
     const slcFrecuencia = document.getElementById('slcFrecuenciaParametros').value;
     const slcBase = document.getElementById('slcBaseParametros').value;
     const slcSubBase = document.getElementById('slcSubBaseParametros').value;
@@ -509,10 +519,12 @@ document.addEventListener("DOMContentLoaded", () => {
         txtTxRate === "" ||
         txtRxRate === ""
       ) {
-        showToast("Por Favor, llene todos los campos requeridos.", "WARNING", 1500);
+        showToast("Por Favor, llene todos los campos requeridos de Fibra", "WARNING", 1500);
+        return false;
       } else {
         jsonParametros = {
           parametros: {
+            plan: txtPaquete,
             frecuencia: slcFrecuencia.split(","),
             base: slcBase.split(","),
             subBase: slcSubBase.split(","),
@@ -521,7 +533,7 @@ document.addEventListener("DOMContentLoaded", () => {
             transmiTccq: txtTransmiTccq,
             txRate: txtTxRate,
             rxRate: txtRxRate,
-          }
+          },
         }
       }
     }
@@ -597,6 +609,7 @@ document.addEventListener("DOMContentLoaded", () => {
           allFieldsFilled = false;
         } else {
           updatedRouters.push({
+            numero: router.numero,
             codigoBarra: router.codigoBarra,
             modelo: router.modelo,
             marca: router.marca,
@@ -609,16 +622,16 @@ document.addEventListener("DOMContentLoaded", () => {
             acceso: router.acceso,
             ssid: router.ssid,
             seguridad: router.seguridad,
-            otros: router.otros,
-            isNew: router.isNew
+            otros: router.otros
           });
         }
       });
 
       if (allFieldsFilled) {
-        //jsonData.ConfiRouter = jsonData.ConfiRouter || [];
+        jsonData.ConfiRouter = jsonData.ConfiRouter || [];
         jsonData.ConfiRouter = jsonData.ConfiRouter.concat(updatedRouters.map(router => ({
           ConfiRouter: {
+            numero: router.numero,
             codigoBarra: router.codigoBarra,
             modelo: router.modelo,
             marca: router.marca,
@@ -633,8 +646,7 @@ document.addEventListener("DOMContentLoaded", () => {
               ssid: router.ssid,
               seguridad: router.seguridad,
               otros: router.otros
-            },
-            isNew: router.isNew
+            }
           }
         })));
       }
@@ -713,9 +725,6 @@ document.addEventListener("DOMContentLoaded", () => {
       };
     }
     jsonData.venta = jsonVenta.venta;
-    if (!jsonData.ConfiRouter) {
-      jsonData.ConfiRouter = [];
-    }
   }
 
   //Json Alquilado
@@ -764,7 +773,7 @@ document.addEventListener("DOMContentLoaded", () => {
           fechaInicio: txtFechaInicioAlquilado,
           fechaFin: txtFechaFinAlquilado,
           costoAlquiler: txtCostoAlquilerAlquilado,
-          condicionTiempo : {
+          condicionTiempo: {
             "Adelantado": chkAdelantadoAlquilado ? true : "",
             "Cumpliendo el mes": chkCumpliendoMesAlquilados ? true : ""
           },
@@ -787,9 +796,6 @@ document.addEventListener("DOMContentLoaded", () => {
       };
     }
     jsonData.alquilado = jsonAlquilado.alquilado;
-    if (!jsonData.ConfiRouter) {
-      jsonData.ConfiRouter = [];
-    }
   }
 
   //Json Pago
@@ -828,9 +834,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
     jsonData.deuda = jsonDeuda.deuda;
-    if (!jsonData.ConfiRouter) {
-      jsonData.ConfiRouter = [];
-    }
   }
 
   //Función Registrar Ficha Wisp
@@ -840,27 +843,6 @@ document.addEventListener("DOMContentLoaded", () => {
     await venta();
     await alquilado_prestado();
     await deuda();
-
-    jsonData.ConfiRouter = jsonRouter.map(router => ({
-      ConfiRouter: {
-        codigoBarra: router.codigoBarra,
-        modelo: router.modelo,
-        marca: router.marca,
-        wan: router.wan,
-        mascara: router.mascara,
-        puertaEnlace: router.puertaEnlace,
-        dns1: router.dns1,
-        dns2: router.dns2,
-        ConfiWireless: {
-          lan: router.lan,
-          acceso: router.acceso,
-          ssid: router.ssid,
-          seguridad: router.seguridad,
-          otros: router.otros
-        },
-        isNew: router.isNew
-      }
-    }));
 
     const data = {
       operacion: "guardarFichaInstalacion",

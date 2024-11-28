@@ -31,17 +31,21 @@ $velocidadPaquete = json_decode($velocidadPaqueteJson, true);
 $fichaTecnicaJson = $resultado[0]['FichaTecnica'];
 $fichaTecnica = json_decode($fichaTecnicaJson, true);
 
+if (empty($fichaTecnica)) {
+  echo '<script>alert("La ficha técnica está vacía."); window.location.href = "../../Contratos/";</script>';
+  exit;
+}
+
 ob_start();
 include 'contenido.php';
 include 'estilos.html';
 $content = ob_get_clean();
 
 if ($content === false) {
-  echo '<script>alert("Error al generar el contenido del PDF.");</script>';
+  echo '<script>alert("Error al generar el contenido del PDF."); window.history.back();</script>';
   exit;
 }
 
 $dompdf->loadHtml($content);
 $dompdf->render();
 $dompdf->stream($nombreArchivo, array('Attachment' => 0));
-?>
