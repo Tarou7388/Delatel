@@ -122,6 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Cable
   async function cable() {
+    const txtPaquete = document.querySelector("#txtPaquete").value;
     const txtPagoInst = document.querySelector("#txtPagoInst").value;
     const txtPotencia = document.querySelector("#txtPotenciaCable").value;
     const slcTriplexor = document.querySelector("#slcTriplexor").value.split(",");
@@ -147,6 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     } else {
       jsonCable = {
+        paquete: txtPaquete,
         pagoinstalacion: parseFloat(txtPagoInst),
         potencia: txtPotencia,
         //sintonizador: {},
