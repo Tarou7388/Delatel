@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("txtFecha").value = today;
 
   let tipoPaquete = "";
-  let routerCount = 0;
+  let numeroRouter = 0;
   let jsonParametros = {};
   let jsonRouter = [];
   let jsonVenta = {};
@@ -27,6 +27,40 @@ document.addEventListener("DOMContentLoaded", () => {
   let jsonDeuda = {};
   let jsonData = {};
   let flagFichaInstalacion = false;
+
+  //Cargar datos del router
+  const valoresRouter = {
+    codigoBarra: '',
+    modelo: '',
+    marca: '',
+    wan: '192.168.',
+    mascara: '255.255.255.0',
+    puertaEnlace: '192.168.',
+    dns1: '8.8.8.8',
+    dns2: '8.8.4.4',
+    lanWireless: '192.168.',
+    accesoWireless: '',
+    ssidWireless: '',
+    seguridadWireless: '',
+    otrosWireless: ''
+  };
+
+  document.getElementById('routerConfigModal').addEventListener('show.bs.modal', (event) => {
+    document.getElementById('txtCodigoBarraRouter').value = valoresRouter.codigoBarra;
+    document.getElementById('txtModeloRouter').value = valoresRouter.modelo;
+    document.getElementById('txtMarcaRouter').value = valoresRouter.marca;
+    document.getElementById('txtWanRouter').value = valoresRouter.wan;
+    document.getElementById('txtMascaraRouter').value = valoresRouter.mascara;
+    document.getElementById('txtPuertaEnlaceRouter').value = valoresRouter.puertaEnlace;
+    document.getElementById('txtDns1Router').value = valoresRouter.dns1;
+    document.getElementById('txtDns2Router').value = valoresRouter.dns2;
+    document.getElementById('txtLanWireless').value = valoresRouter.lanWireless;
+    document.getElementById('txtAccesoWireless').value = valoresRouter.accesoWireless;
+    document.getElementById('txtSsidWireless').value = valoresRouter.ssidWireless;
+    document.getElementById('txtSeguridadWireless').value = valoresRouter.seguridadWireless;
+    document.getElementById('txtOtrosWireless').value = valoresRouter.otrosWireless;
+  });
+
 
   // Código para manejar la selección de operación (Venta o Alquiler)
   document.getElementById('slcOperacion').addEventListener('change', function () {
@@ -92,7 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
         cargarRouters(installationData.ConfiRouter);
 
         // Actualizar el contador de routers
-        routerCount = installationData.ConfiRouter.length;
+        numeroRouter = installationData.ConfiRouter.length;
 
         // Mostrar y cargar datos de venta o alquiler
         const frmVenta = document.getElementById('frmVenta');
@@ -252,7 +286,7 @@ document.addEventListener("DOMContentLoaded", () => {
       deleteButton.innerHTML = '<i class="fas fa-trash-alt" style="color: white;"></i> Eliminar';
 
       deleteButton.addEventListener("click", function () {
-        routersContainer.removeChild(routerCol);
+        rowContainer.removeChild(routerCol);
         jsonRouter.splice(index, 1); // Eliminar router de jsonRouter
         actualizarNumeros(); // Actualizar el contador de routers
       });
@@ -290,13 +324,14 @@ document.addEventListener("DOMContentLoaded", () => {
       const seguridad = document.getElementById("txtSeguridadWireless").value;
       const otros = document.getElementById("txtOtrosWireless").value;
 
-      if (!wan || !mascara || !puertaEnlace || !dns1 || !dns2 || !lan || !acceso || !ssid || !seguridad) {
-        showToast("Complete los campos", "INFO");
+      if (!codigoBarra || !wan || !mascara || !puertaEnlace || !dns1 || !dns2 || !lan || !acceso || !ssid || !seguridad) {
+        showToast("Complete todo los campos del router", "INFO");
         return;
       }
 
+      numeroRouter++;
       const router = {
-        numero: routerCount + 1,
+        numero: numeroRouter,
         codigoBarra,
         modelo,
         marca,
@@ -312,16 +347,7 @@ document.addEventListener("DOMContentLoaded", () => {
         otros
       };
 
-      // Verificar si el router ya existe
-      const existingRouterIndex = jsonRouter.findIndex(r => r.numero === router.numero);
-      if (existingRouterIndex !== -1) {
-        // Actualizar el router existente
-        jsonRouter[existingRouterIndex] = router;
-      } else {
-        // Agregar un nuevo router
-        routerCount++;
-        jsonRouter.push(router);
-      }
+      jsonRouter.push(router);
 
       const routerCol = document.createElement("div");
       routerCol.classList.add("col-md-4", "mb-4");
@@ -331,70 +357,70 @@ document.addEventListener("DOMContentLoaded", () => {
       routerCard.style.maxWidth = '100%';
 
       routerCard.innerHTML = `
-        <div class="card-header text-white py-2">
-          <h5 class="card-title mb-0 d-flex justify-content-between align-items-center fs-6">
-            <span>Router N° ${router.numero}</span>
-          </h5>
-        </div>
-        <div class="card-body p-0">
-          <table class="table table-sm table-hover mb-0">
-            <tbody>
-              <tr>
-                <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>Código de Barra</td>
-                <td class="py-1 px-2">${codigoBarra}</td>
-              </tr>
-              <tr>
-                <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>Modelo</td>
-                <td class="py-1 px-2">${modelo}</td>
-              </tr>
-              <tr>
-                <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>Marca</td>
-                <td class="py-1 px-2">${marca}</td>
-              </tr>
-              <tr>
-                <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>WAN</td>
-                <td class="py-1 px-2">${wan}</td>
-              </tr>
-              <tr>
-                <td class="py-1 px-2"><i class="fas fa-mask text-primary me-2"></i>Máscara</td>
-                <td class="py-1 px-2">${mascara}</td>
-              </tr>
-              <tr>
-                <td class="py-1 px-2"><i class="fas fa-door-open text-primary me-2"></i>Puerta de Enlace</td>
-                <td class="py-1 px-2">${puertaEnlace}</td>
-              </tr>
-              <tr>
-                <td class="py-1 px-2"><i class="fas fa-server text-primary me-2"></i>DNS 1</td>
-                <td class="py-1 px-2">${dns1}</td>
-              </tr>
-              <tr>
-                <td class="py-1 px-2"><i class="fas fa-server text-primary me-2"></i>DNS 2</td>
-                <td class="py-1 px-2">${dns2}</td>
-              </tr>
-              <tr>
-                <td class="py-1 px-2"><i class="fas fa-wifi text-primary me-2"></i>LAN Wireless</td>
-                <td class="py-1 px-2">${lan}</td>
-              </tr>
-              <tr>
-                <td class="py-1 px-2"><i class="fas fa-key text-primary me-2"></i>Acceso Wireless</td>
-                <td class="py-1 px-2">${acceso}</td>
-              </tr>
-              <tr>
-                <td class="py-1 px-2"><i class="fas fa-broadcast-tower text-primary me-2"></i>SSID</td>
-                <td class="py-1 px-2">${ssid}</td>
-              </tr>
-              <tr>
-                <td class="py-1 px-2"><i class="fas fa-shield-alt text-primary me-2"></i>Seguridad</td>
-                <td class="py-1 px-2">${seguridad}</td>
-              </tr>
-              <tr>
-                <td class="py-1 px-2"><i class="fas fa-info-circle text-primary me-2"></i>Otros</td>
-                <td class="py-1 px-2">${otros}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      `;
+      <div class="card-header text-white py-2">
+        <h5 class="card-title mb-0 d-flex justify-content-between align-items-center fs-6">
+          <span>Router N° ${router.numero}</span>
+        </h5>
+      </div>
+      <div class="card-body p-0">
+        <table class="table table-sm table-hover mb-0">
+          <tbody>
+            <tr>
+              <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>Código de Barra</td>
+              <td class="py-1 px-2">${codigoBarra}</td>
+            </tr>
+            <tr>
+              <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>Modelo</td>
+              <td class="py-1 px-2">${modelo}</td>
+            </tr>
+            <tr>
+              <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>Marca</td>
+              <td class="py-1 px-2">${marca}</td>
+            </tr>
+            <tr>
+              <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>WAN</td>
+              <td class="py-1 px-2">${wan}</td>
+            </tr>
+            <tr>
+              <td class="py-1 px-2"><i class="fas fa-mask text-primary me-2"></i>Máscara</td>
+              <td class="py-1 px-2">${mascara}</td>
+            </tr>
+            <tr>
+              <td class="py-1 px-2"><i class="fas fa-door-open text-primary me-2"></i>Puerta de Enlace</td>
+              <td class="py-1 px-2">${puertaEnlace}</td>
+            </tr>
+            <tr>
+              <td class="py-1 px-2"><i class="fas fa-server text-primary me-2"></i>DNS 1</td>
+              <td class="py-1 px-2">${dns1}</td>
+            </tr>
+            <tr>
+              <td class="py-1 px-2"><i class="fas fa-server text-primary me-2"></i>DNS 2</td>
+              <td class="py-1 px-2">${dns2}</td>
+            </tr>
+            <tr>
+              <td class="py-1 px-2"><i class="fas fa-wifi text-primary me-2"></i>LAN Wireless</td>
+              <td class="py-1 px-2">${lan}</td>
+            </tr>
+            <tr>
+              <td class="py-1 px-2"><i class="fas fa-key text-primary me-2"></i>Acceso Wireless</td>
+              <td class="py-1 px-2">${acceso}</td>
+            </tr>
+            <tr>
+              <td class="py-1 px-2"><i class="fas fa-broadcast-tower text-primary me-2"></i>SSID</td>
+              <td class="py-1 px-2">${ssid}</td>
+            </tr>
+            <tr>
+              <td class="py-1 px-2"><i class="fas fa-shield-alt text-primary me-2"></i>Seguridad</td>
+              <td class="py-1 px-2">${seguridad}</td>
+            </tr>
+            <tr>
+              <td class="py-1 px-2"><i class="fas fa-info-circle text-primary me-2"></i>Otros</td>
+              <td class="py-1 px-2">${otros}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    `;
 
       showToast("Agregado correctamente", "SUCCESS", 1500);
       const deleteButton = document.createElement("button");
@@ -408,7 +434,7 @@ document.addEventListener("DOMContentLoaded", () => {
           if (respuesta) {
             routersContainer.removeChild(routerCol);
             jsonRouter.splice(jsonRouter.indexOf(router), 1);
-            routerCount--;
+            numeroRouter--;
             actualizarNumeros();
           }
         });
@@ -508,34 +534,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const txtTransmiTccq = parseFloat(document.getElementById('txtTransmiTccqParametros').value);
     const txtTxRate = parseFloat(document.getElementById('txtTxRateParametros').value);
     const txtRxRate = parseFloat(document.getElementById('txtRxRateParametros').value);
-    if (!flagFichaInstalacion) {
-      if (
-        slcFrecuencia === "" ||
-        slcBase === "" ||
-        slcSubBase === "" ||
-        txtSignalStrength === "" ||
-        txtNoiseFloor === "" ||
-        txtTransmiTccq === "" ||
-        txtTxRate === "" ||
-        txtRxRate === ""
-      ) {
-        showToast("Por Favor, llene todos los campos requeridos de Fibra", "WARNING", 1500);
-        return false;
-      } else {
-        jsonParametros = {
-          parametros: {
-            plan: txtPaquete,
-            frecuencia: slcFrecuencia.split(","),
-            base: slcBase.split(","),
-            subBase: slcSubBase.split(","),
-            signalStrength: txtSignalStrength,
-            noiseFloor: txtNoiseFloor,
-            transmiTccq: txtTransmiTccq,
-            txRate: txtTxRate,
-            rxRate: txtRxRate,
-          },
-        }
-      }
+    jsonParametros = {
+      parametros: {
+        plan: txtPaquete,
+        frecuencia: slcFrecuencia.split(","),
+        base: slcBase.split(","),
+        subBase: slcSubBase.split(","),
+        signalStrength: txtSignalStrength,
+        noiseFloor: txtNoiseFloor,
+        transmiTccq: txtTransmiTccq,
+        txRate: txtTxRate,
+        rxRate: txtRxRate,
+      },
     }
     jsonData.parametros = jsonParametros.parametros;
     if (!jsonData.ConfiRouter) {
@@ -547,7 +557,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const caja = document.getElementById(cajatxt);
     const response = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarra&codigoBarra=${caja.value}`);
     const data = await response.json();
-    console.log(data);
     return data;
   }
 
@@ -586,70 +595,29 @@ document.addEventListener("DOMContentLoaded", () => {
   //Json Router
   async function router() {
     if (!flagFichaInstalacion) {
-      let allFieldsFilled = true;
-      const updatedRouters = [];
-
-      jsonRouter.forEach((router, index) => {
-        if (
-          router.codigoBarra === "" ||
-          router.modelo === "" ||
-          router.marca === "" ||
-          router.wan === "" ||
-          router.mascara === "" ||
-          router.puertaEnlace === "" ||
-          router.dns1 === "" ||
-          router.dns2 === "" ||
-          router.lan === "" ||
-          router.acceso === "" ||
-          router.ssid === "" ||
-          router.seguridad === "" ||
-          router.otros === ""
-        ) {
-          showToast(`Por Favor, llene todos los campos requeridos para el Router N° ${index + 1}.`, "WARNING", 1500);
-          allFieldsFilled = false;
-        } else {
-          updatedRouters.push({
-            numero: router.numero,
-            codigoBarra: router.codigoBarra,
-            modelo: router.modelo,
-            marca: router.marca,
-            wan: router.wan,
-            mascara: router.mascara,
-            puertaEnlace: router.puertaEnlace,
-            dns1: router.dns1,
-            dns2: router.dns2,
-            lan: router.lan,
-            acceso: router.acceso,
-            ssid: router.ssid,
-            seguridad: router.seguridad,
-            otros: router.otros
-          });
+      const updatedRouters = jsonRouter.map(router => ({
+        numero: router.numero,
+        codigoBarra: router.codigoBarra,
+        modelo: router.modelo,
+        marca: router.marca,
+        wan: router.wan,
+        mascara: router.mascara,
+        puertaEnlace: router.puertaEnlace,
+        dns1: router.dns1,
+        dns2: router.dns2,
+        ConfiWireless: {
+          lan: router.lan,
+          acceso: router.acceso,
+          ssid: router.ssid,
+          seguridad: router.seguridad,
+          otros: router.otros
         }
-      });
+      }));
 
-      if (allFieldsFilled) {
-        jsonData.ConfiRouter = jsonData.ConfiRouter || [];
-        jsonData.ConfiRouter = jsonData.ConfiRouter.concat(updatedRouters.map(router => ({
-          ConfiRouter: {
-            numero: router.numero,
-            codigoBarra: router.codigoBarra,
-            modelo: router.modelo,
-            marca: router.marca,
-            wan: router.wan,
-            mascara: router.mascara,
-            puertaEnlace: router.puertaEnlace,
-            dns1: router.dns1,
-            dns2: router.dns2,
-            ConfiWireless: {
-              lan: router.lan,
-              acceso: router.acceso,
-              ssid: router.ssid,
-              seguridad: router.seguridad,
-              otros: router.otros
-            }
-          }
-        })));
-      }
+      jsonData.ConfiRouter = jsonData.ConfiRouter || [];
+      jsonData.ConfiRouter = jsonData.ConfiRouter.concat(updatedRouters.map(router => ({
+        ConfiRouter: router
+      })));
     }
   }
 
@@ -673,57 +641,35 @@ document.addEventListener("DOMContentLoaded", () => {
     const chkCumpliendoMesVenta = document.getElementById('chkCumpliendoMesVenta').checked;
     const txtDetalleVenta = document.getElementById('txtDetalleVenta').value;
 
-    // Solo procesamos si todos los campos están completos
-    if (
-      txtCostoAntenaVenta === "" ||
-      txtCostoRouterVenta === "" ||
-      txtMarcaVentaAntena === "" ||
-      txtMarcaVentaRouter === "" ||
-      txtSubTotalVenta === "" ||
-      txtModeloVentaAntena === "" ||
-      txtModeloVentaRouter === "" ||
-      txtAdelantoVenta === "" ||
-      txtMacVentaAntena === "" ||
-      txtMacVentaRouter === "" ||
-      txtSaldoEquipoVenta === "" ||
-      txtDescripcionVentaAntena === "" ||
-      txtDescripcionVentaRouter === "" ||
-      txtMaterialAdicionalVenta === "" ||
-      txtDetalleVenta === ""
-    ) {
-      showToast("Por Favor, llene todos los campos requeridos.", "WARNING", 1500);
-      return null;
-    } else {
-      jsonVenta = {
-        venta: {
-          costoAntena: txtCostoAntenaVenta,
-          costoRouter: txtCostoRouterVenta,
-          subTotal: txtSubTotalVenta,
-          adelanto: txtAdelantoVenta,
-          saldoEquipos: txtSaldoEquipoVenta,
-          materialAdicional: txtMaterialAdicionalVenta,
-          condicion: {
-            "Adelantado": chkAdelantadoVenta ? true : "",
-            "Cumpliendo el mes": chkCumpliendoMesVenta ? true : ""
-          },
-          antena: {
-            marca: txtMarcaVentaAntena,
-            modelo: txtModeloVentaAntena,
-            mac: txtMacVentaAntena,
-            serial: document.querySelector('#txtSerialVentaAntena').value,
-            descripcion: txtDescripcionVentaAntena
-          },
-          router: {
-            marca: txtMarcaVentaRouter,
-            modelo: txtModeloVentaRouter,
-            mac: txtMacVentaRouter,
-            serial: document.querySelector('#txtSerialVentaRouter').value,
-            descripcion: txtDescripcionVentaRouter
-          },
-          detalle: txtDetalleVenta,
+    jsonVenta = {
+      venta: {
+        costoAntena: txtCostoAntenaVenta,
+        costoRouter: txtCostoRouterVenta,
+        subTotal: txtSubTotalVenta,
+        adelanto: txtAdelantoVenta,
+        saldoEquipos: txtSaldoEquipoVenta,
+        materialAdicional: txtMaterialAdicionalVenta,
+        condicion: {
+          "Adelantado": chkAdelantadoVenta ? true : "",
+          "Cumpliendo el mes": chkCumpliendoMesVenta ? true : ""
         },
-      };
-    }
+        antena: {
+          marca: txtMarcaVentaAntena,
+          modelo: txtModeloVentaAntena,
+          mac: txtMacVentaAntena,
+          serial: document.querySelector('#txtSerialVentaAntena').value,
+          descripcion: txtDescripcionVentaAntena
+        },
+        router: {
+          marca: txtMarcaVentaRouter,
+          modelo: txtModeloVentaRouter,
+          mac: txtMacVentaRouter,
+          serial: document.querySelector('#txtSerialVentaRouter').value,
+          descripcion: txtDescripcionVentaRouter
+        },
+        detalle: txtDetalleVenta,
+      },
+    };
     jsonData.venta = jsonVenta.venta;
   }
 
@@ -746,55 +692,54 @@ document.addEventListener("DOMContentLoaded", () => {
     const chkCumpliendoMesAlquilados = document.getElementById('chkCumpliendoMesAlquilados').checked;
     const txtDetalleAlquilado = document.getElementById('txtDetalleAlquilados').value;
 
-    // Solo procesamos si todos los campos están completos
     if (
-      slcCondicionAlquilado === "" ||
-      txtPeriodoAlquilado === "" ||
-      txtCostoAlquilerAlquilado === "" ||
-      txtMarcaAntenaAlquilado === "" ||
-      txtMarcaRouterAlquilado === "" ||
-      txtFechaInicioAlquilado === "" ||
-      txtModeloAntenaAlquilado === "" ||
-      txtModeloRouterAlquilado === "" ||
-      txtFechaFinAlquilado === "" ||
-      txtMacAntenaAlquilado === "" ||
-      txtMacRouterAlquilado === "" ||
-      txtDescripcionAntenaAlquilado === "" ||
-      txtDescripcionRouterAlquilado === "" ||
-      txtDetalleAlquilado === ""
+      !slcCondicionAlquilado ||
+      !txtPeriodoAlquilado ||
+      !txtMarcaAntenaAlquilado ||
+      !txtMarcaRouterAlquilado ||
+      !txtFechaInicioAlquilado ||
+      !txtModeloAntenaAlquilado ||
+      !txtModeloRouterAlquilado ||
+      !txtFechaFinAlquilado ||
+      !txtMacAntenaAlquilado ||
+      !txtMacRouterAlquilado ||
+      isNaN(txtCostoAlquilerAlquilado) ||
+      !txtDescripcionAntenaAlquilado ||
+      !txtDescripcionRouterAlquilado ||
+      !txtDetalleAlquilado
     ) {
-      showToast("Por Favor, llene todos los campos requeridos.", "WARNING", 1500);
-      return null;
-    } else {
-      jsonAlquilado = {
-        alquilado: {
-          condicion: slcCondicionAlquilado,
-          periodo: txtPeriodoAlquilado,
-          fechaInicio: txtFechaInicioAlquilado,
-          fechaFin: txtFechaFinAlquilado,
-          costoAlquiler: txtCostoAlquilerAlquilado,
-          condicionTiempo: {
-            "Adelantado": chkAdelantadoAlquilado ? true : "",
-            "Cumpliendo el mes": chkCumpliendoMesAlquilados ? true : ""
-          },
-          antena: {
-            marca: txtMarcaAntenaAlquilado,
-            modelo: txtModeloAntenaAlquilado,
-            mac: txtMacAntenaAlquilado,
-            serial: document.querySelector('#txtSerialAntenaAlquilados').value,
-            descripcion: txtDescripcionAntenaAlquilado
-          },
-          router: {
-            marca: txtMarcaRouterAlquilado,
-            modelo: txtModeloRouterAlquilado,
-            mac: txtMacRouterAlquilado,
-            serial: document.querySelector('#txtSerialRouterAlquilados').value,
-            descripcion: txtDescripcionRouterAlquilado
-          },
-          detalle: txtDetalleAlquilado,
-        },
-      };
+      showToast("Por favor, llene todos los campos requeridos.", "WARNING", 1500);
+      return;
     }
+
+    jsonAlquilado = {
+      alquilado: {
+        condicion: slcCondicionAlquilado,
+        periodo: txtPeriodoAlquilado,
+        fechaInicio: txtFechaInicioAlquilado,
+        fechaFin: txtFechaFinAlquilado,
+        costoAlquiler: txtCostoAlquilerAlquilado,
+        condicionTiempo: {
+          "Adelantado": chkAdelantadoAlquilado ? true : "",
+          "Cumpliendo el mes": chkCumpliendoMesAlquilados ? true : ""
+        },
+        antena: {
+          marca: txtMarcaAntenaAlquilado,
+          modelo: txtModeloAntenaAlquilado,
+          mac: txtMacAntenaAlquilado,
+          serial: document.querySelector('#txtSerialAntenaAlquilados').value,
+          descripcion: txtDescripcionAntenaAlquilado
+        },
+        router: {
+          marca: txtMarcaRouterAlquilado,
+          modelo: txtModeloRouterAlquilado,
+          mac: txtMacRouterAlquilado,
+          serial: document.querySelector('#txtSerialRouterAlquilados').value,
+          descripcion: txtDescripcionRouterAlquilado
+        },
+        detalle: txtDetalleAlquilado,
+      },
+    };
     jsonData.alquilado = jsonAlquilado.alquilado;
   }
 
@@ -900,26 +845,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (signalStrength < -90 || signalStrength > -20) {
       showToast("El valor de Signal Strength debe estar entre -90 y -20.", "INFO");
+      document.getElementById('txtSignalStrengthParametros').focus();
       return false;
     }
     if (noiseFloor < -100 || noiseFloor > -30) {
       showToast("El valor de Noise Floor debe estar entre -100 y -30.", "INFO");
+      document.getElementById('txtNoiseFloorParametros').focus();
       return false;
     }
     if (txRate < 20.00 || txRate > 90.00) {
       showToast("El valor de Tx Rate debe estar entre 20.00 y 90.00.", "INFO");
+      document.getElementById('txtTxRateParametros').focus();
       return false;
     }
     if (rxRate < 20.00 || rxRate > 90.00) {
       showToast("El valor de Rx Rate debe estar entre 20.00 y 90.00.", "INFO");
+      document.getElementById('txtRxRateParametros').focus();
       return false;
     }
     if (transmiTccq < 40 || transmiTccq > 100) {
       showToast("El valor de Transmit CCQ debe estar entre 40 y 100.", "INFO");
+      document.getElementById('txtTransmiTccqParametros').focus();
       return false;
     }
     if (!frmAlquiler.classList.contains('hidden') && fechaInicioAlquilados < today) {
       showToast("La fecha de inicio no puede ser menor a la fecha actual.", "INFO");
+      document.getElementById('txtFechaInicioAlquilados').focus();
       return false;
     }
     return true;

@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
       jsonRepetidor = fibraOptica.repetidores;
       document.getElementById("txtSsidRepetidor").value = fibraOptica.repetidores[0].ssid;
       document.getElementById("txtContraseniaRepetidor").value = fibraOptica.repetidores[0].contrasenia;
-      document.getElementById("txtCodigoBarrasRepetidor").value = fibraOptica.repetidores[0].codigoBarra;
+      document.getElementById("txtCodigoBarrasRepetidor").value = fibraOptica.repetidores[0].codigoBarraRepetidor;
       document.getElementById("txtMarcaRepetidor").value = fibraOptica.repetidores[0].marca;
       document.getElementById("txtModeloRepetidor").value = fibraOptica.repetidores[0].modelo;
       document.getElementById("txtSerieRepetidor").value = fibraOptica.repetidores[0].serie;
@@ -117,6 +117,11 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <span>${repetidor.marca}</span>
                             </div>
                             <div class="field">
+                                <i class="fas fa-dollar-sign icon"></i>
+                                <label>Precio:</label>
+                                <span>${repetidor.precio}</span>
+                            </div>
+                            <div class="field">
                                 <i class="fas fa-network-wired icon"></i>
                                 <label>IP:</label>
                                 <span>${repetidor.ip}</span>
@@ -127,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="field">
                                 <i class="fas fa-barcode icon"></i>
                                 <label>Código de Barra:</label>
-                                <span>${repetidor.codigoBarra}</span>
+                                <span>${repetidor.codigoBarraRepetidor}</span>
                             </div>
                         </div>
                     </div>
@@ -155,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const txtPotencia = document.querySelector("#txtPotenciaFibra").value;
     const txtSsdi = document.querySelector("#txtSsdi").value;
     const txtSeguridad = document.querySelector("#txtSeguridad").value;
-    const txtCodigoBarra = document.querySelector("#txtCodigoBarra").value;
+    const txtMAC = document.querySelector("#txtCodigoBarra").value;
     const txtMarca = document.querySelector("#txtMarca").value;
     const txtModelo = document.querySelector("#txtModelo").value;
     const txtSerieModen = document.querySelector("#txtSerieModen").value;
@@ -169,11 +174,11 @@ document.addEventListener('DOMContentLoaded', () => {
         usuario: txtUsuario,
         claveAcceso: txtClaveAcceso,
         plan: txtPlan,
-        potencia: parseInt(txtPotencia),
+        potencia: txtPotencia,
         moden: {
           ssid: txtSsdi,
           seguridad: txtSeguridad,
-          codigoBarra: parseInt(txtCodigoBarra),
+          codigoBarra: txtMAC,
           marca: txtMarca,
           modelo: txtModelo,
           serie: txtSerieModen,
@@ -198,6 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const codigoBarra = document.getElementById("txtCodigoBarrasRepetidor")?.value;
     const marca = document.getElementById("txtMarcaRepetidor")?.value;
     const modelo = document.getElementById("txtModeloRepetidor")?.value;
+    const precio = document.getElementById("txtPrecioRepetidor")?.value;
     const serie = document.getElementById("txtSerieRepetidor")?.value;
     const ip = document.getElementById("txtIpRepetidor")?.value;
 
@@ -211,65 +217,71 @@ document.addEventListener('DOMContentLoaded', () => {
       numero: numeroRepetidores,
       ssid: ssid,
       contrasenia: contrasenia,
-      codigoBarra: codigoBarra,
+      codigoBarraRepetidor: codigoBarra,
       marca: marca,
       modelo: modelo,
+      precio: precio,
       serie: serie,
       ip: ip,
     };
     jsonRepetidor.push(repetidor);
     nuevoRepetidor.innerHTML = `
-      <div class="card repetidor-card" id="carta${numeroRepetidores}">
-        <div class="header">
-          <h2 class="title">Repetidor - N° ${numeroRepetidores}</h2>
+        <div class="card repetidor-card" id="carta${numeroRepetidores}">
+            <div class="header">
+                <h2 class="title">Repetidor - N° ${numeroRepetidores}</h2>
+            </div>
+            <div class="content">
+                <div class="row">
+                    <div class="field">
+                        <i class="fas fa-wifi icon"></i>
+                        <label>SSID:</label>
+                        <span>${ssid}</span>
+                    </div>
+                    <div class="field">
+                        <i class="fas fa-lock icon"></i>
+                        <label>Contraseña:</label>
+                        <span class="password">${contrasenia}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="field">
+                        <i class="fas fa-server icon"></i>
+                        <label>Serie:</label>
+                        <span>${serie}</span>
+                    </div>
+                    <div class="field">
+                        <i class="fas fa-desktop icon"></i>
+                        <label>Modelo:</label>
+                        <span>${modelo}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="field">
+                        <i class="fas fa-box icon"></i>
+                        <label>Marca:</label>
+                        <span>${marca}</span>
+                    </div>
+                    <div class="field">
+                        <i class="fas fa-network-wired icon"></i>
+                        <label>IP:</label>
+                        <span>${ip}</span>
+                    </div>
+                    <div class="field">
+                        <i class="fas fa-dollar-sign icon"></i>
+                        <label>Precio:</label>
+                        <span>${precio}</span>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="field">
+                        <i class="fas fa-barcode icon"></i>
+                        <label>Código de Barra:</label>
+                        <span>${codigoBarra}</span>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="content">
-          <div class="row">
-            <div class="field">
-              <i class="fas fa-wifi icon"></i>
-              <label>SSID:</label>
-              <span>${ssid}</span>
-            </div>
-            <div class="field">
-              <i class="fas fa-lock icon"></i>
-              <label>Contraseña:</label>
-              <span class="password">${contrasenia}</span>
-            </div>
-          </div>
-          <div class="row">
-            <div class="field">
-              <i class="fas fa-server icon"></i>
-              <label>Serie:</label>
-              <span>${serie}</span>
-            </div>
-            <div class="field">
-              <i class="fas fa-desktop icon"></i>
-              <label>Modelo:</label>
-              <span>${modelo}</span>
-            </div>
-          </div>
-          <div class="row">
-            <div class="field">
-              <i class="fas fa-box icon"></i>
-              <label>Marca:</label>
-              <span>${marca}</span>
-            </div>
-            <div class="field">
-              <i class="fas fa-network-wired icon"></i>
-              <label>IP:</label>
-              <span>${ip}</span>
-            </div>
-          </div>
-          <hr>
-          <div class="row">
-            <div class="field">
-              <i class="fas fa-barcode icon"></i>
-              <label>Código de Barra:</label>
-              <span>${codigoBarra}</span>
-            </div>
-          </div>
-        </div>
-      </div>
     `;
     if (cardContainer.hidden) {
       cardContainer.removeAttribute("hidden");
@@ -327,14 +339,17 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const response = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarra&codigoBarra=${encodeURIComponent(codigoBarra)}`);
       const resultado = await response.json();
+      console.log('Resultado de la búsqueda:', resultado);
 
       if (Array.isArray(resultado) && resultado.length > 0) {
         const producto = resultado[0];
         if (producto && producto.marca && producto.modelo) {
           const marca = producto.marca;
           const modelo = producto.modelo;
+          const precio = producto.precio_actual;
           document.getElementById('txtMarcaRepetidor').value = marca;
           document.getElementById('txtModeloRepetidor').value = modelo;
+          document.getElementById('txtPrecioRepetidor').value = precio;
           showToast(`Producto encontrado: ${producto.marca} - ${producto.modelo}`, "SUCCESS");
         } else {
           showToast("Producto no encontrado o datos incompletos.", "INFO");

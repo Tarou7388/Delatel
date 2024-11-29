@@ -21,13 +21,13 @@
   width: 100%;
   max-width: 400px;
   font-family: Arial, sans-serif;
-  margin-bottom: 8px; 
+  margin-bottom: 8px;
 }
 
 .repetidor-card .header {
   background-color: #014080;
   color: white;
-  padding: 12px; 
+  padding: 12px;
 }
 
 .repetidor-card .title {
@@ -36,7 +36,7 @@
 }
 
 .repetidor-card .content {
-  padding: 20px; 
+  padding: 20px;
 }
 
 .repetidor-card .row {
@@ -50,7 +50,7 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  padding-left: 24px; 
+  padding-left: 24px;
 }
 
 .repetidor-card .icon {
@@ -85,9 +85,9 @@
   .repetidor-card .row {
     flex-direction: column;
   }
-  
+
   .repetidor-card .field {
-    margin-bottom: 8px; 
+    margin-bottom: 8px;
   }
 }
 

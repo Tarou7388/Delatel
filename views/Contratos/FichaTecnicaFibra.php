@@ -48,8 +48,14 @@ $idContrato = $_GET['idContrato'];
         </div>
         <div class="mb-2">
           <div class="form-floating">
+            <input type="text" class="form-control" id="txtPrecioRepetidor" placeholder="Número" disabled>
+            <label for="lblPrecioRepetidor">Precio</label>
+          </div>
+        </div>
+        <div class="mb-2">
+          <div class="form-floating">
             <input type="text" class="form-control" id="txtSerieRepetidor" placeholder="Serie">
-            <label for="lblSerie">Serie</label>
+            <label for="lblSerieRepetidor">Serie</label>
           </div>
         </div>
         <div class="mb-2">
