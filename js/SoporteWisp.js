@@ -201,8 +201,6 @@ document.addEventListener("DOMContentLoaded", () => {
     txtaProceSolucion.setAttribute('disabled', 'true');
   }
 
-
-
   async function ArmadoJsonWisp() {
     const Response = await fetch(`${config.HOST}/app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
     const result = await Response.json();

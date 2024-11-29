@@ -54,7 +54,7 @@
           <div class="row g-2 mb-2">
             <div class="col-md">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtPotencia" placeholder="Potencia" disabled required>
+                <input type="text" class="form-control" id="txtPotencia" placeholder="Potencia" min="-50" max="-7" disabled required>
                 <label for="txtPotencia">Potencia</label>
               </div>
             </div>
@@ -87,7 +87,7 @@
                   <label for="txtNumSpliter">Número Spliter</label>
                 </div>
                 <div class="form-floating">
-                  <select class="form-select" id="slcSpliter" aria-label="Selecciona una opción" required disabled> 
+                  <select class="form-select" id="slcSpliter" aria-label="Selecciona una opción" required disabled>
                     <option value="" selected disabled>Elige una opción</option>
                     <option value="1x3">1x3</option>
                     <option value="1x5">1x5</option>
@@ -140,13 +140,13 @@
           <div class="row g-2 mb-2">
             <div class="col-md">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtPotenciaCambio" placeholder="Potencia" required>
+                <input type="text" class="form-control" id="txtPotenciaCambio" placeholder="Potencia" min="-50" max="-7" required>
                 <label for="txtPotenciaCambio">Potencia</label>
               </div>
             </div>
             <div class="col-md">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtSintonizadorCambio" placeholder="Sintonizador" required>
+                <input type="number" class="form-control" id="txtSintonizadorCambio" placeholder="Sintonizador" required min="0" max="999">
                 <label for="txtSintonizadorCambio">Sintonizador</label>
               </div>
             </div>
@@ -167,7 +167,7 @@
             <div class="col-md">
               <div class="input-group">
                 <div class="form-floating flex-fill">
-                  <input type="text" id="txtNumSpliterCambio" class="form-control" placeholder="Spliter" required>
+                  <input type="number" id="txtNumSpliterCambio" class="form-control" placeholder="Spliter" min="0" max="999" required>
                   <label for="txtNumSpliterCambio">Número Spliter</label>
                 </div>
                 <div class="form-floating">
@@ -184,7 +184,7 @@
             <div class="col-md">
               <div class="input-group">
                 <div class="form-floating flex-fill">
-                  <input type="text" class="form-control" id="txtCableCambio" placeholder="Cable" required>
+                  <input type="number" class="form-control" id="txtCableCambio" placeholder="Cable" min="0" max="999" required>
                   <label for="txtCableCambio">Cable</label>
                 </div>
                 <div class="form-floating">
