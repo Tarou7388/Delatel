@@ -25,4 +25,27 @@ class Caja extends Conexion
     return $this->listarDatos($sql);
   }
 
+  public function registrarCaja($params = []){
+    $sql = "CALL spu_cajas_registrar(?,?,?,?,?,?)";
+    $params = [
+      $params['nombre'],
+      $params['descripcion'],
+      $params['numeroEntradas'],
+      $params['idMufa'],
+      $params['coordenadas'],
+      $params['idUsuario']
+    ];
+    return $this->registrar($sql, $params);
+  }
+
+  public function registrarLinea($params = []){
+    $sql = "CALL spu_lineas_registrar(?,?,?)";
+    $params = [
+      $params['idSector'],
+      $params['coordenadas'],
+      $params['idUser']
+    ];
+    return $this->registrar($sql, $params);
+  }
+
 }

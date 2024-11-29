@@ -69,8 +69,6 @@ export async function iniciarMapa(params = { cajas: true, mufas: true }, id = "m
   ({ Map, Circle, Polyline } = await google.maps.importLibrary("maps"));
   ({ AdvancedMarkerElement } = await google.maps.importLibrary("marker"));
 
-  lineasMufas();
-
   mapa = new Map(document.getElementById(id), {
     zoom: 13,
     center: posicionInicial,
@@ -135,19 +133,6 @@ export async function iniciarMapa(params = { cajas: true, mufas: true }, id = "m
   }
 }
 
-async function lineasMufas(){
-  const response = await fetch(`${config.HOST}app/controllers/Lineas.controllers.php?operacion=getLineas`);
-  const data = await response.json();
-  data.forEach(linea => {
-    const line = new google.maps.Polyline({
-      path: linea.coordenadas,
-      geodesic: true,
-      strokeColor: "#FF0000",
-    });
-    line.setMap(mapa);
-  });
-}
-
 async function eventocajas() {
   const datos = await obtenerDatosAnidado(`${config.HOST}app/controllers/Caja.controllers.php?operacion=listarCajas`);
   datosCajas = datos;
@@ -175,22 +160,6 @@ export async function actualizarMapa(id = "map2") {
   if (params.mufas) {
     eventomufas();
   }
-}
-
-async function eliminarElementosPlano(arreglo) {
-  arreglo.forEach(elemento => {
-    elemento.setMap(null);
-  });
-  arreglo.length = 0;
-}
-
-async function eliminarElementosAnidados(arreglo) {
-  arreglo.forEach(subArray => {
-    subArray.forEach(elemento => {
-      elemento.setMap(null);
-    });
-  });
-  arreglo.length = 0;
 }
 
 async function eventoMapa(valor) {

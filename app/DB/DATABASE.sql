@@ -75,6 +75,19 @@ CREATE TABLE tb_sectores (
     CONSTRAINT secto_fk_id_distrito FOREIGN KEY (id_distrito) REFERENCES tb_distritos (id_distrito)
 ) ENGINE = InnoDB;
 
+CREATE TABLE tb_lineas (
+    id_linea INT PRIMARY KEY AUTO_INCREMENT,
+    id_sector INTEGER NULL,
+    coordenadas JSON NOT NULL,
+    create_at DATETIME NOT NULL DEFAULT NOW(),
+    update_at DATETIME NULL,
+    inactive_at DATETIME NULL,
+    iduser_create INT NOT NULL,
+    iduser_update INT NULL,
+    iduser_inactive INT NULL
+    CONSTRAINT lineas_fk_id_sector FOREIGN KEY (id_sector) REFERENCES tb_sectores (id_sector)
+);
+
 CREATE TABLE tb_mufas(
     id_mufa INT PRIMARY KEY AUTO_INCREMENT,
     id_sector INT NOT NULL,

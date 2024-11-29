@@ -261,7 +261,6 @@ window.addEventListener("DOMContentLoaded", async () => {
             idUsuario: user.idUsuario,
           },
         };
-
         console.log(datosEnvio);
 
         const response = await fetch(

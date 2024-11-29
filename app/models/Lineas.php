@@ -17,5 +17,5 @@ class Lineas extends Conexion{
       $respuesta[$key]['coordenadas'] = json_decode($value['coordenadas'], true);
     }
     return $respuesta;
-  }
+  } 
 }

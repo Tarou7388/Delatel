@@ -1,4 +1,4 @@
-<?php require_once "../../header.php" ?>
+<?php require_once "../../header.php"; ?>
 <?php $host = $_ENV['HOST']; ?>
 
 <div class="container-fluid px-4">
@@ -8,14 +8,64 @@
     <li class="breadcrumb-item active">Gestion de mapa</li>
   </ol>
 
-  <div class="card mt-3">
-    <div class="card-header">
-      <i class="fas fa-table me-1"></i>
-      Registro de datos
+  <div class="row">
+    <div class="col-md-10">
+      <div class="card mt-3">
+        <div class="card-header">
+          <i class="fas fa-table me-1"></i>
+          Registro de datos
+        </div>
+
+        <div class="card-body" id="contenido">
+          <div id="map" style="height: 700px;"></div>
+        </div>
+      </div>
     </div>
 
-    <div class="card-body" id="contenido">
-      <div id="map" style="height: 700px;"></div>
+    <div class="col-md-2">
+      <div class="card mt-3">
+        <div class="card-header">
+          <i class="fas fa-list me-1"></i>
+          Opciones de visualización
+        </div>
+
+        <div class="card-body">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="chkSectores" checked>
+            <label class="form-check-label" for="sectores">
+              Sectores
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="chkMufas" checked>
+            <label class="form-check-label" for="mufas">
+              Mufas
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="chkCajas" checked>
+            <label class="form-check-label" for="cajas">
+              Cajas
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="chkCables" checked>
+            <label class="form-check-label" for="cables">
+              Cables
+            </label>
+          </div>
+          <button class="btn btn-primary mt-3" id="btnActualizar">Actualizar</button>
+        </div>
+      </div>
+      <div class="card mt-3">
+        <div class="card-header">
+          <i class="fas fa-plus me-1"></i>
+          Agregar Nueva Entrada
+        </div>
+        <div class="card-body">
+          <button class="btn btn-success" data-bs-toggle="modal" id="modalAgregarCaja" data-bs-target="#modalAgregar" disabled>Agregar Nueva Entrada</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -25,3 +75,41 @@
 </body>
 
 </html>
+<!-- Modal -->
+<div class="modal fade" id="modalAgregar" tabindex="-1" aria-labelledby="modalAgregarLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalAgregarLabel">Agregar Nueva Entrada</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="formAgregarCaja">
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="nombreCaja" name="nombre" placeholder="Nombre" required>
+            <label for="nombre">Nombre</label>
+          </div>
+          <div class="form-floating mb-3">
+            <textarea class="form-control" id="descripcionCaja" name="descripcion" placeholder="Descripción" rows="3" required></textarea>
+            <label for="descripcion">Descripción</label>
+          </div>
+          <div class="form-floating mb-3">
+            <select class="form-select" id="numEntradasCaja" name="numEntradas" required>
+              <option value="1">8</option>
+              <option value="2">16</option>
+            </select>
+            <label for="numEntradas">Número de Entradas</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="direccionCaja" name="direccion" placeholder="Dirección" required>
+            <label for="direccion">Dirección</label>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
