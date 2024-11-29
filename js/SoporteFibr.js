@@ -1,6 +1,7 @@
 import config from "../env.js";
 import { FichaSoporte, inicializarDataTable } from "./Herramientas.js";
 
+// Evento que se ejecuta cuando el DOM ha sido completamente cargado
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("frm-registro-gpon");
   const urlParams = new URLSearchParams(window.location.search);
@@ -8,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let idSoporte = -1;
 
+  // Función autoejecutable para inicializar datos
   (async function () {
     try {
       idSoporte = await obtenerIdSoporteDeUrl();
@@ -22,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   })();
 
+  // Función para obtener el problema del soporte por ID
   async function obtenerProblema(idSoporte) {
     try {
       const respuesta = await fetch(
@@ -40,6 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // Función para crear el select y el botón de guardar
   function crearSelectYBoton() {
     const rowDiv = document.createElement("div");
     rowDiv.className = "row g-2 mb-2";
@@ -58,6 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
     selectDiv.appendChild(selectSoporte);
     rowDiv.appendChild(selectDiv);
 
+    // Llenar el select con los tipos de soporte
     (async () => {
       try {
         const respuesta = await fetch(
@@ -95,6 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
     solutionTextarea.parentNode.parentNode.appendChild(rowDiv);
   }
 
+  // Función para rellenar el nombre del cliente basado en el documento
   async function rellenarDocNombre(doct) {
     try {
       const respuesta = await fetch(
@@ -114,11 +120,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // Función para obtener los datos de la ficha de fibra
   async function datosfichaFibra(idSoporte) {
     const dataFbibr = await FichaSoporte(idSoporte);
     console.log(dataFbibr.ficha_instalacion);
   }
 
+  // Función para obtener el ID del soporte desde la URL
   async function obtenerIdSoporteDeUrl() {
     const urlParams = new URLSearchParams(window.location.search);
     const doc = urlParams.get("doc");
@@ -127,6 +135,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return urlParams.get("idsoporte");
   }
 
+  // Función para armar el JSON de GPON
   async function ArmadoJsonGpon() {
     const response = await fetch(`${config.HOST}/app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
     const result = await response.json();
@@ -164,9 +173,9 @@ document.addEventListener("DOMContentLoaded", () => {
     return soporte;
   }
 
+  // Función para guardar el soporte
   async function guardarSoporte(data) {
     try {
-
       const urlParams = new URLSearchParams(window.location.search);
       const serv = urlParams.get("tiposervicio");
 
@@ -194,7 +203,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const result = await response.json();
       if (result.status === "success") {
         console.log("Soporte actualizado correctamente.");
-
       } else {
         console.error("Error al guardar soporte:", result.message);
       }
@@ -203,6 +211,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // Evento submit del formulario
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const data = await ArmadoJsonGpon();

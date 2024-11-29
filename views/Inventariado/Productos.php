@@ -124,7 +124,7 @@
           <div class="col-md">
             <div class="form-floating">
               <input type="text" class="form-control" id="txtCodigoBarras" name="txtCodigoBarras" placeholder="Código de Barras" required>
-              <label for="txtCodigoBarras">Código de Barras</label>
+              <label for="txtCodigoBarras">MAC</label>
             </div>
           </div>
 
@@ -154,7 +154,7 @@
               <th class="text-center">Modelo</th>
               <th class="text-center">Unidad de Medida</th>
               <th class="text-center">Precio Actual</th>
-              <th class="text-center">Código de Barra</th>
+              <th class="text-center">MAC</th>
               <th class="text-center">Acciones</th>
             </tr>
           </thead>
