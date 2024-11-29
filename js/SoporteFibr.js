@@ -6,6 +6,19 @@ document.addEventListener("DOMContentLoaded", () => {
   const urlParams = new URLSearchParams(window.location.search);
   const serv = urlParams.get("tiposervicio");
 
+  const txtPlan
+   = document.getElementById("txtPlan
+    ");
+  const txtPppoe = document.getElementById("txtPppoe");
+  const txtPotenciaDos = document.getElementById("txtPotenciaDos");
+  const chkCatv = document.getElementById("chkCatv");
+  const txtClave = document.getElementById("txtClave");
+  const txtVlan = document.getElementById("txtVlan");
+  const txtPotencia = document.getElementById("txtPotencia");
+  const txtSsid = document.getElementById("txtSsid");
+  const txtPass = document.getElementById("txtPass");
+  const txtOtros = document.getElementById("txtOtros");
+
   let idSoporte = -1;
 
   // Función autoejecutable para inicializar datos
@@ -67,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log(fibraFiltrado);
       //Asignacion para el campo de plan.
       console.log(fibraFiltrado.plan);
-      
+      txtPlan.value = fibraFiltrado.plan;
       //
       console.log(fibraFiltrado);
 
@@ -79,6 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       //
       console.log(fibraFiltrado);
+
 
 
     } catch (error) {
