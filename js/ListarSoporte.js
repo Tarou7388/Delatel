@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
   async function obtenerDataSoporte(idsoport) {
     const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idsoport}`);
     const data = await respuesta.json();
-    console.log(data[0]);
+    console.log(data);
     await recorrerIdServicio(data, data[0].nro_doc);
   }
 

@@ -20,9 +20,7 @@ SELECT
     p_tecnico.nombres AS tecnico_nombres,
     p_tecnico.apellidos AS tecnico_apellidos,
     pk.id_paquete,
-    pk.id_servicio,
-    GROUP_CONCAT(srv.tipo_servicio) AS tipos_servicio,  -- Apply GROUP_CONCAT for service types
-    GROUP_CONCAT(srv.servicio) AS servicios
+    pk.id_servicio
 FROM
     tb_soporte s
     LEFT JOIN tb_contratos c ON s.id_contrato = c.id_contrato
@@ -31,14 +29,6 @@ FROM
     LEFT JOIN tb_usuarios u ON r.id_usuario = u.id_usuario
     LEFT JOIN tb_personas p_tecnico ON u.id_persona = p_tecnico.id_persona
     LEFT JOIN tb_paquetes pk ON c.id_paquete = pk.id_paquete
-    LEFT JOIN tb_servicios srv ON JSON_CONTAINS(
-        pk.id_servicio,
-        CONCAT(
-            '{"id_servicio":',
-            srv.id_servicio,
-            '}'
-        )
-    )
     LEFT JOIN tb_clientes cl ON c.id_cliente = cl.id_cliente
     LEFT JOIN tb_empresas emp ON cl.id_empresa = emp.id_empresa
     LEFT JOIN tb_personas p_cliente ON cl.id_persona = p_cliente.id_persona;
