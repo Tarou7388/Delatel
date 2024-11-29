@@ -84,13 +84,13 @@ function actualizarModal(idSoporte, tipoServicio, idReporte) {
 
       switch (servicio) {
         case "CABL":
-          vistaURL = `${config.HOST}views/Soporte/SoporteCABL?idReporte=${idSoporte}&nombreCliente=${nombreCliente}`;
+          vistaURL = `${config.HOST}views/Soporte/SoporteCABL?idReporte=${idSoporte}`;
           break;
         case "WISP":
           vistaURL = `${config.HOST}views/Soporte/SoporteWISP?idReporte=${idSoporte}`;
           break;
         case "FIBR":
-          vistaURL = `${config.HOST}views/Soporte/SoporteFIBR?idReporte=${idSoporte}&nombreCliente=${nombreCliente}`;
+          vistaURL = `${config.HOST}views/Soporte/SoporteFIBR?idReporte=${idSoporte}`;
           break;
         default:
           showToast("Tipo de servicio no reconocido", "ERROR");

@@ -29,56 +29,92 @@ document.addEventListener("DOMContentLoaded", () => {
     if (idSoporte) {
       await obtenerProblema(idSoporte);
       crearSelectYBoton();
+      await prueba();
 
       //await ArmadoJsonCable();
     } else {
-      //Código del reporte.
       const urlParams = new URLSearchParams(window.location.search);
-      const idContrato = urlParams.get("idContrato");
-
-      if (idContrato) {
-        try {
-          const response = await fetch(`${config.HOST}app/controllers/Averias.controllers.php?operacion=buscarAveriaPorContrato&valor=${idContrato}`);
-          const averias = await response.json();
-
-          if (averias.length === 0) {
-            showToast("No tienes ninguna avería", "INFO");
-          } else {
-            const averia = averias[0];
-            const soporteData = JSON.parse(averia.soporte);
-
-            document.getElementById("txtNrodocumento").value = averia.id_soporte;
-            document.getElementById("txtCliente").value = averia;
-            document.getElementById("txtFecha").value = averia.fecha_hora_solicitud.split(" ")[0];
-
-            document.getElementById("txtPotencia").value = soporteData.parametroscable.potencia;
-            document.getElementById("txtSintonizador").value = soporteData.parametroscable.sintonizador;
-            document.getElementById("txtNumTriplexor").value = soporteData.parametroscable.triplexor.cantidad;
-            document.getElementById("slcTriplexor").value = soporteData.parametroscable.triplexor.tipo[0];
-            document.getElementById("txtNumSpliter").value = soporteData.parametroscable.spliter[0].cantidad;
-            document.getElementById("slcSpliter").value = soporteData.parametroscable.spliter[0].tipo;
-            document.getElementById("txtCable").value = soporteData.parametroscable.cable;
-            document.getElementById("txtConector").value = soporteData.parametroscable.conectores;
-
-            document.getElementById("txtaEstadoInicial").value = averia.descripcion_solucion;
-
-            document.getElementById("txtPotencia").value = soporteData.cambioscable.potencia;
-            document.getElementById("txtSintonizador").value = soporteData.cambioscable.sintonizador;
-            document.getElementById("txtNumTriplexor").value = soporteData.cambioscable.triplexor.cantidad;
-            document.getElementById("slcTriplexor").value = soporteData.cambioscable.triplexor.tipo[0];
-            document.getElementById("txtNumSpliter").value = soporteData.cambioscable.spliter[0].cantidad;
-            document.getElementById("slcSpliter").value = soporteData.cambioscable.spliter[0].tipo;
-            document.getElementById("txtCable").value = soporteData.cambioscable.cable;
-            document.getElementById("txtConector").value = soporteData.cambioscable.conectores;
-
-            document.getElementById("txtaEstadoFinal").value = averia.descripcion_solucion;
-          }
-        } catch (error) {
-          console.error("Error al obtener las averías:", error);
-        }
-      }
+      urlParams.get("idReporte");
+      await reporte(urlParams.get("idReporte"));
     }
   })();
+  async function rellenarDocNombre(doct) {
+    const respuesta = await fetch(`${config.HOST}/app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${doct}`);
+    const data = await respuesta.json();
+    $("#txtCliente").val(data[0].nombre);
+    $("#txtNrodocumento").val(doct);
+  }
+
+  async function reporte(idReporte) {
+    try {
+      // Obtener datos del soporte
+      const respuesta = await fetch(`${config.HOST}/app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idReporte}`);
+      const data = await respuesta.json();
+
+      // Llamada necesaria para rellenar el número de documento
+      await rellenarDocNombre(data[0].nro_doc);
+
+      // Parsear el campo `soporte`
+      const soporteData = JSON.parse(data[0].soporte);
+
+      // Extraer parámetros iniciales y cambios técnicos
+      const parametrosCable = soporteData.CABL.parametroscable;
+      const cambiosCable = soporteData.CABL.cambioscable;
+
+      // Rellenar y desactivar campos en el formulario
+      const setField = (id, value) => {
+        const element = document.getElementById(id);
+        if (element) {
+          element.value = value || '';
+          element.setAttribute('disabled', 'true');
+        }
+      };
+
+      setField('txtPotencia', parametrosCable.potencia);
+      setField('txtSintonizador', parametrosCable.sintonizador);
+      setField('slcTriplexor', triplexorValue(parametrosCable.triplexor));
+      setField('txtNumSpliter', parametrosCable.spliter[0]?.cantidad);
+      setField('slcSpliter', parametrosCable.spliter[0]?.tipo);
+      setField('txtCable', parametrosCable.cable);
+      setField('txtConector', parametrosCable.conectores);
+      setField('txtaEstadoInicial', data[0].descripcion_problema);
+
+      // Cambios técnicos
+      setField('txtPotenciaCambio', cambiosCable.potencia);
+      setField('txtSintonizadorCambio', cambiosCable.sintonizador);
+      setField('slcTriplexorCambio', triplexorValue(cambiosCable.triplexor));
+      setField('txtNumSpliterCambio', cambiosCable.spliter[0]?.cantidad);
+      setField('slcSpliterCambio', cambiosCable.spliter[0]?.tipo);
+      setField('txtCableCambio', cambiosCable.cable);
+      setField('txtConectorCambio', cambiosCable.conectores);
+      setField('txtaEstadoFinal', data[0].descripcion_solucion);
+
+    } catch (error) {
+      console.error("Error en la función reporte:", error);
+    }
+  }
+
+
+  // Función auxiliar para convertir triplexor a valores válidos del select
+  function triplexorValue(triplexor) {
+    switch (triplexor?.toLowerCase()) {
+      case 'no lleva': return '1';
+      case 'activo': return '2';
+      case 'pasivo': return '3';
+      default: return '';
+    }
+  }
+
+
+
+  async function prueba() {
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const doc = urlParams.get("doc");
+    const idSoporte = urlParams.get("idsoporte");
+    const tiposervicio = urlParams.get("tiposervicio");
+    await llenadoDeDatos(doc, idSoporte, tiposervicio);
+  }
 
   /**
    * Función para obtener el id del soporte, el nro de documento y 
@@ -86,11 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
    */
   async function obtenerReferencias() {
     const urlParams = new URLSearchParams(window.location.search);
-    // Obtener el id del soporte desde la URL
-    const doc = urlParams.get("doc");
     const idSoporte = urlParams.get("idsoporte");
-    const tiposervicio = urlParams.get("tiposervicio");
-    await llenadoDeDatos(doc, idSoporte, tiposervicio);
 
     return idSoporte;
   }
@@ -104,8 +136,6 @@ document.addEventListener("DOMContentLoaded", () => {
   async function obtenerProblema(idSoporte) {
     const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
     const data = await respuesta.json();
-    console.log(data);
-
     $("#txtaEstadoInicial").val(data[0].descripcion_problema);
   }
 
@@ -122,12 +152,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await respuesta.json();
       console.log(doct);
       console.log(data[0].nombre);
-      //Asignacion del Nombre del cliente
       $("#txtCliente").val(data[0].nombre);
-      //Asignacion del Documento del cliente
       $("#txtNrodocumento").val(doct);
-      //Asignacion del Plan
-      //...Pendiente
     } catch (error) {
       console.error("Error en llenadoDeDatos:", error);
     }
@@ -135,10 +161,6 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const dataCable = await FichaSoporte(idSoporte);
       const cableFiltrado = JSON.parse(dataCable[0].ficha_instalacion).cable;
-
-      //console.log(dataCable[0].ficha_instalacion);
-      /***  Asignacion de los datos del cable ***/
-      //Asignacion de la potencia
       console.log(cableFiltrado.potencia);
       txtPotencia.value = cableFiltrado.potencia;
 
@@ -152,11 +174,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // Parsea los valores de cargador y requerido del objeto triplexor
       const cargador = JSON.parse(cableFiltrado.triplexor.cargador);
       const requerido = JSON.parse(cableFiltrado.triplexor.requerido);
-
-      // Lógica para seleccionar el índice del triplexor basado en las condiciones:
-      // - Si no hay cargador pero es requerido -> índice 3
-      // - Si hay cargador y es requerido -> índice 2  
-      // - En cualquier otro caso -> índice 1
+      // Asigna el valor del select según los valores de cargador y requerido
       if (!cargador && requerido) {
         slcTriplexor.selectedIndex = 3;
       } else if (cargador && requerido) {
@@ -344,5 +362,4 @@ document.addEventListener("DOMContentLoaded", () => {
       window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
     }
   });
-
 });

@@ -70,8 +70,6 @@ document.addEventListener("DOMContentLoaded", () => {
   async function rellenarDocNombre(doct) {
     const respuesta = await fetch(`${config.HOST}/app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${doct}`);
     const data = await respuesta.json();
-    console.log(data);
-
     $("#txtCliente").val(data[0].nombre);
     $("#txtNrodocumento").val(doct);
   }
