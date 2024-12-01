@@ -65,14 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
       statusText.textContent = fibraOptica.moden.catv ? 'Sí' : 'No';
 
       // Cargar datos de los repetidores
-      jsonRepetidor = fibraOptica.repetidores;
-      document.getElementById("txtSsidRepetidor").value = fibraOptica.repetidores[0].ssid;
-      document.getElementById("txtContraseniaRepetidor").value = fibraOptica.repetidores[0].contrasenia;
-      document.getElementById("txtCodigoBarrasRepetidor").value = fibraOptica.repetidores[0].codigoBarraRepetidor;
-      document.getElementById("txtMarcaRepetidor").value = fibraOptica.repetidores[0].marca;
-      document.getElementById("txtModeloRepetidor").value = fibraOptica.repetidores[0].modelo;
-      document.getElementById("txtSerieRepetidor").value = fibraOptica.repetidores[0].serie;
-      document.getElementById("txtIpRepetidor").value = fibraOptica.repetidores[0].ip;
+      jsonRepetidor = fibraOptica.repetidores || [];
       numeroRepetidores = jsonRepetidor.length;
       const cardContainer = document.getElementById("cardContainer");
       const contenidoCarta = document.getElementById("cardsRow");

@@ -77,20 +77,16 @@ $idContrato = $_GET['idContrato'];
           </div>
           <div class="col-md">
             <div class="form-floating">
-              <select id="slcBaseParametros" class="form-select" required>
+              <select id="slcBaseParametros" class="form-select select2me" required>
                 <option value="0" selected disabled>Seleccione</option>
-                <option value="Pueblo Nuevo">Pueblo Nuevo</option>
               </select>
               <label for="slcBaseParametros">Base</label>
             </div>
           </div>
           <div class="col-md">
             <div class="form-floating">
-              <select id="slcSubBaseParametros" class="form-select" required>
+              <select id="slcSubBaseParametros" class="form-select select2me" required>
                 <option value="0" selected disabled>Seleccione</option>
-                <option value="keiko">Keiko</option>
-                <option value="san isidro">San Isidro</option>
-                <option value="13 de octubre">13 de octubre</option>
               </select>
               <label for="slcSubBaseParametros">Sub-Base</label>
             </div>
@@ -129,14 +125,14 @@ $idContrato = $_GET['idContrato'];
           <div class="col-md">
             <div class="form-floating">
               <input type="number" id="txtTxRateParametros" class="form-control" placeholder="TX Rate"
-                required min="20.00" max="90.00">
+                required min="20.00" max="90.00" step="0.01">
               <label for="txtTxRateParametros">TX Rate</label>
             </div>
           </div>
           <div class="col-md">
             <div class="form-floating">
               <input type="number" id="txtRxRateParametros" class="form-control" placeholder="RX Rate"
-                required min="20.00" max="90.00">
+                required min="20.00" max="90.00" step="0.01">
               <label for="txtRxRateParametros">RX Rate</label>
             </div>
           </div>
@@ -317,7 +313,7 @@ $idContrato = $_GET['idContrato'];
               <div class="col-12 col-md-4 mt-1">
                 <div class="form-floating">
                   <input type="text" class="form-control" id="txtCostoAntenaVenta"
-                    placeholder="Costo Antena">
+                    placeholder="Costo Antena" disabled>
                   <label for="txtCostoAntenaVenta">Costo Antena</label>
                 </div>
               </div>
@@ -335,7 +331,7 @@ $idContrato = $_GET['idContrato'];
               <div class="col-12 col-md-4 mt-1">
                 <div class="form-floating">
                   <input type="text" min="0" class="form-control" id="txtCostoRouterVenta"
-                    placeholder="Costo Router">
+                    placeholder="Costo Router" disabled>
                   <label for="txtCostoRouterVenta">Costo Router</label>
                 </div>
               </div>
@@ -364,7 +360,7 @@ $idContrato = $_GET['idContrato'];
               <div class="col-12 col-md-4 mt-1">
                 <div class="form-floating">
                   <input type="text" min="0" class="form-control" id="txtSubTotalVenta"
-                    placeholder="SubTotal">
+                    placeholder="SubTotal" disabled>
                   <label for="txtSubTotalVenta">SubTotal</label>
                 </div>
               </div>
@@ -542,13 +538,13 @@ $idContrato = $_GET['idContrato'];
               </div>
               <div class="col-12 col-md-4 mt-1">
                 <div class="form-floating">
-                  <input type="text" id="txtMarcaAntenaAlquilados" class="form-control" placeholder="Marca">
+                  <input type="text" id="txtMarcaAntenaAlquilados" class="form-control" placeholder="Marca" disabled>
                   <label for="txtMarcaAntenaAlquilados" class="form-label mb-0">Marca</label>
                 </div>
               </div>
               <div class="col-12 col-md-4 mt-1">
                 <div class="form-floating">
-                  <input type="text" id="txtMarcaRouterAlquilados" class="form-control" placeholder="Marca">
+                  <input type="text" id="txtMarcaRouterAlquilados" class="form-control" placeholder="Marca" disabled>
                   <label for="txtMarcaRouterAlquilados" class="form-label mb-0">Marca</label>
                 </div>
               </div>
@@ -563,13 +559,13 @@ $idContrato = $_GET['idContrato'];
               </div>
               <div class="col-12 col-md-4 mt-1">
                 <div class="form-floating">
-                  <input type="text" id="txtModeloAntenaAlquilados" placeholder="Modelo" class="form-control">
+                  <input type="text" id="txtModeloAntenaAlquilados" placeholder="Modelo" class="form-control" disabled>
                   <label for="txtModeloAntenaAlquilados" class="form-label mb-0">Modelo</label>
                 </div>
               </div>
               <div class="col-12 col-md-4 mt-1">
                 <div class="form-floating">
-                  <input type="text" id="txtModeloRouterAlquilados" placeholder="Modelo" class="form-control">
+                  <input type="text" id="txtModeloRouterAlquilados" placeholder="Modelo" class="form-control" disabled>
                   <label for="txtModeloRouterAlquilados" class="form-label mb-0">Modelo</label>
                 </div>
               </div>
@@ -682,7 +678,7 @@ $idContrato = $_GET['idContrato'];
           <div class="col-md">
             <div class="form-floating">
               <input type="number" class="form-control" id="txtMaterialAdicional"
-                placeholder="Material Adicional" min="0">
+                placeholder="Material Adicional" min="0" disabled>
               <label for="txtMaterialAdicional">Material Adicional</label>
             </div>
           </div>

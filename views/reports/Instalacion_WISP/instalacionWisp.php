@@ -80,11 +80,11 @@ $HOST = "http://localhost/DELATEL";
         <td class="text-center"><strong>TRANSMIT CCQ:</strong></td>
         <td class="text-center"><?= htmlspecialchars($fichaTecnica['parametros']['transmiTccq']) ?></td>
         <td class="text-center"><strong>BASE:</strong></td>
-        <td class="text-center"><?= htmlspecialchars($fichaTecnica['parametros']['base'][0]) ?></td>
+        <td class="text-center"><?= htmlspecialchars($fichaTecnica['parametros']['base'][0]['nombre']) ?> (ID: <?= htmlspecialchars($fichaTecnica['parametros']['base'][0]['id']) ?>)</td>
       </tr>
       <tr>
         <td class="text-center"><strong>SUB-BASE:</strong></td>
-        <td class="text-center" colspan="2"><?= htmlspecialchars($fichaTecnica['parametros']['subBase'][0]) ?></td>
+        <td class="text-center" colspan="2"><?= htmlspecialchars($fichaTecnica['parametros']['subBase'][0]['nombre']) ?> (ID: <?= htmlspecialchars($fichaTecnica['parametros']['subBase'][0]['id']) ?>)</td>
         <td class="text-center"><strong>TX/RX RATE:</strong></td>
         <td class="text-center"><?= htmlspecialchars($fichaTecnica['parametros']['txRate']) ?></td>
         <td class="text-center"><?= htmlspecialchars($fichaTecnica['parametros']['rxRate']) ?></td>
@@ -95,44 +95,46 @@ $HOST = "http://localhost/DELATEL";
 
 <div>
   <table class="tabla2">
-    <thead>
-      <tr>
-        <td colspan="2" class="text-center thead-cabecera"><strong>MODO ROUTER</strong></td>
-        <td colspan="2" class="text-center thead-cabecera-2"><strong>CONF. WIRELESS</strong></td>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="text-center"><strong>WAN:</strong></td>
-        <td class="text-center"><?= htmlspecialchars($fichaTecnica['ConfiRouter'][0]['ConfiRouter']['wan']) ?></td>
-        <td class="text-center"><strong>LAN:</strong></td>
-        <td class="text-center"><?= htmlspecialchars($fichaTecnica['ConfiRouter'][0]['ConfiRouter']['ConfiWireless']['lan']) ?></td>
-      </tr>
-      <tr>
-        <td class="text-center"><strong>MASCARA:</strong></td>
-        <td class="text-center"><?= htmlspecialchars($fichaTecnica['ConfiRouter'][0]['ConfiRouter']['mascara']) ?></td>
-        <td class="text-center"><strong>ACCESO:</strong></td>
-        <td class="text-center"><?= htmlspecialchars($fichaTecnica['ConfiRouter'][0]['ConfiRouter']['ConfiWireless']['acceso']) ?></td>
-      </tr>
-      <tr>
-        <td class="text-center"><strong>PUERTA DE ENLACE:</strong></td>
-        <td class="text-center"><?= htmlspecialchars($fichaTecnica['ConfiRouter'][0]['ConfiRouter']['puertaEnlace']) ?></td>
-        <td class="text-center"><strong>SSID:</strong></td>
-        <td class="text-center"><?= htmlspecialchars($fichaTecnica['ConfiRouter'][0]['ConfiRouter']['ConfiWireless']['ssid']) ?></td>
-      </tr>
-      <tr>
-        <td class="text-center"><strong>DNS1:</strong></td>
-        <td class="text-center"><?= htmlspecialchars($fichaTecnica['ConfiRouter'][0]['ConfiRouter']['dns1']) ?></td>
-        <td class="text-center"><strong>SEGURIDAD:</strong></td>
-        <td class="text-center"><?= htmlspecialchars($fichaTecnica['ConfiRouter'][0]['ConfiRouter']['ConfiWireless']['seguridad']) ?></td>
-      </tr>
-      <tr>
-        <td class="text-center"><strong>DNS2:</strong></td>
-        <td class="text-center"><?= htmlspecialchars($fichaTecnica['ConfiRouter'][0]['ConfiRouter']['dns2']) ?></td>
-        <td class="text-center"><strong>OTROS:</strong></td>
-        <td class="text-center"><?= htmlspecialchars($fichaTecnica['ConfiRouter'][0]['ConfiRouter']['ConfiWireless']['otros']) ?></td>
-      </tr>
-    </tbody>
+    <?php foreach ($fichaTecnica['parametros']['routers'] as $router): ?>
+      <thead>
+        <tr>
+          <td colspan="2" class="text-center thead-cabecera"><strong>MODO ROUTER</strong></td>
+          <td colspan="2" class="text-center thead-cabecera-2"><strong>CONF. WIRELESS</strong></td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="text-center"><strong>WAN:</strong></td>
+          <td class="text-center"><?= htmlspecialchars($router['wan']) ?></td>
+          <td class="text-center"><strong>LAN:</strong></td>
+          <td class="text-center"><?= htmlspecialchars($router['lan']) ?></td>
+        </tr>
+        <tr>
+          <td class="text-center"><strong>MASCARA:</strong></td>
+          <td class="text-center"><?= htmlspecialchars($router['mascara']) ?></td>
+          <td class="text-center"><strong>ACCESO:</strong></td>
+          <td class="text-center"><?= htmlspecialchars($router['acceso']) ?></td>
+        </tr>
+        <tr>
+          <td class="text-center"><strong>PUERTA DE ENLACE:</strong></td>
+          <td class="text-center"><?= htmlspecialchars($router['puertaEnlace']) ?></td>
+          <td class="text-center"><strong>SSID:</strong></td>
+          <td class="text-center"><?= htmlspecialchars($router['ssid']) ?></td>
+        </tr>
+        <tr>
+          <td class="text-center"><strong>DNS1:</strong></td>
+          <td class="text-center"><?= htmlspecialchars($router['dns1']) ?></td>
+          <td class="text-center"><strong>SEGURIDAD:</strong></td>
+          <td class="text-center"><?= htmlspecialchars($router['seguridad']) ?></td>
+        </tr>
+        <tr>
+          <td class="text-center"><strong>DNS2:</strong></td>
+          <td class="text-center"><?= htmlspecialchars($router['dns2']) ?></td>
+          <td class="text-center"><strong>OTROS:</strong></td>
+          <td class="text-center"><?= htmlspecialchars($router['otros']) ?></td>
+        </tr>
+      <?php endforeach; ?>
+      </tbody>
   </table>
 </div>
 

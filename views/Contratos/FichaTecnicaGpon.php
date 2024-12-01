@@ -70,6 +70,12 @@ $idContrato = $_GET['idContrato'];
         </div>
         <div class="mb-2">
           <div class="form-floating">
+            <input type="text" class="form-control" id="txtPrecio" placeholder="precio" disabled>
+            <label for="txtPrecio">Precio</label>
+          </div>
+        </div>
+        <div class="mb-2">
+          <div class="form-floating">
             <input type="text" class="form-control" id="txtSerieRepetidor" placeholder="Serie">
             <label for="lblSerie">Serie</label>
           </div>

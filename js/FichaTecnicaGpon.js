@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await response.json();
       console.log(data);
 
-      if (data.length === 0) {
+      if (!Array.isArray(data) || data.length === 0) {
         console.warn("No hay datos en ficha_instalacion.");
         return;
       }
@@ -72,28 +72,26 @@ document.addEventListener("DOMContentLoaded", () => {
         var statusText = document.getElementById('statusText');
         statusText.textContent = fibra.moden.catv ? 'Sí' : 'No';
 
-        jsonRepetidor = fibra.repetidores;
+        jsonRepetidor = fibra.repetidores || [];
         document.getElementById("txtSsidRepetidor").value = fibra.repetidores[0].ssid;
         document.getElementById("txtContraseniaRepetidor").value = fibra.repetidores[0].contrasenia;
         document.getElementById("txtCodigoBarrasRepetidor").value = fibra.repetidores[0].codigoBarra;
         document.getElementById("txtMarcaRepetidor").value = fibra.repetidores[0].marca;
         document.getElementById("txtModeloRepetidor").value = fibra.repetidores[0].modelo;
+        document.getElementById("txtPrecio").value = fibra.repetidores[0].precio;
         document.getElementById("txtSerieRepetidor").value = fibra.repetidores[0].serie;
         document.getElementById("txtIpRepetidor").value = fibra.repetidores[0].ip;
-
         numeroRepetidores = jsonRepetidor.length;
         const cardContainer = document.getElementById("cardContainer");
         const contenidoCarta = document.getElementById("cardsRow");
-        //cardContainer.removeAttribute("hidden");
 
-        fibra.repetidores.forEach((repetidor) => {
-          numeroRepetidores++;
+        jsonRepetidor.forEach((repetidor, index) => {
           const nuevoRepetidor = document.createElement("div");
           nuevoRepetidor.classList.add("col-12", "col-md-6", "col-lg-3");
           nuevoRepetidor.innerHTML = `
-          <div class="card repetidor-card mb-2" id="carta${repetidor.numero}">
+          <div class="card repetidor-card mb-2" id="carta${index + 1}">
             <div class="header">
-              <h2 class="title">Repetidor - N° ${repetidor.numero}</h2>
+              <h2 class="title">Repetidor - N° ${index + 1}</h2>
             </div>
             <div class="content">
               <div class="row">
@@ -125,6 +123,11 @@ document.addEventListener("DOMContentLoaded", () => {
                   <i class="fas fa-box icon"></i>
                   <label>Marca:</label>
                   <span>${repetidor.marca}</span>
+                </div>
+                <div class="field">
+                  <i class="fas fa-dollar-sign icon"></i>
+                  <label>Precio:</label>
+                  <span>${repetidor.precio}</span>
                 </div>
                 <div class="field">
                   <i class="fas fa-network-wired icon"></i>
@@ -315,7 +318,7 @@ document.addEventListener("DOMContentLoaded", () => {
       jsonCable = {
         pagoinstalacion: parseFloat(txtPagoInst),
         potencia: txtPotencia,
-        sintonizador: {},
+        //sintonizador: {},
         triplexor: {
           requerido: slcTriplexor[0],
           cargador: slcTriplexor[1],
@@ -415,6 +418,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const codigoBarra = document.getElementById("txtCodigoBarrasRepetidor").value;
     const marca = document.getElementById("txtMarcaRepetidor")?.value;
     const modelo = document.getElementById("txtModeloRepetidor")?.value;
+    const precio = document.getElementById("txtPrecio")?.value;
     const serie = document.getElementById("txtSerieRepetidor")?.value;
     const ip = document.getElementById("txtIpRepetidor").value;
 
@@ -430,61 +434,67 @@ document.addEventListener("DOMContentLoaded", () => {
         codigoBarra: codigoBarra,
         modelo: modelo,
         marca: marca,
+        precio: precio,
         serie: serie,
         ip: ip,
       };
       jsonRepetidor.push(repetidor);
       nuevoRepetidor.innerHTML = `
-        <div class="card repetidor-card mb-2" id="carta${numeroRepetidores}">
-          <div class="header">
-            <h2 class="title">Repetidor - N° ${numeroRepetidores}</h2>
-          </div>
-          <div class="content">
-            <div class="row">
-              <div class="field">
-                <i class="fas fa-wifi icon"></i>
-                <label>SSID:</label>
-                <span>${ssid}</span>
-              </div>
-              <div class="field">
-                <i class="fas fa-lock icon"></i>
-                <label>Contraseña:</label>
-                <span class="password">${contrasenia}</span>
-              </div>
+        <div class="card repetidor-card" id="carta${numeroRepetidores}">
+            <div class="header">
+                <h2 class="title">Repetidor - N° ${numeroRepetidores}</h2>
             </div>
-            <div class="row">
-              <div class="field">
-                <i class="fas fa-server icon"></i>
-                <label>Serie:</label>
-                <span>${serie}</span>
-              </div>
-              <div class="field">
-                <i class="fas fa-desktop icon"></i>
-                <label>Modelo:</label>
-                <span>${modelo}</span>
-              </div>
+            <div class="content">
+                <div class="row">
+                    <div class="field">
+                        <i class="fas fa-wifi icon"></i>
+                        <label>SSID:</label>
+                        <span>${ssid}</span>
+                    </div>
+                    <div class="field">
+                        <i class="fas fa-lock icon"></i>
+                        <label>Contraseña:</label>
+                        <span class="password">${contrasenia}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="field">
+                        <i class="fas fa-server icon"></i>
+                        <label>Serie:</label>
+                        <span>${serie}</span>
+                    </div>
+                    <div class="field">
+                        <i class="fas fa-desktop icon"></i>
+                        <label>Modelo:</label>
+                        <span>${modelo}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="field">
+                        <i class="fas fa-box icon"></i>
+                        <label>Marca:</label>
+                        <span>${marca}</span>
+                    </div>
+                    <div class="field">
+                        <i class="fas fa-network-wired icon"></i>
+                        <label>IP:</label>
+                        <span>${ip}</span>
+                    </div>
+                    <div class="field">
+                        <i class="fas fa-dollar-sign icon"></i>
+                        <label>Precio:</label>
+                        <span>${precio}</span>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="field">
+                        <i class="fas fa-barcode icon"></i>
+                        <label>Código de Barra:</label>
+                        <span>${codigoBarra}</span>
+                    </div>
+                </div>
             </div>
-            <div class="row">
-              <div class="field">
-                <i class="fas fa-box icon"></i>
-                <label>Marca:</label>
-                <span>${marca}</span>
-              </div>
-              <div class="field">
-                <i class="fas fa-network-wired icon"></i>
-                <label>IP:</label>
-                <span>${ip}</span>
-              </div>
-            </div>
-            <hr>
-            <div class="row">
-              <div class="field">
-                <i class="fas fa-barcode icon"></i>
-                <label>Código de Barra:</label>
-                <span>${codigoBarra}</span>
-              </div>
-            </div>
-          </div>
         </div>
       `;
       if (cardContainer.hidden) {
@@ -594,8 +604,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (producto && producto.marca && producto.modelo) {
           const marca = producto.marca;
           const modelo = producto.modelo;
+          const precio = producto.precio_actual;
           document.getElementById('txtMarcaRepetidor').value = marca;
           document.getElementById('txtModeloRepetidor').value = modelo;
+          document.getElementById('txtPrecio').value = precio;
           showToast(`Producto encontrado: ${producto.marca} - ${producto.modelo}`, "SUCCESS");
         } else {
           showToast("Producto no encontrado o datos incompletos.", "INFO");
@@ -654,12 +666,20 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.querySelector("#eliminarRepetidor").addEventListener("click", () => {
-    const card = document.querySelector(`#carta${numeroRepetidores}`);
-    card.remove();
-    numeroRepetidores--;
-    jsonRepetidor.pop();
-    if (numeroRepetidores === 0) {
-      document.getElementById("cardContainer").hidden = true;
+    if (numeroRepetidores > 0) {
+      const card = document.querySelector(`#carta${numeroRepetidores}`);
+      if (card) {
+        card.remove();
+        numeroRepetidores--;
+        jsonRepetidor.pop();
+        if (numeroRepetidores === 0) {
+          document.getElementById("cardContainer").hidden = true;
+        }
+      } else {
+        console.warn(`No se encontró la carta con ID carta${numeroRepetidores}`);
+      }
+    } else {
+      console.warn("No hay repetidores para eliminar.");
     }
   });
 

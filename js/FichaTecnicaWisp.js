@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnAgregarRouter = document.getElementById("btnAgregarRouter");
   const routersContainer = document.getElementById("routersContainer");
   const saveButton = document.getElementById("saveButton");
+  const slcBase = document.getElementById("slcBaseParametros");
   // Check de Adelantado o cumpliendo el mes 
   const chkAdelantadoVenta = document.getElementById('chkAdelantadoVenta');
   const chkCumpliendoMesVenta = document.getElementById('chkCumpliendoMesVenta');
@@ -14,6 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
     backdrop: 'static',
     keyboard: false
   });
+
 
   var today = new Date().toISOString().split("T")[0];
   document.getElementById("txtFecha").value = today;
@@ -61,7 +63,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('txtOtrosWireless').value = valoresRouter.otrosWireless;
   });
 
-
   // Código para manejar la selección de operación (Venta o Alquiler)
   document.getElementById('slcOperacion').addEventListener('change', function () {
     const tipoOperacion = this.value;
@@ -93,13 +94,11 @@ document.addEventListener("DOMContentLoaded", () => {
         `${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerFichaInstalacion&id=${idContrato}`
       );
       const data = await response.json();
-      console.log(data);
 
       if (data.length === 0 || !data[0].ficha_instalacion) {
         showToast("No hay datos en Ficha de Instalación", "INFO");
+        return;
       }
-
-      //const fichaInstalacion = JSON.parse(data[0].ficha_instalacion);
 
       document.getElementById("txtCliente").value = data[0].nombre_cliente;
       document.getElementById("txtNumFicha").value = data[0].id_contrato;
@@ -114,19 +113,131 @@ document.addEventListener("DOMContentLoaded", () => {
         // Cargar datos de parámetros
         const parametros = installationData.parametros;
         document.getElementById("slcFrecuenciaParametros").value = parametros.frecuencia.join(", ");
-        document.getElementById("slcBaseParametros").value = parametros.base.join(", ");
-        document.getElementById("slcSubBaseParametros").value = parametros.subBase.join(", ");
+        // Cargar datos de base
+        const slcBase = document.getElementById("slcBaseParametros");
+        const base = parametros.base[0];
+        const baseOption = document.createElement('option');
+        baseOption.value = base.id;
+        baseOption.textContent = base.nombre;
+        baseOption.selected = true;
+        slcBase.appendChild(baseOption);
+
+        // Cargar datos de subBase
+        const slcSubBase = document.getElementById("slcSubBaseParametros");
+        const subBase = parametros.subBase[0];
+        const subBaseOption = document.createElement('option');
+        subBaseOption.value = subBase.id;
+        subBaseOption.textContent = subBase.nombre;
+        subBaseOption.selected = true;
+        slcSubBase.appendChild(subBaseOption);
+
         document.getElementById("txtSignalStrengthParametros").value = parametros.signalStrength;
         document.getElementById("txtNoiseFloorParametros").value = parametros.noiseFloor;
         document.getElementById("txtTransmiTccqParametros").value = parametros.transmiTccq;
         document.getElementById("txtTxRateParametros").value = parametros.txRate;
         document.getElementById("txtRxRateParametros").value = parametros.rxRate;
 
-        // Cargar datos de configuración del router
-        cargarRouters(installationData.ConfiRouter);
+        // Cargar datos de routers
+        jsonRouter = parametros.routers || [];
+        const rowContainer = document.createElement("div");
+        rowContainer.classList.add("row");
 
-        // Actualizar el contador de routers
-        numeroRouter = installationData.ConfiRouter.length;
+        jsonRouter.forEach((routerData, index) => {
+          const routerCol = document.createElement("div");
+          routerCol.classList.add("col-md-4", "mb-4");
+
+          const routerCard = document.createElement("div");
+          routerCard.classList.add("card", "shadow-sm");
+          routerCard.style.maxWidth = '100%';
+
+          routerCard.innerHTML = `
+                    <div class="card-header text-white py-2">
+                        <h5 class="card-title mb-0 d-flex justify-content-between align-items-center fs-6">
+                            <span>Router N° ${routerData.numero}</span>
+                        </h5>
+                    </div>
+                    <div class="card-body p-0" id="carta${routerData.numero}">
+                        <table class="table table-sm table-hover mb-0">
+                            <tbody>
+                                <tr>
+                                    <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>Código de Barra</td>
+                                    <td class="py-1 px-2">${routerData.codigoBarra}</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>Modelo</td>
+                                    <td class="py-1 px-2">${routerData.modelo}</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>Marca</td>
+                                    <td class="py-1 px-2">${routerData.marca}</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>WAN</td>
+                                    <td class="py-1 px-2">${routerData.wan}</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-1 px-2"><i class="fas fa-mask text-primary me-2"></i>Máscara</td>
+                                    <td class="py-1 px-2">${routerData.mascara}</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-1 px-2"><i class="fas fa-door-open text-primary me-2"></i>Puerta de Enlace</td>
+                                    <td class="py-1 px-2">${routerData.puertaEnlace}</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-1 px-2"><i class="fas fa-server text-primary me-2"></i>DNS 1</td>
+                                    <td class="py-1 px-2">${routerData.dns1}</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-1 px-2"><i class="fas fa-server text-primary me-2"></i>DNS 2</td>
+                                    <td class="py-1 px-2">${routerData.dns2}</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-1 px-2"><i class="fas fa-wifi text-primary me-2"></i>LAN Wireless</td>
+                                    <td class="py-1 px-2">${routerData.lan}</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-1 px-2"><i class="fas fa-key text-primary me-2"></i>Acceso Wireless</td>
+                                    <td class="py-1 px-2">${routerData.acceso}</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-1 px-2"><i class="fas fa-broadcast-tower text-primary me-2"></i>SSID</td>
+                                    <td class="py-1 px-2">${routerData.ssid}</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-1 px-2"><i class="fas fa-shield-alt text-primary me-2"></i>Seguridad</td>
+                                    <td class="py-1 px-2">${routerData.seguridad}</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-1 px-2"><i class="fas fa-info-circle text-primary me-2"></i>Otros</td>
+                                    <td class="py-1 px-2">${routerData.otros}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+
+          const deleteButton = document.createElement("button");
+          deleteButton.classList.add("btn", "btn-sm", "btn-outline-light", "mb-1", "me-2", "float-end");
+          deleteButton.style.backgroundColor = '#0459ad';
+          deleteButton.style.color = 'white';
+          deleteButton.innerHTML = '<i class="fas fa-trash-alt" style="color: white;"></i> Eliminar';
+
+          deleteButton.addEventListener("click", function () {
+            rowContainer.removeChild(routerCol);
+            jsonRouter.splice(index, 1);
+            actualizarNumeros();
+          });
+
+          routerCard.querySelector(".card-body").appendChild(deleteButton);
+          routerCol.appendChild(routerCard);
+          rowContainer.appendChild(routerCol);
+        });
+
+        if (routersContainer) {
+          routersContainer.appendChild(rowContainer);
+        } else {
+          console.error("El contenedor 'routersContainer' no existe en el DOM.");
+        }
 
         // Mostrar y cargar datos de venta o alquiler
         const frmVenta = document.getElementById('frmVenta');
@@ -197,116 +308,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   })();
 
-  function cargarRouters(confiRouter) {
-    const rowContainer = document.createElement("div");
-    rowContainer.classList.add("row");
-
-    // Primero, vacía el contenedor de routers para evitar duplicados al recargar
-    routersContainer.innerHTML = '';
-
-    confiRouter.forEach((router, index) => {
-      const routerData = router.ConfiRouter;
-      const routerCol = document.createElement("div");
-      routerCol.classList.add("col-md-4", "mb-4");
-
-      const routerCard = document.createElement("div");
-      routerCard.classList.add("card", "shadow-sm");
-      routerCard.style.maxWidth = '100%';
-
-      routerCard.innerHTML = `
-        <div class="card-header text-white py-2">
-          <h5 class="card-title mb-0 d-flex justify-content-between align-items-center fs-6">
-            <span>Router N° ${routerData.numero}</span>
-          </h5>
-        </div>
-        <div class="card-body p-0">
-          <table class="table table-sm table-hover mb-0">
-            <tbody>
-              <tr>
-                <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>Código de Barra</td>
-                <td class="py-1 px-2">${routerData.codigoBarra}</td>
-              </tr>
-              <tr>
-                <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>Modelo</td>
-                <td class="py-1 px-2">${routerData.modelo}</td>
-              </tr>
-              <tr>
-                <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>Marca</td>
-                <td class="py-1 px-2">${routerData.marca}</td>
-              </tr>
-              <tr>
-                <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>WAN</td>
-                <td class="py-1 px-2">${routerData.wan}</td>
-              </tr>
-              <tr>
-                <td class="py-1 px-2"><i class="fas fa-mask text-primary me-2"></i>Máscara</td>
-                <td class="py-1 px-2">${routerData.mascara}</td>
-              </tr>
-              <tr>
-                <td class="py-1 px-2"><i class="fas fa-door-open text-primary me-2"></i>Puerta de Enlace</td>
-                <td class="py-1 px-2">${routerData.puertaEnlace}</td>
-              </tr>
-              <tr>
-                <td class="py-1 px-2"><i class="fas fa-server text-primary me-2"></i>DNS 1</td>
-                <td class="py-1 px-2">${routerData.dns1}</td>
-              </tr>
-              <tr>
-                <td class="py-1 px-2"><i class="fas fa-server text-primary me-2"></i>DNS 2</td>
-                <td class="py-1 px-2">${routerData.dns2}</td>
-              </tr>
-              <tr>
-                <td class="py-1 px-2"><i class="fas fa-wifi text-primary me-2"></i>LAN Wireless</td>
-                <td class="py-1 px-2">${routerData.ConfiWireless.lan}</td>
-              </tr>
-              <tr>
-                <td class="py-1 px-2"><i class="fas fa-key text-primary me-2"></i>Acceso Wireless</td>
-                <td class="py-1 px-2">${routerData.ConfiWireless.acceso}</td>
-              </tr>
-              <tr>
-                <td class="py-1 px-2"><i class="fas fa-broadcast-tower text-primary me-2"></i>SSID</td>
-                <td class="py-1 px-2">${routerData.ConfiWireless.ssid}</td>
-              </tr>
-              <tr>
-                <td class="py-1 px-2"><i class="fas fa-shield-alt text-primary me-2"></i>Seguridad</td>
-                <td class="py-1 px-2">${routerData.ConfiWireless.seguridad}</td>
-              </tr>
-              <tr>
-                <td class="py-1 px-2"><i class="fas fa-info-circle text-primary me-2"></i>Otros</td>
-                <td class="py-1 px-2">${routerData.ConfiWireless.otros}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      `;
-
-      const deleteButton = document.createElement("button");
-      deleteButton.classList.add("btn", "btn-sm", "btn-outline-light", "mb-1", "me-2", "float-end");
-      deleteButton.style.backgroundColor = '#0459ad';
-      deleteButton.style.color = 'white';
-      deleteButton.innerHTML = '<i class="fas fa-trash-alt" style="color: white;"></i> Eliminar';
-
-      deleteButton.addEventListener("click", function () {
-        rowContainer.removeChild(routerCol);
-        jsonRouter.splice(index, 1); // Eliminar router de jsonRouter
-        actualizarNumeros(); // Actualizar el contador de routers
-      });
-
-      routerCard.querySelector(".card-body").appendChild(deleteButton);
-      routerCol.appendChild(routerCard);
-      rowContainer.appendChild(routerCol);
-    });
-
-    routersContainer.appendChild(rowContainer);
-    routerConfigModal.hide();
-    limpiarCampos();
-    actualizarNumeros();
-
-    // Agregar console.log para mostrar los routers existentes
-    console.log("Routers existentes:", confiRouter);
-  }
-
   // Función para agregar un nuevo router
-  function agregarRouter() {
+  async function agregarRouter() {
     routerConfigModal.show();
 
     saveButton.onclick = function () {
@@ -332,95 +335,91 @@ document.addEventListener("DOMContentLoaded", () => {
       numeroRouter++;
       const router = {
         numero: numeroRouter,
-        codigoBarra,
-        modelo,
-        marca,
-        wan,
-        mascara,
-        puertaEnlace,
-        dns1,
-        dns2,
-        lan,
-        acceso,
-        ssid,
-        seguridad,
-        otros
+        codigoBarra: codigoBarra,
+        modelo: modelo,
+        marca: marca,
+        wan: wan,
+        mascara: mascara,
+        puertaEnlace: puertaEnlace,
+        dns1: dns1,
+        dns2: dns2,
+        lan: lan,
+        acceso: acceso,
+        ssid: ssid,
+        seguridad: seguridad,
+        otros: otros,
       };
-
       jsonRouter.push(router);
-
       const routerCol = document.createElement("div");
       routerCol.classList.add("col-md-4", "mb-4");
-
       const routerCard = document.createElement("div");
       routerCard.classList.add("card", "shadow-sm");
       routerCard.style.maxWidth = '100%';
-
       routerCard.innerHTML = `
-      <div class="card-header text-white py-2">
-        <h5 class="card-title mb-0 d-flex justify-content-between align-items-center fs-6">
-          <span>Router N° ${router.numero}</span>
-        </h5>
-      </div>
-      <div class="card-body p-0">
-        <table class="table table-sm table-hover mb-0">
-          <tbody>
-            <tr>
-              <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>Código de Barra</td>
-              <td class="py-1 px-2">${codigoBarra}</td>
-            </tr>
-            <tr>
-              <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>Modelo</td>
-              <td class="py-1 px-2">${modelo}</td>
-            </tr>
-            <tr>
-              <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>Marca</td>
-              <td class="py-1 px-2">${marca}</td>
-            </tr>
-            <tr>
-              <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>WAN</td>
-              <td class="py-1 px-2">${wan}</td>
-            </tr>
-            <tr>
-              <td class="py-1 px-2"><i class="fas fa-mask text-primary me-2"></i>Máscara</td>
-              <td class="py-1 px-2">${mascara}</td>
-            </tr>
-            <tr>
-              <td class="py-1 px-2"><i class="fas fa-door-open text-primary me-2"></i>Puerta de Enlace</td>
-              <td class="py-1 px-2">${puertaEnlace}</td>
-            </tr>
-            <tr>
-              <td class="py-1 px-2"><i class="fas fa-server text-primary me-2"></i>DNS 1</td>
-              <td class="py-1 px-2">${dns1}</td>
-            </tr>
-            <tr>
-              <td class="py-1 px-2"><i class="fas fa-server text-primary me-2"></i>DNS 2</td>
-              <td class="py-1 px-2">${dns2}</td>
-            </tr>
-            <tr>
-              <td class="py-1 px-2"><i class="fas fa-wifi text-primary me-2"></i>LAN Wireless</td>
-              <td class="py-1 px-2">${lan}</td>
-            </tr>
-            <tr>
-              <td class="py-1 px-2"><i class="fas fa-key text-primary me-2"></i>Acceso Wireless</td>
-              <td class="py-1 px-2">${acceso}</td>
-            </tr>
-            <tr>
-              <td class="py-1 px-2"><i class="fas fa-broadcast-tower text-primary me-2"></i>SSID</td>
-              <td class="py-1 px-2">${ssid}</td>
-            </tr>
-            <tr>
-              <td class="py-1 px-2"><i class="fas fa-shield-alt text-primary me-2"></i>Seguridad</td>
-              <td class="py-1 px-2">${seguridad}</td>
-            </tr>
-            <tr>
-              <td class="py-1 px-2"><i class="fas fa-info-circle text-primary me-2"></i>Otros</td>
-              <td class="py-1 px-2">${otros}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    `;
+        <div class="card-header text-white py-2">
+            <h5 class="card-title mb-0 d-flex justify-content-between align-items-center fs-6">
+            <span>Router N° ${numeroRouter}</span>
+            </h5>
+        </div>
+        <div class="card-body p-0" id="carta${numeroRouter}" >
+            <table class="table table-sm table-hover mb-0">
+            <tbody>
+                <tr>
+                <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>Código de Barra</td>
+                <td class="py-1 px-2">${codigoBarra}</td>
+                </tr>
+                <tr>
+                <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>Modelo</td>
+                <td class="py-1 px-2">${modelo}</td>
+                </tr>
+                <tr>
+                <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>Marca</td>
+                <td class="py-1 px-2">${marca}</td>
+                </tr>
+                <tr>
+                <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>WAN</td>
+                <td class="py-1 px-2">${wan}</td>
+                </tr>
+                <tr>
+                <td class="py-1 px-2"><i class="fas fa-mask text-primary me-2"></i>Máscara</td>
+                <td class="py-1 px-2">${mascara}</td>
+                </tr>
+                <tr>
+                <td class="py-1 px-2"><i class="fas fa-door-open text-primary me-2"></i>Puerta de Enlace</td>
+                <td class="py-1 px-2">${puertaEnlace}</td>
+                </tr>
+                <tr>
+                <td class="py-1 px-2"><i class="fas fa-server text-primary me-2"></i>DNS 1</td>
+                <td class="py-1 px-2">${dns1}</td>
+                </tr>
+                <tr>
+                <td class="py-1 px-2"><i class="fas fa-server text-primary me-2"></i>DNS 2</td>
+                <td class="py-1 px-2">${dns2}</td>
+                </tr>
+                <tr>
+                <td class="py-1 px-2"><i class="fas fa-wifi text-primary me-2"></i>LAN Wireless</td>
+                <td class="py-1 px-2">${lan}</td>
+                </tr>
+                <tr>
+                <td class="py-1 px-2"><i class="fas fa-key text-primary me-2"></i>Acceso Wireless</td>
+                <td class="py-1 px-2">${acceso}</td>
+                </tr>
+                <tr>
+                <td class="py-1 px-2"><i class="fas fa-broadcast-tower text-primary me-2"></i>SSID</td>
+                <td class="py-1 px-2">${ssid}</td>
+                </tr>
+                <tr>
+                <td class="py-1 px-2"><i class="fas fa-shield-alt text-primary me-2"></i>Seguridad</td>
+                <td class="py-1 px-2">${seguridad}</td>
+                </tr>
+                <tr>
+                <td class="py-1 px-2"><i class="fas fa-info-circle text-primary me-2"></i>Otros</td>
+                <td class="py-1 px-2">${otros}</td>
+                </tr>
+            </tbody>
+            </table>
+        </div>
+        `;
 
       showToast("Agregado correctamente", "SUCCESS", 1500);
       const deleteButton = document.createElement("button");
@@ -432,10 +431,15 @@ document.addEventListener("DOMContentLoaded", () => {
       deleteButton.addEventListener("click", function () {
         ask("¿Está seguro de eliminar este router?", "Ficha Técnica Wisp").then((respuesta) => {
           if (respuesta) {
-            routersContainer.removeChild(routerCol);
-            jsonRouter.splice(jsonRouter.indexOf(router), 1);
-            numeroRouter--;
-            actualizarNumeros();
+            const card = document.querySelector(`#carta${router.numero}`);
+            if (card) {
+              card.remove();
+              jsonRouter.splice(jsonRouter.indexOf(router), 1);
+              numeroRouter--;
+              actualizarNumeros();
+            } else {
+              showToast("No se encontró el router a eliminar.", "ERROR");
+            }
           }
         });
       });
@@ -445,22 +449,7 @@ document.addEventListener("DOMContentLoaded", () => {
       routersContainer.appendChild(routerCol);
 
       routerConfigModal.hide();
-      limpiarCampos();
     }
-  }
-
-  // Limpiar campos de configuración del router
-  function limpiarCampos() {
-    document.getElementById("txtWanRouter").value = "";
-    document.getElementById("txtMascaraRouter").value = "";
-    document.getElementById("txtPuertaEnlaceRouter").value = "";
-    document.getElementById("txtDns1Router").value = "";
-    document.getElementById("txtDns2Router").value = "";
-    document.getElementById("txtLanWireless").value = "";
-    document.getElementById("txtAccesoWireless").value = "";
-    document.getElementById("txtSsidWireless").value = "";
-    document.getElementById("txtSeguridadWireless").value = "";
-    document.getElementById("txtOtrosWireless").value = "";
   }
 
   // Actualizar los números de los routers
@@ -469,6 +458,13 @@ document.addEventListener("DOMContentLoaded", () => {
     routerCards.forEach((card, index) => {
       const cardHeader = card.querySelector(".card-header span");
       cardHeader.textContent = `Router N° ${index + 1}`;
+
+      // Actualizar el número del router en el array jsonRouter
+      const routerId = card.id.replace('carta', '');
+      const routerIndex = jsonRouter.findIndex(router => router.numero == routerId);
+      if (routerIndex !== -1) {
+        jsonRouter[routerIndex].numero = index + 1;
+      }
     });
   }
 
@@ -527,30 +523,39 @@ document.addEventListener("DOMContentLoaded", () => {
   async function parametros() {
     const txtPaquete = document.getElementById('txtPaquete').value;
     const slcFrecuencia = document.getElementById('slcFrecuenciaParametros').value;
-    const slcBase = document.getElementById('slcBaseParametros').value;
-    const slcSubBase = document.getElementById('slcSubBaseParametros').value;
+    const slcBase = document.getElementById('slcBaseParametros');
+    const slcSubBase = document.getElementById('slcSubBaseParametros');
     const txtSignalStrength = document.getElementById('txtSignalStrengthParametros').value;
     const txtNoiseFloor = document.getElementById('txtNoiseFloorParametros').value;
     const txtTransmiTccq = parseFloat(document.getElementById('txtTransmiTccqParametros').value);
     const txtTxRate = parseFloat(document.getElementById('txtTxRateParametros').value);
     const txtRxRate = parseFloat(document.getElementById('txtRxRateParametros').value);
+
+    const base = {
+      id: slcBase.value,
+      nombre: slcBase.options[slcBase.selectedIndex].text
+    };
+
+    const subBase = {
+      id: slcSubBase.value,
+      nombre: slcSubBase.options[slcSubBase.selectedIndex].text
+    };
+
     jsonParametros = {
       parametros: {
         plan: txtPaquete,
         frecuencia: slcFrecuencia.split(","),
-        base: slcBase.split(","),
-        subBase: slcSubBase.split(","),
+        base: [base],
+        subBase: [subBase],
         signalStrength: txtSignalStrength,
         noiseFloor: txtNoiseFloor,
         transmiTccq: txtTransmiTccq,
         txRate: txtTxRate,
         rxRate: txtRxRate,
+        routers: jsonRouter
       },
     }
     jsonData.parametros = jsonParametros.parametros;
-    if (!jsonData.ConfiRouter) {
-      jsonData.ConfiRouter = [];
-    }
   }
 
   async function productoBarraBuscar(cajatxt) {
@@ -591,35 +596,6 @@ document.addEventListener("DOMContentLoaded", () => {
     txtModeloVentaRouter.value = datos[0].modelo;
     txtCostoRouterVenta.value = datos[0].precio_actual;
   });
-
-  //Json Router
-  async function router() {
-    if (!flagFichaInstalacion) {
-      const updatedRouters = jsonRouter.map(router => ({
-        numero: router.numero,
-        codigoBarra: router.codigoBarra,
-        modelo: router.modelo,
-        marca: router.marca,
-        wan: router.wan,
-        mascara: router.mascara,
-        puertaEnlace: router.puertaEnlace,
-        dns1: router.dns1,
-        dns2: router.dns2,
-        ConfiWireless: {
-          lan: router.lan,
-          acceso: router.acceso,
-          ssid: router.ssid,
-          seguridad: router.seguridad,
-          otros: router.otros
-        }
-      }));
-
-      jsonData.ConfiRouter = jsonData.ConfiRouter || [];
-      jsonData.ConfiRouter = jsonData.ConfiRouter.concat(updatedRouters.map(router => ({
-        ConfiRouter: router
-      })));
-    }
-  }
 
   //Json Venta
   async function venta() {
@@ -784,7 +760,7 @@ document.addEventListener("DOMContentLoaded", () => {
   //Función Registrar Ficha Wisp
   async function registrarFichaWisp() {
     await parametros();
-    await router();
+    /*  await router(); */
     await venta();
     await alquilado_prestado();
     await deuda();
@@ -831,7 +807,9 @@ document.addEventListener("DOMContentLoaded", () => {
     window.open(`${config.HOST}views/reports/Instalacion_WISP/soporte.php?id=${idContrato}`, '_blank');
   });
 
-  btnAgregarRouter.addEventListener("click", agregarRouter);
+  btnAgregarRouter.addEventListener("click", async () => {
+    await agregarRouter();
+  });
 
   function validarFormulario() {
     const signalStrength = parseFloat(document.getElementById('txtSignalStrengthParametros').value);
@@ -886,5 +864,65 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById('txtAdelantoVenta').addEventListener('input', calcularSubtotal);
   document.getElementById('txtMaterialAdicionalVenta').addEventListener('input', calcularSubtotal);
 
+  $(".select2me").select2({ theme: "bootstrap-5", allowClear: true });
+  $(".select2me").parent("div").children("span").children("span").children("span").css("height", " calc(3.5rem + 2px)");
+  $(".select2me").parent("div").children("span").children("span").children("span").children("span").css("margin-top", "18px");
+  $(".select2me").parent("div").find("label").css("z-index", "1");
+
+  // Función para cargar las provincias
+  (async () => {
+    try {
+      const response = await fetch(`${config.HOST}app/controllers/Base.controllers.php?operacion=listarBase`);
+      const data = await response.json();
+      console.log("Datos de provincias:", data);
+
+      if (Array.isArray(data)) {
+        data.forEach(base => {
+          const option = document.createElement('option');
+          option.value = base.id_provincia;
+          option.textContent = base.provincia;
+          slcBase.appendChild(option);
+        });
+      } else {
+        console.error("La estructura de los datos devueltos no es la esperada:", data);
+      }
+
+    } catch (error) {
+      console.error("Error al cargar las bases:", error);
+    }
+  })();
+
+  // Función para cargar las subBases
+  async function cargarSubBases(provinciaId) {
+    try {
+      console.log(`Cargando subBases para la provincia con ID: ${provinciaId}`);
+      const response = await fetch(`${config.HOST}app/controllers/Base.controllers.php?operacion=buscarBaseId&id=${provinciaId}`);
+      const data = await response.json();
+      console.log("Datos de subBases:", data);
+
+      const slcSubBase = document.getElementById('slcSubBaseParametros');
+      slcSubBase.innerHTML = '<option value="0" selected disabled>Seleccione</option>';
+
+      if (Array.isArray(data)) {
+        data.forEach(subBase => {
+          const option = document.createElement('option');
+          option.value = subBase.id_distrito;
+          option.textContent = subBase.distrito;
+          slcSubBase.appendChild(option);
+        });
+      } else {
+        console.error("La estructura de los datos devueltos no es la esperada:", data);
+      }
+
+    } catch (error) {
+      console.error("Error al cargar las subBases:", error);
+    }
+  }
+
+  $("#slcBaseParametros").on("change", function () {
+    const provinciaId = this.value;
+    console.log(`Provincia seleccionada con ID: ${provinciaId}`);
+    cargarSubBases(provinciaId);
+  });
 });
 

@@ -84,9 +84,9 @@ CREATE TABLE tb_lineas (
     inactive_at DATETIME NULL,
     iduser_create INT NOT NULL,
     iduser_update INT NULL,
-    iduser_inactive INT NULL
+    iduser_inactive INT NULL,
     CONSTRAINT lineas_fk_id_sector FOREIGN KEY (id_sector) REFERENCES tb_sectores (id_sector)
-);
+) ENGINE = InnoDB;
 
 CREATE TABLE tb_mufas(
     id_mufa INT PRIMARY KEY AUTO_INCREMENT,
