@@ -75,22 +75,8 @@ CREATE TABLE tb_sectores (
     CONSTRAINT secto_fk_id_distrito FOREIGN KEY (id_distrito) REFERENCES tb_distritos (id_distrito)
 ) ENGINE = InnoDB;
 
-CREATE TABLE tb_lineas (
-    id_linea INT PRIMARY KEY AUTO_INCREMENT,
-    id_sector INTEGER NULL,
-    coordenadas JSON NOT NULL,
-    create_at DATETIME NOT NULL DEFAULT NOW(),
-    update_at DATETIME NULL,
-    inactive_at DATETIME NULL,
-    iduser_create INT NOT NULL,
-    iduser_update INT NULL,
-    iduser_inactive INT NULL,
-    CONSTRAINT lineas_fk_id_sector FOREIGN KEY (id_sector) REFERENCES tb_sectores (id_sector)
-) ENGINE = InnoDB;
-
 CREATE TABLE tb_mufas(
     id_mufa INT PRIMARY KEY AUTO_INCREMENT,
-    id_sector INT NOT NULL,
     nombre VARCHAR(60) NOT NULL,
     descripcion VARCHAR(100) NOT NULL,
     coordenadas VARCHAR(50) NOT NULL,
@@ -101,8 +87,7 @@ CREATE TABLE tb_mufas(
     iduser_create INT NOT NULL,
     iduser_update INT NULL,
     iduser_inactive INT NULL,
-    CONSTRAINT mufa_uk_mufa UNIQUE (nombre),
-    CONSTRAINT mufa_fk_id_sector FOREIGN KEY (id_sector) REFERENCES tb_sectores (id_sector)
+    CONSTRAINT mufa_uk_mufa UNIQUE (nombre)
 ) ENGINE = InnoDB;
 
 CREATE TABLE tb_cajas(
@@ -110,7 +95,7 @@ CREATE TABLE tb_cajas(
     nombre VARCHAR(30) NOT NULL,
     descripcion VARCHAR(100) NOT NULL,
     numero_entradas TINYINT NOT NULL,
-    id_mufa INT NOT NULL,
+    id_sector INT NOT NULL,
     coordenadas VARCHAR(50) NOT NULL,
     create_at DATETIME NOT NULL DEFAULT NOW(),
     update_at DATETIME NULL,
@@ -118,7 +103,22 @@ CREATE TABLE tb_cajas(
     iduser_create INT NOT NULL,
     iduser_update INT NULL,
     iduser_inactive INT NULL,
-    CONSTRAINT caja_fk_id_sector FOREIGN KEY (id_mufa) REFERENCES tb_mufas (id_mufa)
+    CONSTRAINT caja_fk_id_sector FOREIGN KEY (id_sector) REFERENCES tb_sectores (id_sector)
+) ENGINE = InnoDB;
+
+CREATE TABLE tb_lineas (
+    id_linea INT PRIMARY KEY AUTO_INCREMENT,
+    id_mufa INT NULL,
+    id_sector INT NULL,
+    coordenadas JSON NOT NULL,
+    create_at DATETIME NOT NULL DEFAULT NOW(),
+    update_at DATETIME NULL,
+    inactive_at DATETIME NULL,
+    iduser_create INT NOT NULL,
+    iduser_update INT NULL,
+    iduser_inactive INT NULL,
+    CONSTRAINT lineas_fk_id_sector FOREIGN KEY (id_sector) REFERENCES tb_sectores (id_sector),
+    CONSTRAINT lineas_fk_id_mufa FOREIGN KEY (id_mufa) REFERENCES tb_mufas (id_mufa)
 ) ENGINE = InnoDB;
 
 CREATE TABLE tb_personas (

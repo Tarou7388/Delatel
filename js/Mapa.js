@@ -97,10 +97,10 @@ export async function iniciarMapa(params = { cajas: true, mufas: true }, id = "m
             const marcadorMasCercano = await buscarMarcadorCercano(datosCajas[circulo.idValue], (marcador) => marcador.numero_entradas > 0);
             idCaja = marcadorMasCercano.id_caja;
             if (marcadorMasCercano) {
-              datosMufas.forEach(subArray => {
-                subArray.forEach(mufa => {
-                  if (mufa.id_mufa == marcadorMasCercano.id_mufa) {
-                    idSector = mufa.id_sector;
+              datosCajas.forEach(subArray => {
+                subArray.forEach(cajas => {
+                  if (cajas.id_sector == marcadorMasCercano.id_sector) {
+                    idSector = cajas.id_sector;
                   }
                 });
               });
@@ -141,8 +141,8 @@ async function eventocajas() {
 }
 
 async function eventomufas() {
-  const datos = await obtenerDatosAnidado(`${config.HOST}app/controllers/Mufas.controllers.php?operacion=listarMufas`);
-  marcadoresMufas = await marcadoresAnidado(datos, "mufa");
+  const datos = await obtenerDatosPlano(`${config.HOST}app/controllers/Mufas.controllers.php?operacion=listarMufas`);
+  marcadoresMufas = await marcadoresPlano(datos, "mufa");
   datosMufas = datos;
 }
 
