@@ -50,6 +50,10 @@ document.addEventListener("DOMContentLoaded", () => {
       // Obtener datos del soporte
       const respuesta = await fetch(`${config.HOST}/app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idReporte}`);
       const data = await respuesta.json();
+      const dataCable = await FichaSoporte(idReporte);
+      const cableFiltrado = JSON.parse(dataCable[0].ficha_instalacion).cable;
+      const plan = document.getElementById("txtPlan")
+      plan.value = cableFiltrado.paquete
 
       // Llamada necesaria para rellenar el número de documento
       await rellenarDocNombre(data[0].nro_doc);
@@ -61,7 +65,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const parametrosCable = soporteData.CABL.parametroscable;
       const cambiosCable = soporteData.CABL.cambioscable;
 
-      // Rellenar y desactivar campos en el formulario
+      // Precios
+      const precioCable = 1.50;  // Precio del cable por unidad
+      const precioConector = 1.00;  // Precio del conector por unidad
+
+      // Función para rellenar y desactivar campos
       const setField = (id, value) => {
         const element = document.getElementById(id);
         if (element) {
@@ -70,6 +78,24 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       };
 
+      // Calcular precios
+      const calcularPrecio = (cantidadCable, cantidadConectores) => {
+        const totalCable = cantidadCable * precioCable;
+        const totalConectores = cantidadConectores * precioConector;
+        return { totalCable, totalConectores };
+      };
+
+      // Cálculo para parámetros iniciales
+      const preciosIniciales = calcularPrecio(parametrosCable.cable, parametrosCable.conectores);
+      setField('txtPrecioCable', preciosIniciales.totalCable.toFixed(2));  // Precio del cable inicial
+      setField('txtPrecioConector', preciosIniciales.totalConectores.toFixed(2));  // Precio de conectores iniciales
+
+      // Cálculo para cambios técnicos
+      const preciosCambios = calcularPrecio(cambiosCable.cable, cambiosCable.conectores);
+      setField('txtPrecioCableCambio', preciosCambios.totalCable.toFixed(2));  // Precio del cable en cambios
+      setField('txtPrecioConectorCambio', preciosCambios.totalConectores.toFixed(2));  // Precio de conectores en cambios
+
+      // Rellenar campos con datos iniciales
       setField('txtPotencia', parametrosCable.potencia);
       setField('txtSintonizador', parametrosCable.sintonizador);
       setField('slcTriplexor', triplexorValue(parametrosCable.triplexor));
@@ -79,7 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
       setField('txtConector', parametrosCable.conectores);
       setField('txtaEstadoInicial', data[0].descripcion_problema);
 
-      // Cambios técnicos
+      // Rellenar campos con datos de cambios técnicos
       setField('txtPotenciaCambio', cambiosCable.potencia);
       setField('txtSintonizadorCambio', cambiosCable.sintonizador);
       setField('slcTriplexorCambio', triplexorValue(cambiosCable.triplexor));
@@ -93,7 +119,6 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error en la función reporte:", error);
     }
   }
-
 
   // Función auxiliar para convertir triplexor a valores válidos del select
   function triplexorValue(triplexor) {
