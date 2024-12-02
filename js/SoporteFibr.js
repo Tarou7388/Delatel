@@ -80,13 +80,13 @@ document.addEventListener("DOMContentLoaded", () => {
       //Asignacion para el campo de plan.
       console.log(fibraFiltrado.plan);
       txtPlan.value = fibraFiltrado.plan;
-      //
-      console.log(fibraFiltrado);
+      //Asignacion de Usuario PPPoE
+      console.log(fibraFiltrado.usuario);
 
-      //
-      console.log(fibraFiltrado);
+      //Asignacion de clave PPPoE
+      console.log(fibraFiltrado.claveAcceso);
 
-      //
+      //Asignacion potencia 
       console.log(fibraFiltrado);
 
       //
