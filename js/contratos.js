@@ -12,7 +12,6 @@ window.addEventListener("DOMContentLoaded", async () => {
   const slcPaquetes = document.querySelector("#slcPaquetes");
   const slcPaquetesActualizar = document.querySelector("#slcPaquetesActualizar");
   const txtNota = document.querySelector("#txtNota");
-  const txtMeses = document.querySelector("#txtMeses");
   const accesos = await Herramientas.permisos();
 
   let idSector = null;
@@ -232,7 +231,6 @@ window.addEventListener("DOMContentLoaded", async () => {
     if (accesos?.contratos?.crear) {
       const fechaRegistro = new Date().toISOString().split("T")[0];
       const nota = txtNota.value;
-      const idUsuarioRegistro = user.idRol;
       const idPaquete = slcPaquetes.value.split(' - ')[0];
 
       if (!(await validarCampos())) {
@@ -498,7 +496,6 @@ window.addEventListener("DOMContentLoaded", async () => {
     coordenada.value = "";
     slcTipoServicio.value = "";
     txtNota.value = "";
-    txtMeses.value = "";
     slcPaquetes.disabled = true;
     $('#slcPaquetes').val(null).trigger('change');
   }
@@ -749,11 +746,11 @@ window.addEventListener("DOMContentLoaded", async () => {
   });
 
   coordenada.addEventListener("change", async function () {
-    console.log(coordenada.value);
+    //console.log(coordenada.value);
     idSector = mapa.idSector;
     idCaja = mapa.idCaja;
     const optionToSelect = document.querySelector(`#slcSector option[value="${idSector}"]`);
-    console.log(optionToSelect);
+    //console.log(optionToSelect);
     if (optionToSelect) {
       optionToSelect.selected = true;
       const selectElement = document.querySelector("#slcSector");

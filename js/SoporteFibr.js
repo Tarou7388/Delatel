@@ -7,8 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const serv = urlParams.get("tiposervicio");
 
   const txtPlan
-   = document.getElementById("txtPlan
-    ");
+   = document.getElementById("txtPlan");
   const txtPppoe = document.getElementById("txtPppoe");
   const txtPotenciaDos = document.getElementById("txtPotenciaDos");
   const chkCatv = document.getElementById("chkCatv");
