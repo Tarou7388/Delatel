@@ -94,6 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
         `${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerFichaInstalacion&id=${idContrato}`
       );
       const data = await response.json();
+      console.log(data);
 
       if (data.length === 0 || !data[0].ficha_instalacion) {
         showToast("No hay datos en Ficha de Instalación", "INFO");
@@ -874,7 +875,6 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const response = await fetch(`${config.HOST}app/controllers/Base.controllers.php?operacion=listarBase`);
       const data = await response.json();
-      console.log("Datos de provincias:", data);
 
       if (Array.isArray(data)) {
         data.forEach(base => {

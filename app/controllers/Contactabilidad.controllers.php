@@ -8,12 +8,12 @@ require_once './Herramientas.php';
 $contactabilidad = new Contactabilidad();
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-  switch ($_GET['operacion']) {
-    case 'obtenerContactos':
-      echo json_encode($contactabilidad->obtenerContactos());
-      break;
+  if ($_GET['operacion'] === 'obtenerContactos') {
+    $contactos = $contactabilidad->obtenerContactos();
+    echo json_encode($contactos);
   }
 }
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $json = file_get_contents('php://input');
   $datos = json_decode($json, true);
@@ -22,11 +22,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     case 'registrarContacto':
       $idPersona = null;
       $idEmpresa = null;
-      if(isset($datos['idEmpresa']) && $datos['idEmpresa'] !== ''){
+      if (isset($datos['idEmpresa']) && $datos['idEmpresa'] !== '') {
         $idEmpresa = $datos['idEmpresa'];
         $idPersona = null;
       }
-      if(isset($datos['idPersona']) && $datos['idPersona'] !== ''){
+      if (isset($datos['idPersona']) && $datos['idPersona'] !== '') {
         $idPersona = $datos['idPersona'];
         $idEmpresa = null;
       }

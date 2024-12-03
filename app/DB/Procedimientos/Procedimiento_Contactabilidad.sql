@@ -1,8 +1,37 @@
 USE Delatel;
- 
+
+DROP VIEW IF EXISTS vw_contactabilidad_listar;
+
+CREATE VIEW vw_contactabilidad_listar AS
+SELECT
+    c.id_contactabilidad,
+    CONCAT(p.nombres, ' ', p.apellidos) AS nombre_contacto,
+    p.telefono,
+    p.email,
+    pk.paquete,
+    pk.precio,
+    c.create_at AS fecha_hora_contacto,
+    c.direccion_servicio,
+    c.nota,
+    c.fecha_limite,
+    u1.nombre_user AS usuario_creador,
+    c.iduser_update,
+    u2.nombre_user AS usuario_modificador,
+    c.iduser_inactive,
+    u3.nombre_user AS usuario_inactivador
+FROM
+    tb_contactabilidad c
+    JOIN tb_personas p ON c.id_persona = p.id_persona
+    INNER JOIN tb_paquetes pk ON c.id_paquete = pk.id_paquete
+    LEFT JOIN tb_usuarios u1 ON c.iduser_create = u1.id_usuario
+    LEFT JOIN tb_usuarios u2 ON c.iduser_update = u2.id_usuario
+    LEFT JOIN tb_usuarios u3 ON c.iduser_inactive = u3.id_usuario
+ORDER BY c.id_contactabilidad DESC;
+
 DELIMITER $$
 
 DROP PROCEDURE IF EXISTS spu_contactabilidad_registrar$$
+
 CREATE PROCEDURE spu_contactabilidad_registrar(
     p_id_persona INT,
     p_id_empresa INT,
@@ -19,6 +48,7 @@ BEGIN
 END $$
 
 DROP PROCEDURE IF EXISTS spu_contactabilidad_inhabilitar$$
+
 CREATE PROCEDURE spu_contactabilidad_inhabilitar()
 BEGIN
     UPDATE tb_contactabilidad
@@ -32,6 +62,7 @@ BEGIN
 END $$
 
 DROP EVENT IF EXISTS ev_inhabilitar_contactos$$
+
 CREATE EVENT ev_inhabilitar_contactos
 ON SCHEDULE EVERY 1 DAY
 DO
@@ -40,6 +71,7 @@ BEGIN
 END $$
 
 DROP PROCEDURE IF EXISTS spu_contactabilidad_actualizar$$
+
 CREATE PROCEDURE spu_contactabilidad_actualizar(
     p_id_contactabilidad INT,
     p_id_persona INT,
@@ -64,6 +96,7 @@ BEGIN
 END $$
 
 DROP PROCEDURE IF EXISTS spu_contactabilidad_inhabilitarManual$$
+
 CREATE PROCEDURE spu_contactabilidad_inhabilitarManual(
     p_id_contactabilidad INT,
     p_iduser_inactive INT
@@ -77,7 +110,8 @@ BEGIN
         id_contactabilidad = p_id_contactabilidad;
 END $$
 
-DELIMITER ;
+DELIMITER;
 
 SET GLOBAL event_scheduler = ON;
+
 SHOW VARIABLES LIKE 'event_scheduler';

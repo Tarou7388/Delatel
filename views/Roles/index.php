@@ -17,6 +17,7 @@
                   <option value="Contratos">Tabla de contratos</option>
                   <option value="Kardex">Ultimos registros de Kardex</option>
                   <option value="Fichas">Soportes y instalacion faltantes</option>
+                  <option value="Contactos" selected>Lista de Contactos</option>
                 </select>
                 <table class="table" id="tablaPermisos">
                   <thead>

@@ -31,6 +31,9 @@ window.addEventListener("DOMContentLoaded", function () {
       case 'Fichas':
         cargarFichas();
         break;
+      case 'Contactos':
+        cargarContactos();
+        break;
     }
   }
 
@@ -136,7 +139,6 @@ window.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-
   async function cargarKardex() {
     contenido.innerHTML = `
     <table class="table table-striped" id="tablaKardex">
@@ -224,6 +226,112 @@ window.addEventListener("DOMContentLoaded", function () {
         url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json",
       },
       order: [[0, "desc"]]
+    });
+  }
+
+  async function cargarContactos() {
+    // Crear la tabla en el DOM
+    contenido.innerHTML = `
+      <table class="table table-striped" id="tablaContactos">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th class="text-center">Nombre y Apellido</th>
+            <th class="text-center">Telefono</th>
+            <th class="text-center">Dirección</th>
+            <th class="text-center">Nota</th>
+            <th class="text-center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="tbodyContactos">
+        </tbody>
+      </table>
+    `;
+
+    // Variables globales
+    let table = null;
+
+    function renderDataTable() {
+      table = new DataTable("#tablaContactos", {
+        order: [[0, 'desc']], // Ordenar por la primera columna (ID) en orden descendente
+        columnDefs: [
+          { targets: 0, visible: false } // Ocultar la columna del ID
+        ],
+        language: {
+          url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
+        }
+      });
+    }
+
+    const response = await fetch(`${config.HOST}app/controllers/Contactabilidad.controllers.php?operacion=obtenerContactos`);
+    const data = await response.json();
+
+    // Reiniciando contenido
+    document.querySelector("#tablaContactos tbody").innerHTML = "";
+
+    data.forEach((element) => {
+      const filaTabla = `
+        <tr>
+          <td class="text-center">${element.id_contactabilidad}</td>
+          <td class="text-center">${element.nombre_contacto}</td>
+          <td class="text-center">${element.telefono}</td>
+          <td class="text-center">${element.direccion_servicio}</td>
+          <td class="text-center">${element.nota}</td>
+          <td>
+            <button class="btn btn-primary btn-detalle" data-id="${element.id_contactabilidad}"><i class="fa-regular fa-clipboard"></i></button>
+            <button class="btn btn-success btn-whatsapp" data-telefono="${element.telefono}" data-nombre="${element.nombre_contacto}"><i class="fa-brands fa-whatsapp"></i></button>
+          </td>
+        </tr>`;
+
+      document.querySelector("#tablaContactos tbody").innerHTML += filaTabla;
+    });
+
+    renderDataTable();
+
+    // Agregar eventos a los botones
+    document.querySelectorAll('.btn-detalle').forEach(button => {
+      button.addEventListener('click', (event) => {
+        const id = event.currentTarget.getAttribute('data-id');
+        const contacto = data.find(element => element.id_contactabilidad == id);
+
+        // Llenar el modal con los detalles del contacto
+        document.getElementById('detalleId').innerText = contacto.id_contactabilidad;
+        document.getElementById('detalleNombre').innerText = contacto.nombre_contacto;
+        document.getElementById('detalleEmail').innerText = contacto.email;
+        document.getElementById('detalleDireccion').innerText = contacto.direccion_servicio;
+        document.getElementById('detalleFechaLimite').innerText = contacto.fecha_limite;
+        document.getElementById('detalleFechaCreacion').innerText = contacto.fecha_hora_contacto;
+        document.getElementById('detallePaquete').innerHTML = contacto.paquete;
+        document.getElementById('detallePrecio').innerText = contacto.precio;
+        document.getElementById('detalleNota').innerText = contacto.nota;
+        document.getElementById('detalleUsuarioCreador').innerText = contacto.usuario_creador;
+
+        // Mostrar el modal
+        const detalleModal = new bootstrap.Modal(document.getElementById('detalleModal'));
+        detalleModal.show();
+      });
+    });
+
+    // Define la nueva función whatsapp
+    window.whatsapp = function (telefono, nombre) {
+      const telefonoFormateado = `51${telefono.replace(/\D/g, '')}`;
+      const mensaje = `Hola ${nombre}, Estoy creando pruebas para la empresa delatel sobre contactos por WhatsApp.`;
+      const url = `https://api.whatsapp.com/send?phone=${telefonoFormateado}&text=${encodeURIComponent(mensaje)}`;
+
+      console.log("Teléfono formateado:", telefonoFormateado);
+      console.log("Mensaje:", mensaje);
+      console.log("URL:", url);
+
+      window.open(url, '_blank');
+    }
+
+    // Modifica el evento de clic para llamar a la nueva función whatsapp
+    document.querySelectorAll('.btn-whatsapp').forEach(button => {
+      button.addEventListener('click', (event) => {
+        const telefono = event.currentTarget.getAttribute('data-telefono');
+        const nombre = event.currentTarget.getAttribute('data-nombre');
+        window.whatsapp(telefono, nombre);
+      });
     });
   }
 

@@ -40,17 +40,17 @@ class Contactabilidad extends Conexion
     return $this->registrar($sql, $values);
   }
 
-  /**
-   * Recupera una lista de personas de la vista 'vw_contactabilidad_listar'.
-   *
-   * Este método ejecuta una consulta SQL para seleccionar todos los registros de la 
-   * vista 'vw_contactabilidad_listar' y devuelve el resultado.
-   *
-   * @return array La lista de personas recuperadas de la base de datos.
-   */
-  public function obtenerContactos()
+
+  public function obtenerContactos(): array
   {
-    $sql = "SELECT * FROM vw_contactabilidad_listar";
-    return $this->listarDatos($sql);
+    try {
+      $cmd = $this->pdo->prepare("SELECT * FROM vw_contactabilidad_listar");
+      $cmd->execute();
+
+      return $cmd->fetchAll(PDO::FETCH_ASSOC);
+    } catch (Exception $e) {
+      error_log($e->getMessage());
+      return [];
+    }
   }
 }
