@@ -11,5 +11,5 @@ ErrorDocument 401 /Delatel/unauthorized.php
 ErrorDocument 403 /Delatel/unauthorized.php
 ErrorDocument 404 /Delatel/404.php
 
-# Bloquear acceso a cualquier URL que empiece con /delatel/app/
-RewriteRule ^delatel/app/ - [F,L]
+# Redirigir acceso a cualquier URL bajo /Delatel/app/ hacia /Delatel/404.php
+RewriteRule ^app/ /Delatel/404.php [L,R=404]
