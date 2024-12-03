@@ -162,6 +162,7 @@ BEGIN
 END $$
 
 DROP PROCEDURE IF EXISTS spu_soporte_ficha_doc$$
+
 CREATE PROCEDURE spu_soporte_ficha_doc (
     IN p_idsoporte INT
 )
@@ -176,3 +177,47 @@ BEGIN
     WHERE 
         s.id_soporte = p_idsoporte;
 END $$
+
+DROP PROCEDURE IF EXISTS spu_buscar_ficha_por_dni$$
+
+CREATE PROCEDURE spu_buscar_ficha_por_dni (
+    IN p_dni VARCHAR(20),
+    IN p_servicio VARCHAR(10)
+)
+BEGIN
+    SELECT 
+        s.id_soporte,
+        s.soporte,
+        s.descripcion_problema,
+        s.descripcion_solucion,
+        s.update_at,
+        GROUP_CONCAT(sv.tipo_servicio) AS tipos_servicio,
+        GROUP_CONCAT(sv.servicio) AS servicios
+    FROM 
+        tb_soporte s
+    LEFT JOIN 
+        tb_contratos c ON s.id_contrato = c.id_contrato
+    LEFT JOIN 
+        tb_clientes cl ON c.id_cliente = cl.id_cliente
+    LEFT JOIN 
+        tb_personas p ON cl.id_persona = p.id_persona
+    LEFT JOIN 
+        tb_paquetes pk ON c.id_paquete = pk.id_paquete
+    INNER JOIN tb_servicios sv ON JSON_CONTAINS(
+        t.id_servicio,
+        CONCAT(
+            '{"id_servicio":',
+            sv.id_servicio,
+            '}'
+        )
+    )
+    WHERE 
+        p.nro_doc = p_dni
+        AND pk.id_servicio = p_servicio
+    ORDER BY 
+        s.update_at DESC;
+END $$
+
+DELIMITER;
+
+CALL spu_buscar_ficha_por_dni ("73310144");

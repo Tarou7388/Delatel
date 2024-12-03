@@ -50,6 +50,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  
   function mostrarSelectorResultados(data) {
     const select = document.createElement('select');
     select.classList.add('form-select', 'mb-3');
@@ -62,9 +63,9 @@ window.addEventListener('DOMContentLoaded', () => {
       select.appendChild(option);
     });
 
-    const modalBody = document.querySelector('.modal-body');
-    modalBody.innerHTML = "";
-    modalBody.appendChild(select);
+    const listMulticontratos = document.getElementById('listMulticontratos');
+    listMulticontratos.innerHTML = "";
+    listMulticontratos.appendChild(select);
 
     select.addEventListener('change', async () => {
       const selectedDni = select.value;
@@ -86,8 +87,6 @@ window.addEventListener('DOMContentLoaded', () => {
       const respuesta = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerContratoPorCliente&id=${clienteId}`);
       const datos = await respuesta.json();
       console.log("Contratos obtenidos:", datos);
-
-      slcContratos.innerHTML = '<option value="">Seleccione un contrato</option>';
 
       if (Array.isArray(datos) && datos.length > 0) {
         datos.forEach(element => {
