@@ -94,17 +94,15 @@ document.addEventListener("DOMContentLoaded", () => {
         `${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerFichaInstalacion&id=${idContrato}`
       );
       const data = await response.json();
-      console.log(data);
+      document.getElementById("txtCliente").value = data[0].nombre_cliente;
+      document.getElementById("txtNumFicha").value = data[0].id_contrato;
+      document.getElementById("txtPaquete").value = data[0].paquete;
+      document.getElementById("txtPrecio").value = data[0].precio;
 
       if (data.length === 0 || !data[0].ficha_instalacion) {
         showToast("No hay datos en Ficha de Instalación", "INFO");
         return;
       }
-
-      document.getElementById("txtCliente").value = data[0].nombre_cliente;
-      document.getElementById("txtNumFicha").value = data[0].id_contrato;
-      document.getElementById("txtPaquete").value = data[0].paquete;
-      document.getElementById("txtPrecio").value = data[0].precio;
 
       tipoPaquete = data[0].tipo_servicio;
 
@@ -140,6 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Cargar datos de routers
         jsonRouter = parametros.routers || [];
+        numeroRouter = jsonRouter.length;
         const rowContainer = document.createElement("div");
         rowContainer.classList.add("row");
 
@@ -224,9 +223,13 @@ document.addEventListener("DOMContentLoaded", () => {
           deleteButton.innerHTML = '<i class="fas fa-trash-alt" style="color: white;"></i> Eliminar';
 
           deleteButton.addEventListener("click", function () {
-            rowContainer.removeChild(routerCol);
-            jsonRouter.splice(index, 1);
-            actualizarNumeros();
+            ask("¿Está seguro de eliminar este router?", "Ficha Técnica Wisp").then((respuesta) => {
+              if (respuesta) {
+                rowContainer.removeChild(routerCol);
+                jsonRouter.splice(index, 1);
+                actualizarNumeros();
+              }
+            });
           });
 
           routerCard.querySelector(".card-body").appendChild(deleteButton);
@@ -333,9 +336,8 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      numeroRouter++;
       const router = {
-        numero: numeroRouter,
+        numero: ++numeroRouter, // Incrementar el contador antes de asignarlo
         codigoBarra: codigoBarra,
         modelo: modelo,
         marca: marca,
@@ -432,11 +434,10 @@ document.addEventListener("DOMContentLoaded", () => {
       deleteButton.addEventListener("click", function () {
         ask("¿Está seguro de eliminar este router?", "Ficha Técnica Wisp").then((respuesta) => {
           if (respuesta) {
-            const card = document.querySelector(`#carta${router.numero}`);
+            const card = document.querySelector(`#carta${router.numero}`).closest('.col-md-4');
             if (card) {
               card.remove();
               jsonRouter.splice(jsonRouter.indexOf(router), 1);
-              numeroRouter--;
               actualizarNumeros();
             } else {
               showToast("No se encontró el router a eliminar.", "ERROR");
@@ -467,6 +468,7 @@ document.addEventListener("DOMContentLoaded", () => {
         jsonRouter[routerIndex].numero = index + 1;
       }
     });
+    numeroRouter = routerCards.length; // Actualizar el contador de routers
   }
 
   function formatDns(input) {
@@ -722,37 +724,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
   //Json Pago
   async function deuda() {
-    const txtPagoServicio = parseFloat(document.getElementById('txtPagoServicio').value);
-    const txtAdelantoEquipo = parseFloat(document.getElementById('txtAdelantoEquipo').value);
-    const txtCostoAlquiler = parseFloat(document.getElementById('txtCostoAlquiler').value);
-    const txtMaterialAdicional = parseFloat(document.getElementById('txtMaterialAdicional').value);
-    const txtTotalCancelado = parseFloat(document.getElementById('txtTotalCancelado').value);
-    const txtSaldoPendiente = parseFloat(document.getElementById('txtSaldoPendiente').value);
+    const txtPagoServicio = document.getElementById('txtPagoServicio').value;
+    const txtAdelantoEquipo = document.getElementById('txtAdelantoEquipo').value;
+    const txtCostoAlquiler = document.getElementById('txtCostoAlquiler').value;
+    const txtMaterialAdicional = document.getElementById('txtMaterialAdicional').value;
+    const txtTotalCancelado = document.getElementById('txtTotalCancelado').value;
+    const txtSaldoPendiente = document.getElementById('txtSaldoPendiente').value;
     const txtDetalleDeuda = document.getElementById('txtDetalleDeuda').value;
-    if (!flagFichaInstalacion) {
-      if (
-        txtPagoServicio === "" ||
-        txtAdelantoEquipo === "" ||
-        txtCostoAlquiler === "" ||
-        txtMaterialAdicional === "" ||
-        txtTotalCancelado === "" ||
-        txtSaldoPendiente === "" ||
-        txtDetalleDeuda === ""
-      ) {
-        showToast("Por Favor, llene todos los campos requeridos.", "WARNING", 1500);
-        return;
-      } else {
-        jsonDeuda = {
-          deuda: {
-            pagoServicio: txtPagoServicio,
-            adelantoEquipo: txtAdelantoEquipo,
-            costoAlquiler: txtCostoAlquiler,
-            materialAdicional: txtMaterialAdicional,
-            totalCancelado: txtTotalCancelado,
-            saldoPendiente: txtSaldoPendiente,
-            detalle: txtDetalleDeuda
-          }
-        }
+    jsonDeuda = {
+      deuda: {
+        pagoServicio: txtPagoServicio,
+        adelantoEquipo: txtAdelantoEquipo,
+        costoAlquiler: txtCostoAlquiler,
+        materialAdicional: txtMaterialAdicional,
+        totalCancelado: txtTotalCancelado,
+        saldoPendiente: txtSaldoPendiente,
+        detalle: txtDetalleDeuda
       }
     }
     jsonData.deuda = jsonDeuda.deuda;
@@ -761,7 +748,6 @@ document.addEventListener("DOMContentLoaded", () => {
   //Función Registrar Ficha Wisp
   async function registrarFichaWisp() {
     await parametros();
-    /*  await router(); */
     await venta();
     await alquilado_prestado();
     await deuda();
@@ -822,34 +808,23 @@ document.addEventListener("DOMContentLoaded", () => {
     const today = new Date().toISOString().split("T")[0];
     const frmAlquiler = document.getElementById('frmAlquiler');
 
-    if (signalStrength < -90 || signalStrength > -20) {
-      showToast("El valor de Signal Strength debe estar entre -90 y -20.", "INFO");
-      document.getElementById('txtSignalStrengthParametros').focus();
-      return false;
-    }
-    if (noiseFloor < -100 || noiseFloor > -30) {
-      showToast("El valor de Noise Floor debe estar entre -100 y -30.", "INFO");
-      document.getElementById('txtNoiseFloorParametros').focus();
-      return false;
-    }
-    if (txRate < 20.00 || txRate > 90.00) {
-      showToast("El valor de Tx Rate debe estar entre 20.00 y 90.00.", "INFO");
-      document.getElementById('txtTxRateParametros').focus();
-      return false;
-    }
-    if (rxRate < 20.00 || rxRate > 90.00) {
-      showToast("El valor de Rx Rate debe estar entre 20.00 y 90.00.", "INFO");
-      document.getElementById('txtRxRateParametros').focus();
-      return false;
-    }
-    if (transmiTccq < 40 || transmiTccq > 100) {
-      showToast("El valor de Transmit CCQ debe estar entre 40 y 100.", "INFO");
-      document.getElementById('txtTransmiTccqParametros').focus();
-      return false;
-    }
+    if (!validarRango(signalStrength, -90, -20, 'Signal Strength')) return false;
+    if (!validarRango(noiseFloor, -100, -30, 'Noise Floor')) return false;
+    if (!validarRango(txRate, 20.00, 90.00, 'Tx Rate')) return false;
+    if (!validarRango(rxRate, 20.00, 90.00, 'Rx Rate')) return false;
+    if (!validarRango(transmiTccq, 40, 100, 'Transmit CCQ')) return false;
     if (!frmAlquiler.classList.contains('hidden') && fechaInicioAlquilados < today) {
       showToast("La fecha de inicio no puede ser menor a la fecha actual.", "INFO");
       document.getElementById('txtFechaInicioAlquilados').focus();
+      return false;
+    }
+    return true;
+  }
+
+  function validarRango(valor, min, max, campo) {
+    if (valor < min || valor > max) {
+      showToast(`El valor de ${campo} debe estar entre ${min} y ${max}.`, "INFO");
+      document.getElementById(`txt${campo.replace(' ', '')}Parametros`).focus();
       return false;
     }
     return true;
@@ -865,10 +840,10 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById('txtAdelantoVenta').addEventListener('input', calcularSubtotal);
   document.getElementById('txtMaterialAdicionalVenta').addEventListener('input', calcularSubtotal);
 
-  $(".select2me").select2({ theme: "bootstrap-5", allowClear: true });
-  $(".select2me").parent("div").children("span").children("span").children("span").css("height", " calc(3.5rem + 2px)");
-  $(".select2me").parent("div").children("span").children("span").children("span").children("span").css("margin-top", "18px");
-  $(".select2me").parent("div").find("label").css("z-index", "1");
+  $("#slcBaseParametros").on("change", function () {
+    const provinciaId = this.value;
+    cargarSubBases(provinciaId);
+  });
 
   // Función para cargar las provincias
   (async () => {
@@ -894,11 +869,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Función para cargar las subBases
   async function cargarSubBases(provinciaId) {
+    if (!provinciaId || provinciaId === "0") {
+      console.warn("No hay provincia seleccionada para cargar sub-bases.");
+      return;
+    }
     try {
-      console.log(`Cargando subBases para la provincia con ID: ${provinciaId}`);
       const response = await fetch(`${config.HOST}app/controllers/Base.controllers.php?operacion=buscarBaseId&id=${provinciaId}`);
       const data = await response.json();
-      console.log("Datos de subBases:", data);
 
       const slcSubBase = document.getElementById('slcSubBaseParametros');
       slcSubBase.innerHTML = '<option value="0" selected disabled>Seleccione</option>';
@@ -919,10 +896,31 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  $("#slcBaseParametros").on("change", function () {
-    const provinciaId = this.value;
-    console.log(`Provincia seleccionada con ID: ${provinciaId}`);
-    cargarSubBases(provinciaId);
+  $(document).ready(function () {
+    $(".select2me").select2({
+      theme: "bootstrap-5",
+      allowClear: true,
+      placeholder: "Seleccione"
+    }).on('select2:clear', function (e) {
+      const selectElement = $(this);
+      const provinciaId = selectElement.val();
+      if (provinciaId) {
+        cargarSubBases(provinciaId);
+      } else {
+        console.warn("No hay provincia seleccionada para cargar sub-bases.");
+        // Limpia las sub-bases si no hay provincia seleccionada
+        $('#slcSubBaseParametros').html('<option value="0" selected disabled>Seleccione</option>');
+      }
+    });
+
+    $(".select2me").parent("div").children("span").children("span").children("span").css("height", "calc(3.5rem + 2px)");
+    $(".select2me").parent("div").children("span").children("span").children("span").children("span").css("margin-top", "18px");
+    $(".select2me").parent("div").find("label").css("z-index", "1");
   });
+
+  $(".select2me").select2({ theme: "bootstrap-5", allowClear: true });
+  $(".select2me").parent("div").children("span").children("span").children("span").css("height", " calc(3.5rem + 2px)");
+  $(".select2me").parent("div").children("span").children("span").children("span").children("span").css("margin-top", "18px");
+  $(".select2me").parent("div").find("label").css("z-index", "1");
 });
 

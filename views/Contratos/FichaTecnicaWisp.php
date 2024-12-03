@@ -112,7 +112,7 @@ $idContrato = $_GET['idContrato'];
           </div>
           <div class="col-md input-group">
             <div class="form-floating">
-              <input type="text" id="txtTransmiTccqParametros" class="form-control"
+              <input type="number" id="txtTransmiTccqParametros" class="form-control"
                 placeholder="Transmit CCQ" required min="40" max="100">
               <label for="txtTransmiTccqParametros">Transmit CCQ</label>
             </div>
@@ -655,21 +655,21 @@ $idContrato = $_GET['idContrato'];
           <div class="col-md">
             <div class="form-floating">
               <input type="number" class="form-control" id="txtPagoServicio"
-                placeholder="Pago Servicio" min="0">
+                placeholder="Pago Servicio" min="0" step="0.01" value="0.00">
               <label for="txtPagoServicio">Pago Servicio</label>
             </div>
           </div>
           <div class="col-md">
             <div class="form-floating">
               <input type="number" class="form-control" id="txtAdelantoEquipo"
-                placeholder="Adelanto Equipo" min="0">
+                placeholder="Adelanto Equipo" min="0" step="0.01" value="0.00">
               <label for="txtAdelantoEquipo">Adelanto Equipo</label>
             </div>
           </div>
           <div class="col-md">
             <div class="form-floating">
               <input type="number" class="form-control" id="txtCostoAlquiler" placeholder="Anticipo"
-                min="0">
+                min="0" step="0.01" value="0.00" >
               <label for="txtCostoAlquiler">Costo de Alquiler</label>
             </div>
           </div>
@@ -678,21 +678,21 @@ $idContrato = $_GET['idContrato'];
           <div class="col-md">
             <div class="form-floating">
               <input type="number" class="form-control" id="txtMaterialAdicional"
-                placeholder="Material Adicional" min="0" disabled>
+                placeholder="Material Adicional" min="0" step="0.01" value="0.00" >
               <label for="txtMaterialAdicional">Material Adicional</label>
             </div>
           </div>
           <div class="col-md">
             <div class="form-floating">
               <input type="number" class="form-control" id="txtTotalCancelado"
-                placeholder="Total Cancelado" min="0">
+                placeholder="Total Cancelado" min="0" step="0.01" value="0.00">
               <label for="txtTotalCancelado">Total Cancelado</label>
             </div>
           </div>
           <div class="col-md">
             <div class="form-floating">
               <input type="number" class="form-control" id="txtSaldoPendiente"
-                placeholder="Saldo Pendiente" min="0">
+                placeholder="Saldo Pendiente" min="0" step="0.01" value="0.00">
               <label for="txtSaldoPendiente">Saldo Pendiente</label>
             </div>
           </div>
@@ -707,23 +707,25 @@ $idContrato = $_GET['idContrato'];
         </div>
       </div>
     </div>
+    <!-- Botones -->
+    <div class="row">
+      <div class="col-12 mb-3 btn-container">
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+          <button type="button" id="btnReporte" class="btn btn-info px-4 py-2 mb-2 mb-md-0">
+            <i class="fas fa-file-alt"></i> Generar Reporte
+          </button>
+          <button type="button" id="btnRegistrar" class="btn btn-success px-4 py-2 mb-2 mb-md-0">
+            <i class="fas fa-save"></i> Guardar
+          </button>
+          <button type="button" id="btnCancelar" class="btn btn-outline-secondary px-4 py-2 mb-2 mb-md-0">
+            <i class="fas fa-times"></i> Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- Botones -->
-<div class="row">
-  <div class="col-12 text-center text-md-end mb-3 btn-container">
-    <button type="button" id="btnReporte" class="btn btn-info px-4 py-2">
-      <i class="fas fa-file-alt"></i> Generar Reporte
-    </button>
-    <button type="button" id="btnRegistrar" class="btn btn-success px-4 py-2">
-      <i class="fas fa-save"></i> Guardar
-    </button>
-    <button type="button" id="btnCancelar" class="btn btn-outline-secondary px-4 py-2">
-      <i class="fas fa-times"></i> Cancelar
-    </button>
-  </div>
-</div>
 
 <script>
   const idContrato = <?= $idContrato ?>;
