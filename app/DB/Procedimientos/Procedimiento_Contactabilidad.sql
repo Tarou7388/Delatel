@@ -26,6 +26,8 @@ FROM
     LEFT JOIN tb_usuarios u1 ON c.iduser_create = u1.id_usuario
     LEFT JOIN tb_usuarios u2 ON c.iduser_update = u2.id_usuario
     LEFT JOIN tb_usuarios u3 ON c.iduser_inactive = u3.id_usuario
+WHERE
+    p.id_persona NOT IN (SELECT id_persona FROM tb_clientes WHERE id_persona IS NOT NULL)
 ORDER BY c.id_contactabilidad DESC;
 
 DELIMITER $$
