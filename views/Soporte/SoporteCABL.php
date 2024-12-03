@@ -218,8 +218,6 @@
         </div>
 
         <hr>
-
-        <button type="submit" id="btnEnviarCable" class="btn btn-primary">Guardar</button>
       </form>
     </div>
   </div>

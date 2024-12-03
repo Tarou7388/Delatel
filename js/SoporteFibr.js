@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const serv = urlParams.get("tiposervicio");
 
   const txtPlan
-   = document.getElementById("txtPlan");
+    = document.getElementById("txtPlan");
   const txtPppoe = document.getElementById("txtPppoe");
   const txtPotenciaDos = document.getElementById("txtPotenciaDos");
   const chkCatv = document.getElementById("chkCatv");
@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
       idSoporte = await obtenerReferencias();
       if (idSoporte) {
         //await obtenerProblema(idSoporte);
-        //crearSelectYBoton();
+        await crearSelectYBoton();
         //ArmadoJsonGpon();
 
         const doc = urlParams.get("doc");
@@ -38,6 +38,54 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error durante la inicialización:", error);
     }
   })();
+
+  function crearSelectYBoton() {
+    const rowDiv = document.createElement("div");
+    rowDiv.className = "row g-2 mb-2";
+
+    const selectDiv = document.createElement("div");
+    selectDiv.className = "col-md ";
+
+    const labelSelect = document.createElement("label");
+    labelSelect.innerText = "Tipo de Soporte";
+    selectDiv.appendChild(labelSelect);
+
+    const selectSoporte = document.createElement("select");
+    selectSoporte.id = "slcTipoSoporte";
+    selectSoporte.className = "form-control";
+    selectSoporte.required = true;
+    selectDiv.appendChild(selectSoporte);
+    rowDiv.appendChild(selectDiv);
+
+    (async () => {
+      const respuesta = await fetch(`${config.HOST}/app/controllers/Soporte.controllers.php?operacion=listarTipoSoporte`);
+      const datos = await respuesta.json();
+      selectSoporte.innerHTML = "";
+      datos.forEach((element) => {
+        const option = new Option(
+          `${element.tipo_soporte}`,
+          element.id_tipo_soporte
+        );
+        selectSoporte.append(option);
+      });
+    })();
+
+    const buttonDiv = document.createElement("div");
+    buttonDiv.className = "col-md d-flex align-items-end";
+
+    const guardarBtn = document.createElement("button");
+    guardarBtn.id = "btnGuardarFicha";
+    guardarBtn.className = "btn btn-primary";
+    guardarBtn.type = "submit";
+    guardarBtn.textContent = "Guardar Ficha";
+
+    buttonDiv.appendChild(guardarBtn);
+    rowDiv.appendChild(buttonDiv);
+
+
+    const solutionTextarea = document.getElementById("txtaCambiosProceSolucion");
+    solutionTextarea.parentNode.parentNode.appendChild(rowDiv);
+  }
 
   async function obtenerReferencias() {
     const urlParams = new URLSearchParams(window.location.search);

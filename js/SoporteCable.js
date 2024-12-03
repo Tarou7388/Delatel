@@ -280,6 +280,18 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     })();
 
+    const buttonDiv = document.createElement("div");
+    buttonDiv.className = "col-md d-flex align-items-end";
+
+    const guardarBtn = document.createElement("button");
+    guardarBtn.id = "btnGuardarFicha";
+    guardarBtn.className = "btn btn-primary";
+    guardarBtn.type = "submit";
+    guardarBtn.textContent = "Guardar Ficha";
+
+    buttonDiv.appendChild(guardarBtn);
+    rowDiv.appendChild(buttonDiv);
+
     const solutionTextarea = document.getElementById("txtaEstadoFinal");
     solutionTextarea.parentNode.parentNode.appendChild(rowDiv);
   }
