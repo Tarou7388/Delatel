@@ -228,6 +228,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 
   async function registrarContrato() {
+    console.log(mapa.idCaja)
     if (accesos?.contratos?.crear) {
       const fechaRegistro = new Date().toISOString().split("T")[0];
       const nota = txtNota.value;
