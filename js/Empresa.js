@@ -94,20 +94,10 @@ document.addEventListener("DOMContentLoaded", async function () {
       slcPaquetes.innerHTML = '<option value="" disabled selected>Seleccione un paquete</option>';
 
       let paquetesFiltrados = [];
-      if (tipo === "duos") {
+      if (tipo === "FIBRA + CABLE") {
         paquetesFiltrados = dataPaquetes.filter(paquete => {
           const servicios = JSON.parse(paquete.id_servicio).id_servicio;
           return servicios.length === 2 && !paquete.inactive_at;
-        });
-      } else if (tipo === "trios") {
-        paquetesFiltrados = dataPaquetes.filter(paquete => {
-          const servicios = JSON.parse(paquete.id_servicio).id_servicio;
-          return servicios.length === 3 && !paquete.inactive_at;
-        });
-      } else if (tipo === "cuarteto") {
-        paquetesFiltrados = dataPaquetes.filter(paquete => {
-          const servicios = JSON.parse(paquete.id_servicio).id_servicio;
-          return servicios.length === 4 && !paquete.inactive_at;
         });
       }
 
@@ -141,7 +131,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   slcTipoServicio.addEventListener("change", async function () {
     const idServicioSeleccionado = slcTipoServicio.value;
-    const tiposMultiples = ["duos", "trios", "cuarteto"];
+    const tiposMultiples = ["FIBRA + CABLE"];
 
     if (tiposMultiples.includes(idServicioSeleccionado)) {
       await cargarPaquetesMultiples(idServicioSeleccionado);
@@ -297,9 +287,7 @@ document.addEventListener("DOMContentLoaded", async function () {
           agregarOpcion(slcTipoServicio, servicio.id_servicio, `${servicio.tipo_servicio} (${servicio.servicio})`);
         });
 
-        agregarOpcion(slcTipoServicio, "duos", "Duos");
-        agregarOpcion(slcTipoServicio, "trios", "Trios");
-        agregarOpcion(slcTipoServicio, "cuarteto", "Cuarteto");
+        agregarOpcion(slcTipoServicio, "FIBRA + CABLE", "FIBRA + CABLE (GPON)");
       }
     } catch (error) {
       console.error("Error al cargar servicios:", error);
