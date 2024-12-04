@@ -4,7 +4,7 @@ require_once '../models/Caja.php';
 
 $caja = new Caja();
 
-if(isset($_GET['operacion'])){
+if (isset($_GET['operacion'])) {
   $operacion = $_GET['operacion'];
   switch ($operacion) {
     case 'listarCajas':
@@ -14,7 +14,7 @@ if(isset($_GET['operacion'])){
   }
 }
 
-if(isset($_POST['operacion'])){
+if (isset($_POST['operacion'])) {
   $operacion = $_POST['operacion'];
   switch ($operacion) {
     case 'registrarCaja':
@@ -39,6 +39,12 @@ if(isset($_POST['operacion'])){
       ];
       $respuesta = $caja->registrarLinea($params);
       echo json_encode($respuesta);
+      break;
+    case "descontarEspacioCaja":
+      $idContrato = $_POST['parametros']['idContrato'];
+      $caja = new Caja();
+      $resultado = $caja->descontarEspacioCaja($idContrato);
+      echo json_encode($resultado); // <-- Verifica qué devuelve exactamente esta línea
       break;
   }
 }

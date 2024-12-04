@@ -25,7 +25,8 @@ class Caja extends Conexion
     return $this->listarDatos($sql);
   }
 
-  public function registrarCaja($params = []){
+  public function registrarCaja($params = [])
+  {
     $sql = "CALL spu_cajas_registrar(?,?,?,?,?,?)";
     $params = [
       $params['nombre'],
@@ -38,7 +39,8 @@ class Caja extends Conexion
     return $this->registrar($sql, $params);
   }
 
-  public function registrarLinea($params = []){
+  public function registrarLinea($params = [])
+  {
     $sql = "CALL spu_lineas_registrar(?,?,?)";
     $params = [
       $params['idSector'],
@@ -48,4 +50,17 @@ class Caja extends Conexion
     return $this->registrar($sql, $params);
   }
 
+  public function descontarEspacioCaja($idContrato)
+  {
+    $sql = "CALL spu_descontar_espacio_caja(?)";
+    $resultado = $this->registrar($sql, [$idContrato]);
+
+    if ($resultado) {
+      return ["status" => "success", "message" => "Espacio descontado correctamente"];
+    } else {
+      return ["status" => "error", "message" => "No se pudo descontar el espacio"];
+    }
+  }
 }
+
+

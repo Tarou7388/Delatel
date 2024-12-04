@@ -43,7 +43,7 @@ BEGIN
 END$$
 DELIMITER ;
 
-DROP PROCEDURE if EXISTS spu_descontar_espacio_caja;
+DROP PROCEDURE IF EXISTS spu_descontar_espacio_caja;
 CREATE PROCEDURE spu_descontar_espacio_caja (
     IN p_id_contrato INT
 )
@@ -59,7 +59,7 @@ BEGIN
     -- Obtener el id_caja relacionado al sector
     SELECT id_caja INTO v_id_caja
     FROM tb_cajas
-    WHERE id_sector = v_id_sector
+    WHERE id_sector = v_id_sector 
     LIMIT 1;
 
     -- Verificar si la caja tiene espacios disponibles y actualizarlos

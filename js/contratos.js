@@ -279,6 +279,18 @@ window.addEventListener("DOMContentLoaded", async () => {
           showToast("¡Contrato registrado correctamente!", "SUCCESS", 1500);
           resetUI();
           tabla.ajax.reload();
+          await fetch(`${config.HOST}app/controllers/Caja.controllers.php`, {
+            method: "POST",
+            body: JSON.stringify({
+              operacion: "descontarEspacioCaja",
+              parametros: {
+                idContrato: data.idContrato,
+              },
+            }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
         }
       } catch (error) {
         console.log(error);
