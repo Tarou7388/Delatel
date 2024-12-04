@@ -50,16 +50,11 @@ class Caja extends Conexion
     return $this->registrar($sql, $params);
   }
 
-  public function descontarEspacioCaja($idContrato)
+  public function descontarEspacioCaja($params = [])
   {
     $sql = "CALL spu_descontar_espacio_caja(?)";
-    $resultado = $this->registrar($sql, [$idContrato]);
-
-    if ($resultado) {
-      return ["status" => "success", "message" => "Espacio descontado correctamente"];
-    } else {
-      return ["status" => "error", "message" => "No se pudo descontar el espacio"];
-    }
+    $idCaja = $params['idCaja'];
+    return $this->registrar($sql, [$idCaja]);
   }
 }
 

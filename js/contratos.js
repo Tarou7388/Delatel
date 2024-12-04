@@ -280,11 +280,11 @@ window.addEventListener("DOMContentLoaded", async () => {
           resetUI();
           tabla.ajax.reload();
           await fetch(`${config.HOST}app/controllers/Caja.controllers.php`, {
-            method: "POST",
+            method: "PUT",
             body: JSON.stringify({
-              operacion: "descontarEspacioCaja",
+              operacion: "descontarCaja",
               parametros: {
-                idContrato: data.idContrato,
+                idCaja: mapa.idCaja
               },
             }),
             headers: {

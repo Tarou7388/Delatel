@@ -3,6 +3,8 @@
 require_once '../models/Caja.php';
 
 $caja = new Caja();
+$input = file_get_contents('php://input');
+$data = json_decode($input, true);
 
 if (isset($_GET['operacion'])) {
   $operacion = $_GET['operacion'];
@@ -40,11 +42,21 @@ if (isset($_POST['operacion'])) {
       $respuesta = $caja->registrarLinea($params);
       echo json_encode($respuesta);
       break;
-    case "descontarEspacioCaja":
-      $idContrato = $_POST['parametros']['idContrato'];
-      $caja = new Caja();
-      $resultado = $caja->descontarEspacioCaja($idContrato);
-      echo json_encode($resultado); // <-- Verifica qué devuelve exactamente esta línea
+  }
+}
+if (isset($data['operacion'])) {
+  $operacion = $data['operacion'];
+  switch ($operacion) {
+    case 'descontarCaja':
+      if (isset($data['idCaja'])) {
+        $idCaja = $data['idCaja'];
+        $respuesta = $caja->descontarEspacioCaja(['idCaja' => $idCaja]);
+        echo json_encode($respuesta);
+      } else {
+        echo json_encode(['error' => 'Falta el parámetro idCaja']);
+      }
       break;
+    default:
+      echo json_encode(['error' => 'Operación no válida']);
   }
 }
