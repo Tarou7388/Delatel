@@ -825,14 +825,12 @@ window.addEventListener("DOMContentLoaded", async () => {
           slcTipoServicio.append(option);
         });
 
-        slcTipoServicio.append('<option value="duos">Duos</option>');
-        slcTipoServicio.append('<option value="trios">Trios</option>');
-        slcTipoServicio.append('<option value="cuarteto">Cuarteto</option>');
+        slcTipoServicio.append('<option value="duos">FIBRA + CABLE (GPON)</option>');
       }
 
       slcTipoServicio.on("change", function () {
         const idServicio = $(this).val();
-        if (idServicio === "duos" || idServicio === "trios" || idServicio === "cuarteto") {
+        if (idServicio === "duos") {
           cargarPaquetesMultiples(idServicio);
         } else {
           cargarPaquetes(idServicio);
