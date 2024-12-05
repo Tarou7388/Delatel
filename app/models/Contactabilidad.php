@@ -41,6 +41,12 @@ class Contactabilidad extends Conexion
   }
 
 
+  /**
+   * Obtiene una lista de contactos desde la vista `vw_contactabilidad_listar`.
+   *
+   * @return array Un arreglo asociativo con los datos de los contactos.
+   * @throws Exception Si ocurre un error durante la consulta a la base de datos.
+   */
   public function obtenerContactos(): array
   {
     try {

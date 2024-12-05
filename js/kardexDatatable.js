@@ -36,20 +36,13 @@ window.tablaKardex = $('#TbKardex').DataTable({
     }
   ],
   processing: true,
-  serverSide: true,
+  serverSide: false, // Cambiado a false ya que los datos no se están procesando en el servidor
   ajax: {
     url: ruta,
     type: "GET",
-    data: function (d) {
-      return {
-        draw: d.draw,
-        start: d.start,
-        length: d.length,
-        search: d.search.value
-      };
-    },
     dataSrc: function (json) {
-      return json.data;
+      console.log(json); // Verifica la respuesta del servidor
+      return json; // Devuelve directamente el array de datos
     }
   },
   columnDefs: [
@@ -72,14 +65,14 @@ window.tablaKardex = $('#TbKardex').DataTable({
       title: 'Producto',
       className: 'text-center'
     },
-    { data: 'nombre_almacen', className: 'text-center' },
-    { data: 'fecha', className: 'text-center' },
-    { data: 'tipo_movimiento', className: 'text-center' },
-    { data: 'tipo_operacion', className: 'text-center' },
-    { data: 'cantidad', className: 'text-center' },
-    { data: 'saldo_total', className: 'text-center' },
-    { data: 'valor_unico_historico', className: 'text-center' },
-    { data: 'creado_por', className: 'text-center' }
+    { data: 'nombre_almacen', title: 'Almacén', className: 'text-center' },
+    { data: 'fecha', title: 'Fecha', className: 'text-center' },
+    { data: 'tipo_movimiento', title: 'Movimiento', className: 'text-center' },
+    { data: 'tipo_operacion', title: 'Operación', className: 'text-center' },
+    { data: 'cantidad', title: 'Cantidad', className: 'text-center' },
+    { data: 'saldo_total', title: 'Saldo Total', className: 'text-center' },
+    { data: 'valor_unico_historico', title: 'Valor Histórico', className: 'text-center' },
+    { data: 'creado_por', title: 'Creado Por', className: 'text-center' }
   ],
   order: [],
   language: {
@@ -99,4 +92,3 @@ function getFileTitle() {
   const productName = tablaKardex.column(0).data()[0];
   return `${productName.tipo_producto} ${productName.modelo} - kardex`;
 }
-

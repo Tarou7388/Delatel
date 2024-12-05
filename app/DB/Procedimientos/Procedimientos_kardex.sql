@@ -47,7 +47,6 @@ FROM
     LEFT JOIN tb_personas pe ON k.iduser_create = pe.id_persona
 ORDER BY k.create_at DESC;
 
-
 DROP PROCEDURE IF EXISTS spu_kardex_registrar$$
 
 CREATE PROCEDURE spu_kardex_registrar(

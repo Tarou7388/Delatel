@@ -28,22 +28,8 @@ if (isset($_POST['operacion'])) {
 if (isset($_GET["operacion"])) {
   switch ($_GET['operacion']) {
     case 'listarKardex':
-      // Obtenemos los parámetros de inicio (start), longitud (length) y búsqueda (search) desde la URL
-      $start = isset($_GET['start']) ? (int)$_GET['start'] : 0;
-      $length = isset($_GET['length']) ? (int)$_GET['length'] : 10;
-      $search = isset($_GET['search']['value']) ? $_GET['search']['value'] : "";
-
-      // Llamamos al método listarKardex con los parámetros obtenidos
-      $resultados = $kardex->listarKardex($start, $length, $search);
-
-      // Estructura de la respuesta, similar al formato de listarContratos
-      $response = [
-        "draw" => isset($_GET['draw']) ? (int)$_GET['draw'] : 1, // Valor para la funcionalidad de DataTables (si usas DataTables en el frontend)
-        "recordsTotal" => $resultados['totalRegistros'], // Total de registros sin filtrar
-        "recordsFiltered" => $resultados['totalRegistros'], // Total de registros después de aplicar el filtro de búsqueda
-        "data" => $resultados['kardex'] // Los registros de la consulta
-      ];
-      echo json_encode($response);
+      $kardex = $kardex->listarKardex();
+      echo json_encode($kardex);
       break;
 
     case "buscarStockId":
