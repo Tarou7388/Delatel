@@ -53,21 +53,27 @@ END$$
 
 DROP PROCEDURE IF EXISTS spu_descontar_espacio_caja$$
 CREATE PROCEDURE spu_descontar_espacio_caja (
-    IN p_id_caja INT
+  IN p_id_caja INT
 )
 BEGIN
-    IF p_id_caja IS NOT NULL THEN
-        UPDATE tb_cajas
-        SET numero_entradas = numero_entradas - 1
-        WHERE id_caja = p_id_caja AND numero_entradas > 0;
+  UPDATE tb_cajas
+  SET numero_entradas = numero_entradas - 1
+  WHERE id_caja = p_id_caja AND numero_entradas > 0;
 
-        IF ROW_COUNT() = 0 THEN
-            SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'No hay espacios disponibles en la caja.';
-        END IF;
-    ELSE
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'ID de caja no proporcionado.';
-    END IF;
+  IF ROW_COUNT() = 0 THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'No hay espacios disponibles en la caja o ID de caja no proporcionado.';
+  END IF;
+END $$
+
+DROP PROCEDURE IF EXISTS spu_recontar_espacio_caja$$
+CREATE PROCEDURE spu_recontar_espacio_caja (
+  IN p_id_contrato INT
+)
+BEGIN
+  UPDATE tb_cajas 
+    INNER JOIN tb_contratos ON tb_cajas.id_sector = tb_contratos.id_sector
+  SET tb_cajas.numero_entradas = tb_cajas.numero_entradas + 1
+  WHERE tb_contratos.id_contrato = p_id_contrato;
 END $$
 
