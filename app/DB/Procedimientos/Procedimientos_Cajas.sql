@@ -21,25 +21,26 @@ CREATE PROCEDURE spu_cajas_registrar(
   IN p_nombre VARCHAR(30),
   IN p_descripcion VARCHAR(100),
   IN p_numero_entradas TINYINT,
-  IN p_id_mufa INT,
+  IN p_id_sector INT,
   IN p_coordenadas VARCHAR(50),
   IN p_iduser_create INT
 )
 BEGIN
-  INSERT INTO tb_cajas(nombre, descripcion, numero_entradas, id_mufa, coordenadas, iduser_create)
-  VALUES(p_nombre, p_descripcion, p_numero_entradas, p_id_mufa, p_coordenadas, p_iduser_create);
+  INSERT INTO tb_cajas(nombre, descripcion, numero_entradas, id_sector, coordenadas, iduser_create)
+  VALUES(p_nombre, p_descripcion, p_numero_entradas, p_id_sectors, p_coordenadas, p_iduser_create);
 END$$
 
 DROP PROCEDURE IF EXISTS spu_lineas_registrar;
 
 CREATE PROCEDURE spu_lineas_registrar(
-  IN p_id_sector INT,
+  IN p_id_mufa INT,
+  IN p_id_caja INT,
   IN p_coordenadas JSON,
   IN p_iduser_create INT
 )
 BEGIN
-  INSERT INTO tb_lineas(id_sector, coordenadas, iduser_create)
-  VALUES(p_id_sector, p_coordenadas, p_iduser_create);
+  INSERT INTO tb_lineas(id_mufa, id_caja, coordenadas, iduser_create)
+  VALUES(p_id_mufa, p_id_caja, p_coordenadas, p_iduser_create);
 END$$
 DELIMITER ;
 
