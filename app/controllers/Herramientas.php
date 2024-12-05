@@ -6,6 +6,17 @@ date_default_timezone_set('America/Lima');
 
 class Herramientas
 {
+    //Metodo para verificar el acceso a los archivos
+    public static function verificarAcceso()
+    {
+        session_start();
+
+        if (!isset($_SESSION['login']) || $_SESSION['login']['estado'] == false || $_SESSION['login']['idRol'] != 0) {
+          header("Location: http://localhost/Delatel/");
+          exit();
+        }
+    }
+
     // Método para formatear fechas
     public static function formatearFecha($fecha, $formato = 'Y-m-d')
     {

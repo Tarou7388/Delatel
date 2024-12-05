@@ -1,6 +1,8 @@
 <?php
 
+use App\Controllers\Herramientas;
 require_once '../models/Movimiento.php';
+require_once "./Herramientas.php";
 
 $movimiento = new Movimiento();
 

@@ -1,6 +1,11 @@
 <?php
 
+
+use App\Controllers\Herramientas;
+
 require_once '../models/Marca.php';
+require_once "./Herramientas.php";
+
 
 $marca = new Marca();
 

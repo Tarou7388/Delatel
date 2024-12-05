@@ -5,9 +5,9 @@ import { FichaSoporte, inicializarDataTable } from "./Herramientas.js";
 document.addEventListener("DOMContentLoaded", () => {
   const urlParams = new URLSearchParams(window.location.search);
   const serv = urlParams.get("tiposervicio");
+  const form = urlParams.get("frm-registro-gpon");
 
-  const txtPlan
-    = document.getElementById("txtPlan");
+  const txtPlan = document.getElementById("txtPlan");
   const txtPppoe = document.getElementById("txtPppoe");
   const txtPotenciaDos = document.getElementById("txtPotenciaDos");
   const chkCatv = document.getElementById("chkCatv");
@@ -145,5 +145,90 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (error) {
       console.error("Error en data de Fibra:", error);
     }
+  };
+
+  async function ArmadoJsonGpon() {
+    const response = await fetch(`${config.HOST}/app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
+    const result = await response.json();
+
+    let soporte = result[0].soporte ? JSON.parse(result[0].soporte) : {};
+
+    const existeClave = Object.keys(soporte).includes(serv);
+
+    if (!existeClave) {
+      soporte[serv] = {
+        parametrosgpon: {
+          pppoe: document.getElementById("txtPppoe").value,
+          potencia: document.getElementById("txtPotencia").value,
+          potecia: document.getElementById("txtPotenciaDos").value,
+          catv: document.getElementById("chkCatv").checked,
+          clave: document.getElementById("txtClave").value,
+          vlan: document.getElementById("txtVlan").value,
+          ssid: document.getElementById("txtSsid").value,
+          password: document.getElementById("txtPass").value,
+          otros: document.getElementById("txtOtros").value
+        },
+        cambiosgpon: {
+          pppoe: document.getElementById("txtCambiosPppoe").value,
+          potencia: document.getElementById("txtCambiosPotencia").value,
+          potecia: document.getElementById("txtCambiosPotenciaDos").value,
+          catv: document.getElementById("chkCambiosCatv").checked,
+          clave: document.getElementById("txtCambiosClave").value,
+          vlan: document.getElementById("txtCambiosVlan").value,
+          ssid: document.getElementById("txtCambiosSsid").value,
+          password: document.getElementById("txtCambiosPass").value,
+          otros: document.getElementById("txtCambiosOtros").value
+        }
+      }
+    }
+    return soporte;
+  };
+
+  async function guardarSoporte(data) {
+    try {
+      const response = await fetch(`${config.HOST}/app/controllers/Soporte.controllers.php`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          operacion: 'actualizarSoporte',
+          data: {
+            idSoporte: idSoporte,
+            idTecnico: user['idUsuario'],
+            idTipoSoporte: document.getElementById("slcTipoSoporte").value,
+            soporte: data,
+            idUserUpdate: user['idUsuario'],
+            descripcion_solucion: document.getElementById("txtaEstadoFinal").value,
+          },
+        }),
+      });
+
+      const result = await response.json();
+      console.log(result.status);
+      if (result.status === "success") {
+        // Lógica para éxito
+        console.log("Soporte actualizado correctamente.");
+      }
+    } catch (error) {
+      console.error('Error en la solicitud:', error);
+    }
+
   }
+
+  /**
+   * Llama a la función ArmadoJsonCable para recuperar datos.
+   * 
+   * @returns {Promise<Object>} Los datos devueltos por la función ArmadoJsonCable.
+   */
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const data = await ArmadoJsonGpon();
+    if (await ask("¿Desea guardar la ficha?")) {
+      await guardarSoporte(data);
+
+      window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
+    }
+  });
+
 });

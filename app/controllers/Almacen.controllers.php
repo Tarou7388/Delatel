@@ -1,5 +1,8 @@
 <?php
 
+use App\Controllers\Herramientas;
+require_once './Herramientas.php';
+
 require_once '../models/Almacen.php';
 
 $Almacen = new Almacen();

@@ -217,7 +217,3 @@ BEGIN
     ORDER BY 
         s.update_at DESC;
 END $$
-
-DELIMITER;
-
-CALL spu_buscar_ficha_por_dni ("73310144");

@@ -112,7 +112,6 @@ BEGIN
         id_contactabilidad = p_id_contactabilidad;
 END $$
 
-DELIMITER;
 
 SET GLOBAL event_scheduler = ON;
 

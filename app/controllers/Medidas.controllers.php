@@ -1,6 +1,8 @@
 <?php
 
+use App\Controllers\Herramientas;
 require_once '../models/Medidas.php';
+require_once "./Herramientas.php";
 
 $medida = new Medida();
 
