@@ -140,46 +140,75 @@ window.addEventListener("DOMContentLoaded", function () {
   }
 
   async function cargarKardex() {
+    // Crear la tabla en el DOM
     contenido.innerHTML = `
     <table class="table table-striped" id="tablaKardex">
       <thead>
         <tr>
-          <th>ID</th>
-          <th>Fecha</th>
-          <th>Marca</th>
-          <th>Tipo</th>
-          <th>Saldo</th>
-          <th>Motivo</th>
+          <th class="text-center">ID</th>
+          <th class="text-center">Fecha</th>
+          <th class="text-center">Marca</th>
+          <th class="text-center">Tipo</th>
+          <th class="text-center">Saldo</th>
+          <th class="text-center">Motivo</th>
+          <th class="text-center">Acciones</th>
         </tr>
       </thead>
-      <tbody id="tbodyKardex">
-      </tbody>
+      <tbody id="tbodyKardex"></tbody>
     </table>
     `
-    const tbodyKardex = document.getElementById("tbodyKardex");
+    // Variable global
+    let tablaKardex = null;
+
+    // Renderizar la tabla
+    function renderDataTable() {
+      tablaKardex = new DataTable("#tablaKardex", {
+        order: [[0, 'desc']],
+        columnDefs: [{ targets: 0, visible: false }],
+        language: { url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json" }
+      });
+    }
+
     const response = await fetch(`${config.HOST}app/controllers/Kardex.controllers.php?operacion=listarKardex`);
     const data = await response.json();
-    console.log(data);
-    data.forEach(kardex => {
-      tbodyKardex.innerHTML += `
-        <tr>
-          <td>${kardex.id_kardex}</td>
-          <td>${kardex.fecha}</td>
-          <td>${kardex.nombre_marca}</td>
-          <td>${kardex.tipo_producto}</td>
-          <td>${kardex.saldo_total}</td>
-          <td>${kardex.tipo_operacion}</td>
-        </tr>
-      `;
-    });
-    $('#tablaKardex').DataTable({
-      columnDefs: [
-        { targets: 0, visible: false }
-      ],
-      language: {
-        url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json",
-      },
-      order: [[0, "desc"]]
+
+    // Reiniciando contenido
+    const tbody = document.querySelector("#tablaKardex tbody");
+    tbody.innerHTML = data.map(element => `
+      <tr>
+        <td class="text-center">${element.id_kardex}</td>
+        <td class="text-center">${element.fecha}</td>
+        <td class="text-center">${element.nombre_marca}</td>
+        <td class="text-center">${element.tipo_producto}</td>
+        <td class="text-center">${element.saldo_total}</td>
+        <td class="text-center">${element.tipo_operacion}</td>
+        <td class="text-center">
+          <button class="btn btn-primary btn-detalle" data-id="${element.id_kardex}"><i class="fa-regular fa-clipboard"></i></button>
+        </td>
+      </tr>`).join('');
+
+    renderDataTable();
+
+    // Agregar eventos a los botones
+    document.querySelectorAll('.btn-detalle').forEach(button => {
+      button.addEventListener('click', (event) => {
+        const id = event.currentTarget.getAttribute('data-id');
+        const kardex = data.find(element => element.id_kardex == id);
+        console.log(kardex); // Verifica los detalles del kardex
+
+        // Llenar el modal con los detalles del kardex
+        document.getElementById('detalleIdKardex').innerText = kardex.id_kardex;
+        document.getElementById('detalleUsuario').innerText = kardex.creado_por;
+        document.getElementById('detalleFecha').innerText = kardex.fecha;
+        document.getElementById('detalleMarca').innerText = kardex.nombre_marca;
+        document.getElementById('detalleTipo').innerText = kardex.tipo_producto;
+        document.getElementById('detalleSaldo').innerText = kardex.saldo_total;
+        document.getElementById('detalleTipoMovimiento').innerText = kardex.tipo_movimiento;
+        document.getElementById('detalleMotivo').innerText = kardex.tipo_operacion;
+
+        // Mostrar el modal
+        new bootstrap.Modal(document.getElementById('detalleModalKardex')).show();
+      });
     });
   }
 
@@ -243,23 +272,19 @@ window.addEventListener("DOMContentLoaded", function () {
             <th class="text-center">Acciones</th>
           </tr>
         </thead>
-        <tbody id="tbodyContactos">
-        </tbody>
+        <tbody id="tbodyContactos"></tbody>
       </table>
     `;
 
     // Variables globales
     let table = null;
 
+    //Renderizar la tabla
     function renderDataTable() {
       table = new DataTable("#tablaContactos", {
-        order: [[0, 'desc']], // Ordenar por la primera columna (ID) en orden descendente
-        columnDefs: [
-          { targets: 0, visible: false } // Ocultar la columna del ID
-        ],
-        language: {
-          url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
-        }
+        order: [[0, 'desc']],
+        columnDefs: [{ targets: 0, visible: false }],
+        language: { url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json" }
       });
     }
 
@@ -267,24 +292,19 @@ window.addEventListener("DOMContentLoaded", function () {
     const data = await response.json();
 
     // Reiniciando contenido
-    document.querySelector("#tablaContactos tbody").innerHTML = "";
-
-    data.forEach((element) => {
-      const filaTabla = `
-        <tr>
-          <td class="text-center">${element.id_contactabilidad}</td>
-          <td class="text-center">${element.nombre_contacto}</td>
-          <td class="text-center">${element.telefono}</td>
-          <td class="text-center">${element.direccion_servicio}</td>
-          <td class="text-center">${element.nota}</td>
-          <td>
-            <button class="btn btn-primary btn-detalle" data-id="${element.id_contactabilidad}"><i class="fa-regular fa-clipboard"></i></button>
-            <button class="btn btn-success btn-whatsapp" data-telefono="${element.telefono}" data-nombre="${element.nombre_contacto}"><i class="fa-brands fa-whatsapp"></i></button>
-          </td>
-        </tr>`;
-
-      document.querySelector("#tablaContactos tbody").innerHTML += filaTabla;
-    });
+    const tbody = document.querySelector("#tablaContactos tbody");
+    tbody.innerHTML = data.map(element => `
+      <tr>
+        <td class="text-center">${element.id_contactabilidad}</td>
+        <td class="text-center">${element.nombre_contacto}</td>
+        <td class="text-center">${element.telefono}</td>
+        <td class="text-center">${element.direccion_servicio}</td>
+        <td class="text-center">${element.nota}</td>
+        <td>
+          <button class="btn btn-primary btn-detalle" data-id="${element.id_contactabilidad}"><i class="fa-regular fa-clipboard"></i></button>
+          <button class="btn btn-success btn-whatsapp" data-telefono="${element.telefono}" data-nombre="${element.nombre_contacto}"><i class="fa-brands fa-whatsapp"></i></button>
+        </td>
+      </tr>`).join('');
 
     renderDataTable();
 
@@ -307,8 +327,7 @@ window.addEventListener("DOMContentLoaded", function () {
         document.getElementById('detalleUsuarioCreador').innerText = contacto.usuario_creador;
 
         // Mostrar el modal
-        const detalleModal = new bootstrap.Modal(document.getElementById('detalleModal'));
-        detalleModal.show();
+        new bootstrap.Modal(document.getElementById('detalleModal')).show();
       });
     });
 

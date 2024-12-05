@@ -10,66 +10,26 @@ class Kardex extends Conexion
     $this->pdo = parent::getConexion();
   }
 
+ 
   /**
-   * Lista los registros de Kardex.
+   * Listar Kardex
    *
-   * Este método recupera todos los registros de la vista 'vw_kardex_listar'.
+   * This method retrieves a list of records from the `vw_kardex_listar` view.
    *
-   * @param array $params Parámetros opcionales para la consulta (actualmente no utilizados).
-   * @return array La lista de registros de Kardex.
+   * @return array An array of associative arrays representing the records.
+   *               Returns an empty array if an exception occurs.
    */
-  public function listarKardex($offset = 0, $limit = 10, $search = "")
+  public function listarKardex(): array
   {
-    $sql = "SELECT * FROM vw_kardex_listar";
-    $sqlCount = "SELECT COUNT(*) AS total FROM vw_kardex_listar";
+    try {
+      $cmd = $this->pdo->prepare("SELECT * FROM vw_kardex_listar");
+      $cmd->execute();
 
-    // Si hay búsqueda, se filtran los campos
-    if ($search) {
-      $sql .= " WHERE id_kardex LIKE :search 
-                  OR id_producto LIKE :search 
-                  OR modelo LIKE :search 
-                  OR tipo_producto LIKE :search 
-                  OR nombre_marca LIKE :search 
-                  OR tipo_operacion LIKE :search 
-                  OR tipo_movimiento LIKE :search 
-                  OR nombre_almacen LIKE :search
-                  OR creado_por LIKE :search";  // Nuevo filtro agregado
-      $sqlCount .= " WHERE id_kardex LIKE :search 
-                       OR id_producto LIKE :search 
-                       OR modelo LIKE :search 
-                       OR tipo_producto LIKE :search 
-                       OR nombre_marca LIKE :search 
-                       OR tipo_operacion LIKE :search 
-                       OR tipo_movimiento LIKE :search 
-                       OR nombre_almacen LIKE :search
-                       OR creado_por LIKE :search";  // Nuevo filtro agregado
+      return $cmd->fetchAll(PDO::FETCH_ASSOC);
+    } catch (Exception $e) {
+      error_log($e->getMessage());
+      return [];
     }
-
-    // Agregamos el LIMIT y OFFSET para la paginación
-    $sql .= " LIMIT :offset, :limit";
-    $stmt = $this->pdo->prepare($sql);
-
-    // Enlazamos los valores de búsqueda si se proporcionan
-    if ($search) {
-      $stmt->bindValue(':search', "%$search%", PDO::PARAM_STR);
-    }
-    // Enlazamos los valores de offset y limit para la paginación
-    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
-    $stmt->execute();
-
-    // Recuperamos los resultados en un arreglo asociativo
-    $kardex = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $stmtCount = $this->pdo->prepare($sqlCount);
-
-    // Enlazamos los valores de búsqueda también en la consulta de contar registros
-    if ($search) {
-      $stmtCount->bindValue(':search', "%$search%", PDO::PARAM_STR);
-    }
-    $stmtCount->execute();
-    // Obtenemos el total de registros
-    $totalRegistros = $stmtCount->fetch(PDO::FETCH_ASSOC)['total'];
-    return ['kardex' => $kardex, 'totalRegistros' => $totalRegistros];
   }
 
 

@@ -1,7 +1,7 @@
 <?php require_once "../header.php"; ?>
 
-<!-- Modal -->
-<div class="modal fade" id="detalleModal" tabindex="-1" aria-labelledby="detalleModalLabel" aria-hidden="true">
+<!-- Modal de Contactos -->
+<div class="modal fade" id="detalleModalContactos" tabindex="-1" aria-labelledby="detalleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -20,6 +20,31 @@
         <p><strong>Precio:</strong> <span id="detallePrecio"></span></p>
         <p><strong>Nota:</strong> <span id="detalleNota"></span></p>
         <p><strong>Usuario Creador:</strong> <span id="detalleUsuarioCreador"></span></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Kardex -->
+<div class="modal fade" id="detalleModalKardex" tabindex="-1" aria-labelledby="detalleModalKardexLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="detalleModalKardexLabel">Detalles del Kardex</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p><strong>ID:</strong> <span id="detalleIdKardex"></span></p>
+        <p><strong>Creado por:</strong> <span id="detalleUsuario"></span> </p>
+        <p><strong>Fecha:</strong> <span id="detalleFecha"></span></p>
+        <p><strong>Marca:</strong> <span id="detalleMarca"></span></p>
+        <p><strong>Tipo:</strong> <span id="detalleTipo"></span></p>
+        <p><strong>Saldo:</strong> <span id="detalleSaldo"></span></p>
+        <p><strong>Tipo Movimiento</strong> <span id="detalleTipoMovimiento"></span></p>
+        <p><strong>Motivo:</strong> <span id="detalleMotivo"></span></p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
