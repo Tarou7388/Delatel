@@ -41,11 +41,11 @@ if (isset($_POST['operacion'])) {
         'idUser' => $_POST['idUsuario']
       ];
       $respuesta = $caja->registrarLinea($params);
-      echo json_encode($respuesta);
+      echo json_encode(["registrado" => $respuesta]);
       break;
   }
 }
-if (isset($data['operacion'])) {
+/* if (isset($data['operacion'])) {
   $operacion = $data['operacion'];
   switch ($operacion) {
     case 'descontarCaja':
@@ -60,4 +60,4 @@ if (isset($data['operacion'])) {
     default:
       echo json_encode(['error' => 'Operación no válida']);
   }
-}
+} */

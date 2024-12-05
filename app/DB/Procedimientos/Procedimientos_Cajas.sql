@@ -27,7 +27,8 @@ CREATE PROCEDURE spu_cajas_registrar(
 )
 BEGIN
   INSERT INTO tb_cajas(nombre, descripcion, numero_entradas, id_sector, coordenadas, iduser_create)
-  VALUES(p_nombre, p_descripcion, p_numero_entradas, p_id_sectors, p_coordenadas, p_iduser_create);
+  VALUES(p_nombre, p_descripcion, p_numero_entradas, p_id_sector, p_coordenadas, p_iduser_create);
+  SELECT LAST_INSERT_ID() AS id_caja;
 END$$
 
 DROP PROCEDURE IF EXISTS spu_lineas_registrar;
@@ -42,6 +43,9 @@ BEGIN
   INSERT INTO tb_lineas(id_mufa, id_caja, coordenadas, iduser_create)
   VALUES(p_id_mufa, p_id_caja, p_coordenadas, p_iduser_create);
 END$$
+
+CALL spu_cajas_registrar('Caja 1', 'Caja de pruebas 1', 10, 1, '[-34.603722, -58.381592]', 1);
+
 DELIMITER ;
 
 DROP PROCEDURE IF EXISTS spu_descontar_espacio_caja;

@@ -36,7 +36,7 @@ class Caja extends Conexion
       $params['coordenadas'],
       $params['idUsuario']
     ];
-    return $this->registrar($sql, $params);
+    return $this->registroValorDevolvido($sql, $params);
   }
 
   public function registrarLinea($params = [])

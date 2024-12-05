@@ -95,8 +95,8 @@
           </div>
           <div class="form-floating mb-3">
             <select class="form-select" id="numEntradasCaja" name="numEntradas" required>
-              <option value="1">8</option>
-              <option value="2">16</option>
+              <option value="8">8</option>
+              <option value="16">16</option>
             </select>
             <label for="numEntradas">Número de Entradas</label>
           </div>
