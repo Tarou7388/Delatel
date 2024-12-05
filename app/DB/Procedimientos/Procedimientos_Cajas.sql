@@ -5,17 +5,24 @@ DELIMITER $$
 
 CREATE PROCEDURE spu_cajas_listar()
 BEGIN
-  SELECT id_caja, nombre, descripcion, numero_entradas, id_sector, coordenadas FROM tb_cajas;
+  SELECT 
+    id_caja, 
+    nombre, 
+    descripcion, 
+    numero_entradas, 
+    id_sector, 
+    coordenadas 
+  FROM tb_cajas;
 END$$
 
-DROP PROCEDURE IF EXISTS spu_mufas_listar;
+DROP PROCEDURE IF EXISTS spu_mufas_listar$$
 
 CREATE PROCEDURE spu_mufas_listar()
 BEGIN
   SELECT id_mufa, nombre, descripcion, coordenadas FROM tb_mufas;
 END$$
 
-DROP PROCEDURE IF EXISTS spu_cajas_registrar;
+DROP PROCEDURE IF EXISTS spu_cajas_registrar$$
 
 CREATE PROCEDURE spu_cajas_registrar(
   IN p_nombre VARCHAR(30),
@@ -31,7 +38,7 @@ BEGIN
   SELECT LAST_INSERT_ID() AS id_caja;
 END$$
 
-DROP PROCEDURE IF EXISTS spu_lineas_registrar;
+DROP PROCEDURE IF EXISTS spu_lineas_registrar$$
 
 CREATE PROCEDURE spu_lineas_registrar(
   IN p_id_mufa INT,
@@ -44,11 +51,7 @@ BEGIN
   VALUES(p_id_mufa, p_id_caja, p_coordenadas, p_iduser_create);
 END$$
 
-CALL spu_cajas_registrar('Caja 1', 'Caja de pruebas 1', 10, 1, '[-34.603722, -58.381592]', 1);
-
-DELIMITER ;
-
-DROP PROCEDURE IF EXISTS spu_descontar_espacio_caja;
+DROP PROCEDURE IF EXISTS spu_descontar_espacio_caja$$
 CREATE PROCEDURE spu_descontar_espacio_caja (
     IN p_id_caja INT
 )
@@ -66,4 +69,5 @@ BEGIN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'ID de caja no proporcionado.';
     END IF;
-END //
+END $$
+

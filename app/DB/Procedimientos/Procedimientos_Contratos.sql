@@ -211,6 +211,7 @@ CREATE PROCEDURE spu_contratos_eliminar(
     p_iduser_inactive INT
 )
 BEGIN
+
     UPDATE 
     tb_contratos 
     SET 
