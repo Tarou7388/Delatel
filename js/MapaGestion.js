@@ -109,8 +109,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   async function eventomufas() {
-    const datos = await obtenerDatosAnidado(`${config.HOST}app/controllers/Mufas.controllers.php?operacion=listarMufas`);
-    marcadoresMufas = await marcadoresAnidado(datos, "mufa");
+    const datos = await obtenerDatosPlano(`${config.HOST}app/controllers/Mufas.controllers.php?operacion=listarMufas`);
+    marcadoresMufas = await marcadoresPlano(datos, "mufa");
 
     for (let i = 0; i < marcadoresMufas.length; i++) {
       if (marcadoresMufas[i] == undefined) {

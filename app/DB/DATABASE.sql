@@ -109,7 +109,7 @@ CREATE TABLE tb_cajas(
 CREATE TABLE tb_lineas (
     id_linea INT PRIMARY KEY AUTO_INCREMENT,
     id_mufa INT NULL,
-    id_sector INT NULL,
+    id_caja INT NULL,
     coordenadas JSON NOT NULL,
     create_at DATETIME NOT NULL DEFAULT NOW(),
     update_at DATETIME NULL,
@@ -117,8 +117,8 @@ CREATE TABLE tb_lineas (
     iduser_create INT NOT NULL,
     iduser_update INT NULL,
     iduser_inactive INT NULL,
-    CONSTRAINT lineas_fk_id_sector FOREIGN KEY (id_sector) REFERENCES tb_sectores (id_sector),
-    CONSTRAINT lineas_fk_id_mufa FOREIGN KEY (id_mufa) REFERENCES tb_mufas (id_mufa)
+    CONSTRAINT lineas_fk_id_mufa FOREIGN KEY (id_mufa) REFERENCES tb_mufas (id_mufa),
+    CONSTRAINT lineas_fk_id_caja FOREIGN KEY (id_caja) REFERENCES tb_cajas (id_caja)
 ) ENGINE = InnoDB;
 
 CREATE TABLE tb_personas (

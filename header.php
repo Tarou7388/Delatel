@@ -109,21 +109,21 @@ if (!isset($_SESSION['login']) || $_SESSION['login']['estado'] == false) {
             foreach ($listaAcceso as $acceso) {
               if (strpos($acceso['ruta'], 'views') === false) {
                 if (isset($acceso['Desplegable'])) {
-                    $uniqueId = uniqid();
-                    echo "
+                  $uniqueId = uniqid();
+                  echo "
                     <a class='nav-link' href='#' data-bs-toggle='collapse' data-bs-target='#collapse{$uniqueId}' aria-expanded='false' aria-controls='collapse{$uniqueId}'>
                       <div class='sb-nav-link-icon'><i class='fa-solid {$acceso['icono']}'></i></div>
                       {$acceso['texto']}
                     </a>
                     <div id='collapse{$uniqueId}' class='collapse'>";
-                    for ($i = 0; $i < count($acceso['rutasAnexas']); $i++) {
-                      echo "<a class='nav-link ps-5' href='{$host}views/{$acceso['ruta']}/{$acceso['rutasAnexas'][$i]}'>
+                  for ($i = 0; $i < count($acceso['rutasAnexas']); $i++) {
+                    echo "<a class='nav-link ps-5' href='{$host}views/{$acceso['ruta']}/{$acceso['rutasAnexas'][$i]}'>
                       <div class='sb-nav-link-icon'><i class='fa-solid {$acceso['IconoAnexo'][$i]}'></i></div>
                       {$acceso['rutasAnexas'][$i]}
                       </a>";
-                    }
-                    echo "</div>";
-                }else {
+                  }
+                  echo "</div>";
+                } else {
                   echo "
                   <a class='nav-link' href='{$host}views/{$acceso['ruta']}'>
                     <div class='sb-nav-link-icon'><i class='fa-solid {$acceso['icono']}'></i></div>

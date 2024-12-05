@@ -38,6 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
       await reporte(urlParams.get("idReporte"));
     }
   })();
+  
   async function rellenarDocNombre(doct) {
     const respuesta = await fetch(`${config.HOST}/app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${doct}`);
     const data = await respuesta.json();

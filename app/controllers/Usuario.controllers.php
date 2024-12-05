@@ -56,7 +56,7 @@ if (isset($_POST['operacion'])) {
         // Obtener permisos y accesos filtrados
         $idRol = $registro['id_rol'];
         $permissions = cargarPermisos($idRol);
-        $accesosFiltrados = obtenerAccesosFiltrados($idRol, $permissions);
+        $accesosFiltrados = obtenerAccesosFiltrados($permissions);
 
         $Login["accesos"] = $accesosFiltrados;
       } else {
