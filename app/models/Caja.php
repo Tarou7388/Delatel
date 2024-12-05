@@ -32,7 +32,7 @@ class Caja extends Conexion
       $params['nombre'],
       $params['descripcion'],
       $params['numeroEntradas'],
-      $params['idMufa'],
+      $params['idSector'],
       $params['coordenadas'],
       $params['idUsuario']
     ];
@@ -41,9 +41,10 @@ class Caja extends Conexion
 
   public function registrarLinea($params = [])
   {
-    $sql = "CALL spu_lineas_registrar(?,?,?)";
+    $sql = "CALL spu_lineas_registrar(?,?,?,?)";
     $params = [
-      $params['idSector'],
+      $params['idMufa'],
+      $params['idCaja'],
       $params['coordenadas'],
       $params['idUser']
     ];

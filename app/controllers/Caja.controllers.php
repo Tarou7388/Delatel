@@ -24,7 +24,7 @@ if (isset($_POST['operacion'])) {
         'nombre' => $_POST['nombre'],
         'descripcion' => $_POST['descripcion'],
         'numeroEntradas' => $_POST['numeroEntradas'],
-        'idMufa' => $_POST['idMufa'],
+        'idSector' => $_POST['idSector'],
         'coordenadas' => $_POST['coordenadas'],
         'idUsuario' => $_POST['idUsuario']
       ];
@@ -35,7 +35,8 @@ if (isset($_POST['operacion'])) {
       $coordenadas = json_decode($_POST['coordenadas']);
       $coordenadas = json_encode($coordenadas);
       $params = [
-        'idSector' => $_POST['idSector'],
+        'idMufa' => $_POST['idMufa'],
+        'idCaja' => $_POST['idCaja'],
         'coordenadas' => $coordenadas,
         'idUser' => $_POST['idUsuario']
       ];
