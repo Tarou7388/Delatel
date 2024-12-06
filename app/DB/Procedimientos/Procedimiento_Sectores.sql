@@ -14,6 +14,9 @@ SELECT
     s.id_sector,
     s.sector,
     s.id_distrito,
+    s.descripcion,
+    s.coordenadas,
+    s.direccion,
     d.distrito,
     s.create_at,
     s.update_at,
@@ -24,6 +27,7 @@ SELECT
 FROM
     tb_sectores s
     LEFT JOIN tb_distritos d ON s.id_distrito = d.id_distrito;
+
 
 DELIMITER $$
 DROP PROCEDURE IF EXISTS spu_sectores_registrar$$

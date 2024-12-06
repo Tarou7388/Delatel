@@ -33,5 +33,9 @@ if (isset($_GET["operacion"])) {
 			$resultado = $sectores->listarSectores();
 			echo json_encode($resultado);
 			break;
+		case 'listarSectoresMapa':
+			$resultado = $sectores->listarSectoresMapa();
+			echo json_encode($resultado);
+			break;
 	}
 }

@@ -10,29 +10,35 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   let Coordenadas = null;
 
+  let datosCajas = [];
+  let datosSectores = [];
+
+  let sectorCercano = null;
+
   let marcadoresMufas = [];
+  let marcadoresSectores = [];
   let marcadoresCajas = [];
   let lineasCables = [];
 
+  let idCajaRegistro = "";
   let lineaCableGuardar = [];
   let nombreCaja = "";
   let descripcionCaja = "";
   let numeroEntradasCaja = "";
-  let idMufaCaja = "";
   let direccionCaja = "";
   let coordenadasCaja = "";
 
-  let idSectorCable = "";
+  let idMufaRegistro = "";
 
   let banderaCable = false;
 
   let line = null;
 
-  const params = { cajas: true, mufas: true, cables: true };
+  const params = { cajas: true, mufas: true, cables: true, sectores: true };
 
   async function initMap(params) {
 
-    ({ Map } = await google.maps.importLibrary("maps"));
+    ({ Map, Circle, Polyline } = await google.maps.importLibrary("maps"));
     ({ AdvancedMarkerElement } = await google.maps.importLibrary("marker"));
     // The location of the center of the map
     const posicionInicial = { lat: -13.417077, lng: -76.136585 };
@@ -53,6 +59,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (params.cables) {
       await eventoCables();
     }
+    if (params.sectores) {
+      await eventoSectores();
+    }
 
   }
 
@@ -63,7 +72,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     paramsEnviar.append("nombre", nombreCaja);
     paramsEnviar.append("descripcion", descripcionCaja);
     paramsEnviar.append("numeroEntradas", numeroEntradasCaja);
-    paramsEnviar.append("idMufa", idMufaCaja);
+    paramsEnviar.append("idSector", idSectorRegistro);
     paramsEnviar.append("direccion", direccionCaja);
     paramsEnviar.append("coordenadas", coordenadasEnviar);
     paramsEnviar.append("idUsuario", user.idUsuario);
@@ -72,13 +81,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       body: paramsEnviar
     });
     const data = await response.json();
+    idCajaRegistro = data.id_caja;
     console.log(data);
   }
 
   async function agregarCable() {
     let paramsEnviar = new FormData();
     paramsEnviar.append("operacion", "registrarLinea");
-    paramsEnviar.append("idSector", idSectorCable);
+    paramsEnviar.append("idMufa", idMufaRegistro);
+    paramsEnviar.append("idCaja", idCajaRegistro);
     paramsEnviar.append("coordenadas", JSON.stringify(lineaCableGuardar));
     paramsEnviar.append("idUsuario", user.idUsuario);
 
@@ -87,25 +98,51 @@ document.addEventListener('DOMContentLoaded', async () => {
       body: paramsEnviar
     });
     const data = await response.json();
-    console.log(data);
+    if(data.error){
+      showToast(data.error.message, "ERROR");
+    }else{
+      showToast("Registrado Correctamente", "SUCCESS");
+    }
   }
 
-  document.querySelector("#formAgregarCaja").addEventListener("submit", (e) => {
+  async function buscarMarcadorCercano(datos, coordenadas) {
+    let menorDistancia = 1000000;
+    let marcadorCercano = null;
+    datos.forEach(marcador => {
+      const distancia = google.maps.geometry.spherical.computeDistanceBetween(
+        new google.maps.LatLng(marcador.latLng[0], marcador.latLng[1]),
+        new google.maps.LatLng(coordenadas.lat, coordenadas.lng)
+      )
+      if (distancia < menorDistancia) {
+        menorDistancia = distancia;
+        marcadorCercano = marcador;
+      }
+    });
+    const params = {
+      marcador: marcadorCercano.idValue,
+      distancia: distancia
+    }
+    return params;
+  }
+
+  document.querySelector("#formAgregarCaja").addEventListener("submit", async (e) => {
     e.preventDefault();
     nombreCaja = document.querySelector("#nombreCaja").value;
     descripcionCaja = document.querySelector("#descripcionCaja").value;
     numeroEntradasCaja = document.querySelector("#numEntradasCaja").value;
     direccionCaja = document.querySelector("#direccionCaja").value;
     coordenadasCaja = Coordenadas;
+
+    sectorCercano = await buscarMarcadorCercano(datosSectores, coordenadasCaja);
+    console.log(sectorCercano);
     banderaCable = true;
     const modal = bootstrap.Modal.getInstance(document.getElementById('modalAgregar'));
     modal.hide();
   });
 
   async function eventocajas() {
-    const datos = await obtenerDatosAnidado(`${config.HOST}app/controllers/Caja.controllers.php?operacion=listarCajas`);
-    console.log(datos);
-    marcadoresCajas = await marcadoresAnidado(datos, "cajaNAP");
+    datosCajas = await obtenerDatosAnidado(`${config.HOST}app/controllers/Caja.controllers.php?operacion=listarCajas`);
+    marcadoresCajas = await marcadoresAnidado(datosCajas, "cajaNAP");
   }
 
   async function eventomufas() {
@@ -113,28 +150,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     marcadoresMufas = await marcadoresPlano(datos, "mufa");
 
     for (let i = 0; i < marcadoresMufas.length; i++) {
-      if (marcadoresMufas[i] == undefined) {
-        continue;
-      }
-      for (let j = 0; j < marcadoresMufas[i].length; j++) {
-        marcadoresMufas[i][j].addListener('click', async (e) => {
-          if (banderaCable) {
-            idMufaCaja = datos[i][j].id_mufa;
-            idSectorCable = datos[i][j].id_sector;
-            const json = { lat: e.latLng.lat(), lng: e.latLng.lng() };
-            lineaCableGuardar.push(json);
-            banderaCable = false;
-            if (await ask('¿Desea guardar la Caja?')) {
-              if (accesos?.administracion?.crear) {
-                agregarCaja();
-                agregarCable();
-              }else{
-                showToast("No tienes permisos para realizar esta acción", "ERROR");
-              }
-            }
-          }
-        });
-      }
+      marcadoresMufas[i].addListener('click', async (e) => {
+        if (banderaCable) {
+          idMufaRegistro = datos[i].id_mufa;
+          const json = { lat: e.latLng.lat(), lng: e.latLng.lng() };
+          lineaCableGuardar.push(json);
+        }
+      });
     }
   }
 
@@ -152,11 +174,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  async function marcadoresPlano(datos) {
+  async function eventoSectores() {
+    datosSectores = await obtenerDatosPlano(`${config.HOST}app/controllers/Sector.controllers.php?operacion=listarSectoresMapa`);
+    console.log(datosSectores);
+    marcadoresSectores = await marcadoresPlano(datosSectores, "sector");
+  }
+
+  async function marcadoresPlano(datos, img2) {
     let marcadorarreglo = [];
     datos.forEach(item => {
       const img = document.createElement('img');
-      img.src = `${config.HOST}image/mufa.png`;
+      img.src = `${config.HOST}image/${img2}.png`;
       const marcador = new AdvancedMarkerElement({
         position: { lat: item.latLng[0], lng: item.latLng[1] },
         map: mapa,
@@ -164,6 +192,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         content: img
       });
       marcadorarreglo.push(marcador);
+      marcador.addListener('click', () => {
+        const ventanaInfo = new google.maps.InfoWindow({
+          content: `
+        <div id="content">
+          <h1 id="firstHeading" class="firstHeading">${item.nombre}</h1>
+          <div id="bodyContent">
+            <p>${item.descripcion}</p>
+            <p>Coordenadas: ${item.latLng}</p>
+          </div>
+        </div>`,
+          ariaLabel: "Demo InfoWindow",
+        });
+        ventanaInfo.open({
+          anchor: marcador,
+          map: mapa,
+          shouldFocus: false,
+        });
+      });
     });
     return marcadorarreglo;
   }
@@ -213,10 +259,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       const { coordenadas, descripcion, nombre, direccion } = item;
       const latLng = coordenadas.split(',').map(Number);
       datos.push({
-        nombre,
-        descripcion,
         latLng,
-        direccion,
+        ...item
       });
     });
     return datos;
@@ -249,6 +293,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     params1.cajas = document.querySelector("#chkCajas").checked;
     params1.mufas = document.querySelector("#chkMufas").checked;
     params1.cables = document.querySelector("#chkCables").checked;
+    params1.sectores = document.querySelector("#chkSectores").checked;
 
     if (params1.cajas != params.cajas) {
       if (params1.cajas) {
@@ -281,10 +326,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
       }
     }
+    if (params1.sectores != params.sectores) {
+      if (params1.sectores) {
+        await eventoSectores();
+      } else {
+        marcadoresSectores.forEach(marcador => {
+          marcador.setMap(null);
+        });
+      }
+    }
 
     params.cajas = params1.cajas;
     params.mufas = params1.mufas;
     params.cables = params1.cables;
+    params.sectores = params1.sectores;
   }
 
   async function marcarLineaCable(json) {
