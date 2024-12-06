@@ -327,29 +327,9 @@ window.addEventListener("DOMContentLoaded", async () => {
         );
         const data = await response.json();
         if (data.eliminado) {
-          try {
-            const respuesta = await fetch(`${config.HOST}app/controllers/Caja.controllers.php`, {
-              method: "PUT",
-              body: JSON.stringify({
-                operacion: "recontarCaja",
-                idContrato: idContrato,
-              }),
-              headers: {
-                "Content-Type": "application/json",
-              },
-            });
-
-            const Datos = await respuesta.json();
-
-            console.log(Datos);
-
-            showToast("¡Contrato eliminado correctamente!", "SUCCESS", 1500);
-            resetUI();
-            tabla.ajax.reload();
-          } catch (error) {
-            console.log(error);
-            showToast("Ocurrió un error en las cajas.", "ERROR");
-          }
+          showToast("¡Contrato eliminado correctamente!", "SUCCESS", 1500);
+          resetUI();
+          tabla.ajax.reload();
         }
       }
     } else {
