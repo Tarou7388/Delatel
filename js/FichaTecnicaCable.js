@@ -44,6 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (fichaInstalacion && fichaInstalacion.cable) {
         const cable = fichaInstalacion.cable;
         document.querySelector("#txtPagoInst").value = cable.pagoinstalacion;
+        document.querySelector("#txtPeriodo").value = cable.periodo;
         document.querySelector("#txtPotenciaCable").value = cable.potencia;
         document.querySelector("#slcTriplexor").value = `${cable.triplexor.requerido},${cable.triplexor.cargador}`;
         document.querySelector("#txtCantConector").value = cable.conector.numeroconector;
@@ -123,6 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Cable
   async function cable() {
     const txtPaquete = document.querySelector("#txtPaquete").value;
+    const txtPeriodo = document.querySelector("#txtPeriodo").value;
     const txtPagoInst = document.querySelector("#txtPagoInst").value;
     const txtPotencia = document.querySelector("#txtPotenciaCable").value;
     const slcTriplexor = document.querySelector("#slcTriplexor").value.split(",");
@@ -135,6 +137,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (
       txtPagoInst === "" ||
+      txtPeriodo === "" ||
       txtPotencia === "" ||
       slcTriplexor === "" ||
       txtCantConector === "" ||
@@ -149,9 +152,9 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       jsonCable = {
         paquete: txtPaquete,
+        periodo: txtPeriodo,
         pagoinstalacion: parseFloat(txtPagoInst),
         potencia: txtPotencia,
-        //sintonizador: {},
         triplexor: {
           requerido: slcTriplexor[0],
           cargador: slcTriplexor[1],

@@ -130,6 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
         subBaseOption.selected = true;
         slcSubBase.appendChild(subBaseOption);
 
+        document.getElementById("txtPeriodo").value = parametros.periodo;
         document.getElementById("txtSignalStrengthParametros").value = parametros.signalStrength;
         document.getElementById("txtNoiseFloorParametros").value = parametros.noiseFloor;
         document.getElementById("txtTransmiTccqParametros").value = parametros.transmiTccq;
@@ -524,6 +525,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   //Json Parametros 
   async function parametros() {
+    const txtPeriodo = document.getElementById('txtPeriodo').value;
     const txtPaquete = document.getElementById('txtPaquete').value;
     const slcFrecuencia = document.getElementById('slcFrecuenciaParametros').value;
     const slcBase = document.getElementById('slcBaseParametros');
@@ -546,6 +548,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     jsonParametros = {
       parametros: {
+        periodo: txtPeriodo,
         plan: txtPaquete,
         frecuencia: slcFrecuencia.split(","),
         base: [base],

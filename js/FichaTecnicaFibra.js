@@ -45,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       const fibraOptica = fichaInstalacion.fibraOptica;
 
+      document.getElementById("txtPeriodo").value = fibraOptica.periodo;
       document.getElementById("txtUsuario").value = fibraOptica.usuario;
       document.getElementById("txtClaveAcceso").value = fibraOptica.claveAcceso;
       document.getElementById("txtPlan").value = fibraOptica.plan;
@@ -150,6 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const txtUsuario = document.querySelector("#txtUsuario").value;
     const txtClaveAcceso = document.querySelector("#txtClaveAcceso").value;
     const txtPlan = document.querySelector("#txtPlan").value;
+    const txtPeriodo = document.querySelector("#txtPeriodo").value;
     const txtPotencia = document.querySelector("#txtPotenciaFibra").value;
     const txtSsdi = document.querySelector("#txtSsdi").value;
     const txtSeguridad = document.querySelector("#txtSeguridad").value;
@@ -166,6 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
       fibraOptica: {
         usuario: txtUsuario,
         claveAcceso: txtClaveAcceso,
+        periodo: txtPeriodo,
         plan: txtPlan,
         potencia: txtPotencia,
         moden: {

@@ -40,6 +40,12 @@ $idContrato = $_GET['idContrato'];
                 <label for="txtPaquete">Paquete</label>
               </div>
             </div>
+            <div class="col-md">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="txtPeriodo" placeholder="Periodo">
+                <label for="txtPeriodo">Periodo</label>
+              </div>
+            </div>
             <div class="col-md input-group">
               <span class="input-group-text">S/.</span>
               <div class="form-floating">

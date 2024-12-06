@@ -76,7 +76,7 @@ $idContrato = $_GET['idContrato'];
             </div>
             <div class="col-md-4">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtPeriodo" disabled placeholder="Período">
+                <input type="text" class="form-control" id="txtPeriodo" placeholder="Período">
                 <label for="txtPeriodo">Período</label>
               </div>
             </div>

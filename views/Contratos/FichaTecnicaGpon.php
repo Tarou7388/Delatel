@@ -143,6 +143,12 @@ $idContrato = $_GET['idContrato'];
             </div>
             <div class="col md-3">
               <div class="form-floating">
+                <input type="text" class="form-control" id="txtPeriodo" placeholder="Periodo">
+                <label for="txtPeriodo">Periodo</label>
+              </div>
+            </div>
+            <div class="col md-3">
+              <div class="form-floating">
                 <input type="number" class="form-control" id="txtPotenciaFibra" placeholder="Potencia" min="-30" max="24">
                 <label for="lblPotenciaFibra">Potencia</label>
               </div>

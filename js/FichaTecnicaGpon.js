@@ -58,6 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const cable = installationData.cable;
         document.getElementById("txtPotenciaFibra").value = fibra.potencia || "";
         document.getElementById("txtSsdi").value = fibra.moden?.ssid || "";
+        document.getElementById("txtPeriodo").value = fibra.periodo || "";
         document.getElementById("txtSeguridad").value = fibra.moden?.seguridad || "";
         document.getElementById("txtCodigoBarra").value = fibra.moden?.codigoBarra || "";
         document.getElementById("txtMarca").value = fibra.moden?.marca || "";
@@ -250,6 +251,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const txtUsuario = document.querySelector("#txtUsuario").value;
     const txtPlan = document.querySelector("#txtPlan").value;
     const txtClaveAcceso = document.querySelector("#txtClaveAcceso").value;
+    const txtPeriodo = document.querySelector("#txtPeriodo").value;
     const txtPotencia = document.querySelector("#txtPotenciaFibra").value;
     const txtSsdi = document.querySelector("#txtSsdi").value;
     const txtSeguridad = document.querySelector("#txtSeguridad").value;
@@ -263,7 +265,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const txtaDetallesModen = document.querySelector("#txtaDetallesModen").value;
 
     if (!flagFichaInstalacion) {
-      if (txtUsuario === "" || txtPlan === "" || txtClaveAcceso === "" || txtPotencia === "" || txtSsdi === "" || txtSeguridad === "" || txtCodigoBarra === "" || slcBanda === "" || txtAntenas === "") {
+      if (txtUsuario === "" ||
+        txtPlan === "" ||
+        txtClaveAcceso === "" ||
+        txtPeriodo === "" ||
+        txtPotencia === "" ||
+        txtSsdi === "" ||
+        txtSeguridad === "" ||
+        txtCodigoBarra === "" ||
+        slcBanda === "" ||
+        txtAntenas === "") {
         showToast("Por favor, llene todos los campos.", "WARNING");
         return;
       } else {
@@ -271,6 +282,7 @@ document.addEventListener("DOMContentLoaded", () => {
           fibraoptica: {
             usuario: txtUsuario,
             claveacceso: txtClaveAcceso,
+            periodo: txtPeriodo,
             plan: txtPlan,
             potencia: parseInt(txtPotencia),
             moden: {
