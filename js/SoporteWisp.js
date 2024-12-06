@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
     rowDiv.appendChild(selectDiv);
 
     (async () => {
-      const respuesta = await fetch(`${config.HOST}/app/controllers/Soporte.controllers.php?operacion=listarTipoSoporte`);
+      const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=listarTipoSoporte`);
       const datos = await respuesta.json();
       selectSoporte.innerHTML = "";
       datos.forEach((element) => {
@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function rellenarDocNombre(doct) {
-    const respuesta = await fetch(`${config.HOST}/app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${doct}`);
+    const respuesta = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${doct}`);
     const data = await respuesta.json();
     $("#txtCliente").val(data[0].nombre);
     $("#txtNrodocumento").val(doct);
@@ -148,7 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
   })();
 
   async function reporte(idRe) {
-    const respuesta = await fetch(`${config.HOST}/app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idRe}`);
+    const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idRe}`);
     const data = await respuesta.json();
     console.log(data);
     const datawisp = await FichaSoporte(idRe);
@@ -200,7 +200,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function ArmadoJsonWisp() {
-    const Response = await fetch(`${config.HOST}/app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
+    const Response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
     const result = await Response.json();
 
     let soporte = result[0].soporte ? JSON.parse(result[0].soporte) : {};
@@ -228,7 +228,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function guardarSoporte(data) {
     try {
-      const response = await fetch(`${config.HOST}/app/controllers/Soporte.controllers.php`, {
+      const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

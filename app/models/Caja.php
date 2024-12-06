@@ -57,6 +57,13 @@ class Caja extends Conexion
     $idCaja = $params['idCaja'];
     return $this->registrar($sql, [$idCaja]);
   }
+
+  public function recontarEspacioCaja($params = [])
+  {
+    $sql = "CALL spu_recontar_espacio_caja(?)";
+    $params = $params['idContrato'];
+    return $this->registrar($sql, [$params]);
+  }
 }
 
 

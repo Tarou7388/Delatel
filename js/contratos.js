@@ -276,28 +276,33 @@ window.addEventListener("DOMContentLoaded", async () => {
         if (data.error) {
           console.log(data.error);
         } else {
-          showToast("¡Contrato registrado correctamente!", "SUCCESS", 1500);
-          resetUI();
-          tabla.ajax.reload();
-          await fetch(`${config.HOST}app/controllers/Caja.controllers.php`, {
-            method: "PUT",
-            body: JSON.stringify({
-              operacion: "descontarCaja",
-              parametros: {
-                idCaja: mapa.idCaja
+          try {
+            const respuesta = await fetch(`${config.HOST}app/controllers/Caja.controllers.php`, {
+              method: "PUT",
+              body: JSON.stringify({
+                operacion: "descontarCaja",
+                idCaja: mapa.idCaja, // Correcta estructura
+              }),
+              headers: {
+                "Content-Type": "application/json",
               },
-            }),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
+            });
+
+            const data = await respuesta.json();
+
+            console.log(data);
+
+            showToast("¡Contrato registrado correctamente!", "SUCCESS", 1500);
+            resetUI();
+            tabla.ajax.reload();
+          } catch (error) {
+            console.log(error);
+            showToast("Ocurrió un error en las cajas.", "ERROR");
+          }
         }
       } catch (error) {
         console.log(error);
-        showToast(
-          "Ocurrió un error al registrar el contrato. Por favor, inténtelo de nuevo.",
-          "ERROR"
-        );
+        showToast("Ocurrió un error al registrar el contrato. Por favor, inténtelo de nuevo.", "ERROR");
       }
     } else {
       showToast("No tienes acceso para registrar un contrato", "ERROR");
@@ -322,9 +327,29 @@ window.addEventListener("DOMContentLoaded", async () => {
         );
         const data = await response.json();
         if (data.eliminado) {
-          showToast("¡Contrato eliminado correctamente!", "SUCCESS", 1500);
-          resetUI();
-          tabla.ajax.reload();
+          try {
+            const respuesta = await fetch(`${config.HOST}app/controllers/Caja.controllers.php`, {
+              method: "PUT",
+              body: JSON.stringify({
+                operacion: "recontarCaja",
+                idContrato: idContrato,
+              }),
+              headers: {
+                "Content-Type": "application/json",
+              },
+            });
+
+            const Datos = await respuesta.json();
+
+            console.log(Datos);
+
+            showToast("¡Contrato eliminado correctamente!", "SUCCESS", 1500);
+            resetUI();
+            tabla.ajax.reload();
+          } catch (error) {
+            console.log(error);
+            showToast("Ocurrió un error en las cajas.", "ERROR");
+          }
         }
       }
     } else {

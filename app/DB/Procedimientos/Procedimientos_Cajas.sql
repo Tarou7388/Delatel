@@ -57,7 +57,8 @@ CREATE PROCEDURE spu_descontar_espacio_caja (
 )
 BEGIN
   UPDATE tb_cajas
-  SET numero_entradas = numero_entradas - 1
+  SET numero_entradas = numero_entradas - 1,
+      update_at = NOW()
   WHERE id_caja = p_id_caja AND numero_entradas > 0;
 
   IF ROW_COUNT() = 0 THEN
@@ -72,8 +73,9 @@ CREATE PROCEDURE spu_recontar_espacio_caja (
 )
 BEGIN
   UPDATE tb_cajas 
-    INNER JOIN tb_contratos ON tb_cajas.id_sector = tb_contratos.id_sector
+  INNER JOIN tb_contratos ON tb_cajas.id_sector = tb_contratos.id_sector 
   SET tb_cajas.numero_entradas = tb_cajas.numero_entradas + 1
-  WHERE tb_contratos.id_contrato = p_id_contrato;
+  WHERE tb_contratos.id_contrato = p_id_contrato
+    AND tb_contratos.create_at = tb_cajas.update_at;
 END $$
 

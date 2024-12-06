@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
     rowDiv.appendChild(selectDiv);
 
     (async () => {
-      const respuesta = await fetch(`${config.HOST}/app/controllers/Soporte.controllers.php?operacion=listarTipoSoporte`);
+      const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=listarTipoSoporte`);
       const datos = await respuesta.json();
       selectSoporte.innerHTML = "";
       datos.forEach((element) => {
@@ -107,7 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
    */
   async function llenadoDeDatos(doct, idSoporte, tiposervicio) {
     try {
-      const respuesta = await fetch(`${config.HOST}/app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${doct}`);
+      const respuesta = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${doct}`);
       const data = await respuesta.json();
       console.log(doct);
       console.log(data[0].nombre);
@@ -148,7 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   async function ArmadoJsonGpon() {
-    const response = await fetch(`${config.HOST}/app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
+    const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
     const result = await response.json();
 
     let soporte = result[0].soporte ? JSON.parse(result[0].soporte) : {};
@@ -186,7 +186,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function guardarSoporte(data) {
     try {
-      const response = await fetch(`${config.HOST}/app/controllers/Soporte.controllers.php`, {
+      const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

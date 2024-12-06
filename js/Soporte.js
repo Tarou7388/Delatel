@@ -30,7 +30,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     try {
       console.log("Iniciando búsqueda avanzada...");
-      const response = await fetch(`${config.HOST}/app/controllers/Cliente.controllers.php?operacion=buscarPorNombreApellido&nombres=${encodeURIComponent(nombre)}&apellidos=${encodeURIComponent(apellido)}`);
+      const response = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarPorNombreApellido&nombres=${encodeURIComponent(nombre)}&apellidos=${encodeURIComponent(apellido)}`);
       const data = await response.json();
       console.log("Resultado de búsqueda avanzada:", data);
 
@@ -134,7 +134,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     try {
-      const respuesta = await fetch(`${config.HOST}/app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${numdocumento}`);
+      const respuesta = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${numdocumento}`);
       const data = await respuesta.json();
       console.log("Cliente encontrado:", data);
 

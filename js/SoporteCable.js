@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
   })();
   
   async function rellenarDocNombre(doct) {
-    const respuesta = await fetch(`${config.HOST}/app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${doct}`);
+    const respuesta = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${doct}`);
     const data = await respuesta.json();
     $("#txtCliente").val(data[0].nombre);
     $("#txtNrodocumento").val(doct);
@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
   async function reporte(idReporte) {
     try {
       // Obtener datos del soporte
-      const respuesta = await fetch(`${config.HOST}/app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idReporte}`);
+      const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idReporte}`);
       const data = await respuesta.json();
       const dataCable = await FichaSoporte(idReporte);
       const cableFiltrado = JSON.parse(dataCable[0].ficha_instalacion).cable;
@@ -174,7 +174,7 @@ document.addEventListener("DOMContentLoaded", () => {
    */
   async function llenadoDeDatos(doct, idSoporte, tiposervicio) {
     try {
-      const respuesta = await fetch(`${config.HOST}/app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${doct}`);
+      const respuesta = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${doct}`);
       const data = await respuesta.json();
       console.log(doct);
       console.log(data[0].nombre);
@@ -269,7 +269,7 @@ document.addEventListener("DOMContentLoaded", () => {
     rowDiv.appendChild(selectDiv);
 
     (async () => {
-      const respuesta = await fetch(`${config.HOST}/app/controllers/Soporte.controllers.php?operacion=listarTipoSoporte`);
+      const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=listarTipoSoporte`);
       const datos = await respuesta.json();
       selectSoporte.innerHTML = "";
       datos.forEach((element) => {
@@ -305,7 +305,7 @@ document.addEventListener("DOMContentLoaded", () => {
    * @returns {Promise<Object>} Una promesa que se resuelve en un objeto que contiene los parámetros y cambios del cable.
    */
   async function ArmadoJsonCable() {
-    const Response = await fetch(`${config.HOST}/app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
+    const Response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
     const result = await Response.json();
 
     let soporte = result[0].soporte ? JSON.parse(result[0].soporte) : {};
@@ -356,7 +356,7 @@ document.addEventListener("DOMContentLoaded", () => {
    */
   async function guardarSoporte(data) {
     try {
-      const response = await fetch(`${config.HOST}/app/controllers/Soporte.controllers.php`, {
+      const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

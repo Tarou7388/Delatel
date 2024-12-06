@@ -45,19 +45,25 @@ if (isset($_POST['operacion'])) {
       break;
   }
 }
-/* if (isset($data['operacion'])) {
-  $operacion = $data['operacion'];
-  switch ($operacion) {
-    case 'descontarCaja':
-      if (isset($data['idCaja'])) {
-        $idCaja = $data['idCaja'];
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+  $json = file_get_contents('php://input');
+  $datos = json_decode($json, true);
+
+  if (isset($datos['operacion'])) {
+    $operacion = $datos['operacion'];
+    switch ($operacion) {
+      case 'descontarCaja':
+        $idCaja = $datos['idCaja'];
         $respuesta = $caja->descontarEspacioCaja(['idCaja' => $idCaja]);
         echo json_encode($respuesta);
-      } else {
-        echo json_encode(['error' => 'Falta el parámetro idCaja']);
-      }
-      break;
-    default:
-      echo json_encode(['error' => 'Operación no válida']);
+        break;
+      case 'recontarCaja':
+        $idContrato = $datos['idContrato'];
+        $respuesta = $caja->recontarEspacioCaja(['idContrato' => $idContrato]);
+        echo json_encode($respuesta);
+        break;
+    }
   }
-} */
+}
