@@ -62,8 +62,7 @@ BEGIN
   WHERE id_caja = p_id_caja AND numero_entradas > 0;
 
   IF ROW_COUNT() = 0 THEN
-    SIGNAL SQLSTATE '45000'
-    SET MESSAGE_TEXT = 'No hay espacios disponibles en la caja o ID de caja no proporcionado.';
+      SELECT FALSE AS resultado;
   END IF;
 END $$
 

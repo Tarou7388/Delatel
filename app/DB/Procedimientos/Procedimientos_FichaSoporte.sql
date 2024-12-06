@@ -190,9 +190,7 @@ BEGIN
         s.soporte,
         s.descripcion_problema,
         s.descripcion_solucion,
-        s.update_at,
-        GROUP_CONCAT(sv.tipo_servicio) AS tipos_servicio,
-        GROUP_CONCAT(sv.servicio) AS servicios
+        s.update_at
     FROM 
         tb_soporte s
     LEFT JOIN 
