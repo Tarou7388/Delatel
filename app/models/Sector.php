@@ -47,4 +47,10 @@ class Sector extends Conexion
     return $this->listarDatos($sql);
   }
 
+  public function listarSectoresMapa()
+  {
+    $sql = "SELECT id_sector, sector as 'nombre', descripcion, coordenadas, direccion  FROM vw_sectores_obtener";
+    return $this->listarDatos($sql);
+  }
+
 }

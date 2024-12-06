@@ -32,25 +32,25 @@
         <div class="card-body">
           <div class="form-check">
             <input class="form-check-input" type="checkbox" value="" id="chkSectores" checked>
-            <label class="form-check-label" for="sectores">
+            <label class="form-check-label" for="chkSectores">
               Sectores
             </label>
           </div>
           <div class="form-check">
             <input class="form-check-input" type="checkbox" value="" id="chkMufas" checked>
-            <label class="form-check-label" for="mufas">
+            <label class="form-check-label" for="chkMufas">
               Mufas
             </label>
           </div>
           <div class="form-check">
             <input class="form-check-input" type="checkbox" value="" id="chkCajas" checked>
-            <label class="form-check-label" for="cajas">
+            <label class="form-check-label" for="chkCajas">
               Cajas
             </label>
           </div>
           <div class="form-check">
             <input class="form-check-input" type="checkbox" value="" id="chkCables" checked>
-            <label class="form-check-label" for="cables">
+            <label class="form-check-label" for="chkCables">
               Cables
             </label>
           </div>
