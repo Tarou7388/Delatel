@@ -806,8 +806,8 @@ window.addEventListener("DOMContentLoaded", async () => {
         const idServicio = $(this).val();
         if (idServicio === "duos") {
           cargarPaquetesMultiples(idServicio);
-          btnBuscarCoordenadas.disabled = true;
-          sector.disabled = false;
+          btnBuscarCoordenadas.disabled = false;
+          sector.disabled = true;
         }else if(idServicio === "2"){
           btnBuscarCoordenadas.disabled = true;
           sector.disabled = false;
