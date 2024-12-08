@@ -286,6 +286,8 @@ window.addEventListener("DOMContentLoaded", async () => {
             showToast("¡Contrato registrado correctamente!", "SUCCESS", 1500);
             resetUI();
             tabla.ajax.reload();
+            // Guardar el idCaja en el almacenamiento local
+            localStorage.setItem('idCaja', mapa.idCaja);
           } catch (error) {
             console.log(error);
             showToast("Ocurrió un error en las cajas.", "ERROR");
@@ -808,7 +810,7 @@ window.addEventListener("DOMContentLoaded", async () => {
           cargarPaquetesMultiples(idServicio);
           btnBuscarCoordenadas.disabled = false;
           sector.disabled = true;
-        }else if(idServicio === "2"){
+        } else if (idServicio === "2") {
           btnBuscarCoordenadas.disabled = true;
           sector.disabled = false;
         }

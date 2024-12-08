@@ -1,6 +1,9 @@
 import config from '../env.js';
 document.addEventListener('DOMContentLoaded', () => {
   const userid = user["idUsuario"];
+  const urlParams = new URLSearchParams(window.location.search);
+  const idCaja = urlParams.get('idCaja') || localStorage.getItem('idCaja');
+  console.log("idCaja:", idCaja);
   var today = new Date().toISOString().split('T')[0];
   document.getElementById("txtFecha").value = today;
 
@@ -184,7 +187,8 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         detallesModen: txtaDetallesModen,
         repetidores: jsonRepetidor
-      }
+      },
+      idCaja: idCaja, // id de la caja
     }
   }
 
