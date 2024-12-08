@@ -19,49 +19,57 @@ $idContrato = $_GET['idContrato'];
         <div class="mb-2">
           <div class="form-floating">
             <input type="text" class="form-control" id="txtSsidRepetidor" placeholder="SSID">
-            <label for="lblSsid">SSID</label>
+            <label for="lblSsid">SSID <span class="required-asterisk" style="color: red;">*</span></label>
+            <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
           </div>
         </div>
         <div class="mb-2">
           <div class="form-floating">
             <input type="text" class="form-control" id="txtContraseniaRepetidor" placeholder="Contraseña">
-            <label for="lblContraseniaRepetidor">Contraseña</label>
+            <label for="lblContraseniaRepetidor">Contraseña <span class="required-asterisk" style="color: red;">*</span></label>
+            <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
           </div>
         </div>
         <div class="mb-2">
           <div class="form-floating">
             <input type="text" class="form-control" id="txtCodigoBarrasRepetidor" placeholder="Codigo de barras">
-            <label for="lblCodigoBarrasRepetidor">Codigo de barras</label>
+            <label for="lblCodigoBarrasRepetidor">Codigo de barras <span class="required-asterisk" style="color: red;">*</span></label>
+            <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
           </div>
         </div>
         <div class="mb-2">
           <div class="form-floating">
             <input type="text" class="form-control" id="txtMarcaRepetidor" placeholder="a" disabled>
-            <label for="lblMarcaRepetidor">Marca</label>
+            <label for="lblMarcaRepetidor">Marca <span class="required-asterisk" style="color: red;">*</span></label>
+            <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
           </div>
         </div>
         <div class="mb-2">
           <div class="form-floating">
             <input type="text" class="form-control" id="txtModeloRepetidor" placeholder="a" disabled>
-            <label for="lblModeloRepetidor">Modelo</label>
+            <label for="lblModeloRepetidor">Modelo <span class="required-asterisk" style="color: red;">*</span></label>
+            <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
           </div>
         </div>
         <div class="mb-2">
           <div class="form-floating">
             <input type="text" class="form-control" id="txtPrecioRepetidor" placeholder="Número" disabled>
-            <label for="lblPrecioRepetidor">Precio</label>
+            <label for="lblPrecioRepetidor">Precio <span class="required-asterisk" style="color: red;">*</span></label>
+            <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
           </div>
         </div>
         <div class="mb-2">
           <div class="form-floating">
             <input type="text" class="form-control" id="txtSerieRepetidor" placeholder="Serie">
-            <label for="lblSerieRepetidor">Serie</label>
+            <label for="lblSerieRepetidor">Serie <span class="required-asterisk" style="color: red;">*</span></label>
+            <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
           </div>
         </div>
         <div class="mb-2">
           <div class="form-floating">
             <input type="text" class="form-control" id="txtIpRepetidor" placeholder="IP">
-            <label for="lblIpRepetidor">IP</label>
+            <label for="lblIpRepetidor">IP <span class="required-asterisk" style="color: red;">*</span></label>
+            <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
           </div>
         </div>
       </div>
@@ -105,7 +113,7 @@ $idContrato = $_GET['idContrato'];
               <div class="col-12 col-md-6">
                 <div class="form-floating">
                   <input type="text" class="form-control" id="txtUsuario" placeholder="Usuario" disabled=true>
-                  <label for="lblUsuario">Usuario</label>
+                  <label for="lblUsuario">Usuario </label>
                 </div>
               </div>
               <div class="col-12 col-md-6">
@@ -125,14 +133,15 @@ $idContrato = $_GET['idContrato'];
               </div>
               <div class="col-12 col-md">
                 <div class="form-floating">
-                  <input type="text" class="form-control" id="txtPeriodo" placeholder="Periodo">
+                  <input type="date" class="form-control" id="txtPeriodo" placeholder="Periodo">
                   <label for="txtPeriodo">Periodo</label>
                 </div>
               </div>
               <div class="col-12 col-md">
                 <div class="form-floating">
                   <input type="number" class="form-control" id="txtPotenciaFibra" placeholder="Potencia" min="-30" max="24">
-                  <label for="lblPotenciaFibra">Potencia</label>
+                  <label for="lblPotenciaFibra">Potencia <span class="required-asterisk" style="color: red;">*</span></label>
+                  <div class="invalid-feedback">Por favor, ingrese un valor válido (-30 a 24).</div>
                 </div>
               </div>
             </div>
@@ -142,13 +151,15 @@ $idContrato = $_GET['idContrato'];
               <div class="col-12 col-md-6">
                 <div class="form-floating">
                   <input type="text" class="form-control" id="txtSsdi" placeholder="SSDI">
-                  <label for="lblSsdi">SSDI</label>
+                  <label for="lblSsdi">SSDI <span class="required-asterisk" style="color: red;">*</span></label>
+                  <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
                 </div>
               </div>
               <div class="col-12 col-md-6">
                 <div class="form-floating">
                   <input type="text" class="form-control" id="txtSeguridad" placeholder="Contraseña">
-                  <label for="lblSeguridad">Seguridad</label>
+                  <label for="lblSeguridad">Seguridad <span class="required-asterisk" style="color: red;">*</span></label>
+                  <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
                 </div>
               </div>
             </div>
@@ -156,19 +167,22 @@ $idContrato = $_GET['idContrato'];
               <div class="col-12 col-md-4">
                 <div class="form-floating">
                   <input type="text" class="form-control" id="txtCodigoBarra" placeholder="Codigo de barra">
-                  <label for="lblCodigoBarra">Codigo de barras</label>
+                  <label for="lblCodigoBarra">Codigo de barras <span class="required-asterisk" style="color: red;">*</span></label>
+                  <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
                 </div>
               </div>
               <div class="col-12 col-md-4">
                 <div class="form-floating">
                   <input type="text" class="form-control" id="txtMarca" placeholder="Marca" disabled>
-                  <label for="marca">Marca</label>
+                  <label for="marca">Marca <span class="required-asterisk" style="color: red;">*</span></label>
+                  <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
                 </div>
               </div>
               <div class="col-12 col-md-4">
                 <div class="form-floating">
                   <input type="text" class="form-control" id="txtModelo" placeholder="Modelo" disabled>
-                  <label for="lblModelo">Modelo</label>
+                  <label for="lblModelo">Modelo <span class="required-asterisk" style="color: red;">*</span></label>
+                  <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
                 </div>
               </div>
             </div>
@@ -177,7 +191,8 @@ $idContrato = $_GET['idContrato'];
               <div class="col md-2">
                 <div class="form-floating">
                   <input type="text" class="form-control" id="txtSerieModen" placeholder="Serie">
-                  <label for="lblSerie">Serie</label>
+                  <label for="lblSerie">Serie <span class="required-asterisk" style="color: red;">*</span></label>
+                  <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
                 </div>
               </div>
               <div class="col md-6">
@@ -187,13 +202,15 @@ $idContrato = $_GET['idContrato'];
                     <option value="5G" selected>5G</option>
                     <option value="2G,5G">5G-2G</option>
                   </select>
-                  <label for="">Banda</label>
+                  <label for="">Banda <span class="required-asterisk" style="color: red;">*</span></label>
+                  <div class="invalid-feedback">Por favor, seleccione una opción válida.</div>
                 </div>
               </div>
               <div class="col md-9">
                 <div class="form-floating">
                   <input type="number" class="form-control" id="txtAntenas" placeholder="Antena#" min="2" max="10">
-                  <label for="lblAntena">N°Antena</label>
+                  <label for="lblAntena">N°Antena <span class="required-asterisk" style="color: red;">*</span></label>
+                  <div class="invalid-feedback">Por favor, ingrese un valor válido (2 a 10).</div>
                 </div>
               </div>
               <div class="col-md-3 form-check form-switch d-flex align-items-center mt-custom">
