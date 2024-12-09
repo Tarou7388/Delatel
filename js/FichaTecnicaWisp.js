@@ -15,7 +15,38 @@ document.addEventListener("DOMContentLoaded", () => {
     backdrop: 'static',
     keyboard: false
   });
+  const txtPeriodo = document.getElementById('txtPeriodo');
 
+  // Validar valores dentro del rango para campos con rango
+  function validarValorRango(event) {
+    const elemento = event.target;
+    const min = parseFloat(elemento.min);
+    const max = parseFloat(elemento.max);
+    const mensaje = `${elemento.placeholder} debe estar entre ${min} y ${max}.`;
+    const invalidFeedback = elemento.nextElementSibling;
+
+    if (parseFloat(elemento.value) < min || parseFloat(elemento.value) > max) {
+      elemento.classList.add("is-invalid");
+      invalidFeedback.textContent = mensaje;
+      invalidFeedback.style.display = "block";
+    } else {
+      elemento.classList.remove("is-invalid");
+      invalidFeedback.style.display = "none";
+    }
+  }
+
+  // Asignar eventos de validación en tiempo real a los campos
+  document.getElementById("txtSignalStrengthParametros").addEventListener("input", validarValorRango);
+  document.getElementById("txtNoiseFloorParametros").addEventListener("input", validarValorRango);
+  document.getElementById("txtTransmiTccqParametros").addEventListener("input", validarValorRango);
+  document.getElementById("txtTxRateParametros").addEventListener("input", validarValorRango);
+  document.getElementById("txtRxRateParametros").addEventListener("input", validarValorRango);
+
+  const periodoDate = new Date();
+  periodoDate.setMonth(periodoDate.getMonth() + 6);
+  const DateFormateado = periodoDate.toISOString().split("T")[0];
+  txtPeriodo.value = DateFormateado;
+  txtPeriodo.min = DateFormateado;
 
   var today = new Date().toISOString().split("T")[0];
   document.getElementById("txtFecha").value = today;
@@ -755,6 +786,11 @@ document.addEventListener("DOMContentLoaded", () => {
     await alquilado_prestado();
     await deuda();
 
+    if (!validarCampos()) {
+      showToast("Por favor, llene todos los campos requeridos.", "WARNING", 1500);
+      return;
+    }
+
     const data = {
       operacion: "guardarFichaInstalacion",
       fichaInstalacion: jsonData,
@@ -770,23 +806,91 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     );
     const datos = await response.json();
-    console.log(datos);
+    showToast("Ficha de Instalación Guardada Correctamente", "SUCCESS");
+    setTimeout(() => {
+      window.location.href = `${config.HOST}views/Contratos/`;
+    }, 2500);
+  }
+
+  function validarCampos() {
+    const camposVenta = [
+      "txtMacVentaRouter",
+      "txtMacVentaAntena",
+      "txtAdelantoVenta",
+      "txtSaldoEquipoVenta",
+      "txtSerialVentaRouter",
+      "txtSerialVentaAntena",
+      "txtMaterialAdicionalVenta",
+      "txtDescripcionVentaAntena",
+      "txtDescripcionVentaRouter"
+    ];
+
+    const camposAlquilado = [
+      "slcCondicionAlquilados",
+      "txtMacAntenaAlquilados",
+      "txtMacRouterAlquilados",
+      "txtPeriodoAlquilados",
+      "txtFechaInicioAlquilados",
+      "txtFechaFinAlquilados",
+      "txtSerialAntenaAlquilados",
+      "txtSerialRouterAlquilados",
+      "txtCostoAlquilerAlquilados",
+      "txtDescripcionAntenaAlquilados",
+      "txtDescripcionRouterAlquilados",
+      "txtDetalleAlquilados"
+    ];
+
+    const camposComunes = [
+      "txtPeriodo",
+      "slcFrecuenciaParametros",
+      "slcBaseParametros",
+      "slcSubBaseParametros",
+      "txtSignalStrengthParametros",
+      "txtNoiseFloorParametros",
+      "txtTransmiTccqParametros",
+      "txtTxRateParametros",
+      "txtRxRateParametros",
+      "txtCodigoBarraRouter",
+      "txtWanRouter",
+      "txtMascaraRouter",
+      "txtPuertaEnlaceRouter",
+      "txtDns1Router",
+      "txtDns2Router",
+      "txtLanWireless",
+      "txtAccesoWireless",
+      "txtSsidWireless",
+      "txtSeguridadWireless",
+      "txtPagoServicio",
+      "txtAdelantoEquipo",
+      "txtCostoAlquiler",
+      "txtMaterialAdicional",
+      "txtTotalCancelado",
+      "txtSaldoPendiente"
+    ];
+
+    let campos = [...camposComunes];
+
+    const tipoOperacion = document.getElementById('slcOperacion').value;
+    if (tipoOperacion === 'frmventa') {
+      campos = [...campos, ...camposVenta];
+    } else if (tipoOperacion === 'frmalquiler') {
+      campos = [...campos, ...camposAlquilado];
+    }
+
+    for (const campo of campos) {
+      const elemento = document.getElementById(campo);
+      if (!elemento || elemento.value.trim() === "") {
+        elemento.classList.add("is-invalid");
+        return false;
+      } else {
+        elemento.classList.remove("is-invalid");
+      }
+    }
+    return true;
   }
 
   document.getElementById('btnRegistrar').addEventListener('click', async (event) => {
-    if (!validarFormulario()) {
-      event.preventDefault();
-      return;
-    }
-    if (!flagFichaInstalacion) {
-      await registrarFichaWisp();
-      showToast("Ficha de Instalación guardada correctamente", "SUCCESS");
-      setTimeout(() => {
-        window.location.href = `${config.HOST}views/Contratos/`;
-      }, 2000);
-    } else {
-      showToast("Ficha de Instalación ya guardada", "INFO");
-    }
+    await registrarFichaWisp();
   });
 
   document.getElementById("btnCancelar").addEventListener("click", () => {
