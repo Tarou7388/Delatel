@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     paramsEnviar.append("nombre", nombreCaja);
     paramsEnviar.append("descripcion", descripcionCaja);
     paramsEnviar.append("numeroEntradas", numeroEntradasCaja);
-    paramsEnviar.append("idSector", idSectorRegistro);
+    paramsEnviar.append("idSector", sectorCercano);
     paramsEnviar.append("direccion", direccionCaja);
     paramsEnviar.append("coordenadas", coordenadasEnviar);
     paramsEnviar.append("idUsuario", user.idUsuario);
@@ -81,8 +81,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       body: paramsEnviar
     });
     const data = await response.json();
-    idCajaRegistro = data.id_caja;
-    console.log(data);
+    idCajaRegistro = data[0].id_caja;
   }
 
   async function agregarCable() {
@@ -98,6 +97,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       body: paramsEnviar
     });
     const data = await response.json();
+    console.log(data);
     if(data.error){
       showToast(data.error.message, "ERROR");
     }else{
@@ -119,8 +119,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     });
     const params = {
-      marcador: marcadorCercano.idValue,
-      distancia: distancia
+      marcador: marcadorCercano,
+      distancia: menorDistancia
     }
     return params;
   }
@@ -133,8 +133,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     direccionCaja = document.querySelector("#direccionCaja").value;
     coordenadasCaja = Coordenadas;
 
-    sectorCercano = await buscarMarcadorCercano(datosSectores, coordenadasCaja);
-    console.log(sectorCercano);
+    const marcador = await buscarMarcadorCercano(datosSectores, coordenadasCaja);
+    sectorCercano = marcador.marcador.id_sector;
     banderaCable = true;
     const modal = bootstrap.Modal.getInstance(document.getElementById('modalAgregar'));
     modal.hide();
@@ -155,6 +155,11 @@ document.addEventListener('DOMContentLoaded', async () => {
           idMufaRegistro = datos[i].id_mufa;
           const json = { lat: e.latLng.lat(), lng: e.latLng.lng() };
           lineaCableGuardar.push(json);
+          banderaCable = false;
+          if(ask("¿Desea guardar la caja?")){
+            await agregarCaja();
+            await agregarCable();
+          }
         }
       });
     }
@@ -176,7 +181,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   async function eventoSectores() {
     datosSectores = await obtenerDatosPlano(`${config.HOST}app/controllers/Sector.controllers.php?operacion=listarSectoresMapa`);
-    console.log(datosSectores);
     marcadoresSectores = await marcadoresPlano(datosSectores, "sector");
   }
 
