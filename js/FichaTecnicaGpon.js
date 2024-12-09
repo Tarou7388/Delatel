@@ -1,6 +1,9 @@
 import config from "../env.js";
 document.addEventListener("DOMContentLoaded", () => {
   const userid = user["idUsuario"];
+  const urlParams = new URLSearchParams(window.location.search);
+  const idCaja = urlParams.get('idCaja') || localStorage.getItem('idCaja');
+  console.log("idCaja:", idCaja);
   const txtCantCable = document.getElementById("txtCantCable");
   const txtPrecioCable = document.getElementById("txtPrecioCable");
   const txtCostoCable = document.getElementById("txtCostoCable");
@@ -298,6 +301,7 @@ document.addEventListener("DOMContentLoaded", () => {
             },
             detalles: txtaDetallesModen,
           },
+          idCaja: idCaja, // id de la caja
         };
       }
     }

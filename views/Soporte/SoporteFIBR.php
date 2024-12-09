@@ -53,7 +53,7 @@
             <div class="col-md-4">
               <div class="form-floating">
                 <input type="number" class="form-control" id="txtPotenciaDos" placeholder="Potencia" disabled required>
-                <label for="txtPotenciaDos">Potencia</label>
+                <label for="txtPotencia">Potencia</label>
               </div>
             </div>
             <div class="col-md-4 d-flex align-items-center">
@@ -81,7 +81,7 @@
             <div class="col-md-4">
               <div class="form-floating">
                 <input type="number" class="form-control" id="txtPotencia" placeholder="Potencia" disabled required>
-                <label for="txtPotencia">Potencia</label>
+                <label for="txtPotenciaDos">Potencia</label>
               </div>
             </div>
           </div>

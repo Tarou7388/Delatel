@@ -5,15 +5,15 @@ import { FichaSoporte, inicializarDataTable } from "./Herramientas.js";
 document.addEventListener("DOMContentLoaded", () => {
   const urlParams = new URLSearchParams(window.location.search);
   const serv = urlParams.get("tiposervicio");
-  const form = urlParams.get("frm-registro-gpon");
+  const form = document.getElementById("frm-registro-gpon");
 
   const txtPlan = document.getElementById("txtPlan");
   const txtPppoe = document.getElementById("txtPppoe");
-  const txtPotenciaDos = document.getElementById("txtPotenciaDos");
+  const txtPotenciaDos = document.getElementById("txtPotencia");
   const chkCatv = document.getElementById("chkCatv");
   const txtClave = document.getElementById("txtClave");
   const txtVlan = document.getElementById("txtVlan");
-  const txtPotencia = document.getElementById("txtPotencia");
+  const txtPotencia = document.getElementById("txtPotenciaDos");
   const txtSsid = document.getElementById("txtSsid");
   const txtPass = document.getElementById("txtPass");
   const txtOtros = document.getElementById("txtOtros");
@@ -123,16 +123,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       const dataFibra = await FichaSoporte(idSoporte);
-      const fibraFiltrado = JSON.parse(dataFibra[0].ficha_instalacion).fibraOptica;
+      const fibraFiltrado = JSON.parse(dataFibra[0].ficha_instalacion).fibraoptica;
+      console.log(JSON.parse(dataFibra[0].ficha_instalacion));
       console.log(fibraFiltrado);
       //Asignacion para el campo de plan.
       console.log(fibraFiltrado.plan);
       txtPlan.value = fibraFiltrado.plan;
       //Asignacion de Usuario PPPoE
       console.log(fibraFiltrado.usuario);
-
+      txtPppoe.value = fibraFiltrado.usuario;
       //Asignacion de clave PPPoE
-      console.log(fibraFiltrado.claveAcceso);
+      console.log(fibraFiltrado.claveacceso);
+      txtClave.value = fibraFiltrado.claveacceso;
+      //Asignacion potencia 
+      console.log(fibraFiltrado);
+      txtPotencia.value = fibraFiltrado.potencia;
+      //
+      console.log(fibraFiltrado);
 
       //Asignacion potencia 
       console.log(fibraFiltrado);
@@ -140,7 +147,11 @@ document.addEventListener("DOMContentLoaded", () => {
       //
       console.log(fibraFiltrado);
 
+      //Asignacion potencia 
+      console.log(fibraFiltrado);
 
+      //
+      console.log(fibraFiltrado);
 
     } catch (error) {
       console.error("Error en data de Fibra:", error);

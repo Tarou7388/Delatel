@@ -13,6 +13,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   const slcPaquetesActualizar = document.querySelector("#slcPaquetesActualizar");
   const txtNota = document.querySelector("#txtNota");
   const accesos = await Herramientas.permisos();
+  const btnBuscarCoordenadas = document.querySelector("#btnBuscarCoordenadas");
 
   let idSector = null;
   let idCaja = null;
@@ -110,16 +111,6 @@ window.addEventListener("DOMContentLoaded", async () => {
         const servicios = JSON.parse(paquete.id_servicio).id_servicio;
         return servicios.length === 2 && !paquete.inactive_at;
       });
-    } else if (tipo === "trios") {
-      paquetesFiltrados = dataPaquetes.filter(paquete => {
-        const servicios = JSON.parse(paquete.id_servicio).id_servicio;
-        return servicios.length === 3 && !paquete.inactive_at;
-      });
-    } else if (tipo === "cuarteto") {
-      paquetesFiltrados = dataPaquetes.filter(paquete => {
-        const servicios = JSON.parse(paquete.id_servicio).id_servicio;
-        return servicios.length === 4 && !paquete.inactive_at;
-      });
     }
 
     if (paquetesFiltrados.length === 0) {
@@ -149,7 +140,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   async function cargarSelectPaquetes() {
     const idServicioSeleccionado = slcTipoServicio.value;
-    if (idServicioSeleccionado === "duos" || idServicioSeleccionado === "trios" || idServicioSeleccionado === "cuarteto") {
+    if (idServicioSeleccionado === "duos") {
       await cargarPaquetesMultiples(idServicioSeleccionado);
     } else {
       await cargarPaquetes(idServicioSeleccionado);
@@ -295,6 +286,8 @@ window.addEventListener("DOMContentLoaded", async () => {
             showToast("¡Contrato registrado correctamente!", "SUCCESS", 1500);
             resetUI();
             tabla.ajax.reload();
+            // Guardar el idCaja en el almacenamiento local
+            localStorage.setItem('idCaja', mapa.idCaja);
           } catch (error) {
             console.log(error);
             showToast("Ocurrió un error en las cajas.", "ERROR");
@@ -523,9 +516,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     modal.show();
 
     try {
-      const response = await fetch(
-        `${config.HOST}app/controllers/Contrato.controllers.php?operacion=buscarContratoId&id=${idContrato}`
-      );
+      const response = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=buscarContratoId&id=${idContrato}`);
       const data = await response.json();
       document.getElementById("txtIdContratoActualizar").value = data[0].id_contrato;
       document.getElementById("txtNombreActualizar").value = data[0].nombre_cliente;
@@ -541,12 +532,6 @@ window.addEventListener("DOMContentLoaded", async () => {
       if (tiposServicio === 2) {
         await cargarTipoServicioActualizar('duos');
         await cargarPaquetesMultiplesActualizar("duos", data[0].id_paquete);
-      } else if (tiposServicio === 3) {
-        await cargarTipoServicioActualizar('trios');
-        await cargarPaquetesMultiplesActualizar("trios", data[0].id_paquete);
-      } else if (tiposServicio === 4) {
-        await cargarTipoServicioActualizar('cuarteto');
-        await cargarPaquetesMultiplesActualizar("cuarteto", data[0].id_paquete);
       } else {
         await cargarTipoServicioActualizar(idServicio);
         await cargarPaquetesActualizar(idServicio, data[0].id_paquete);
@@ -617,9 +602,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       const slcTipoServicioActualizar = document.getElementById("slcTipoServicioActualizar");
       slcTipoServicioActualizar.innerHTML = '<option value="0" disabled selected>Seleccione</option>';
       const opcionesAdicionales = [
-        { id_servicio: 'duos', tipo_servicio: 'Dúos' },
-        { id_servicio: 'trios', tipo_servicio: 'Tríos' },
-        { id_servicio: 'cuarteto', tipo_servicio: 'Cuarteto' }
+        { id_servicio: 'duos', tipo_servicio: 'Dúos' }
       ];
 
       opcionesAdicionales.forEach((servicio) => {
@@ -688,16 +671,6 @@ window.addEventListener("DOMContentLoaded", async () => {
         const servicios = JSON.parse(paquete.id_servicio).id_servicio;
         return servicios.length === 2 && !paquete.inactive_at;
       });
-    } else if (tipo === "trios") {
-      paquetesFiltrados = dataPaquetes.filter(paquete => {
-        const servicios = JSON.parse(paquete.id_servicio).id_servicio;
-        return servicios.length === 3 && !paquete.inactive_at;
-      });
-    } else if (tipo === "cuarteto") {
-      paquetesFiltrados = dataPaquetes.filter(paquete => {
-        const servicios = JSON.parse(paquete.id_servicio).id_servicio;
-        return servicios.length === 4 && !paquete.inactive_at;
-      });
     }
 
     if (paquetesFiltrados.length === 0) {
@@ -723,7 +696,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   async function cargarSelectPaquetesActualizar(idServicio, idPaqueteSeleccionado) {
     const tipoServicioSeleccionado = document.getElementById("slcTipoServicioActualizar").value;
-    if (tipoServicioSeleccionado === "duos" || tipoServicioSeleccionado === "trios" || tipoServicioSeleccionado === "cuarteto") {
+    if (tipoServicioSeleccionado === "duos") {
       await cargarPaquetesMultiplesActualizar(tipoServicioSeleccionado, idPaqueteSeleccionado);
     } else {
       await cargarPaquetesActualizar(idServicio, idPaqueteSeleccionado);
@@ -817,9 +790,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
       slcTipoServicio.empty();
 
-      slcTipoServicio.append(
-        '<option value="" disabled selected>Seleccione</option>'
-      );
+      slcTipoServicio.append('<option value="" disabled selected>Seleccione</option>');
 
       const serviciosActivos = servicios.filter((servicio) => servicio.inactive_at === null);
       if (serviciosActivos.length === 0) {
@@ -837,8 +808,11 @@ window.addEventListener("DOMContentLoaded", async () => {
         const idServicio = $(this).val();
         if (idServicio === "duos") {
           cargarPaquetesMultiples(idServicio);
-        } else {
-          cargarPaquetes(idServicio);
+          btnBuscarCoordenadas.disabled = false;
+          sector.disabled = true;
+        } else if (idServicio === "2") {
+          btnBuscarCoordenadas.disabled = true;
+          sector.disabled = false;
         }
       });
     } catch (error) {
@@ -846,7 +820,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  document.querySelector("#btnBuscarCoordenadas").addEventListener("click", async () => {
+  btnBuscarCoordenadas.addEventListener("click", async () => {
     const params = { cajas: true, mufas: true }
     const id = "map"
     const renderizado = "modal"

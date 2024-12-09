@@ -1,13 +1,62 @@
 import config from '../env.js';
 document.addEventListener('DOMContentLoaded', () => {
   const userid = user["idUsuario"];
+  const urlParams = new URLSearchParams(window.location.search);
+  const idCaja = urlParams.get('idCaja') || localStorage.getItem('idCaja');
+  console.log("idCaja:", idCaja);
   var today = new Date().toISOString().split('T')[0];
   document.getElementById("txtFecha").value = today;
+  const txtPeriodo = document.getElementById("txtPeriodo");
+
+  const periodoDate = new Date();
+  periodoDate.setMonth(periodoDate.getMonth() + 6);
+  const DateFormateado = periodoDate.toISOString().split("T")[0];
+  txtPeriodo.value = DateFormateado;
+  txtPeriodo.min = DateFormateado;
 
   let jsonData = [];
   let jsonRepetidor = [];
   let flagFichaInstalacion = false;
   let numeroRepetidores = 0;
+
+  const requiredFields = document.querySelectorAll(".form-control");
+
+  requiredFields.forEach(field => {
+    field.addEventListener("input", function () {
+      const label = field.nextElementSibling;
+      const invalidFeedback = label.nextElementSibling;
+
+      if (field.value.trim() !== "") {
+        field.classList.remove("is-invalid");
+        invalidFeedback.style.display = "none";
+      } else {
+        field.classList.add("is-invalid");
+        invalidFeedback.style.display = "block";
+      }
+    });
+  });
+
+  // Validar valores en tiempo real para campos con rango
+  function validarValorRango(event) {
+    const elemento = event.target;
+    const min = parseFloat(elemento.min);
+    const max = parseFloat(elemento.max);
+    const mensaje = `${elemento.placeholder} debe estar entre ${min} y ${max}.`;
+    const invalidFeedback = elemento.nextElementSibling.nextElementSibling;
+
+    if (parseFloat(elemento.value) < min || parseFloat(elemento.value) > max) {
+      elemento.classList.add("is-invalid");
+      invalidFeedback.textContent = mensaje;
+      invalidFeedback.style.display = "block";
+    } else {
+      elemento.classList.remove("is-invalid");
+      invalidFeedback.style.display = "none";
+    }
+  }
+
+  // Asignar eventos de validación en tiempo real
+  document.getElementById("txtPotenciaFibra").addEventListener("input", validarValorRango);
+  document.getElementById("txtAntenas").addEventListener("input", validarValorRango);
 
   (async () => {
     try {
@@ -164,6 +213,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const chkCatv = document.querySelector("#chkCatv").checked;
     const txtaDetallesModen = document.querySelector("#txtDetallesModen").value;
 
+    console.log("Plan:", txtPlan);
+    console.log("Periodo:", txtPeriodo);
+
     jsonData = {
       fibraOptica: {
         usuario: txtUsuario,
@@ -184,7 +236,8 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         detallesModen: txtaDetallesModen,
         repetidores: jsonRepetidor
-      }
+      },
+      idCaja: idCaja, // id de la caja
     }
   }
 
@@ -408,8 +461,44 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  function validarCampos() {
+    const campos = [
+      "txtUsuario",
+      "txtClaveAcceso",
+      "txtPlan",
+      "txtPeriodo",
+      "txtPotenciaFibra",
+      "txtSsdi",
+      "txtSeguridad",
+      "txtCodigoBarra",
+      "txtSerieModen",
+      "slcBanda",
+      "txtAntenas"
+    ];
+
+    let allValid = true;
+
+    for (const campo of campos) {
+      const elemento = document.getElementById(campo);
+      if (!elemento || elemento.value.trim() === "") {
+        if (elemento) {
+          elemento.classList.add("is-invalid");
+        }
+        allValid = false;
+      } else {
+        elemento.classList.remove("is-invalid");
+      }
+    }
+
+    return allValid;
+  }
+
   document.getElementById("btnGuardar").addEventListener("click", async () => {
     if (!flagFichaInstalacion) {
+      if (!validarCampos()) {
+        showToast("Todos los campos son obligatorios.", "WARNING");
+        return;
+      }
       await Guardar();
       showToast("Ficha de Instalación Guardarda Correctamente", "SUCCESS");
       setTimeout(() => {

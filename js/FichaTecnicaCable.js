@@ -10,7 +10,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const txtPrecioConector = document.getElementById("txtPrecioConector");
   const txtCostoConector = document.getElementById("txtCostoConector");
 
+  const txtSpliter = document.getElementById("txtSpliter");
+  const txtPeriodo = document.getElementById("txtPeriodo");
+
   var today = new Date().toISOString().split("T")[0];
+
+  const periodoDate = new Date();
+  periodoDate.setMonth(periodoDate.getMonth() + 6);
+  const DateFormateado = periodoDate.toISOString().split("T")[0];
+  txtPeriodo.value = DateFormateado;
+  txtPeriodo.min = DateFormateado;
 
   let tipoPaquete = "";
   let numeroSintotizadores = 0;
@@ -18,6 +27,72 @@ document.addEventListener("DOMContentLoaded", () => {
   let jsonCosto = {};
   let jsonData = {};
   let jsonCable = {};
+
+  // Script para manejar la visibilidad de los asteriscos rojos y mostrar advertencias
+  const requiredFields = document.querySelectorAll(".form-control");
+
+  requiredFields.forEach(field => {
+    field.addEventListener("input", function () {
+      const label = field.nextElementSibling.nextElementSibling;
+      const asterisk = label.querySelector(".required-asterisk");
+      const invalidFeedback = field.nextElementSibling;
+
+      if (field.value.trim() !== "") {
+        asterisk.style.display = "none";
+        field.classList.remove("is-invalid");
+        invalidFeedback.style.display = "none";
+      } else {
+        asterisk.style.display = "inline";
+        field.classList.add("is-invalid");
+        invalidFeedback.style.display = "block";
+      }
+    });
+  });
+
+  // Validar valores negativos en tiempo real para campos positivos
+  function validarValorNegativoPositivo(event) {
+    const elemento = event.target;
+    const min = 0;
+    const mensaje = `${elemento.placeholder} debe ser ${min} o más.`;
+    const invalidFeedback = elemento.nextElementSibling;
+
+    if (parseFloat(elemento.value) < min) {
+      elemento.classList.add("is-invalid");
+      invalidFeedback.textContent = mensaje;
+      invalidFeedback.style.display = "block";
+    } else {
+      elemento.classList.remove("is-invalid");
+      invalidFeedback.style.display = "none";
+    }
+  }
+
+  // Validar valores en tiempo real para campos con rango
+  function validarValorRango(event) {
+    const elemento = event.target;
+    const min = parseFloat(elemento.min);
+    const max = parseFloat(elemento.max);
+    const mensaje = `${elemento.placeholder} debe estar entre ${min} y ${max}.`;
+    const invalidFeedback = elemento.nextElementSibling;
+
+    if (parseFloat(elemento.value) < min || parseFloat(elemento.value) > max) {
+      elemento.classList.add("is-invalid");
+      invalidFeedback.textContent = mensaje;
+      invalidFeedback.style.display = "block";
+    } else {
+      elemento.classList.remove("is-invalid");
+      invalidFeedback.style.display = "none";
+    }
+  }
+
+  // Asignar eventos de validación en tiempo real
+  txtCantConector.addEventListener("input", validarValorNegativoPositivo);
+  txtCantCable.addEventListener("input", validarValorNegativoPositivo);
+  txtSpliter.addEventListener("input", validarValorNegativoPositivo);
+  txtPotenciaCable.addEventListener("input", validarValorRango);
+  txtGponNap.addEventListener("input", validarValorRango);
+  txtCatvNap.addEventListener("input", validarValorRango);
+  txtGponCasa.addEventListener("input", validarValorRango);
+  txtCatvCasa.addEventListener("input", validarValorRango);
 
   // Cargar Datos de Ficha del Cliente y la Ficha Tecnica
   (async () => {
@@ -135,7 +210,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const txtCantCable = document.querySelector("#txtCantCable").value;
     const txtPrecioCable = document.querySelector("#txtPrecioCable").value;
 
+    console.log("txtPaquete:", txtPaquete);
+    console.log("txtPeriodo:", txtPeriodo);
+
     if (
+      txtPaquete === "" ||
       txtPagoInst === "" ||
       txtPeriodo === "" ||
       txtPotencia === "" ||
@@ -197,22 +276,20 @@ document.addEventListener("DOMContentLoaded", () => {
       },
     };
 
-    if (typeof tipoPaquete !== "undefined" && tipoPaquete === "CABL") {
-      const txtCantCable = document.querySelector("#txtCantCable").value;
-      const txtPrecioCable = document.querySelector("#txtPrecioCable").value;
-      const txtPrecioConector = document.querySelector("#txtPrecioConector").value;
-      const txtCantConector = document.querySelector("#txtCantConector").value;
+    const txtCantCable = document.querySelector("#txtCantCable").value;
+    const txtPrecioCable = document.querySelector("#txtPrecioCable").value;
+    const txtPrecioConector = document.querySelector("#txtPrecioConector").value;
+    const txtCantConector = document.querySelector("#txtCantConector").value;
 
-      const jsonCostoCable = {
-        numerosintotizadores: parseInt(txtCantSintotizador) || 0,
-        costoAlquilerSintotizador: parseFloat(txtCostoAlquiler) || 0,
-        cantidadCable: txtCantCable,
-        precioCable: txtPrecioCable,
-        precioConector: txtPrecioConector,
-        cantidadConector: txtCantConector,
-      };
-      jsonCosto.cableCosto = jsonCostoCable;
-    }
+    const jsonCostoCable = {
+      numerosintotizadores: parseInt(txtCantSintotizador) || 0,
+      costoAlquilerSintotizador: parseFloat(txtCostoAlquiler) || 0,
+      cantidadCable: txtCantCable,
+      precioCable: txtPrecioCable,
+      precioConector: txtPrecioConector,
+      cantidadConector: txtCantConector,
+    };
+    jsonCosto.cableCosto = jsonCostoCable;
 
     return jsonCosto;
   }
@@ -290,6 +367,8 @@ document.addEventListener("DOMContentLoaded", () => {
     jsonData.cable = jsonCable;
     jsonData.costo = jsonCosto;
 
+    console.log("jsonData:", jsonData);
+
     // Validación de campos obligatorios
     if (!validarCampos()) {
       showToast("Todos los campos son obligatorios.", "WARNING");
@@ -345,7 +424,10 @@ document.addEventListener("DOMContentLoaded", () => {
     for (const campo of campos) {
       const elemento = document.getElementById(campo);
       if (!elemento || elemento.value.trim() === "") {
+        elemento.classList.add("is-invalid");
         return false;
+      } else {
+        elemento.classList.remove("is-invalid");
       }
     }
     return true;
