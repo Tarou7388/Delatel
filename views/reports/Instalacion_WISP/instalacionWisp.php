@@ -67,8 +67,8 @@ $HOST = "http://localhost/DELATEL";
     </thead>
     <tbody>
       <tr>
-        <td class="text-center"><strong>EQUIPO:</strong></td>
-        <td></td>
+        <td class="text-center"><strong>PERIODO:</strong></td>
+        <td class="text-center"><?= htmlspecialchars($fichaTecnica['parametros']['periodo']) ?></td>
         <td class="text-center"><strong>SIGNAL STRENGTH</strong></td>
         <td class="text-center"><?= htmlspecialchars($fichaTecnica['parametros']['signalStrength']) ?></td>
         <td class="text-center"><strong>FRECUENCIA:</strong></td>

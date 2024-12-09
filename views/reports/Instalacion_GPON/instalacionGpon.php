@@ -164,7 +164,7 @@ $HOST = "http://localhost/Delatel";
         <td class="text-center" ><strong>TRIPLEXOR:</strong></td>
         <td class="text-center"><?= htmlspecialchars($fichaTecnica['cable']['triplexor']['requerido']); ?></td>
         <td class="text-center"><strong>PERIODO:</strong></td>
-        <td colspan="2"></td>
+        <td colspan="2" class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['periodo']); ?></td>
         <td class="text-center"><strong>SPLITER:</strong></td>
         <td class="text-center"><?= htmlspecialchars($fichaTecnica['cable']['spliter'][0]['tipo']); ?></td>
         <td class="text-center"><?= htmlspecialchars($fichaTecnica['cable']['spliter'][0]['cantidad']); ?></td>
