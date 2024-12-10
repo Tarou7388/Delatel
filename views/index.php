@@ -11,7 +11,6 @@
       <div class="modal-body">
         <p><strong>ID:</strong> <span id="detalleId"></span></p>
         <p><strong>Nombre y Apellido:</strong> <span id="detalleNombre"></span></p>
-        <!-- <p><strong>Telefono:</strong> <span id="detalleTelefono"></span></p> -->
         <p><strong>Email:</strong> <span id="detalleEmail"></span></p>
         <p><strong>Dirección:</strong> <span id="detalleDireccion"></span></p>
         <p><strong>Cuando Llamó:</strong> <span id="detalleFechaCreacion"></span></p>
