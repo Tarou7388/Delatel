@@ -303,7 +303,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  async function eliminar(idContrato, idUsuario) {
+  async function eliminar(idContrato, idUsuario, idCaja) {
     if (accesos?.contratos?.eliminar) {
       if (await ask("¿Desea eliminar este contrato?")) {
         const response = await fetch(
@@ -321,6 +321,22 @@ window.addEventListener("DOMContentLoaded", async () => {
         );
         const data = await response.json();
         if (data.eliminado) {
+          if (idCaja != -1) {
+            const respuesta = await fetch(`${config.HOST}app/controllers/Caja.controllers.php`, {
+              method: "PUT",
+              body: JSON.stringify({
+                operacion: "recontarCaja",
+                idContrato: idCaja
+              }),
+              headers: {
+                "Content-Type": "application/json",
+              },
+            });
+
+            const data = await respuesta.json();
+
+            console.log(data);
+          }
           showToast("¡Contrato eliminado correctamente!", "SUCCESS", 1500);
           resetUI();
           tabla.ajax.reload();
@@ -458,9 +474,25 @@ window.addEventListener("DOMContentLoaded", async () => {
         });
 
         botonesEliminar.forEach((boton) => {
-          boton.addEventListener("click", (event) => {
+          boton.addEventListener("click", async (event) => {
             const idContrato = event.target.getAttribute("data-idContrato");
-            eliminar(idContrato, 1);
+            const tipoServicio = boton.closest('tr').querySelector('td:nth-child(5)').textContent.trim();
+            let idCaja = -1;
+            if (tipoServicio === "FIBR,CABL" || tipoServicio === "FIBR") {
+              try {
+                const response = await fetch(
+                  `${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerJsonFichabyId&id=${idContrato}`
+                );
+                const data = await response.json();
+                idCaja = JSON.parse(data[0].ficha_instalacion).idCaja;
+              } catch (error) {
+                console.error("Error al obtener el JSON de la ficha de instalación:", error);
+                idCaja = -1;
+              }
+
+            }
+
+            eliminar(idContrato, 1, idCaja);
           });
         });
 

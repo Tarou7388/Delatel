@@ -68,13 +68,12 @@ END $$
 
 DROP PROCEDURE IF EXISTS spu_recontar_espacio_caja$$
 CREATE PROCEDURE spu_recontar_espacio_caja (
-  IN p_id_contrato INT
+  IN p_id_caja INT
 )
 BEGIN
-  UPDATE tb_cajas 
-  INNER JOIN tb_contratos ON tb_cajas.id_sector = tb_contratos.id_sector 
-  SET tb_cajas.numero_entradas = tb_cajas.numero_entradas + 1
-  WHERE tb_contratos.id_contrato = p_id_contrato
-    AND tb_contratos.create_at = tb_cajas.update_at;
+  UPDATE tb_cajas
+  SET numero_entradas = numero_entradas + 1,
+      update_at = NOW()
+  WHERE id_caja = p_id_caja AND numero_entradas > 0;
 END $$
 

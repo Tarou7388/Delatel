@@ -12,16 +12,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     case 'listarContratos':
       $start = isset($_GET['start']) ? (int)$_GET['start'] : 0;
       $length = isset($_GET['length']) ? (int)$_GET['length'] : 10;
-      $search = isset($_GET['search']['value']) ? $_GET['search']['value'] : "";  
+      $search = isset($_GET['search']['value']) ? $_GET['search']['value'] : "";
       $resultados = $contrato->listarContratos($start, $length, $search);
       $response = [
-          "draw" => isset($_GET['draw']) ? (int)$_GET['draw'] : 1,
-          "recordsTotal" => $resultados['totalRegistros'],
-          "recordsFiltered" => $resultados['totalRegistros'],
-          "data" => $resultados['contratos']
+        "draw" => isset($_GET['draw']) ? (int)$_GET['draw'] : 1,
+        "recordsTotal" => $resultados['totalRegistros'],
+        "recordsFiltered" => $resultados['totalRegistros'],
+        "data" => $resultados['contratos']
       ];
       echo json_encode($response);
-      break;   
+      break;
     case 'buscarContratoId':
       $resultado = $contrato->buscarContratoId(["id" => Herramientas::sanitizarEntrada($_GET['id'])]);
       echo json_encode($resultado);
@@ -40,6 +40,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
       break;
     case 'obtenerPDF':
       $resultado = $contrato->obtenerPDF(['id' => Herramientas::sanitizarEntrada($_GET['id'])]);
+      echo json_encode($resultado);
+      break;
+    case "obtenerJsonFichabyId":
+      $resultado = $contrato->obtenerJsonFichabyId(['id' => Herramientas::sanitizarEntrada($_GET['id'])]);
       echo json_encode($resultado);
       break;
   }

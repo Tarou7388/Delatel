@@ -250,4 +250,13 @@ class Contrato extends Conexion
         );
         return $this->consultaParametros($sql, $values);
     }
+
+    public function obtenerJsonFichabyId($params = [])
+    {
+        $sql = "CALL spu_contratos_JsonFichabyId(?)";
+        $values = array(
+            $params['id']
+        );
+        return $this->consultaParametros($sql, $values);
+    }
 }

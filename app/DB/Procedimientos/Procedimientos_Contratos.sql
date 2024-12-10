@@ -353,3 +353,14 @@ BEGIN
     WHERE 
         co.id_contrato = p_id_contrato;
 END$$
+
+
+CREATE PROCEDURE spu_contratos_JsonFichabyId(IN p_id_contrato INT)
+BEGIN
+    SELECT 
+        ficha_instalacion
+    FROM 
+        tb_contratos
+    WHERE 
+        id_contrato = p_id_contrato;
+END$$
