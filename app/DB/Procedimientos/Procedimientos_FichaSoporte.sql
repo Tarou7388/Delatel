@@ -5,7 +5,10 @@ DROP VIEW IF EXISTS vw_soporte_detalle;
 CREATE VIEW vw_soporte_detalle AS
 SELECT
     s.id_soporte,
+    c.coordenada,
     s.id_contrato,
+    c.id_sector,
+    sct.sector,
     s.fecha_hora_solicitud,
     s.fecha_hora_asistencia,
     s.prioridad,
@@ -24,6 +27,7 @@ SELECT
 FROM
     tb_soporte s
     LEFT JOIN tb_contratos c ON s.id_contrato = c.id_contrato
+    INNER JOIN tb_sectores sct ON c.id_sector = sct.id_sector
     LEFT JOIN tb_tipo_soporte ts ON s.id_tipo_soporte = ts.id_tipo_soporte
     LEFT JOIN tb_responsables r ON s.id_tecnico = r.id_responsable
     LEFT JOIN tb_usuarios u ON r.id_usuario = u.id_usuario
@@ -119,10 +123,12 @@ CREATE PROCEDURE spu_soporte_filtrar_prioridad (
 )
 BEGIN
     SELECT
+        c.coordenada,
+        c.id_sector,
+        sct.sector,
         s.fecha_hora_solicitud,
         s.fecha_hora_asistencia,
         c.direccion_servicio,
-        sct.sector,
         s.id_soporte,
         s.prioridad,
         s.soporte,
@@ -142,7 +148,7 @@ BEGIN
     LEFT JOIN 
         tb_contratos c ON s.id_contrato = c.id_contrato
     INNER JOIN
-        tb_sectores sct ON c.id_contrato = sct.id_sector
+        tb_sectores sct ON c.id_sector = sct.id_sector
     LEFT JOIN 
         tb_tipo_soporte ts ON s.id_tipo_soporte = ts.id_tipo_soporte
     LEFT JOIN 
@@ -178,40 +184,53 @@ BEGIN
         s.id_soporte = p_idsoporte;
 END $$
 
-DROP PROCEDURE IF EXISTS spu_buscar_ficha_por_dni$$
-
-CREATE PROCEDURE spu_buscar_ficha_por_dni (
-    IN p_dni VARCHAR(20),
-    IN p_servicio VARCHAR(10)
-)
-BEGIN
-    SELECT 
-        s.id_soporte,
-        s.soporte,
-        s.descripcion_problema,
-        s.descripcion_solucion,
-        s.update_at
-    FROM 
-        tb_soporte s
-    LEFT JOIN 
-        tb_contratos c ON s.id_contrato = c.id_contrato
-    LEFT JOIN 
-        tb_clientes cl ON c.id_cliente = cl.id_cliente
-    LEFT JOIN 
-        tb_personas p ON cl.id_persona = p.id_persona
-    LEFT JOIN 
-        tb_paquetes pk ON c.id_paquete = pk.id_paquete
-    INNER JOIN tb_servicios sv ON JSON_CONTAINS(
-        t.id_servicio,
+DROP VIEW IF EXISTS vw_soporte_fichadatos$$
+CREATE VIEW vw_soporte_fichadatos AS
+SELECT 
+    p.nro_doc,
+    s.id_soporte,
+    s.soporte,
+    s.descripcion_problema,
+    s.descripcion_solucion,
+    s.update_at,
+    sv.tipo_servicio,
+    c.coordenada,
+    sv.servicio
+FROM 
+    tb_soporte s
+INNER JOIN 
+    tb_contratos c ON s.id_contrato = c.id_contrato
+INNER JOIN 
+    tb_clientes cl ON c.id_cliente = cl.id_cliente
+INNER JOIN 
+    tb_personas p ON cl.id_persona = p.id_persona
+INNER JOIN 
+    tb_paquetes pk ON c.id_paquete = pk.id_paquete
+INNER JOIN 
+    tb_servicios sv ON JSON_CONTAINS(
+        pk.id_servicio,
         CONCAT(
             '{"id_servicio":',
             sv.id_servicio,
             '}'
         )
-    )
+    );
+
+
+DROP PROCEDURE IF EXISTS spu_buscar_ficha_por_dni$$
+
+CREATE PROCEDURE spu_buscar_ficha_por_dni (
+    IN p_dni VARCHAR(20),
+    IN p_servicio VARCHAR(10),
+    IN p_coordenada VARCHAR(50)
+)
+BEGIN
+    SELECT * FROM 
+        vw_soporte_fichadatos
     WHERE 
-        p.nro_doc = p_dni
-        AND pk.id_servicio = p_servicio
+        nro_doc = p_dni
+        AND tipo_servicio = p_servicio
+        AND coordenada = p_coordenada
     ORDER BY 
-        s.update_at DESC;
+        update_at DESC;
 END $$

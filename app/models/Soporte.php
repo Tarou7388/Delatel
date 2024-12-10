@@ -116,4 +116,15 @@ class Soporte extends Conexion
     $values = array($params['nroDoc']);
     return $this->consultaParametros($sql, $values);
   }
+
+  public function buscarUltimoSoportebyDNI($params = [])
+  {
+    $sql = "CALL spu_buscar_ficha_por_dni(?,?,?)";
+    $values = [
+      $params['nrodoc'],
+      $params['tipoServicio'],
+      $params['coordenada']
+    ];
+    return $this->consultaParametros($sql, $values);
+  }
 }

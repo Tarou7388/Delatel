@@ -1,5 +1,5 @@
 import config from "../env.js";
-import { FichaSoporte, inicializarDataTable } from "./Herramientas.js";
+import { FichaSoporte, FichaSoportePorId } from "./Herramientas.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const txtPotencia = document.getElementById("txtPotencia");
@@ -11,6 +11,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const txtPrecioCable = document.getElementById("txtPrecioCable");
   const txtPrecioConector = document.getElementById("txtPrecioConector");
   const txtaEstadoInicial = document.getElementById("txtaEstadoInicial")
+
+  const txtPrecioCableCambio = document.getElementById("txtPrecioCableCambio");
+  const txtPrecioConectorCambio = document.getElementById("txtPrecioConectorCambio");
+
+  const txtPlan = document.getElementById("txtPlan");
 
 
   const form = document.getElementById("form-cable");
@@ -29,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (idSoporte) {
       await obtenerProblema(idSoporte);
       crearSelectYBoton();
-      await prueba();
+      await ObtenerValores();
 
       //await ArmadoJsonCable();
     } else {
@@ -38,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
       await reporte(urlParams.get("idReporte"));
     }
   })();
-  
+
   async function rellenarDocNombre(doct) {
     const respuesta = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${doct}`);
     const data = await respuesta.json();
@@ -133,13 +138,62 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-  async function prueba() {
+  async function ObtenerValores() {
 
     const urlParams = new URLSearchParams(window.location.search);
     const doc = urlParams.get("doc");
     const idSoporte = urlParams.get("idsoporte");
     const tiposervicio = urlParams.get("tiposervicio");
-    await llenadoDeDatos(doc, idSoporte, tiposervicio);
+    const coordenada = urlParams.get("coordenada");
+
+    await cabeceraFicha(doc);
+
+    console.log(doc);
+
+    const respuesta = await FichaSoportePorId(doc, tiposervicio, coordenada);
+
+    if (respuesta[0].soporte != "{}") {
+      console.log(respuesta);
+      await cargardatos(JSON.parse(respuesta[0].soporte).CABL.cambioscable);
+    }else
+    {
+      await llenadoDeDatos(doc, idSoporte);
+    }
+
+  }
+
+  async function cabeceraFicha(doct) {
+    try {
+      const respuesta = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${doct}`);
+      const data = await respuesta.json();
+      console.log(doct);
+      console.log(data[0].nombre);
+      $("#txtCliente").val(data[0].nombre);
+      $("#txtNrodocumento").val(doct);
+    } catch (error) {
+      console.error("Error en llenadoDeDatos:", error);
+    }
+  }
+
+  async function cargardatos(data) {
+    console.log(data);
+    txtPotencia.value = data.potencia;
+    txtSintonizador.value = data.sintonizador;
+
+    for (let i = 0; i < slcTriplexor.options.length; i++) {
+      if (slcTriplexor.options[i].text.trim().toLowerCase() === data.triplexor.trim().toLowerCase()) {
+        slcTriplexor.selectedIndex = i;
+        break;
+      }
+    }
+
+    txtNumSpliter.value = data.spliter[0].cantidad;
+    slcSpliter.selectedIndex = data.spliter[0].tipo;
+
+    txtCable.value = data.cable.metrosadicionales;
+    txtPrecioCable.value = data.cable.metrosadicionales * data.cable.preciometro;
+    txtConector.value = data.conector.numeroconector;
+    txtPrecioConector.value = data.conector.precio * data.conector.numeroconector;
   }
 
   /**
@@ -172,22 +226,11 @@ document.addEventListener("DOMContentLoaded", () => {
    * @param {string} tiposervicio - Tipo de servicio /-->/ Actualmente sin uso
    * @returns {Promise<void>}
    */
-  async function llenadoDeDatos(doct, idSoporte, tiposervicio) {
-    try {
-      const respuesta = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${doct}`);
-      const data = await respuesta.json();
-      console.log(doct);
-      console.log(data[0].nombre);
-      $("#txtCliente").val(data[0].nombre);
-      $("#txtNrodocumento").val(doct);
-    } catch (error) {
-      console.error("Error en llenadoDeDatos:", error);
-    }
-
+  async function llenadoDeDatos(doct, idSoporte) {
     try {
       const dataCable = await FichaSoporte(idSoporte);
       const cableFiltrado = JSON.parse(dataCable[0].ficha_instalacion).cable;
-      console.log(cableFiltrado.potencia);
+      console.log(cableFiltrado.paquete);
       txtPotencia.value = cableFiltrado.potencia;
 
       //Asignacion de los sintonizadores
@@ -224,8 +267,17 @@ document.addEventListener("DOMContentLoaded", () => {
       //Asignacion del array de conectores      
       console.log(cableFiltrado.conector);
       txtConector.value = cableFiltrado.conector.numeroconector;
+
+      // Heredado de Parametros tecnicos
+      console.log(cableFiltrado.cable.preciometro);
+      txtPrecioCableCambio.value = (cableFiltrado.cable.preciometro).toFixed(2);
+      txtPrecioConectorCambio.value = (cableFiltrado.conector.precio).toFixed(2);
+
       //Calculo para el total de cantidad * precio
       txtPrecioConector.value = (cableFiltrado.conector.numeroconector * cableFiltrado.conector.precio).toFixed(2);
+
+      //Asignar el plan 
+      txtPlan.value =cableFiltrado.paquete
 
     } catch (error) {
       console.error("Error en FichaInstalacion:", error);
@@ -315,17 +367,25 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!existeClave) {
       soporte[serv] = {
         parametroscable: {
+          plan: document.getElementById("txtPlan").value,
           potencia: parseInt(document.getElementById("txtPotencia").value) || 0,
           sintonizador: parseInt(document.getElementById("txtSintonizador").value) || 0,
           triplexor: document.getElementById("slcTriplexor").value === "2" ? "activo" :
-            (document.getElementById("slcTriplexorCambio").value === "3" ? "pasivo" : "no lleva"),
+            (document.getElementById("slcTriplexor").value === "3" ? "pasivo" : "no lleva"),
           spliter: [
             { cantidad: parseInt(document.getElementById("txtNumSpliter").value) || 0, tipo: document.getElementById("slcSpliter").value }
           ],
-          cable: parseInt(document.getElementById("txtCable").value) || 0,
-          conectores: parseInt(document.getElementById("txtConector").value) || 0,
+          conector: {
+            numeroconector: parseInt(document.getElementById("txtConector").value) || 0,
+            precio: parseFloat(document.getElementById("txtPrecioConector").value) || 0
+          },
+          cable: {
+            metrosadicionales: parseInt(document.getElementById("txtCable").value) || 0,
+            preciometro: parseFloat(document.getElementById("txtPrecioCable").value) || 0
+          }
         },
         cambioscable: {
+          plan: document.getElementById("txtPlan").value,
           potencia: parseInt(document.getElementById("txtPotenciaCambio").value) || 0,
           sintonizador: parseInt(document.getElementById("txtSintonizadorCambio").value) || 0,
           triplexor: document.getElementById("slcTriplexorCambio").value === "2" ? "activo" :
@@ -333,8 +393,14 @@ document.addEventListener("DOMContentLoaded", () => {
           spliter: [
             { cantidad: parseInt(document.getElementById("txtNumSpliterCambio").value) || 0, tipo: document.getElementById("slcSpliterCambio").value }
           ],
-          cable: parseInt(document.getElementById("txtCableCambio").value) || 0,
-          conectores: parseInt(document.getElementById("txtConectorCambio").value) || 0,
+          conector: {
+            numeroconector: parseInt(document.getElementById("txtConectorCambio").value) || 0,
+            precio: parseFloat(document.getElementById("txtPrecioConectorCambio").value) || 0
+          },
+          cable: {
+            metrosadicionales: parseInt(document.getElementById("txtCableCambio").value) || 0,
+            preciometro: parseFloat(document.getElementById("txtPrecioCableCambio").value) || 0
+          }
         }
       }
     }

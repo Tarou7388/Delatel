@@ -26,6 +26,19 @@ export async function FichaSoporte(Value) {
   return data
 }
 
+export async function FichaSoportePorId(nrodoc,tipoServicio,coordenada) {
+  const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php`, {
+    method: 'POST',
+    body: JSON.stringify({ 
+      operacion: 'buscarUltimoSoportebyDNI', 
+      nrodoc: nrodoc, 
+      tipoServicio: tipoServicio,
+      coordenada: coordenada
+    })
+  });
+  const data = await response.json()
+  return data
+}
 
 /**
 * Formatea la entrada de un campo de texto para que se asemeje a una dirección IP.

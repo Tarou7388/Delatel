@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const Prioridad = document.querySelector("#slcPrioridad");
 
 
-  async function recorrerIdServicio(data, nrodoc) {
+  async function recorrerIdServicio(data, nrodoc, coordenada) {
     const modal = new bootstrap.Modal(document.getElementById('soporteModal'));
     const modalBody = document.querySelector('#soporteModal .modal-body');
     modalBody.innerHTML = '';
@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
         div.textContent = `Servicio ${index + 1}: ${nombres[0].tipo_servicio}`;
 
         div.addEventListener('click', () => {
-          mostrarFichaServicio(nombres[0].tipo_servicio, data[0].id_soporte, nrodoc);
+          mostrarFichaServicio(nombres[0].tipo_servicio, data[0].id_soporte, nrodoc,coordenada);
         });
 
         modalBody.appendChild(div);
@@ -36,19 +36,19 @@ document.addEventListener("DOMContentLoaded", () => {
       const id = servicios[0];
       const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=obtenerServiciosId&idservicio=${id}`);
       const nombres = await respuesta.json();
-      mostrarFichaServicio(nombres[0].tipo_servicio, data[0].id_soporte, nrodoc);
+      mostrarFichaServicio(nombres[0].tipo_servicio, data[0].id_soporte, nrodoc,coordenada);
     }
   }
 
-  function mostrarFichaServicio(tipoServicio, id_soporte, nro_doc) {
-    window.location.href = `${config.HOST}views/Soporte/Soporte${tipoServicio}?idsoporte=${id_soporte}&doc=${nro_doc}&tiposervicio=${tipoServicio}`;
+  function mostrarFichaServicio(tipoServicio, id_soporte, nro_doc,coordenada) {
+    window.location.href = `${config.HOST}views/Soporte/Soporte${tipoServicio}?idsoporte=${id_soporte}&doc=${nro_doc}&tiposervicio=${tipoServicio}&coordenada=${coordenada}`;
   }
 
   async function obtenerDataSoporte(idsoport) {
     const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idsoport}`);
     const data = await respuesta.json();
     console.log(data);
-    await recorrerIdServicio(data, data[0].nro_doc);
+    await recorrerIdServicio(data, data[0].nro_doc, data[0].coordenada);
   }
 
   const table = inicializarDataTable(

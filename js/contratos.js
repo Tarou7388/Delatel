@@ -267,6 +267,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         if (data.error) {
           console.log(data.error);
         } else {
+          console.log(data);
           try {
             const respuesta = await fetch(`${config.HOST}app/controllers/Caja.controllers.php`, {
               method: "PUT",
@@ -813,6 +814,9 @@ window.addEventListener("DOMContentLoaded", async () => {
         } else if (idServicio === "2") {
           btnBuscarCoordenadas.disabled = true;
           sector.disabled = false;
+        } else {
+          btnBuscarCoordenadas.disabled = false;
+          sector.disabled = true;
         }
       });
     } catch (error) {

@@ -53,6 +53,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'message' => $status ? 'Soporte registrado correctamente' : 'Error al registrar soporte'
       ]);
       break;
+    case 'buscarUltimoSoportebyDNI':
+      $values = [
+        'nrodoc' => Herramientas::sanitizarEntrada($datos['nrodoc']),
+        'tipoServicio' => Herramientas::sanitizarEntrada($datos['tipoServicio']),
+        'coordenada' => $datos['coordenada']
+      ];
+      $status = $soporte->buscarUltimoSoportebyDNI($values);
+      echo json_encode($status);
+      break;
   }
 }
 

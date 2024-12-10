@@ -157,7 +157,7 @@
               <div class="form-floating">
                 <select class="form-select" id="slcTriplexorCambio" aria-label="Selecciona una opción" required>
                   <option value="" selected disabled>Elige una opción</option>
-                  <option value="1">No</option>
+                  <option value="1">No lleva</option>
                   <option value="2">Activo</option>
                   <option value="3">Pasivo</option>
                 </select>
