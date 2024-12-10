@@ -136,8 +136,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-
-
   async function ObtenerValores() {
 
     const urlParams = new URLSearchParams(window.location.search);
