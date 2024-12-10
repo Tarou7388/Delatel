@@ -92,7 +92,7 @@ INSERT INTO tb_personas (tipo_doc, nro_doc, apellidos, nombres, telefono, nacion
 ('DNI','41114586','GOITIA PEREZ','YHONSONN','946090592','Peruano',NULL,1),
 ('DNI','21866147','MENDIGUETE LOYOLA','MARIA JULIA','962402706','Peruana',NULL,1),
 ('DNI','22303840','SARAVIA VELA','ROCIO MAYDEE','981168789','Peruana',NULL,1),
-('DNI','21861430','TASAYCO TOERRES','MARITZA LILIANA','904712454','Peruana',NULL,1),
+('DNI','21861430','TASAYCO TORRES','MARITZA LILIANA','904712454','Peruana',NULL,1),
 ('DNI','21867629','LEVANO TORRES','MARITZA','955446960','Peruana',NULL,1),
 ('DNI','45715311','CARBAJAL SANCHEZ','ROSA','952567956','Peruana',NULL,1),
 ('DNI','70365628','GARCIA TASAYCO','RONALD STALIN','950639761','Peruano',NULL,1),
@@ -340,34 +340,34 @@ INSERT INTO tb_responsables (id_usuario, id_rol,iduser_create) VALUES
 (5, 5,1);
 
 INSERT INTO tb_clientes (id_persona, id_empresa, direccion, referencia, iduser_create, coordenadas) VALUES
-(6, NULL, 'Av. Luis Alva Maurtua S/N', 'Cruz blanca 4ta cuadra - Oruro', 1, '-13.430061, -76.113640'),
-(7, NULL, 'Calle San Luis #139', 'Chincha alta', 1, '-13.421607, -76.122374'),
-(8, NULL, 'AA.HH. Virgen Del Carmen Mz-G N-18 ', 'Chincha Alta', 1, '-1'),
-(9, NULL, 'Calle San Martin #103', 'Sunampe', 1, '-1'),
-(10, NULL, 'Psj. Los Angeles S/N', 'Mina de oro', 1, '-1'),
-(11, NULL, 'Av. Santa Rosa N° 312', 'Lomo largo', 1, '-1'),
-(12, NULL, 'Psj. San Cosme #185', 'Calle Rosario 7ma Cuadra', 1, '-1'),
-(13, NULL, 'Psj. San Vicente Mz-P Lt-16', 'Sunampe', 1, '-1'),
-(14, NULL, 'Av. San Antonio', 'Santa Rosa - Sunampe', 1, '-1'),
-(15, NULL, 'PSj. Primaveral Lt-11022', 'Cruz Blanca', 1, '-1'),
-(16, NULL, 'Psj. Los Claveles N° 207', 'Cruz Blanca - Chinhca Alta', 1, '-1'),
-(17, NULL, 'Calle Parada de los amigos', 'Sunampe', 1, '-1'),
-(18, NULL, 'Barrio el por venir', 'Grocio Prado', 1, '-1'),
-(19, NULL, 'Upis Divina Misericordia Mz-B Lt-6A', 'Chincha Alta', 1, '-1'),
-(20, NULL, 'Psj. 2 de mayo N°228', 'Cruz Blanca', 1, '-1'),
-(21, NULL, 'Urb Los Viñedos N° UZ-12', 'Chincha Alta', 1, '-1'),
-(22, NULL, 'Psj. San Jose Mz-H Lt-10', 'Sunampe', 1, '-1'),
-(23, NULL, 'Calle Sebastian Barranca Lt-14C', 'Grocio Prado', 1, '-1'),
-(24, NULL, 'Psj. San Blas - Calle A Lt-02', 'Alfonso Ugarte Norte-Sunampe', 1, '-1'),
-(25, NULL, 'Av. Unión N°3A - Los Alamos', 'Pueblo Nuevo', 1, '-1'),
-(26, NULL, 'Psj. La frontera N° 257', 'Lomo Largo - Sunampe', 1, '-1'),
-(27, NULL, 'AA.HH El Salvador Mz-J Sub Lt-2-2', 'Pueblo Nuevo a 2 casas de la torre', 1, '-1'),
-(28, NULL, 'Av. Alva Maurtua Mz-J Lt-16', 'Cruz Blanca', 1, '-1'),
-(29, NULL, 'Upis San Andrés Mz-A Lt-6', 'Pueblo Nuevo', 1, '-1'),
-(30, NULL, 'Upis San Andrés Mz-I Lt-19', 'Pueblo Nuevo', 1, '-1'),
-(31, NULL, 'Calle Los Angeles N°368', 'Lomo Largo', 1, '-1'),
-(32, NULL, 'Calle La frontera S/N', 'Sunampe', 1, '-1'),
-(33, NULL, 'Av. Las Viñas Emancipación N° 500', 'Int.12-Sunampe', 1, '-1'),
+(6, NULL, 'Av. Luis Alva Maurtua S/N', 'Cruz blanca 4ta cuadra - Oruro', 1, '-13.430139, -76.113639'), --ANGEL DANIEL NAPA ABREGU
+(7, NULL, 'Calle San Luis #139', 'Chincha alta', 1, '-13.421583, -76.122361'), -- MOISES YATACO GARCIA
+(8, NULL, 'AA.HH. Virgen Del Carmen Mz-G N-18 ', 'Chincha Alta', 1, '-13.427278, -76.124889'), -- MARYORI ELIZABETH MESIAS ALMEYDA
+(9, NULL, 'Av San Martin #103', 'Sunampe', 1, '-13.433306, -76.137694'), -- ROBERTO CARLOS ANCHANTE RICALES
+(10, NULL, 'Psj. Los Angeles S/N', 'Mina de oro', 1, '-13.431694, -76.144278'), --MIGUEL ANGEL TASAYCO LEVANO
+(11, NULL, 'Av. Santa Rosa N° 312', 'Lomo largo', 1, '-13.424111, -76.168028'), --PATRICIA PASTOR ROJAS
+(12, NULL, 'Psj. San Cosme #185', 'Calle Rosario 7ma Cuadra', 1, '-13.406222, -76.138167'), -- YHONSONN GOITIA PEREZ
+(13, NULL, 'Psj. San Vicente Mz-P Lt-16', 'Sunampe', 1, '-13.411083, -76.163611'), -- MARIA JULIA MENDIGUETE LOYOLA
+(14, NULL, 'Av. San Antonio', 'Santa Rosa - Sunampe', 1, '-13.421583, -76.157194'), -- ROCIO MAYDEE SARAVIA VELA
+(15, NULL, 'PSj. Primaveral Lt-11022', 'Cruz Blanca', 1, '-13.430250, -76.121194'), -- MARITZA LILIANA TASAYCO TORRES
+(16, NULL, 'Psj. Los Claveles N° 207', 'Cruz Blanca - Chinhca Alta', 1, '-13.423222, -76.123889'), -- MARITZA LEVANO TORRES
+(17, NULL, 'Calle Parada de los amigos', 'Sunampe', 1, '-13.412833, -76.164778'), -- ROSA CARBAJAL SANCHEZ
+(18, NULL, 'Barrio el por venir', 'Grocio Prado', 1, '-13.403472, -76.165472'), -- RONALD STALIN GARCIA TASAYCO
+(19, NULL, 'Upis Divina Misericordia Mz-B Lt-6A', 'Chincha Alta', 1, '-13.416028, -76.144944'), -- VICTOR HUGO SANTIAGO SARAVIA
+(20, NULL, 'Psj. 2 de mayo N°228', 'Cruz Blanca', 1, '-1'), -- MARIA SANTOS YATACO GARCIA
+(21, NULL, 'Urb Los Viñedos N° UZ-12', 'Chincha Alta', 1, '-13.406250, -76.140111'), -- CECILIA PATRICIA GARCIA MARTINEZ
+(22, NULL, 'Psj. San Jose Mz-H Lt-10', 'Sunampe', 1, '-13.421139, -76.169333'), -- CRISTAL GENTILLE GUTARRA
+(23, NULL, 'Calle Sebastian Barranca Lt-14C', 'Grocio Prado', 1, '-13.382250, -76.156000'), -- DANIEL BARILLAS PEVE
+(24, NULL, 'Psj. San Blas - Calle A Lt-02', 'Alfonso Ugarte Norte-Sunampe', 1, '-13.418639, -76.170583'), -- PEDRO MANUEL CRISOSTOMO LEVANO
+(25, NULL, 'Av. Unión N°3A - Los Alamos', 'Pueblo Nuevo', 1, '-13.403750, -76.138222'), --NAYADE SAIDA HUANQUI TRILLO DE GARAY
+(26, NULL, 'Psj. La frontera N° 257', 'Lomo Largo - Sunampe', 1, '-13.420250, -76.165306'), -- LUIS LOBO MENESES
+(27, NULL, 'AA.HH El Salvador Mz-J Sub Lt-2-2', 'Pueblo Nuevo a 2 casas de la torre', 1, '-13.395750, -76.142361'), -- EDDER RUBEN DIAZ REBATTA
+(28, NULL, 'Av. Alva Maurtua Mz-J Lt-16', 'Cruz Blanca', 1, '-13.428611, -76.117278'),-- DELIA LIBERTAD NAPA CASTILLO
+(29, NULL, 'Upis San Andrés Mz-A Lt-6', 'Pueblo Nuevo', 1, '-13.392583, -76.139028'), --EPIFANIA CLEMENCIA MARTINEZ VILLAR
+(30, NULL, 'Upis San Andrés Mz-I Lt-19', 'Pueblo Nuevo', 1, '-13.394111, -76.137361'), -- JUANA MILAGROS CAMPOS BARRIOS
+(31, NULL, 'Calle Los Angeles N°368', 'Lomo Largo', 1, '-13.419361, -76.168944'), -- MARIA GONZALES ATUNCAR
+(32, NULL, 'Calle Pedro Moreno N° 130', 'Grocio Prado', 1, '-13.410833, -76.140333'), -- LUIS DE LA CRUZ TORRES
+(33, NULL, 'Av. Los Angeles #512 - Sunampe', 'Frente discoteca the boss', 1, '-13.419139, -76.170278'), -- LUIS SARAVIA MEDINA
 (34, NULL, 'Condorillo alto Mz-I Lt-12', 'Chincha Alta', 1, '-1'),
 (35, NULL, 'Psj. San gregorio S/N', 'Alameda - Sunampe', 1, '-1'),
 (36, NULL, 'Psj. 2 de mayo #309', 'Cruz Blanca', 1, '-1'),
@@ -405,16 +405,27 @@ INSERT INTO tb_clientes (id_persona, id_empresa, direccion, referencia, iduser_c
 (68, NULL, 'AA.HH San Judas Tadeo Mz-E Lt-1', 'Sunampe',1,'-1'),
 (69, NULL, 'AA.HH San Judas Tadeo Mz-E Lt-4', 'Sunampe',1,'-1'),
 (70, NULL, 'AA.HH San Judas Tadeo Mz-E Lt-5', 'Sunampe',1,'-1'),
-(71, NULL, '', '',1,'-1'),
-(72, NULL, '', '',1,'-1'),
-(73, NULL, '', '',1,'-1'),
-(74, NULL, '', '',1,'-1'),
-(75, NULL, '', '',1,'-1'),
-(76, NULL, '', '',1,'-1'),
-(77, NULL, '', '',1,'-1'),
-(78, NULL, '', '',1,'-1'),
-(79, NULL, '', '',1,'-1'),
-(80, NULL, '', '',1,'-1');
+(71, NULL, 'Estadio Cruz blanca', 'Chincha Alta',1,'-1'),
+(72, NULL, 'Condorillo alto N°15 primera cuadra', 'Antes de la posta',1,'-1'),
+(73, NULL, 'Centro Poblado El Tigre 141', 'Int. O1 - Chincha Alta',1,'-1'),
+(74, NULL, 'Calle El Carmen N° 190', 'Cruz blanca',1,'-1'),
+(75, NULL, 'Toma de Cala', 'Cruz blanca',1,'-1'),
+(76, NULL, 'Psj San Francisco N°111 Int-20', 'Sunampe',1,'-1'),
+(77, NULL, 'Condominio San Pablo Mz S/N Lt-2-1', 'Sunampe',1,'-1'),
+(78, NULL, 'Av. Victor Raúl Haya de la Torre Lt-2', 'Chacarita - Sunampe - Costado del grifo Green',1,'-1'),
+(79, NULL, 'Av. Fátima N°373', 'Sunampe',1,'-1'),
+(80, NULL, 'Psj. Santa Rosa S/N', 'Cruz Blanca',1,'-1'),
+(81, NULL, 'AA.HH San Valentin Mz-I Lt-12', 'Condorillo bajo',1,'-1'),
+(82, NULL, 'Barrio el por venir Psj. San vicente', 'Lt-35 Mz-G - Grocio Prado',1,'-1'),
+(83, NULL, 'Psj. Sucre N° 470', 'Espalda de mina de oro',1,'-1'),
+(84, NULL, 'Cale el por venir N° 1138 - D', 'Barrio el por venir - Grocio Prado',1,'-1'),
+(85, NULL, 'Av. Monterrico #405 - Sunampe', 'Pasando el colegio Simón bolivar',1,'-1'),
+(86, NULL, 'Av. Primavera N°300', 'Sunampe',1,'-1'),
+(87, NULL, 'HU.CA Santa Teresa S/N', 'Sunampe',1,'-1'),
+(88, NULL, 'AA.HH Las flores de mina Mz-A Lt-6', 'Grocio Prado - Mina de oro',1,'-1'),
+(89, NULL, 'Calle Victor Haya de la Torre Lt-02', 'Chacarita Sunampe',1,'-1'),
+(90, NULL, 'Psj. San Juan Lt-94A', 'Alfonso Ugarte - Sunampe',1,'-1'),
+(91, NULL, 'Calle La Palma 114 cercado de grocio prado', 'Toma el carriso',1,'-1'),
 
 
 INSERT INTO tb_contratos 
