@@ -478,7 +478,7 @@ window.addEventListener("DOMContentLoaded", async () => {
             const idContrato = event.target.getAttribute("data-idContrato");
             const tipoServicio = boton.closest('tr').querySelector('td:nth-child(5)').textContent.trim();
             let idCaja = -1;
-            if (tipoServicio === "FIBR,CABL" || tipoServicio === "FIBR") {
+            if (tipoServicio === "FIBR,CABL" || tipoServicio === "FIBR" || tipoServicio === "CABL") {
               try {
                 const response = await fetch(
                   `${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerJsonFichabyId&id=${idContrato}`
