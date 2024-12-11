@@ -391,6 +391,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 
   async function cargarDatos() {
+    //Cargar Sectores
     const dataSectores = await fetchSectores();
     dataSectores.forEach((sector) => {
       const option = document.createElement("option");
@@ -402,6 +403,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       slcSectorActualizar.appendChild(option);
     });
 
+    //Inicializar tabla
     tabla = new DataTable("#listarContratos", {
       language: {
         url: `https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json`,
@@ -409,32 +411,38 @@ window.addEventListener("DOMContentLoaded", async () => {
       processing: true,
       serverSide: true,
       ajax: {
-        url: `${config.HOST}app/controllers/Contrato.controllers.php?operacion=listarContratos`,
+        url: `${config.HOST}app/controllers/Contrato.ssp.php`,
         type: 'GET',
         dataSrc: function (json) {
           return json.data;
+        },
+        error: function (xhr, error, thrown) {
+          console.error("Error en la solicitud AJAX:", error, thrown);
+          console.error("Respuesta del servidor:", xhr.responseText);
+          showToast("Ocurrió un error al cargar los datos. Por favor, inténtelo de nuevo.", "ERROR");
         }
       },
       columns: [
-        { data: 'nombre_cliente' },
-        { data: 'num_identificacion' },
-        { data: 'paquete' },
-        { data: 'precio' },
-        { data: 'tipos_servicio' },
+        { data: 1 }, // nombre_cliente
+        { data: 2 }, // num_identificacion
+        { data: 3 }, // direccion_servicio
+        { data: 4 }, // paquete
+        { data: 5 }, // precio
+        { data: 6 }, // tipos_servicio
         {
           data: null,
           render: function (data, type, row) {
             return `
-              <button class="btn btn-sm btn-warning btn-edit" data-idContrato="${row.id_contrato}" title="Actualizar">
+              <button class="btn btn-sm btn-warning btn-edit" data-idContrato="${row[0]}" title="Actualizar">
               <i class="fa-regular fa-pen-to-square icon-disabled"></i>
               </button>
-              <button class="btn btn-sm btn-danger btnEliminar" data-idContrato="${row.id_contrato}" title="Eliminar">
+              <button class="btn btn-sm btn-danger btnEliminar" data-idContrato="${row[0]}" title="Eliminar">
               <i class="fa-regular fa-trash-can icon-disabled"></i>
               </button>
-              <button class="btn btn-sm btn-primary btnGenerar" data-idContrato="${row.id_contrato}" title="Generar PDF">
+              <button class="btn btn-sm btn-primary btnGenerar" data-idContrato="${row[0]}" title="Generar PDF">
               <i class="fa-solid fa-file-pdf icon-disabled"></i>
               </button>
-              <button class="btn btn-sm btn-success btnFicha" data-tipoServicio="${row.tipos_servicio}" data-idContrato="${row.id_contrato}" title="Ver Ficha">
+              <button class="btn btn-sm btn-success btnFicha" data-tipoServicio="${row[6]}" data-idContrato="${row[0]}" title="Ver Ficha">
               Ficha
               </button>
             `;
@@ -442,15 +450,17 @@ window.addEventListener("DOMContentLoaded", async () => {
         }
       ],
       columnDefs: [
-        { className: 'text-center', targets: [0, 1, 2, 3, 4, 5] },
-        { width: "200px", targets: [5] }
+        { className: 'text-center', targets: [0, 1, 2, 3, 4, 5, 6] },
+        { width: "200px", targets: [6] }
       ],
       drawCallback: function (settings) {
+        //Agregar event listerners para los botones despues de dibujar la tabla
         const botonesPdf = document.querySelectorAll(".btnGenerar");
         const botonesEliminar = document.querySelectorAll(".btnEliminar");
         const botonesFicha = document.querySelectorAll(".btnFicha");
         const botonesEdit = document.querySelectorAll(".btn-edit");
 
+        //Event listeners para el botón de ficha técnica
         botonesFicha.forEach((boton) => {
           boton.addEventListener("click", (event) => {
             const idContrato = event.target.getAttribute("data-idContrato");
@@ -466,6 +476,7 @@ window.addEventListener("DOMContentLoaded", async () => {
           });
         });
 
+        //Event listeners para el botón de editar
         botonesEdit.forEach((boton) => {
           boton.addEventListener("click", (event) => {
             const idContrato = event.target.getAttribute("data-idContrato");
@@ -473,10 +484,11 @@ window.addEventListener("DOMContentLoaded", async () => {
           });
         });
 
+        //Event listeners para el botón de eliminar
         botonesEliminar.forEach((boton) => {
           boton.addEventListener("click", async (event) => {
             const idContrato = event.target.getAttribute("data-idContrato");
-            const tipoServicio = boton.closest('tr').querySelector('td:nth-child(5)').textContent.trim();
+            const tipoServicio = boton.closest('tr').querySelector('td:nth-child(6)').textContent.trim();
             let idCaja = -1;
             if (tipoServicio === "FIBR,CABL" || tipoServicio === "FIBR" || tipoServicio === "CABL") {
               try {
@@ -496,10 +508,11 @@ window.addEventListener("DOMContentLoaded", async () => {
           });
         });
 
+        //Event listeners para el botón de generar PDF
         botonesPdf.forEach((boton) => {
           boton.addEventListener("click", () => {
             const idContrato = boton.getAttribute("data-idContrato");
-            const tipoServicio = boton.closest('tr').querySelector('td:nth-child(5)').textContent.trim();
+            const tipoServicio = boton.closest('tr').querySelector('td:nth-child(6)').textContent.trim();
             if (tipoServicio === "WISP") {
               window.open(`${config.HOST}views/reports/Contrato_WISP/soporte.php?id=${idContrato}`);
             } else {

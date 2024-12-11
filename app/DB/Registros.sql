@@ -289,36 +289,55 @@ INSERT INTO tb_roles (rol, permisos, iduser_create) VALUES
 ('Almacen - Tecnico', '{"actividad":"Kardex", "administracion":{},"soporte":false,"contratos":false,"inventariado":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"personas":false,"roles":false,"usuarios":false,"paquetes":false}', 1);
 
 INSERT INTO tb_sectores (id_distrito, sector, descripcion, coordenadas, direccion, iduser_create) VALUES
-(110210, 'COLEGIO', 'Descripción del sector', "-13.42544269617297, -76.15808116947606", 'Dirección del sector', 1),
-(110210, 'SANTA ROSA', 'Descripción del sector', "-13.4236801469295, -76.15636428337336", 'Dirección del sector', 1),
-(110210, 'SAN IGNACIO', 'Descripción del sector', "-13.42084308470873, -76.15172619142008", 'Dirección del sector', 1),
-(110210, 'VILLA JULIA', 'Descripción del sector', "-13.41865293087071, -76.14804412727285", 'Dirección del sector', 1),
-(110210, 'PARAISO', 'Descripción del sector', "-13.42056044489115, -76.1658703095588", 'Dirección del sector', 1),
-(110210, 'SAN PILPA', 'Descripción del sector', "-13.41763371580861, -76.1636141502515", 'Dirección del sector', 1),
-(110210, 'CRUZ BLANCA', 'Descripción del sector', "-13.4292202892175, -76.12004531160598", 'Dirección del sector', 1),
-(110210, 'MINA ORO', 'Descripción del sector', "-13.42704443028948, -76.13963358072775", 'Dirección del sector', 1),
-(110210, 'SANTA FE', 'Descripción del sector', "-13.42720878737056, -76.17156138732457", 'Dirección del sector', 1),
-(110210, 'HUACA GRANDE', 'Descripción del sector', "-13.4288474271221, -76.15446500188271", 'Dirección del sector', 1),
-(110206, 'MEJILLONEROS', 'Descripción del sector', "-13.40788239712879, -76.15983137626122", 'Dirección del sector', 1),
-(110206, 'PORVENIR', 'Descripción del sector', "-13.40498211432371, -76.15983221931539", 'Dirección del sector', 1),
-(110206, 'PROGRESO', 'Descripción del sector', "-13.4344505095856, -76.13017637387277", 'Dirección del sector', 1),
-(110107, 'SALVADOR 1', 'Descripción del sector', "-13.39336425906626, -76.1488242018644", 'Dirección del sector', 1),
-(110107, 'TECHO MAX', 'Descripción del sector', "-13.40220429678562, -76.13732471155042", 'Dirección del sector', 1),
-(110107, 'SATELITE 1', 'Descripción del sector', "-13.38765487990007, -76.11958212522634", 'Dirección del sector', 1),
-(110107, 'SATELITE 2', 'Descripción del sector', "-13.38534611704822, -76.12102025177141", 'Dirección del sector', 1),
-(110107, 'ROSEDAL', 'Descripción del sector', "-13.399712698456614, -76.12151072760331", 'Dirección del sector', 1),
-(110201, 'CRUZBLANCA', 'Descripción del sector', "-13.4292202892175, -76.12004531160598", 'Dirección del sector', 1),
-(110201, 'ORURO', 'Descripción del sector', "-13.42999374526452, -76.11673399746118", 'Dirección del sector', 1),
-(110201, 'VR DEL CARMEN', 'Descripción del sector', "-13.42802163353247, -76.12165813154482", 'Dirección del sector', 1),
-(110201, 'CAMPO COND', 'Descripción del sector', "-13.4316581916571, -76.11842467768329", 'Dirección del sector', 1),
-(110201, 'COND. ALTA', 'Descripción del sector', "-13.43669652995902, -76.11306320932194", 'Dirección del sector', 1),
-(110201, 'COND. BAJA', 'Descripción del sector', "-13.43473693459032, -76.11455679499767", 'Dirección del sector', 1);
+(110210, 'COLEGIO', 'Descripción del sector', "-13.42544269617297, -76.15808116947606", '500 Carr. de Sunampe', 1),
+(110210, 'SANTA ROSA', 'Descripción del sector', "-13.4236801469295, -76.15636428337336", 'Av. el Porvenir', 1),
+(110210, 'SAN IGNACIO', 'Descripción del sector', "-13.42084308470873, -76.15172619142008", '322 Av. San Antonio', 1),
+(110210, 'VILLA JULIA', 'Descripción del sector', "-13.41865293087071, -76.14804412727285", '336 Av. San Cristobal', 1),
+(110210, 'PARAISO', 'Descripción del sector', "-13.42056044489115, -76.1658703095588", 'Av. Paraiso', 1),
+(110210, 'SAN PILPA', 'Descripción del sector', "-13.41763371580861, -76.1636141502515", '220 Av. San Pedro de Pilpa', 1),
+(110210, 'CRUZ BLANCA', 'Descripción del sector', "-13.4292202892175, -76.12004531160598", 'C. El Carmen', 1),
+(110210, 'MINA ORO', 'Descripción del sector', "-13.42704443028948, -76.13963358072775", '847 Pasaje Kike', 1),
+(110210, 'SANTA FE', 'Descripción del sector', "-13.42720878737056, -76.17156138732457", 'Santa Fe', 1),
+(110210, 'HUACA GRANDE', 'Descripción del sector', "-13.4288474271221, -76.15446500188271", 'C. Nazareno', 1),
+(110206, 'MEJILLONEROS', 'Descripción del sector', "-13.40788239712879, -76.15983137626122", '1027 Av. 28 de Julio', 1),
+(110206, 'PORVENIR', 'Descripción del sector', "-13.40498211432371, -76.15983221931539", '154 Pje. Benavides', 1),
+(110206, 'PROGRESO', 'Descripción del sector', "-13.4344505095856, -76.13017637387277", '400 Avenida Progreso', 1),
+(110107, 'SALVADOR 1', 'Descripción del sector', "-13.39336425906626, -76.1488242018644", 'Calle Micaela Bastidas', 1),
+(110107, 'TECHO MAX', 'Descripción del sector', "-13.40220429678562, -76.13732471155042", '520 Av. Los Incas', 1),
+(110107, 'SATELITE 1', 'Descripción del sector', "-13.38765487990007, -76.11958212522634", 'Avenida Leoncio Prado', 1),
+(110107, 'SATELITE 2', 'Descripción del sector', "-13.38534611704822, -76.12102025177141", 'Jiron Chimu', 1),
+(110107, 'ROSEDAL', 'Descripción del sector', "-13.399712698456614, -76.12151072760331", 'Pje. Carlos Bernicio', 1),
+(110201, 'CRUZBLANCA', 'Descripción del sector', "-13.4292202892175, -76.12004531160598", 'C. El Carmen', 1),
+(110201, 'ORURO', 'Descripción del sector', "-13.42999374526452, -76.11673399746118", 'Ica', 1),
+(110201, 'VR DEL CARMEN', 'Descripción del sector', "-13.42802163353247, -76.12165813154482", 'Pje. Alva Maurtua', 1),
+(110201, 'CAMPO COND', 'Descripción del sector', "-13.4316581916571, -76.11842467768329", 'Ica', 1),
+(110201, 'COND. ALTA', 'Descripción del sector', "-13.43669652995902, -76.11306320932194", 'Avenida Progreso', 1),
+(110201, 'COND. BAJA', 'Descripción del sector', "-13.43473693459032, -76.11455679499767", 'Ica', 1);
 
-INSERT INTO tb_mufas (nombre, descripcion, coordenadas, direccion, create_at, iduser_create) VALUES
-('Mufa 1', 'Cerca del estadio', '-13.41287751332741, -76.15387988372802', 'Av 123', NOW(), 1),
-('Mufa 2', 'Plaza san Isidro', '-13.429027241634715, -76.14961981773376', 'Av 123456', NOW(), 1),
-('Mufa 3', 'Cerca de la Plaza', '-13.404169746696624, -76.12736834665132', 'Av 123', NOW(), 1),
-('Mufa 4', 'San Nicolas', '-13.42830253845429, -76.12306531088652', 'Av 123456', NOW(), 1);
+INSERT INTO tb_mufas (nombre, descripcion, coordenadas, direccion, iduser_create) VALUES
+('MF-DIST_1', 'MUFA', '-13.42570564488918, -76.15792285270977', '500 Carr. de Sunampe', 1),
+('MF-DIST_2', 'MUFA', '-13.42321566127741, -76.15560128208772', 'Pje. Noras', 1),
+('MF-DIST_4', 'MUFA', '-13.41843986771674, -76.15267002733752', '174 Av. Huascar', 1),
+('MF-DIST_5', 'MUFA', '-13.41832306865034, -76.14753575599708', '313 Av. San Cristobal', 1),
+('MF-DIST-GR-001', 'MUFA', '-13.42070677897916, -76.15869670445154', '732 Carr. de Sunampe', 1),
+('MF-DIST-GR-002', 'MUFA', '-13.41765438581083, -76.162847466781', '218 Av. San Pedro de Pilpa', 1),
+('MF-DIST_10', 'MUFA', ' -13.42856769736073, -76.12136643507596', 'Pje. Alva Maurtua', 1),
+('MF-DIST_11', 'MUFA', ' -13.43437825465185, -76.11985826402989', 'MUFA', 1),
+('MF-DIST_12', 'MUFA', ' -13.43564533116661, -76.11679723568685', 'Ica', 1),
+('MF-DIST_CHAC_1', 'MUFA', ' -13.42687898126485, -76.13869457855354', '540 Avenida Garcilazo de la Vega', 1),
+('MF-DIST-GR-004', 'MUFA', ' -13.40870874982738, -76.16017101320631', '1129 Av. 28 de Julio', 1),
+('MF-DIST-GR-005', 'MUFA', ' -13.40300192483251, -76.15869930643939', '521 Av. Melchorita', 1),
+('MF-DIST-SF-001', 'MUFA', ' -13.42976895725194, -76.16155000202716', 'Jiron Alfonso Ugarte', 1),
+('MF-DIST-SF-002', 'MUFA', ' -13.42974397743853, -76.16338365045578', '320 Av. Monterico', 1),
+('MF-DIST-SF-003', 'MUFA', ' -13.42827173218315, -76.16539074715578', 'Sunampe, Ica', 1),
+('MF-DIST-SF-004', 'MUFA', ' -13.43023394975805, -76.175168775591', 'Bajada del Socorro', 1),
+('MF-DIST-GR-007', 'MUFA', ' -13.39327468075545, -76.14602410058211', 'C. 17', 1),
+('MF-DIST-GR-008', 'MUFA', ' -13.3999100186419, -76.13760591163792', '1551 Jr. Sebastian Barranca', 1),
+('MF-DIST-GR-009', 'MUFA', ' -13.39867418619314, -76.12955989467225', '1013 Av. 13 de Octubre', 1),
+('MF-DIST-GR-011', 'MUFA', ' -13.38604536530613, -76.12056907639858', 'Avenida Satelite', 1),
+('MF-DIST_CHAC_3', 'MUFA', ' -13.43549568166407, -76.13705777298017', '169 Avenida Urbino Julve', 1),
+('MF-DIST_CHAC_4', 'MUFA', ' -13.43405776994658, -76.13304872779845', '272 Avenida Argentina', 1),
+('MF-DIST_9', 'MUFA', ' -13.42499799657197, -76.12843280976335', '348 Av. Victoria', 1);
 
 INSERT INTO tb_cajas(nombre, descripcion, numero_entradas, id_sector, coordenadas, iduser_create) VALUES
 ('Caja 1', 'Cerca del estadio', 16, 11, '-13.390019838079903, -76.14898062581466', 1),
@@ -340,94 +359,94 @@ INSERT INTO tb_responsables (id_usuario, id_rol,iduser_create) VALUES
 (5, 5,1);
 
 INSERT INTO tb_clientes (id_persona, id_empresa, direccion, referencia, iduser_create, coordenadas) VALUES
-(6, NULL, 'Av. Luis Alva Maurtua S/N', 'Cruz blanca 4ta cuadra - Oruro', 1, '-13.430139, -76.113639'), --ANGEL DANIEL NAPA ABREGU
-(7, NULL, 'Calle San Luis #139', 'Chincha alta', 1, '-13.421583, -76.122361'), -- MOISES YATACO GARCIA
-(8, NULL, 'AA.HH. Virgen Del Carmen Mz-G N-18 ', 'Chincha Alta', 1, '-13.427278, -76.124889'), -- MARYORI ELIZABETH MESIAS ALMEYDA
-(9, NULL, 'Av San Martin #103', 'Sunampe', 1, '-13.433306, -76.137694'), -- ROBERTO CARLOS ANCHANTE RICALES
-(10, NULL, 'Psj. Los Angeles S/N', 'Mina de oro', 1, '-13.431694, -76.144278'), --MIGUEL ANGEL TASAYCO LEVANO
-(11, NULL, 'Av. Santa Rosa N° 312', 'Lomo largo', 1, '-13.424111, -76.168028'), --PATRICIA PASTOR ROJAS
-(12, NULL, 'Psj. San Cosme #185', 'Calle Rosario 7ma Cuadra', 1, '-13.406222, -76.138167'), -- YHONSONN GOITIA PEREZ
-(13, NULL, 'Psj. San Vicente Mz-P Lt-16', 'Sunampe', 1, '-13.411083, -76.163611'), -- MARIA JULIA MENDIGUETE LOYOLA
-(14, NULL, 'Av. San Antonio', 'Santa Rosa - Sunampe', 1, '-13.421583, -76.157194'), -- ROCIO MAYDEE SARAVIA VELA
-(15, NULL, 'PSj. Primaveral Lt-11022', 'Cruz Blanca', 1, '-13.430250, -76.121194'), -- MARITZA LILIANA TASAYCO TORRES
-(16, NULL, 'Psj. Los Claveles N° 207', 'Cruz Blanca - Chinhca Alta', 1, '-13.423222, -76.123889'), -- MARITZA LEVANO TORRES
-(17, NULL, 'Calle Parada de los amigos', 'Sunampe', 1, '-13.412833, -76.164778'), -- ROSA CARBAJAL SANCHEZ
-(18, NULL, 'Barrio el por venir', 'Grocio Prado', 1, '-13.403472, -76.165472'), -- RONALD STALIN GARCIA TASAYCO
-(19, NULL, 'Upis Divina Misericordia Mz-B Lt-6A', 'Chincha Alta', 1, '-13.416028, -76.144944'), -- VICTOR HUGO SANTIAGO SARAVIA
-(20, NULL, 'Psj. 2 de mayo N°228', 'Cruz Blanca', 1, '-1'), -- MARIA SANTOS YATACO GARCIA
-(21, NULL, 'Urb Los Viñedos N° UZ-12', 'Chincha Alta', 1, '-13.406250, -76.140111'), -- CECILIA PATRICIA GARCIA MARTINEZ
-(22, NULL, 'Psj. San Jose Mz-H Lt-10', 'Sunampe', 1, '-13.421139, -76.169333'), -- CRISTAL GENTILLE GUTARRA
-(23, NULL, 'Calle Sebastian Barranca Lt-14C', 'Grocio Prado', 1, '-13.382250, -76.156000'), -- DANIEL BARILLAS PEVE
-(24, NULL, 'Psj. San Blas - Calle A Lt-02', 'Alfonso Ugarte Norte-Sunampe', 1, '-13.418639, -76.170583'), -- PEDRO MANUEL CRISOSTOMO LEVANO
-(25, NULL, 'Av. Unión N°3A - Los Alamos', 'Pueblo Nuevo', 1, '-13.403750, -76.138222'), --NAYADE SAIDA HUANQUI TRILLO DE GARAY
-(26, NULL, 'Psj. La frontera N° 257', 'Lomo Largo - Sunampe', 1, '-13.420250, -76.165306'), -- LUIS LOBO MENESES
-(27, NULL, 'AA.HH El Salvador Mz-J Sub Lt-2-2', 'Pueblo Nuevo a 2 casas de la torre', 1, '-13.395750, -76.142361'), -- EDDER RUBEN DIAZ REBATTA
-(28, NULL, 'Av. Alva Maurtua Mz-J Lt-16', 'Cruz Blanca', 1, '-13.428611, -76.117278'),-- DELIA LIBERTAD NAPA CASTILLO
-(29, NULL, 'Upis San Andrés Mz-A Lt-6', 'Pueblo Nuevo', 1, '-13.392583, -76.139028'), --EPIFANIA CLEMENCIA MARTINEZ VILLAR
-(30, NULL, 'Upis San Andrés Mz-I Lt-19', 'Pueblo Nuevo', 1, '-13.394111, -76.137361'), -- JUANA MILAGROS CAMPOS BARRIOS
-(31, NULL, 'Calle Los Angeles N°368', 'Lomo Largo', 1, '-13.419361, -76.168944'), -- MARIA GONZALES ATUNCAR
-(32, NULL, 'Calle Pedro Moreno N° 130', 'Grocio Prado', 1, '-13.410833, -76.140333'), -- LUIS DE LA CRUZ TORRES
-(33, NULL, 'Av. Los Angeles #512 - Sunampe', 'Frente discoteca the boss', 1, '-13.419139, -76.170278'), -- LUIS SARAVIA MEDINA
-(34, NULL, 'Calle La Frontera S/N', 'Sunampe', 1, '-13.410833, -76.140333'), -- MARILU MENESES CRISOSTOMO
-(35, NULL, 'Av. Las viñas Emancipación - Sunampe', 'N° 500 Int 12', 1, '-13.424361, -76.158111'), --HAROLD ATUNCAR MARQUEZ
-(36, NULL, 'Condorillo Alto Mz-I Lt-12', 'Chincha Alta', 1, '-13.434139, -76.117556'), --OSWALDO EFRAIN PEVE GUERRA
-(37, NULL, 'Psj. San Gregorio S/N Alameda', 'Sunampe', 1, '-1'), -- ELIZABETH VALENCIA SARAVIA
-(38, NULL, 'Psj. 2 de mayo N°309', 'Cruz Blanca', 1, '-13.430111, -76.118861'), -- VICTOR HUGO TORRES TASAYCO
-(39, NULL, 'Psj San Juan de Dios', 'Cruz Blanca', 1, '-13.429139, -76.118667'), -- NELLY YATACO GARCIA DE GARCIA
-(40, NULL, 'AA.HH Jesús María y Jesús Mz-D Lt-02', 'Chincha Alta', 1, '-13.439889, -76.136556'), -- JUAN CARLOS CASTILLA MATEO
-(41, NULL, 'Upis Biggio Mz-D Puerta 02', 'Grocio Prado', 1, '-13.406556, -76.141389'), -- LINO QUISPE SANCHEZ
-(42, NULL, 'Calle El Carmen N°210', 'Cruz Blanca', 1, '-13.431694, -76.119583'), -- BLANCA MARIBEL MENESES TASAYCO
-(43, NULL, 'C.P Condorillo alto Mz-T Lt-23', 'Chincha Alta', 1, '-13.436361, -76.114917'), -- MARTIN WILLIAM ALVAREZ CUEVA
-(44, NULL, 'Calle Sebastion Barranca Lt-3 C-1', 'Fundo colorado - Grocio Prado', 1, '-13.382361, -76.155083'), -- RUTH ESTHER VASQUEZ CHUQUISPUMA
-(45, NULL, 'Calle Mina de oro Puerta 06 / Sin barrio', 'Mina de oro - cinco esquinas', 1, '-13.427194, -76.143917'), -- GRETY PEREZ TERRONES
-(46, NULL, 'AA.HH Jesus Maria y Jose #A-05', 'Chincha Alta', 1, '-13.439750, -76.136750'), -- ERCELIZ GAMEZ CHACON
-(47, NULL, 'Prol. Juan Castilla Roncero Lt-3B', 'Grocio Prado - Barrio el por venir', 1, '-13.405667, -76.163722'), -- RONNY RAUL QUISPE PACHAS
-(48, NULL, 'Calle San Pedro de Pilpa #256-1', 'Sunampe', 1, '-13.420222, -76.167167'), -- OSCAR JAVIER NAPA CASTILLA
-(49, NULL, 'Condorillo Alto Mz-P Lt-15', 'Cruz Blanca', 1, '-13.430389, -76.111944'), -- FREDY JHON BRICEÑO DEL RIO
-(50, NULL, 'Av. Luis Alva Maurtua N° 525', 'Cruz Blanca - Chincha Alta', 1, '-13.428861, -76.116556'), -- LUCY YAMALI JUAREZ TORRES
-(51, NULL, 'AA.HH Husares de Junin', 'Mz-C Lt-8', 1, '-13.390944, -76.149472'), -- VANESSA PAZ CASAVERDE
-(52, NULL, 'Psj. Anampa Puerta 160', 'Antiguo Sunampe', 1, '-1'), -- DIANA CUADROS SARAVIA
-(53, NULL, 'Calle Prol. Benavides', 'Grocio Prado', 1, '-13.405556, -76.162583'), -- NELZI APOLAYA ROMERO
-(54, NULL, 'Av. Paraiso Lt. 5-B', 'Lomo Largo - Sunampe', 1, '-13.422722, -76.173444'), -- ANGEL ALBERTO MATIAS CRISOSTOMO
-(55, NULL, 'AA.HH Virgen del Carmen - Cruz Blanca', 'Mz-D Lt-17', 1, '-1'), -- BRYAN LUIS ANTON OSTIA
-(56, NULL, 'Luis Massaro ex Pilpa Plaza center', 'Chincha Frente SJB Stand 210-D', 1, '-13.416611, -76.142444'),-- JHAN CARLOS ANGULO LOYOLA
-(57, NULL, 'Calle El Carmen N° 196', 'Cruz Blanca - Chincha', 1, '-1'), -- VICTOR LUIS MAGALLANES ORTIZ
-(58, NULL, 'Calle San Pedro de Pilpa #588', 'Sunampe',1,'-13.416340, -76.169422'), -- LILIANA CATALINA TASAYCO MENDOZA
-(59, NULL, 'Upis 15 de Noviembre', 'Jose olaya B-13-2 puertas',1,'-1'), -- GIANELA CORAIMA MEREDIA MUÑOZ
-(60, NULL, 'AA.HH El milagro de San Judas Tadeo', 'Mz-D Lt-8 - Sunampe - Mina de Oro',1,'-13.429139, -76.142361'), -- SANTA ANGELICA VALVERDE ORTIZ
-(61, NULL, 'Av. Primavera #711', 'Antes de la baja del socorro - Sunampe',1,'-13.4300627,-76.1749036'), -- MARIANELLA ORTIZ HERNANDEZ
-(62, NULL, 'Psj. San Martin  N°114', 'Mina de oro',1,'-13.425750, -76.145361'), -- ANSELMO MELO GUERRA
-(63, NULL, 'AA.HH Virgen del Carmen', 'Mz-B Lt-04',1,'-13.426889, -76.123000'), -- GLORIA ALMEYDA NAPA
-(64, NULL, 'Psj. Arena Costa Mz-D Lt-7', 'San Ignacio',1,'-13.417278, -76.150694'), -- ARIANA DIAZ DE LA CRUZ
-(65, NULL, 'Prol. Benavides Lt-11', 'Barrio el pro venir - Grocio Prado',1,'-13.405778, -76.161306'), -- ALEXANDER CASTILLA RILQUELME
-(66, NULL, 'CP. Condorillo alto', 'Mz-U Lt-01',1,'-13.436333, -76.114444'), -- GREGORIO JHONATHAN TASAYCO ARIAS
-(67, NULL, 'Av. San Rafael #258 - Grocio Prado', 'Frente a los mejilloneros',1,'-13.408361, -76.163139'), -- MARYORI SARAVIA LEVANO
-(68, NULL, 'Barrio Cruz Blanca - Alva Maurtua', 'Ultimo paradero - Oruro',1,'-13.430556, -76.112056'), -- MIGUEL ANGEL DE LA CRUZ ABREGU
-(69, NULL, 'AA.HH El salvador Mz-B Puerta 17', 'Pueblo Nuevo - El salvador',1,'-13.397500, -76.140667'), -- VICTOR HUARANCA DURAND
-(70, NULL, 'AA.HH San Judas Tadeo Mz-E Lt-1', 'Sunampe',1,'-13.429361, -76.142306'), --GIANCARLOS BOGA SIGUAS
-(71, NULL, 'AA.HH San Judas Tadeo Mz-E Lt-4', 'Sunampe',1,'-13.429361, -76.142306'), -- CARLOS YVAN DIAZ TASAYCO
-(72, NULL, 'AA.HH San Judas Tadeo Mz-E Lt-5', 'Sunampe',1,'-13.429361, -76.142306'), -- HILDA XIOMARA DAVILA DIAZ
-(73, NULL, 'Estadio Cruz blanca', 'Chincha Alta',1,'-13.427389, -76.122917'), -- MIRIAN QUISPE PAUCAR
-(74, NULL, 'Condorillo alto N°15 primera cuadra', 'Antes de la posta',1,'-13.436750, -76.117306'), -- JHAN MARTINEZ ALVAREZ CHIQUISPUMA
-(75, NULL, 'Centro Poblado El Tigre 141', 'Int. O1 - Chincha Alta',1,'-13.423250, -76.120222'), -- EDGAR ROJAS GUERRA
-(76, NULL, 'Calle El Carmen N° 190', 'Cruz blanca',1,'-13.4299847,-76.1200058'), -- MIOSIRY LILIANA MAGALLANES MURILLO
-(77, NULL, 'Toma de Cala', 'Cruz blanca',1,'-1'), -- JULIO CESAR MAGALLANES GARCIA
-(78, NULL, 'Psj San Francisco N°111 Int-20', 'Sunampe',1,'-13.416583, -76.151861'), -- MIRIAM DE LA CRUZ TORRES
-(79, NULL, 'Condominio San Pablo Mz S/N Lt-2-1', 'Sunampe',1,'-13.416861, -76.155361'), -- DIEGO ALFONSO ATUNCAR ALMEYDA
-(80, NULL, 'Av. Victor Raúl Haya de la Torre Lt-2', 'Chacarita - Sunampe - Costado del grifo Green',1,'-13.438778, -76.135694'), -- JOSE LUIS HERNANDEZ NAPA
-(81, NULL, 'Av. Fátima N°373', 'Sunampe',1,'-1'), -- VICTORIA ISABEL DE LA CRUZ QUISPE
-(82, NULL, 'Psj. Santa Rosa S/N', 'Cruz Blanca',1,'-13.428639, -76.111583'), -- ARNALDO CRISOSTOMO CUELLAR
-(83, NULL, 'AA.HH San Valentin Mz-I Lt-12', 'Condorillo bajo',1,'-13.433556, -76.117972'), -- ROSA LINDA CASTAÑEDA SULCA
-(84, NULL, 'Barrio el por venir Psj. San vicente', 'Lt-35 Mz-G - Grocio Prado',1,'-13.401944, -76.163889'), -- JENNIFER DENIS SARAVIA BONIFACIO
-(85, NULL, 'Psj. Sucre N° 470', 'Espalda de mina de oro',1,'-13.425472, -76.144972'), -- YOVANA VANESA ROJAS PACHAS
-(86, NULL, 'Cale el por venir N° 1138 - D', 'Barrio el por venir - Grocio Prado',1,'-13.402194, -76.163667'), -- ERICK JOHANY TORRES FAJARDO
-(87, NULL, 'Av. Monterrico #405 - Sunampe', 'Pasando el colegio Simón bolivar',1,'-13.430083, -76.163417'), -- CECILIA ROJAS CONTRERAS
-(88, NULL, 'Av. Primavera N°300', 'Sunampe',1,'-13.4281144,-76.1666212'), --JULIO CESAR DE LA CRUZ JACOBO
-(89, NULL, 'HU.CA Santa Teresa S/N', 'Sunampe',1,'-13.429111, -76.174972'), -- ANGEL JESUS ATUNCAR ALMEYDA
-(90, NULL, 'AA.HH Las flores de mina Mz-A Lt-6', 'Grocio Prado - Mina de oro',1,'-13.426389, -76.143833'), -- JUAN MARTIN ALVAREZ TOMASTO
-(91, NULL, 'Calle Victor Haya de la Torre Lt-02', 'Chacarita Sunampe',1,'-13.438722, -76.135583'), -- MARIA NAPA MARTINEZ
-(92, NULL, 'Psj. San Juan Lt-94A', 'Alfonso Ugarte - Sunampe',1,'-13.419139, -76.164250'), -- FRANCISCO HERMAN BENITES BOCANEGRA
-(93, NULL, 'Calle La Palma 114 cercado de grocio prado', 'Toma el carriso',1,'-13.398528, -76.161556'); -- TERESA YSABEL SARAVIA TORRES
+(6, NULL, 'Av. Luis Alva Maurtua S/N', 'Cruz blanca 4ta cuadra - Oruro', 1, '-13.430139, -76.113639'),
+(7, NULL, 'Calle San Luis #139', 'Chincha alta', 1, '-13.421583, -76.122361'),
+(8, NULL, 'AA.HH. Virgen Del Carmen Mz-G N-18 ', 'Chincha Alta', 1, '-13.427278, -76.124889'),
+(9, NULL, 'Av San Martin #103', 'Sunampe', 1, '-13.433306, -76.137694'),
+(10, NULL, 'Psj. Los Angeles S/N', 'Mina de oro', 1, '-13.431694, -76.144278'),
+(11, NULL, 'Av. Santa Rosa N° 312', 'Lomo largo', 1, '-13.424111, -76.168028'),
+(12, NULL, 'Psj. San Cosme #185', 'Calle Rosario 7ma Cuadra', 1, '-13.406222, -76.138167'),
+(13, NULL, 'Psj. San Vicente Mz-P Lt-16', 'Sunampe', 1, '-13.411083, -76.163611'),
+(14, NULL, 'Av. San Antonio', 'Santa Rosa - Sunampe', 1, '-13.421583, -76.157194'),
+(15, NULL, 'PSj. Primaveral Lt-11022', 'Cruz Blanca', 1, '-13.430250, -76.121194'),
+(16, NULL, 'Psj. Los Claveles N° 207', 'Cruz Blanca - Chinhca Alta', 1, '-13.423222, -76.123889'),
+(17, NULL, 'Calle Parada de los amigos', 'Sunampe', 1, '-13.412833, -76.164778'),
+(18, NULL, 'Barrio el por venir', 'Grocio Prado', 1, '-13.403472, -76.165472'),
+(19, NULL, 'Upis Divina Misericordia Mz-B Lt-6A', 'Chincha Alta', 1, '-13.416028, -76.144944'),
+(20, NULL, 'Psj. 2 de mayo N°228', 'Cruz Blanca', 1, '-1'),
+(21, NULL, 'Urb Los Viñedos N° UZ-12', 'Chincha Alta', 1, '-13.406250, -76.140111'),
+(22, NULL, 'Psj. San Jose Mz-H Lt-10', 'Sunampe', 1, '-13.421139, -76.169333'),
+(23, NULL, 'Calle Sebastian Barranca Lt-14C', 'Grocio Prado', 1, '-13.382250, -76.156000'),
+(24, NULL, 'Psj. San Blas - Calle A Lt-02', 'Alfonso Ugarte Norte-Sunampe', 1, '-13.418639, -76.170583'),
+(25, NULL, 'Av. Unión N°3A - Los Alamos', 'Pueblo Nuevo', 1, '-13.403750, -76.138222'),
+(26, NULL, 'Psj. La frontera N° 257', 'Lomo Largo - Sunampe', 1, '-13.420250, -76.165306'),
+(27, NULL, 'AA.HH El Salvador Mz-J Sub Lt-2-2', 'Pueblo Nuevo a 2 casas de la torre', 1, '-13.395750, -76.142361'),
+(28, NULL, 'Av. Alva Maurtua Mz-J Lt-16', 'Cruz Blanca', 1, '-13.428611, -76.117278'),
+(29, NULL, 'Upis San Andrés Mz-A Lt-6', 'Pueblo Nuevo', 1, '-13.392583, -76.139028'),
+(30, NULL, 'Upis San Andrés Mz-I Lt-19', 'Pueblo Nuevo', 1, '-13.394111, -76.137361'),
+(31, NULL, 'Calle Los Angeles N°368', 'Lomo Largo', 1, '-13.419361, -76.168944'),
+(32, NULL, 'Calle Pedro Moreno N° 130', 'Grocio Prado', 1, '-13.410833, -76.140333'),
+(33, NULL, 'Av. Los Angeles #512 - Sunampe', 'Frente discoteca the boss', 1, '-13.419139, -76.170278'),
+(34, NULL, 'Calle La Frontera S/N', 'Sunampe', 1, '-13.410833, -76.140333'),
+(35, NULL, 'Av. Las viñas Emancipación - Sunampe', 'N° 500 Int 12', 1, '-13.424361, -76.158111'),
+(36, NULL, 'Condorillo Alto Mz-I Lt-12', 'Chincha Alta', 1, '-13.434139, -76.117556'),
+(37, NULL, 'Psj. San Gregorio S/N Alameda', 'Sunampe', 1, '-1'),
+(38, NULL, 'Psj. 2 de mayo N°309', 'Cruz Blanca', 1, '-13.430111, -76.118861'),
+(39, NULL, 'Psj San Juan de Dios', 'Cruz Blanca', 1, '-13.429139, -76.118667'),
+(40, NULL, 'AA.HH Jesús María y Jesús Mz-D Lt-02', 'Chincha Alta', 1, '-13.439889, -76.136556'),
+(41, NULL, 'Upis Biggio Mz-D Puerta 02', 'Grocio Prado', 1, '-13.406556, -76.141389'),
+(42, NULL, 'Calle El Carmen N°210', 'Cruz Blanca', 1, '-13.431694, -76.119583'),
+(43, NULL, 'C.P Condorillo alto Mz-T Lt-23', 'Chincha Alta', 1, '-13.436361, -76.114917'),
+(44, NULL, 'Calle Sebastion Barranca Lt-3 C-1', 'Fundo colorado - Grocio Prado', 1, '-13.382361, -76.155083'),
+(45, NULL, 'Calle Mina de oro Puerta 06 / Sin barrio', 'Mina de oro - cinco esquinas', 1, '-13.427194, -76.143917'),
+(46, NULL, 'AA.HH Jesus Maria y Jose #A-05', 'Chincha Alta', 1, '-13.439750, -76.136750'),
+(47, NULL, 'Prol. Juan Castilla Roncero Lt-3B', 'Grocio Prado - Barrio el por venir', 1, '-13.405667, -76.163722'),
+(48, NULL, 'Calle San Pedro de Pilpa #256-1', 'Sunampe', 1, '-13.420222, -76.167167'),
+(49, NULL, 'Condorillo Alto Mz-P Lt-15', 'Cruz Blanca', 1, '-13.430389, -76.111944'),
+(50, NULL, 'Av. Luis Alva Maurtua N° 525', 'Cruz Blanca - Chincha Alta', 1, '-13.428861, -76.116556'),
+(51, NULL, 'AA.HH Husares de Junin', 'Mz-C Lt-8', 1, '-13.390944, -76.149472'),
+(52, NULL, 'Psj. Anampa Puerta 160', 'Antiguo Sunampe', 1, '-1'),
+(53, NULL, 'Calle Prol. Benavides', 'Grocio Prado', 1, '-13.405556, -76.162583'),
+(54, NULL, 'Av. Paraiso Lt. 5-B', 'Lomo Largo - Sunampe', 1, '-13.422722, -76.173444'),
+(55, NULL, 'AA.HH Virgen del Carmen - Cruz Blanca', 'Mz-D Lt-17', 1, '-1'),
+(56, NULL, 'Luis Massaro ex Pilpa Plaza center', 'Chincha Frente SJB Stand 210-D', 1, '-13.416611, -76.142444'),
+(57, NULL, 'Calle El Carmen N° 196', 'Cruz Blanca - Chincha', 1, '-1'),
+(58, NULL, 'Calle San Pedro de Pilpa #588', 'Sunampe', 1, '-13.416340, -76.169422'),
+(59, NULL, 'Upis 15 de Noviembre', 'Jose olaya B-13-2 puertas', 1, '-1'),
+(60, NULL, 'AA.HH El milagro de San Judas Tadeo', 'Mz-D Lt-8 - Sunampe - Mina de Oro', 1, '-13.429139, -76.142361'),
+(61, NULL, 'Av. Primavera #711', 'Antes de la baja del socorro - Sunampe', 1, '-13.4300627,-76.1749036'),
+(62, NULL, 'Psj. San Martin  N°114', 'Mina de oro', 1, '-13.425750, -76.145361'),
+(63, NULL, 'AA.HH Virgen del Carmen', 'Mz-B Lt-04', 1, '-13.426889, -76.123000'),
+(64, NULL, 'Psj. Arena Costa Mz-D Lt-7', 'San Ignacio', 1, '-13.417278, -76.150694'),
+(65, NULL, 'Prol. Benavides Lt-11', 'Barrio el pro venir - Grocio Prado', 1, '-13.405778, -76.161306'),
+(66, NULL, 'CP. Condorillo alto', 'Mz-U Lt-01', 1, '-13.436333, -76.114444'),
+(67, NULL, 'Av. San Rafael #258 - Grocio Prado', 'Frente a los mejilloneros', 1, '-13.408361, -76.163139'),
+(68, NULL, 'Barrio Cruz Blanca - Alva Maurtua', 'Ultimo paradero - Oruro', 1, '-13.430556, -76.112056'),
+(69, NULL, 'AA.HH El salvador Mz-B Puerta 17', 'Pueblo Nuevo - El salvador', 1, '-13.397500, -76.140667'),
+(70, NULL, 'AA.HH San Judas Tadeo Mz-E Lt-1', 'Sunampe', 1, '-13.429361, -76.142306'),
+(71, NULL, 'AA.HH San Judas Tadeo Mz-E Lt-4', 'Sunampe', 1, '-13.429361, -76.142306'),
+(72, NULL, 'AA.HH San Judas Tadeo Mz-E Lt-5', 'Sunampe', 1, '-13.429361, -76.142306'),
+(73, NULL, 'Estadio Cruz blanca', 'Chincha Alta', 1, '-13.427389, -76.122917'),
+(74, NULL, 'Condorillo alto N°15 primera cuadra', 'Antes de la posta', 1, '-13.436750, -76.117306'),
+(75, NULL, 'Centro Poblado El Tigre 141', 'Int. O1 - Chincha Alta', 1, '-13.423250, -76.120222'),
+(76, NULL, 'Calle El Carmen N° 190', 'Cruz blanca', 1, '-13.4299847,-76.1200058'),
+(77, NULL, 'Toma de Cala', 'Cruz blanca', 1, '-1'),
+(78, NULL, 'Psj San Francisco N°111 Int-20', 'Sunampe', 1, '-13.416583, -76.151861'),
+(79, NULL, 'Condominio San Pablo Mz S/N Lt-2-1', 'Sunampe', 1, '-13.416861, -76.155361'),
+(80, NULL, 'Av. Victor Raúl Haya de la Torre Lt-2', 'Chacarita - Sunampe - Costado del grifo Green', 1, '-13.438778, -76.135694'),
+(81, NULL, 'Av. Fátima N°373', 'Sunampe', 1, '-1'),
+(82, NULL, 'Psj. Santa Rosa S/N', 'Cruz Blanca', 1, '-13.428639, -76.111583'),
+(83, NULL, 'AA.HH San Valentin Mz-I Lt-12', 'Condorillo bajo', 1, '-13.433556, -76.117972'),
+(84, NULL, 'Barrio el por venir Psj. San vicente', 'Lt-35 Mz-G - Grocio Prado', 1, '-13.401944, -76.163889'),
+(85, NULL, 'Psj. Sucre N° 470', 'Espalda de mina de oro', 1, '-13.425472, -76.144972'),
+(86, NULL, 'Cale el por venir N° 1138 - D', 'Barrio el por venir - Grocio Prado', 1, '-13.402194, -76.163667'),
+(87, NULL, 'Av. Monterrico #405 - Sunampe', 'Pasando el colegio Simón bolivar', 1, '-13.430083, -76.163417'),
+(88, NULL, 'Av. Primavera N°300', 'Sunampe', 1, '-13.4281144,-76.1666212'),
+(89, NULL, 'HU.CA Santa Teresa S/N', 'Sunampe', 1, '-13.429111, -76.174972'),
+(90, NULL, 'AA.HH Las flores de mina Mz-A Lt-6', 'Grocio Prado - Mina de oro', 1, '-13.426389, -76.143833'),
+(91, NULL, 'Calle Victor Haya de la Torre Lt-02', 'Chacarita Sunampe', 1, '-13.438722, -76.135583'),
+(92, NULL, 'Psj. San Juan Lt-94A', 'Alfonso Ugarte - Sunampe', 1, '-13.419139, -76.164250'),
+(93, NULL, 'Calle La Palma 114 cercado de grocio prado', 'Toma el carriso', 1, '-13.398528, -76.161556');
 
 
 INSERT INTO tb_contratos 
