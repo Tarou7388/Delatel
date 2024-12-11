@@ -25,9 +25,6 @@ $table = 'vw_contactabilidad_listar';
 $primaryKey = 'id_contactabilidad';
 
 // Array of database columns which should be read and sent back to DataTables.
-// The `db` parameter represents the column name in the database, while the `dt`
-// parameter represents the DataTables column identifier. In this case simple
-// indexes
 $columns = array(
   array('db' => 'id_contactabilidad', 'dt' => 0),
   array('db' => 'nombre_contacto', 'dt' => 1),
@@ -56,7 +53,7 @@ $columns = array(
 $sql_details = array(
   'user' => 'root',
   'pass' => '',
-  'db'   => 'delatel',
+  'db'   => 'Delatel',
   'host' => 'localhost',
   'charset' => 'utf8'
 );

@@ -1,5 +1,5 @@
 import config from '../env.js';
-const ruta = `${config.HOST}app/controllers/Kardex.controllers.php?operacion=listarKardex`;
+const ruta = `${config.HOST}app/controllers/Kardex.ssp.php`;
 
 window.tablaKardex = $('#TbKardex').DataTable({
   dom: `
@@ -36,13 +36,17 @@ window.tablaKardex = $('#TbKardex').DataTable({
     }
   ],
   processing: true,
-  serverSide: false, // Cambiado a false ya que los datos no se están procesando en el servidor
+  serverSide: true,
   ajax: {
     url: ruta,
     type: "GET",
     dataSrc: function (json) {
       console.log(json); // Verifica la respuesta del servidor
-      return json; // Devuelve directamente el array de datos
+      return json.data; // Devuelve el array de datos
+    },
+    error: function (xhr, error, thrown) {
+      console.error('Error en la carga de datos:', error, thrown);
+      alert('Error al cargar los datos. Por favor, revisa la consola para más detalles.');
     }
   },
   columnDefs: [
@@ -58,21 +62,20 @@ window.tablaKardex = $('#TbKardex').DataTable({
   ],
   columns: [
     {
-      data: null,
-      render: function (data, type, row) {
-        return `${row.tipo_producto} ${row.modelo}`;
+      data: function (row) {
+        return `${row[3]} ${row[2]}`;
       },
       title: 'Producto',
       className: 'text-center'
     },
-    { data: 'nombre_almacen', title: 'Almacén', className: 'text-center' },
-    { data: 'fecha', title: 'Fecha', className: 'text-center' },
-    { data: 'tipo_movimiento', title: 'Movimiento', className: 'text-center' },
-    { data: 'tipo_operacion', title: 'Operación', className: 'text-center' },
-    { data: 'cantidad', title: 'Cantidad', className: 'text-center' },
-    { data: 'saldo_total', title: 'Saldo Total', className: 'text-center' },
-    { data: 'valor_unico_historico', title: 'Valor Histórico', className: 'text-center' },
-    { data: 'creado_por', title: 'Creado Por', className: 'text-center' }
+    { data: 11, title: 'Almacén', className: 'text-center' },
+    { data: 6, title: 'Fecha', className: 'text-center' },
+    { data: 13, title: 'Movimiento', className: 'text-center' },
+    { data: 7, title: 'Operación', className: 'text-center' },
+    { data: 8, title: 'Cantidad', className: 'text-center' },
+    { data: 9, title: 'Saldo Total', className: 'text-center' },
+    { data: 10, title: 'Valor Histórico', className: 'text-center' },
+    { data: 12, title: 'Creado Por', className: 'text-center' }
   ],
   order: [],
   language: {
@@ -86,9 +89,9 @@ window.tablaKardex = $('#TbKardex').DataTable({
 
 function getFileName(type) {
   const productName = tablaKardex.column(0).data()[0];
-  return `${productName.tipo_producto} ${productName.modelo} - kardex (${type})`;
+  return `${productName[3]} ${productName[2]} - kardex (${type})`;
 }
 function getFileTitle() {
   const productName = tablaKardex.column(0).data()[0];
-  return `${productName.tipo_producto} ${productName.modelo} - kardex`;
+  return `${productName[3]} ${productName[2]} - kardex`;
 }

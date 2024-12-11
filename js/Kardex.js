@@ -84,8 +84,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     const data = await response.json();
 
     // Asegúrate de que data contenga los productos.
-    if (data.data && Array.isArray(data.data)) {
-      data.data.forEach(producto => {
+    if (Array.isArray(data)) {
+      data.forEach(producto => {
         const tagOption = document.createElement("option");
         tagOption.value = producto.id_producto;
         tagOption.textContent = `${producto.marca} ${producto.modelo}`;

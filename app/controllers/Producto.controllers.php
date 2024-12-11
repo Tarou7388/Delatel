@@ -30,17 +30,8 @@ if (isset($_POST['operacion'])) {
 if (isset($_GET['operacion'])) {
 	switch ($_GET['operacion']) {
 		case 'listarProductos':
-			$start = isset($_GET['start']) ? (int)$_GET['start'] : 0;
-			$length = isset($_GET['length']) ? (int)$_GET['length'] : 10;
-			$search = isset($_GET['search']['value']) ? $_GET['search']['value'] : "";
-			$resultados = $producto->listarProductos($start, $length, $search);  // Cambiar a listarProductos
-			$response = [
-				"draw" => isset($_GET['draw']) ? (int)$_GET['draw'] : 1,
-				"recordsTotal" => $resultados['totalRegistros'],
-				"recordsFiltered" => $resultados['totalRegistros'],
-				"data" => $resultados['productos']  // Cambiar 'contratos' a 'productos'
-			];
-			echo json_encode($response);
+			$producto = $producto->listarProductos();
+			echo json_encode($producto);
 			break;
 		case "buscarProductoId":
 			$resultado = $producto->buscarProductoId(["idProducto" => Herramientas::sanitizarEntrada($_GET['idProducto'])]);

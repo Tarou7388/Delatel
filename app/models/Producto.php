@@ -28,47 +28,29 @@ class Producto extends Conexion
     return $this->consultaParametros($sql, $value);
   }
 
+  
   /**
-   * Lista todos los productos.
+   * Listar todos los productos.
    *
-   * Esta función ejecuta una consulta SQL para obtener todos los productos
-   * de la tabla 'tb_productos' ordenados por 'id_producto' en orden descendente.
+   * Este método ejecuta una consulta SQL para obtener todos los productos
+   * desde la vista `vw_productos_detalle` y devuelve los resultados como
+   * un array asociativo.
    *
-   * @return array Un array de productos obtenidos de la base de datos.
+   * @return array Un array asociativo que contiene los detalles de los productos.
+   *               Si ocurre una excepción, se devuelve un array vacío.
    */
-  public function listarProductos($offset = 0, $limit = 10, $search = "")
+  public function listarProductos(): array
   {
-    $sql = "SELECT * FROM vw_productos_detalle ORDER BY id_producto DESC";
-    $sqlCount = "SELECT COUNT(*) AS total FROM vw_productos_detalle";
+    try {
+      $cmd = $this->pdo->prepare("SELECT * FROM vw_productos_detalle");
+      $cmd->execute();
 
-    // Ajustar la búsqueda para los campos de vw_productos_detalle
-    if ($search) {
-      $sql .= " WHERE modelo LIKE :search OR marca LIKE :search OR tipo_nombre LIKE :search OR unidad_nombre LIKE :search OR codigo_barra LIKE :search";
-      $sqlCount .= " WHERE modelo LIKE :search OR marca LIKE :search OR tipo_nombre LIKE :search OR unidad_nombre LIKE :search OR codigo_barra LIKE :search";
+      return $cmd->fetchAll(PDO::FETCH_ASSOC);
+    } catch (Exception $e) {
+      error_log($e->getMessage());
+      return [];
+      
     }
-
-    $sql .= " LIMIT :offset, :limit";
-    $stmt = $this->pdo->prepare($sql);
-
-    // Aplicar los valores de búsqueda, offset y limit
-    if ($search) {
-      $stmt->bindValue(':search', "%$search%", PDO::PARAM_STR);
-    }
-    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
-    $stmt->execute();
-
-    // Obtener resultados y el total de registros
-    $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    $stmtCount = $this->pdo->prepare($sqlCount);
-    if ($search) {
-      $stmtCount->bindValue(':search', "%$search%", PDO::PARAM_STR);
-    }
-    $stmtCount->execute();
-    $totalRegistros = $stmtCount->fetch(PDO::FETCH_ASSOC)['total'];
-
-    return ['productos' => $productos, 'totalRegistros' => $totalRegistros];
   }
 
   /**

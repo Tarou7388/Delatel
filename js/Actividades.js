@@ -261,104 +261,118 @@ window.addEventListener("DOMContentLoaded", function () {
   async function cargarContactos() {
     // Crear la tabla en el DOM
     contenido.innerHTML = `
-        <table class="table table-striped" id="tablaContactos">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th class="text-center">Nombre y Apellido</th>
-              <th class="text-center">Telefono</th>
-              <th class="text-center">Dirección</th>
-              <th class="text-center">Nota</th>
-              <th class="text-center">Acciones</th>
-            </tr>
-          </thead>
-          <tbody id="tbodyContactos"></tbody>
-        </table>
-      `;
-
-    // Variables globales
-    let table = null;
-
-    // Renderizar la tabla
-    function renderDataTable() {
-      table = new DataTable("#tablaContactos", {
-        order: [[0, 'desc']],
-        columnDefs: [{ targets: 0, visible: false }],
-        language: { url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json" }
-      });
-    }
-
-    const response = await fetch(`${config.HOST}app/controllers/Contactabilidad.controllers.php?operacion=obtenerContactos`);
-    const data = await response.json();
-
-    // Reiniciando contenido
-    const tbody = document.querySelector("#tablaContactos tbody");
-    tbody.innerHTML = data.map(element => `
-        <tr>
-          <td class="text-center">${element.id_contactabilidad}</td>
-          <td class="text-center">${element.nombre_contacto}</td>
-          <td class="text-center">${element.telefono}</td>
-          <td class="text-center">${element.direccion_servicio}</td>
-          <td class="text-center">${element.nota}</td>
-          <td>
-            <button class="btn btn-primary btn-detalle" data-id="${element.id_contactabilidad}"><i class="fa-regular fa-clipboard"></i></button>
-            <button class="btn btn-success btn-whatsapp" data-telefono="${element.telefono}" data-nombre="${element.nombre_contacto}"><i class="fa-brands fa-whatsapp"></i></button>
-          </td>
-        </tr>`).join('');
-
-    renderDataTable();
-
-    // Agregar eventos a los botones
-    document.querySelectorAll('.btn-detalle').forEach(button => {
-      button.addEventListener('click', (event) => {
-        const id = event.currentTarget.getAttribute('data-id');
-        const contacto = data.find(element => element.id_contactabilidad == id);
-
-        if (contacto) {
-          // Llenar el modal con los detalles del contacto
-          document.getElementById('detalleId').innerText = contacto.id_contactabilidad;
-          document.getElementById('detalleNombre').innerText = contacto.nombre_contacto;
-          document.getElementById('detalleEmail').innerText = contacto.email;
-          document.getElementById('detalleDireccion').innerText = contacto.direccion_servicio;
-          document.getElementById('detalleFechaLimite').innerText = contacto.fecha_limite;
-          document.getElementById('detalleFechaCreacion').innerText = contacto.fecha_hora_contacto;
-          document.getElementById('detallePaquete').innerHTML = contacto.paquete;
-          document.getElementById('detallePrecio').innerText = contacto.precio;
-          document.getElementById('detalleNota').innerText = contacto.nota;
-          document.getElementById('detalleUsuarioCreador').innerText = contacto.usuario_creador;
-
-          // Mostrar el modal
-          new bootstrap.Modal(document.getElementById('detalleModalContactos')).show();
-        } else {
-          console.error('Contacto no encontrado');
+      <table class="table table-striped" id="tablaContactos">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th class="text-center">Nombre y Apellido</th>
+            <th class="text-center">Telefono</th>
+            <th class="text-center">Dirección</th>
+            <th class="text-center">Nota</th>
+            <th class="text-center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="tbodyContactos"></tbody>
+      </table>
+    `;
+  
+    // Inicializar DataTable con procesamiento en el servidor
+    $('#tablaContactos').DataTable({
+      processing: true,
+      serverSide: true,
+      ajax: {
+        url: '../app/controllers/Contactos.ssp.php',
+        dataSrc: function(json) {
+          // Verifica la estructura de la respuesta JSON
+          console.log(json);
+          return json.data;
+        },
+        error: function(xhr, error, thrown) {
+          console.error('Error en la carga de datos:', error, thrown);
+          alert('Error al cargar los datos. Por favor, revisa la consola para más detalles.');
         }
+      },
+      columns: [
+        { data: 0, className: 'text-center' },           // ID de contacto, será oculto
+        { data: 1, className: 'text-center' },           // Nombre y apellido
+        { data: 2, className: 'text-center' },           // Teléfono
+        { data: 8, className: 'text-center' },           // Dirección
+        { data: 4, className: 'text-center' },           // Nota
+        {
+          data: null,
+          orderable: false,
+          searchable: false,
+          render: function(data, type, row) {
+            return `
+              <button class="btn btn-primary btn-detalle" data-id="${row[0]}"><i class="fa-regular fa-clipboard"></i></button>
+              <button class="btn btn-success btn-whatsapp" data-telefono="${row[2]}" data-nombre="${row[1]}"><i class="fa-brands fa-whatsapp"></i></button>
+            `;
+          }
+        }
+      ],
+      columnDefs: [
+        { targets: 0, visible: false }  // Ocultamos la columna id_contactabilidad
+      ],
+      language: {
+        url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
+      },
+      order: [[0, 'desc']]
+    });
+  
+    // Agregar eventos a los botones después de que la tabla se haya renderizado
+    $('#tablaContactos').on('draw.dt', function() {
+      // Agregar eventos a los botones de detalle
+      document.querySelectorAll('.btn-detalle').forEach(button => {
+        button.addEventListener('click', (event) => {
+          const id = event.currentTarget.getAttribute('data-id');
+          const contacto = $('#tablaContactos').DataTable().data().toArray().find(element => element[0] == id);
+    
+          if (contacto) {
+            // Llenar el modal con los detalles del contacto
+            document.getElementById('detalleId').innerText = contacto[0];
+            document.getElementById('detalleNombre').innerText = contacto[1];
+            document.getElementById('detalleEmail').innerText = contacto[3];
+            document.getElementById('detalleDireccion').innerText = contacto[8];
+            document.getElementById('detalleFechaLimite').innerText = contacto[10];
+            document.getElementById('detalleFechaCreacion').innerText = contacto[7];
+            document.getElementById('detallePaquete').innerHTML = contacto[9];
+            document.getElementById('detallePrecio').innerText = contacto[6];
+            document.getElementById('detalleNota').innerText = contacto[4];
+            document.getElementById('detalleUsuarioCreador').innerText = contacto[11];
+    
+            // Mostrar el modal
+            new bootstrap.Modal(document.getElementById('detalleModalContactos')).show();
+          } else {
+            console.error('Contacto no encontrado');
+          }
+        });
+      });
+    
+      // Agregar eventos a los botones de WhatsApp
+      document.querySelectorAll('.btn-whatsapp').forEach(button => {
+        button.addEventListener('click', (event) => {
+          const telefono = event.currentTarget.getAttribute('data-telefono');
+          const nombre = event.currentTarget.getAttribute('data-nombre');
+          window.whatsapp(telefono, nombre);
+        });
       });
     });
-
+    
     // Define la nueva función whatsapp
     window.whatsapp = function (telefono, nombre) {
       if (typeof telefono === 'string') {
         const telefonoFormateado = `51${telefono.replace(/\D/g, '')}`;
         const mensaje = `Hola ${nombre}, Estoy creando pruebas para la empresa delatel sobre contactos por WhatsApp.`;
         const url = `https://api.whatsapp.com/send?phone=${telefonoFormateado}&text=${encodeURIComponent(mensaje)}`;
-
+  
         console.log("Teléfono formateado:", telefonoFormateado);
         console.log("Mensaje:", mensaje);
         console.log("URL:", url);
-
+  
         window.open(url, '_blank');
       } else {
         console.error('Teléfono no válido');
       }
     }
-
-    // Modifica el evento de clic para llamar a la nueva función whatsapp
-    document.querySelectorAll('.btn-whatsapp').forEach(button => {
-      button.addEventListener('click', (event) => {
-        const telefono = event.currentTarget.getAttribute('data-telefono');
-        const nombre = event.currentTarget.getAttribute('data-nombre');
-        window.whatsapp(telefono, nombre);
-      });
-    });
   }
 });

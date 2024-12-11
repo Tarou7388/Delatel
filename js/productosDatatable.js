@@ -2,8 +2,9 @@ import config from "../env.js";
 
 document.addEventListener("DOMContentLoaded", function () {
   const userid = user["idUsuario"];
-  const ruta = `${config.HOST}app/controllers/Producto.controllers.php?operacion=listarProductos`;
+  const ruta = `${config.HOST}app/controllers/Producto.ssp.php`;
   let idProducto = -1;
+
   // 2. Inicialización de la tabla de productos
   window.tablaProductos = $("#tblProductos").DataTable({
     dom: `
@@ -59,52 +60,38 @@ document.addEventListener("DOMContentLoaded", function () {
     ajax: {
       url: ruta,
       type: "GET",
-      data: function (d) {
-        return {
-          draw: d.draw,
-          start: d.start,
-          length: d.length,
-          search: d.search.value,
-        };
-      },
       dataSrc: function (json) {
         return json.data;
       },
+      error: function (xhr, error, thrown) {
+        console.error('Error en la carga de datos:', error, thrown);
+        alert('Error al cargar los datos. Por favor, revisa la consola para más detalles.');
+      }
     },
     columns: [
-      { data: "marca", title: "Marca", className: "text-center" },
+      { data: 0, title: "ID", className: "text-center" },
+      { data: 1, title: "Marca", className: "text-center" },
+      { data: 2, title: "Tipo de Producto", className: "text-center" },
+      { data: 3, title: "Nombre o Modelo", className: "text-center" },
+      { data: 4, title: "Unidad de Medida", className: "text-center" },
+      { data: 5, title: "Precio Actual", className: "text-center" },
+      { data: 6, title: "MAC", className: "text-center" },
       {
-        data: "tipo_nombre",
-        title: "Tipo de Producto",
-        className: "text-center",
-      },
-      { data: "modelo", title: "Nombre o Modelo", className: "text-center" },
-      {
-        data: "unidad_nombre",
-        title: "Unidad de Medida",
-        className: "text-center",
-      },
-      {
-        data: "precio_actual",
-        title: "Precio Actual",
-        className: "text-center",
-      },
-      {
-        data: "codigo_barra",
-        title: "MAC",
-        className: "text-center",
-      },
-      {
-        data: null,
+        data: 7,
         title: "Acciones",
         className: "text-center",
+        orderable: false,
+        searchable: false,
         render: function (data, type, row) {
           return `
-            <button class="btn btn-warning btn-edit" data-id="${row.id_producto}"><i class="fa-regular fa-pen-to-square"></i></button>
-            <button class="btn btn-danger btn-delete" data-id="${row.id_producto}"><i class="fa-regular fa-trash-can"></i></button>
+            <button class="btn btn-warning btn-edit" data-id="${row[0]}"><i class="fa-regular fa-pen-to-square"></i></button>
+            <button class="btn btn-danger btn-delete" data-id="${row[0]}"><i class="fa-regular fa-trash-can"></i></button>
           `;
-        },
-      },
+        }
+      }
+    ],
+    columnDefs: [
+      { targets: 0, visible: false }  // Ocultamos la columna id_producto
     ],
     paging: true,
     searching: true,
@@ -268,7 +255,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
   };
-
 
   //Funcion para aplicarse al momento de retomar algun producto
   async function rehabilitarProducto(id) {
