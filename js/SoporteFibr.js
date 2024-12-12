@@ -9,15 +9,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const txtPlan = document.getElementById("txtPlan");
   const txtPppoe = document.getElementById("txtPppoe");
-  const txtPotenciaDos = document.getElementById("txtPotencia");
+  const txtPotencia= document.getElementById("txtPotencia");  
   const chkCatv = document.getElementById("chkCatv");
   const txtClave = document.getElementById("txtClave");
   const txtVlan = document.getElementById("txtVlan");
-  const txtPotencia = document.getElementById("txtPotenciaDos");
+  const txtPotenciaDos = document.getElementById("txtPotenciaDos");
   const txtSsid = document.getElementById("txtSsid");
   const txtPass = document.getElementById("txtPass");
-  const txtOtros = document.getElementById("txtOtros");
+  const txtIp = document.getElementById("txtIp");
   const slcRpetidor = document.getElementById("slcRpetidor");
+
 
   let idSoporte = -1;
 
@@ -143,6 +144,10 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log(fibraFiltrado);
       txtPotencia.value = fibraFiltrado.potencia;
 
+      // Catv
+      console.log(fibraFiltrado.moden.catv);
+      chkCatv.checked = fibraFiltrado.moden.catv;
+
       // DATOS MODEN
       // Asignacion repetidores
       const slcRpetidor = document.getElementById('slcRpetidor');
@@ -152,13 +157,6 @@ document.addEventListener("DOMContentLoaded", () => {
         option.text = `${repetidor.ssid} (${repetidor.ip})`;
         slcRpetidor.appendChild(option);
       });
-
-      // Catv
-      console.log(fibraFiltrado.moden.catv);
-      chkCatv.checked = fibraFiltrado.moden.catv;
-
-
-
     } catch (error) {
       console.error("Error en data de Fibra:", error);
     }
@@ -166,27 +164,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
   slcRpetidor.addEventListener("change", async () => {
     await cargarEnInputs();
-    
+
   });
 
   async function cargarEnInputs() {
     try {
       const selectedValue = parseInt(slcRpetidor.value); // Convertir el valor seleccionado a número
       console.log("Valor seleccionado:", selectedValue);
-  
+
       const respuesta = await FichaSoporte(idSoporte);
       const fibraFiltrado = JSON.parse(respuesta[0].ficha_instalacion).fibraOptica;
-  
+
       const repetidorSeleccionado = fibraFiltrado.repetidores.find(
         repetidor => repetidor.numero === selectedValue
       );
-  
+
       if (repetidorSeleccionado) {
         console.log("Repetidor seleccionado:", repetidorSeleccionado);
-        // Puedes cargar los datos en los inputs aquí
-        // Ejemplo:
-        // inputSSID.value = repetidorSeleccionado.ssid;
-        // inputContrasenia.value = repetidorSeleccionado.contrasenia;
+        txtIp.value = repetidorSeleccionado.ip.toString();
       } else {
         console.warn("No se encontró un repetidor con el valor seleccionado.");
       }
@@ -194,7 +189,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error al cargar datos del repetidor:", error);
     }
   }
-  
+
 
   async function ArmadoJsonGpon() {
     const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
