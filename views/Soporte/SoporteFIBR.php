@@ -13,7 +13,7 @@
       <form action="" id="frm-registro-gpon" autocomplete="off">
 
         <!-- Primera Fila -->
-        <h5>Datos del Usuario</h5>
+        <h5>Datos del Cliente</h5>
         <div class="row g-2 mb-2">
           <div class="col-md">
             <div class="input-group">
@@ -74,26 +74,23 @@
             </div>
             <div class="col-md-4">
               <div class="form-floating">
-                <input type="number" class="form-control" id="txtVlan" placeholder="VLAN" disabled required>
-                <label for="txtVlan">VLAN</label>
+                <select id="slcRpetidor" class="form-select">
+                  <option value="" disabled selected>Seleccione una opción</option>
+                </select>
+                <label for="slcRpetidor">Repetidor</label>
               </div>
             </div>
-            <div class="col-md-4">
-              <div class="form-floating">
-                <input type="number" class="form-control" id="txtPotencia" placeholder="Potencia" disabled required>
-                <label for="txtPotenciaDos">Potencia</label>
-              </div>
-            </div>
-          </div>
-
-          <!-- Tercera Fila -->
-          <div class="row g-3 mb-3 align-items-center">
             <div class="col-md-4">
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtSsid" placeholder="SSID" disabled required>
                 <label for="txtSsid">SSID</label>
               </div>
             </div>
+
+          </div>
+
+          <!-- Tercera Fila -->
+          <div class="row g-3 mb-3 align-items-center">
             <div class="col-md-4">
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtPass" placeholder="Password" disabled required>
@@ -102,10 +99,11 @@
             </div>
             <div class="col-md-4">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtOtros" placeholder="Otros" disabled required>
-                <label for="txtOtros">Otros</label>
+                <input type="number" class="form-control" id="txtVlan" placeholder="VLAN" disabled required>
+                <label for="txtVlan">VLAN</label>
               </div>
             </div>
+
           </div>
 
           <!-- Cuarta Fila -->
@@ -161,12 +159,6 @@
                 <label for="txtCambiosVlan">VLAN</label>
               </div>
             </div>
-            <div class="col-md-4">
-              <div class="form-floating">
-                <input type="number" class="form-control" id="txtCambiosPotencia" placeholder="Potencia" required>
-                <label for="txtCambiosPotencia">Potencia</label>
-              </div>
-            </div>
           </div>
 
           <!-- Tercera Fila -->
@@ -181,12 +173,6 @@
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtCambiosPass" placeholder="Password" required>
                 <label for="txtCambiosPass">Password</label>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-floating">
-                <input type="text" class="form-control" id="txtCambiosOtros" placeholder="Otros" required>
-                <label for="txtCambiosOtros">Otros</label>
               </div>
             </div>
           </div>

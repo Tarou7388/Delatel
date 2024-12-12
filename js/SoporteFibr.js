@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const txtSsid = document.getElementById("txtSsid");
   const txtPass = document.getElementById("txtPass");
   const txtOtros = document.getElementById("txtOtros");
+  const slcRpetidor = document.getElementById("slcRpetidor");
 
   let idSoporte = -1;
 
@@ -123,40 +124,77 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       const dataFibra = await FichaSoporte(idSoporte);
-      const fibraFiltrado = JSON.parse(dataFibra[0].ficha_instalacion).fibraoptica;
-      console.log(JSON.parse(dataFibra[0].ficha_instalacion));
+      const fibraFiltrado = JSON.parse(dataFibra[0].ficha_instalacion).fibraOptica;
       console.log(fibraFiltrado);
-      //Asignacion para el campo de plan.
+
+      // Asignacion para el campo de plan.
       console.log(fibraFiltrado.plan);
       txtPlan.value = fibraFiltrado.plan;
-      //Asignacion de Usuario PPPoE
+
+      // Asignacion de Usuario PPPoE
       console.log(fibraFiltrado.usuario);
       txtPppoe.value = fibraFiltrado.usuario;
-      //Asignacion de clave PPPoE
-      console.log(fibraFiltrado.claveacceso);
-      txtClave.value = fibraFiltrado.claveacceso;
-      //Asignacion potencia 
+
+      // Asignacion de clave PPPoE
+      console.log(fibraFiltrado.claveAcceso);
+      txtClave.value = fibraFiltrado.claveAcceso;
+
+      // Asignacion potencia 
       console.log(fibraFiltrado);
       txtPotencia.value = fibraFiltrado.potencia;
-      //
-      console.log(fibraFiltrado);
 
-      //Asignacion potencia 
-      console.log(fibraFiltrado);
+      // DATOS MODEN
+      // Asignacion repetidores
+      const slcRpetidor = document.getElementById('slcRpetidor');
+      fibraFiltrado.repetidores.forEach(repetidor => {
+        const option = document.createElement('option');
+        option.value = repetidor.numero;
+        option.text = `${repetidor.ssid} (${repetidor.ip})`;
+        slcRpetidor.appendChild(option);
+      });
 
-      //
-      console.log(fibraFiltrado);
+      // Catv
+      console.log(fibraFiltrado.moden.catv);
+      chkCatv.checked = fibraFiltrado.moden.catv;
 
-      //Asignacion potencia 
-      console.log(fibraFiltrado);
 
-      //
-      console.log(fibraFiltrado);
 
     } catch (error) {
       console.error("Error en data de Fibra:", error);
     }
   };
+
+  slcRpetidor.addEventListener("change", async () => {
+    await cargarEnInputs();
+    
+  });
+
+  async function cargarEnInputs() {
+    try {
+      const selectedValue = parseInt(slcRpetidor.value); // Convertir el valor seleccionado a número
+      console.log("Valor seleccionado:", selectedValue);
+  
+      const respuesta = await FichaSoporte(idSoporte);
+      const fibraFiltrado = JSON.parse(respuesta[0].ficha_instalacion).fibraOptica;
+  
+      const repetidorSeleccionado = fibraFiltrado.repetidores.find(
+        repetidor => repetidor.numero === selectedValue
+      );
+  
+      if (repetidorSeleccionado) {
+        console.log("Repetidor seleccionado:", repetidorSeleccionado);
+        // Puedes cargar los datos en los inputs aquí
+        // Ejemplo:
+        // inputSSID.value = repetidorSeleccionado.ssid;
+        // inputContrasenia.value = repetidorSeleccionado.contrasenia;
+      } else {
+        console.warn("No se encontró un repetidor con el valor seleccionado.");
+      }
+    } catch (error) {
+      console.error("Error al cargar datos del repetidor:", error);
+    }
+  }
+  
 
   async function ArmadoJsonGpon() {
     const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);

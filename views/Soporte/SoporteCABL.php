@@ -25,7 +25,7 @@
     <div class="card-body">
       <form id="form-cable" autocomplete="off">
 
-        <h5>Datos del Usuario</h5>
+        <h5>Datos del Cliente</h5>
         <div class="row g-2 mb-2">
           <div class="col-md">
             <div class="form-floating">
