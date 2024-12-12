@@ -15,6 +15,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   var today = new Date().toISOString().split("T")[0];
 
+  //Obtener idCaja
+  const urlParams = new URLSearchParams(window.location.search);
+  const idCaja = urlParams.get('idCaja') || localStorage.getItem('idCaja'); 
+  console.log("idCaja:", idCaja);
+
   const periodoDate = new Date();
   periodoDate.setMonth(periodoDate.getMonth() + 6);
   const DateFormateado = periodoDate.toISOString().split("T")[0];
@@ -252,6 +257,7 @@ document.addEventListener("DOMContentLoaded", () => {
           metrosadicionales: parseInt(txtCantCable),
           preciometro: parseFloat(txtPrecioCable),
         },
+        idCaja: idCaja, // idCaja
       };
     }
   }

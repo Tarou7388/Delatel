@@ -267,6 +267,7 @@
         <table id="listarContratos" class="table table-striped">
           <thead>
             <tr>
+              <th class="text-center">ID</th>
               <th class="text-center">Cliente</th>
               <th class="text-center">Número de Doc</th>
               <th class="text-center">Paquete</th>

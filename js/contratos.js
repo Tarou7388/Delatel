@@ -409,7 +409,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         url: `https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json`,
       },
       processing: true,
-      serverSide: true,
+      serverSide: true, 
       ajax: {
         url: `${config.HOST}app/controllers/Contrato.ssp.php`,
         type: 'GET',
@@ -423,9 +423,9 @@ window.addEventListener("DOMContentLoaded", async () => {
         }
       },
       columns: [
+        { data: 0 }, // id_contrato
         { data: 1 }, // nombre_cliente
         { data: 2 }, // num_identificacion
-        { data: 3 }, // direccion_servicio
         { data: 4 }, // paquete
         { data: 5 }, // precio
         { data: 6 }, // tipos_servicio
@@ -451,8 +451,10 @@ window.addEventListener("DOMContentLoaded", async () => {
       ],
       columnDefs: [
         { className: 'text-center', targets: [0, 1, 2, 3, 4, 5, 6] },
-        { width: "200px", targets: [6] }
+        { width: "200px", targets: [6] },
+        { targets: [0], visible: false }
       ],
+      order: [[0, 'desc']], 
       drawCallback: function (settings) {
         //Agregar event listerners para los botones despues de dibujar la tabla
         const botonesPdf = document.querySelectorAll(".btnGenerar");

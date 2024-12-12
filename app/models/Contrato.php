@@ -49,36 +49,23 @@ class Contrato extends Conexion
         return $this->registrar($sql, $values);
     }
 
+    
     /**
-     * Lista todos los contratos llamando al procedimiento almacenado 'vw_contratos_listar'.
+     * Lista todos los contratos desde la vista `vw_contratos`.
      *
-     * @return array El conjunto de resultados de la ejecución del procedimiento almacenado.
+     * @return array Un arreglo asociativo con los datos de los contratos.
+     * @throws Exception Si ocurre un error durante la consulta a la base de datos.
      */
-    public function listarContratos($offset = 0, $limit = 10, $search = "")
+    public function listarContratos():array
     {
-        $sql = "SELECT * FROM vw_contratos_listar";
-        $sqlCount = "SELECT COUNT(*) AS total FROM vw_contratos_listar";
-        if ($search) {
-            $sql .= " WHERE nombre_cliente LIKE :search OR num_identificacion LIKE :search OR paquete LIKE :search OR direccion_servicio LIKE :search";
-            $sqlCount .= " WHERE nombre_cliente LIKE :search OR num_identificacion LIKE :search OR paquete LIKE :search OR direccion_servicio LIKE :search";
+        try {
+            $cmd = $this->pdo->prepare("SELECT * FROM vw_contratos_listar");
+            $cmd->execute();
+            return $cmd->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            return [];
         }
-        $sql .= " LIMIT :offset, :limit";
-        $stmt = $this->pdo->prepare($sql);
-        if ($search) {
-            $stmt->bindValue(':search', "%$search%", PDO::PARAM_STR);
-        }
-        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
-        $stmt->execute();
-        $contratos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $stmtCount = $this->pdo->prepare($sqlCount);
-        if ($search) {
-            $stmtCount->bindValue(':search', "%$search%", PDO::PARAM_STR);
-        }
-        $stmtCount->execute();
-        $totalRegistros = $stmtCount->fetch(PDO::FETCH_ASSOC)['total'];
-
-        return ['contratos' => $contratos, 'totalRegistros' => $totalRegistros];
     }
 
     /**

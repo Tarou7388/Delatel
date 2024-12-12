@@ -2,7 +2,7 @@
 $HOST = "http://localhost/Delatel";
 ?>
 
-<img src="<?= $HOST ?>/image/headerInstalacionGpon.png" class="image-header" alt="">
+<h3 class="text-center">CONTROL DE INSTALACIÓN SERVICIO FTTH - DELAFIBER</h3>
 <div class="container">
   <table class="tabla2">
     <tbody>
