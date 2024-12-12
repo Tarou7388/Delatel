@@ -19,27 +19,27 @@ $idContrato = $_GET['idContrato'];
         <div class="mb-2">
           <div class="form-floating">
             <input type="text" class="form-control" id="txtCodigoBarraSintonizador" placeholder="Código Barra">
-            <label for="txtCodigoBarraSintonizador">Código de Barra <span class="required-asterisk" style="color: red;">*</span></label>
             <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
+            <label for="txtCodigoBarraSintonizador">Código de Barra <span class="required-asterisk" style="color: red;">*</span></label>
           </div>
         </div>
         <div class="mb-2">
           <div class="form-floating">
             <input type="text" class="form-control" id="txtMarcaSintonizador" placeholder="Marca" disabled>
-            <label for="txtMarcaSintonizador">Marca <span class="required-asterisk" style="color: red;">*</span></label>
+            <label for="txtMarcaSintonizador">Marca</label>
           </div>
         </div>
         <div class="mb-2">
           <div class="form-floating">
             <input type="text" class="form-control" id="txtModeloSintonizador" placeholder="Modelo" disabled>
-            <label for="txtModeloSintonizador">Modelo <span class="required-asterisk" style="color: red;">*</span></label>
+            <label for="txtModeloSintonizador">Modelo</label>
           </div>
         </div>
         <div class="mb-2">
           <div class="form-floating">
             <input type="text" class="form-control" id="txtSerieSintonizador" placeholder="Serie">
-            <label for="txtSerieSintonizador">Serie <span class="required-asterisk" style="color: red;">*</span></label>
             <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
+            <label for="txtSerieSintonizador">Serie <span class="required-asterisk" style="color: red;">*</span></label>
           </div>
         </div>
         <!-- Aquí se agregarán las cartas -->
