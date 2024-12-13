@@ -1,8 +1,15 @@
 <?php
 $table = 'vw_clientes_obtener';
 $primaryKey = 'id_cliente';
-$host = rtrim($_ENV['HOST'], '/'); 
+
+require __DIR__ . '../../../vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../');
+$dotenv->load();
+
+$host = $_ENV['HOST'];
+
 echo $host;
+
 
 $columns = array(
   array('db' => 'id_cliente', 'dt' => 0), // ID Cliente

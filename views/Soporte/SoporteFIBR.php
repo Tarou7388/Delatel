@@ -69,7 +69,7 @@
           <div class="row g-3 mb-3 align-items-center">
             <div class="col-md-4">
               <div class="form-floating">
-                <input type="number" class="form-control" id="txtVlan" placeholder="VLAN" disabled required>
+                <input type="text" class="form-control" id="txtVlan" placeholder="VLAN" disabled required>
                 <label for="txtVlan">VLAN</label>
               </div>
             </div>
@@ -81,43 +81,36 @@
                 <label for="slcRpetidor">Repetidor</label>
               </div>
             </div>
-            
+
             <div class="col-md-4 d-flex align-items-center">
               <div class="form-check form-switch">
                 <input class="form-check-input" type="checkbox" id="chkCatv" disabled>
                 <label class="form-check-label ms-2" for="chkCatv">CATV</label>
               </div>
             </div>
-            
           </div>
 
           <!-- Tercera Fila -->
-            <div class="row g-3 mb-3 align-items-center">
-            <div class="col-md-3">
+          <div class="row g-3 mb-3 align-items-center">
+            <div class="col-md-4">
               <div class="form-floating">
-              <input type="text" class="form-control" id="txtSsid" placeholder="SSID" disabled required>
-              <label for="txtSsid">SSID</label>
+                <input type="text" class="form-control" id="txtSsid" placeholder="SSID" disabled required>
+                <label for="txtSsid">SSID</label>
               </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
               <div class="form-floating">
-              <input type="text" class="form-control" id="txtPass" placeholder="Password" disabled required>
-              <label for="txtPass">Password</label>
+                <input type="text" class="form-control" id="txtPass" placeholder="Password" disabled required>
+                <label for="txtPass">Password</label>
               </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
               <div class="form-floating">
-              <input type="number" class="form-control" id="txtPotenciaDos" placeholder="Potencia" disabled required>
-              <label for="txtPotenciaDos">Potencia</label>
+                <input type="text" class="form-control" id="txtIp" placeholder="IP" disabled required>
+                <label for="txtIp">IP</label>
               </div>
             </div>
-            <div class="col-md-3">
-              <div class="form-floating">
-              <input type="text" class="form-control" id="txtIp" placeholder="IP" disabled required>
-              <label for="txtIp">IP</label>
-              </div>
-            </div>
-            </div>
+          </div>
 
           <!-- Cuarta Fila -->
           <div class="row g-3 mb-3">
@@ -137,75 +130,86 @@
         <h5 class="mb-4">Cambios Técnicos de Fibra</h5>
         <div>
           <!-- Primera Fila -->
-          <div class="row g-3 mb-3 align-items-center">
-            <div class="col-md-4">
-              <div class="form-floating">
-                <input type="text" class="form-control" id="txtCambiosPppoe" placeholder="PPPoE" required>
-                <label for="txtCambiosPppoe">PPPoE</label>
+          <div class="">
+            <!-- Primera Fila -->
+            <div class="row g-3 mb-3 align-items-center">
+              <div class="col-md-4">
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="txtCambiosPppoe" placeholder="PPPoE" disabled required>
+                  <label for="txtCambiosPppoe">PPPoE</label>
+                </div>
               </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-floating">
-                <input type="number" class="form-control" id="txtCambiosPotenciaDos" placeholder="Potencia" required>
-                <label for="txtCambiosPotenciaDos">Potencia</label>
+              <div class="col-md-4">
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="txtCambiosClave" placeholder="Clave" disabled required>
+                  <label for="txtCambiosClave">Clave</label>
+                </div>
               </div>
-            </div>
-            <div class="col-md-4 d-flex align-items-center">
-              <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" id="chkCambiosCatv">
-                <label class="form-check-label ms-2" for="chkCambiosCatv">CATV</label>
+              <div class="col-md-4">
+                <div class="form-floating">
+                  <input type="number" class="form-control" id="txtCambiosPotencia" placeholder="Potencia" required>
+                  <label for="txtCambiosPotencia">Potencia</label>
+                </div>
               </div>
-            </div>
-          </div>
 
-          <!-- Segunda Fila -->
-          <div class="row g-3 mb-3 align-items-center">
-            <div class="col-md-4">
-              <div class="form-floating">
-                <input type="text" class="form-control" id="txtCambiosClave" placeholder="Clave" required>
-                <label for="txtCambiosClave">Clave</label>
-              </div>
             </div>
-            <div class="col-md-4">
-              <div class="form-floating">
-                <input type="number" class="form-control" id="txtCambiosVlan" placeholder="VLAN" required>
-                <label for="txtCambiosVlan">VLAN</label>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-floating">
-                <input type="number" class="form-control" id="txtCambiosPotencia" placeholder="Potencia" required>
-                <label for="txtCambiosPotencia">Potencia</label>
-              </div>
-            </div>
-          </div>
 
-          <!-- Tercera Fila -->
-          <div class="row g-3 mb-3 align-items-center">
-            <div class="col-md-4">
-              <div class="form-floating">
-                <input type="text" class="form-control" id="txtCambiosSsid" placeholder="SSID" required>
-                <label for="txtCambiosSsid">SSID</label>
+            <!-- Segunda Fila -->
+            <div class="row g-3 mb-3 align-items-center">
+              <div class="col-md-4">
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="txtCambiosVlan" placeholder="VLAN" disabled required>
+                  <label for="txtCambiosVlan">VLAN</label>
+                </div>
               </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-floating">
-                <input type="text" class="form-control" id="txtCambiosPass" placeholder="Password" required>
-                <label for="txtCambiosPass">Password</label>
-              </div>
-            </div>
-          </div>
 
-          <!-- Cuarta Fila -->
-          <div class="row g-3 mb-3">
-            <div class="col-md-12">
-              <div class="form-floating">
-                <textarea class="form-control" id="txtaCambiosProceSolucion" style="height: 100px;" placeholder="Procedimiento de Solución" required></textarea>
-                <label for="txtaCambiosProceSolucion">Procedimiento de Solución</label>
+              <div class="col-md-4">
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="txtRepetidor" placeholder="txtRepetidor" required>
+                  <label for="txtRepetidor">Repetidor(Nombre)</label>
+                </div>
+              </div>
+
+              <div class="col-md-4 d-flex align-items-center">
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="chkCambiosCatv">
+                  <label class="form-check-label ms-2" for="chkCambiosCatv">CATV</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tercera Fila -->
+            <div class="row g-3 mb-3 align-items-center">
+              <div class="col-md-4">
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="txtCambiosSsid" placeholder="SSID" required>
+                  <label for="txtCambiosSsid">SSID</label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="txtCambiosPass" placeholder="Password" required>
+                  <label for="txtCambiosPass">Password</label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="txtCambiosIp" placeholder="IP" required>
+                  <label for="txtCambiosIp">IP</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Cuarta Fila -->
+            <div class="row g-3 mb-3">
+              <div class="col-md-12">
+                <div class="form-floating">
+                  <textarea class="form-control" id="txtaCambiosProceSolucion" style="height: 100px;" placeholder="Procedimiento de Solución" required></textarea>
+                  <label for="txtaCambiosProceSolucion">Procedimiento de Solución</label>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
       </form>
     </div>

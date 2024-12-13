@@ -26,12 +26,12 @@ export async function FichaSoporte(Value) {
   return data
 }
 
-export async function FichaSoportePorId(nrodoc,tipoServicio,coordenada) {
+export async function FichaSoportePorId(nrodoc, tipoServicio, coordenada) {
   const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php`, {
     method: 'POST',
-    body: JSON.stringify({ 
-      operacion: 'buscarUltimoSoportebyDNI', 
-      nrodoc: nrodoc, 
+    body: JSON.stringify({
+      operacion: 'buscarUltimoSoportebyDNI',
+      nrodoc: nrodoc,
       tipoServicio: tipoServicio,
       coordenada: coordenada
     })
@@ -40,22 +40,25 @@ export async function FichaSoportePorId(nrodoc,tipoServicio,coordenada) {
   return data
 }
 
+
 /**
-* Formatea la entrada de un campo de texto para que se asemeje a una dirección IP.
-* 
-* Esta función se utiliza como un manejador de eventos para el evento 'input' de un campo de texto.
-* Su propósito es restringir la entrada del usuario para que solo contenga números y puntos ('.'),
-* y formatear la cadena de entrada de manera que se agreguen puntos cada tres dígitos.
-* Además, limita la longitud de la entrada a un máximo de 15 caracteres.
-* 
-* Ejemplo de uso:
-* 
-* <input type="text" oninput="formatoIPinput(event)">
-* 
-* @param {Event} event - El evento de entrada que contiene el valor del campo de texto.
-*/
+ * Formatea la entrada de un campo de texto para que tenga el formato de una dirección IP.
+ * 
+ * @async
+ * @function formatoIPinput
+ * @param {Event} event - El evento de entrada del campo de texto.
+ * 
+ * @description
+ * Esta función toma el valor del campo de texto del evento, elimina todos los caracteres que no sean números o puntos,
+ * y luego formatea el valor para que tenga el formato de una dirección IP. Se asegura de que no haya más de tres números
+ * entre cada punto y que no haya más de tres puntos en total. Si el valor formateado excede los 15 caracteres, se trunca.
+ */
 export async function formatoIPinput(event) {
-  let input = event.target.value.replace(/[^0-9.]/g, ''); // Solo números y puntos
+  let input = event.target.value.replace(/[^0-9.]/g, '');
+  let pointCount = (input.match(/\./g) || []).length;
+  if (pointCount > 3) {
+    input = input.split('.').slice(0, 4).join('.');
+  }
 
   let formattedInput = '';
   let count = 0;
@@ -65,16 +68,17 @@ export async function formatoIPinput(event) {
       formattedInput += input[i];
       count++;
 
-      if (count % 3 === 0 && i < input.length - 1 && input[i + 1] !== '.') {
+      if (count === 3 && i < input.length - 1 && input[i + 1] !== '.') {
         formattedInput += '.';
+        count = 0;
       }
     } else {
       if (formattedInput[formattedInput.length - 1] !== '.') {
         formattedInput += '.';
+        count = 0;
       }
-      count = 0;
     }
   }
-
   event.target.value = formattedInput.slice(0, 15);
-};
+}
+

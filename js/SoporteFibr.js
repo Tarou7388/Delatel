@@ -1,5 +1,5 @@
 import config from "../env.js";
-import { FichaSoporte, inicializarDataTable } from "./Herramientas.js";
+import { FichaSoporte, formatoIPinput } from "./Herramientas.js";
 
 // Evento que se ejecuta cuando el DOM ha sido completamente cargado
 document.addEventListener("DOMContentLoaded", () => {
@@ -7,18 +7,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const serv = urlParams.get("tiposervicio");
   const form = document.getElementById("frm-registro-gpon");
 
+  //Parametros tecnicos de la ficha
   const txtPlan = document.getElementById("txtPlan");
   const txtPppoe = document.getElementById("txtPppoe");
-  const txtPotencia= document.getElementById("txtPotencia");  
+  const txtPotencia = document.getElementById("txtPotencia");
   const chkCatv = document.getElementById("chkCatv");
   const txtClave = document.getElementById("txtClave");
   const txtVlan = document.getElementById("txtVlan");
-  const txtPotenciaDos = document.getElementById("txtPotenciaDos");
   const txtSsid = document.getElementById("txtSsid");
   const txtPass = document.getElementById("txtPass");
   const txtIp = document.getElementById("txtIp");
   const slcRpetidor = document.getElementById("slcRpetidor");
+  const txtaEstadoInicial = document.getElementById("txtaEstadoInicial");
 
+  //Cambios de la ficha
+  const txtCambiosPppoe = document.getElementById("txtCambiosPppoe");
+  const txtCambiosClave = document.getElementById("txtCambiosClave");
+  const txtCambiosVlan = document.getElementById("txtCambiosVlan");
+  const txtCambiosIp = document.getElementById("txtCambiosIp");
 
   let idSoporte = -1;
 
@@ -27,9 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       idSoporte = await obtenerReferencias();
       if (idSoporte) {
-        //await obtenerProblema(idSoporte);
         await crearSelectYBoton();
-        //ArmadoJsonGpon();
 
         const doc = urlParams.get("doc");
         const idSoporte = urlParams.get("idsoporte");
@@ -109,6 +113,15 @@ document.addEventListener("DOMContentLoaded", () => {
    */
   async function llenadoDeDatos(doct, idSoporte, tiposervicio) {
     try {
+      const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
+      const data = await respuesta.json();
+      txtaEstadoInicial.value = (data[0].descripcion_problema);
+
+    } catch (error) {
+      console.log("Error en Obtener el estado Inicial:", error);
+    }
+
+    try {
       const respuesta = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${doct}`);
       const data = await respuesta.json();
       console.log(doct);
@@ -117,8 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
       $("#txtCliente").val(data[0].nombre);
       //Asignacion del Documento del cliente
       $("#txtNrodocumento").val(doct);
-      //Asignacion del Plan
-      //...Pendiente
+
     } catch (error) {
       console.error("Error en llenadoDeDatos:", error);
     }
@@ -126,7 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const dataFibra = await FichaSoporte(idSoporte);
       const fibraFiltrado = JSON.parse(dataFibra[0].ficha_instalacion).fibraOptica;
-      console.log(fibraFiltrado);
+      console.log(dataFibra[0]);
 
       // Asignacion para el campo de plan.
       console.log(fibraFiltrado.plan);
@@ -140,6 +152,11 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log(fibraFiltrado.claveAcceso);
       txtClave.value = fibraFiltrado.claveAcceso;
 
+      //Asignacion de los campos que no pueden cambiar sin procesos externos
+      txtCambiosPppoe.value = fibraFiltrado.usuario;
+      txtCambiosClave.value = fibraFiltrado.claveAcceso;
+      txtCambiosVlan.value = fibraFiltrado.vlan;
+
       // Asignacion potencia 
       console.log(fibraFiltrado);
       txtPotencia.value = fibraFiltrado.potencia;
@@ -147,6 +164,10 @@ document.addEventListener("DOMContentLoaded", () => {
       // Catv
       console.log(fibraFiltrado.moden.catv);
       chkCatv.checked = fibraFiltrado.moden.catv;
+
+      // Vlan
+      console.log(fibraFiltrado.vlan);
+      txtVlan.value = fibraFiltrado.vlan;
 
       // DATOS MODEN
       // Asignacion repetidores
@@ -157,6 +178,13 @@ document.addEventListener("DOMContentLoaded", () => {
         option.text = `${repetidor.ssid} (${repetidor.ip})`;
         slcRpetidor.appendChild(option);
       });
+
+
+      //Seleccionar Automaticamente el primer repetidor, y ejecutar programaticamente el evento change
+      slcRpetidor.selectedIndex = 1;
+      const changeEvent = new Event('change');
+      slcRpetidor.dispatchEvent(changeEvent);
+
     } catch (error) {
       console.error("Error en data de Fibra:", error);
     }
@@ -164,7 +192,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   slcRpetidor.addEventListener("change", async () => {
     await cargarEnInputs();
-
   });
 
   async function cargarEnInputs() {
@@ -181,7 +208,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (repetidorSeleccionado) {
         console.log("Repetidor seleccionado:", repetidorSeleccionado);
-        txtIp.value = repetidorSeleccionado.ip.toString();
+        txtIp.value = repetidorSeleccionado.ip;
+        txtSsid.value = repetidorSeleccionado.ssid;
+        txtPass.value = repetidorSeleccionado.contrasenia;
       } else {
         console.warn("No se encontró un repetidor con el valor seleccionado.");
       }
@@ -189,7 +218,6 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error al cargar datos del repetidor:", error);
     }
   }
-
 
   async function ArmadoJsonGpon() {
     const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
@@ -273,6 +301,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
       window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
     }
+  });
+
+  txtCambiosIp.addEventListener("input", async (event) => {
+    await formatoIPinput(event);
   });
 
 });
