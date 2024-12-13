@@ -35,18 +35,44 @@ document.addEventListener("DOMContentLoaded", () => {
 
   requiredFields.forEach(field => {
     field.addEventListener("input", function () {
-      const label = field.nextElementSibling;
-      const invalidFeedback = label.nextElementSibling;
+      const formGroup = field.closest('.form-floating');
+      const label = formGroup ? formGroup.querySelector('label') : null; // Encontrar el label
+      const asterisk = label ? label.querySelector('.required-asterisk') : null; // Encontrar el asterisco
+      const invalidFeedback = field.nextElementSibling; // El mensaje de error
 
-      if (field.value.trim() !== "") {
-        field.classList.remove("is-invalid");
-        invalidFeedback.style.display = "none";
+      // Comprobar si encontramos el asterisco
+      if (asterisk) {
+        if (field.value.trim() !== "") {
+          asterisk.style.display = "none";
+          field.classList.remove("is-invalid");
+          invalidFeedback.style.display = "none";
+        } else {
+          asterisk.style.display = "inline";
+          field.classList.add("is-invalid");
+          invalidFeedback.style.display = "block";
+        }
       } else {
-        field.classList.add("is-invalid");
-        invalidFeedback.style.display = "block";
+        console.warn("Asterisco no encontrado para el campo:", field);
       }
     });
   });
+
+  // Validar valores negativos en tiempo real para campos positivos
+  function validarValorNegativoPositivo(event) {
+    const elemento = event.target;
+    const min = 0;
+    const mensaje = `${elemento.placeholder} debe ser ${min} o más.`;
+    const invalidFeedback = elemento.nextElementSibling;
+
+    if (parseFloat(elemento.value) < min) {
+      elemento.classList.add("is-invalid");
+      invalidFeedback.textContent = mensaje;
+      invalidFeedback.style.display = "block";
+    } else {
+      elemento.classList.remove("is-invalid");
+      invalidFeedback.style.display = "none";
+    }
+  }
 
   // Validar valores en tiempo real para campos con rango
   function validarValorRango(event) {
@@ -68,8 +94,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Asignar eventos de validación en tiempo real
   document.getElementById("txtPotenciaFibra").addEventListener("input", validarValorRango);
+  document.getElementById("txtVlan").addEventListener("input", validarValorRango);
   document.getElementById("txtAntenas").addEventListener("input", validarValorRango);
   document.getElementById("txtPotenciaCable").addEventListener("input", validarValorRango);
+  txtCantConector.addEventListener("input", validarValorNegativoPositivo);
+  txtCantCable.addEventListener("input", validarValorNegativoPositivo);
+  txtSpliter.addEventListener("input", validarValorNegativoPositivo);
+  txtPotenciaCable.addEventListener("input", validarValorRango);
   txtGponNap.addEventListener("input", validarValorRango);
   txtCatvNap.addEventListener("input", validarValorRango);
   txtGponCasa.addEventListener("input", validarValorRango);
@@ -116,6 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("txtPotenciaFibra").value = fibra.potencia || "";
         document.getElementById("txtSsdi").value = fibra.moden?.ssid || "";
         document.getElementById("txtPeriodo").value = fibra.periodo || "";
+        document.getElementById("txtVlan").value = fibra.vlan || "";
         document.getElementById("txtSeguridad").value = fibra.moden?.seguridad || "";
         document.getElementById("txtCodigoBarra").value = fibra.moden?.codigoBarra || "";
         document.getElementById("txtMarca").value = fibra.moden?.marca || "";
@@ -137,7 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
           document.getElementById("txtCodigoBarrasRepetidor").value = jsonRepetidor[0]?.codigoBarra || "";
           document.getElementById("txtMarcaRepetidor").value = jsonRepetidor[0]?.marca || "";
           document.getElementById("txtModeloRepetidor").value = jsonRepetidor[0]?.modelo || "";
-          document.getElementById("txtPrecio").value = jsonRepetidor[0]?.precio || "";
+          document.getElementById("txtPrecioRepetidor").value = jsonRepetidor[0]?.precio || "";
           document.getElementById("txtSerieRepetidor").value = jsonRepetidor[0]?.serie || "";
           document.getElementById("txtIpRepetidor").value = jsonRepetidor[0]?.ip || "";
         }
@@ -190,10 +222,17 @@ document.addEventListener("DOMContentLoaded", () => {
                     <label>Precio:</label>
                     <span>${repetidor.precio}</span>
                   </div>
+                </div>
+                <div class="row">
                   <div class="field">
                     <i class="fas fa-network-wired icon"></i>
                     <label>IP:</label>
                     <span>${repetidor.ip}</span>
+                  </div>
+                  <div class="field">
+                    <i class="fas fa-thermometer-half icon"></i>
+                    <label>Condición:</label>
+                    <span>${repetidor.condicion}</span>
                   </div>
                 </div>
                 <hr>
@@ -239,9 +278,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div class="card-body">
                   <h5 class="card-title"><i class="fa-solid fa-desktop" style="color: #0459ad;"></i> Sintonizador</h5>
                   <p class="card-text" style="color: gray;">
-                    Marca y Modelo:
+                    Código de Barra:
                     <span style="background-color: #d3d3d3; border-radius: 10px; padding: 2px 5px; color: black;">
-                      ${sintonizador.marcaModelo}
+                      ${sintonizador.codigoBarra}
+                    </span>
+                  </p>
+                  <p class="card-text" style="color: gray;">
+                    Marca:
+                    <span style="background-color: #d3d3d3; border-radius: 10px; padding: 2px 5px; color: black;">
+                      ${sintonizador.marca}
+                    </span>
+                  </p>
+                  <p class="card-text" style="color: gray;">
+                    Modelo:
+                    <span style="background-color: #d3d3d3; border-radius: 10px; padding: 2px 5px; color: black;">
+                      ${sintonizador.modelo}
                     </span>
                   </p>
                   <p class="card-text" style="color: gray;">
@@ -300,6 +351,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const txtPlan = document.querySelector("#txtPlan").value;
     const txtClaveAcceso = document.querySelector("#txtClaveAcceso").value;
     const txtPeriodo = document.querySelector("#txtPeriodo").value;
+    const txtVlan = document.querySelector("#txtVlan").value;
     const txtPotencia = document.querySelector("#txtPotenciaFibra").value;
     const txtSsdi = document.querySelector("#txtSsdi").value;
     const txtSeguridad = document.querySelector("#txtSeguridad").value;
@@ -330,6 +382,7 @@ document.addEventListener("DOMContentLoaded", () => {
           fibraoptica: {
             usuario: txtUsuario,
             claveacceso: txtClaveAcceso,
+            vlan: txtVlan,
             periodo: txtPeriodo,
             plan: txtPlan,
             potencia: parseInt(txtPotencia),
@@ -479,9 +532,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const codigoBarra = document.getElementById("txtCodigoBarrasRepetidor").value;
     const marca = document.getElementById("txtMarcaRepetidor")?.value;
     const modelo = document.getElementById("txtModeloRepetidor")?.value;
-    const precio = document.getElementById("txtPrecio")?.value;
+    const precio = document.getElementById("txtPrecioRepetidor")?.value;
     const serie = document.getElementById("txtSerieRepetidor")?.value;
     const ip = document.getElementById("txtIpRepetidor").value;
+    const condicion = document.getElementById("slcCondicionRepetidor").value;
 
     if (ssid === "" || contrasenia === "" || codigoBarra === "" || ip === "") {
       showToast("Por favor, llene todos los campos.", "WARNING");
@@ -498,6 +552,7 @@ document.addEventListener("DOMContentLoaded", () => {
         precio: precio,
         serie: serie,
         ip: ip,
+        condicion: condicion
       };
       jsonRepetidor.push(repetidor);
       nuevoRepetidor.innerHTML = `
@@ -541,11 +596,19 @@ document.addEventListener("DOMContentLoaded", () => {
                         <label>IP:</label>
                         <span>${ip}</span>
                     </div>
-                    <div class="field">
-                        <i class="fas fa-dollar-sign icon"></i>
-                        <label>Precio:</label>
-                        <span>${precio}</span>
-                    </div>
+                    
+                </div>
+                <div class="row">
+                  <div class="field">
+                      <i class="fas fa-dollar-sign icon"></i>
+                      <label>Precio:</label>
+                      <span>${precio}</span>
+                  </div>
+                  <div class="field">
+                      <i class="fas fa-thermometer-half icon"></i>
+                      <label>Condición:</label>
+                      <span>${condicion}</span>
+                  </div>
                 </div>
                 <hr>
                 <div class="row">
@@ -574,13 +637,17 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function AgregarSintotizador() {
-    const marcaModelo = "ASUS";
-    const serie = "1234567890";
+    const txtCodigoBarraSintonizador = document.getElementById("txtCodigoBarraSintonizador").value;
+    const txtMarcaSintonizador = document.getElementById("txtMarcaSintonizador").value;
+    const txtModeloSintonizador = document.getElementById("txtModeloSintonizador").value;
+    const txtSerieSintonizador = document.getElementById("txtSerieSintonizador").value;
     numeroSintotizadores++;
     const jsonSintotizadorNuevo = {
       numero: numeroSintotizadores,
-      marcaModelo: marcaModelo,
-      serie: serie,
+      codigoBarra: txtCodigoBarraSintonizador,
+      marca: txtMarcaSintonizador,
+      modelo: txtModeloSintonizador,
+      serie: txtSerieSintonizador,
     };
     jsonSintotizador.push(jsonSintotizadorNuevo);
     const card = document.createElement("div");
@@ -589,15 +656,27 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="card-body">
               <h5 class="card-title"><i class="fa-solid fa-desktop" style="color: #0459ad;"></i> Sintonizador</h5>
               <p class="card-text" style="color: gray;">
-                Marca y Modelo:
+                Código de Barra:
                 <span style="background-color: #d3d3d3; border-radius: 10px; padding: 2px 5px; color: black;">
-                  ${marcaModelo}
+                  ${txtCodigoBarraSintonizador}
+                </span>
+              </p>
+              <p class="card-text" style="color: gray;">
+                Marca:
+                <span style="background-color: #d3d3d3; border-radius: 10px; padding: 2px 5px; color: black;">
+                  ${txtMarcaSintonizador}
+                </span>
+              </p>
+              <p class="card-text" style="color: gray;">
+                Modelo:
+                <span style="background-color: #d3d3d3; border-radius: 10px; padding: 2px 5px; color: black;">
+                  ${txtModeloSintonizador}
                 </span>
               </p>
               <p class="card-text" style="color: gray;">
                 Serie:
                 <span style="background-color: #d3d3d3; border-radius: 10px; padding: 2px 5px; color: black;">
-                  ${serie}
+                  ${txtSerieSintonizador}
                 </span>
               </p>
               <button class="btn btn-danger btn-sm mt-2 btnEliminar">
@@ -668,7 +747,7 @@ document.addEventListener("DOMContentLoaded", () => {
           const precio = producto.precio_actual;
           document.getElementById('txtMarcaRepetidor').value = marca;
           document.getElementById('txtModeloRepetidor').value = modelo;
-          document.getElementById('txtPrecio').value = precio;
+          document.getElementById('txtPrecioRepetidor').value = precio;
           showToast(`Producto encontrado: ${producto.marca} - ${producto.modelo}`, "SUCCESS");
         } else {
           showToast("Producto no encontrado o datos incompletos.", "INFO");
@@ -732,6 +811,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const campos = [
       "txtUsuario",
       "txtClaveAcceso",
+      "txtVlan",
       "txtPlan",
       "txtPeriodo",
       "txtPotenciaFibra",
@@ -772,7 +852,35 @@ document.addEventListener("DOMContentLoaded", () => {
   txtCantConector.addEventListener("input", calcularCostos);
 
   document.getElementById("btnAñadirSintotizador").addEventListener("click", function () {
+    const codigoBarra = document.getElementById("txtCodigoBarraSintonizador").value.trim();
+    const serie = document.getElementById("txtSerieSintonizador").value.trim();
+
+    if (!codigoBarra || !serie) {
+      if (!codigoBarra) {
+        document.getElementById("txtCodigoBarraSintonizador").classList.add("is-invalid");
+      } else {
+        document.getElementById("txtCodigoBarraSintonizador").classList.remove("is-invalid");
+      }
+
+      if (!serie) {
+        document.getElementById("txtSerieSintonizador").classList.add("is-invalid");
+      } else {
+        document.getElementById("txtSerieSintonizador").classList.remove("is-invalid");
+      }
+
+      return;
+    }
+
+    document.getElementById("txtCodigoBarraSintonizador").classList.remove("is-invalid");
+    document.getElementById("txtSerieSintonizador").classList.remove("is-invalid");
+
     AgregarSintotizador();
+
+    // Limpiar los campos después de agregar un sintonizador
+    document.getElementById("txtCodigoBarraSintonizador").value = "";
+    document.getElementById("txtMarcaSintonizador").value = "";
+    document.getElementById("txtModeloSintonizador").value = "";
+    document.getElementById("txtSerieSintonizador").value = "";
   });
 
   document.getElementById("btnAñadirRepetidor").addEventListener("click", async function () {
@@ -842,5 +950,37 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById('chkCatv').addEventListener('change', function () {
     var statusText = document.getElementById('statusText');
     statusText.textContent = this.checked ? 'Sí' : 'No';
+  });
+
+  //Evento de escaneo de código de barras fibra óptica
+  document.getElementById('txtCodigoBarraSintonizador').addEventListener('input', async function () {
+    const codigoBarra = this.value.trim();
+
+    if (codigoBarra === "") {
+      return;
+    }
+
+    try {
+      const response = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarra&codigoBarra=${encodeURIComponent(codigoBarra)}`);
+      const resultado = await response.json();
+
+      if (Array.isArray(resultado) && resultado.length > 0) {
+        const producto = resultado[0];
+        if (producto && producto.marca && producto.modelo) {
+          const marca = producto.marca;
+          const modelo = producto.modelo;
+          document.getElementById("txtMarcaSintonizador").value = marca;
+          document.getElementById("txtModeloSintonizador").value = modelo;
+          showToast(`Producto encontrado: ${producto.marca} - ${producto.modelo}`, "SUCCESS");
+        } else {
+          showToast("Producto no encontrado o datos incompletos", "INFO");
+        }
+      } else {
+        showToast("Producto no encontrado", "INFO");
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      showToast("Hubo un error al escanear el código de barras.", "ERROR");
+    }
   });
 });

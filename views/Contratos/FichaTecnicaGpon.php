@@ -4,6 +4,7 @@ $idContrato = $_GET['idContrato'];
 ?>
 <link rel="stylesheet" href="../../css/gpon.css">
 
+<!-- Modal de Sintotizador -->
 <div class="modal fade" id="mdlSintotizador" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -14,6 +15,32 @@ $idContrato = $_GET['idContrato'];
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" id="mdlSintotizadorBody">
+        <div class="mb-2">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="txtCodigoBarraSintonizador" placeholder="Código Barra">
+            <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
+            <label for="txtCodigoBarraSintonizador">Código de Barra <span class="required-asterisk" style="color: red;">*</span></label>
+          </div>
+        </div>
+        <div class="mb-2">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="txtMarcaSintonizador" placeholder="Marca" disabled>
+            <label for="txtMarcaSintonizador">Marca</label>
+          </div>
+        </div>
+        <div class="mb-2">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="txtModeloSintonizador" placeholder="Modelo" disabled>
+            <label for="txtModeloSintonizador">Modelo</label>
+          </div>
+        </div>
+        <div class="mb-2">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="txtSerieSintonizador" placeholder="Serie">
+            <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
+            <label for="txtSerieSintonizador">Serie <span class="required-asterisk" style="color: red;">*</span></label>
+          </div>
+        </div>
         <!-- Aquí se agregarán las cartas -->
       </div>
       <div class="modal-footer">
@@ -28,8 +55,9 @@ $idContrato = $_GET['idContrato'];
   </div>
 </div>
 
+<!-- Modal de Repetidor -->
 <div class="modal fade" id="mdlRepetidor" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered w-50">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="exampleModalLabel">
@@ -38,57 +66,80 @@ $idContrato = $_GET['idContrato'];
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" id="mdlRepetidorBody">
-        <div class="mb-2">
-          <div class="form-floating">
-            <input type="text" class="form-control" id="txtSsidRepetidor" placeholder="SSID">
-            <label for="lblSsid">SSID <span class="required-asterisk" style="color: red;">*</span></label>
-            <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
+        <div class="row g-2 mb-2">
+          <div class="col-12 col-md-6">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="txtSsidRepetidor" placeholder="SSID">
+              <label for="lblSsid">SSID <span class="required-asterisk" style="color: red;">*</span></label>
+              <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="txtContraseniaRepetidor" placeholder="Contraseña">
+              <label for="lblContraseniaRepetidor">Contraseña <span class="required-asterisk" style="color: red;">*</span></label>
+              <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
+            </div>
           </div>
         </div>
-        <div class="mb-2">
-          <div class="form-floating">
-            <input type="text" class="form-control" id="txtContraseniaRepetidor" placeholder="Contraseña">
-            <label for="lblContraseniaRepetidor">Contraseña <span class="required-asterisk" style="color: red;">*</span></label>
-            <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
+        <div class="row g-2 mb-2">
+          <div class="col-12 col-md-6">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="txtSerieRepetidor" placeholder="Serie">
+              <label for="lblSerieRepetidor">Serie <span class="required-asterisk" style="color: red;">*</span></label>
+              <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="txtIpRepetidor" placeholder="IP">
+              <label for="lblIpRepetidor">IP <span class="required-asterisk" style="color: red;">*</span></label>
+              <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
+            </div>
           </div>
         </div>
-        <div class="mb-2">
-          <div class="form-floating">
-            <input type="text" class="form-control" id="txtCodigoBarrasRepetidor" placeholder="Codigo de barras">
-            <label for="lblCodigoBarrasRepetidor">Codigo de barras <span class="required-asterisk" style="color: red;">*</span></label>
-            <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
+        <div class="row g-2 mb-2">
+          <div class="col-12 col-md-6">
+            <div class="form-floating">
+              <select class="form-select" id="slcCondicionRepetidor">
+                <option value="venta">Venta</option>
+                <option value="alquilado">Alquilado</option>
+              </select>
+              <label for="slcTipoRepetidor">Tipo <span class="required-asterisk" style="color: red;">*</span></label>
+              <div class="invalid-feedback">Por favor, seleccione una opción válida.</div>
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="txtCodigoBarrasRepetidor" placeholder="Codigo de barras">
+              <label for="lblCodigoBarrasRepetidor">Codigo de barras <span class="required-asterisk" style="color: red;">*</span></label>
+              <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
+            </div>
           </div>
         </div>
-        <div class="mb-2">
-          <div class="form-floating">
-            <input type="text" class="form-control" id="txtMarcaRepetidor" placeholder="a" disabled>
-            <label for="lblMarcaRepetidor">Marca </label>
+        <div class="row g-2 mb-2">
+          <div class="col-12 col-md-6">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="txtMarcaRepetidor" placeholder="Marca" disabled>
+              <label for="lblMarcaRepetidor">Marca <span class="required-asterisk" style="color: red;">*</span></label>
+              <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="txtModeloRepetidor" placeholder="Modelo" disabled>
+              <label for="lblModeloRepetidor">Modelo <span class="required-asterisk" style="color: red;">*</span></label>
+              <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
+            </div>
           </div>
         </div>
-        <div class="mb-2">
-          <div class="form-floating">
-            <input type="text" class="form-control" id="txtModeloRepetidor" placeholder="a" disabled>
-            <label for="lblModeloRepetidor">Modelo</label>
-          </div>
-        </div>
-        <div class="mb-2">
-          <div class="form-floating">
-            <input type="text" class="form-control" id="txtPrecio" placeholder="precio" disabled>
-            <label for="txtPrecio">Precio</label>
-          </div>
-        </div>
-        <div class="mb-2">
-          <div class="form-floating">
-            <input type="text" class="form-control" id="txtSerieRepetidor" placeholder="Serie">
-            <label for="lblSerie">Serie <span class="required-asterisk" style="color: red;">*</span></label>
-            <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
-          </div>
-        </div>
-        <div class="mb-2">
-          <div class="form-floating">
-            <input type="text" class="form-control" id="txtIpRepetidor" placeholder="IP">
-            <label for="lblIpRepetidor">IP <span class="required-asterisk" style="color: red;">*</span></label>
-            <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
+        <div class="row g-2 mb-2">
+          <div class="col-12 col-md-6">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="txtPrecioRepetidor" placeholder="Precio" disabled>
+              <label for="lblPrecioRepetidor">Precio <span class="required-asterisk" style="color: red;">*</span></label>
+              <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
+            </div>
           </div>
         </div>
       </div>
@@ -138,29 +189,37 @@ $idContrato = $_GET['idContrato'];
                 <label for="lblClaveAcceso">Clave de Acceso</label>
               </div>
             </div>
-          </div>
-          <div class="row g-3 mb-2">
             <div class="col md-9">
               <div class="form-floating">
                 <input type="text" class="form-control" disabled=true id="txtPlan" placeholder="Plan">
                 <label for="lblPlan">Plan</label>
               </div>
             </div>
+          </div>
+
+          <div class="row g-3 mb-2">
             <div class="col md-3">
               <div class="form-floating">
                 <input type="date" class="form-control" id="txtPeriodo" placeholder="Periodo">
-                <label for="txtPeriodo">Periodo</label>
+                <label for="txtPeriodo">Periodo Mínimo</label>
+              </div>
+            </div>
+            <div class="col md-3">
+              <div class="form-floating">
+                <input type="number" class="form-control" id="txtVlan" placeholder="Vlan" min="1" max="4094">
+                <label for="lblVlan">Vlan <span class="required-asterisk" style="color: red;">*</span></label>
+                <div class="invalid-feedback">Por favor, ingrese un valor válido (1 a 4094).</div>
               </div>
             </div>
             <div class="col md-3">
               <div class="form-floating">
                 <input type="number" class="form-control" id="txtPotenciaFibra" placeholder="Potencia" min="-30" max="24">
+                <div class="invalid-feedback">Por favor, ingrese un valor válido (-30 a 24).</div>
                 <label for="lblPotenciaFibra">Potencia <span class="required-asterisk" style="color: red;">*</span></label>
-                <div class="invalid-feedback"></div>
               </div>
             </div>
           </div>
-          <h5> Datos del Modén</h5>
+          <h5> Datos del Módem</h5>
 
           <div class="row g-3 mb-2">
             <div class="col md-6">
@@ -182,7 +241,7 @@ $idContrato = $_GET['idContrato'];
             <div class="col-4 mb-2">
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtCodigoBarra" placeholder="Codigo de barra">
-                <label for="lblCodigoBarra">Codigo de barras <span class="required-asterisk" style="color: red;">*</span></label>
+                <label for="lblCodigoBarra">Código de barras <span class="required-asterisk" style="color: red;">*</span></label>
                 <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
               </div>
             </div>

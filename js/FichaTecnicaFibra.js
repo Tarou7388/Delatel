@@ -23,15 +23,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
   requiredFields.forEach(field => {
     field.addEventListener("input", function () {
-      const label = field.nextElementSibling;
-      const invalidFeedback = label.nextElementSibling;
+      const formGroup = field.closest('.form-floating');
+      const label = formGroup ? formGroup.querySelector('label') : null; // Encontrar el label
+      const asterisk = label ? label.querySelector('.required-asterisk') : null; // Encontrar el asterisco
+      const invalidFeedback = field.nextElementSibling; // El mensaje de error
 
-      if (field.value.trim() !== "") {
-        field.classList.remove("is-invalid");
-        invalidFeedback.style.display = "none";
+      // Comprobar si encontramos el asterisco
+      if (asterisk) {
+        if (field.value.trim() !== "") {
+          asterisk.style.display = "none";
+          field.classList.remove("is-invalid");
+          invalidFeedback.style.display = "none";
+        } else {
+          asterisk.style.display = "inline";
+          field.classList.add("is-invalid");
+          invalidFeedback.style.display = "block";
+        }
       } else {
-        field.classList.add("is-invalid");
-        invalidFeedback.style.display = "block";
+        console.warn("Asterisco no encontrado para el campo:", field);
       }
     });
   });
@@ -56,6 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Asignar eventos de validación en tiempo real
   document.getElementById("txtPotenciaFibra").addEventListener("input", validarValorRango);
+  document.getElementById("txtVlan").addEventListener("input", validarValorRango);
   document.getElementById("txtAntenas").addEventListener("input", validarValorRango);
 
   (async () => {
@@ -97,6 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById("txtPeriodo").value = fibraOptica.periodo;
       document.getElementById("txtUsuario").value = fibraOptica.usuario;
       document.getElementById("txtClaveAcceso").value = fibraOptica.claveAcceso;
+      document.getElementById("txtVlan").value = fibraOptica.vlan;
       document.getElementById("txtPlan").value = fibraOptica.plan;
       document.getElementById("txtPotenciaFibra").value = fibraOptica.potencia;
       document.getElementById("txtSsdi").value = fibraOptica.moden.ssid;
@@ -164,10 +175,17 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <label>Precio:</label>
                                 <span>${repetidor.precio}</span>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="field">
                                 <i class="fas fa-network-wired icon"></i>
                                 <label>IP:</label>
                                 <span>${repetidor.ip}</span>
+                            </div>
+                            <div class="field">
+                                <i class="fas fa-thermometer-half icon"></i>
+                                <label>Condición:</label>
+                                <span>${repetidor.condicion}</span>
                             </div>
                         </div>
                         <hr>
@@ -199,6 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
   async function fibraOptica() {
     const txtUsuario = document.querySelector("#txtUsuario").value;
     const txtClaveAcceso = document.querySelector("#txtClaveAcceso").value;
+    const txtVlan = document.querySelector("#txtVlan").value;
     const txtPlan = document.querySelector("#txtPlan").value;
     const txtPeriodo = document.querySelector("#txtPeriodo").value;
     const txtPotencia = document.querySelector("#txtPotenciaFibra").value;
@@ -220,6 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
       fibraOptica: {
         usuario: txtUsuario,
         claveAcceso: txtClaveAcceso,
+        vlan: txtVlan,
         periodo: txtPeriodo,
         plan: txtPlan,
         potencia: txtPotencia,
@@ -255,6 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const precio = document.getElementById("txtPrecioRepetidor")?.value;
     const serie = document.getElementById("txtSerieRepetidor")?.value;
     const ip = document.getElementById("txtIpRepetidor")?.value;
+    const condicion = document.getElementById("slcCondicionRepetidor")?.value;
 
     if (!ssid || !contrasenia || !codigoBarra || !marca || !modelo || !serie || !ip) {
       showToast("Por favor, complete todos los campos del repetidor.", "WARNING");
@@ -272,6 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
       precio: precio,
       serie: serie,
       ip: ip,
+      condicion: condicion
     };
     jsonRepetidor.push(repetidor);
     nuevoRepetidor.innerHTML = `
@@ -315,10 +337,17 @@ document.addEventListener('DOMContentLoaded', () => {
                         <label>IP:</label>
                         <span>${ip}</span>
                     </div>
+                </div>
+                <div class="row">
                     <div class="field">
                         <i class="fas fa-dollar-sign icon"></i>
                         <label>Precio:</label>
                         <span>${precio}</span>
+                    </div>
+                    <div class="field">
+                        <i class="fas fa-thermometer-half icon"></i>
+                        <label>Condición:</label>
+                        <span>${condicion}</span>
                     </div>
                 </div>
                 <hr>
@@ -465,6 +494,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const campos = [
       "txtUsuario",
       "txtClaveAcceso",
+      "txtVlan",
       "txtPlan",
       "txtPeriodo",
       "txtPotenciaFibra",

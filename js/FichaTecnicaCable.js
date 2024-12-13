@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   //Obtener idCaja
   const urlParams = new URLSearchParams(window.location.search);
-  const idCaja = urlParams.get('idCaja') || localStorage.getItem('idCaja'); 
+  const idCaja = urlParams.get('idCaja') || localStorage.getItem('idCaja');
   console.log("idCaja:", idCaja);
 
   const periodoDate = new Date();
@@ -35,30 +35,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const requiredFields = document.querySelectorAll(".form-control");
 
-requiredFields.forEach(field => {
-  field.addEventListener("input", function () {
-    // Buscamos el contenedor de la etiqueta (label) y el asterisco.
-    const formGroup = field.closest('.form-floating');
-    const label = formGroup ? formGroup.querySelector('label') : null; // Encontrar el label
-    const asterisk = label ? label.querySelector('.required-asterisk') : null; // Encontrar el asterisco
-    const invalidFeedback = field.nextElementSibling; // El mensaje de error
+  requiredFields.forEach(field => {
+    field.addEventListener("input", function () {
+      const formGroup = field.closest('.form-floating');
+      const label = formGroup ? formGroup.querySelector('label') : null; // Encontrar el label
+      const asterisk = label ? label.querySelector('.required-asterisk') : null; // Encontrar el asterisco
+      const invalidFeedback = field.nextElementSibling; // El mensaje de error
 
-    // Comprobar si encontramos el asterisco
-    if (asterisk) {
-      if (field.value.trim() !== "") {
-        asterisk.style.display = "none";
-        field.classList.remove("is-invalid");
-        invalidFeedback.style.display = "none";
+      // Comprobar si encontramos el asterisco
+      if (asterisk) {
+        if (field.value.trim() !== "") {
+          asterisk.style.display = "none";
+          field.classList.remove("is-invalid");
+          invalidFeedback.style.display = "none";
+        } else {
+          asterisk.style.display = "inline";
+          field.classList.add("is-invalid");
+          invalidFeedback.style.display = "block";
+        }
       } else {
-        asterisk.style.display = "inline";
-        field.classList.add("is-invalid");
-        invalidFeedback.style.display = "block";
+        console.warn("Asterisco no encontrado para el campo:", field);
       }
-    } else {
-      console.warn("Asterisco no encontrado para el campo:", field);
-    }
+    });
   });
-});
 
 
   // Validar valores negativos en tiempo real para campos positivos
@@ -342,7 +341,7 @@ requiredFields.forEach(field => {
     const txtCodigoBarraSintonizador = document.getElementById("txtCodigoBarraSintonizador").value;
     const txtMarcaSintonizador = document.getElementById("txtMarcaSintonizador").value;
     const txtModeloSintonizador = document.getElementById("txtModeloSintonizador").value;
-    const txtSerieSintonizador  = document.getElementById("txtSerieSintonizador").value;
+    const txtSerieSintonizador = document.getElementById("txtSerieSintonizador").value;
     numeroSintotizadores++;
     const jsonSintotizadorNuevo = {
       numero: numeroSintotizadores,
@@ -480,34 +479,34 @@ requiredFields.forEach(field => {
 
   document.getElementById("btnAñadirSintotizador").addEventListener("click", function () {
     const codigoBarra = document.getElementById("txtCodigoBarraSintonizador").value.trim();
-  const serie = document.getElementById("txtSerieSintonizador").value.trim();
+    const serie = document.getElementById("txtSerieSintonizador").value.trim();
 
-  if (!codigoBarra || !serie) {
-    if (!codigoBarra) {
-      document.getElementById("txtCodigoBarraSintonizador").classList.add("is-invalid");
-    } else {
-      document.getElementById("txtCodigoBarraSintonizador").classList.remove("is-invalid");
+    if (!codigoBarra || !serie) {
+      if (!codigoBarra) {
+        document.getElementById("txtCodigoBarraSintonizador").classList.add("is-invalid");
+      } else {
+        document.getElementById("txtCodigoBarraSintonizador").classList.remove("is-invalid");
+      }
+
+      if (!serie) {
+        document.getElementById("txtSerieSintonizador").classList.add("is-invalid");
+      } else {
+        document.getElementById("txtSerieSintonizador").classList.remove("is-invalid");
+      }
+
+      return;
     }
 
-    if (!serie) {
-      document.getElementById("txtSerieSintonizador").classList.add("is-invalid");
-    } else {
-      document.getElementById("txtSerieSintonizador").classList.remove("is-invalid");
-    }
+    document.getElementById("txtCodigoBarraSintonizador").classList.remove("is-invalid");
+    document.getElementById("txtSerieSintonizador").classList.remove("is-invalid");
 
-    return;
-  }
+    AgregarSintotizador();
 
-  document.getElementById("txtCodigoBarraSintonizador").classList.remove("is-invalid");
-  document.getElementById("txtSerieSintonizador").classList.remove("is-invalid");
-
-  AgregarSintotizador();
-
-  // Limpiar los campos después de agregar un sintonizador
-  document.getElementById("txtCodigoBarraSintonizador").value = "";
-  document.getElementById("txtMarcaSintonizador").value = "";
-  document.getElementById("txtModeloSintonizador").value = "";
-  document.getElementById("txtSerieSintonizador").value = "";
+    // Limpiar los campos después de agregar un sintonizador
+    document.getElementById("txtCodigoBarraSintonizador").value = "";
+    document.getElementById("txtMarcaSintonizador").value = "";
+    document.getElementById("txtModeloSintonizador").value = "";
+    document.getElementById("txtSerieSintonizador").value = "";
   });
 
   document.getElementById("btnGuardar").addEventListener("click", async () => {
@@ -526,7 +525,7 @@ requiredFields.forEach(field => {
   document.getElementById('txtCodigoBarraSintonizador').addEventListener('input', async function () {
     const codigoBarra = this.value.trim();
 
-    if(codigoBarra === "") {
+    if (codigoBarra === "") {
       return;
     }
 
@@ -534,17 +533,17 @@ requiredFields.forEach(field => {
       const response = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarra&codigoBarra=${encodeURIComponent(codigoBarra)}`);
       const resultado = await response.json();
 
-      if(Array.isArray(resultado) && resultado.length > 0) {
+      if (Array.isArray(resultado) && resultado.length > 0) {
         const producto = resultado[0];
         if (producto && producto.marca && producto.modelo) {
           const marca = producto.marca;
           const modelo = producto.modelo;
-          document.getElementById("txtMarcaSintonizador").value = marca;   
+          document.getElementById("txtMarcaSintonizador").value = marca;
           document.getElementById("txtModeloSintonizador").value = modelo;
           showToast(`Producto encontrado: ${producto.marca} - ${producto.modelo}`, "SUCCESS");
         } else {
           showToast("Producto no encontrado o datos incompletos", "INFO");
-        } 
+        }
       } else {
         showToast("Producto no encontrado", "INFO");
       }

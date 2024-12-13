@@ -2,18 +2,16 @@
 $HOST = "http://localhost/Delatel";
 ?>
 
-<img src="<?= $HOST ?>/image/headerInstalacionGpon.png" class="image-header" alt="">
+<h3 class="text-center">CONTROL DE INSTALACIÓN SERVICIO FTTH - DELAFIBER</h3>
+
+<!-- Información de Contrato y Fecha alineada a la derecha -->
 <div class="container">
-  <table class="tabla2">
-    <tbody>
-      <tr>
-        <td class="text-center">N°:</td>
-        <td class="text-center"><?= $resultado[0]['id_contrato']; ?></td>
-        <td class="text-center">Fecha:</td>
-        <td class="text-center"><?= $fechaActual; ?></td>
-      </tr>
-    </tbody>
-  </table>
+  <div style="text-align: right; font-family: Arial, sans-serif; font-size: 12px;">
+    <p><strong>N°:</strong> <?= $resultado[0]['id_contrato']; ?> &nbsp; <strong>Fecha:</strong> <?= $fechaActual; ?></p>
+  </div>
+</div>
+
+<div class="container">
   <table class="tabla2">
     <thead>
       <tr>
@@ -75,7 +73,7 @@ $HOST = "http://localhost/Delatel";
       </tr>
       <tr>
         <td class="text-center"><strong>VLAN:</strong></td>
-        <td class="text-center"></td>
+        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['vlan']); ?></td>
         <td class="text-center"><strong>ANTENA:</strong></td>
         <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['moden']['numeroantena']); ?></td>
       </tr>
@@ -121,8 +119,8 @@ $HOST = "http://localhost/Delatel";
           <td rowspan="5" class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['detalles']); ?></td>
         </tr>
         <tr>
-          <td class="text-center"><strong>CONDICION:</strong></td>
-          <td class="text-center"></td>
+          <td class="text-center"><strong>CONDICIÓN:</strong></td>
+          <td class="text-center"><?= htmlspecialchars($repetidor['condicion']); ?></td>
         </tr>
         <tr>
           <td class="text-center"><strong>IP:</strong></td>

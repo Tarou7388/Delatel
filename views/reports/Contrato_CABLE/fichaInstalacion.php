@@ -41,11 +41,14 @@ include 'contenido.php';
 include 'estilos.html';
 $content = ob_get_clean();
 
-if ($content === false) {
-  echo '<script>alert("Error al generar el contenido del PDF."); window.history.back();</script>';
-  exit;
-}
-
 $dompdf->loadHtml($content);
 $dompdf->render();
+
+// Obtener el objeto Canvas
+$canvas = $dompdf->getCanvas();
+
+// Añadir numeración de páginas en la cabecera a la izquierda
+$canvas->page_text(30, 30, "Página {PAGE_NUM} de {PAGE_COUNT}", null, 9, array(0, 0, 0));
+
+// Streaming del PDF
 $dompdf->stream($nombreArchivo, array('Attachment' => 0));

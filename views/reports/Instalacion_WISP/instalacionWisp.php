@@ -1,21 +1,16 @@
 <?php
-$HOST = "http://localhost/DELATEL";
+$HOST = "http://localhost/Delatel";
 ?>
 
-<img src="<?= $HOST ?>/image/headerInstalacionWisp.png" class="image-header" alt="">
-<br>
-<div>
-  <table class="tabla2">
-    <tbody>
-      <tr>
-        <td class="text-center"><strong>Troncal:</strong></td>
-        <td class="text-center"><?= $resultado[0]['id_contrato']; ?></td>
-        <td class="text-center"><strong>Fecha:</strong></td>
-        <td class="text-center"><?= $fechaActual; ?></td>
-      </tr>
-    </tbody>
-  </table>
+<h3 class="text-center">CONTROL DE INSTALACIÓN SERVICIO WISP - COMPUIVAN</h3>
+
+<!-- Información de Contrato y Fecha alineada a la derecha -->
+<div class="container">
+  <div style="text-align: right; font-family: Arial, sans-serif; font-size: 12px;">
+    <p><strong>N°:</strong> <?= $resultado[0]['id_contrato']; ?> &nbsp; <strong>Fecha:</strong> <?= $fechaActual; ?></p>
+  </div>
 </div>
+
 <div>
   <table class="tabla2">
     <thead>
@@ -25,37 +20,35 @@ $HOST = "http://localhost/DELATEL";
     </thead>
     <tbody>
       <tr>
-        <td class="text-center"><strong>CLIENTE:</strong></td>
+        <td><strong>CLIENTE:</strong></td>
         <td colspan="5" class="text-center"><?= $resultado[0]['NombreCliente']; ?></td>
-        <td class="text-center"><strong>DNI:</strong></td>
+        <td><strong>DNI:</strong></td>
         <td colspan="2" class="text-center"><?= $resultado[0]['NumeroDocumento']; ?></td>
       </tr>
       <tr>
-        <td class="text-center"><strong>CELULAR:</strong></td>
+        <td><strong>CELULAR:</strong></td>
         <td colspan="2" class="text-center"><?= $resultado[0]['Telefono']; ?></td>
-        <td class="text-center" colspan="2"><strong>DIRECCIÓN:</strong></td>
+        <td colspan="2"><strong>DIRECCIÓN:</strong></td>
         <td colspan="4" class="text-center"><?= $resultado[0]['DireccionContrato']; ?></td>
       </tr>
       <tr>
-        <td class="text-center"><strong>ZONA:</strong></td>
+        <td><strong>ZONA:</strong></td>
         <td colspan="2" class="text-center"><?= $resultado[0]['Sector']; ?></td>
-        <td class="text-center"><strong>DISTRITO:</strong></td>
+        <td><strong>DISTRITO:</strong></td>
         <td colspan="2" class="text-center"><?= $resultado[0]['Distrito']; ?></td>
-        <td class="text-center"><strong>PROVINCIA:</strong></td>
+        <td><strong>PROVINCIA:</strong></td>
         <td colspan="2" class="text-center"><?= $resultado[0]['Provincia']; ?></td>
       </tr>
       <tr>
-        <td class="text-center"><strong>DPTO:</strong></td>
+        <td><strong>DPTO:</strong></td>
         <td class="text-center"><?= $resultado[0]['Departamento']; ?></td>
-        <td class="text-center" colspan="2"><strong>PLAN CONTRATADO:</strong></td>
+        <td colspan="2"><strong>PLAN CONTRATADO:</strong></td>
         <td colspan="3" class="text-center"><?= $resultado[0]['NombrePaquete']; ?></td>
-        <td class="text-center"><strong>COSTO:</strong></td>
-        <td class="text-center"><?= $resultado[0]['PrecioPaquete']; ?></td>
+        <td><strong>COSTO:</strong></td>
+        <td class="text-center">S/. <?= $resultado[0]['PrecioPaquete']; ?></td>
       </tr>
     </tbody>
   </table>
-</div>
-
 </div>
 
 <div>
@@ -67,25 +60,25 @@ $HOST = "http://localhost/DELATEL";
     </thead>
     <tbody>
       <tr>
-        <td class="text-center"><strong>PERIODO:</strong></td>
+        <td><strong>PERIODO:</strong></td>
         <td class="text-center"><?= htmlspecialchars($fichaTecnica['parametros']['periodo']) ?></td>
-        <td class="text-center"><strong>SIGNAL STRENGTH</strong></td>
+        <td><strong>SIGNAL STRENGTH</strong></td>
         <td class="text-center"><?= htmlspecialchars($fichaTecnica['parametros']['signalStrength']) ?></td>
-        <td class="text-center"><strong>FRECUENCIA:</strong></td>
+        <td><strong>FRECUENCIA:</strong></td>
         <td class="text-center"><?= htmlspecialchars($fichaTecnica['parametros']['frecuencia'][0]) ?></td>
       </tr>
       <tr>
-        <td class="text-center"><strong>NOISE FLOOR:</strong></td>
+        <td><strong>NOISE FLOOR:</strong></td>
         <td class="text-center"><?= htmlspecialchars($fichaTecnica['parametros']['noiseFloor']) ?></td>
-        <td class="text-center"><strong>TRANSMIT CCQ:</strong></td>
+        <td><strong>TRANSMIT CCQ:</strong></td>
         <td class="text-center"><?= htmlspecialchars($fichaTecnica['parametros']['transmiTccq']) ?></td>
-        <td class="text-center"><strong>BASE:</strong></td>
+        <td><strong>BASE:</strong></td>
         <td class="text-center"><?= htmlspecialchars($fichaTecnica['parametros']['base'][0]['nombre']) ?> (ID: <?= htmlspecialchars($fichaTecnica['parametros']['base'][0]['id']) ?>)</td>
       </tr>
       <tr>
-        <td class="text-center"><strong>SUB-BASE:</strong></td>
+        <td><strong>SUB-BASE:</strong></td>
         <td class="text-center" colspan="2"><?= htmlspecialchars($fichaTecnica['parametros']['subBase'][0]['nombre']) ?> (ID: <?= htmlspecialchars($fichaTecnica['parametros']['subBase'][0]['id']) ?>)</td>
-        <td class="text-center"><strong>TX/RX RATE:</strong></td>
+        <td><strong>TX/RX RATE:</strong></td>
         <td class="text-center"><?= htmlspecialchars($fichaTecnica['parametros']['txRate']) ?></td>
         <td class="text-center"><?= htmlspecialchars($fichaTecnica['parametros']['rxRate']) ?></td>
       </tr>
@@ -104,33 +97,33 @@ $HOST = "http://localhost/DELATEL";
       </thead>
       <tbody>
         <tr>
-          <td class="text-center"><strong>WAN:</strong></td>
+          <td><strong>WAN:</strong></td>
           <td class="text-center"><?= htmlspecialchars($router['wan']) ?></td>
-          <td class="text-center"><strong>LAN:</strong></td>
+          <td><strong>LAN:</strong></td>
           <td class="text-center"><?= htmlspecialchars($router['lan']) ?></td>
         </tr>
         <tr>
-          <td class="text-center"><strong>MASCARA:</strong></td>
+          <td><strong>MASCARA:</strong></td>
           <td class="text-center"><?= htmlspecialchars($router['mascara']) ?></td>
-          <td class="text-center"><strong>ACCESO:</strong></td>
+          <td><strong>ACCESO:</strong></td>
           <td class="text-center"><?= htmlspecialchars($router['acceso']) ?></td>
         </tr>
         <tr>
-          <td class="text-center"><strong>PUERTA DE ENLACE:</strong></td>
+          <td><strong>PUERTA DE ENLACE:</strong></td>
           <td class="text-center"><?= htmlspecialchars($router['puertaEnlace']) ?></td>
-          <td class="text-center"><strong>SSID:</strong></td>
+          <td><strong>SSID:</strong></td>
           <td class="text-center"><?= htmlspecialchars($router['ssid']) ?></td>
         </tr>
         <tr>
-          <td class="text-center"><strong>DNS1:</strong></td>
+          <td><strong>DNS1:</strong></td>
           <td class="text-center"><?= htmlspecialchars($router['dns1']) ?></td>
-          <td class="text-center"><strong>SEGURIDAD:</strong></td>
+          <td><strong>SEGURIDAD:</strong></td>
           <td class="text-center"><?= htmlspecialchars($router['seguridad']) ?></td>
         </tr>
         <tr>
-          <td class="text-center"><strong>DNS2:</strong></td>
+          <td><strong>DNS2:</strong></td>
           <td class="text-center"><?= htmlspecialchars($router['dns2']) ?></td>
-          <td class="text-center"><strong>OTROS:</strong></td>
+          <td><strong>OTROS:</strong></td>
           <td class="text-center"><?= htmlspecialchars($router['otros']) ?></td>
         </tr>
       <?php endforeach; ?>
@@ -148,49 +141,49 @@ $HOST = "http://localhost/DELATEL";
       </thead>
       <tbody>
         <tr>
-          <td class="text-center"><strong>COSTO ANTENA:</strong></td>
-          <td class="text-center"><?= htmlspecialchars($fichaTecnica['venta']['costoAntena']) ?></td>
+          <td><strong>COSTO ANTENA:</strong></td>
+          <td class="text-center">S/. <?= htmlspecialchars($fichaTecnica['venta']['costoAntena']) ?></td>
           <td colspan="2" class="text-center thead-cabecera-3"><strong>ANTENA</strong></td>
           <td colspan="2" class="text-center thead-cabecera-4"><strong>ROUTER</strong></td>
         </tr>
         <tr>
-          <td class="text-center"><strong>COSTO ROUTER:</strong></td>
-          <td class="text-center"><?= htmlspecialchars($fichaTecnica['venta']['costoRouter']) ?></td>
-          <td class="text-center"><strong>MARCA:</strong></td>
+          <td><strong>COSTO ROUTER:</strong></td>
+          <td class="text-center">S/. <?= htmlspecialchars($fichaTecnica['venta']['costoRouter']) ?></td>
+          <td><strong>MARCA:</strong></td>
           <td class="text-center"><?= htmlspecialchars($fichaTecnica['venta']['antena']['marca']) ?></td>
-          <td class="text-center"><strong>MODELO:</strong></td>
+          <td><strong>MODELO:</strong></td>
           <td class="text-center"><?= htmlspecialchars($fichaTecnica['venta']['router']['modelo']) ?></td>
         </tr>
         <tr>
-          <td class="text-center"><strong>SUBTOTAL:</strong></td>
-          <td class="text-center"><?= htmlspecialchars($fichaTecnica['venta']['subTotal']) ?></td>
-          <td class="text-center"><strong>MODELO:</strong></td>
+          <td><strong>SUBTOTAL:</strong></td>
+          <td class="text-center">S/. <?= htmlspecialchars($fichaTecnica['venta']['subTotal']) ?></td>
+          <td><strong>MODELO:</strong></td>
           <td class="text-center"><?= htmlspecialchars($fichaTecnica['venta']['antena']['modelo']) ?></td>
-          <td class="text-center"><strong>MARCA:</strong></td>
+          <td><strong>MARCA:</strong></td>
           <td class="text-center"><?= htmlspecialchars($fichaTecnica['venta']['router']['marca']) ?></td>
         </tr>
         <tr>
-          <td class="text-center"><strong>ADELANTO:</strong></td>
-          <td class="text-center"><?= htmlspecialchars($fichaTecnica['venta']['adelanto']) ?></td>
-          <td class="text-center"><strong>MAC:</strong></td>
+          <td><strong>ADELANTO:</strong></td>
+          <td class="text-center">S/. <?= htmlspecialchars($fichaTecnica['venta']['adelanto']) ?></td>
+          <td><strong>MAC:</strong></td>
           <td class="text-center"><?= htmlspecialchars($fichaTecnica['venta']['antena']['mac']) ?></td>
-          <td class="text-center"><strong>MAC:</strong></td>
+          <td><strong>MAC:</strong></td>
           <td class="text-center"><?= htmlspecialchars($fichaTecnica['venta']['router']['mac']) ?></td>
         </tr>
         <tr>
-          <td class="text-center"><strong>SALDO EQUIPOS:</strong></td>
-          <td class="text-center"><?= htmlspecialchars($fichaTecnica['venta']['saldoEquipos']) ?></td>
-          <td class="text-center"><strong>SERIAL:</strong></td>
+          <td><strong>SALDO EQUIPOS:</strong></td>
+          <td class="text-center">S/. <?= htmlspecialchars($fichaTecnica['venta']['saldoEquipos']) ?></td>
+          <td><strong>SERIAL:</strong></td>
           <td class="text-center"><?= htmlspecialchars($fichaTecnica['venta']['antena']['serial']) ?></td>
-          <td class="text-center"><strong>SERIAL:</strong></td>
+          <td><strong>SERIAL:</strong></td>
           <td class="text-center"><?= htmlspecialchars($fichaTecnica['venta']['router']['serial']) ?></td>
         </tr>
         <tr>
-          <td class="text-center"><strong>MATERIAL ADICI:</strong></td>
+          <td><strong>MATERIAL ADICI:</strong></td>
           <td class="text-center"><?= htmlspecialchars($fichaTecnica['venta']['materialAdicional']) ?></td>
-          <td class="text-center"><strong>DESCRIPCIÓN:</strong></td>
+          <td><strong>DESCRIPCIÓN:</strong></td>
           <td class="text-center"><?= htmlspecialchars($fichaTecnica['venta']['antena']['descripcion']) ?></td>
-          <td class="text-center"><strong>DESCRIPCIÓN:</strong></td>
+          <td><strong>DESCRIPCIÓN:</strong></td>
           <td class="text-center"><?= htmlspecialchars($fichaTecnica['venta']['router']['descripcion']) ?></td>
         </tr>
         <tr>
@@ -219,41 +212,41 @@ $HOST = "http://localhost/DELATEL";
       </thead>
       <tbody>
         <tr>
-          <td class="text-center">CONDICIÓN:</td>
+          <td>CONDICIÓN:</td>
           <td><?= htmlspecialchars($fichaTecnica['alquilado']['condicion']) ?></td>
           <td colspan="2" class="text-center thead-cabecera-3"><strong>ANTENA</strong></td>
           <td colspan="2" class="text-center thead-cabecera-4"><strong>ROUTER</strong></td>
         </tr>
         <tr>
-          <td class="text-center">PERIODO:</td>
+          <td>PERIODO:</td>
           <td><?= htmlspecialchars($fichaTecnica['alquilado']['periodo']) ?></td>
-          <td class="text-center">MARCA:</td>
+          <td>MARCA:</td>
           <td><?= htmlspecialchars($fichaTecnica['alquilado']['antena']['marca']) ?></td>
-          <td class="text-center">MARCA:</td>
+          <td>MARCA:</td>
           <td><?= htmlspecialchars($fichaTecnica['alquilado']['router']['marca']) ?></td>
         </tr>
         <tr>
-          <td class="text-center">F. INICIO:</td>
+          <td>F. INICIO:</td>
           <td><?= htmlspecialchars($fichaTecnica['alquilado']['fechaInicio']) ?></td>
-          <td class="text-center">MODELO:</td>
+          <td>MODELO:</td>
           <td><?= htmlspecialchars($fichaTecnica['alquilado']['antena']['modelo']) ?></td>
-          <td class="text-center">MODELO:</td>
+          <td>MODELO:</td>
           <td><?= htmlspecialchars($fichaTecnica['alquilado']['router']['modelo']) ?></td>
         </tr>
         <tr>
-          <td class="text-center">F. TERMINO:</td>
+          <td>F. TERMINO:</td>
           <td><?= htmlspecialchars($fichaTecnica['alquilado']['fechaFin']) ?></td>
-          <td class="text-center">MAC:</td>
+          <td>MAC:</td>
           <td><?= htmlspecialchars($fichaTecnica['alquilado']['antena']['mac']) ?></td>
-          <td class="text-center">MAC:</td>
+          <td>MAC:</td>
           <td><?= htmlspecialchars($fichaTecnica['alquilado']['router']['mac']) ?></td>
         </tr>
         <tr>
-          <td class="text-center">COSTO ALQUILER:</td>
-          <td><?= htmlspecialchars($fichaTecnica['alquilado']['costoAlquiler']) ?></td>
-          <td class="text-center">DESCRIPCIÓN:</td>
+          <td>COSTO ALQUILER:</td>
+          <td>S/. <?= htmlspecialchars($fichaTecnica['alquilado']['costoAlquiler']) ?></td>
+          <td>DESCRIPCIÓN:</td>
           <td><?= htmlspecialchars($fichaTecnica['alquilado']['antena']['descripcion']) ?></td>
-          <td class="text-center">DESCRIPCIÓN:</td>
+          <td>DESCRIPCIÓN:</td>
           <td><?= htmlspecialchars($fichaTecnica['alquilado']['router']['descripcion']) ?></td>
         </tr>
         <tr>
@@ -283,20 +276,20 @@ $HOST = "http://localhost/DELATEL";
     </thead>
     <tbody>
       <tr>
-        <td colspan="2" class="text-center"><strong>PAGO SERVICIO:</strong></td>
-        <td colspan="1" class="text-center"><?= htmlspecialchars($fichaTecnica['deuda']['pagoServicio']) ?></td>
-        <td colspan="2" class="text-center"><strong>SALDO PENDIENTE:</strong></td>
-        <td colspan="1" class="text-center"><?= htmlspecialchars($fichaTecnica['deuda']['saldoPendiente']) ?></td>
-        <td colspan="2" class="text-center"><strong>ADELANTO EQUIPO:</strong></td>
-        <td colspan="1" class="text-center"><?= htmlspecialchars($fichaTecnica['deuda']['adelantoEquipo']) ?></td>
+        <td colspan="2"><strong>PAGO SERVICIO:</strong></td>
+        <td colspan="1" class="text-center">S/. <?= htmlspecialchars($fichaTecnica['deuda']['pagoServicio']) ?></td>
+        <td colspan="2"><strong>SALDO PENDIENTE:</strong></td>
+        <td colspan="1" class="text-center">S/. <?= htmlspecialchars($fichaTecnica['deuda']['saldoPendiente']) ?></td>
+        <td colspan="2"><strong>ADELANTO EQUIPO:</strong></td>
+        <td colspan="1" class="text-center">S/. <?= htmlspecialchars($fichaTecnica['deuda']['adelantoEquipo']) ?></td>
       </tr>
       <tr>
-        <td colspan="2" class="text-center"><strong>COSTO DE ALQUILER:</strong></td>
-        <td class="text-center"><?= htmlspecialchars($fichaTecnica['deuda']['costoAlquiler']) ?></td>
-        <td colspan="2" class="text-center"><strong>MATERIAL ADICIONAL:</strong></td>
+        <td colspan="2"><strong>COSTO DE ALQUILER:</strong></td>
+        <td class="text-center">S/. <?= htmlspecialchars($fichaTecnica['deuda']['costoAlquiler']) ?></td>
+        <td colspan="2"><strong>MATERIAL ADICIONAL:</strong></td>
         <td class="text-center"><?= htmlspecialchars($fichaTecnica['deuda']['materialAdicional']) ?></td>
-        <td colspan="2" class="text-center"><strong>TOTAL CANCELADO:</strong></td>
-        <td class="text-center"><?= htmlspecialchars($fichaTecnica['deuda']['totalCancelado']) ?></td>
+        <td colspan="2"><strong>TOTAL CANCELADO:</strong></td>
+        <td class="text-center">S/. <?= htmlspecialchars($fichaTecnica['deuda']['totalCancelado']) ?></td>
       </tr>
       <tr>
         <td colspan="9" class="text-center thead-cabecera-3"><strong>DETALLES:</strong></td>
