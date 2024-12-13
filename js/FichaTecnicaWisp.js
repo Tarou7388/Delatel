@@ -94,6 +94,17 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('txtOtrosWireless').value = valoresRouter.otrosWireless;
   });
 
+  // Función para verificar si el formulario está lleno
+  function isFormFilled(form) {
+    const inputs = form.querySelectorAll('input, select, textarea');
+    for (let input of inputs) {
+      if (input.value.trim() !== '') {
+        return true;
+      }
+    }
+    return false;
+  }
+
   // Código para manejar la selección de operación (Venta o Alquiler)
   document.getElementById('slcOperacion').addEventListener('change', function () {
     const tipoOperacion = this.value;
@@ -109,6 +120,11 @@ document.addEventListener("DOMContentLoaded", () => {
       frmVenta.classList.remove('hidden');
     } else if (tipoOperacion === 'alquiler') {
       frmAlquiler.classList.remove('hidden');
+    }
+
+    // Deshabilitar el select si el formulario correspondiente está lleno
+    if (isFormFilled(frmVenta) || isFormFilled(frmAlquiler)) {
+      this.disabled = true;
     }
   });
 
