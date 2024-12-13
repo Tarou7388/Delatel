@@ -338,14 +338,15 @@ $idContrato = $_GET['idContrato'];
             <div class="form-floating">
               <input type="number" class="form-control" id="txtPagoInst" value=30 min="0" placeholder="Pago Instalación">
               <label for="lblPago">Pago Instalación</label>
+              <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
             </div>
             <span class="input-group-text">.00</span>
           </div>
           <div class="col-md">
             <div class="form-floating">
               <input type="number" class="form-control" id="txtPotenciaCable" placeholder="Potencia" min="-50" max="-7">
-              <label for="lblPotenciaCable">Potencia <span class="required-asterisk" style="color: red;">*</span></label>
-              <div class="invalid-feedback"></div>
+              <div class="invalid-feedback">Por favor, ingrese un valor válido (-50 a -7).</div>
+              <label for="txtPotenciaCable">Potencia <span class="required-asterisk" style="color: red;">*</span></label>
             </div>
           </div>
         </div>
@@ -370,8 +371,8 @@ $idContrato = $_GET['idContrato'];
             <div class="d-flex">
               <div class="form-floating me-2 flex-fill">
                 <input type="number" class="form-control" min="0" id="txtCantConector" placeholder="Conector">
+                <div class="invalid-feedback">Por favor, ingrese un valor válido (0 o más).</div>
                 <label for="txtCantConector">Conector <span class="required-asterisk" style="color: red;">*</span></label>
-                <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
               </div>
               <div class="form-floating flex-fill">
                 <input type="number" class="form-control" id="txtPrecioConector" value="1.50" disabled>
@@ -386,8 +387,8 @@ $idContrato = $_GET['idContrato'];
             <div class="input-group">
               <div class="form-floating">
                 <input type="number" id="txtSpliter" min="0" class="form-control" placeholder="Spliter">
-                <label for="txtSpliter">Spliter <span class="required-asterisk" style="color: red;">*</span></label>
                 <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
+                <label for="txtSpliter">Spliter <span class="required-asterisk" style="color: red;">*</span></label>
               </div>
               <div class="form-floating">
                 <select class="form-select" id="slcSpliter" aria-label="Selecciona una opción">
@@ -404,8 +405,8 @@ $idContrato = $_GET['idContrato'];
             <div class="input-group">
               <div class="form-floating">
                 <input type="number" class="form-control" min="0" id="txtCantCable" placeholder="Cable M.">
-                <label for="txtCantCable">Cable M. <span class="required-asterisk" style="color: red;">*</span></label>
                 <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
+                <label for="txtCantCable">Cable M. <span class="required-asterisk" style="color: red;">*</span></label>
               </div>
               <div class="form-floating">
                 <input type="number" class="form-control" id="txtPrecioCable" value="1.30" disabled>
@@ -477,15 +478,15 @@ $idContrato = $_GET['idContrato'];
           <div class="col-md">
             <div class="form-floating">
               <input type="number" class="form-control" id="txtGponNap" placeholder="GPON" min="-50" max="-7">
+              <div class="invalid-feedback">Por favor, ingrese un valor válido (-50 a -7).</div>
               <label for="lblGponNap">GPON <span class="required-asterisk" style="color: red;">*</span></label>
-              <div class="invalid-feedback"></div>
             </div>
           </div>
           <div class="col-md">
             <div class="form-floating">
               <input type="number" class="form-control" id="txtCatvNap" placeholder="CATV" min="-50" max="-7">
+              <div class="invalid-feedback">Por favor, ingrese un valor válido (-50 a -7).</div>
               <label for="lblCatvNap">CATV <span class="required-asterisk" style="color: red;">*</span></label>
-              <div class="invalid-feedback"></div>
             </div>
           </div>
 
@@ -495,15 +496,15 @@ $idContrato = $_GET['idContrato'];
           <div class="col-md">
             <div class="form-floating">
               <input type="number" class="form-control" id="txtGponCasa" placeholder="GPON" min="-50" max="-7">
+              <div class="invalid-feedback">Por favor, ingrese un valor válido (-50 a -7).</div>
               <label for="lblGponCasa">GPON <span class="required-asterisk" style="color: red;">*</span></label>
-              <div class="invalid-feedback"></div>
             </div>
           </div>
           <div class="col-md">
             <div class="form-floating">
               <input type="number" class="form-control" id="txtCatvCasa" placeholder="CATV" min="-50" max="-7">
+              <div class="invalid-feedback">Por favor, ingrese un valor válido (-50 a -7).</div>
               <label for="lblCatvCasa">CATV <span class="required-asterisk" style="color: red;">*</span></label>
-              <div class="invalid-feedback"></div>
             </div>
           </div>
         </div>

@@ -21,23 +21,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const requiredFields = document.querySelectorAll(".form-control");
 
+  // Validar campos requeridos en tiempo real
   requiredFields.forEach(field => {
     field.addEventListener("input", function () {
       const formGroup = field.closest('.form-floating');
       const label = formGroup ? formGroup.querySelector('label') : null; // Encontrar el label
       const asterisk = label ? label.querySelector('.required-asterisk') : null; // Encontrar el asterisco
-      const invalidFeedback = field.nextElementSibling; // El mensaje de error
+      const invalidFeedback = formGroup ? formGroup.querySelector('.invalid-feedback') : null; // El mensaje de error
 
       // Comprobar si encontramos el asterisco
       if (asterisk) {
         if (field.value.trim() !== "") {
           asterisk.style.display = "none";
           field.classList.remove("is-invalid");
-          invalidFeedback.style.display = "none";
+          if (invalidFeedback) {
+            invalidFeedback.style.display = "none";
+          }
         } else {
           asterisk.style.display = "inline";
           field.classList.add("is-invalid");
-          invalidFeedback.style.display = "block";
+          if (invalidFeedback) {
+            invalidFeedback.style.display = "block";
+          }
         }
       } else {
         console.warn("Asterisco no encontrado para el campo:", field);
@@ -51,15 +56,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const min = parseFloat(elemento.min);
     const max = parseFloat(elemento.max);
     const mensaje = `${elemento.placeholder} debe estar entre ${min} y ${max}.`;
-    const invalidFeedback = elemento.nextElementSibling.nextElementSibling;
+    const invalidFeedback = elemento.closest('.form-floating').querySelector('.invalid-feedback');
 
     if (parseFloat(elemento.value) < min || parseFloat(elemento.value) > max) {
       elemento.classList.add("is-invalid");
-      invalidFeedback.textContent = mensaje;
-      invalidFeedback.style.display = "block";
+      if (invalidFeedback) {
+        invalidFeedback.textContent = mensaje;
+        invalidFeedback.style.display = "block";
+      }
     } else {
       elemento.classList.remove("is-invalid");
-      invalidFeedback.style.display = "none";
+      if (invalidFeedback) {
+        invalidFeedback.style.display = "none";
+      }
     }
   }
 
@@ -477,7 +486,69 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   document.getElementById("btnAñadirRepetidor").addEventListener("click", async function () {
+    const codigoBarra = document.getElementById("txtCodigoBarrasRepetidor").value;
+    const ssdi = document.getElementById("txtSsidRepetidor").value;
+    const contrasenia = document.getElementById("txtContraseniaRepetidor").value;
+    const ip = document.getElementById("txtIpRepetidor").value;
+    const condicion = document.getElementById("slcCondicionRepetidor").value;
+    const serie = document.getElementById("txtSerieRepetidor").value;
+
+    if (codigoBarra === "" || ssdi === "" || contrasenia === "" || ip === "" || condicion === "") {
+      if (!codigoBarra) {
+        document.getElementById("txtCodigoBarrasRepetidor").classList.add("is-invalid");
+      } else {
+        document.getElementById("txtCodigoBarrasRepetidor").classList.remove("is-invalid");
+      }
+
+      if (!ssdi) {
+        document.getElementById("txtSsidRepetidor").classList.add("is-invalid");
+      } else {
+        document.getElementById("txtSsidRepetidor").classList.remove("is-invalid");
+      }
+
+      if (!contrasenia) {
+        document.getElementById("txtContraseniaRepetidor").classList.add("is-invalid");
+      } else {
+        document.getElementById("txtContraseniaRepetidor").classList.remove("is-invalid");
+      }
+
+      if (!ip) {
+        document.getElementById("txtIpRepetidor").classList.add("is-invalid");
+      } else {
+        document.getElementById("txtIpRepetidor").classList.remove("is-invalid");
+      }
+
+      if (!condicion) {
+        document.getElementById("slcCondicionRepetidor").classList.add("is-invalid");
+      } else {
+        document.getElementById("slcCondicionRepetidor").classList.remove("is-invalid");
+      }
+
+      if (!serie) {
+        document.getElementById("txtSerieRepetidor").classList.add("is-invalid");
+      } else {
+        document.getElementById("txtSerieRepetidor").classList.remove("is-invalid");
+      }
+
+      return;
+    }
+    
+    document.getElementById("txtCodigoBarrasRepetidor").classList.remove("is-invalid");
+    document.getElementById("txtSsidRepetidor").classList.remove("is-invalid");
+    document.getElementById("txtContraseniaRepetidor").classList.remove("is-invalid");
+    document.getElementById("txtIpRepetidor").classList.remove("is-invalid");
+    document.getElementById("slcCondicionRepetidor").classList.remove("is-invalid");
+    document.getElementById("txtSerieRepetidor").classList.remove("is-invalid");
     AgregarRepetidor();
+
+    //Limpiar los campos 
+    document.getElementById("txtCodigoBarrasRepetidor").value = "";
+    document.getElementById("txtSsidRepetidor").value = "";
+    document.getElementById("txtContraseniaRepetidor").value = "";
+    document.getElementById("txtIpRepetidor").value = "";
+    document.getElementById("slcCondicionRepetidor").value = "";
+    document.getElementById("txtSerieRepetidor").value = "";
+    document.getElementById("txtPrecioRepetidor").value = ""; 
   });
 
   document.querySelector("#eliminarRepetidor").addEventListener("click", () => {
