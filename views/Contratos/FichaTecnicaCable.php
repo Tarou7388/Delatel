@@ -37,6 +37,12 @@ $idContrato = $_GET['idContrato'];
         </div>
         <div class="mb-2">
           <div class="form-floating">
+            <input type="number" class="form-control" id="txtPrecioSintonizador" placeholder="Precio" disabled>
+            <label for="txtPrecioSintonizador">Precio</label>
+          </div>
+        </div>
+        <div class="mb-2">
+          <div class="form-floating">
             <input type="text" class="form-control" id="txtSerieSintonizador" placeholder="Serie">
             <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
             <label for="txtSerieSintonizador">Serie <span class="required-asterisk" style="color: red;">*</span></label>
@@ -150,18 +156,18 @@ $idContrato = $_GET['idContrato'];
             <div class="col-md-6">
               <div class="input-group">
                 <div class="form-floating">
-                  <input type="number" id="txtSpliter" min="0" class="form-control" placeholder="Spliter">
+                  <input type="number" id="txtSplitter" min="0" class="form-control" placeholder="Splitter">
                   <div class="invalid-feedback">Por favor, ingrese un valor válido (0 o más).</div>
-                  <label for="txtSpliter">Spliter <span class="required-asterisk" style="color: red;">*</span></label>
+                  <label for="txtSplitter">Splitter <span class="required-asterisk" style="color: red;">*</span></label>
                 </div>
                 <div class="form-floating">
-                  <select class="form-select" id="slcSpliter" aria-label="Selecciona una opción">
+                  <select class="form-select" id="slcSplitter" aria-label="Selecciona una opción">
                     <option selected disabled>Elige una opción</option>
                     <option value="1x3">1x3</option>
                     <option value="1x5">1x5</option>
                     <option value="1x8">1x8</option>
                   </select>
-                  <label for="slcSpliter">Tipo</label>
+                  <label for="slcSplitter">Tipo</label>
                 </div>
               </div>
             </div>
@@ -257,6 +263,12 @@ $idContrato = $_GET['idContrato'];
               <input type="number" class="form-control" id="txtCatvCasa" placeholder="CATV" min="-50" max="-7">
               <div class="invalid-feedback">Por favor, ingrese un valor válido (-50 a -7).</div>
               <label for="txtCatvCasa">CATV <span class="required-asterisk" style="color: red;">*</span></label>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="form-floating">
+              <textarea class="form-control" id="txtDetalle" placeholder="Detalle" rows="3"></textarea>
+              <label for="txtDetalle">Detalle</label>
             </div>
           </div>
         </div>

@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("txtPotenciaCable").addEventListener("input", validarValorRango);
   txtCantConector.addEventListener("input", validarValorNegativoPositivo);
   txtCantCable.addEventListener("input", validarValorNegativoPositivo);
-  txtSpliter.addEventListener("input", validarValorNegativoPositivo);
+  txtSplitter.addEventListener("input", validarValorNegativoPositivo);
   txtPotenciaCable.addEventListener("input", validarValorRango);
   txtGponNap.addEventListener("input", validarValorRango);
   txtCatvNap.addEventListener("input", validarValorRango);
@@ -271,8 +271,8 @@ document.addEventListener("DOMContentLoaded", () => {
           document.getElementById("slcTriplexor").value = `${cable.triplexor?.requerido},${cable.triplexor?.cargador}` || "";
           document.getElementById("txtCantConector").value = cable.conector?.numeroconector || "";
           document.getElementById("txtPrecioConector").value = cable.conector?.precio || "";
-          document.getElementById("txtSpliter").value = cable.spliter?.[0]?.cantidad || "";
-          document.getElementById("slcSpliter").value = cable.spliter?.[0]?.tipo || "";
+          document.getElementById("txtSplitter").value = cable.splitter?.[0]?.cantidad || "";
+          document.getElementById("slcSplitter").value = cable.splitter?.[0]?.tipo || "";
           document.getElementById("txtCantCable").value = cable.cable?.metrosadicionales || "";
           document.getElementById("txtPrecioCable").value = cable.cable?.preciometro || "";
           document.getElementById("txtCantSintotizador").value = cable.sintonizadores?.[0]?.numero || "";
@@ -310,6 +310,12 @@ document.addEventListener("DOMContentLoaded", () => {
                       ${sintonizador.serie}
                     </span>
                   </p>
+                  <p class="card-text" style="color: gray;">
+                    Precio:
+                    <span style="background-color: #d3d3d3; border-radius: 10px; padding: 2px 5px; color: black;">
+                      ${sintonizador.precio}
+                    </span>
+                  </p>
                   <button class="btn btn-danger btn-sm mt-2 btnEliminar">
                     <i class="fas fa-times"></i> Eliminar
                   </button>
@@ -344,6 +350,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("txtPrecioCable").value = costo.cableCosto?.precioCable || "";
         document.getElementById("txtPrecioConector").value = costo.cableCosto?.precioConector || "";
         document.getElementById("txtCantConector").value = costo.cableCosto?.cantidadConector || "";
+        document.getElementById("txtDetalle").value = costo.cableCosto?.detalle || "";
 
         // Calcular costos de cable y conector
         calcularCostos();
@@ -420,8 +427,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const slcTriplexor = document.querySelector("#slcTriplexor").value.split(",");
     const txtCantConector = document.querySelector("#txtCantConector").value;
     const txtPrecioConector = document.querySelector("#txtPrecioConector").value;
-    const txtSpliter = document.querySelector("#txtSpliter").value;
-    const slcSpliter = document.querySelector("#slcSpliter").value;
+    const txtSplitter = document.querySelector("#txtSplitter").value;
+    const slcSplitter = document.querySelector("#slcSplitter").value;
     const txtCantCable = document.querySelector("#txtCantCable").value;
     const txtPrecioCable = document.querySelector("#txtPrecioCable").value;
     if (
@@ -430,8 +437,8 @@ document.addEventListener("DOMContentLoaded", () => {
       slcTriplexor === "" ||
       txtCantConector === "" ||
       txtPrecioConector === "" ||
-      txtSpliter === "" ||
-      slcSpliter === "" ||
+      txtSplitter === "" ||
+      slcSplitter === "" ||
       txtCantCable === "" ||
       txtPrecioCable === ""
     ) {
@@ -450,10 +457,10 @@ document.addEventListener("DOMContentLoaded", () => {
           numeroconector: parseInt(txtCantConector),
           precio: parseFloat(txtPrecioConector),
         },
-        spliter: [
+        splitter: [
           {
-            cantidad: parseInt(txtSpliter),
-            tipo: slcSpliter,
+            cantidad: parseInt(txtSplitter),
+            tipo: slcSplitter,
           },
         ],
         cable: {
@@ -494,17 +501,20 @@ document.addEventListener("DOMContentLoaded", () => {
     if (typeof tipoServicio !== "undefined" && (tipoServicio === "FIBR,CABL" || tipoServicio === "CABL,FIBR")) {
       const txtCantCable = document.querySelector("#txtCantCable").value;
       const txtPrecioCable = document.querySelector("#txtPrecioCable").value;
-      const txtPrecioConector =
-        document.querySelector("#txtPrecioConector").value;
+      const txtPrecioConector = document.querySelector("#txtPrecioConector").value;
       const txtCantConector = document.querySelector("#txtCantConector").value;
+      const txtDetalle = document.querySelector("#txtDetalle").value;
 
       const jsonCostoCable = {
         numerosintotizadores: parseInt(txtCantSintotizador) || 0,
         costoAlquilerSintotizador: parseFloat(txtCostoAlquiler) || 0,
+        costoCable: parseFloat(txtCostoCable) || 0,
+        costoConector: parseFloat(txtCostoConector) || 0,
         cantidadCable: txtCantCable,
         precioCable: txtPrecioCable,
         precioConector: txtPrecioConector,
         cantidadConector: txtCantConector,
+        detalle: txtDetalle,
       };
       jsonCosto.cableCosto = jsonCostoCable;
     }
@@ -650,6 +660,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const txtMarcaSintonizador = document.getElementById("txtMarcaSintonizador").value;
     const txtModeloSintonizador = document.getElementById("txtModeloSintonizador").value;
     const txtSerieSintonizador = document.getElementById("txtSerieSintonizador").value;
+    const txtPrecioSintonizador = document.getElementById("txtPrecioSintonizador").value;
     numeroSintotizadores++;
     const jsonSintotizadorNuevo = {
       numero: numeroSintotizadores,
@@ -657,6 +668,7 @@ document.addEventListener("DOMContentLoaded", () => {
       marca: txtMarcaSintonizador,
       modelo: txtModeloSintonizador,
       serie: txtSerieSintonizador,
+      precio: txtPrecioSintonizador,
     };
     jsonSintotizador.push(jsonSintotizadorNuevo);
     const card = document.createElement("div");
@@ -686,6 +698,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 Serie:
                 <span style="background-color: #d3d3d3; border-radius: 10px; padding: 2px 5px; color: black;">
                   ${txtSerieSintonizador}
+                </span>
+              </p>
+              <p class="card-text" style="color: gray;">
+                Precio:
+                <span style="background-color: #d3d3d3; border-radius: 10px; padding: 2px 5px; color: black;">
+                  ${txtPrecioSintonizador}
                 </span>
               </p>
               <button class="btn btn-danger btn-sm mt-2 btnEliminar">
@@ -834,8 +852,8 @@ document.addEventListener("DOMContentLoaded", () => {
       "txtPotenciaCable",
       "slcTriplexor",
       "txtCantConector",
-      "txtSpliter",
-      "slcSpliter",
+      "txtSplitter",
+      "slcSplitter",
       "txtCantCable",
       "txtPagoAdelantado",
       "txtDescuento",
@@ -1037,12 +1055,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (Array.isArray(resultado) && resultado.length > 0) {
         const producto = resultado[0];
-        if (producto && producto.marca && producto.modelo) {
+        if (producto && producto.marca && producto.modelo && producto.precio_actual) {
           const marca = producto.marca;
           const modelo = producto.modelo;
+          const precio = producto.precio_actual;
           document.getElementById("txtMarcaSintonizador").value = marca;
           document.getElementById("txtModeloSintonizador").value = modelo;
-          showToast(`Producto encontrado: ${producto.marca} - ${producto.modelo}`, "SUCCESS");
+          document.getElementById("txtPrecioSintonizador").value = precio;
+          showToast(`Producto encontrado: ${producto.marca} - ${producto.modelo} - Precio: ${producto.precio}`, "SUCCESS");
         } else {
           showToast("Producto no encontrado o datos incompletos", "INFO");
         }

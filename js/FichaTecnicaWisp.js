@@ -115,18 +115,26 @@ document.addEventListener("DOMContentLoaded", () => {
     frmVenta.classList.add('hidden');
     frmAlquiler.classList.add('hidden');
 
+    // Limpiar ambos formularios (opcional, si deseas limpiar los campos al cambiar de operación)
+    limpiarFormulario(frmVenta);
+    limpiarFormulario(frmAlquiler);
+
     // Mostrar el formulario correspondiente según el tipo de operación
     if (tipoOperacion === 'venta') {
       frmVenta.classList.remove('hidden');
     } else if (tipoOperacion === 'alquiler') {
       frmAlquiler.classList.remove('hidden');
     }
-
-    // Deshabilitar el select si el formulario correspondiente está lleno
-    if (isFormFilled(frmVenta) || isFormFilled(frmAlquiler)) {
-      this.disabled = true;
-    }
   });
+
+  // Función para limpiar los formularios (si es necesario)
+  function limpiarFormulario(form) {
+    const inputs = form.querySelectorAll('input, textarea, select');
+    inputs.forEach(input => {
+      input.value = ''; // Limpiar el valor de cada campo
+    });
+  }
+
 
   // Función para iniciar con la visibilidad correcta (inicialmente oculto)
   window.addEventListener('DOMContentLoaded', function () {
@@ -795,6 +803,64 @@ document.addEventListener("DOMContentLoaded", () => {
     jsonData.deuda = jsonDeuda.deuda;
   }
 
+  const camposVenta = [
+    "txtMacVentaRouter",
+    "txtMacVentaAntena",
+    "txtAdelantoVenta",
+    "txtSaldoEquipoVenta",
+    "txtSerialVentaRouter",
+    "txtSerialVentaAntena",
+    "txtMaterialAdicionalVenta",
+    "txtDescripcionVentaAntena",
+    "txtDescripcionVentaRouter"
+  ];
+
+  const camposAlquiler = [
+    "txtMacAntenaAlquilados",
+    "txtMacRouterAlquilados",
+    "txtPeriodoAlquilados",
+    "txtFechaInicioAlquilados",
+    "txtFechaFinAlquilados",
+    "txtSerialAntenaAlquilados",
+    "txtSerialRouterAlquilados",
+    "txtCostoAlquilerAlquilados",
+    "txtDescripcionAntenaAlquilados",
+    "txtDescripcionRouterAlquilados",
+    "txtDetalleAlquilados"
+  ];
+
+  function addInputEventListeners(campos) {
+    campos.forEach(campo => {
+      document.getElementById(campo).addEventListener('input', function () {
+        const slcOperacion = document.getElementById('slcOperacion');
+        const frmVenta = document.getElementById('frmVenta');
+        const frmAlquiler = document.getElementById('frmAlquiler');
+
+        // Volver a comprobar si el formulario está lleno o vacío
+        if (isFormFilled(frmVenta) || isFormFilled(frmAlquiler)) {
+          slcOperacion.disabled = true; // Deshabilitar si el formulario está lleno
+        } else {
+          slcOperacion.disabled = false; // Habilitar si los formularios están vacíos
+        }
+      });
+    });
+  }
+
+  addInputEventListeners(camposVenta);
+  addInputEventListeners(camposAlquiler);
+
+  // Función para verificar si el formulario está lleno
+  function isFormFilled(form) {
+    const inputs = form.querySelectorAll('input, textarea, select');
+    // Verificar si hay algún campo con valor
+    for (const input of inputs) {
+      if (input.value.trim() !== "") {
+        return true; // Si algún campo tiene valor, el formulario está lleno
+      }
+    }
+    return false; // Si todos los campos están vacíos, el formulario no está lleno
+  }
+
   //Función Registrar Ficha Wisp
   async function registrarFichaWisp() {
     await parametros();
@@ -829,33 +895,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function validarCampos() {
-    const camposVenta = [
-      "txtMacVentaRouter",
-      "txtMacVentaAntena",
-      "txtAdelantoVenta",
-      "txtSaldoEquipoVenta",
-      "txtSerialVentaRouter",
-      "txtSerialVentaAntena",
-      "txtMaterialAdicionalVenta",
-      "txtDescripcionVentaAntena",
-      "txtDescripcionVentaRouter"
-    ];
-
-    const camposAlquilado = [
-      "slcCondicionAlquilados",
-      "txtMacAntenaAlquilados",
-      "txtMacRouterAlquilados",
-      "txtPeriodoAlquilados",
-      "txtFechaInicioAlquilados",
-      "txtFechaFinAlquilados",
-      "txtSerialAntenaAlquilados",
-      "txtSerialRouterAlquilados",
-      "txtCostoAlquilerAlquilados",
-      "txtDescripcionAntenaAlquilados",
-      "txtDescripcionRouterAlquilados",
-      "txtDetalleAlquilados"
-    ];
-
     const camposComunes = [
       "txtPeriodo",
       "slcFrecuenciaParametros",
@@ -877,9 +916,9 @@ document.addEventListener("DOMContentLoaded", () => {
     let campos = [...camposComunes];
 
     const tipoOperacion = document.getElementById('slcOperacion').value;
-    if (tipoOperacion === 'frmventa') {
+    if (tipoOperacion === 'venta') {
       campos = [...campos, ...camposVenta];
-    } else if (tipoOperacion === 'frmalquiler') {
+    } else if (tipoOperacion === 'alquiler') {
       campos = [...campos, ...camposAlquilado];
     }
 
@@ -910,38 +949,6 @@ document.addEventListener("DOMContentLoaded", () => {
   btnAgregarRouter.addEventListener("click", async () => {
     await agregarRouter();
   });
-
-  function validarFormulario() {
-    const signalStrength = parseFloat(document.getElementById('txtSignalStrengthParametros').value);
-    const noiseFloor = parseFloat(document.getElementById('txtNoiseFloorParametros').value);
-    const txRate = parseFloat(document.getElementById('txtTxRateParametros').value);
-    const rxRate = parseFloat(document.getElementById('txtRxRateParametros').value);
-    const transmiTccq = parseFloat(document.getElementById('txtTransmiTccqParametros').value);
-    const fechaInicioAlquilados = document.getElementById('txtFechaInicioAlquilados').value;
-    const today = new Date().toISOString().split("T")[0];
-    const frmAlquiler = document.getElementById('frmAlquiler');
-
-    if (!validarRango(signalStrength, -90, -20, 'Signal Strength')) return false;
-    if (!validarRango(noiseFloor, -100, -30, 'Noise Floor')) return false;
-    if (!validarRango(txRate, 20.00, 90.00, 'Tx Rate')) return false;
-    if (!validarRango(rxRate, 20.00, 90.00, 'Rx Rate')) return false;
-    if (!validarRango(transmiTccq, 40, 100, 'Transmit CCQ')) return false;
-    if (!frmAlquiler.classList.contains('hidden') && fechaInicioAlquilados < today) {
-      showToast("La fecha de inicio no puede ser menor a la fecha actual.", "INFO");
-      document.getElementById('txtFechaInicioAlquilados').focus();
-      return false;
-    }
-    return true;
-  }
-
-  function validarRango(valor, min, max, campo) {
-    if (valor < min || valor > max) {
-      showToast(`El valor de ${campo} debe estar entre ${min} y ${max}.`, "INFO");
-      document.getElementById(`txt${campo.replace(' ', '')}Parametros`).focus();
-      return false;
-    }
-    return true;
-  }
 
   function calcularSubtotal() {
     const adelanto = parseFloat(document.getElementById('txtAdelantoVenta').value) || 0;
