@@ -165,7 +165,7 @@
 
               <div class="col-md-4">
                 <div class="form-floating">
-                  <input type="text" class="form-control" id="txtRepetidor" placeholder="txtRepetidor" required>
+                  <input type="text" class="form-control" id="txtRepetidor" placeholder="txtRepetidor" disabled required>
                   <label for="txtRepetidor">Repetidor(Nombre)</label>
                 </div>
               </div>

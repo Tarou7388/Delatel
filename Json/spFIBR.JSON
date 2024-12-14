@@ -1,0 +1,75 @@
+{
+  "FIBR": {
+    "parametroscliente": {
+      "plan": "Plan Internet 110MB - 70",
+      "usuario": "PEVE GUERRA, OSWALDO EFRAIN",
+      "Nrodoc": "43210229"
+    },
+    "parametrosgpon": {
+      "pppoe": "OSWPEV28",
+      "clave": "@OSWPEV28",
+      "potencia": "20",
+      "catv": false,
+      "vlan": "1147",
+      "repetidor": [
+        {
+          "numero": 1,
+          "ssid": "43210229",
+          "contrasenia": "43210229",
+          "codigoBarraRepetidor": "1234567890123",
+          "marca": "TP Link",
+          "modelo": "Router",
+          "precio": "150.00",
+          "serie": "43210229",
+          "ip": "192.168.432.102",
+          "condicion": "alquilado"
+        },
+        {
+          "numero": 2,
+          "ssid": "EsteNotiene000000000",
+          "contrasenia": "1234567890123",
+          "codigoBarraRepetidor": "1234567890123",
+          "marca": "TP Link",
+          "modelo": "Router",
+          "precio": "150.00",
+          "serie": "1234567890123",
+          "ip": "192.168.123.456",
+          "condicion": "venta"
+        }
+      ]
+    },
+    "cambiosgpon": {
+      "pppoe": "OSWPEV28",
+      "clave": "@OSWPEV28",
+      "potencia": "-00",
+      "catv": false,
+      "vlan": "1147",
+      "repetidor": [
+        {
+          "numero": 1,
+          "ssid": "43210229",
+          "contrasenia": "43210229",
+          "codigoBarraRepetidor": "1234567890123",
+          "marca": "TP Link",
+          "modelo": "Router",
+          "precio": "150.00",
+          "serie": "43210229",
+          "ip": "192.168.432.102",
+          "condicion": "alquilado"
+        },
+        {
+          "numero": 2,
+          "ssid": "00000000000",
+          "contrasenia": "00000000000",
+          "codigoBarraRepetidor": "1234567890123",
+          "marca": "TP Link",
+          "modelo": "Router",
+          "precio": "150.00",
+          "serie": "1234567890123",
+          "ip": "000.000.000.000",
+          "condicion": "venta"
+        }
+      ]
+    }
+  }
+}

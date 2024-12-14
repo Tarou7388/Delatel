@@ -141,16 +141,16 @@ document.addEventListener("DOMContentLoaded", () => {
         ).toUpperCase() + idContrato;
 
       const contrasenia = "@" + usuario;
-
+      console.log("ficha:", );
       document.getElementById("txtUsuario").value = usuario;
       document.getElementById("txtClaveAcceso").value = contrasenia;
-      document.getElementById("txtPlan").value = ficha.paquete || "";
-      document.getElementById("txtPlanCable").value = ficha.paquete || "";
+      document.getElementById("txtPlan").value = ficha.plan || "";
+      document.getElementById("txtPlanCable").value = ficha.plan || "";
 
       // Verificar si existe ficha_instalacion
       if (ficha.ficha_instalacion) {
         const installationData = JSON.parse(ficha.ficha_instalacion);
-        const fibra = installationData.fibraoptica || {};
+        const fibra = installationData.fibraOptica || {};
         const cable = installationData.cable || {};
 
         document.getElementById("txtPotenciaFibra").value = fibra.potencia || "";
@@ -395,7 +395,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       } else {
         jsonData = {
-          fibraoptica: {
+          fibraOptica: {
             usuario: txtUsuario,
             claveacceso: txtClaveAcceso,
             vlan: txtVlan,
@@ -794,7 +794,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const jsonCosto = await costos();
 
     if (numeroRepetidores > 0) {
-      jsonData.fibraoptica.repetidores = jsonRepetidor;
+      jsonData.fibraOptica.repetidores = jsonRepetidor;
     }
 
     if (tipoServicio === "FIBR,CABL" || tipoServicio === "CABL,FIBR") {

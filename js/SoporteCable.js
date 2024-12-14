@@ -105,8 +105,8 @@ document.addEventListener("DOMContentLoaded", () => {
       setField('txtPotencia', parametrosCable.potencia);
       setField('txtSintonizador', parametrosCable.sintonizador);
       setField('slcTriplexor', triplexorValue(parametrosCable.triplexor));
-      setField('txtNumSpliter', parametrosCable.spliter[0]?.cantidad);
-      setField('slcSpliter', parametrosCable.spliter[0]?.tipo);
+      setField('txtNumSpliter', parametrosCable.splitter[0]?.cantidad);
+      setField('slcSpliter', parametrosCable.splitter[0]?.tipo);
       setField('txtCable', parametrosCable.cable);
       setField('txtConector', parametrosCable.conectores);
       setField('txtaEstadoInicial', data[0].descripcion_problema);
@@ -115,8 +115,8 @@ document.addEventListener("DOMContentLoaded", () => {
       setField('txtPotenciaCambio', cambiosCable.potencia);
       setField('txtSintonizadorCambio', cambiosCable.sintonizador);
       setField('slcTriplexorCambio', triplexorValue(cambiosCable.triplexor));
-      setField('txtNumSpliterCambio', cambiosCable.spliter[0]?.cantidad);
-      setField('slcSpliterCambio', cambiosCable.spliter[0]?.tipo);
+      setField('txtNumSpliterCambio', cambiosCable.splitter[0]?.cantidad);
+      setField('slcSpliterCambio', cambiosCable.splitter[0]?.tipo);
       setField('txtCableCambio', cambiosCable.cable);
       setField('txtConectorCambio', cambiosCable.conectores);
       setField('txtaEstadoFinal', data[0].descripcion_solucion);
@@ -153,8 +153,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (respuesta[0].soporte != "{}") {
       console.log(respuesta);
       await cargardatos(JSON.parse(respuesta[0].soporte).CABL.cambioscable);
-    }else
-    {
+    } else {
       await llenadoDeDatos(doc, idSoporte);
     }
 
@@ -184,9 +183,9 @@ document.addEventListener("DOMContentLoaded", () => {
         break;
       }
     }
-
-    txtNumSpliter.value = data.spliter[0].cantidad;
-    slcSpliter.selectedIndex = data.spliter[0].tipo;
+    console.log(data);
+    txtNumSpliter.value = data.splitter[0].cantidad;
+    slcSpliter.selectedIndex = data.splitter[0].tipo;
 
     txtCable.value = data.cable.metrosadicionales;
     txtPrecioCable.value = data.cable.metrosadicionales * data.cable.preciometro;
@@ -228,7 +227,8 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const dataCable = await FichaSoporte(idSoporte);
       const cableFiltrado = JSON.parse(dataCable[0].ficha_instalacion).cable;
-      console.log(cableFiltrado.paquete);
+
+      console.log(cableFiltrado);
       txtPotencia.value = cableFiltrado.potencia;
 
       //Asignacion de los sintonizadores
@@ -251,10 +251,10 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       //Asignacion de los spliter
-      console.log(cableFiltrado.spliter);
-      txtNumSpliter.value = cableFiltrado.spliter[0].cantidad;
-      console.log(cableFiltrado.spliter[0].tipo);
-      slcSpliter.value = cableFiltrado.spliter[0].tipo;
+      console.log(cableFiltrado.splitter);
+      txtNumSpliter.value = cableFiltrado.splitter[0].cantidad;
+      console.log(cableFiltrado.splitter[0].tipo);
+      slcSpliter.value = cableFiltrado.splitter[0].tipo;
 
       //Asignacion del array de cables
       console.log(cableFiltrado.cable);
@@ -275,7 +275,7 @@ document.addEventListener("DOMContentLoaded", () => {
       txtPrecioConector.value = (cableFiltrado.conector.numeroconector * cableFiltrado.conector.precio).toFixed(2);
 
       //Asignar el plan 
-      txtPlan.value =cableFiltrado.paquete
+      txtPlan.value = cableFiltrado.paquete
 
     } catch (error) {
       console.error("Error en FichaInstalacion:", error);
@@ -302,7 +302,7 @@ document.addEventListener("DOMContentLoaded", () => {
    */
   function crearSelectYBoton() {
     const rowDiv = document.createElement("div");
-    rowDiv.className = "row g-2 mb-2";
+    rowDiv.className = "row g-2 mb-2 mt-2";
 
     const selectDiv = document.createElement("div");
     selectDiv.className = "col-md ";
@@ -313,7 +313,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const selectSoporte = document.createElement("select");
     selectSoporte.id = "slcTipoSoporte";
-    selectSoporte.className = "form-control";
+    selectSoporte.className = "form-floating form-select";
     selectSoporte.required = true;
     selectDiv.appendChild(selectSoporte);
     rowDiv.appendChild(selectDiv);
@@ -370,7 +370,7 @@ document.addEventListener("DOMContentLoaded", () => {
           sintonizador: parseInt(document.getElementById("txtSintonizador").value) || 0,
           triplexor: document.getElementById("slcTriplexor").value === "2" ? "activo" :
             (document.getElementById("slcTriplexor").value === "3" ? "pasivo" : "no lleva"),
-          spliter: [
+          splitter: [
             { cantidad: parseInt(document.getElementById("txtNumSpliter").value) || 0, tipo: document.getElementById("slcSpliter").value }
           ],
           conector: {
@@ -388,7 +388,7 @@ document.addEventListener("DOMContentLoaded", () => {
           sintonizador: parseInt(document.getElementById("txtSintonizadorCambio").value) || 0,
           triplexor: document.getElementById("slcTriplexorCambio").value === "2" ? "activo" :
             (document.getElementById("slcTriplexorCambio").value === "3" ? "pasivo" : "no lleva"),
-          spliter: [
+          splitter: [
             { cantidad: parseInt(document.getElementById("txtNumSpliterCambio").value) || 0, tipo: document.getElementById("slcSpliterCambio").value }
           ],
           conector: {

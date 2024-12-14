@@ -232,5 +232,5 @@ BEGIN
         AND tipo_servicio = p_servicio
         AND coordenada = p_coordenada
     ORDER BY 
-        update_at DESC;
+        update_at DESC LIMIT 1;
 END $$

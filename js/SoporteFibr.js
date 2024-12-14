@@ -1,14 +1,17 @@
 import config from "../env.js";
-import { FichaSoporte, formatoIPinput } from "./Herramientas.js";
+import { FichaSoporte, formatoIPinput, FichaSoportePorId } from "./Herramientas.js";
 
 // Evento que se ejecuta cuando el DOM ha sido completamente cargado
 document.addEventListener("DOMContentLoaded", () => {
   const urlParams = new URLSearchParams(window.location.search);
   const serv = urlParams.get("tiposervicio");
   const form = document.getElementById("frm-registro-gpon");
-
+  let fibraFiltrado = null;
   //Parametros tecnicos de la ficha
   const txtPlan = document.getElementById("txtPlan");
+  const txtCliente = document.getElementById("txtCliente");
+  const txtNrodocumento = document.getElementById("txtNrodocumento");
+
   const txtPppoe = document.getElementById("txtPppoe");
   const txtPotencia = document.getElementById("txtPotencia");
   const chkCatv = document.getElementById("chkCatv");
@@ -24,7 +27,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const txtCambiosPppoe = document.getElementById("txtCambiosPppoe");
   const txtCambiosClave = document.getElementById("txtCambiosClave");
   const txtCambiosVlan = document.getElementById("txtCambiosVlan");
+
+  const txtRepetidor = document.getElementById("txtRepetidor");
+
+  const txtCambiosPotencia = document.getElementById("txtCambiosPotencia");
+  const txtCambiosSsid = document.getElementById("txtCambiosSsid");
   const txtCambiosIp = document.getElementById("txtCambiosIp");
+  const chkCambiosCatv = document.getElementById("chkCambiosCatv");
+  const txtCambiosPass = document.getElementById("txtCambiosPass");
+
+
+  const solutionTextarea = document.getElementById("txtaCambiosProceSolucion");
 
   let idSoporte = -1;
 
@@ -34,23 +47,80 @@ document.addEventListener("DOMContentLoaded", () => {
       idSoporte = await obtenerReferencias();
       if (idSoporte) {
         await crearSelectYBoton();
-
-        const doc = urlParams.get("doc");
-        const idSoporte = urlParams.get("idsoporte");
-        const tiposervicio = urlParams.get("tiposervicio");
-        await llenadoDeDatos(doc, idSoporte, tiposervicio);
+        await ObtenerValores();
+        await cargarProblema(idSoporte);
       }
     } catch (error) {
       console.error("Error durante la inicialización:", error);
     }
   })();
 
+  async function ObtenerValores() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const doc = urlParams.get("doc");
+    const idSoporte = urlParams.get("idsoporte");
+    const tiposervicio = urlParams.get("tiposervicio");
+    const coordenada = urlParams.get("coordenada");
+
+    console.log(doc);
+
+    const respuesta = await FichaSoportePorId(doc, tiposervicio, coordenada);
+
+    if (respuesta[0].soporte != "{}") {
+      console.log(respuesta);
+      await cargardatos(JSON.parse(respuesta[0].soporte).FIBR);
+    } else {
+      await llenadoDeDatos(doc, idSoporte);
+    }
+
+  }
+
+  async function cargarProblema(idSoporte) {
+    try {
+      const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
+      const data = await respuesta.json();
+      txtaEstadoInicial.value = (data[0].descripcion_problema);
+
+    } catch (error) {
+      console.log("Error en Obtener el estado Inicial:", error);
+    }
+  }
+
+  async function cargardatos(data) {
+    console.log(data);
+    //Asignar el nombre del cliente
+    txtCliente.value = data.parametroscliente.usuario;
+    //Asignar el documento del cliente
+    txtNrodocumento.value = data.parametroscliente.Nrodoc;
+    //Asignar el plan
+    txtPlan.value = data.parametroscliente.plan;
+
+    //Asignar el usuario PPPoE
+    txtPppoe.value = data.cambiosgpon.pppoe;
+    //Asignar la clave PPPoE
+    txtClave.value = data.cambiosgpon.clave;
+    //Asignar la potencia
+    txtPotencia.value = data.cambiosgpon.potencia;
+    //Asignar si tiene CATV
+    chkCatv.checked = data.cambiosgpon.catv;
+    //Asignar la VLAN
+    txtVlan.value = data.cambiosgpon.vlan;
+    //Asignar el repetidor
+    console.log(data.cambiosgpon.repetidor);
+    await cargarRepetidores(data.cambiosgpon.repetidor)
+
+    //Asignacion de los campos que no pueden cambiar sin procesos externos
+    txtCambiosPppoe.value = data.cambiosgpon.pppoe;
+    txtCambiosClave.value = data.cambiosgpon.clave;
+    txtCambiosVlan.value = data.cambiosgpon.vlan;
+  }
+
   function crearSelectYBoton() {
     const rowDiv = document.createElement("div");
-    rowDiv.className = "row g-2 mb-2";
+    rowDiv.className = "row g-2 mb-2 mt-2";
 
     const selectDiv = document.createElement("div");
-    selectDiv.className = "col-md ";
+    selectDiv.className = "col-md";
 
     const labelSelect = document.createElement("label");
     labelSelect.innerText = "Tipo de Soporte";
@@ -58,7 +128,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const selectSoporte = document.createElement("select");
     selectSoporte.id = "slcTipoSoporte";
-    selectSoporte.className = "form-control";
+    selectSoporte.className = "form-floating form-select";
     selectSoporte.required = true;
     selectDiv.appendChild(selectSoporte);
     rowDiv.appendChild(selectDiv);
@@ -88,8 +158,6 @@ document.addEventListener("DOMContentLoaded", () => {
     buttonDiv.appendChild(guardarBtn);
     rowDiv.appendChild(buttonDiv);
 
-
-    const solutionTextarea = document.getElementById("txtaCambiosProceSolucion");
     solutionTextarea.parentNode.parentNode.appendChild(rowDiv);
   }
 
@@ -113,23 +181,14 @@ document.addEventListener("DOMContentLoaded", () => {
    */
   async function llenadoDeDatos(doct, idSoporte, tiposervicio) {
     try {
-      const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
-      const data = await respuesta.json();
-      txtaEstadoInicial.value = (data[0].descripcion_problema);
-
-    } catch (error) {
-      console.log("Error en Obtener el estado Inicial:", error);
-    }
-
-    try {
       const respuesta = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${doct}`);
       const data = await respuesta.json();
       console.log(doct);
       console.log(data[0].nombre);
       //Asignacion del Nombre del cliente
-      $("#txtCliente").val(data[0].nombre);
+      txtCliente.value = data[0].nombre;
       //Asignacion del Documento del cliente
-      $("#txtNrodocumento").val(doct);
+      txtNrodocumento.value = doct;
 
     } catch (error) {
       console.error("Error en llenadoDeDatos:", error);
@@ -171,24 +230,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // DATOS MODEN
       // Asignacion repetidores
-      const slcRpetidor = document.getElementById('slcRpetidor');
-      fibraFiltrado.repetidores.forEach(repetidor => {
+      console.log(fibraFiltrado.repetidores);
+      await cargarRepetidores(fibraFiltrado.repetidores)
+
+    } catch (error) {
+      console.error("Error en data de Fibra:", error);
+    }
+  };
+
+  async function cargarRepetidores(repetidorJson) {
+    const slcRpetidor = document.getElementById('slcRpetidor');
+    console.log(repetidorJson);
+    if (Array.isArray(repetidorJson) && repetidorJson.length > 0) {
+      slcRpetidor.innerHTML = '';
+
+      repetidorJson.forEach(repetidor => {
         const option = document.createElement('option');
         option.value = repetidor.numero;
         option.text = `${repetidor.ssid} (${repetidor.ip})`;
         slcRpetidor.appendChild(option);
       });
 
-
-      //Seleccionar Automaticamente el primer repetidor, y ejecutar programaticamente el evento change
       slcRpetidor.selectedIndex = 1;
+
       const changeEvent = new Event('change');
       slcRpetidor.dispatchEvent(changeEvent);
-
-    } catch (error) {
-      console.error("Error en data de Fibra:", error);
+    } else {
+      console.error('No se encontraron repetidores o el formato es incorrecto.');
     }
-  };
+  }
+
 
   slcRpetidor.addEventListener("change", async () => {
     await cargarEnInputs();
@@ -196,21 +267,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function cargarEnInputs() {
     try {
-      const selectedValue = parseInt(slcRpetidor.value); // Convertir el valor seleccionado a número
-      console.log("Valor seleccionado:", selectedValue);
+      const selectedValue = parseInt(slcRpetidor.value);
+      const nombreRepetidor = slcRpetidor.options[slcRpetidor.selectedIndex].text;
+      const coordenada = urlParams.get("coordenada");
 
-      const respuesta = await FichaSoporte(idSoporte);
-      const fibraFiltrado = JSON.parse(respuesta[0].ficha_instalacion).fibraOptica;
+      const respuesta2 = await FichaSoportePorId(txtNrodocumento.value, serv, coordenada);
 
-      const repetidorSeleccionado = fibraFiltrado.repetidores.find(
+      if (respuesta2[0].soporte =="{}") {
+        const respuesta = await FichaSoporte(idSoporte);
+        fibraFiltrado = JSON.parse(respuesta[0].ficha_instalacion).fibraOptica.repetidores;
+        console.log(fibraFiltrado);
+      } else {
+        fibraFiltrado = JSON.parse(respuesta2[0].soporte).FIBR.cambiosgpon.repetidor;
+      }
+
+      const repetidorSeleccionado = fibraFiltrado.find(
         repetidor => repetidor.numero === selectedValue
       );
 
       if (repetidorSeleccionado) {
-        console.log("Repetidor seleccionado:", repetidorSeleccionado);
         txtIp.value = repetidorSeleccionado.ip;
         txtSsid.value = repetidorSeleccionado.ssid;
         txtPass.value = repetidorSeleccionado.contrasenia;
+        txtRepetidor.value = nombreRepetidor;
       } else {
         console.warn("No se encontró un repetidor con el valor seleccionado.");
       }
@@ -219,9 +298,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+
   async function ArmadoJsonGpon() {
     const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
     const result = await response.json();
+
+    const dataFibra = await FichaSoporte(idSoporte);
+    const fibraFiltrado = JSON.parse(dataFibra[0].ficha_instalacion).fibraOptica;
 
     let soporte = result[0].soporte ? JSON.parse(result[0].soporte) : {};
 
@@ -229,35 +312,50 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!existeClave) {
       soporte[serv] = {
+        parametroscliente: {
+          plan: txtPlan.value,
+          usuario: txtCliente.value,
+          Nrodoc: txtNrodocumento.value,
+        },
         parametrosgpon: {
           pppoe: document.getElementById("txtPppoe").value,
-          potencia: document.getElementById("txtPotencia").value,
-          potecia: document.getElementById("txtPotenciaDos").value,
-          catv: document.getElementById("chkCatv").checked,
           clave: document.getElementById("txtClave").value,
+          potencia: document.getElementById("txtPotencia").value,
+          catv: document.getElementById("chkCatv").checked,
           vlan: document.getElementById("txtVlan").value,
-          ssid: document.getElementById("txtSsid").value,
-          password: document.getElementById("txtPass").value,
-          otros: document.getElementById("txtOtros").value
+          repetidor: JSON.parse(JSON.stringify(fibraFiltrado.repetidores))
         },
         cambiosgpon: {
-          pppoe: document.getElementById("txtCambiosPppoe").value,
-          potencia: document.getElementById("txtCambiosPotencia").value,
-          potecia: document.getElementById("txtCambiosPotenciaDos").value,
-          catv: document.getElementById("chkCambiosCatv").checked,
-          clave: document.getElementById("txtCambiosClave").value,
-          vlan: document.getElementById("txtCambiosVlan").value,
-          ssid: document.getElementById("txtCambiosSsid").value,
-          password: document.getElementById("txtCambiosPass").value,
-          otros: document.getElementById("txtCambiosOtros").value
+          pppoe: txtCambiosPppoe.value,
+          clave: txtCambiosClave.value,
+          potencia: txtCambiosPotencia.value,
+          catv: chkCambiosCatv.checked,
+          vlan: txtCambiosVlan.value,
+          repetidor: await moficadoRepetidor(fibraFiltrado.repetidores)
         }
-      }
+      };
     }
+
     return soporte;
-  };
+  }
+
+  async function moficadoRepetidor(repetidores) {
+    console.log(repetidores);
+    const selectedValue = parseInt(slcRpetidor.value);
+    return repetidores.map(repetidor => {
+      if (repetidor.numero === selectedValue) {
+        repetidor.ssid = txtCambiosSsid.value;
+        repetidor.contrasenia = txtCambiosPass.value;
+        repetidor.ip = txtCambiosIp.value;
+      }
+      return repetidor;
+    });
+  }
 
   async function guardarSoporte(data) {
     try {
+      const soporteData = typeof data === "string" ? JSON.parse(data) : data;
+
       const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php`, {
         method: 'PUT',
         headers: {
@@ -269,9 +367,9 @@ document.addEventListener("DOMContentLoaded", () => {
             idSoporte: idSoporte,
             idTecnico: user['idUsuario'],
             idTipoSoporte: document.getElementById("slcTipoSoporte").value,
-            soporte: data,
+            soporte: soporteData,
             idUserUpdate: user['idUsuario'],
-            descripcion_solucion: document.getElementById("txtaEstadoFinal").value,
+            descripcion_solucion: solutionTextarea.value,
           },
         }),
       });
@@ -279,14 +377,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const result = await response.json();
       console.log(result.status);
       if (result.status === "success") {
-        // Lógica para éxito
         console.log("Soporte actualizado correctamente.");
       }
     } catch (error) {
       console.error('Error en la solicitud:', error);
     }
-
   }
+
 
   /**
    * Llama a la función ArmadoJsonCable para recuperar datos.
@@ -299,7 +396,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (await ask("¿Desea guardar la ficha?")) {
       await guardarSoporte(data);
 
-      window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
+      //window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
     }
   });
 
