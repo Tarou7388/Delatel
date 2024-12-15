@@ -240,7 +240,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <span>${repetidor.ip}</span>
                   </div>
                   <div class="field">
-                    <i class="fas fa-thermometer-half icon"></i>
+                     <i class="fas fa-hand-holding-dollar icon"></i>
                     <label>Condición:</label>
                     <span>${repetidor.condicion}</span>
                   </div>
@@ -598,7 +598,7 @@ document.addEventListener("DOMContentLoaded", () => {
                       <span>${precio}</span>
                   </div>
                   <div class="field">
-                      <i class="fas fa-thermometer-half icon"></i>
+                      <i class="fas fa-hand-holding-dollar icon"></i>
                       <label>Condición:</label>
                       <span>${condicion}</span>
                   </div>

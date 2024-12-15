@@ -241,9 +241,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const chkCatv = document.querySelector("#chkCatv").checked;
     const txtaDetallesModen = document.querySelector("#txtDetallesModen").value;
 
-    console.log("Plan:", txtPlan);
-    console.log("Periodo:", txtPeriodo);
-
     jsonData = {
       fibraOptica: {
         usuario: txtUsuario,
@@ -266,7 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
         detallesModen: txtaDetallesModen,
         repetidores: jsonRepetidor
       },
-      idCaja: idCaja, // id de la caja
+      idCaja: idCaja,
     }
   }
 
@@ -450,7 +447,67 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  function validarCampos() {
+    const campos = [
+      "txtUsuario",
+      "txtClaveAcceso",
+      "txtVlan",
+      "txtPlan",
+      "txtPeriodo",
+      "txtPotenciaFibra",
+      "txtSsdi",
+      "txtSeguridad",
+      "txtCodigoBarra",
+      "txtSerieModen",
+      "slcBanda",
+      "txtAntenas"
+    ];
+
+    let allValid = true;
+
+    for (const campo of campos) {
+      const elemento = document.getElementById(campo);
+
+      // Validar si el campo está vacío
+      if (!elemento || elemento.value.trim() === "") {
+        if (elemento) {
+          elemento.classList.add("is-invalid");
+        }
+        allValid = false;
+        continue;
+      } else {
+        elemento.classList.remove("is-invalid");
+      }
+
+      // Validar solo si el campo es numérico
+      if (!isNaN(elemento.value)) {
+        const valor = parseFloat(elemento.value);
+        const min = elemento.hasAttribute('min') ? parseFloat(elemento.min) : null;
+        const max = elemento.hasAttribute('max') ? parseFloat(elemento.max) : null;
+
+        // Validar valores negativos (solo si el campo permite negativos)
+        if (min !== null && valor < min) {
+          elemento.classList.add("is-invalid");
+          allValid = false;
+        }
+
+        // Validar valores fuera de rango (solo si el campo tiene min y max definidos)
+        if (max !== null && valor > max) {
+          elemento.classList.add("is-invalid");
+          allValid = false;
+        }
+      }
+    }
+
+    return allValid;
+  }
+
   async function Guardar() {
+    if (!validarCampos()) {
+      showToast("Por favor, llene todos los campos requeridos.", "WARNING");
+      return;
+    }
+
     await fibraOptica();
 
     const data = {
@@ -532,7 +589,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       return;
     }
-    
+
     document.getElementById("txtCodigoBarrasRepetidor").classList.remove("is-invalid");
     document.getElementById("txtSsidRepetidor").classList.remove("is-invalid");
     document.getElementById("txtContraseniaRepetidor").classList.remove("is-invalid");
@@ -548,7 +605,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById("txtIpRepetidor").value = "";
     document.getElementById("slcCondicionRepetidor").value = "";
     document.getElementById("txtSerieRepetidor").value = "";
-    document.getElementById("txtPrecioRepetidor").value = ""; 
+    document.getElementById("txtPrecioRepetidor").value = "";
   });
 
   document.querySelector("#eliminarRepetidor").addEventListener("click", () => {
@@ -561,53 +618,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  function validarCampos() {
-    const campos = [
-      "txtUsuario",
-      "txtClaveAcceso",
-      "txtVlan",
-      "txtPlan",
-      "txtPeriodo",
-      "txtPotenciaFibra",
-      "txtSsdi",
-      "txtSeguridad",
-      "txtCodigoBarra",
-      "txtSerieModen",
-      "slcBanda",
-      "txtAntenas"
-    ];
-
-    let allValid = true;
-
-    for (const campo of campos) {
-      const elemento = document.getElementById(campo);
-      if (!elemento || elemento.value.trim() === "") {
-        if (elemento) {
-          elemento.classList.add("is-invalid");
-        }
-        allValid = false;
-      } else {
-        elemento.classList.remove("is-invalid");
-      }
-    }
-
-    return allValid;
-  }
-
   document.getElementById("btnGuardar").addEventListener("click", async () => {
-    if (!flagFichaInstalacion) {
-      if (!validarCampos()) {
-        showToast("Todos los campos son obligatorios.", "WARNING");
-        return;
-      }
-      await Guardar();
-      showToast("Ficha de Instalación Guardarda Correctamente", "SUCCESS");
-      setTimeout(() => {
-        window.location.href = `${config.HOST}views/Contratos/`;
-      }, 2500);
-    } else {
-      showToast("La ficha de instalación ya ha sido guardada.", "WARNING");
-    }
+    await Guardar();
   });
 
   function formatoIPinput(event) {

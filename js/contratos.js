@@ -409,7 +409,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         url: `https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json`,
       },
       processing: true,
-      serverSide: true, 
+      serverSide: true,
       ajax: {
         url: `${config.HOST}app/controllers/Contrato.ssp.php`,
         type: 'GET',
@@ -439,7 +439,7 @@ window.addEventListener("DOMContentLoaded", async () => {
               <button class="btn btn-sm btn-danger btnEliminar" data-idContrato="${row[0]}" title="Eliminar">
               <i class="fa-regular fa-trash-can icon-disabled"></i>
               </button>
-              <button class="btn btn-sm btn-primary btnGenerar" data-idContrato="${row[0]}" title="Generar PDF">
+              <button class="btn btn-sm btn-primary btnGenerar" data-tipoServicio="${row[6]}" data-idContrato="${row[0]}" title="Generar PDF">
               <i class="fa-solid fa-file-pdf icon-disabled"></i>
               </button>
               <button class="btn btn-sm btn-success btnFicha" data-tipoServicio="${row[6]}" data-idContrato="${row[0]}" title="Ver Ficha">
@@ -454,7 +454,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         { width: "200px", targets: [6] },
         { targets: [0], visible: false }
       ],
-      order: [[0, 'desc']], 
+      order: [[0, 'desc']],
       drawCallback: function (settings) {
         //Agregar event listerners para los botones despues de dibujar la tabla
         const botonesPdf = document.querySelectorAll(".btnGenerar");
@@ -464,7 +464,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
         //Event listeners para el botón de ficha técnica
         botonesFicha.forEach((boton) => {
-          boton.addEventListener("click", (event) => {
+          boton.addEventListener("click", async (event) => {
             const idContrato = event.target.getAttribute("data-idContrato");
             const tipoServicio = event.target.getAttribute("data-tipoServicio");
             const tipoFicha = {
@@ -474,7 +474,30 @@ window.addEventListener("DOMContentLoaded", async () => {
               CABL: "FichaTecnicaCable",
               FIBR: "FichaTecnicaFibra",
             };
-            window.location.href = `${config.HOST}views/Contratos/${tipoFicha[tipoServicio]}?idContrato=${idContrato}`;
+
+            try {
+              const response = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerFichaInstalacion&id=${idContrato}`);
+              const data = await response.json();
+              const fichaInstalacion = JSON.parse(data[0].ficha_instalacion);
+
+              if (fichaInstalacion && Object.keys(fichaInstalacion).length > 0) {
+                if (tipoServicio === "WISP") {
+                  window.open(`${config.HOST}views/reports/Contrato_WISP/fichaInstalacion.php?id=${idContrato}`, '_blank');
+                } else if (tipoServicio === "FIBR,CABL" || tipoServicio === "CABL,FIBR") {
+                  window.open(`${config.HOST}views/reports/Contrato_GPON/fichaInstalacion.php?id=${idContrato}`, '_blank');
+                } else if (tipoServicio === "CABL") {
+                  window.open(`${config.HOST}views/reports/Contrato_CABLE/fichaInstalacion.php?id=${idContrato}`, '_blank');
+                } else if (tipoServicio === "FIBR") {
+                  window.open(`${config.HOST}views/reports/Contrato_FIBRA/fichaInstalacion.php?id=${idContrato}`, '_blank');
+                }
+              } else {
+                window.location.href = `${config.HOST}views/Contratos/${tipoFicha[tipoServicio]}?idContrato=${idContrato}`;
+              }
+            } catch (error) {
+              console.error("Error al obtener el JSON de la ficha de instalación:", error);
+              // Redirigir a la ruta original en caso de error
+              window.location.href = `${config.HOST}views/Contratos/${tipoFicha[tipoServicio]}?idContrato=${idContrato}`;
+            }
           });
         });
 
@@ -514,11 +537,11 @@ window.addEventListener("DOMContentLoaded", async () => {
         botonesPdf.forEach((boton) => {
           boton.addEventListener("click", () => {
             const idContrato = boton.getAttribute("data-idContrato");
-            const tipoServicio = boton.closest('tr').querySelector('td:nth-child(6)').textContent.trim();
+            const tipoServicio = boton.getAttribute("data-tipoServicio");
             if (tipoServicio === "WISP") {
-              window.open(`${config.HOST}views/reports/Contrato_WISP/soporte.php?id=${idContrato}`);
+              window.open(`${config.HOST}views/reports/Contrato_servicio_WISP/soporte.php?id=${idContrato}`);
             } else {
-              window.open(`${config.HOST}views/reports/Contrato/soporte.php?id=${idContrato}`);
+              window.open(`${config.HOST}views/reports/Contrato_servicio/soporte.php?id=${idContrato}`);
             }
           });
         });

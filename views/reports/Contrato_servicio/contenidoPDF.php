@@ -84,32 +84,34 @@ $HOST = "http://localhost/Delatel/";
         <p>- Los precios incluyen IGV</p>
         <p>- Velocidad del Internet fijo:</p>
         <p>- La Velocidad mínima garantizada es el 70% de la Velocidad Máxima</p>
-        <table class="tabla" style="width: 100%; border-collapse: collapse;">
-          <colgroup>
-            <col style="width: 50%;">
-            <col style="width: 50%;">
-          </colgroup>
-          <thead>
-            <tr class="bg-info tex-light">
-              <th colspan="2" class="text-center">Bajada (Descarga) Mbp/s <img src="<?= $HOST; ?>image/iconoFlechaAbajo.png" class="icono" alt=""> </th>
-              <th colspan="2" class="text-center">Subida (Carga) Mbp/s <img src="<?= $HOST; ?>image/iconoFlechaArriba.png" class="icono" alt=""></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style="border: 1px solid #fff;">
-              <td style="border: 1px solid #fff;" class="text-center">Máxima</td>
-              <td style="border: 1px solid #fff;" class="text-center">Mínima Garantizada</td>
-              <td style="border: 1px solid #fff;" class="text-center">Máxima</td>
-              <td style="border: 1px solid #fff;" class="text-center">Mínima Garantizada</td>
-            </tr>
-            <tr style="border: 1px solid #fff;">
-              <td style="border: 1px solid #fff;" class="input text-center"><?= $velocidadPaquete['bajada']['maxima']; ?></td>
-              <td style="border: 1px solid #fff;" class="input text-center"><?= $velocidadPaquete['bajada']['minima_garantizada']; ?></td>
-              <td style="border: 1px solid #fff;" class="input text-center"><?= $velocidadPaquete['subida']['maxima']; ?></td>
-              <td style="border: 1px solid #fff;" class="input text-center"><?= $velocidadPaquete['subida']['minima_garantizada']; ?></td>
-            </tr>
-          </tbody>
-        </table>
+        <?php if (!empty($velocidadPaquete['bajada']) && !empty($velocidadPaquete['subida'])): ?>
+          <table class="tabla" style="width: 100%; border-collapse: collapse;">
+            <colgroup>
+              <col style="width: 50%;">
+              <col style="width: 50%;">
+            </colgroup>
+            <thead>
+              <tr class="bg-info tex-light">
+                <th colspan="2" class="text-center">Bajada (Descarga) Mbp/s <img src="<?= $HOST; ?>image/iconoFlechaAbajo.png" class="icono" alt=""> </th>
+                <th colspan="2" class="text-center">Subida (Carga) Mbp/s <img src="<?= $HOST; ?>image/iconoFlechaArriba.png" class="icono" alt=""></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border: 1px solid #fff;">
+                <td style="border: 1px solid #fff;" class="text-center">Máxima</td>
+                <td style="border: 1px solid #fff;" class="text-center">Mínima Garantizada</td>
+                <td style="border: 1px solid #fff;" class="text-center">Máxima</td>
+                <td style="border: 1px solid #fff;" class="text-center">Mínima Garantizada</td>
+              </tr>
+              <tr style="border: 1px solid #fff;">
+                <td style="border: 1px solid #fff;" class="input text-center"><?= $velocidadPaquete['bajada']['maxima']; ?></td>
+                <td style="border: 1px solid #fff;" class="input text-center"><?= $velocidadPaquete['bajada']['minima_garantizada']; ?></td>
+                <td style="border: 1px solid #fff;" class="input text-center"><?= $velocidadPaquete['subida']['maxima']; ?></td>
+                <td style="border: 1px solid #fff;" class="input text-center"><?= $velocidadPaquete['subida']['minima_garantizada']; ?></td>
+              </tr>
+            </tbody>
+          </table>
+        <?php endif; ?>
 
         <p>- El servicio contratado es simétrico (la misma para la subida y la bajada).</p>
         <p>- El Ancho de banda mínimo asegurado se mide mediante cable Ethernet.</p>

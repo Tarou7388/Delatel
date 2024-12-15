@@ -59,7 +59,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-
   // Validar valores negativos en tiempo real para campos positivos
   function validarValorNegativoPositivo(event) {
     const elemento = event.target;
@@ -240,9 +239,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const txtCantCable = document.querySelector("#txtCantCable").value;
     const txtPrecioCable = document.querySelector("#txtPrecioCable").value;
 
-    console.log("txtPaquete:", txtPaquete);
-    console.log("txtPeriodo:", txtPeriodo);
-
     if (
       txtPaquete === "" ||
       txtPagoInst === "" ||
@@ -420,6 +416,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function guardar() {
+    if (!validarCampos()) {
+      showToast("Todos los campos son obligatorios.", "WARNING");
+      return;
+    }
+
     await cable();
     jsonCosto = await costos();
 
@@ -430,12 +431,6 @@ document.addEventListener("DOMContentLoaded", () => {
     jsonData.costo = jsonCosto;
 
     console.log("jsonData:", jsonData);
-
-    // Validación de campos obligatorios
-    if (!validarCampos()) {
-      showToast("Todos los campos son obligatorios.", "WARNING");
-      return;
-    }
 
     const data = {
       operacion: "guardarFichaInstalacion",
@@ -464,6 +459,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function validarCampos() {
     const campos = [
       "txtUsuario",
+      "txtPeriodo",
       "txtPaquete",
       "txtNumFicha",
       "txtPagoInst",
@@ -483,16 +479,39 @@ document.addEventListener("DOMContentLoaded", () => {
       "txtCatvCasa"
     ];
 
+    let esValido = true;
+
+    // Recorrer cada campo y validar
     for (const campo of campos) {
       const elemento = document.getElementById(campo);
-      if (!elemento || elemento.value.trim() === "") {
+
+      // Validar si el campo está vacío
+      if (elemento.value.trim() === "") {
         elemento.classList.add("is-invalid");
-        return false;
+        esValido = false;
       } else {
         elemento.classList.remove("is-invalid");
       }
+
+      // Obtener el valor numérico del campo
+      const valor = parseFloat(elemento.value);
+      const min = parseFloat(elemento.min);  // Obtener valor mínimo del atributo min
+      const max = parseFloat(elemento.max);  // Obtener valor máximo del atributo max
+
+      // Validar valores negativos (solo si el campo permite negativos)
+      if (valor < 0 && elemento.hasAttribute('min') && valor < min) {
+        elemento.classList.add("is-invalid");
+        esValido = false;
+      }
+
+      // Validar valores fuera de rango (solo si el campo tiene min y max definidos)
+      if (valor < min || valor > max) {
+        elemento.classList.add("is-invalid");
+        esValido = false;
+      }
     }
-    return true;
+
+    return esValido;
   }
 
   txtCantCable.addEventListener("input", calcularCostos);

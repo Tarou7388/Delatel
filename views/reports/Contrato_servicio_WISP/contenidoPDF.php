@@ -1,5 +1,5 @@
 <?php
-$HOST = "http://localhost/Delatel";
+$HOST = "http://localhost/Delatel/";
 ?>
 
 <table style="width: 100%; table-layout: fixed; border-collapse: collapse;">

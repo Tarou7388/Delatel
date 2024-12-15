@@ -207,57 +207,57 @@ $HOST = "http://localhost/Delatel";
     <?php if (isset($fichaTecnica['alquilado'])): ?>
       <thead>
         <tr>
-          <td colspan="6" class="text-center thead-cabecera"><strong>DETALLE EQUIPOS ALQUILADOS / PRESTADOS</strong></td>
+          <td colspan="7" class="text-center thead-cabecera"><strong>DETALLE EQUIPOS ALQUILADOS / PRESTADOS</strong></td>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>CONDICIÓN:</td>
+          <td><strong>CONDICIÓN:</strong></td>
           <td><?= htmlspecialchars($fichaTecnica['alquilado']['condicion']) ?></td>
           <td colspan="2" class="text-center thead-cabecera-3"><strong>ANTENA</strong></td>
-          <td colspan="2" class="text-center thead-cabecera-4"><strong>ROUTER</strong></td>
+          <td colspan="3" class="text-center thead-cabecera-4"><strong>ROUTER</strong></td>
         </tr>
         <tr>
-          <td>PERIODO:</td>
+          <td><strong>PERIODO:</strong></td>
           <td><?= htmlspecialchars($fichaTecnica['alquilado']['periodo']) ?></td>
-          <td>MARCA:</td>
+          <td><strong>MARCA:</strong></td>
           <td><?= htmlspecialchars($fichaTecnica['alquilado']['antena']['marca']) ?></td>
-          <td>MARCA:</td>
-          <td><?= htmlspecialchars($fichaTecnica['alquilado']['router']['marca']) ?></td>
+          <td><strong>MARCA:</strong></td>
+          <td colspan="2"><?= htmlspecialchars($fichaTecnica['alquilado']['router']['marca']) ?></td>
         </tr>
         <tr>
-          <td>F. INICIO:</td>
+          <td><strong>F. INICIO:</strong></td>
           <td><?= htmlspecialchars($fichaTecnica['alquilado']['fechaInicio']) ?></td>
-          <td>MODELO:</td>
+          <td><strong>MODELO:</strong></td>
           <td><?= htmlspecialchars($fichaTecnica['alquilado']['antena']['modelo']) ?></td>
-          <td>MODELO:</td>
-          <td><?= htmlspecialchars($fichaTecnica['alquilado']['router']['modelo']) ?></td>
+          <td><strong>MODELO:</strong></td>
+          <td colspan="2"><?= htmlspecialchars($fichaTecnica['alquilado']['router']['modelo']) ?></td>
         </tr>
         <tr>
-          <td>F. TERMINO:</td>
+          <td><strong>F. TERMINO:</strong></td>
           <td><?= htmlspecialchars($fichaTecnica['alquilado']['fechaFin']) ?></td>
-          <td>MAC:</td>
+          <td><strong>MAC:</strong></td>
           <td><?= htmlspecialchars($fichaTecnica['alquilado']['antena']['mac']) ?></td>
-          <td>MAC:</td>
-          <td><?= htmlspecialchars($fichaTecnica['alquilado']['router']['mac']) ?></td>
+          <td><strong>MAC:</strong></td>
+          <td colspan="2"><?= htmlspecialchars($fichaTecnica['alquilado']['router']['mac']) ?></td>
         </tr>
         <tr>
-          <td>COSTO ALQUILER:</td>
+          <td><strong>COSTO ALQUILER:</strong></td>
           <td>S/. <?= htmlspecialchars($fichaTecnica['alquilado']['costoAlquiler']) ?></td>
-          <td>DESCRIPCIÓN:</td>
+          <td><strong>DESCRIPCIÓN:</strong></td>
           <td><?= htmlspecialchars($fichaTecnica['alquilado']['antena']['descripcion']) ?></td>
-          <td>DESCRIPCIÓN:</td>
-          <td><?= htmlspecialchars($fichaTecnica['alquilado']['router']['descripcion']) ?></td>
+          <td><strong>DESCRIPCIÓN:</strong></td>
+          <td colspan="2"><?= htmlspecialchars($fichaTecnica['alquilado']['router']['descripcion']) ?></td>
         </tr>
         <tr>
-          <td class="text-center">CONDICIÓN PAG:</td>
-          <td class="text-center">ADELANTADO:</td>
+          <td class="text-center"><strong>CONDICIÓN PAG:</strong></td>
+          <td class="text-center"><strong>ADELANTADO:</strong></td>
           <td class="text-center"><input type="checkbox" <?= $fichaTecnica['alquilado']['condicionTiempo']['Adelantado'] ? 'checked' : '' ?> disabled></td>
-          <td class="text-center" colspan="2">CUMPLIENDO EL MES:</td>
-          <td class="text-center"><input type="checkbox" <?= $fichaTecnica['alquilado']['condicionTiempo']['Cumpliendo el mes'] ? 'checked' : '' ?> disabled></td>
+          <td class="text-center" colspan="2"><strong>CUMPLIENDO EL MES:</strong></td>
+          <td class="text-center" colspan="2"><input type="checkbox" <?= $fichaTecnica['alquilado']['condicionTiempo']['Cumpliendo el mes'] ? 'checked' : '' ?> disabled></td>
         </tr>
         <tr>
-          <td rowspan="5" class="text-center">DETALLES:</td>
+          <td rowspan="5"><strong>DETALLES:</strong></td>
           <td rowspan="5" colspan="6"><?= htmlspecialchars($fichaTecnica['alquilado']['detalle']) ?></td>
         </tr>
       <?php endif; ?>

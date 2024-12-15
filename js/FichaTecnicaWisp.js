@@ -149,6 +149,7 @@ document.addEventListener("DOMContentLoaded", () => {
         `${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerFichaInstalacion&id=${idContrato}`
       );
       const data = await response.json();
+      console.log(data);
       document.getElementById("txtCliente").value = data[0].nombre_cliente;
       document.getElementById("txtNumFicha").value = data[0].id_contrato;
       document.getElementById("txtPaquete").value = data[0].paquete;
@@ -708,6 +709,7 @@ document.addEventListener("DOMContentLoaded", () => {
       },
     };
     jsonData.venta = jsonVenta.venta;
+    return true;
   }
 
   //Json Alquilado
@@ -728,27 +730,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const chkAdelantadoAlquilado = document.getElementById('chkAdelantadoAlquilados').checked;
     const chkCumpliendoMesAlquilados = document.getElementById('chkCumpliendoMesAlquilados').checked;
     const txtDetalleAlquilado = document.getElementById('txtDetalleAlquilados').value;
-
-    if (
-      !slcCondicionAlquilado ||
-      !txtPeriodoAlquilado ||
-      !txtMarcaAntenaAlquilado ||
-      !txtMarcaRouterAlquilado ||
-      !txtFechaInicioAlquilado ||
-      !txtModeloAntenaAlquilado ||
-      !txtModeloRouterAlquilado ||
-      !txtFechaFinAlquilado ||
-      !txtMacAntenaAlquilado ||
-      !txtMacRouterAlquilado ||
-      isNaN(txtCostoAlquilerAlquilado) ||
-      !txtDescripcionAntenaAlquilado ||
-      !txtDescripcionRouterAlquilado ||
-      !txtDetalleAlquilado
-    ) {
-      showToast("Por favor, llene todos los campos requeridos.", "WARNING", 1500);
-      return;
-    }
-
     jsonAlquilado = {
       alquilado: {
         condicion: slcCondicionAlquilado,
@@ -778,6 +759,7 @@ document.addEventListener("DOMContentLoaded", () => {
       },
     };
     jsonData.alquilado = jsonAlquilado.alquilado;
+    return true;
   }
 
   //Json Pago
@@ -863,15 +845,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
   //Función Registrar Ficha Wisp
   async function registrarFichaWisp() {
-    await parametros();
-    await venta();
-    await alquilado_prestado();
-    await deuda();
-
     if (!validarCampos()) {
       showToast("Por favor, llene todos los campos requeridos.", "WARNING", 1500);
       return;
     }
+
+    await parametros();
+
+    // Limpiar cualquier dato previo de venta y alquilado
+    jsonData.venta = null;
+    jsonData.alquilado = null;
+
+    // Obtener el tipo de operación seleccionado (venta o alquilado)
+    const tipoOperacion = document.getElementById('slcOperacion').value;
+
+    // Si es venta, llamamos a la función venta(), y si es alquilado, llamamos a la función alquilado_prestado()
+    if (tipoOperacion === 'venta') {
+      await venta(); // Asigna jsonData.venta
+    } else if (tipoOperacion === 'alquiler') {
+      await alquilado_prestado(); // Asigna jsonData.alquilado
+    } else {
+      showToast("Debe seleccionar una operación válida (Venta o Alquiler).", "WARNING", 1500);
+      return;
+    }
+
+    await deuda();
 
     const data = {
       operacion: "guardarFichaInstalacion",
@@ -887,12 +885,15 @@ document.addEventListener("DOMContentLoaded", () => {
         body: JSON.stringify(data),
       }
     );
+
     const datos = await response.json();
     showToast("Ficha de Instalación Guardada Correctamente", "SUCCESS");
+
     setTimeout(() => {
       window.location.href = `${config.HOST}views/Contratos/`;
     }, 2500);
   }
+
 
   function validarCampos() {
     const camposComunes = [
@@ -919,19 +920,46 @@ document.addEventListener("DOMContentLoaded", () => {
     if (tipoOperacion === 'venta') {
       campos = [...campos, ...camposVenta];
     } else if (tipoOperacion === 'alquiler') {
-      campos = [...campos, ...camposAlquilado];
+      campos = [...campos, ...camposAlquiler];
     }
+
+    let allValid = true;
 
     for (const campo of campos) {
       const elemento = document.getElementById(campo);
+
+      // Validar si el campo está vacío
       if (!elemento || elemento.value.trim() === "") {
-        elemento.classList.add("is-invalid");
-        return false;
+        if (elemento) {
+          elemento.classList.add("is-invalid");
+        }
+        allValid = false;
+        continue;
       } else {
         elemento.classList.remove("is-invalid");
       }
+
+      // Validar solo si el campo es numérico
+      if (!isNaN(elemento.value)) {
+        const valor = parseFloat(elemento.value);
+        const min = elemento.hasAttribute('min') ? parseFloat(elemento.min) : null;
+        const max = elemento.hasAttribute('max') ? parseFloat(elemento.max) : null;
+
+        // Validar valores negativos (solo si el campo permite negativos)
+        if (min !== null && valor < min) {
+          elemento.classList.add("is-invalid");
+          allValid = false;
+        }
+
+        // Validar valores fuera de rango (solo si el campo tiene min y max definidos)
+        if (max !== null && valor > max) {
+          elemento.classList.add("is-invalid");
+          allValid = false;
+        }
+      }
     }
-    return true;
+
+    return allValid;
   }
 
   document.getElementById('btnRegistrar').addEventListener('click', async (event) => {
@@ -943,7 +971,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.getElementById("btnReporte").addEventListener("click", () => {
-    window.open(`${config.HOST}views/reports/Instalacion_WISP/soporte.php?id=${idContrato}`, '_blank');
+    window.open(`${config.HOST}views/reports/Contrato_WISP/soporte.php?id=${idContrato}`, '_blank');
   });
 
   btnAgregarRouter.addEventListener("click", async () => {
