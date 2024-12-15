@@ -61,48 +61,49 @@ $HOST = "http://localhost/Delatel";
     <tbody>
       <tr>
         <td><strong>USUARIO:</strong></td>
-        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['usuario']); ?></td>
+        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraOptica']['usuario']); ?></td>
         <td><strong>MARCA:</strong></td>
-        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['moden']['marca']); ?></td>
+        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraOptica']['moden']['marca']); ?></td>
       </tr>
       <tr>
         <td><strong>CLAVE:</strong></td>
-        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['claveacceso']); ?></td>
+        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraOptica']['claveacceso']); ?></td>
         <td><strong>BANDA:</strong></td>
-        <td class="text-center"><?= htmlspecialchars(implode(", ", $fichaTecnica['fibraoptica']['moden']['banda'])); ?></td>
+        <td class="text-center"><?= htmlspecialchars(implode(", ", $fichaTecnica['fibraOptica']['moden']['banda'])); ?></td>
       </tr>
       <tr>
         <td><strong>VLAN:</strong></td>
-        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['vlan']); ?></td>
+        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraOptica']['vlan']); ?></td>
         <td><strong>N° ANTENA:</strong></td>
-        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['moden']['numeroantena']); ?></td>
+        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraOptica']['moden']['numeroantena']); ?></td>
       </tr>
       <tr>
         <td><strong>SSID:</strong></td>
-        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['moden']['ssid']); ?></td>
+        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraOptica']['moden']['ssid']); ?></td>
         <td><strong>CATV:</strong></td>
-        <td class="text-center"><?= $fichaTecnica['fibraoptica']['moden']['catv'] ? 'Sí' : 'No'; ?></td>
+        <td class="text-center"><?= $fichaTecnica['fibraOptica']['moden']['catv'] ? 'Sí' : 'No'; ?></td>
       </tr>
       <tr>
         <td><strong>SEGURIDAD:</strong></td>
-        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['moden']['seguridad']); ?></td>
+        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraOptica']['moden']['seguridad']); ?></td>
         <td><strong>MAC:</strong></td>
-        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['moden']['codigoBarra']) ?></td>
-      </tr>
+        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraOptica']['moden']['codigoBarra']) ?></td>
+        <?php if (!empty($fichaTecnica['fibraOptica']['detalles'])): ?>
       <tr>
         <td colspan="4" class="text-center"><strong>DETALLES:</strong></td>
       </tr>
       <tr>
-        <td colspan="4"><?= htmlspecialchars($fichaTecnica['fibraoptica']['detalles']); ?></td>
+        <td colspan="4"><?= htmlspecialchars($fichaTecnica['fibraOptica']['detalles']); ?></td>
       </tr>
+    <?php endif; ?>
     </tbody>
   </table>
 </div>
 
 <div class="container">
   <table class="tabla2">
-    <?php if (!empty($fichaTecnica['fibraoptica']['repetidores'])): ?>
-      <?php foreach ($fichaTecnica['fibraoptica']['repetidores'] as $repetidor): ?>
+    <?php if (!empty($fichaTecnica['fibraOptica']['repetidores'])): ?>
+      <?php foreach ($fichaTecnica['fibraOptica']['repetidores'] as $repetidor): ?>
         <thead>
           <tr>
             <td colspan="6" class="text-center thead-cabecera"><strong>EQUIPOS ADICIONALES WIFI</strong></td>
@@ -135,50 +136,6 @@ $HOST = "http://localhost/Delatel";
   </table>
 </div>
 
-<?php if (!empty($fichaTecnica['fibraoptica']['repetidores'])): ?>
-  <div class="container">
-    <table class="tabla2">
-      <thead>
-        <tr>
-          <td colspan="4" class="text-center thead-cabecera"><strong>REPETIDORES</strong></td>
-        </tr>
-      </thead>
-      <tbody>
-        <?php foreach ($fichaTecnica['fibraoptica']['repetidores'] as $repetidor): ?>
-          <tr>
-            <td class="text-center"><strong>REPETIDOR:</strong></td>
-            <td class="text-center"><?= htmlspecialchars($repetidor['numero']); ?></td>
-            <td class="text-center"><strong>COSTO:</strong></td>
-            <td class="text-center"><?= htmlspecialchars($repetidor['precio']); ?></td>
-          </tr>
-          <tr>
-            <td class="text-center"><strong>MARCA:</strong></td>
-            <td class="text-center"><?= htmlspecialchars($repetidor['marca']); ?></td>
-            <td rowspan="5" class="text-center"><strong>DETALLES:</strong></td>
-            <td rowspan="5" class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['detalles']); ?></td>
-          </tr>
-          <tr>
-            <td class="text-center"><strong>CONDICIÓN:</strong></td>
-            <td class="text-center"><?= htmlspecialchars($repetidor['condicion']); ?></td>
-          </tr>
-          <tr>
-            <td class="text-center"><strong>IP:</strong></td>
-            <td class="text-center"><?= htmlspecialchars($repetidor['ip']); ?></td>
-          </tr>
-          <tr>
-            <td class="text-center"><strong>SSID:</strong></td>
-            <td class="text-center"><?= htmlspecialchars($repetidor['ssid']); ?></td>
-          </tr>
-          <tr>
-            <td class="text-center"><strong>CLAVE:</strong></td>
-            <td class="text-center"><?= htmlspecialchars($repetidor['contrasenia']); ?></td>
-          </tr>
-        <?php endforeach; ?>
-      </tbody>
-    </table>
-  </div>
-<?php endif; ?>
-
 <div class="container">
   <table class="tabla2">
     <thead>
@@ -187,6 +144,10 @@ $HOST = "http://localhost/Delatel";
       </tr>
     </thead>
     <tbody>
+      <tr>
+        <td><strong>PLAN:</strong></td>
+        <td colspan="5"><?= htmlspecialchars($fichaTecnica['cable']['planCable']); ?></td>
+      </tr>
       <tr>
         <td><strong>PAGO INST:</strong></td>
         <td class="text-center">S./ <?= htmlspecialchars($fichaTecnica['cable']['pagoinstalacion']); ?></td>
@@ -197,7 +158,7 @@ $HOST = "http://localhost/Delatel";
       </tr>
       <tr>
         <td><strong>PERIODO:</strong></td>
-        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['periodo']); ?></td>
+        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraOptica']['periodo']); ?></td>
         <td><strong>SPLITTER:</strong></td>
         <td class="text-center">CANTIDAD: <?= htmlspecialchars($fichaTecnica['cable']['splitter'][0]['cantidad']); ?></td>
         <td><strong>TIPO:</strong></td>
@@ -269,16 +230,68 @@ $HOST = "http://localhost/Delatel";
   </table>
 </div>
 
-<div class="container">
-  <table class="tabla2">
-    <?php if (!empty($fichaTecnica['cable']['sintonizadores'])): ?>
-      <?php foreach ($fichaTecnica['cable']['sintonizadores'] as $sintonizador): ?>
-        <thead>
+<br>
+<br>
+<br>
+<br>
+<?php if (!empty($fichaTecnica['fibraOptica']['repetidores'])): ?>
+  <div class="container">
+    <table class="tabla2">
+      <thead>
+        <tr>
+          <td colspan="4" class="text-center thead-cabecera"><strong>REPETIDORES</strong></td>
+        </tr>
+      </thead>
+      <tbody>
+        <?php foreach ($fichaTecnica['fibraOptica']['repetidores'] as $repetidor): ?>
           <tr>
-            <td colspan="8" class="text-center"><strong>SINTONIZADORES</strong></td>
+            <td class="text-center"><strong>REPETIDOR:</strong></td>
+            <td class="text-center"><?= htmlspecialchars($repetidor['numero']); ?></td>
+            <td class="text-center"><strong>COSTO:</strong></td>
+            <td class="text-center"><?= htmlspecialchars($repetidor['precio']); ?></td>
           </tr>
-        </thead>
-        <tbody>
+          <tr>
+            <td class="text-center"><strong>MARCA:</strong></td>
+            <td class="text-center"><?= htmlspecialchars($repetidor['marca']); ?></td>
+            <td rowspan="5" class="text-center"><strong>DETALLES:</strong></td>
+            <td rowspan="5" class="text-center"><?= htmlspecialchars($fichaTecnica['fibraOptica']['detalles']); ?></td>
+          </tr>
+          <tr>
+            <td class="text-center"><strong>CONDICIÓN:</strong></td>
+            <td class="text-center"><?= htmlspecialchars($repetidor['condicion']); ?></td>
+          </tr>
+          <tr>
+            <td class="text-center"><strong>IP:</strong></td>
+            <td class="text-center"><?= htmlspecialchars($repetidor['ip']); ?></td>
+          </tr>
+          <tr>
+            <td class="text-center"><strong>SSID:</strong></td>
+            <td class="text-center"><?= htmlspecialchars($repetidor['ssid']); ?></td>
+          </tr>
+          <tr>
+            <td class="text-center"><strong>CLAVE:</strong></td>
+            <td class="text-center"><?= htmlspecialchars($repetidor['contrasenia']); ?></td>
+          </tr>
+        <?php endforeach; ?>
+      </tbody>
+    </table>
+  </div>
+<?php endif; ?>
+<br>
+<br>
+<br>
+<br>
+<br>
+<?php if (!empty($fichaTecnica['cable']['sintonizadores'])): ?>
+  <div class="container">
+    <table class="tabla2">
+      <thead>
+        <tr>
+          <td colspan="8" class="text-center"><strong>SINTONIZADORES</strong></td>
+        </tr>
+      </thead>
+      <tbody>
+        <?php foreach ($fichaTecnica['cable']['sintonizadores'] as $sintonizador): ?>
           <tr>
             <td><strong>SINTONIZADOR:</strong></td>
             <td class="text-center" colspan="1"><?= htmlspecialchars($sintonizador['numero']); ?></td>
@@ -298,7 +311,7 @@ $HOST = "http://localhost/Delatel";
             <td class="text-center" colspan="4"><?= htmlspecialchars($sintonizador['precio']); ?></td>
           </tr>
         <?php endforeach; ?>
-        </tbody>
-  </table>
-</div>
+      </tbody>
+    </table>
+  </div>
 <?php endif; ?>

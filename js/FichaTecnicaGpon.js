@@ -102,6 +102,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Asignar eventos de validación en tiempo real
+  txtPagoAdelantado.addEventListener("input", validarValorRango);
+  txtDescuento.addEventListener("input", validarValorRango);
   document.getElementById("txtPotenciaFibra").addEventListener("input", validarValorRango);
   document.getElementById("txtVlan").addEventListener("input", validarValorRango);
   document.getElementById("txtAntenas").addEventListener("input", validarValorRango);
@@ -121,7 +123,6 @@ document.addEventListener("DOMContentLoaded", () => {
         `${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerFichaInstalacion&id=${idContrato}`
       );
       const data = await response.json();
-      console.log(data);
 
       if (!Array.isArray(data) || data.length === 0) {
         console.warn("No hay datos en ficha_instalacion.");
@@ -132,7 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       document.getElementById("txtNumFicha").value = ficha.id_contrato || "";
 
-      tipoServicio = ficha.tipos_servicio || ""; // Asignar tipoServicio aquí
+      tipoServicio = ficha.tipos_servicio || "";
       const nombreCliente = (ficha.nombre_cliente || "").split(", ");
       const usuario =
         (
@@ -141,11 +142,10 @@ document.addEventListener("DOMContentLoaded", () => {
         ).toUpperCase() + idContrato;
 
       const contrasenia = "@" + usuario;
-      console.log("ficha:", );
       document.getElementById("txtUsuario").value = usuario;
       document.getElementById("txtClaveAcceso").value = contrasenia;
-      document.getElementById("txtPlan").value = ficha.plan || "";
-      document.getElementById("txtPlanCable").value = ficha.plan || "";
+      document.getElementById("txtPlan").value = data[0].paquete;
+      document.getElementById("txtPlanCable").value = data[0].paquete;
 
       // Verificar si existe ficha_instalacion
       if (ficha.ficha_instalacion) {
@@ -156,6 +156,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("txtPotenciaFibra").value = fibra.potencia || "";
         document.getElementById("txtSsdi").value = fibra.moden?.ssid || "";
         document.getElementById("txtPeriodo").value = fibra.periodo || "";
+        document.getElementById("txtPlan").value = fibra.plan || "";
         document.getElementById("txtVlan").value = fibra.vlan || "";
         document.getElementById("txtSeguridad").value = fibra.moden?.seguridad || "";
         document.getElementById("txtCodigoBarra").value = fibra.moden?.codigoBarra || "";
@@ -266,8 +267,9 @@ document.addEventListener("DOMContentLoaded", () => {
           document.querySelector("#contenidoCable").setAttribute("hidden", "true");
         } else if (cable) {
           document.querySelector("#contenidoCable").removeAttribute("hidden");
-
+          document.getElementById("txtPagoInst").value = cable.pagoinstalacion || "";
           document.getElementById("txtPotenciaCable").value = cable.potencia || "";
+          document.getElementById("txtPlanCable").value = cable.planCable || "";
           document.getElementById("slcTriplexor").value = `${cable.triplexor?.requerido},${cable.triplexor?.cargador}` || "";
           document.getElementById("txtCantConector").value = cable.conector?.numeroconector || "";
           document.getElementById("txtPrecioConector").value = cable.conector?.precio || "";
@@ -380,48 +382,33 @@ document.addEventListener("DOMContentLoaded", () => {
     const chkCatv = document.querySelector("#chkCatv").checked;
     const txtaDetallesModen = document.querySelector("#txtaDetallesModen").value;
 
-    if (!flagFichaInstalacion) {
-      if (txtUsuario === "" ||
-        txtPlan === "" ||
-        txtClaveAcceso === "" ||
-        txtPeriodo === "" ||
-        txtPotencia === "" ||
-        txtSsdi === "" ||
-        txtSeguridad === "" ||
-        txtCodigoBarra === "" ||
-        slcBanda === "" ||
-        txtAntenas === "") {
-        showToast("Por favor, llene todos los campos.", "WARNING");
-        return;
-      } else {
-        jsonData = {
-          fibraOptica: {
-            usuario: txtUsuario,
-            claveacceso: txtClaveAcceso,
-            vlan: txtVlan,
-            periodo: txtPeriodo,
-            plan: txtPlan,
-            potencia: parseInt(txtPotencia),
-            moden: {
-              ssid: txtSsdi,
-              seguridad: txtSeguridad,
-              codigoBarra: parseInt(txtCodigoBarra),
-              marca: txtMarca,
-              modelo: txtModelo,
-              serie: txtSerieModen,
-              banda: slcBanda.split(","),
-              numeroantena: parseInt(txtAntenas),
-              catv: chkCatv,
-            },
-            detalles: txtaDetallesModen,
-          },
-          idCaja: idCaja, // id de la caja
-        };
-      }
-    }
+    jsonData = {
+      fibraOptica: {
+        usuario: txtUsuario,
+        claveacceso: txtClaveAcceso,
+        vlan: txtVlan,
+        periodo: txtPeriodo,
+        plan: txtPlan,
+        potencia: parseInt(txtPotencia),
+        moden: {
+          ssid: txtSsdi,
+          seguridad: txtSeguridad,
+          codigoBarra: parseInt(txtCodigoBarra),
+          marca: txtMarca,
+          modelo: txtModelo,
+          serie: txtSerieModen,
+          banda: slcBanda.split(","),
+          numeroantena: parseInt(txtAntenas),
+          catv: chkCatv,
+        },
+        detalles: txtaDetallesModen,
+      },
+      idCaja: idCaja, // id de la caja
+    };
   }
 
   async function cable() {
+    const txtPlanCable = document.querySelector("#txtPlanCable").value;
     const txtPagoInst = document.querySelector("#txtPagoInst").value;
     const txtPotencia = document.querySelector("#txtPotenciaCable").value;
     const slcTriplexor = document.querySelector("#slcTriplexor").value.split(",");
@@ -431,44 +418,30 @@ document.addEventListener("DOMContentLoaded", () => {
     const slcSplitter = document.querySelector("#slcSplitter").value;
     const txtCantCable = document.querySelector("#txtCantCable").value;
     const txtPrecioCable = document.querySelector("#txtPrecioCable").value;
-    if (
-      txtPagoInst === "" ||
-      txtPotencia === "" ||
-      slcTriplexor === "" ||
-      txtCantConector === "" ||
-      txtPrecioConector === "" ||
-      txtSplitter === "" ||
-      slcSplitter === "" ||
-      txtCantCable === "" ||
-      txtPrecioCable === ""
-    ) {
-      showToast("Por favor, llene todos los campos del Cable.", "WARNING");
-      return;
-    } else {
-      jsonCable = {
-        pagoinstalacion: parseFloat(txtPagoInst),
-        potencia: txtPotencia,
-        //sintonizador: {},
-        triplexor: {
-          requerido: slcTriplexor[0],
-          cargador: slcTriplexor[1],
+
+    jsonCable = {
+      pagoinstalacion: parseFloat(txtPagoInst),
+      potencia: txtPotencia,
+      planCable: txtPlanCable,
+      triplexor: {
+        requerido: slcTriplexor[0],
+        cargador: slcTriplexor[1],
+      },
+      conector: {
+        numeroconector: parseInt(txtCantConector),
+        precio: parseFloat(txtPrecioConector),
+      },
+      splitter: [
+        {
+          cantidad: parseInt(txtSplitter),
+          tipo: slcSplitter,
         },
-        conector: {
-          numeroconector: parseInt(txtCantConector),
-          precio: parseFloat(txtPrecioConector),
-        },
-        splitter: [
-          {
-            cantidad: parseInt(txtSplitter),
-            tipo: slcSplitter,
-          },
-        ],
-        cable: {
-          metrosadicionales: parseInt(txtCantCable),
-          preciometro: parseFloat(txtPrecioCable),
-        },
-      };
-    }
+      ],
+      cable: {
+        metrosadicionales: parseInt(txtCantCable),
+        preciometro: parseFloat(txtPrecioCable),
+      },
+    };
   }
 
   async function costos() {
@@ -496,7 +469,6 @@ document.addEventListener("DOMContentLoaded", () => {
         catv: txtCatvCasa,
       },
     };
-    console.log(jsonCosto);
 
     if (typeof tipoServicio !== "undefined" && (tipoServicio === "FIBR,CABL" || tipoServicio === "CABL,FIBR")) {
       const txtCantCable = document.querySelector("#txtCantCable").value;
@@ -504,6 +476,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const txtPrecioConector = document.querySelector("#txtPrecioConector").value;
       const txtCantConector = document.querySelector("#txtCantConector").value;
       const txtDetalle = document.querySelector("#txtDetalle").value;
+      const txtCostoCable = document.querySelector("#txtCostoCable").value;
+      const txtCostoConector = document.querySelector("#txtCostoConector").value;
 
       const jsonCostoCable = {
         numerosintotizadores: parseInt(txtCantSintotizador) || 0,
@@ -789,6 +763,12 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   async function guardar() {
+    if (!validarCampos()) {
+      showToast("Por favor, llene todos los campos requeridos.", "WARNING");
+      return;
+    }
+
+    // El resto de la función sigue igual
     await fibraOptica();
     await cable();
     const jsonCosto = await costos();
@@ -805,12 +785,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     jsonData.costo = jsonCosto;
-
-    // Validación de campos requeridos
-    if (!validarCampos()) {
-      showToast("Por favor, llene todos los campos requeridos.", "WARNING");
-      return;
-    }
 
     const data = {
       operacion: "guardarFichaInstalacion",
@@ -835,25 +809,19 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function validarCampos() {
+    // Campos a validar
     const campos = [
-      "txtUsuario",
-      "txtClaveAcceso",
       "txtVlan",
-      "txtPlan",
       "txtPeriodo",
       "txtPotenciaFibra",
       "txtSsdi",
       "txtSeguridad",
       "txtCodigoBarra",
       "txtSerieModen",
-      "slcBanda",
       "txtAntenas",
-      "txtPagoInst",
       "txtPotenciaCable",
-      "slcTriplexor",
       "txtCantConector",
       "txtSplitter",
-      "slcSplitter",
       "txtCantCable",
       "txtPagoAdelantado",
       "txtDescuento",
@@ -863,16 +831,39 @@ document.addEventListener("DOMContentLoaded", () => {
       "txtCatvCasa"
     ];
 
+    let esValido = true;
+
+    // Recorrer cada campo y validar
     for (const campo of campos) {
       const elemento = document.getElementById(campo);
-      if (!elemento || elemento.value.trim() === "") {
+
+      // Validar si el campo está vacío
+      if (elemento.value.trim() === "") {
         elemento.classList.add("is-invalid");
-        return false;
+        esValido = false;
       } else {
         elemento.classList.remove("is-invalid");
       }
+
+      // Obtener el valor numérico del campo
+      const valor = parseFloat(elemento.value);
+      const min = parseFloat(elemento.min);  // Obtener valor mínimo del atributo min
+      const max = parseFloat(elemento.max);  // Obtener valor máximo del atributo max
+
+      // Validar valores negativos (solo si el campo permite negativos)
+      if (valor < 0 && elemento.hasAttribute('min') && valor < min) {
+        elemento.classList.add("is-invalid");
+        esValido = false;
+      }
+
+      // Validar valores fuera de rango (solo si el campo tiene min y max definidos)
+      if (valor < min || valor > max) {
+        elemento.classList.add("is-invalid");
+        esValido = false;
+      }
     }
-    return true;
+
+    return esValido;
   }
 
   txtCantCable.addEventListener("input", calcularCostos);
@@ -1029,7 +1020,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.getElementById("btnReporte").addEventListener("click", () => {
-    window.open(`${config.HOST}views/reports/Instalacion_GPON/soporte.php?id=${idContrato}`, '_blank');
+    window.open(`${config.HOST}views/reports/Contrato_GPON/soporte.php?id=${idContrato}`, '_blank');
   });
 
   $("#txtIpRepetidor").on("input", function (event) {

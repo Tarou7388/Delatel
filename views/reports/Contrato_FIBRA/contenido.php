@@ -88,13 +88,14 @@ $HOST = "http://localhost/Delatel";
         <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraOptica']['moden']['seguridad']); ?></td>
         <td><strong>MAC:</strong></td>
         <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraOptica']['moden']['codigoBarra']) ?></td>
-      </tr>
-      <tr>
-        <td colspan="4" class="text-center"><strong>DETALLES:</strong></td>
-      </tr>
-      <tr>
-        <td colspan="4"><?= htmlspecialchars($fichaTecnica['fibraOptica']['detallesModen']); ?></td>
-      </tr>
+      <?php if (!empty($fichaTecnica['fibraOptica']['detallesModen'])): ?>
+        <tr>
+          <td colspan="4" class="text-center"><strong>DETALLES:</strong></td>
+        </tr>
+        <tr>
+          <td colspan="4"><?= htmlspecialchars($fichaTecnica['fibraOptica']['detallesModen']); ?></td>
+        </tr>
+      <?php endif; ?>
     </tbody>
   </table>
 </div>
