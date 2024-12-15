@@ -1,6 +1,15 @@
 import config from "../env.js";
 import { FichaSoporte, inicializarDataTable } from "./Herramientas.js";
 
+        //Aqui NO puedes meterle mano
+        //Aqui NO puedes meterle mano
+        //Aqui NO puedes meterle mano
+        //Aqui NO puedes meterle mano
+        //Aqui NO puedes meterle mano
+        //Aqui NO puedes meterle mano
+        //Aqui NO puedes meterle mano
+        //Aqui NO puedes meterle mano
+
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("frmRegistroWisp");
   const urlParams = new URLSearchParams(window.location.search);

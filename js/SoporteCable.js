@@ -35,12 +35,18 @@ document.addEventListener("DOMContentLoaded", () => {
       await obtenerProblema(idSoporte);
       crearSelectYBoton();
       await ObtenerValores();
-
-      //await ArmadoJsonCable();
     } else {
       const urlParams = new URLSearchParams(window.location.search);
       urlParams.get("idReporte");
       await reporte(urlParams.get("idReporte"));
+      //Aqui puedes meterle mano
+      //Aqui puedes meterle mano
+      //Aqui puedes meterle mano
+      //Aqui puedes meterle mano
+      //Aqui puedes meterle mano
+      //Aqui puedes meterle mano
+      //Aqui puedes meterle mano
+      //Aqui puedes meterle mano
     }
   })();
 

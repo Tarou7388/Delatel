@@ -48,6 +48,15 @@ document.addEventListener("DOMContentLoaded", () => {
         await crearSelectYBoton();
         await ObtenerValores();
         await cargarProblema(idSoporte);
+      } else {
+        //Aqui puedes meterle mano
+        //Aqui puedes meterle mano
+        //Aqui puedes meterle mano
+        //Aqui puedes meterle mano
+        //Aqui puedes meterle mano
+        //Aqui puedes meterle mano
+        //Aqui puedes meterle mano
+        //Aqui puedes meterle mano
       }
     } catch (error) {
       console.error("Error durante la inicialización:", error);
@@ -441,8 +450,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const data = await ArmadoJsonGpon();
     if (await ask("¿Desea guardar la ficha?")) {
       await guardarSoporte(data);
-
-      //window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
+      window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
     }
   });
 
