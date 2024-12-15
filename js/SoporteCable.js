@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const dataCable = await FichaSoporte(idReporte);
       const cableFiltrado = JSON.parse(dataCable[0].ficha_instalacion).cable;
       const plan = document.getElementById("txtPlan")
-      plan.value = cableFiltrado.paquete
+      plan.value = cableFiltrado.plan
 
       // Llamada necesaria para rellenar el número de documento
       await rellenarDocNombre(data[0].nro_doc);
@@ -151,8 +151,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const respuesta = await FichaSoportePorId(doc, tiposervicio, coordenada);
 
     if (respuesta[0].soporte != "{}") {
-      console.log(respuesta);
-      await cargardatos(JSON.parse(respuesta[0].soporte).CABL.cambioscable);
+      if (JSON.parse(respuesta[0].soporte).CABL) {
+        await cargardatos(JSON.parse(respuesta[0].soporte).CABL.cambioscable);
+      }
+      else {
+        await llenadoDeDatos(doc, idSoporte);
+      }
+
     } else {
       await llenadoDeDatos(doc, idSoporte);
     }
@@ -186,7 +191,7 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log(data);
     txtNumSpliter.value = data.splitter[0].cantidad;
     slcSpliter.selectedIndex = data.splitter[0].tipo;
-
+    txtPlan.value = data.plan;
     txtCable.value = data.cable.metrosadicionales;
     txtPrecioCable.value = data.cable.metrosadicionales * data.cable.preciometro;
     txtConector.value = data.conector.numeroconector;
@@ -275,7 +280,8 @@ document.addEventListener("DOMContentLoaded", () => {
       txtPrecioConector.value = (cableFiltrado.conector.numeroconector * cableFiltrado.conector.precio).toFixed(2);
 
       //Asignar el plan 
-      txtPlan.value = cableFiltrado.paquete
+
+      txtPlan.value = cableFiltrado.plan
 
     } catch (error) {
       console.error("Error en FichaInstalacion:", error);
@@ -460,7 +466,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const data = await ArmadoJsonCable();
     if (await ask("¿Desea guardar la ficha?")) {
       await guardarSoporte(data);
-
       window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
     }
   });

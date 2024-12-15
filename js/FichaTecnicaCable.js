@@ -256,7 +256,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     } else {
       jsonCable = {
-        paquete: txtPaquete,
+        plan: txtPaquete,
         periodo: txtPeriodo,
         pagoinstalacion: parseFloat(txtPagoInst),
         potencia: txtPotencia,

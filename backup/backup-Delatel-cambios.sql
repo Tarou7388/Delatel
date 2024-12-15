@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: localhost
--- Tiempo de generación: 13-12-2024 a las 15:03:04
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 15-12-2024 a las 22:58:40
 -- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
+-- Versión de PHP: 8.1.25
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,11 +18,11 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `Delatel`
+-- Base de datos: `delatel`
 --
 DROP DATABASE IF EXISTS `Delatel`;
 CREATE DATABASE IF NOT EXISTS `Delatel` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `Delatel`;
+USE `delatel`;
 
 DELIMITER $$
 --
@@ -529,7 +529,6 @@ DROP PROCEDURE IF EXISTS `spu_empresas_registrar`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_empresas_registrar` (`p_ruc` VARCHAR(11), `p_representante_legal` VARCHAR(70), `p_razon_social` VARCHAR(100), `p_nombre_comercial` VARCHAR(100), `p_telefono` CHAR(9), `p_email` VARCHAR(100), `p_iduser_create` INT)   BEGIN
     INSERT INTO tb_empresas (ruc, representante_legal, razon_social, nombre_comercial, telefono, email, iduser_create) 
     VALUES (p_ruc, p_representante_legal, p_razon_social, p_nombre_comercial, p_telefono, p_email, p_iduser_create);
-    
     SELECT LAST_INSERT_ID() AS id_empresa;
 END$$
 
@@ -587,19 +586,16 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_kardex_registrar` (IN `p_id_alm
     DECLARE v_saldo_kardex_actual DECIMAL(10,2) DEFAULT 0;
     DECLARE v_movimiento CHAR(1);
     DECLARE v_nuevo_saldo DECIMAL(10,2);
-
     -- Obtener el tipo de movimiento (E para entrada, S para salida)
     SELECT movimiento
     INTO v_movimiento
     FROM tb_tipooperacion
     WHERE id_tipooperacion = p_id_tipooperacion
     LIMIT 1;
-
     -- Validar si el tipo de operación existe
     IF v_movimiento IS NULL THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Tipo de operación no encontrado.';
     END IF;
-
     -- Obtener el saldo actual del producto específico por almacén o 0 si no existen registros previos
     SELECT COALESCE(saldo_total, 0)
     INTO v_saldo_kardex_actual
@@ -608,7 +604,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_kardex_registrar` (IN `p_id_alm
     AND id_almacen = p_id_almacen
     ORDER BY create_at DESC
     LIMIT 1;
-
     -- Calcular el nuevo saldo en función del tipo de movimiento
     IF v_movimiento = 'S' THEN
         -- Verificar que hay suficiente saldo para la salida
@@ -621,7 +616,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_kardex_registrar` (IN `p_id_alm
         -- Realizar la suma para entrada
         SET v_nuevo_saldo = v_saldo_kardex_actual + p_cantidad;
     END IF;
-
     -- Insertar el movimiento en el kardex para el almacén específico
     INSERT INTO tb_kardex (
         id_almacen,
@@ -1082,6 +1076,15 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_soporte_actualizar` (IN `p_id_s
     WHERE id_soporte = p_id_soporte;
 END$$
 
+DROP PROCEDURE IF EXISTS `spu_soporte_eliminarbyId`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_soporte_eliminarbyId` (IN `p_id_soporte` INT, IN `p_iduser_inactive` INT)   BEGIN
+    UPDATE tb_soporte
+    SET
+        inactive_at = NOW(),
+        iduser_inactive = p_iduser_inactive
+    WHERE id_soporte = p_id_soporte;
+END$$
+
 DROP PROCEDURE IF EXISTS `spu_soporte_ficha_doc`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_soporte_ficha_doc` (IN `p_idsoporte` INT)   BEGIN
     SELECT 
@@ -1139,7 +1142,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_soporte_filtrar_prioridad` (IN 
     LEFT JOIN 
         tb_empresas e ON cl.id_empresa = e.id_empresa
     WHERE
-        (p_prioridad = "" OR s.prioridad = p_prioridad);
+        (p_prioridad = "" OR s.prioridad = p_prioridad) AND s.inactive_at IS NULL;
 END$$
 
 DROP PROCEDURE IF EXISTS `spu_tipo_soporte_registrar`$$
@@ -1205,7 +1208,8 @@ DELIMITER ;
 --
 -- Estructura de tabla para la tabla `tb_almacen`
 --
--- Creación: 12-12-2024 a las 14:53:58
+-- Creación: 15-12-2024 a las 21:54:44
+-- Última actualización: 15-12-2024 a las 21:54:44
 --
 
 DROP TABLE IF EXISTS `tb_almacen`;
@@ -1241,7 +1245,7 @@ INSERT INTO `tb_almacen` (`id_almacen`, `nombre_almacen`, `ubicacion`, `coordena
 --
 -- Estructura de tabla para la tabla `tb_cajas`
 --
--- Creación: 12-12-2024 a las 14:53:57
+-- Creación: 15-12-2024 a las 21:54:44
 --
 
 DROP TABLE IF EXISTS `tb_cajas`;
@@ -1289,7 +1293,7 @@ INSERT INTO `tb_cajas` (`id_caja`, `nombre`, `descripcion`, `numero_entradas`, `
 --
 -- Estructura de tabla para la tabla `tb_clientes`
 --
--- Creación: 12-12-2024 a las 14:53:58
+-- Creación: 15-12-2024 a las 21:54:44
 --
 
 DROP TABLE IF EXISTS `tb_clientes`;
@@ -1416,7 +1420,7 @@ INSERT INTO `tb_clientes` (`id_cliente`, `id_persona`, `id_empresa`, `direccion`
 --
 -- Estructura de tabla para la tabla `tb_contactabilidad`
 --
--- Creación: 12-12-2024 a las 14:53:58
+-- Creación: 15-12-2024 a las 21:54:44
 --
 
 DROP TABLE IF EXISTS `tb_contactabilidad`;
@@ -1483,7 +1487,7 @@ INSERT INTO `tb_contactabilidad` (`id_contactabilidad`, `id_persona`, `id_empres
 --
 -- Estructura de tabla para la tabla `tb_contratos`
 --
--- Creación: 12-12-2024 a las 14:53:58
+-- Creación: 15-12-2024 a las 21:54:45
 --
 
 DROP TABLE IF EXISTS `tb_contratos`;
@@ -1570,7 +1574,8 @@ INSERT INTO `tb_contratos` (`id_contrato`, `id_cliente`, `id_paquete`, `id_secto
 --
 -- Estructura de tabla para la tabla `tb_departamentos`
 --
--- Creación: 12-12-2024 a las 14:53:57
+-- Creación: 15-12-2024 a las 21:54:45
+-- Última actualización: 15-12-2024 a las 21:54:45
 --
 
 DROP TABLE IF EXISTS `tb_departamentos`;
@@ -1620,7 +1625,7 @@ INSERT INTO `tb_departamentos` (`id_departamento`, `departamento`) VALUES
 --
 -- Estructura de tabla para la tabla `tb_distritos`
 --
--- Creación: 12-12-2024 a las 14:53:57
+-- Creación: 15-12-2024 a las 21:54:45
 --
 
 DROP TABLE IF EXISTS `tb_distritos`;
@@ -3528,7 +3533,8 @@ INSERT INTO `tb_distritos` (`id_distrito`, `distrito`, `id_provincia`, `id_depar
 --
 -- Estructura de tabla para la tabla `tb_empresas`
 --
--- Creación: 12-12-2024 a las 14:53:58
+-- Creación: 15-12-2024 a las 21:54:45
+-- Última actualización: 15-12-2024 a las 21:54:45
 --
 
 DROP TABLE IF EXISTS `tb_empresas`;
@@ -3608,7 +3614,7 @@ INSERT INTO `tb_empresas` (`id_empresa`, `ruc`, `representante_legal`, `razon_so
 --
 -- Estructura de tabla para la tabla `tb_kardex`
 --
--- Creación: 12-12-2024 a las 14:53:59
+-- Creación: 15-12-2024 a las 21:54:45
 --
 
 DROP TABLE IF EXISTS `tb_kardex`;
@@ -3648,7 +3654,7 @@ CREATE TABLE IF NOT EXISTS `tb_kardex` (
 --
 -- Estructura de tabla para la tabla `tb_lineas`
 --
--- Creación: 12-12-2024 a las 14:53:57
+-- Creación: 15-12-2024 a las 21:54:45
 --
 
 DROP TABLE IF EXISTS `tb_lineas`;
@@ -3681,7 +3687,8 @@ CREATE TABLE IF NOT EXISTS `tb_lineas` (
 --
 -- Estructura de tabla para la tabla `tb_marca`
 --
--- Creación: 12-12-2024 a las 14:53:59
+-- Creación: 15-12-2024 a las 21:54:45
+-- Última actualización: 15-12-2024 a las 21:54:45
 --
 
 DROP TABLE IF EXISTS `tb_marca`;
@@ -3724,7 +3731,8 @@ INSERT INTO `tb_marca` (`id_marca`, `marca`, `inactive_at`, `iduser_inactive`, `
 --
 -- Estructura de tabla para la tabla `tb_mufas`
 --
--- Creación: 12-12-2024 a las 14:53:57
+-- Creación: 15-12-2024 a las 21:54:45
+-- Última actualización: 15-12-2024 a las 21:54:45
 --
 
 DROP TABLE IF EXISTS `tb_mufas`;
@@ -3763,7 +3771,8 @@ INSERT INTO `tb_mufas` (`id_mufa`, `nombre`, `descripcion`, `coordenadas`, `dire
 --
 -- Estructura de tabla para la tabla `tb_paquetes`
 --
--- Creación: 12-12-2024 a las 14:53:58
+-- Creación: 15-12-2024 a las 21:54:45
+-- Última actualización: 15-12-2024 a las 21:54:45
 --
 
 DROP TABLE IF EXISTS `tb_paquetes`;
@@ -3844,7 +3853,8 @@ INSERT INTO `tb_paquetes` (`id_paquete`, `id_servicio`, `paquete`, `precio`, `ve
 --
 -- Estructura de tabla para la tabla `tb_personas`
 --
--- Creación: 12-12-2024 a las 14:53:58
+-- Creación: 15-12-2024 a las 21:54:45
+-- Última actualización: 15-12-2024 a las 21:54:45
 --
 
 DROP TABLE IF EXISTS `tb_personas`;
@@ -3865,7 +3875,7 @@ CREATE TABLE IF NOT EXISTS `tb_personas` (
   `iduser_inactive` int(11) DEFAULT NULL,
   PRIMARY KEY (`id_persona`),
   UNIQUE KEY `perso_uk_nro_doc` (`nro_doc`,`tipo_doc`)
-) ;
+) ENGINE=InnoDB AUTO_INCREMENT=94 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- RELACIONES PARA LA TABLA `tb_personas`:
@@ -3975,7 +3985,7 @@ INSERT INTO `tb_personas` (`id_persona`, `tipo_doc`, `nro_doc`, `apellidos`, `no
 --
 -- Estructura de tabla para la tabla `tb_productos`
 --
--- Creación: 12-12-2024 a las 14:53:59
+-- Creación: 15-12-2024 a las 21:54:45
 --
 
 DROP TABLE IF EXISTS `tb_productos`;
@@ -4030,7 +4040,7 @@ INSERT INTO `tb_productos` (`id_producto`, `id_marca`, `id_tipo`, `id_unidad`, `
 --
 -- Estructura de tabla para la tabla `tb_provincias`
 --
--- Creación: 12-12-2024 a las 14:53:57
+-- Creación: 15-12-2024 a las 21:54:45
 --
 
 DROP TABLE IF EXISTS `tb_provincias`;
@@ -4255,7 +4265,7 @@ INSERT INTO `tb_provincias` (`id_provincia`, `provincia`, `id_departamento`) VAL
 --
 -- Estructura de tabla para la tabla `tb_responsables`
 --
--- Creación: 12-12-2024 a las 14:53:58
+-- Creación: 15-12-2024 a las 21:54:45
 --
 
 DROP TABLE IF EXISTS `tb_responsables`;
@@ -4298,7 +4308,8 @@ INSERT INTO `tb_responsables` (`id_responsable`, `id_usuario`, `id_rol`, `fecha_
 --
 -- Estructura de tabla para la tabla `tb_roles`
 --
--- Creación: 12-12-2024 a las 14:53:57
+-- Creación: 15-12-2024 a las 21:54:45
+-- Última actualización: 15-12-2024 a las 21:54:45
 --
 
 DROP TABLE IF EXISTS `tb_roles`;
@@ -4336,7 +4347,7 @@ INSERT INTO `tb_roles` (`id_rol`, `rol`, `permisos`, `create_at`, `update_at`, `
 --
 -- Estructura de tabla para la tabla `tb_sectores`
 --
--- Creación: 12-12-2024 a las 14:53:57
+-- Creación: 15-12-2024 a las 21:54:45
 --
 
 DROP TABLE IF EXISTS `tb_sectores`;
@@ -4399,7 +4410,8 @@ INSERT INTO `tb_sectores` (`id_sector`, `id_distrito`, `sector`, `descripcion`, 
 --
 -- Estructura de tabla para la tabla `tb_servicios`
 --
--- Creación: 12-12-2024 a las 14:53:57
+-- Creación: 15-12-2024 a las 21:54:45
+-- Última actualización: 15-12-2024 a las 21:54:45
 --
 
 DROP TABLE IF EXISTS `tb_servicios`;
@@ -4435,7 +4447,7 @@ INSERT INTO `tb_servicios` (`id_servicio`, `tipo_servicio`, `servicio`, `create_
 --
 -- Estructura de tabla para la tabla `tb_soporte`
 --
--- Creación: 12-12-2024 a las 14:53:58
+-- Creación: 15-12-2024 a las 21:54:45
 --
 
 DROP TABLE IF EXISTS `tb_soporte`;
@@ -4448,6 +4460,7 @@ CREATE TABLE IF NOT EXISTS `tb_soporte` (
   `fecha_hora_asistencia` datetime DEFAULT NULL,
   `descripcion_problema` text NOT NULL,
   `descripcion_solucion` text DEFAULT NULL,
+  `estaCompleto` tinyint(1) NOT NULL DEFAULT 0,
   `prioridad` varchar(50) DEFAULT 'Incidencia',
   `soporte` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT '{}' CHECK (json_valid(`soporte`)),
   `create_at` datetime NOT NULL DEFAULT current_timestamp(),
@@ -4477,7 +4490,8 @@ CREATE TABLE IF NOT EXISTS `tb_soporte` (
 --
 -- Estructura de tabla para la tabla `tb_tipooperacion`
 --
--- Creación: 12-12-2024 a las 14:53:59
+-- Creación: 15-12-2024 a las 21:54:45
+-- Última actualización: 15-12-2024 a las 21:54:45
 --
 
 DROP TABLE IF EXISTS `tb_tipooperacion`;
@@ -4516,7 +4530,8 @@ INSERT INTO `tb_tipooperacion` (`id_tipooperacion`, `descripcion`, `movimiento`)
 --
 -- Estructura de tabla para la tabla `tb_tipoproducto`
 --
--- Creación: 12-12-2024 a las 14:53:59
+-- Creación: 15-12-2024 a las 21:54:45
+-- Última actualización: 15-12-2024 a las 21:54:45
 --
 
 DROP TABLE IF EXISTS `tb_tipoproducto`;
@@ -4552,7 +4567,8 @@ INSERT INTO `tb_tipoproducto` (`id_tipo`, `tipo_nombre`, `create_at`, `update_at
 --
 -- Estructura de tabla para la tabla `tb_tipo_soporte`
 --
--- Creación: 12-12-2024 a las 14:53:57
+-- Creación: 15-12-2024 a las 21:54:45
+-- Última actualización: 15-12-2024 a las 21:54:45
 --
 
 DROP TABLE IF EXISTS `tb_tipo_soporte`;
@@ -4604,7 +4620,8 @@ INSERT INTO `tb_tipo_soporte` (`id_tipo_soporte`, `tipo_soporte`, `create_at`, `
 --
 -- Estructura de tabla para la tabla `tb_unidadmedida`
 --
--- Creación: 12-12-2024 a las 14:53:59
+-- Creación: 15-12-2024 a las 21:54:45
+-- Última actualización: 15-12-2024 a las 21:54:45
 --
 
 DROP TABLE IF EXISTS `tb_unidadmedida`;
@@ -4636,7 +4653,7 @@ INSERT INTO `tb_unidadmedida` (`id_unidad`, `unidad_nombre`, `create_at`, `updat
 --
 -- Estructura de tabla para la tabla `tb_usuarios`
 --
--- Creación: 12-12-2024 a las 14:53:58
+-- Creación: 15-12-2024 a las 21:54:45
 --
 
 DROP TABLE IF EXISTS `tb_usuarios`;
@@ -4994,11 +5011,11 @@ CREATE TABLE IF NOT EXISTS `vw_servicios_listar` (
 -- --------------------------------------------------------
 
 --
--- Estructura Stand-in para la vista `vw_servicios_listarTotal`
+-- Estructura Stand-in para la vista `vw_servicios_listartotal`
 -- (Véase abajo para la vista actual)
 --
-DROP VIEW IF EXISTS `vw_servicios_listarTotal`;
-CREATE TABLE IF NOT EXISTS `vw_servicios_listarTotal` (
+DROP VIEW IF EXISTS `vw_servicios_listartotal`;
+CREATE TABLE IF NOT EXISTS `vw_servicios_listartotal` (
 `id_servicio` int(11)
 ,`servicio` varchar(200)
 ,`create_at` datetime
@@ -5290,12 +5307,12 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- --------------------------------------------------------
 
 --
--- Estructura para la vista `vw_servicios_listarTotal`
+-- Estructura para la vista `vw_servicios_listartotal`
 --
-DROP TABLE IF EXISTS `vw_servicios_listarTotal`;
+DROP TABLE IF EXISTS `vw_servicios_listartotal`;
 
-DROP VIEW IF EXISTS `vw_servicios_listarTotal`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_servicios_listarTotal`  AS SELECT `s`.`id_servicio` AS `id_servicio`, `s`.`servicio` AS `servicio`, `s`.`create_at` AS `create_at`, `s`.`update_at` AS `update_at`, `s`.`inactive_at` AS `inactive_at`, `s`.`iduser_create` AS `iduser_create`, `s`.`iduser_update` AS `iduser_update`, `s`.`iduser_inactive` AS `iduser_inactive` FROM `tb_servicios` AS `s` ;
+DROP VIEW IF EXISTS `vw_servicios_listartotal`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_servicios_listartotal`  AS SELECT `s`.`id_servicio` AS `id_servicio`, `s`.`servicio` AS `servicio`, `s`.`create_at` AS `create_at`, `s`.`update_at` AS `update_at`, `s`.`inactive_at` AS `inactive_at`, `s`.`iduser_create` AS `iduser_create`, `s`.`iduser_update` AS `iduser_update`, `s`.`iduser_inactive` AS `iduser_inactive` FROM `tb_servicios` AS `s` ;
 
 -- --------------------------------------------------------
 

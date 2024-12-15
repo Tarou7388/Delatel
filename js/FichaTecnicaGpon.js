@@ -269,7 +269,7 @@ document.addEventListener("DOMContentLoaded", () => {
           document.querySelector("#contenidoCable").removeAttribute("hidden");
           document.getElementById("txtPagoInst").value = cable.pagoinstalacion || "";
           document.getElementById("txtPotenciaCable").value = cable.potencia || "";
-          document.getElementById("txtPlanCable").value = cable.planCable || "";
+          document.getElementById("txtPlanCable").value = cable.plan || "";
           document.getElementById("slcTriplexor").value = `${cable.triplexor?.requerido},${cable.triplexor?.cargador}` || "";
           document.getElementById("txtCantConector").value = cable.conector?.numeroconector || "";
           document.getElementById("txtPrecioConector").value = cable.conector?.precio || "";
@@ -385,7 +385,7 @@ document.addEventListener("DOMContentLoaded", () => {
     jsonData = {
       fibraOptica: {
         usuario: txtUsuario,
-        claveacceso: txtClaveAcceso,
+        claveAcceso: txtClaveAcceso,
         vlan: txtVlan,
         periodo: txtPeriodo,
         plan: txtPlan,
@@ -422,7 +422,7 @@ document.addEventListener("DOMContentLoaded", () => {
     jsonCable = {
       pagoinstalacion: parseFloat(txtPagoInst),
       potencia: txtPotencia,
-      planCable: txtPlanCable,
+      plan: txtPlanCable,
       triplexor: {
         requerido: slcTriplexor[0],
         cargador: slcTriplexor[1],

@@ -9,7 +9,7 @@
         <h5 class="modal-title" id="soporteModalLabel">Detalles del Soporte</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="container text-justify"><strong>Se encontraron varios servicios, seleccione el que se hara mantenimiento:</strong></div>
+      <div class="container text-justify"><strong>Se encontraron 2 o más servicios, seleccione al que se hara mantenimiento:</strong></div>
       <div class="modal-body">
         <!-- Body vacía para añadir contenido dinámico -->
       </div>

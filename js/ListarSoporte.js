@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
         div.textContent = `Servicio ${index + 1}: ${nombres[0].tipo_servicio}`;
 
         div.addEventListener('click', () => {
-          mostrarFichaServicio(nombres[0].tipo_servicio, data[0].id_soporte, nrodoc,coordenada);
+          mostrarFichaServicio(nombres[0].tipo_servicio, data[0].id_soporte, nrodoc, coordenada);
         });
 
         modalBody.appendChild(div);
@@ -36,11 +36,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const id = servicios[0];
       const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=obtenerServiciosId&idservicio=${id}`);
       const nombres = await respuesta.json();
-      mostrarFichaServicio(nombres[0].tipo_servicio, data[0].id_soporte, nrodoc,coordenada);
+      mostrarFichaServicio(nombres[0].tipo_servicio, data[0].id_soporte, nrodoc, coordenada);
     }
   }
 
-  function mostrarFichaServicio(tipoServicio, id_soporte, nro_doc,coordenada) {
+  function mostrarFichaServicio(tipoServicio, id_soporte, nro_doc, coordenada) {
     window.location.href = `${config.HOST}views/Soporte/Soporte${tipoServicio}?idsoporte=${id_soporte}&doc=${nro_doc}&tiposervicio=${tipoServicio}&coordenada=${coordenada}`;
   }
 
@@ -49,6 +49,27 @@ document.addEventListener("DOMContentLoaded", () => {
     const data = await respuesta.json();
     console.log(data);
     await recorrerIdServicio(data, data[0].nro_doc, data[0].coordenada);
+  }
+
+  async function inhabilitarSoporte(idsoport) {
+    const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        operacion: 'inhabilitarSoportebyID',
+        data: {
+          idSoporte: idsoport,
+          idUserInactive: user['idUsuario']
+        }
+      })
+    });
+    const data = await respuesta.json();
+    if (data) { 
+      showToast('Soporte eliminado correctamente', 'SUCCESS');
+      table.ajax.reload();
+    }
   }
 
   const table = inicializarDataTable(
@@ -101,7 +122,8 @@ document.addEventListener("DOMContentLoaded", () => {
         render: function (data, type, row) {
           const prioridad = row.prioridad ? row.prioridad.trim().toLowerCase() : "";
           const isDisabled = prioridad === "incidencia" ? "disabled" : "";
-          return `<button class="btnActualizar btn btn-primary" data-id="${row.id_soporte}" ${isDisabled}>Atender</button>`;
+          return `<button class="btnActualizar btn btn-primary" data-id="${row.id_soporte}" ${isDisabled}>Atender</button>
+                  <button class="btnEliminar btn btn-danger" data-id="${row.id_soporte}" >Eliminar</button>`;
         }
       }
     ],
@@ -117,10 +139,17 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 
 
-  $('.card-body').on('click', '.btnActualizar', function () {
+  $('.card-body').on('click', '.btnActualizar', async function () {
     let id_soporte = $(this).data('id');
     console.log("Se ha hecho clic en Editar con ID de soporte:", id_soporte);
-    obtenerDataSoporte(id_soporte);
+    await obtenerDataSoporte(id_soporte);
+  });
+
+  $('.card-body').on('click', '.btnEliminar', async function () {
+    let id_soporte = $(this).data('id');
+    if (await ask("¿Está seguro de eliminar este soporte?")) {
+      await inhabilitarSoporte(id_soporte);
+    }
   });
 
   var today = new Date().toISOString().split('T')[0];

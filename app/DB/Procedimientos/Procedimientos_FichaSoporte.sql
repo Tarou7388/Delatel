@@ -164,7 +164,7 @@ BEGIN
     LEFT JOIN 
         tb_empresas e ON cl.id_empresa = e.id_empresa
     WHERE
-        (p_prioridad = "" OR s.prioridad = p_prioridad);
+        (p_prioridad = "" OR s.prioridad = p_prioridad) AND s.inactive_at IS NULL;
 END $$
 
 DROP PROCEDURE IF EXISTS spu_soporte_ficha_doc$$
@@ -233,4 +233,19 @@ BEGIN
         AND coordenada = p_coordenada
     ORDER BY 
         update_at DESC LIMIT 1;
+END $$
+
+
+DROP PROCEDURE IF EXISTS spu_soporte_eliminarbyId$$
+
+CREATE PROCEDURE spu_soporte_eliminarbyId (
+    IN p_id_soporte INT,
+    IN p_iduser_inactive INT 
+)
+BEGIN
+    UPDATE tb_soporte
+    SET
+        inactive_at = NOW(),
+        iduser_inactive = p_iduser_inactive
+    WHERE id_soporte = p_id_soporte;
 END $$

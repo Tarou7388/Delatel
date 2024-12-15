@@ -110,6 +110,18 @@ class Soporte extends Conexion
     return $this->registrar($sql, $values);
   }
 
+  public function inhabilitarSoportebyID($params = [])
+  {
+    $sql = "CALL spu_soporte_eliminarbyId(?, ?)";
+
+    $values = [
+      $params['idSoporte'],
+      $params['idUserInactive']
+    ];
+
+    return $this->registrar($sql, $values);
+  }
+
   public function obtenerfichaSoporteporDoc($params = [])
   {
     $sql = "CALL spu_soporte_ficha_doc(?)";

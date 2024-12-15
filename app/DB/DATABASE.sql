@@ -280,6 +280,7 @@ CREATE TABLE tb_soporte (
     fecha_hora_asistencia DATETIME NULL,
     descripcion_problema TEXT NOT NULL,
     descripcion_solucion TEXT NULL,
+    estaCompleto BOOLEAN NOT NULL DEFAULT FALSE,
     prioridad VARCHAR(50) NULL DEFAULT "Incidencia",
     soporte JSON NULL DEFAULT '{}',
     create_at DATETIME NOT NULL DEFAULT NOW(),

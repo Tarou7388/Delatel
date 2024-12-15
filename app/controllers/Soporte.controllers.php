@@ -70,21 +70,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
   $datos = json_decode($Json, true);
   $operacion = ($datos['operacion']);
 
-  if ($operacion == 'actualizarSoporte') {
-    $values = [
-      'idSoporte'            => Herramientas::sanitizarEntrada($datos['data']['idSoporte']),
-      'idTecnico'            => Herramientas::sanitizarEntrada($datos['data']['idTecnico']),
-      'idTipoSoporte'        => Herramientas::sanitizarEntrada($datos['data']['idTipoSoporte']),
-      'fechaHoraAsistencia'  => date("Y-m-d H:i:s"),
-      'soporte'              => $datos['data']['soporte'],
-      'idUserUpdate'         => Herramientas::sanitizarEntrada($datos['data']['idUserUpdate']),
-      'descripcion_solucion'         => Herramientas::sanitizarEntrada($datos['data']['descripcion_solucion'])
-    ];
+  switch ($operacion) {
+    case 'actualizarSoporte':
+      $values = [
+        'idSoporte'            => Herramientas::sanitizarEntrada($datos['data']['idSoporte']),
+        'idTecnico'            => Herramientas::sanitizarEntrada($datos['data']['idTecnico']),
+        'idTipoSoporte'        => Herramientas::sanitizarEntrada($datos['data']['idTipoSoporte']),
+        'fechaHoraAsistencia'  => date("Y-m-d H:i:s"),
+        'soporte'              => $datos['data']['soporte'],
+        'idUserUpdate'         => Herramientas::sanitizarEntrada($datos['data']['idUserUpdate']),
+        'descripcion_solucion'         => Herramientas::sanitizarEntrada($datos['data']['descripcion_solucion'])
+      ];
 
-    $status = $soporte->actualizarSoporte($values);
-    echo json_encode([
-      'status' => $status ? 'success' : 'error',
-      'message' => $status ? 'Soporte actualizado correctamente' : 'Error al actualizar soporte'
-    ]);
+      $status = $soporte->actualizarSoporte($values);
+      echo json_encode([
+        'status' => $status ? 'success' : 'error',
+        'message' => $status ? 'Soporte actualizado correctamente' : 'Error al actualizar soporte'
+      ]);
+      break;
+    case 'inhabilitarSoportebyID':
+      $values = [
+        'idSoporte' => Herramientas::sanitizarEntrada($datos['data']['idSoporte']),
+        'idUserInactive' => Herramientas::sanitizarEntrada($datos['data']['idUserInactive'])
+      ];
+      $status = $soporte->inhabilitarSoportebyID($values);
+      echo json_encode ($status);
+      break;
   }
 }

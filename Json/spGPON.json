@@ -1,0 +1,95 @@
+{
+  "fibraOptica": {
+    "usuario": "BRAMES32",
+    "claveAcceso": "@BRAMES32",
+    "vlan": "1100",
+    "periodo": "2025-06-15",
+    "plan": "Plan Internet Duo Plata",
+    "potencia": -30,
+    "moden": {
+      "ssid": "Modems",
+      "seguridad": "Sin seguridad",
+      "codigoBarra": 1234567890123,
+      "marca": "",
+      "modelo": "",
+      "serie": "1234567890123AFDJBSD",
+      "banda": [
+        "5G"
+      ],
+      "numeroantena": 2,
+      "catv": false
+    },
+    "detalles": "Detalle cable",
+    "repetidores": [
+      {
+        "numero": 1,
+        "ssid": "ASDJKFNSUIJDF",
+        "contrasenia": "ASDJKFNSUIJDF",
+        "codigoBarra": "1234567890123",
+        "modelo": "Router",
+        "marca": "TP Link",
+        "precio": "150.00",
+        "serie": "ASDJKFNSUIJDF",
+        "ip": "192.168.215.456",
+        "condicion": "venta"
+      }
+    ]
+  },
+  "idCaja": "8",
+  "cable": {
+    "pagoinstalacion": 30,
+    "potencia": "-7",
+    "plan": "Plan Internet Duo Plata",
+    "triplexor": {
+      "requerido": "false",
+      "cargador": " false"
+    },
+    "conector": {
+      "numeroconector": 2,
+      "precio": 1.5
+    },
+    "splitter": [
+      {
+        "cantidad": 1,
+        "tipo": "Elige una opci\u00f3n"
+      }
+    ],
+    "cable": {
+      "metrosadicionales": 23,
+      "preciometro": 1.3
+    },
+    "sintonizadores": [
+      {
+        "numero": 1,
+        "codigoBarra": "1234567890123",
+        "marca": "TP Link",
+        "modelo": "Router",
+        "serie": "1234567890123awasfd",
+        "precio": "150.00"
+      }
+    ]
+  },
+  "costo": {
+    "pagoAdelantado": "200",
+    "descuento": "0",
+    "nap": {
+      "gpon": "-30",
+      "catv": "-30"
+    },
+    "casa": {
+      "gpon": "-30",
+      "catv": "-30"
+    },
+    "cableCosto": {
+      "numerosintotizadores": 1,
+      "costoAlquilerSintotizador": 40,
+      "costoCable": 0,
+      "costoConector": 0,
+      "cantidadCable": "23",
+      "precioCable": "1.30",
+      "precioConector": "1.50",
+      "cantidadConector": "2",
+      "detalle": "-30"
+    }
+  }
+}

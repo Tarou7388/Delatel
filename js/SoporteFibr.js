@@ -6,7 +6,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const urlParams = new URLSearchParams(window.location.search);
   const serv = urlParams.get("tiposervicio");
   const form = document.getElementById("frm-registro-gpon");
-  let fibraFiltrado = null;
   //Parametros tecnicos de la ficha
   const txtPlan = document.getElementById("txtPlan");
   const txtCliente = document.getElementById("txtCliente");
@@ -67,8 +66,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const respuesta = await FichaSoportePorId(doc, tiposervicio, coordenada);
 
     if (respuesta[0].soporte != "{}") {
-      console.log(respuesta);
-      await cargardatos(JSON.parse(respuesta[0].soporte).FIBR);
+      if (JSON.parse(respuesta[0].soporte).FIBR) {
+        await cargardatos(JSON.parse(respuesta[0].soporte).FIBR);
+      }
+      else {
+        await llenadoDeDatos(doc, idSoporte);
+      }
     } else {
       await llenadoDeDatos(doc, idSoporte);
     }
@@ -105,14 +108,20 @@ document.addEventListener("DOMContentLoaded", () => {
     chkCatv.checked = data.cambiosgpon.catv;
     //Asignar la VLAN
     txtVlan.value = data.cambiosgpon.vlan;
-    //Asignar el repetidor
-    console.log(data.cambiosgpon.repetidor);
-    await cargarRepetidores(data.cambiosgpon.repetidor)
 
     //Asignacion de los campos que no pueden cambiar sin procesos externos
     txtCambiosPppoe.value = data.cambiosgpon.pppoe;
     txtCambiosClave.value = data.cambiosgpon.clave;
     txtCambiosVlan.value = data.cambiosgpon.vlan;
+
+    //Asignar el repetidor
+    console.log(data.cambiosgpon);
+
+    if (!data.cambiosgpon.repetidor || data.cambiosgpon.repetidor == null) {
+      console.log(data.cambiosgpon);
+      await cargardatosModem(data.cambiosgpon);
+    }
+    await cargarRepetidores(data.cambiosgpon.repetidor);
   }
 
   function crearSelectYBoton() {
@@ -183,8 +192,6 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const respuesta = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${doct}`);
       const data = await respuesta.json();
-      console.log(doct);
-      console.log(data[0].nombre);
       //Asignacion del Nombre del cliente
       txtCliente.value = data[0].nombre;
       //Asignacion del Documento del cliente
@@ -230,8 +237,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // DATOS MODEN
       // Asignacion repetidores
-      console.log(fibraFiltrado.repetidores);
-      await cargarRepetidores(fibraFiltrado.repetidores)
+      if (!fibraFiltrado.repetidores) {
+        console.log(fibraFiltrado);
+        await cargardatosModem(fibraFiltrado);
+        return;
+      } else {
+        await cargarRepetidores(fibraFiltrado.repetidores)
+      }
 
     } catch (error) {
       console.error("Error en data de Fibra:", error);
@@ -239,24 +251,25 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   async function cargarRepetidores(repetidorJson) {
-    const slcRpetidor = document.getElementById('slcRpetidor');
-    console.log(repetidorJson);
-    if (Array.isArray(repetidorJson) && repetidorJson.length > 0) {
-      slcRpetidor.innerHTML = '';
+    if (repetidorJson) {
+      const slcRpetidor = document.getElementById('slcRpetidor');
+      if (Array.isArray(repetidorJson) && repetidorJson.length > 0) {
+        slcRpetidor.innerHTML = '';
 
-      repetidorJson.forEach(repetidor => {
-        const option = document.createElement('option');
-        option.value = repetidor.numero;
-        option.text = `${repetidor.ssid} (${repetidor.ip})`;
-        slcRpetidor.appendChild(option);
-      });
+        repetidorJson.forEach(repetidor => {
+          const option = document.createElement('option');
+          option.value = repetidor.numero;
+          option.text = `${repetidor.ssid} (${repetidor.ip})`;
+          slcRpetidor.appendChild(option);
+        });
 
-      slcRpetidor.selectedIndex = 1;
+        slcRpetidor.selectedIndex = 0;
 
-      const changeEvent = new Event('change');
-      slcRpetidor.dispatchEvent(changeEvent);
-    } else {
-      console.error('No se encontraron repetidores o el formato es incorrecto.');
+        const changeEvent = new Event('change');
+        slcRpetidor.dispatchEvent(changeEvent);
+      } else {
+        console.error('No se encontraron repetidores o el formato es incorrecto.');
+      }
     }
   }
 
@@ -268,27 +281,35 @@ document.addEventListener("DOMContentLoaded", () => {
   async function cargarEnInputs() {
     try {
       const selectedValue = parseInt(slcRpetidor.value);
-      const nombreRepetidor = slcRpetidor.options[slcRpetidor.selectedIndex].text;
+      const nombreRepetidor = slcRpetidor.options[slcRpetidor.selectedIndex]?.text || "Sin nombre";
       const coordenada = urlParams.get("coordenada");
-
+      const respuesta = await FichaSoporte(idSoporte);
       const respuesta2 = await FichaSoportePorId(txtNrodocumento.value, serv, coordenada);
 
-      if (respuesta2[0].soporte =="{}") {
-        const respuesta = await FichaSoporte(idSoporte);
-        fibraFiltrado = JSON.parse(respuesta[0].ficha_instalacion).fibraOptica.repetidores;
-        console.log(fibraFiltrado);
+      let fibraFiltrado = null;
+      let datosgenerales = null;
+      if (!respuesta2[0]?.soporte || respuesta2[0]?.soporte === "{}" || !JSON.parse(respuesta2[0].soporte)?.FIBR) {
+        const fichaInstalacion = JSON.parse(respuesta[0]?.ficha_instalacion || "{}");
+        fibraFiltrado = fichaInstalacion?.fibraOptica?.repetidores || null;
+        datosgenerales = fichaInstalacion?.fibraOptica || null;
       } else {
-        fibraFiltrado = JSON.parse(respuesta2[0].soporte).FIBR.cambiosgpon.repetidor;
+        const soporte = JSON.parse(respuesta2[0]?.soporte || "{}");
+        fibraFiltrado = soporte?.FIBR?.cambiosgpon?.repetidor || null;
+        datosgenerales = soporte?.FIBR?.cambiosgpon || null;
       }
-
+      if (!fibraFiltrado) {
+        console.log(datosgenerales);
+        await cargardatosModem(datosgenerales);
+        return;
+      }
       const repetidorSeleccionado = fibraFiltrado.find(
-        repetidor => repetidor.numero === selectedValue
+        (repetidor) => repetidor.numero === selectedValue
       );
 
       if (repetidorSeleccionado) {
-        txtIp.value = repetidorSeleccionado.ip;
-        txtSsid.value = repetidorSeleccionado.ssid;
-        txtPass.value = repetidorSeleccionado.contrasenia;
+        txtIp.value = repetidorSeleccionado.ip || "";
+        txtSsid.value = repetidorSeleccionado.ssid || "";
+        txtPass.value = repetidorSeleccionado.contrasenia || "";
         txtRepetidor.value = nombreRepetidor;
       } else {
         console.warn("No se encontró un repetidor con el valor seleccionado.");
@@ -296,6 +317,18 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (error) {
       console.error("Error al cargar datos del repetidor:", error);
     }
+  }
+
+
+  //Funcion para cargar los datos del modem en caso no haya repetidor
+  async function cargardatosModem(DatoModem) {
+    console.log(DatoModem);
+    slcRpetidor.innerHTML = 'No hay repetidores';
+    slcRpetidor.disabled = true;
+    //txtIp.value = DatoModem.moden.ip;
+    txtSsid.value = DatoModem.moden.ssid;
+    txtPass.value = DatoModem.moden.seguridad;
+    txtRepetidor.value = "No hay repetidores";
   }
 
 
@@ -321,14 +354,16 @@ document.addEventListener("DOMContentLoaded", () => {
           pppoe: document.getElementById("txtPppoe").value,
           clave: document.getElementById("txtClave").value,
           potencia: document.getElementById("txtPotencia").value,
+          moden: JSON.parse(JSON.stringify(fibraFiltrado.moden)),
           catv: document.getElementById("chkCatv").checked,
           vlan: document.getElementById("txtVlan").value,
-          repetidor: JSON.parse(JSON.stringify(fibraFiltrado.repetidores))
+          repetidor: fibraFiltrado.repetidores ? JSON.parse(JSON.stringify(fibraFiltrado.repetidores)) : null
         },
         cambiosgpon: {
           pppoe: txtCambiosPppoe.value,
           clave: txtCambiosClave.value,
           potencia: txtCambiosPotencia.value,
+          moden: await modificadoModem(fibraFiltrado.moden),
           catv: chkCambiosCatv.checked,
           vlan: txtCambiosVlan.value,
           repetidor: await moficadoRepetidor(fibraFiltrado.repetidores)
@@ -340,6 +375,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function moficadoRepetidor(repetidores) {
+    if (!repetidores) {
+      return null;
+    }
     console.log(repetidores);
     const selectedValue = parseInt(slcRpetidor.value);
     return repetidores.map(repetidor => {
@@ -350,6 +388,14 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       return repetidor;
     });
+  }
+
+  async function modificadoModem(modem) {
+    modem.ssid = txtCambiosSsid.value;
+    modem.seguridad = txtCambiosPass.value;
+    //modem.ip = txtCambiosIp.value;
+    console.log(modem);
+    return modem;
   }
 
   async function guardarSoporte(data) {

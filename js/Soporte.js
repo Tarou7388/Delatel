@@ -50,7 +50,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  
+
   function mostrarSelectorResultados(data) {
     const select = document.createElement('select');
     select.classList.add('form-select', 'mb-3');
@@ -84,15 +84,23 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     try {
+      slcContratos.innerHTML = "";
+
+      const opcionInicial = document.createElement('option');
+      opcionInicial.value = "";
+      opcionInicial.disabled = true;
+      opcionInicial.selected = true;
+      opcionInicial.textContent = "Seleccione un Contrato";
+      slcContratos.appendChild(opcionInicial);
+
       const respuesta = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerContratoPorCliente&id=${clienteId}`);
       const datos = await respuesta.json();
-      console.log("Contratos obtenidos:", datos);
 
       if (Array.isArray(datos) && datos.length > 0) {
         datos.forEach(element => {
           const option = document.createElement('option');
           option.value = element.id_contrato;
-          option.textContent = ` | ${element.tipos_servicio} |${element.direccion_servicio}`;
+          option.textContent = ` | ${element.tipos_servicio} | ${element.direccion_servicio}`;
           option.dataset.nota = element.nota;
           option.dataset.direccion = element.direccion_servicio;
           slcContratos.appendChild(option);
@@ -101,12 +109,9 @@ window.addEventListener('DOMContentLoaded', () => {
         if (datos.length === 1) {
           slcContratos.selectedIndex = 1;
           const unicoContrato = datos[0];
-          console.log(unicoContrato);
           txtContratoObservacion.value = `${unicoContrato.nota} | ${unicoContrato.direccion_servicio}`;
           idContratoSeleccionado = unicoContrato.id_contrato;
         }
-      } else {
-        console.log("No se encontraron contratos para el cliente especificado.");
       }
     } catch (error) {
       console.error("Error al obtener contratos:", error);
@@ -125,6 +130,8 @@ window.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+
 
   // Función: Buscar contrato por documento
   async function BuscarcontratoNDoc(numdocumento) {
