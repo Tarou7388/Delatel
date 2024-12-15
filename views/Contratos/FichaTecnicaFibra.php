@@ -270,9 +270,9 @@ $idContrato = $_GET['idContrato'];
         </div>
         <div class="row">
           <div class="col-12 text-center text-md-end mb-3 btn-container d-grid gap-2 d-md-flex justify-content-md-end">
-            <button type="button" id="btnReporte" class="btn btn-info px-4 py-2">
+            <!-- <button type="button" id="btnReporte" class="btn btn-info px-4 py-2">
               <i class="fas fa-file-alt"></i> Generar Reporte
-            </button>
+            </button> -->
             <button type="button" id="btnGuardar" class="btn btn-success px-4 py-2">
               <i class="fas fa-save"></i> Guardar
             </button>

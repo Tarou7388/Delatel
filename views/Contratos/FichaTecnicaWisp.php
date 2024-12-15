@@ -100,7 +100,7 @@ $idContrato = $_GET['idContrato'];
             <div class="form-floating">
               <input type="number" id="txtSignalStrengthParametros" class="form-control"
                 placeholder="Signal Strength" required min="-90" max="-20">
-                <div class="invalid-feedback">Por favor, ingrese su valor válido (-90 a -20).</div>
+              <div class="invalid-feedback">Por favor, ingrese su valor válido (-90 a -20).</div>
               <label for="txtSignalStrengthParametros">Signal Strength <span class="text-danger">*</span></label>
             </div>
             <span class="input-group-text">dBm</span>
@@ -109,7 +109,7 @@ $idContrato = $_GET['idContrato'];
             <div class="form-floating">
               <input type="number" id="txtNoiseFloorParametros" class="form-control"
                 placeholder="Noise Floor" required min="-100" max="-30">
-                <div class="invalid-feedback">Por favor, ingrese su valor válido (-100 a -30).</div>
+              <div class="invalid-feedback">Por favor, ingrese su valor válido (-100 a -30).</div>
               <label for="txtNoiseFloorParametros">Noise Floor <span class="text-danger">*</span></label>
             </div>
             <span class="input-group-text">dBm</span>
@@ -118,7 +118,7 @@ $idContrato = $_GET['idContrato'];
             <div class="form-floating">
               <input type="number" id="txtTransmiTccqParametros" class="form-control"
                 placeholder="Transmit CCQ" required min="40" max="100">
-                <div class="invalid-feedback">Por favor, ingrese su valor válido (40 a 100).</div>
+              <div class="invalid-feedback">Por favor, ingrese su valor válido (40 a 100).</div>
               <label for="txtTransmiTccqParametros">Transmit CCQ <span class="text-danger">*</span></label>
             </div>
             <span class="input-group-text">%</span>
@@ -130,7 +130,7 @@ $idContrato = $_GET['idContrato'];
             <div class="form-floating">
               <input type="number" id="txtTxRateParametros" class="form-control" placeholder="TX Rate"
                 required min="20.00" max="90.00" step="0.01">
-                <div class="invalid-feedback">Por favor, ingrese su valor válido (20.00 a 90.00).</div>
+              <div class="invalid-feedback">Por favor, ingrese su valor válido (20.00 a 90.00).</div>
               <label for="txtTxRateParametros">TX Rate <span class="text-danger">*</span></label>
             </div>
           </div>
@@ -138,7 +138,7 @@ $idContrato = $_GET['idContrato'];
             <div class="form-floating">
               <input type="number" id="txtRxRateParametros" class="form-control" placeholder="RX Rate"
                 required min="20.00" max="90.00" step="0.01">
-                <div class="invalid-feedback">Por favor, ingrese su valor válido (20.00 a 90.00).</div>
+              <div class="invalid-feedback">Por favor, ingrese su valor válido (20.00 a 90.00).</div>
               <label for="txtRxRateParametros">RX Rate <span class="text-danger">*</span></label>
             </div>
           </div>
@@ -313,159 +313,90 @@ $idContrato = $_GET['idContrato'];
           <h4 class="ms-3">Detalle Equipo Venta</h4>
           <div class="card-body">
 
-            <!-- Fila de Costo Antena, Antena y Router -->
-            <div class="row mb-2">
-              <div class="col-12 col-md-4 mt-1">
-                <div class="form-floating">
-                  <input type="text" class="form-control" id="txtCostoAntenaVenta"
-                    placeholder="Costo Antena" disabled>
-                  <label for="txtCostoAntenaVenta">Costo Antena</label>
-                </div>
-              </div>
-              <div class="col-12 col-md-4 mt-1">
+            <!-- Fila de Antena, Router y Costo -->
+            <div class="row mb-3"> <!-- Añadí mb-3 para separar de la fila superior -->
+              <!-- Columna de Antena -->
+              <div class="col-12 col-md-4 mt-2">
                 <div class="antena-header p-3 text-center border py-3">Antena</div>
-              </div>
-              <div class="col-12 col-md-4 mt-1">
-                <div class="router-header p-3 text-center border py-3">Router</div>
-              </div>
-
-            </div>
-
-            <!-- Fila de Costo Router, Marca Antena y Marca Router -->
-            <div class="row mb-2">
-              <div class="col-12 col-md-4 mt-1">
-                <div class="form-floating">
-                  <input type="text" min="0" class="form-control" id="txtCostoRouterVenta"
-                    placeholder="Costo Router" disabled>
-                  <label for="txtCostoRouterVenta">Costo Router</label>
+                <div class="form-floating mt-2">
+                  <input type="text" class="form-control" id="txtMacVentaAntena" placeholder="MAC">
+                  <label for="txtMacVentaAntena">MAC <span class="text-danger">*</span></label>
                 </div>
-              </div>
-
-              <div class="col-12 col-md-4 mt-1">
-                <div class="form-floating">
-                  <input type="text" class="form-control" id="txtMacVentaRouter"
-                    placeholder="MAC">
-                  <label for="txtMacVentaRouter">MAC  <span class="text-danger">*</span></label>
-                </div>
-              </div>
-
-              <div class="col-12 col-md-4 mt-1">
-                <div class="input-group">
-                  <div class="form-floating flex-fill">
-                    <input type="text" class="form-control" id="txtMacVentaAntena"
-                      placeholder="MAC">
-                    <label for="txtMacVentaAntena">MAC  <span class="text-danger">*</span></label>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Fila de SubTotal, Modelo Antena y Modelo Router -->
-            <div class="row mb-2">
-              <div class="col-12 col-md-4 mt-1">
-                <div class="form-floating">
-                  <input type="text" min="0" class="form-control" id="txtSubTotalVenta"
-                    placeholder="SubTotal" disabled>
-                  <label for="txtSubTotalVenta">SubTotal</label>
-                </div>
-              </div>
-
-              <div class="col-12 col-md-4 mt-1">
-                <div class="form-floating">
-                  <input type="text" id="txtMarcaVentaAntena" class="form-control"
-                    placeholder="Marca" disabled>
+                <div class="form-floating mt-2">
+                  <input type="text" id="txtMarcaVentaAntena" class="form-control" placeholder="Marca" disabled>
                   <label for="txtMarcaVentaAntena" class="form-label mb-0">Marca</label>
                 </div>
-              </div>
-
-              <div class="col-12 col-md-4 mt-1">
-                <div class="form-floating">
-                  <input type="text" id="txtMarcaVentaRouter" class="form-control"
-                    placeholder="Marca" disabled>
-                  <label for="txtMarcaVentaRouter" class="form-label mb-0">Marca</label>
-                </div>
-              </div>
-            </div>
-
-            <!-- Fila de Adelanto, MAC Antena y MAC Router -->
-            <div class="row mb-2">
-              <div class="col-12 col-md-4 mt-1">
-                <div class="form-floating">
-                  <input type="text" min="0" class="form-control" id="txtAdelantoVenta"
-                    placeholder="Adelanto">
-                  <label for="txtAdelantoVenta">Adelanto  <span class="text-danger">*</span></label>
-                </div>
-              </div>
-
-              <div class="col-12 col-md-4 mt-1">
-                <div class="form-floating">
-                  <input type="text" id="txtModeloVentaAntena" placeholder="Modelo"
-                    class="form-control" disabled>
+                <div class="form-floating mt-2">
+                  <input type="text" id="txtModeloVentaAntena" placeholder="Modelo" class="form-control" disabled>
                   <label for="txtModeloVentaAntena">Modelo</label>
                 </div>
-              </div>
-              <div class="col-12 col-md-4 mt-1">
-                <div class="form-floating">
-                  <input type="text" id="txtModeloVentaRouter" placeholder="Modelo"
-                    class="form-control" disabled>
-                  <label for="txtModeloVentaRouter">Modelo</label>
+                <div class="form-floating mt-2">
+                  <input type="text" class="form-control" id="txtSerialVentaAntena" placeholder="Serial">
+                  <label for="txtSerialVentaAntena">Serial <span class="text-danger">*</span></label>
                 </div>
-              </div>
-            </div>
-
-            <!-- Fila de Saldo Equipos, Descripción Antena y Descripción Router -->
-            <div class="row mb-2">
-              <div class="col-12 col-md-4 mt-1">
-                <div class="form-floating">
-                  <input type="text" min="0" class="form-control" id="txtSaldoEquipoVenta"
-                    placeholder="Saldo Equipos">
-                  <label for="txtSaldoEquipoVenta">Saldo Equipos  <span class="text-danger">*</span></label>
-                </div>
-              </div>
-              <div class="col-12 col-md-4 mt-1">
-                <div class="form-floating">
-                  <input type="text" class="form-control" id="txtSerialVentaRouter"
-                    placeholder="Serial">
-                  <label for="txtSerialVentaRouter">Serial  <span class="text-danger">*</span></label>
-                </div>
-              </div>
-              <div class="col-12 col-md-4 mt-1">
-                <div class="form-floating">
-                  <input type="text" class="form-control" id="txtSerialVentaAntena"
-                    placeholder="Serial">
-                  <label for="txtSerialVentaAntena">Serial  <span class="text-danger">*</span></label>
-                </div>
-              </div>
-            </div>
-
-            <!-- Fila de Material Adicional -->
-            <div class="row mb-2">
-              <div class="col-12 col-md-4 mt-1">
-                <div class="form-floating">
-                  <input type="number" min="0" class="form-control" id="txtMaterialAdicionalVenta"
-                    placeholder="Material Adicional">
-                  <label for="txtMaterialAdicionalVenta">Material Adicional <span class="text-danger">*</span></label>
-                </div>
-              </div>
-              <div class="col-12 col-md-4 mt-1">
-                <div class="form-floating">
-                  <input type="text" class="form-control" id="txtDescripcionVentaAntena"
-                    placeholder="Descripción">
+                <div class="form-floating mt-2">
+                  <input type="text" class="form-control" id="txtDescripcionVentaAntena" placeholder="Descripción">
                   <label for="txtDescripcionVentaAntena">Descripción <span class="text-danger">*</span></label>
                 </div>
               </div>
-              <div class="col-12 col-md-4 mt-1">
-                <div class="form-floating">
-                  <input type="text" class="form-control" id="txtDescripcionVentaRouter"
-                    placeholder="Descripción">
+
+              <!-- Columna de Router -->
+              <div class="col-12 col-md-4 mt-2">
+                <div class="router-header p-3 text-center border py-3">Router</div>
+                <div class="form-floating mt-2">
+                  <input type="text" class="form-control" id="txtMacVentaRouter" placeholder="MAC">
+                  <label for="txtMacVentaRouter">MAC <span class="text-danger">*</span></label>
+                </div>
+                <div class="form-floating mt-2">
+                  <input type="text" id="txtMarcaVentaRouter" class="form-control" placeholder="Marca" disabled>
+                  <label for="txtMarcaVentaRouter" class="form-label mb-0">Marca</label>
+                </div>
+                <div class="form-floating mt-2">
+                  <input type="text" id="txtModeloVentaRouter" placeholder="Modelo" class="form-control" disabled>
+                  <label for="txtModeloVentaRouter">Modelo</label>
+                </div>
+                <div class="form-floating mt-2">
+                  <input type="text" class="form-control" id="txtSerialVentaRouter" placeholder="Serial">
+                  <label for="txtSerialVentaRouter">Serial <span class="text-danger">*</span></label>
+                </div>
+                <div class="form-floating mt-2">
+                  <input type="text" class="form-control" id="txtDescripcionVentaRouter" placeholder="Descripción">
                   <label for="txtDescripcionVentaRouter">Descripción <span class="text-danger">*</span></label>
+                </div>
+              </div>
+
+              <!-- Columna de Costo, Adelanto y Material -->
+              <div class="col-12 col-md-4">
+                <div class="form-floating mt-2">
+                  <input type="text" class="form-control" id="txtCostoAntenaVenta" placeholder="Costo Antena" disabled>
+                  <label for="txtCostoAntenaVenta">Costo Antena</label>
+                </div>
+                <div class="form-floating mt-2">
+                  <input type="text" min="0" class="form-control" id="txtCostoRouterVenta" placeholder="Costo Router" disabled>
+                  <label for="txtCostoRouterVenta">Costo Router</label>
+                </div>
+                <div class="form-floating mt-2">
+                  <input type="text" min="0" class="form-control" id="txtSubTotalVenta" placeholder="SubTotal" disabled>
+                  <label for="txtSubTotalVenta">SubTotal</label>
+                </div>
+                <div class="form-floating mt-2">
+                  <input type="text" min="0" class="form-control" id="txtAdelantoVenta" placeholder="Adelanto">
+                  <label for="txtAdelantoVenta">Adelanto <span class="text-danger">*</span></label>
+                </div>
+                <div class="form-floating mt-2">
+                  <input type="text" min="0" class="form-control" id="txtSaldoEquipoVenta" placeholder="Saldo Equipos">
+                  <label for="txtSaldoEquipoVenta">Saldo Equipos <span class="text-danger">*</span></label>
+                </div>
+                <div class="form-floating mt-2">
+                  <input type="number" min="0" class="form-control" id="txtMaterialAdicionalVenta" placeholder="Material Adicional">
+                  <label for="txtMaterialAdicionalVenta">Material Adicional <span class="text-danger">*</span></label>
                 </div>
               </div>
             </div>
 
             <!-- Condición de pago -->
-            <div class="row mb-2">
-              <div class="col-12 mt-1">
+            <div class="row mb-3"> <!-- Añadí mb-3 para separar de la fila superior -->
+              <div class="col-12 mt-2">
                 <span class="text-primary">Condición Pág.</span>
                 <div class="form-check form-check-inline ms-2">
                   <input class="form-check-input" type="checkbox" id="chkAdelantadoVenta">
@@ -473,18 +404,16 @@ $idContrato = $_GET['idContrato'];
                 </div>
                 <div class="form-check form-check-inline">
                   <input class="form-check-input" type="checkbox" id="chkCumpliendoMesVenta">
-                  <label class="form-check-label" for="chkCumpliendoMesVenta">Cumpliendo el
-                    Mes</label>
+                  <label class="form-check-label" for="chkCumpliendoMesVenta">Cumpliendo el Mes</label>
                 </div>
               </div>
             </div>
 
             <!-- Detalles adicionales -->
             <div class="row">
-              <div class="col-12">
+              <div class="col-12 mt-3"> <!-- Añadí mt-3 para separar de la fila superior -->
                 <div class="form-floating">
-                  <textarea class="form-control" rows="3" id="txtDetalleVenta"
-                    placeholder="Detalle"></textarea>
+                  <textarea class="form-control" rows="3" id="txtDetalleVenta" placeholder="Detalle"></textarea>
                   <label class="form-label" for="txtDetalleVenta">Detalles</label>
                 </div>
               </div>
@@ -493,135 +422,95 @@ $idContrato = $_GET['idContrato'];
           </div>
         </form>
 
-
-        <!-- Sección de Alquiler de Equipos (oculta inicialmente) -->
         <form id="frmAlquiler" class="hidden">
           <h4 class="ms-3">Detalle Equipos Alquilados / Prestados</h4>
           <div class="card-body">
 
-            <div class="row mb-2">
-              <div class="col-12 col-md-4 mt-1"></div>
-              <div class="col-12 col-md-4 mt-1">
-                <div class="antena-header p-3 text-center border py-3">Antena</div>
+            <!-- Fila de Antena, Router y Costo -->
+            <div class="row mb-3">
+              <!-- Columna de Antena -->
+              <div class="col-12 col-md-4 mt-2">
+              <div class="antena-header p-3 text-center border py-3">Antena</div>
+              <div class="form-floating mt-2">
+                <input type="text" class="form-control" id="txtMacAntenaAlquilados" placeholder="MAC">
+                <label for="txtMacAntenaAlquilados">MAC <span class="text-danger">*</span></label>
               </div>
-              <div class="col-12 col-md-4 mt-1">
-                <div class="router-header p-3 text-center border py-3">Router</div>
+              <div class="form-floating mt-2">
+                <input type="text" id="txtMarcaAntenaAlquilados" class="form-control" placeholder="Marca" disabled>
+                <label for="txtMarcaAntenaAlquilados" class="form-label mb-0">Marca</label>
               </div>
-            </div>
+              <div class="form-floating mt-2">
+                <input type="text" id="txtModeloAntenaAlquilados" placeholder="Modelo" class="form-control" disabled>
+                <label for="txtModeloAntenaAlquilados">Modelo</label>
+              </div>
+              <div class="form-floating mt-2">
+                <input type="text" class="form-control" id="txtSerialAntenaAlquilados" placeholder="Serial">
+                <label for="txtSerialAntenaAlquilados">Serial <span class="text-danger">*</span></label>
+              </div>
+              <div class="form-floating mt-2">
+                <input type="text" class="form-control" id="txtDescripcionAntenaAlquilados" placeholder="Descripción">
+                <label for="txtDescripcionAntenaAlquilados">Descripción <span class="text-danger">*</span></label>
+              </div>
+              </div>
 
-            <div class="row mb-2">
-              <div class="col-12 col-md-4 mt-1">
-                <div class="form-floating">
-                  <select class="form-select" id="slcCondicionAlquilados" aria-label="Condición de equipos">
-                    <option value="" selected disabled>Seleccione</option>
-                    <option value="Alquilado">Alquilado</option>
-                    <option value="Prestado">Prestado</option>
-                  </select>
-                  <label for="slcCondicionAlquilados">Condición  <span class="text-danger">*</span></label>
-                </div>
+              <!-- Columna de Router -->
+              <div class="col-12 col-md-4 mt-2">
+              <div class="router-header p-3 text-center border py-3">Router</div>
+              <div class="form-floating mt-2">
+                <input type="text" class="form-control" id="txtMacRouterAlquilados" placeholder="MAC">
+                <label for="txtMacRouterAlquilados">MAC <span class="text-danger">*</span></label>
               </div>
-              <div class="col-12 col-md-4 mt-1">
-                <div class="form-floating">
-                  <input type="text" class="form-control" id="txtMacAntenaAlquilados" placeholder="MAC">
-                  <label for="txtMacAntenaAlquilados">MAC  <span class="text-danger">*</span></label>
-                </div>
+              <div class="form-floating mt-2">
+                <input type="text" id="txtMarcaRouterAlquilados" class="form-control" placeholder="Marca" disabled>
+                <label for="txtMarcaRouterAlquilados" class="form-label mb-0">Marca</label>
               </div>
-              <div class="col-12 col-md-4 mt-1">
-                <div class="form-floating">
-                  <input type="text" class="form-control" id="txtMacRouterAlquilados" placeholder="MAC">
-                  <label for="txtMacRouterAlquilados">MAC <span class="text-danger">*</span></label>
-                </div>
+              <div class="form-floating mt-2">
+                <input type="text" id="txtModeloRouterAlquilados" placeholder="Modelo" class="form-control" disabled>
+                <label for="txtModeloRouterAlquilados">Modelo</label>
               </div>
-            </div>
+              <div class="form-floating mt-2">
+                <input type="text" class="form-control" id="txtSerialRouterAlquilados" placeholder="Serial">
+                <label for="txtSerialRouterAlquilados">Serial <span class="text-danger">*</span></label>
+              </div>
+              <div class="form-floating mt-2">
+                <input type="text" class="form-control" id="txtDescripcionRouterAlquilados" placeholder="Descripción">
+                <label for="txtDescripcionRouterAlquilados">Descripción <span class="text-danger">*</span></label>
+              </div>
+              </div>
 
-            <div class="row mb-2">
-              <div class="col-12 col-md-4 mt-1">
-                <div class="form-floating">
-                  <input type="text" class="form-control" id="txtPeriodoAlquilados" placeholder="Periodo">
-                  <label for="txtPeriodoAlquilados">Periodo <span class="text-danger">*</span></label>
-                </div>
+              <!-- Columna de Costo, Condición de Pago y Material -->
+              <div class="col-12 col-md-4">
+              <div class="form-floating mt-2">
+                <select class="form-select" id="slcCondicionAlquilados" aria-label="Condición de equipos">
+                <option value="" selected disabled>Seleccione</option>
+                <option value="Alquilado">Alquilado</option>
+                <option value="Prestado">Prestado</option>
+                </select>
+                <label for="slcCondicionAlquilados">Condición <span class="text-danger">*</span></label>
               </div>
-              <div class="col-12 col-md-4 mt-1">
-                <div class="form-floating">
-                  <input type="text" id="txtMarcaAntenaAlquilados" class="form-control" placeholder="Marca" disabled>
-                  <label for="txtMarcaAntenaAlquilados" class="form-label mb-0">Marca</label>
-                </div>
+              <div class="form-floating mt-2">
+                <input type="text" class="form-control" id="txtPeriodoAlquilados" placeholder="Periodo">
+                <label for="txtPeriodoAlquilados">Periodo <span class="text-danger">*</span></label>
               </div>
-              <div class="col-12 col-md-4 mt-1">
-                <div class="form-floating">
-                  <input type="text" id="txtMarcaRouterAlquilados" class="form-control" placeholder="Marca" disabled>
-                  <label for="txtMarcaRouterAlquilados" class="form-label mb-0">Marca</label>
-                </div>
+              <div class="form-floating mt-2">
+                <input type="date" class="form-control" id="txtFechaInicioAlquilados" placeholder="Fecha de Inicio">
+                <label for="txtFechaInicioAlquilados">Fecha de Inicio <span class="text-danger">*</span></label>
               </div>
-            </div>
-
-            <div class="row mb-2">
-              <div class="col-12 col-md-4 mt-1">
-                <div class="form-floating">
-                  <input type="date" class="form-control" id="txtFechaInicioAlquilados" placeholder="Fecha de Inicio">
-                  <label for="txtFechaInicioAlquilados">Fecha de Inicio <span class="text-danger">*</span></label>
-                </div>
+              <div class="form-floating mt-2">
+                <input type="date" class="form-control" id="txtFechaFinAlquilados" placeholder="Fecha de Fin">
+                <label for="txtFechaFinAlquilados">Fecha de Término <span class="text-danger">*</span></label>
               </div>
-              <div class="col-12 col-md-4 mt-1">
-                <div class="form-floating">
-                  <input type="text" id="txtModeloAntenaAlquilados" placeholder="Modelo" class="form-control" disabled>
-                  <label for="txtModeloAntenaAlquilados" class="form-label mb-0">Modelo</label>
-                </div>
+              <div class="form-floating mt-2">
+                <input type="text" class="form-control" min="0" id="txtCostoAlquilerAlquilados" placeholder="Costo Alquiler">
+                <label for="txtCostoAlquilerAlquilados">Costo Alquiler <span class="text-danger">*</span></label>
               </div>
-              <div class="col-12 col-md-4 mt-1">
-                <div class="form-floating">
-                  <input type="text" id="txtModeloRouterAlquilados" placeholder="Modelo" class="form-control" disabled>
-                  <label for="txtModeloRouterAlquilados" class="form-label mb-0">Modelo</label>
-                </div>
-              </div>
-            </div>
-
-            <div class="row mb-2">
-              <div class="col-12 col-md-4 mt-1">
-                <div class="form-floating">
-                  <input type="date" class="form-control" id="txtFechaFinAlquilados" placeholder="Fecha de Fin">
-                  <label for="txtFechaFinAlquilados">Fecha de Termino <span class="text-danger">*</span></label>
-                </div>
-              </div>
-              <div class="col-12 col-md-4 mt-1">
-                <div class="form-floating">
-                  <input type="text" class="form-control" id="txtSerialAntenaAlquilados" placeholder="Serial">
-                  <label for="txtSerialAntenaAlquilados">Serial <span class="text-danger">*</span></label>
-                </div>
-              </div>
-              <div class="col-12 col-md-4 mt-1">
-                <div class="form-floating">
-                  <input type="text" class="form-control" id="txtSerialRouterAlquilados" placeholder="Serial">
-                  <label for="txtSerialRouterAlquilados">Serial <span class="text-danger">*</span></label>
-                </div>
-              </div>
-            </div>
-
-            <div class="row mb-2">
-              <div class="col-12 col-md-4 mt-1">
-                <div class="form-floating">
-                  <input type="text" class="form-control" min="0" id="txtCostoAlquilerAlquilados" placeholder="Costo Alquiler">
-                  <label for="txtCostoAlquilerAlquilados">Costo Alquiler <span class="text-danger">*</span></label>
-                </div>
-              </div>
-              <div class="col-12 col-md-4 mt-1">
-                <div class="form-floating">
-                  <input type="text" class="form-control" id="txtDescripcionAntenaAlquilados" placeholder="Descripción">
-                  <label for="txtDescripcionAntenaAlquilados">Descripción <span class="text-danger">*</span></label>
-                </div>
-              </div>
-              <div class="col-12 col-md-4 mt-1">
-                <div class="form-floating">
-                  <input type="text" class="form-control" id="txtDescripcionRouterAlquilados" placeholder="Descripción">
-                  <label for="txtDescripcionRouterAlquilados">Descripción <span class="text-danger">*</span></label>
-                </div>
               </div>
             </div>
 
             <!-- Condición de Pago -->
             <div class="row mb-2">
               <div class="col-12 mt-1">
-                <span class="text-primary">Condición Pág.</span>
+                <span class="text-primary">Condición de Pago</span>
                 <div class="form-check form-check-inline ms-2">
                   <input class="form-check-input" type="checkbox" id="chkAdelantadoAlquilados">
                   <label class="form-check-label" for="chkAdelantadoAlquilados">Adelantado</label>
@@ -697,7 +586,7 @@ $idContrato = $_GET['idContrato'];
           <div class="col-md">
             <div class="form-floating">
               <input type="number" class="form-control" id="txtSaldoPendiente"
-                placeholder="Saldo Pendiente" min="0" step="0.01" >
+                placeholder="Saldo Pendiente" min="0" step="0.01">
               <label for="txtSaldoPendiente">Saldo Pendiente <span class="text-danger">*</span></label>
             </div>
           </div>
@@ -716,9 +605,9 @@ $idContrato = $_GET['idContrato'];
     <div class="row">
       <div class="col-12 mb-3 btn-container">
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-          <button type="button" id="btnReporte" class="btn btn-info px-4 py-2 mb-2 mb-md-0">
+          <!-- <button type="button" id="btnReporte" class="btn btn-info px-4 py-2 mb-2 mb-md-0">
             <i class="fas fa-file-alt"></i> Generar Reporte
-          </button>
+          </button> -->
           <button type="button" id="btnRegistrar" class="btn btn-success px-4 py-2 mb-2 mb-md-0">
             <i class="fas fa-save"></i> Guardar
           </button>

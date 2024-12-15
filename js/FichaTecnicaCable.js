@@ -553,9 +553,9 @@ document.addEventListener("DOMContentLoaded", () => {
     await guardar();
   });
 
-  document.getElementById("btnReporte").addEventListener("click", () => {
+  /* document.getElementById("btnReporte").addEventListener("click", () => {
     window.open(`${config.HOST}views/reports/Contrato_CABLE/fichaInstalacion.php?id=${idContrato}`, '_blank');
-  });
+  }); */
 
   document.getElementById("btnCancelar").addEventListener("click", () => {
     window.location.href = `${config.HOST}views/Contratos/`;

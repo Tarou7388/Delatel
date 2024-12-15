@@ -135,7 +135,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-
   // Función para iniciar con la visibilidad correcta (inicialmente oculto)
   window.addEventListener('DOMContentLoaded', function () {
     document.getElementById('frmVenta').classList.add('hidden');
@@ -647,16 +646,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.querySelector('#txtMacVentaRouter').addEventListener('change', async function () {
     const datos = await productoBarraBuscar('txtMacVentaRouter');
-    txtMarcaVentaAntena.value = datos[0].marca;
-    txtModeloVentaAntena.value = datos[0].modelo;
-    txtCostoAntenaVenta.value = datos[0].precio_actual;
+    txtMarcaVentaRouter.value = datos[0].marca;
+    txtModeloVentaRouter.value = datos[0].modelo;
+    txtCostoRouterVenta.value = datos[0].precio_actual;
   });
 
   document.querySelector('#txtMacVentaAntena').addEventListener('change', async function () {
     const datos = await productoBarraBuscar('txtMacVentaAntena');
-    txtMarcaVentaRouter.value = datos[0].marca;
-    txtModeloVentaRouter.value = datos[0].modelo;
-    txtCostoRouterVenta.value = datos[0].precio_actual;
+    txtMarcaVentaAntena.value = datos[0].marca;
+    txtModeloVentaAntena.value = datos[0].modelo;
+    txtCostoAntenaVenta.value = datos[0].precio_actual;
   });
 
   //Json Venta
@@ -970,9 +969,9 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = `${config.HOST}views/Contratos/`;
   });
 
-  document.getElementById("btnReporte").addEventListener("click", () => {
+  /* document.getElementById("btnReporte").addEventListener("click", () => {
     window.open(`${config.HOST}views/reports/Contrato_WISP/soporte.php?id=${idContrato}`, '_blank');
-  });
+  }); */
 
   btnAgregarRouter.addEventListener("click", async () => {
     await agregarRouter();

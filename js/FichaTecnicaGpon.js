@@ -1019,9 +1019,9 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = `${config.HOST}views/Contratos/`;
   });
 
-  document.getElementById("btnReporte").addEventListener("click", () => {
+  /* document.getElementById("btnReporte").addEventListener("click", () => {
     window.open(`${config.HOST}views/reports/Contrato_GPON/soporte.php?id=${idContrato}`, '_blank');
-  });
+  }); */
 
   $("#txtIpRepetidor").on("input", function (event) {
     formatoIPinput(event);
