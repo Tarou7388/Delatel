@@ -1,4 +1,5 @@
 import config from '../env.js';
+
 document.addEventListener("DOMContentLoaded", async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const idContrato = urlParams.get("idContrato");
@@ -18,7 +19,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Fetch para obtener las averías del contrato
     const respuesta = await fetch(`${config.HOST}app/controllers/Averias.controllers.php?operacion=buscarAveriaPorContrato&valor=${idContrato}`);
     const averias = await respuesta.json();
-    console.log(averias)
+    console.log(averias);
 
     const tbody = document.querySelector("#listarAverias tbody");
     averias.forEach((averia, index) => {
@@ -30,6 +31,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         <td>${averia.fecha_hora_asistencia}</td>
         <td><button class="btn btn-primary btn-ver-soporte" 
                     data-id-soporte="${averia.id_soporte}" 
+                    data-id-contrato="${idContrato}" 
                     data-tipo-servicio="${tipoServicio}">
               Ver Soporte
             </button></td>
@@ -51,16 +53,17 @@ document.addEventListener("DOMContentLoaded", async () => {
       button.addEventListener("click", (e) => {
         const idSoporte = e.target.getAttribute("data-id-soporte");
         const tipoServicio = e.target.getAttribute("data-tipo-servicio");
+        const idContrato = e.target.getAttribute("data-id-contrato");
 
         // Llama a la función para actualizar el modal con la información correspondiente
-        actualizarModal(idSoporte, tipoServicio);
+        actualizarModal(idSoporte, tipoServicio, idContrato);
       });
     });
   }
 });
 
 // Función para actualizar y mostrar el modal
-function actualizarModal(idSoporte, tipoServicio, idReporte) {
+function actualizarModal(idSoporte, tipoServicio, idContrato) {
   const modalTitle = document.querySelector("#nombrePersona");
   const modalBody = document.querySelector(".modal-body");
 
@@ -84,13 +87,13 @@ function actualizarModal(idSoporte, tipoServicio, idReporte) {
 
       switch (servicio) {
         case "CABL":
-          vistaURL = `${config.HOST}views/Soporte/SoporteCABL?idReporte=${idSoporte}`;
+          vistaURL = `${config.HOST}views/Soporte/SoporteCABL?idReporte=${idSoporte}&idContrato=${idContrato}`;
           break;
         case "WISP":
-          vistaURL = `${config.HOST}views/Soporte/SoporteWISP?idReporte=${idSoporte}`;
+          vistaURL = `${config.HOST}views/Soporte/SoporteWISP?idReporte=${idSoporte}&idContrato=${idContrato}`;
           break;
         case "FIBR":
-          vistaURL = `${config.HOST}views/Soporte/SoporteFIBR?idReporte=${idSoporte}`;
+          vistaURL = `${config.HOST}views/Soporte/SoporteFIBR?idReporte=${idSoporte}&idContrato=${idContrato}`;
           break;
         default:
           showToast("Tipo de servicio no reconocido", "ERROR");

@@ -4,6 +4,8 @@ import { FichaSoporte, formatoIPinput, FichaSoportePorId } from "./Herramientas.
 // Evento que se ejecuta cuando el DOM ha sido completamente cargado
 document.addEventListener("DOMContentLoaded", () => {
   const urlParams = new URLSearchParams(window.location.search);
+  const idContrato = urlParams.get("idContrato");
+  const idReporte = urlParams.get("idReporte");
   const serv = urlParams.get("tiposervicio");
   const form = document.getElementById("frm-registro-gpon");
   //Parametros tecnicos de la ficha
@@ -50,18 +52,78 @@ document.addEventListener("DOMContentLoaded", () => {
         await cargarProblema(idSoporte);
       } else {
         //Aqui puedes meterle mano
-        //Aqui puedes meterle mano
-        //Aqui puedes meterle mano
-        //Aqui puedes meterle mano
-        //Aqui puedes meterle mano
-        //Aqui puedes meterle mano
-        //Aqui puedes meterle mano
-        //Aqui puedes meterle mano
+        await listarReporte(idContrato, idReporte);
+        await cargarProblema(idReporte);
       }
     } catch (error) {
       console.error("Error durante la inicialización:", error);
     }
   })();
+  async function listarReporte(idContrato, idSoporte) {
+    const respuesta = await fetch(`${config.HOST}app/controllers/Averias.controllers.php?operacion=buscarAveriaPorContrato&valor=${idContrato}`);
+    const data = await respuesta.json();
+
+    // Filtrar por idSoporte
+    const soporteEspecifico = data.find(soporte => soporte.id_soporte === parseInt(idSoporte));
+
+    if (soporteEspecifico) {
+      console.log(soporteEspecifico);
+      // Convertir el soporte a un objeto JSON
+      const soporte = JSON.parse(soporteEspecifico.soporte);
+      // Llenar los campos del formulario
+      if (soporte && soporte.FIBR) {
+        const fibr = soporte.FIBR;
+        // Parámetros del cliente
+        txtPlan.value = fibr.parametroscliente.plan || "";
+        txtCliente.value = fibr.parametroscliente.usuario || "";
+        txtNrodocumento.value = fibr.parametroscliente.Nrodoc || "";
+        // Parámetros iniciales (parametrosgpon)
+        txtPppoe.value = fibr.parametrosgpon.pppoe || "";
+        txtPotencia.value = fibr.parametrosgpon.potencia || "";
+        chkCatv.checked = fibr.parametrosgpon.catv || false;
+        txtClave.value = fibr.parametrosgpon.clave || "";
+        txtVlan.value = fibr.parametrosgpon.vlan || "";
+        txtSsid.value = fibr.parametrosgpon.moden?.ssid || "";
+        txtPass.value = fibr.parametrosgpon.moden?.seguridad || "";
+        txtIp.value = fibr.parametrosgpon.repetidor?.[0]?.ip || "";
+        slcRpetidor.value = fibr.parametrosgpon.repetidor?.length || 0; // Cantidad de repetidores
+
+        // Cambios realizados (cambiosgpon)
+        txtCambiosPppoe.value = fibr.cambiosgpon.pppoe || "";
+        txtCambiosClave.value = fibr.cambiosgpon.clave || "";
+        txtCambiosVlan.value = fibr.cambiosgpon.vlan || "";
+        txtCambiosPotencia.value = fibr.cambiosgpon.potencia || "";
+        txtCambiosSsid.value = fibr.cambiosgpon.moden?.ssid || "";
+        txtCambiosIp.value = fibr.cambiosgpon.repetidor?.[0]?.ip || "";
+        chkCambiosCatv.checked = fibr.cambiosgpon.catv || false;
+        txtCambiosPass.value = fibr.cambiosgpon.moden?.seguridad || "";
+        deshabilitarCampos();
+        // Llenar repetidor si existe
+        if (fibr.parametrosgpon.repetidor?.[0]) {
+          const repetidor = fibr.parametrosgpon.repetidor[0];
+          txtRepetidor.value = JSON.stringify(repetidor, null, 2);
+        } else {
+          txtRepetidor.value = "Sin repetidores configurados";
+        }
+        // Solución
+        solutionTextarea.value = soporteEspecifico.descripcion_solucion || "";
+      }
+    } else {
+      console.error('No se encontró el soporte con el id especificado.');
+    }
+  }
+  async function deshabilitarCampos() {
+    txtCambiosPppoe.disabled = true;
+    txtCambiosClave.disabled = true;
+    txtCambiosVlan.disabled = true;
+    txtCambiosPotencia.disabled = true;
+    txtCambiosSsid.disabled = true;
+    txtCambiosIp.disabled = true;
+    chkCambiosCatv.disabled = true;
+    txtCambiosPass.disabled = true;
+    solutionTextarea.disabled = true;
+  }
+
 
   async function ObtenerValores() {
     const urlParams = new URLSearchParams(window.location.search);
