@@ -63,8 +63,15 @@
           Agregar Nueva Entrada
         </div>
         <div class="card-body">
-          <button class="btn btn-success w-100 mb-2" data-bs-toggle="modal" id="modalAgregarCaja" data-bs-target="#modalAgregar" disabled>Nueva Caja</button>
-          <button class="btn btn-success w-100" data-bs-toggle="modal" id="modalAgregarMufa" data-bs-target="#modalAgregarMufa2" disabled>Nueva Mufa</button>
+          <button class="btn btn-success w-100 mb-2" data-bs-toggle="modal" id="modalAgregarCaja" data-bs-target="#modalAgregar" disabled>
+            <i class="fas fa-plus"></i> Caja
+          </button>
+          <button class="btn btn-success w-100" data-bs-toggle="modal" id="modalAgregarMufa" data-bs-target="#modalAgregarMufa2" disabled>
+            <i class="fas fa-plus"></i> Mufa
+          </button>
+          <button class="btn btn-success w-100" data-bs-toggle="modal" id="modalAgregarSector" data-bs-target="#modalAgregarSector" disabled>
+            <i class="fas fa-plus"></i> Sector
+          </button>
         </div>
       </div>
     </div>
@@ -134,6 +141,37 @@
           </div>
           <div class="form-floating mb-3">
             <input type="text" class="form-control" id="direccionMufa" name="direccion" placeholder="Dirección" required>
+            <label for="direccion">Dirección</label>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalAgregarSector" tabindex="-1" aria-labelledby="modalAgregarSectorLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalAgregarSectorLabel">Agregar Nuevo Sector</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="modalAgregarSectorBody">
+        <form id="formAgregarSector">
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="nombreSector" name="nombre" placeholder="Nombre" required>
+            <label for="nombre">Nombre</label>
+          </div>
+          <div class="form-floating mb-3">
+            <textarea class="form-control" id="descripcionSector" name="descripcion" placeholder="Descripción" rows="3" required></textarea>
+            <label for="descripcion">Descripción</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="direccionSector" name="direccion" placeholder="Dirección" required>
             <label for="direccion">Dirección</label>
           </div>
           <div class="modal-footer">

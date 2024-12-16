@@ -34,6 +34,8 @@ DROP PROCEDURE IF EXISTS spu_sectores_registrar$$
 CREATE PROCEDURE spu_sectores_registrar(
     p_id_distrito    INT,
     p_sector         VARCHAR(60),
+    p_descripcion    VARCHAR(100),
+    p_coordenadas    VARCHAR(100),
     p_iduser_create  INT
 )
 BEGIN
