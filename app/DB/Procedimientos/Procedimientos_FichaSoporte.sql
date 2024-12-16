@@ -174,7 +174,8 @@ CREATE PROCEDURE spu_soporte_ficha_doc (
 )
 BEGIN
     SELECT 
-        ct.ficha_instalacion
+        ct.ficha_instalacion,
+        ct.id_contrato
     FROM tb_soporte s
     INNER JOIN tb_contratos ct ON s.id_contrato = ct.id_contrato
     INNER JOIN tb_clientes cl ON ct.id_cliente = cl.id_cliente
