@@ -66,10 +66,10 @@
           <button class="btn btn-success w-100 mb-2" data-bs-toggle="modal" id="modalAgregarCaja" data-bs-target="#modalAgregar" disabled>
             <i class="fas fa-plus"></i> Caja
           </button>
-          <button class="btn btn-success w-100" data-bs-toggle="modal" id="modalAgregarMufa" data-bs-target="#modalAgregarMufa2" disabled>
+          <button class="btn btn-success w-100 mb-2" data-bs-toggle="modal" id="modalAgregarMufa" data-bs-target="#modalAgregarMufa2" disabled>
             <i class="fas fa-plus"></i> Mufa
           </button>
-          <button class="btn btn-success w-100" data-bs-toggle="modal" id="modalAgregarSector" data-bs-target="#modalAgregarSector" disabled>
+          <button class="btn btn-success w-100 mb-2" data-bs-toggle="modal" id="modalAgregarSector" data-bs-target="#modalAgregarSector" disabled>
             <i class="fas fa-plus"></i> Sector
           </button>
         </div>

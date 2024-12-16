@@ -53,4 +53,10 @@ class Sector extends Conexion
     return $this->listarDatos($sql);
   }
 
+  public function listarSectoresPorDistrito($idDistrito)
+  {
+    $sql = "SELECT * FROM vw_sectores_listar WHERE id_distrito = ?";
+    return $this->listarDatos($sql, [$idDistrito]);
+  }
+
 }
