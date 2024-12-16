@@ -69,7 +69,7 @@
           <button class="btn btn-success w-100 mb-2" data-bs-toggle="modal" id="modalAgregarMufa" data-bs-target="#modalAgregarMufa2" disabled>
             <i class="fas fa-plus"></i> Mufa
           </button>
-          <button class="btn btn-success w-100 mb-2" data-bs-toggle="modal" id="modalAgregarSector" data-bs-target="#modalAgregarSector" disabled>
+          <button class="btn btn-success w-100 mb-2" data-bs-toggle="modal" id="modalAgregarSector" data-bs-target="#modalAgregarSector2">
             <i class="fas fa-plus"></i> Sector
           </button>
         </div>
@@ -153,7 +153,7 @@
   </div>
 </div>
 
-<div class="modal fade" id="modalAgregarSector" tabindex="-1" aria-labelledby="modalAgregarSectorLabel" aria-hidden="true">
+<div class="modal fade" id="modalAgregarSector2" tabindex="-1" aria-labelledby="modalAgregarSectorLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
