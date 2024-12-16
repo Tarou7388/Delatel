@@ -246,4 +246,13 @@ class Contrato extends Conexion
         );
         return $this->consultaParametros($sql, $values);
     }
+
+    public function obtenerCoordenadasbyId($params = [])
+    {
+        $sql = "CALL spu_contrato_buscar_coordenada(?)";
+        $values = array(
+            $params['id']
+        );
+        return $this->consultaParametros($sql, $values);
+    }
 }

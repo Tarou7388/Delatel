@@ -37,6 +37,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
       $resultado = $contrato->obtenerJsonFichabyId(['id' => Herramientas::sanitizarEntrada($_GET['id'])]);
       echo json_encode($resultado);
       break;
+    case 'obtenerCoordenadasbyId':
+      $resultado = $contrato->obtenerCoordenadasbyId(['id' => Herramientas::sanitizarEntrada($_GET['id'])]);
+      echo json_encode($resultado);
+      break;
   }
 }
 
