@@ -171,10 +171,6 @@
             <label for="descripcion">Descripción</label>
           </div>
           <div class="form-floating mb-3">
-            <input type="text" class="form-control" id="direccionSector" name="direccion" placeholder="Dirección" required>
-            <label for="direccion">Dirección</label>
-          </div>
-          <div class="form-floating mb-3">
             <select class="form-select" name="" id="buscarDistrito">
               <option value="" disabled>Selecciona un Distrito</option>
             </select>
