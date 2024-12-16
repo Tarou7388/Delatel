@@ -1,5 +1,5 @@
 import config from "../env.js";
-import { FichaSoporte, FichaSoportePorId } from "./Herramientas.js";
+import { FichaSoporte, FichaSoportePorId, formatoIPinput } from "./Herramientas.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("frmRegistroWisp");
@@ -96,13 +96,13 @@ document.addEventListener("DOMContentLoaded", () => {
       txtBase.value = wispFiltrado.base[0].nombre;
       txtBaseNuevo.value = wispFiltrado.base[0].nombre;
 
-      console.log(wispFiltrado.subBase[0].nombre);
+      console.log(wispFiltrado.subbase[0].nombre);
 
-      txtSenial.value = wispFiltrado.signalStrength;
+      txtSenial.value = wispFiltrado.signalstrength;
 
       await cargarRouters(wispFiltrado.routers)
     } catch (error) {
-      console.error("Error en data de Fibra:", error);
+      console.error("Error en data de WISP:", error);
     }
   };
 
@@ -148,7 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
         txtIp.value = routerseleccionado.lan;
         txtRouterSsid.value = routerseleccionado.ssid;
         txtRouterSeguridad.value = routerseleccionado.seguridad;
-        txtRouterpuertaEnlace.value = routerseleccionado.puertaEnlace;
+        txtRouterpuertaEnlace.value = routerseleccionado.puertaenlace;
         txtRouterWan.value = routerseleccionado.wan;
       } else {
         console.warn("No se encontró un repetidor con el valor seleccionado.");
@@ -225,8 +225,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let soporte = result[0].soporte ? JSON.parse(result[0].soporte) : {};
 
-      const datawisp = await FichaSoporte(idSoporte);
-      const wispFiltrado = JSON.parse(datawisp[0].ficha_instalacion).parametros;
+    const datawisp = await FichaSoporte(idSoporte);
+    const wispFiltrado = JSON.parse(datawisp[0].ficha_instalacion).parametros;
 
     const existeClave = Object.keys(soporte).includes(serv);
 
@@ -235,16 +235,16 @@ document.addEventListener("DOMContentLoaded", () => {
         parametroscliente: {
           plan: txtPlan.value,
           usuario: txtCliente.value,
-          Nrodoc: txtNrodocumento.value,
+          nrodoc: txtNrodocumento.value,
         },
         parametros: {
           base: txtBase.value,
           routers: JSON.parse(JSON.stringify(wispFiltrado.routers)),
-          signalStrength: txtSenial.value
+          signalstrength: txtSenial.value
         },
         cambios: {
-          nuevaBase: txtBaseNuevo.value,
-          signalStrength: txtSenialNuevo.value,
+          nuevabase: txtBaseNuevo.value,
+          signalstrength: txtSenialNuevo.value,
           routers: await moficadoRuter(wispFiltrado.routers)
         },
       };
@@ -252,7 +252,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     console.log(soporte);
     return soporte;
-    
+
   };
 
   async function moficadoRuter(routers) {
@@ -305,6 +305,10 @@ document.addEventListener("DOMContentLoaded", () => {
       await guardarSoporte(data)
       //window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
     }
+  });
+
+  txtIp, txtIpNuevo.addEventListener("input", (event) => {
+    formatoIPinput(event);
   });
 
 });
