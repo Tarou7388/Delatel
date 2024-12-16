@@ -41,7 +41,7 @@
 
         <!-- Segunda Fila -->
         <h5 class="mb-4">Parámetros Técnicos de Fibra</h5>
-        
+
         <div class="row g-3 mb-3 align-items-center">
           <div class="col-md">
             <div class="form-floating">
@@ -85,15 +85,6 @@
                 <label for="txtVlan">VLAN</label>
               </div>
             </div>
-            <div class="col-md-4">
-              <div class="form-floating">
-                <select id="slcRpetidor" class="form-select">
-                  <option value="" disabled selected>Seleccione una opción</option>
-                </select>
-                <label for="slcRpetidor">Repetidor</label>
-              </div>
-            </div>
-
             <div class="col-md-4 d-flex align-items-center">
               <div class="form-check form-switch">
                 <input class="form-check-input" type="checkbox" id="chkCatv" disabled>
@@ -123,6 +114,36 @@
               </div>
             </div>
           </div>
+          <!-- repetidor -->
+          <div class="row g-3 mb-3">
+            <div class="col-mb-4">
+              <div class="form-floating">
+                <select id="slcRpetidor" class="form-select">
+                  <option value="" disabled selected>Seleccione una opción</option>
+                </select>
+                <label for="slcRpetidor">Repetidor</label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="txtSSIDRepetidor" placeholder="SSID" disabled required>
+                <label for="txtSsid">SSID</label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="txtPassRepetidor" placeholder="Password" disabled required>
+                <label for="txtPass">Password</label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="txtIpRepetidor" placeholder="IP" disabled required>
+                <label for="txtIp">IP</label>
+              </div>
+            </div>
+          </div>
+
 
           <!-- Cuarta Fila -->
           <div class="row g-3 mb-3">
@@ -174,14 +195,6 @@
                   <label for="txtCambiosVlan">VLAN</label>
                 </div>
               </div>
-
-              <div class="col-md-4">
-                <div class="form-floating">
-                  <input type="text" class="form-control" id="txtRepetidor" placeholder="txtRepetidor" disabled required>
-                  <label for="txtRepetidor">Repetidor(Nombre)</label>
-                </div>
-              </div>
-
               <div class="col-md-4 d-flex align-items-center">
                 <div class="form-check form-switch">
                   <input class="form-check-input" type="checkbox" id="chkCambiosCatv">
@@ -208,6 +221,15 @@
                 <div class="form-floating">
                   <input type="text" class="form-control" id="txtCambiosIp" placeholder="IP" required>
                   <label for="txtCambiosIp">IP</label>
+                </div>
+              </div>
+            </div>
+            <!-- repetidor -->
+            <div class="row g-2 mb-3">
+              <div class="col-md-4">
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="txtRepetidor" placeholder="txtRepetidor" disabled required>
+                  <label for="txtRepetidor">Repetidor(Nombre)</label>
                 </div>
               </div>
             </div>
