@@ -124,7 +124,6 @@ document.addEventListener("DOMContentLoaded", () => {
     solutionTextarea.disabled = true;
   }
 
-
   async function ObtenerValores() {
     const urlParams = new URLSearchParams(window.location.search);
     const doc = urlParams.get("doc");
@@ -313,7 +312,7 @@ document.addEventListener("DOMContentLoaded", () => {
         await cargardatosModem(fibraFiltrado);
         return;
       } else {
-        await cargarRepetidores(fibraFiltrado.repetidores)
+        await cargarRepetidores(fibraFiltrado.repetidores);
       }
 
     } catch (error) {
@@ -324,6 +323,8 @@ document.addEventListener("DOMContentLoaded", () => {
   async function cargarRepetidores(repetidorJson) {
     if (repetidorJson) {
       const slcRpetidor = document.getElementById('slcRpetidor');
+      slcRpetidor.innerHTML="";
+      slcRpetidor.innerHTML = '<option value="" disabled selected>Seleccione una opción</option>';
       if (Array.isArray(repetidorJson) && repetidorJson.length > 0) {
         slcRpetidor.innerHTML = '';
 
@@ -336,8 +337,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         slcRpetidor.selectedIndex = 0;
 
-        const changeEvent = new Event('change');
-        slcRpetidor.dispatchEvent(changeEvent);
       } else {
         console.error('No se encontraron repetidores o el formato es incorrecto.');
       }
@@ -395,6 +394,7 @@ document.addEventListener("DOMContentLoaded", () => {
   async function cargardatosModem(DatoModem) {
     console.log(DatoModem);
     slcRpetidor.innerHTML = 'No hay repetidores';
+    
     slcRpetidor.disabled = true;
     //txtIp.value = DatoModem.moden.ip;
     txtSsid.value = DatoModem.moden.ssid;

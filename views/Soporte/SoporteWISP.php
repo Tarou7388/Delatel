@@ -43,6 +43,18 @@
 
           <!-- Segunda Fila -->
           <h5>Parámetros Wireless</h5>
+
+          <div class="row g-2 mb-2">
+            <div class="col-md">
+              <div class="form-floating">
+                <select class="form-select" id="slcWireless" required>
+                  <option value="" disabled selected>Seleccione una opción</option>
+                </select>
+                <label for="slcWireless">Parámetro Wireless</label>
+              </div>
+            </div>
+          </div>
+
           <div class="row g-2 mb-2">
             <div class="col-md">
               <div class="form-floating">
@@ -54,14 +66,44 @@
             <div class="col-md">
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtIp" placeholder="IP" required disabled>
-                <label>IP</label>
+                <label>Dirección IP (LAN)</label>
               </div>
             </div>
 
             <div class="col-md">
               <div class="form-floating">
                 <input type="number" class="form-control" id="txtSenial" placeholder="Señal" required disabled>
-                <label>Señal</label>
+                <label>Señal (ST)</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="row g-2 mb-2">
+            <div class="col-md">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="txtRouterSsid" placeholder="Base" required disabled>
+                <label>Router SSID (Nombre)</label>
+              </div>
+            </div>
+
+            <div class="col-md">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="txtRouterSeguridad" placeholder="IP" required disabled>
+                <label>Seguridad (Clave)</label>
+              </div>
+            </div>
+
+            <div class="col-md">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="txtRouterpuertaEnlace" placeholder="Señal" required disabled>
+                <label>Puerta de Enlace (Gateway)</label>
+              </div>
+            </div>
+
+            <div class="col-md">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="txtRouterWan" placeholder="Señal" required disabled>
+                <label>WAN</label>
               </div>
             </div>
           </div>
@@ -80,22 +122,52 @@
           <div class="row g-2 mb-2">
             <div class="col-md">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtBaseNuevo" placeholder="Fecha" required>
-                <label>Nueva Base</label>
+                <input type="text" class="form-control" id="txtBaseNuevo" placeholder="Fecha" required disabled>
+                <label>Base</label>
               </div>
             </div>
 
             <div class="col-md">
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtIpNuevo" placeholder="Fecha" required>
-                <label>Nuevo IP</label>
+                <label>IP</label>
               </div>
             </div>
 
             <div class="col-md">
               <div class="form-floating">
                 <input type="number" class="form-control" id="txtSenialNuevo" placeholder="Fecha" required>
-                <label>Señal</label>
+                <label>Señal (ST)</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="row g-2 mb-2">
+            <div class="col-md">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="txtRouterCambioSsid" placeholder="Base" required >
+                <label>Router SSID (Nombre)</label>
+              </div>
+            </div>
+
+            <div class="col-md">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="txtRouterCambioSeguridad" placeholder="IP" required >
+                <label>Seguridad (Clave)</label>
+              </div>
+            </div>
+
+            <div class="col-md">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="txtRouterCambiopuertaEnlace" placeholder="Señal" required >
+                <label>Puerta de Enlace</label>
+              </div>
+            </div>
+
+            <div class="col-md">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="txtRouterCambioWan" placeholder="Señal" required >
+                <label>WAN</label>
               </div>
             </div>
           </div>

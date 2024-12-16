@@ -1,33 +1,173 @@
 import config from "../env.js";
-import { FichaSoporte, inicializarDataTable } from "./Herramientas.js";
-
-        //Aqui NO puedes meterle mano
-        //Aqui NO puedes meterle mano
-        //Aqui NO puedes meterle mano
-        //Aqui NO puedes meterle mano
-        //Aqui NO puedes meterle mano
-        //Aqui NO puedes meterle mano
-        //Aqui NO puedes meterle mano
-        //Aqui NO puedes meterle mano
+import { FichaSoporte, FichaSoportePorId } from "./Herramientas.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("frmRegistroWisp");
   const urlParams = new URLSearchParams(window.location.search);
   const serv = urlParams.get("tiposervicio");
 
+  // Datos del Cliente
+  const txtNrodocumento = document.getElementById("txtNrodocumento");
+  const txtCliente = document.getElementById("txtCliente");
+  const txtPlan = document.getElementById("txtPlan");
+
+  // Parámetros Wireless
+  const slcWireless = document.getElementById("slcWireless");
+  const txtBase = document.getElementById("txtBase");
+  const txtIp = document.getElementById("txtIp");
+  const txtSenial = document.getElementById("txtSenial");
+
+  const txtRouterSsid = document.getElementById("txtRouterSsid");
+  const txtRouterSeguridad = document.getElementById("txtRouterSeguridad");
+  const txtRouterpuertaEnlace = document.getElementById("txtRouterpuertaEnlace");
+  const txtRouterWan = document.getElementById("txtRouterWan");
+
+  // Cambios Wireless
+  const txtBaseNuevo = document.getElementById("txtBaseNuevo");
+  const txtIpNuevo = document.getElementById("txtIpNuevo");
+  const txtSenialNuevo = document.getElementById("txtSenialNuevo");
+
+  const txtRouterCambioSsid = document.getElementById("txtRouterCambioSsid");
+  const txtRouterCambioSeguridad = document.getElementById("txtRouterCambioSeguridad");
+  const txtRouterCambiopuertaEnlace = document.getElementById("txtRouterCambiopuertaEnlace");
+  const txtRouterCambioWan = document.getElementById("txtRouterCambioWan");
+
+  //Definicion de constantes
+  const solutionTextarea = document.getElementById("txtaProceSolucion");
+  const txtaEstadoInicial = document.getElementById("txtaEstadoInicial");
+
   let idSoporte = -1;
 
-  async function obtenerIdSoporteDeUrl() {
+  (async function () {
+    idSoporte = await obtenerReferencias();
+    if (idSoporte) {
+      await cargarProblema(idSoporte);
+      await crearSelectYBoton();
+      await ObtenerValores();
+    } else {
+      const urlParams = new URLSearchParams(window.location.search);
+      urlParams.get("idReporte");
+      await reporte(urlParams.get("idReporte"));
+    }
+  })();
+
+  async function obtenerReferencias() {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get("idsoporte");
+  };
+
+  async function ObtenerValores() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const doc = urlParams.get("doc");
+    const idSoporte = urlParams.get("idsoporte");
+    const tiposervicio = urlParams.get("tiposervicio");
+    const coordenada = urlParams.get("coordenada");
+
+    const respuesta = await FichaSoportePorId(doc, tiposervicio, coordenada);
+
+    if (respuesta[0].soporte != "{}" && JSON.parse(respuesta[0].soporte).WISP) {
+      await cargardatos(JSON.parse(respuesta[0].soporte).WISP);
+    } else {
+      await llenadoDeDatos(doc, idSoporte);
+    }
   }
 
-  function crearSelectYBoton() {
+  async function llenadoDeDatos(doct, idSoporte, tiposervicio) {
+    try {
+      const respuesta = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${doct}`);
+      const data = await respuesta.json();
+      //Asignacion del Nombre del cliente
+      txtCliente.value = data[0].nombre;
+      //Asignacion del Documento del cliente
+      txtNrodocumento.value = doct;
+
+    } catch (error) {
+      console.error("Error en llenadoDeDatos:", error);
+    }
+
+    try {
+      const datawisp = await FichaSoporte(idSoporte);
+      const wispFiltrado = JSON.parse(datawisp[0].ficha_instalacion).parametros;
+
+      console.log(wispFiltrado);
+      txtPlan.value = wispFiltrado.plan;
+
+      console.log(wispFiltrado.base);
+      txtBase.value = wispFiltrado.base[0].nombre;
+      txtBaseNuevo.value = wispFiltrado.base[0].nombre;
+
+      console.log(wispFiltrado.subBase[0].nombre);
+
+      txtSenial.value = wispFiltrado.signalStrength;
+
+      await cargarRouters(wispFiltrado.routers)
+    } catch (error) {
+      console.error("Error en data de Fibra:", error);
+    }
+  };
+
+  async function cargarRouters(routers) {
+    slcWireless.innerHTML = '';
+
+    slcWireless.innerHTML = '<option value="" disabled selected>Seleccione una opción</option>';
+
+    routers.forEach(router => {
+      const option = document.createElement("option");
+      option.value = router.numero; // Usar "numero" como valor del option
+      option.textContent = router.ssid; // Usar "ssid" como texto visible del option
+      slcWireless.appendChild(option);
+    });
+
+  }
+
+  slcWireless.addEventListener("change", async (event) => {
+    await cargarEnInputs();
+  });
+
+  async function cargarEnInputs() {
+    try {
+      const selectedValue = parseInt(slcWireless.value);
+      const coordenada = urlParams.get("coordenada");
+      const respuesta = await FichaSoporte(idSoporte);
+      const respuesta2 = await FichaSoportePorId(txtNrodocumento.value, serv, coordenada);
+
+      let wispFiltrado = null;
+      let datosgenerales = null;
+      if (!respuesta2[0]?.soporte || respuesta2[0]?.soporte === "{}" || !JSON.parse(respuesta2[0].soporte)?.WISP) {
+        const fichaInstalacion = JSON.parse(respuesta[0]?.ficha_instalacion || "{}");
+        wispFiltrado = fichaInstalacion?.parametros?.routers || null;
+        datosgenerales = fichaInstalacion?.parametros || null;
+      }
+
+      const routerseleccionado = wispFiltrado.find(
+        (router) => router.numero === selectedValue
+      );
+
+      if (routerseleccionado) {
+        console.log(routerseleccionado);
+        txtIp.value = routerseleccionado.lan;
+        txtRouterSsid.value = routerseleccionado.ssid;
+        txtRouterSeguridad.value = routerseleccionado.seguridad;
+        txtRouterpuertaEnlace.value = routerseleccionado.puertaEnlace;
+        txtRouterWan.value = routerseleccionado.wan;
+      } else {
+        console.warn("No se encontró un repetidor con el valor seleccionado.");
+      }
+    } catch (error) {
+      console.error("Error al cargar datos del repetidor:", error);
+    }
+  }
+
+  async function cargardatos(data) {
+    console.log(data);
+  }
+
+  async function crearSelectYBoton() {
     const rowDiv = document.createElement("div");
-    rowDiv.className = "row g-2 mb-2";
+    rowDiv.className = "row g-2 mb-2 mt-2";
 
     const selectDiv = document.createElement("div");
-    selectDiv.className = "col-md ";
+    selectDiv.className = "col-md";
 
     const labelSelect = document.createElement("label");
     labelSelect.innerText = "Tipo de Soporte";
@@ -35,7 +175,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const selectSoporte = document.createElement("select");
     selectSoporte.id = "slcTipoSoporte";
-    selectSoporte.className = "form-control";
+    selectSoporte.className = "form-floating form-select";
     selectSoporte.required = true;
     selectDiv.appendChild(selectSoporte);
     rowDiv.appendChild(selectDiv);
@@ -65,147 +205,18 @@ document.addEventListener("DOMContentLoaded", () => {
     buttonDiv.appendChild(guardarBtn);
     rowDiv.appendChild(buttonDiv);
 
-
-    const solutionTextarea = document.getElementById("txtaProceSolucion");
     solutionTextarea.parentNode.parentNode.appendChild(rowDiv);
   }
 
-  async function obtenerProblema(idSoporte) {
-    const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
-    const data = await respuesta.json();
-    $("#txtaEstadoInicial").val(data[0].descripcion_problema);
-  }
+  async function cargarProblema(idSoporte) {
+    try {
+      const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
+      const data = await respuesta.json();
+      txtaEstadoInicial.value = (data[0].descripcion_problema);
 
-  async function rellenarDocNombre(doct) {
-    const respuesta = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${doct}`);
-    const data = await respuesta.json();
-    $("#txtCliente").val(data[0].nombre);
-    $("#txtNrodocumento").val(doct);
-  }
-
-  async function datosFichaWisp(doct) {
-    const datawisp = await FichaSoporte(doct);
-    rellenarDocNombre(urlParams.get("doc"));
-    $("#txtPlan").val(JSON.parse(datawisp[0].ficha_instalacion).parametros.plan);
-    console.log(JSON.parse(datawisp[0].ficha_instalacion).parametros);
-
-    $("#txtBase").val(JSON.parse(datawisp[0].ficha_instalacion).parametros.base[0]);
-
-    const fichaInstalacion = datawisp.find(item => {
-      const ficha = JSON.parse(item.ficha_instalacion);
-      return ficha.parametros !== undefined;
-    });
-
-    console.log(JSON.parse(fichaInstalacion.ficha_instalacion));
-
-    if (fichaInstalacion) {
-      const ficha = JSON.parse(fichaInstalacion.ficha_instalacion); // Definir la ficha aquí
-      const parametros = ficha.ConfiRouter;
-      console.log(parametros);
-      const routers = parametros;
-      console.log(routers.length);
-
-      if (routers.length > 1) {
-        const routerSelectDiv = document.createElement("div");
-        routerSelectDiv.className = "col-md mb-2 text-end";
-
-        const labelRouterSelect = document.createElement("label");
-        labelRouterSelect.innerText = "Seleccionar Router";
-        routerSelectDiv.appendChild(labelRouterSelect);
-
-        const routerSelect = document.createElement("select");
-        routerSelect.id = "slcRouter";
-        routerSelect.className = "form-control";
-        routerSelect.required = true;
-        routerSelectDiv.appendChild(routerSelect);
-
-        routers.forEach((router, index) => {
-          const option = new Option(`Router ${index + 1}`, index);
-          routerSelect.append(option);
-        });
-
-        routerSelect.value = 0;
-        $("#txtIp").val(routers[0].ConfiRouter.wan);
-        $("#txtSenial").val(ficha.parametros.signalStrength);
-
-        routerSelect.addEventListener("change", (event) => {
-          const selectedIndex = event.target.value;
-          $("#txtIp").val(routers[selectedIndex].ConfiRouter.wan);
-          $("#txtSenial").val(ficha.parametros.signalStrength);
-        });
-
-        form.parentNode.insertBefore(routerSelectDiv, form);
-      } else {
-        $("#txtIp").val(routers[0].ConfiRouter.wan);
-        $("#txtSenial").val(ficha.parametros.signalStrength);
-      }
+    } catch (error) {
+      console.log("Error en Obtener el estado Inicial:", error);
     }
-  }
-
-
-  (async function () {
-    idSoporte = await obtenerIdSoporteDeUrl();
-    if (idSoporte) {
-      await obtenerProblema(idSoporte);
-      await datosFichaWisp(idSoporte);
-      crearSelectYBoton();
-    } else {
-      const urlParams = new URLSearchParams(window.location.search);
-      urlParams.get("idReporte");
-      await reporte(urlParams.get("idReporte"));
-    }
-  })();
-
-  async function reporte(idRe) {
-    const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idRe}`);
-    const data = await respuesta.json();
-    console.log(data);
-    const datawisp = await FichaSoporte(idRe);
-    $("#txtPlan").val(JSON.parse(datawisp[0].ficha_instalacion).parametros.plan);
-
-    rellenarDocNombre(data[0].nro_doc);
-
-    // Define soporte como data[0]
-    const soporte = data[0];
-
-    // Parámetros Wireless
-    const parametros = JSON.parse(soporte.soporte).WISP.parametros;
-    const txtBase = document.getElementById('txtBase');
-    const txtIp = document.getElementById('txtIp');
-    const txtSenial = document.getElementById('txtSenial');
-
-    txtBase.value = parametros.base;
-    txtIp.value = parametros.ip;
-    txtSenial.value = parametros.senal;
-
-    // Deshabilitar los campos
-    txtBase.setAttribute('disabled', 'true');
-    txtIp.setAttribute('disabled', 'true');
-    txtSenial.setAttribute('disabled', 'true');
-
-    // Estado Inicial
-    const txtaEstadoInicial = document.getElementById('txtaEstadoInicial');
-    txtaEstadoInicial.value = soporte.descripcion_problema;
-    txtaEstadoInicial.setAttribute('disabled', 'true');
-
-    // Cambios Wireless
-    const cambios = JSON.parse(soporte.soporte).WISP.cambios;
-    const txtBaseNuevo = document.getElementById('txtBaseNuevo');
-    const txtIpNuevo = document.getElementById('txtIpNuevo');
-    const txtSenialNuevo = document.getElementById('txtSenialNuevo');
-
-    txtBaseNuevo.value = cambios.nuevaBase;
-    txtIpNuevo.value = cambios.nuevoIP;
-    txtSenialNuevo.value = cambios.senal;
-
-    txtBaseNuevo.setAttribute('disabled', 'true');
-    txtIpNuevo.setAttribute('disabled', 'true');
-    txtSenialNuevo.setAttribute('disabled', 'true');
-
-    // Procedimiento de Solución
-    const txtaProceSolucion = document.getElementById('txtaProceSolucion');
-    txtaProceSolucion.value = soporte.descripcion_solucion;
-    txtaProceSolucion.setAttribute('disabled', 'true');
   }
 
   async function ArmadoJsonWisp() {
@@ -214,26 +225,51 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let soporte = result[0].soporte ? JSON.parse(result[0].soporte) : {};
 
+      const datawisp = await FichaSoporte(idSoporte);
+      const wispFiltrado = JSON.parse(datawisp[0].ficha_instalacion).parametros;
+
     const existeClave = Object.keys(soporte).includes(serv);
 
     if (!existeClave) {
       soporte[serv] = {
+        parametroscliente: {
+          plan: txtPlan.value,
+          usuario: txtCliente.value,
+          Nrodoc: txtNrodocumento.value,
+        },
         parametros: {
-          base: document.getElementById("txtBase").value,
-          ip: document.getElementById("txtIp").value,
-          senal: document.getElementById("txtSenial").value,
+          base: txtBase.value,
+          routers: JSON.parse(JSON.stringify(wispFiltrado.routers)),
+          signalStrength: txtSenial.value
         },
         cambios: {
-          nuevaBase: document.getElementById("txtBaseNuevo").value,
-          nuevoIP: document.getElementById("txtIpNuevo").value,
-          senal: document.getElementById("txtSenialNuevo").value,
+          nuevaBase: txtBaseNuevo.value,
+          signalStrength: txtSenialNuevo.value,
+          routers: await moficadoRuter(wispFiltrado.routers)
         },
       };
     }
 
+    console.log(soporte);
     return soporte;
-  }
+    
+  };
 
+  async function moficadoRuter(routers) {
+    console.log(routers);
+    const selectedValue = parseInt(slcWireless.value);
+    return routers.map(router => {
+      if (router.numero === selectedValue) {
+        router.ssid = txtRouterCambioSsid.value;
+        router.contrasenia = txtRouterCambioSeguridad.value;
+        router.lan = txtIpNuevo.value;
+        router.puertaEnlace = txtRouterCambiopuertaEnlace.value;
+        router.wan = txtRouterCambioWan.value;
+        console.log(router);
+      }
+      return router;
+    });
+  }
 
   async function guardarSoporte(data) {
     try {
@@ -267,7 +303,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const data = await ArmadoJsonWisp();
     if (await ask("¿Desea guardar la ficha?")) {
       await guardarSoporte(data)
-      window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
+      //window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
     }
   });
 
