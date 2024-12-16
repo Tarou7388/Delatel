@@ -15,6 +15,7 @@ SELECT
     s.sector,
     s.id_distrito,
     s.descripcion,
+    s.direccion,
     s.coordenadas,
     d.distrito,
     s.create_at,

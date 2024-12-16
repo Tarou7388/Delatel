@@ -66,6 +66,7 @@ CREATE TABLE tb_sectores (
     id_distrito INT NOT NULL,
     sector VARCHAR(60) NOT NULL,
     descripcion VARCHAR(100) NOT NULL,
+    direccion VARCHAR(200) NULL,
     coordenadas VARCHAR(50) NOT NULL,
     create_at DATETIME NOT NULL DEFAULT NOW(),
     update_at DATETIME NULL,
