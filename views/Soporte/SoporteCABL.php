@@ -50,6 +50,16 @@
         <hr>
 
         <h5>Parámetros Técnicos</h5>
+        <div class="row g-3 mb-3 align-items-center">
+          <div class="col-md">
+            <div class="form-floating">
+              <select id="slcCaja" class="form-select">
+                <option value="" disabled selected>Seleccione una opción</option>
+              </select>
+              <label for="slcCaja">Caja</label>
+            </div>
+          </div>
+        </div>
         <div>
           <div class="row g-2 mb-2">
             <div class="col-md">

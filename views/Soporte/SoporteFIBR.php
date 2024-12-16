@@ -41,6 +41,18 @@
 
         <!-- Segunda Fila -->
         <h5 class="mb-4">Parámetros Técnicos de Fibra</h5>
+        
+        <div class="row g-3 mb-3 align-items-center">
+          <div class="col-md">
+            <div class="form-floating">
+              <select id="slcCaja" class="form-select">
+                <option value="" disabled selected>Seleccione una opción</option>
+              </select>
+              <label for="slcCaja">Caja</label>
+            </div>
+          </div>
+        </div>
+
         <div class="">
           <!-- Primera Fila -->
           <div class="row g-3 mb-3 align-items-center">
