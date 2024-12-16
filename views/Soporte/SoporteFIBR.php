@@ -225,34 +225,35 @@
               </div>
             </div>
             <!-- repetidor -->
-            <div class="row g-2 mb-3">
-              <div class="col-md-4">
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
                 <div class="form-floating">
-                  <input type="text" class="form-control" id="txtRepetidor" placeholder="txtRepetidor" disabled required>
-                  <label for="txtRepetidor">Repetidor(Nombre)</label>
+                  <input type="text" class="form-control" id="txtRepetidor" placeholder="Repetidor" disabled required>
+                  <label for="txtRepetidor">Repetidor (Nombre)</label>
                 </div>
-                <div class="col-md-4">
-                  <div class="form-floating">
-                    <input type="text" class="form-control" id="txtCambiosSsidRepetidor" placeholder="SSID" required>
-                    <label for="txtCambiosSsid">SSID</label>
-                  </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="txtCambiosSsidRepetidor" placeholder="SSID" required>
+                  <label for="txtCambiosSsidRepetidor">SSID</label>
                 </div>
               </div>
             </div>
-            <dic class="row g-2 mb-3">
-              <div class="col-md-4">
+
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
                 <div class="form-floating">
                   <input type="text" class="form-control" id="txtCambiosPassRepetidor" placeholder="Password" required>
-                  <label for="txtCambiosPass">Password</label>
+                  <label for="txtCambiosPassRepetidor">Password</label>
                 </div>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-6">
                 <div class="form-floating">
                   <input type="text" class="form-control" id="txtCambiosIpRepetidor" placeholder="IP" required>
-                  <label for="txtCambiosIp">IP</label>
+                  <label for="txtCambiosIpRepetidor">IP</label>
                 </div>
               </div>
-            </dic>
+            </div>
 
             <!-- Cuarta Fila -->
             <div class="row g-3 mb-3">
