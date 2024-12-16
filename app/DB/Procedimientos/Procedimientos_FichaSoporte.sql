@@ -167,9 +167,9 @@ BEGIN
         (p_prioridad = "" OR s.prioridad = p_prioridad) AND s.inactive_at IS NULL;
 END $$
 
-DROP PROCEDURE IF EXISTS spu_soporte_ficha_doc$$
+DROP PROCEDURE IF EXISTS spu_instalacion_ficha_IdSoporte$$
 
-CREATE PROCEDURE spu_soporte_ficha_doc (
+CREATE PROCEDURE spu_instalacion_ficha_IdSoporte(
     IN p_idsoporte INT
 )
 BEGIN

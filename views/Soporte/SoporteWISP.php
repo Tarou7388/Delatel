@@ -72,7 +72,7 @@
 
           <div class="col-md">
             <div class="form-floating">
-              <input type="text" class="form-control" id="txtAccesoNuevo" placeholder="Fecha" required>
+              <input type="text" class="form-control" id="txtAcceso" placeholder="Fecha" required disabled>
               <label>Acceso(lan)</label>
             </div>
           </div>

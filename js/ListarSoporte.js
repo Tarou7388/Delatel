@@ -1,6 +1,6 @@
 import config from "../env.js";
 import * as mapa from "./Mapa.js";
-import { inicializarDataTable, FichaSoporte } from "./Herramientas.js";
+import { inicializarDataTable, FichaInstalacion} from "./Herramientas.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   let ruta = `${config.HOST}app/controllers/Soporte.controllers.php?operacion=FiltrarSoportePrioridad&prioridad=`;
@@ -158,7 +158,7 @@ document.addEventListener("DOMContentLoaded", () => {
   $('.card-body').on('click', '.btnMapa', async function () {
     //asignar la funcion del boton del mapa para que me obtenga el id del contrato la funcion esta en Herramientas.js
     let id_soporte = $(this).data('id');
-    const data = await FichaSoporte(id_soporte);
+    const data = await FichaInstalacion(id_soporte);
     console.log('id del soporte:', id_soporte);
     console.log('Datos del contrato:', data);
 

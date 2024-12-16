@@ -1,5 +1,5 @@
 import config from "../env.js";
-import { FichaSoporte, formatoIPinput, FichaSoportePorId } from "./Herramientas.js";
+import { FichaInstalacion, formatoIPinput, FichaSoportePorId } from "./Herramientas.js";
 
 // Evento que se ejecuta cuando el DOM ha sido completamente cargado
 document.addEventListener("DOMContentLoaded", () => {
@@ -272,7 +272,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
-      const dataFibra = await FichaSoporte(idSoporte);
+      const dataFibra = await FichaInstalacion(idSoporte);
       const fibraFiltrado = JSON.parse(dataFibra[0].ficha_instalacion).fibraOptica;
       console.log(dataFibra[0]);
 
@@ -353,7 +353,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const selectedValue = parseInt(slcRpetidor.value);
       const nombreRepetidor = slcRpetidor.options[slcRpetidor.selectedIndex]?.text || "Sin nombre";
       const coordenada = urlParams.get("coordenada");
-      const respuesta = await FichaSoporte(idSoporte);
+      const respuesta = await FichaInstalacion(idSoporte);
       const respuesta2 = await FichaSoportePorId(txtNrodocumento.value, serv, coordenada);
 
       let fibraFiltrado = null;
@@ -407,7 +407,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
     const result = await response.json();
 
-    const dataFibra = await FichaSoporte(idSoporte);
+    const dataFibra = await FichaInstalacion(idSoporte);
     const fibraFiltrado = JSON.parse(dataFibra[0].ficha_instalacion).fibraOptica;
 
     let soporte = result[0].soporte ? JSON.parse(result[0].soporte) : {};

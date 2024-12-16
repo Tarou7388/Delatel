@@ -1,5 +1,5 @@
 import config from "../env.js";
-import { FichaSoporte, FichaSoportePorId, formatoIPinput } from "./Herramientas.js";
+import { FichaInstalacion, FichaSoportePorId, formatoIPinput } from "./Herramientas.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("frmRegistroWisp");
@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const txtRouterSeguridad = document.getElementById("txtRouterSeguridad");
   const txtRouterpuertaEnlace = document.getElementById("txtRouterpuertaEnlace");
   const txtRouterWan = document.getElementById("txtRouterWan");
+  const txtAcceso = document.getElementById("txtAcceso");
 
   // Cambios Wireless
   const txtBaseNuevo = document.getElementById("txtBaseNuevo");
@@ -66,13 +67,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const respuesta = await FichaSoportePorId(doc, tiposervicio, coordenada);
 
     if (respuesta[0].soporte != "{}" && JSON.parse(respuesta[0].soporte).WISP) {
-      await cargardatos(JSON.parse(respuesta[0].soporte).WISP);
+      await cargarSoporteAnterior(JSON.parse(respuesta[0].soporte).WISP);
     } else {
-      await llenadoDeDatos(doc, idSoporte);
+      await traerDatosInstalacion(doc, idSoporte);
     }
   }
 
-  async function llenadoDeDatos(doct, idSoporte, tiposervicio) {
+  async function traerDatosInstalacion(doct, idSoporte, tiposervicio) {
     try {
       const respuesta = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${doct}`);
       const data = await respuesta.json();
@@ -82,11 +83,11 @@ document.addEventListener("DOMContentLoaded", () => {
       txtNrodocumento.value = doct;
 
     } catch (error) {
-      console.error("Error en llenadoDeDatos:", error);
+      console.error("Error en traer datos Instalacion:", error);
     }
 
     try {
-      const datawisp = await FichaSoporte(idSoporte);
+      const datawisp = await FichaInstalacion(idSoporte);
       const wispFiltrado = JSON.parse(datawisp[0].ficha_instalacion).parametros;
 
       console.log(wispFiltrado);
@@ -128,7 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const selectedValue = parseInt(slcWireless.value);
       const coordenada = urlParams.get("coordenada");
-      const respuesta = await FichaSoporte(idSoporte);
+      const respuesta = await FichaInstalacion(idSoporte);
       const respuesta2 = await FichaSoportePorId(txtNrodocumento.value, serv, coordenada);
 
       let wispFiltrado = null;
@@ -150,6 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
         txtRouterSeguridad.value = routerseleccionado.seguridad;
         txtRouterpuertaEnlace.value = routerseleccionado.puertaenlace;
         txtRouterWan.value = routerseleccionado.wan;
+        txtAcceso.value = routerseleccionado.acceso;
       } else {
         console.warn("No se encontró un repetidor con el valor seleccionado.");
       }
@@ -158,7 +160,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  async function cargardatos(data) {
+  async function cargarSoporteAnterior(data) {
     console.log(data);
   }
 
@@ -225,7 +227,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let soporte = result[0].soporte ? JSON.parse(result[0].soporte) : {};
 
-    const datawisp = await FichaSoporte(idSoporte);
+    const datawisp = await FichaInstalacion(idSoporte);
     const wispFiltrado = JSON.parse(datawisp[0].ficha_instalacion).parametros;
 
     const existeClave = Object.keys(soporte).includes(serv);

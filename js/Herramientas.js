@@ -20,8 +20,8 @@ export async function permisos() {
   return data
 }
 
-export async function FichaSoporte(Value) {
-  const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=obtenerfichaSoporteporDoc&nroDoc=${Value}`);
+export async function FichaInstalacion(Value) {
+  const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=obtenerfichaInstalacionporIdSoporte&idSoporte=${Value}`);
   const data = await response.json()
   return data
 }

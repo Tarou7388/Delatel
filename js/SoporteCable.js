@@ -1,5 +1,5 @@
 import config from "../env.js";
-import { FichaSoporte, FichaSoportePorId } from "./Herramientas.js";
+import { FichaInstalacion, FichaSoportePorId } from "./Herramientas.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const txtPotencia = document.getElementById("txtPotencia");
@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // Obtener datos del soporte
       const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idReporte}`);
       const data = await respuesta.json();
-      const dataCable = await FichaSoporte(idReporte);
+      const dataCable = await FichaInstalacion(idReporte);
       const cableFiltrado = JSON.parse(dataCable[0].ficha_instalacion).cable;
       const plan = document.getElementById("txtPlan")
       plan.value = cableFiltrado.plan
@@ -236,7 +236,7 @@ document.addEventListener("DOMContentLoaded", () => {
    */
   async function llenadoDeDatos(doct, idSoporte) {
     try {
-      const dataCable = await FichaSoporte(idSoporte);
+      const dataCable = await FichaInstalacion(idSoporte);
       const cableFiltrado = JSON.parse(dataCable[0].ficha_instalacion).cable;
 
       console.log(cableFiltrado);
