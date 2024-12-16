@@ -123,15 +123,17 @@ document.addEventListener("DOMContentLoaded", () => {
           const prioridad = row.prioridad ? row.prioridad.trim().toLowerCase() : "";
           const isDisabled = prioridad === "incidencia" ? "disabled" : "";
           return `<button class="btnActualizar btn btn-primary" data-id="${row.id_soporte}" ${isDisabled}>Atender</button>
-                  <button class="btnEliminar btn btn-danger" data-id="${row.id_soporte}" >Eliminar</button>`;
+                  <button class="btnEliminar btn btn-danger" data-id="${row.id_soporte}" ><i class="fa-solid fa-trash"></i></button>
+                  <button class="btnMapa btn btn-dark" data-id="${row.id_soporte}" ><i class="fa-solid fa-map"></i></button>
+                  <button class="btnCompleto btn btn-success" data-id="${row.id_soporte}" ><i class="fa-solid fa-check"></i></button>`;
         }
       }
     ],
     [
       { width: "4%", targets: 0 },
       { width: "10%", targets: 1 },
-      { width: "30%", targets: 2 },
-      { width: "20%", targets: 3 },
+      { width: "15%", targets: 2 },
+      { width: "25%", targets: 3 },
       { width: "10%", targets: 4 },
       { width: "20%", targets: 5 },
       { width: "10%", targets: 6 }
@@ -150,6 +152,16 @@ document.addEventListener("DOMContentLoaded", () => {
     if (await ask("¿Está seguro de eliminar este soporte?")) {
       await inhabilitarSoporte(id_soporte);
     }
+  });
+  
+  $('.card-body').on('click', '.btnMapa', async function () {
+    let id_soporte = $(this).data('id');
+    console.log("Aqui esta el mapa");
+  });
+
+  $('.card-body').on('click', '.btnCompleto', async function () {
+    let id_soporte = $(this).data('id');
+    console.log("Aqui sera para completarlo");
   });
 
   var today = new Date().toISOString().split('T')[0];
