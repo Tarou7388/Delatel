@@ -178,7 +178,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Cargar datos de subBase
         const slcSubBase = document.getElementById("slcSubBaseParametros");
-        const subBase = parametros.subBase[0];
+        const subBase = parametros.subbase[0];
         const subBaseOption = document.createElement('option');
         subBaseOption.value = subBase.id;
         subBaseOption.textContent = subBase.nombre;
@@ -186,11 +186,11 @@ document.addEventListener("DOMContentLoaded", () => {
         slcSubBase.appendChild(subBaseOption);
 
         document.getElementById("txtPeriodo").value = parametros.periodo;
-        document.getElementById("txtSignalStrengthParametros").value = parametros.signalStrength;
-        document.getElementById("txtNoiseFloorParametros").value = parametros.noiseFloor;
-        document.getElementById("txtTransmiTccqParametros").value = parametros.transmiTccq;
-        document.getElementById("txtTxRateParametros").value = parametros.txRate;
-        document.getElementById("txtRxRateParametros").value = parametros.rxRate;
+        document.getElementById("txtSignalStrengthParametros").value = parametros.signalstrength;
+        document.getElementById("txtNoiseFloorParametros").value = parametros.noisefloor;
+        document.getElementById("txtTransmiTccqParametros").value = parametros.transmitccq;
+        document.getElementById("txtTxRateParametros").value = parametros.txrate;
+        document.getElementById("txtRxRateParametros").value = parametros.rxrate;
 
         // Cargar datos de routers
         jsonRouter = parametros.routers || [];
@@ -217,7 +217,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             <tbody>
                                 <tr>
                                     <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>Código de Barra</td>
-                                    <td class="py-1 px-2">${routerData.codigoBarra}</td>
+                                    <td class="py-1 px-2">${routerData.codigobarra}</td>
                                 </tr>
                                 <tr>
                                     <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>Modelo</td>
@@ -237,7 +237,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 </tr>
                                 <tr>
                                     <td class="py-1 px-2"><i class="fas fa-door-open text-primary me-2"></i>Puerta de Enlace</td>
-                                    <td class="py-1 px-2">${routerData.puertaEnlace}</td>
+                                    <td class="py-1 px-2">${routerData.puertaenlace}</td>
                                 </tr>
                                 <tr>
                                     <td class="py-1 px-2"><i class="fas fa-server text-primary me-2"></i>DNS 1</td>
@@ -307,12 +307,12 @@ document.addEventListener("DOMContentLoaded", () => {
           frmVenta.classList.remove('hidden');
           frmAlquiler.classList.add('hidden');
           const venta = installationData.venta;
-          document.getElementById("txtCostoAntenaVenta").value = venta.costoAntena;
-          document.getElementById("txtCostoRouterVenta").value = venta.costoRouter;
-          document.getElementById("txtSubTotalVenta").value = venta.subTotal;
+          document.getElementById("txtCostoAntenaVenta").value = venta.costoantena;
+          document.getElementById("txtCostoRouterVenta").value = venta.costorouter;
+          document.getElementById("txtSubTotalVenta").value = venta.subtotal;
           document.getElementById("txtAdelantoVenta").value = venta.adelanto;
-          document.getElementById("txtSaldoEquipoVenta").value = venta.saldoEquipos;
-          document.getElementById("txtMaterialAdicionalVenta").value = venta.materialAdicional;
+          document.getElementById("txtSaldoEquipoVenta").value = venta.saldoequipos;
+          document.getElementById("txtMaterialAdicionalVenta").value = venta.materialadicional;
           document.getElementById("txtMarcaVentaAntena").value = venta.antena.marca;
           document.getElementById("txtModeloVentaAntena").value = venta.antena.modelo;
           document.getElementById("txtMacVentaAntena").value = venta.antena.mac;
@@ -332,9 +332,9 @@ document.addEventListener("DOMContentLoaded", () => {
           const alquilado = installationData.alquilado;
           document.getElementById("slcCondicionAlquilados").value = alquilado.condicion ? "Alquilado" : "Prestado";
           document.getElementById("txtPeriodoAlquilados").value = alquilado.periodo;
-          document.getElementById("txtFechaInicioAlquilados").value = alquilado.fechaInicio;
-          document.getElementById("txtFechaFinAlquilados").value = alquilado.fechaFin;
-          document.getElementById("txtCostoAlquilerAlquilados").value = alquilado.costoAlquiler;
+          document.getElementById("txtFechaInicioAlquilados").value = alquilado.fechainicio;
+          document.getElementById("txtFechaFinAlquilados").value = alquilado.fechafin;
+          document.getElementById("txtCostoAlquilerAlquilados").value = alquilado.costoalquiler;
           document.getElementById("txtMarcaAntenaAlquilados").value = alquilado.antena.marca;
           document.getElementById("txtModeloAntenaAlquilados").value = alquilado.antena.modelo;
           document.getElementById("txtMacAntenaAlquilados").value = alquilado.antena.mac;
@@ -345,19 +345,19 @@ document.addEventListener("DOMContentLoaded", () => {
           document.getElementById("txtMacRouterAlquilados").value = alquilado.router.mac;
           document.getElementById("txtSerialRouterAlquilados").value = alquilado.router.serial;
           document.getElementById("txtDescripcionRouterAlquilados").value = alquilado.router.descripcion;
-          document.getElementById("chkAdelantadoAlquilados").checked = alquilado.condicionTiempo["Adelantado"] === true;
-          document.getElementById("chkCumpliendoMesAlquilados").checked = alquilado.condicionTiempo["Cumpliendo el mes"] === true;
+          document.getElementById("chkAdelantadoAlquilados").checked = alquilado.condiciontiempo["Adelantado"] === true;
+          document.getElementById("chkCumpliendoMesAlquilados").checked = alquilado.condiciontiempo["Cumpliendo el mes"] === true;
           document.getElementById("txtDetalleAlquilados").value = alquilado.detalle;
         }
 
         // Cargar datos de deuda
         const deuda = installationData.deuda;
-        document.getElementById("txtPagoServicio").value = deuda.pagoServicio;
-        document.getElementById("txtAdelantoEquipo").value = deuda.adelantoEquipo;
-        document.getElementById("txtCostoAlquiler").value = deuda.costoAlquiler;
-        document.getElementById("txtMaterialAdicional").value = deuda.materialAdicional;
-        document.getElementById("txtTotalCancelado").value = deuda.totalCancelado;
-        document.getElementById("txtSaldoPendiente").value = deuda.saldoPendiente;
+        document.getElementById("txtPagoServicio").value = deuda.pagoservicio;
+        document.getElementById("txtAdelantoEquipo").value = deuda.adelantoequipo;
+        document.getElementById("txtCostoAlquiler").value = deuda.costoalquiler;
+        document.getElementById("txtMaterialAdicional").value = deuda.materialadicional;
+        document.getElementById("txtTotalCancelado").value = deuda.totalcancelado;
+        document.getElementById("txtSaldoPendiente").value = deuda.saldopendiente;
         document.getElementById("txtDetalleDeuda").value = deuda.detalle;
       } else {
         showToast("No hay datos en la Ficha de Instalación.", "INFO");
@@ -394,12 +394,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const router = {
         numero: ++numeroRouter, // Incrementar el contador antes de asignarlo
-        codigoBarra: codigoBarra,
+        codigobarra: codigoBarra,
         modelo: modelo,
         marca: marca,
         wan: wan,
         mascara: mascara,
-        puertaEnlace: puertaEnlace,
+        puertaenlace: puertaEnlace,
         dns1: dns1,
         dns2: dns2,
         lan: lan,
@@ -607,12 +607,12 @@ document.addEventListener("DOMContentLoaded", () => {
         plan: txtPaquete,
         frecuencia: slcFrecuencia.split(","),
         base: [base],
-        subBase: [subBase],
-        signalStrength: txtSignalStrength,
-        noiseFloor: txtNoiseFloor,
-        transmiTccq: txtTransmiTccq,
-        txRate: txtTxRate,
-        rxRate: txtRxRate,
+        subbase: [subBase],
+        signalstrength: txtSignalStrength,
+        noisefloor: txtNoiseFloor,
+        transmitccq: txtTransmiTccq,
+        txrate: txtTxRate,
+        rxrate: txtRxRate,
         routers: jsonRouter
       },
     }
@@ -680,12 +680,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     jsonVenta = {
       venta: {
-        costoAntena: txtCostoAntenaVenta,
-        costoRouter: txtCostoRouterVenta,
-        subTotal: txtSubTotalVenta,
+        costoantena: txtCostoAntenaVenta,
+        costorouter: txtCostoRouterVenta,
+        subtotal: txtSubTotalVenta,
         adelanto: txtAdelantoVenta,
-        saldoEquipos: txtSaldoEquipoVenta,
-        materialAdicional: txtMaterialAdicionalVenta,
+        saldoequipos: txtSaldoEquipoVenta,
+        materialadicional: txtMaterialAdicionalVenta,
         condicion: {
           "Adelantado": chkAdelantadoVenta ? true : "",
           "Cumpliendo el mes": chkCumpliendoMesVenta ? true : ""
@@ -733,10 +733,10 @@ document.addEventListener("DOMContentLoaded", () => {
       alquilado: {
         condicion: slcCondicionAlquilado,
         periodo: txtPeriodoAlquilado,
-        fechaInicio: txtFechaInicioAlquilado,
-        fechaFin: txtFechaFinAlquilado,
-        costoAlquiler: txtCostoAlquilerAlquilado,
-        condicionTiempo: {
+        fechainicio: txtFechaInicioAlquilado,
+        fechafin: txtFechaFinAlquilado,
+        costoalquiler: txtCostoAlquilerAlquilado,
+        condiciontiempo: {
           "Adelantado": chkAdelantadoAlquilado ? true : "",
           "Cumpliendo el mes": chkCumpliendoMesAlquilados ? true : ""
         },
@@ -772,12 +772,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const txtDetalleDeuda = document.getElementById('txtDetalleDeuda').value;
     jsonDeuda = {
       deuda: {
-        pagoServicio: txtPagoServicio,
-        adelantoEquipo: txtAdelantoEquipo,
-        costoAlquiler: txtCostoAlquiler,
-        materialAdicional: txtMaterialAdicional,
-        totalCancelado: txtTotalCancelado,
-        saldoPendiente: txtSaldoPendiente,
+        pagoservicio: txtPagoServicio,
+        adelantoequipo: txtAdelantoEquipo,
+        costoalquiler: txtCostoAlquiler,
+        materialadicional: txtMaterialAdicional,
+        totalcancelado: txtTotalCancelado,
+        saldopendiente: txtSaldoPendiente,
         detalle: txtDetalleDeuda
       }
     }
