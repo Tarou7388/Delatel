@@ -16,7 +16,6 @@ SELECT
     s.id_distrito,
     s.descripcion,
     s.coordenadas,
-    s.direccion,
     d.distrito,
     s.create_at,
     s.update_at,
@@ -39,8 +38,8 @@ CREATE PROCEDURE spu_sectores_registrar(
     p_iduser_create  INT
 )
 BEGIN
-    INSERT INTO tb_sectores (id_distrito, sector, iduser_create)
-    VALUES (p_id_distrito, p_sector, p_iduser_create);
+    INSERT INTO tb_sectores (id_distrito, sector,descripcion,coordenadas, iduser_create)
+    VALUES (p_id_distrito, p_sector,p_descripcion,p_coordenadas, p_iduser_create);
 END $$
 
 DROP PROCEDURE IF EXISTS spu_sectores_actualizar_id$$

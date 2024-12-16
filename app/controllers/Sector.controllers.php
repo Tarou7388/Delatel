@@ -17,7 +17,9 @@ if (isset($_POST["operacion"])) {
 			$datos = [
 				"idDistrito"   => Herramientas::sanitizarEntrada($_POST["idDistrito"]),
 				"sector"       => Herramientas::sanitizarEntrada($_POST["sector"]),
-				"idUsuario"    => Herramientas::sanitizarEntrada($_POST["idUsuario"])
+				"descripcion"    => Herramientas::sanitizarEntrada($_POST["descripcion"]),
+				"coordenadas"    => Herramientas::sanitizarEntrada($_POST["coordenadas"]),
+				"idUsuario"    => Herramientas::sanitizarEntrada($_POST["idUsuario"]),
 			];
 
 			$resultado = $sectores->registrarSector($datos);

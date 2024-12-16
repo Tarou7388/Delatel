@@ -67,6 +67,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
   }
+  async function cargarSelect(){
+    const response = await fetch(`${config.HOST}app/controllers/Distritos.controllers.php?operacion=buscarDistrito&valor=1102`);
+    const data = await response.json();
+    const select = document.querySelector("#buscarDistrito");
+    data.forEach(item => {
+      const option = document.createElement("option");
+      option.value = item.id_distrito; // Asegúrate de que esta propiedad existe en la respuesta
+      option.text = item.distrito;    // Asegúrate de que esta propiedad existe en la respuesta
+      select.appendChild(option);
+    });
+  }
+  cargarSelect();
 
   async function agregarCaja() {
     const coordenadasEnviar = `${coordenadasCaja.lat},${coordenadasCaja.lng}`;

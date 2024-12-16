@@ -174,6 +174,12 @@
             <input type="text" class="form-control" id="direccionSector" name="direccion" placeholder="Dirección" required>
             <label for="direccion">Dirección</label>
           </div>
+          <div class="form-floating mb-3">
+            <select class="form-select" name="" id="buscarDistrito">
+              <option value="" disabled>Selecciona un Distrito</option>
+            </select>
+            <label for="distritos">Distritos</label>
+          </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
             <button type="submit" class="btn btn-primary">Guardar</button>

@@ -24,10 +24,12 @@ class Sector extends Conexion
    */
   public function registrarSector($params = [])
   {
-    $sql = "CALL spu_sectores_registrar(?,?,?)";
+    $sql = "CALL spu_sectores_registrar(?,?,?,?,?)";
     $values = array(
       $params['idDistrito'],
       $params['sector'],
+      $params['descripcion'],
+      $params['coordenadas'],
       $params['idUsuario']
     );
     return $this->registrar($sql, $values);

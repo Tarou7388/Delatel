@@ -67,7 +67,6 @@ CREATE TABLE tb_sectores (
     sector VARCHAR(60) NOT NULL,
     descripcion VARCHAR(100) NOT NULL,
     coordenadas VARCHAR(50) NOT NULL,
-    direccion VARCHAR(200) NOT NULL,
     create_at DATETIME NOT NULL DEFAULT NOW(),
     update_at DATETIME NULL,
     inactive_at DATETIME NULL,
