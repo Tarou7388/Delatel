@@ -54,7 +54,7 @@
               Cables
             </label>
           </div>
-          <button class="btn btn-primary mt-3" id="btnActualizar">Actualizar</button>
+          <button class="btn btn-primary mt-3 w-100" id="btnActualizar">Actualizar</button>
         </div>
       </div>
       <div class="card mt-3">
@@ -63,7 +63,8 @@
           Agregar Nueva Entrada
         </div>
         <div class="card-body">
-          <button class="btn btn-success" data-bs-toggle="modal" id="modalAgregarCaja" data-bs-target="#modalAgregar" disabled>Agregar Nueva Entrada</button>
+          <button class="btn btn-success w-100 mb-2" data-bs-toggle="modal" id="modalAgregarCaja" data-bs-target="#modalAgregar" disabled>Nueva Caja</button>
+          <button class="btn btn-success w-100" data-bs-toggle="modal" id="modalAgregarMufa" data-bs-target="#modalAgregarMufa2" disabled>Nueva Mufa</button>
         </div>
       </div>
     </div>
@@ -80,7 +81,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="modalAgregarLabel">Agregar Nueva Entrada</h5>
+        <h5 class="modal-title" id="modalAgregarLabel">Agregar Nueva Caja</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -102,6 +103,37 @@
           </div>
           <div class="form-floating mb-3">
             <input type="text" class="form-control" id="direccionCaja" name="direccion" placeholder="Dirección" required>
+            <label for="direccion">Dirección</label>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalAgregarMufa2" tabindex="-1" aria-labelledby="modalAgregarMufaLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalAgregarMufaLabel">Agregar Nueva Mufa</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="formAgregarMufa">
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="nombreMufa" name="nombre" placeholder="Nombre" required>
+            <label for="nombre">Nombre</label>
+          </div>
+          <div class="form-floating mb-3">
+            <textarea class="form-control" id="descripcionMufa" name="descripcion" placeholder="Descripción" rows="3" required></textarea>
+            <label for="descripcion">Descripción</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="direccionMufa" name="direccion" placeholder="Dirección" required>
             <label for="direccion">Dirección</label>
           </div>
           <div class="modal-footer">

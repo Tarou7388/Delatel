@@ -314,7 +314,7 @@ INSERT INTO tb_sectores (id_distrito, sector, descripcion, coordenadas, direccio
 (110201, 'COND. ALTA', 'Descripción del sector', "-13.43669652995902, -76.11306320932194", 'Dirección del sector', 1),
 (110201, 'COND. BAJA', 'Descripción del sector', "-13.43473693459032, -76.11455679499767", 'Dirección del sector', 1);
 
-INSERT INTO tb_mufas (nombre, descripcion, coordenadas, direccion, create_at, iduser_create) VALUES
+/* INSERT INTO tb_mufas (nombre, descripcion, coordenadas, direccion, create_at, iduser_create) VALUES
 ('Mufa 1', 'Cerca del estadio', '-13.41287751332741, -76.15387988372802', 'Av 123', NOW(), 1),
 ('Mufa 2', 'Plaza san Isidro', '-13.429027241634715, -76.14961981773376', 'Av 123456', NOW(), 1),
 ('Mufa 3', 'Cerca de la Plaza', '-13.404169746696624, -76.12736834665132', 'Av 123', NOW(), 1),
@@ -330,7 +330,7 @@ INSERT INTO tb_cajas(nombre, descripcion, numero_entradas, id_sector, coordenada
 ('Caja 7', 'Los Bancarios', 8, 6, '-13.42826126892918, -76.135733419194', 1),
 ('Caja 8', 'Plaza Chincha', 16, 6, '-13.41819520203595, -76.13222851544388', 1),
 ('Caja 9', 'Parque Toledo', 8, 19, '-13.417732015444551, -76.11985007949754', 1),
-('Caja 10', 'Plaza de pueblo nuevo', 16, 19, '-13.404169746696624, -76.12736834665132', 1);
+('Caja 10', 'Plaza de pueblo nuevo', 16, 19, '-13.404169746696624, -76.12736834665132', 1); */
 
 INSERT INTO tb_responsables (id_usuario, id_rol,iduser_create) VALUES
 (1, 1,1),

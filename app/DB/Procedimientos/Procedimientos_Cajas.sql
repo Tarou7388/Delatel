@@ -77,3 +77,16 @@ BEGIN
   WHERE id_caja = p_id_caja AND numero_entradas > 0;
 END $$
 
+DROP PROCEDURE IF EXISTS spu_mufa_registrar$$
+
+CREATE PROCEDURE spu_mufa_registrar(
+  IN p_nombre VARCHAR(30),
+  IN p_descripcion VARCHAR(100),
+  IN p_coordenadas JSON,
+  IN p_direccion VARCHAR(100),
+  IN p_iduser_create INT
+)
+BEGIN
+  INSERT INTO tb_mufas(nombre, descripcion, coordenadas, direccion, iduser_create)
+  VALUES(p_nombre, p_descripcion, p_coordenadas, p_direccion, p_iduser_create);
+END$$

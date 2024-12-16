@@ -12,3 +12,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
       break;
   }
 }
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  switch ($_POST['operacion']) {
+    case 'registrarMufa':
+      $array = [
+        'nombre' => $_POST['nombre'],
+        'descripcion' => $_POST['descripcion'],
+        'coordenadas' => $_POST['coordenadas'],
+        'direccion' => $_POST['direccion'],
+        'id_usuario' => $_POST['id_usuario']
+      ];
+      $respuesta = $mufa->registrarMufa($array);
+      echo json_encode($respuesta);
+      break;
+  }
+}

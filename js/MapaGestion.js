@@ -10,8 +10,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   let Coordenadas = null;
 
+  let CablePrincipal = null;
+
   let datosCajas = [];
   let datosSectores = [];
+
 
   let sectorCercano = null;
 
@@ -98,9 +101,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
     const data = await response.json();
     console.log(data);
-    if(data.error){
+    if (data.error) {
       showToast(data.error.message, "ERROR");
-    }else{
+    } else {
       showToast("Registrado Correctamente", "SUCCESS");
     }
   }
@@ -140,14 +143,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     modal.hide();
   });
 
+  document.querySelector("#formAgregarMufa").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const modal = bootstrap.Modal.getInstance(document.getElementById('modalAgregarMufa2'));
+    agregarMufa();
+    modal.hide();
+  });
+
   async function eventocajas() {
     datosCajas = await obtenerDatosAnidado(`${config.HOST}app/controllers/Caja.controllers.php?operacion=listarCajas`);
-    marcadoresCajas = await marcadoresAnidado(datosCajas, "cajaNAP");
+    marcadoresCajas = await marcadoresAnidado(datosCajas, "rojo");
   }
 
   async function eventomufas() {
     const datos = await obtenerDatosPlano(`${config.HOST}app/controllers/Mufas.controllers.php?operacion=listarMufas`);
-    marcadoresMufas = await marcadoresPlano(datos, "mufa");
+    marcadoresMufas = await marcadoresPlano(datos, "verde");
 
     for (let i = 0; i < marcadoresMufas.length; i++) {
       marcadoresMufas[i].addListener('click', async (e) => {
@@ -156,9 +166,20 @@ document.addEventListener('DOMContentLoaded', async () => {
           const json = { lat: e.latLng.lat(), lng: e.latLng.lng() };
           lineaCableGuardar.push(json);
           banderaCable = false;
-          if(ask("¿Desea guardar la caja?")){
+          if (await ask("¿Desea guardar la caja?")) {
             await agregarCaja();
             await agregarCable();
+            marcadoresCajas.forEach(marcador => {
+              marcador.forEach(item => {
+                item.setMap(null);
+              });
+            });
+            eventocajas();
+            lineasCables.forEach(linea => {
+              linea.setMap(null);
+            });
+            eventoCables();
+            marcadorPrincipal.setMap(null);
           }
         }
       });
@@ -168,20 +189,46 @@ document.addEventListener('DOMContentLoaded', async () => {
   async function eventoCables() {
     const response = await fetch(`${config.HOST}app/controllers/Lineas.controllers.php?operacion=getLineas`);
     const data = await response.json();
-    data.forEach(linea => {
+    data.forEach((linea, index) => {
       const line = new google.maps.Polyline({
         path: linea.coordenadas,
         geodesic: true,
-        strokeColor: "#FF0000",
+        strokeColor: index === 0 ? "#227093" : "#cd6133",
+        strokeWeight: index === 0 ? 7 : 3 // CablePrincipal más grueso
       });
       lineasCables.push(line);
       line.setMap(mapa);
     });
+    CablePrincipal = lineasCables[0];
+    CablePrincipal.addListener('click', async (e) => {
+      blooquearbotones(true, false);
+      Coordenadas = `${e.latLng.lat()},${e.latLng.lng()}`;
+    });
+  }
+
+  async function agregarMufa() {
+    const paramsEnviar = new FormData();
+    paramsEnviar.append("operacion", "registrarMufa");
+    paramsEnviar.append("nombre", document.querySelector("#nombreMufa").value);
+    paramsEnviar.append("descripcion", document.querySelector("#descripcionMufa").value);
+    paramsEnviar.append("coordenadas", Coordenadas);
+    paramsEnviar.append("direccion", document.querySelector("#direccionMufa").value);
+    paramsEnviar.append("id_usuario", user.idUsuario);
+    const response = await fetch(`${config.HOST}app/controllers/Mufas.controllers.php`, {
+      method: "POST",
+      body: paramsEnviar
+    });
+    const data = await response.json();
+  }
+
+  async function blooquearbotones(caja, mufa) {
+    document.querySelector("#modalAgregarCaja").disabled = caja;
+    document.querySelector("#modalAgregarMufa").disabled = mufa;
   }
 
   async function eventoSectores() {
     datosSectores = await obtenerDatosPlano(`${config.HOST}app/controllers/Sector.controllers.php?operacion=listarSectoresMapa`);
-    marcadoresSectores = await marcadoresPlano(datosSectores, "sector");
+    marcadoresSectores = await marcadoresPlano(datosSectores, "azul");
   }
 
   async function marcadoresPlano(datos, img2) {
@@ -315,9 +362,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         await eventomufas();
       } else {
         marcadoresMufas.forEach(marcador => {
-          marcador.forEach(item => {
-            item.setMap(null);
-          });
+          marcador.setMap(null);
         });
       }
     }
@@ -379,6 +424,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   mapa.addListener('click', (event) => {
     const latLng = event.latLng.toJSON();
     Coordenadas = { lat: latLng.lat, lng: latLng.lng };
+
+    blooquearbotones(true, true);
 
     if (marcadorPrincipal) {
       marcadorPrincipal.setMap(null);
