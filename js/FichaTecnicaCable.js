@@ -149,14 +149,14 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelector("#txtGponCasa").value = costo.casa.gpon;
         document.querySelector("#txtCatvCasa").value = costo.casa.catv;
 
-        if (costo.cableCosto) {
-          document.querySelector("#txtCantSintotizador").value = costo.cableCosto.numerosintotizadores;
-          document.querySelector("#txtCostoAlquiler").value = costo.cableCosto.costoAlquilerSintotizador;
-          document.querySelector("#txtCantCable").value = costo.cableCosto.cantidadCable;
-          document.querySelector("#txtPrecioCable").value = costo.cableCosto.precioCable;
-          document.querySelector("#txtPrecioConector").value = costo.cableCosto.precioConector;
-          document.querySelector("#txtCantConector").value = costo.cableCosto.cantidadConector;
-          document.querySelector("#txtDetalle").value = costo.cableCosto.detalle;
+        if (costo.cablecosto) {
+          document.querySelector("#txtCantSintotizador").value = costo.cablecosto.numerosintotizadores;
+          document.querySelector("#txtCostoAlquiler").value = costo.cablecosto.costoAlquilerSintotizador;
+          document.querySelector("#txtCantCable").value = costo.cablecosto.cantidadCable;
+          document.querySelector("#txtPrecioCable").value = costo.cablecosto.precioCable;
+          document.querySelector("#txtPrecioConector").value = costo.cablecosto.precioConector;
+          document.querySelector("#txtCantConector").value = costo.cablecosto.cantidadConector;
+          document.querySelector("#txtDetalle").value = costo.cablecosto.detalle;
         }
       }
 
@@ -278,7 +278,7 @@ document.addEventListener("DOMContentLoaded", () => {
           metrosadicionales: parseInt(txtCantCable),
           preciometro: parseFloat(txtPrecioCable),
         },
-        idCaja: idCaja, // idCaja
+        idcaja: idCaja, // idCaja
       };
     }
   }
@@ -313,16 +313,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const jsonCostoCable = {
       numerosintotizadores: parseInt(txtCantSintotizador) || 0,
-      costoAlquilerSintotizador: parseFloat(txtCostoAlquiler) || 0,
-      costoCable: parseFloat(txtCostoCable) || 0,
-      costoConector: parseFloat(txtCostoConector) || 0,
-      cantidadCable: txtCantCable,
-      precioCable: txtPrecioCable,
-      precioConector: txtPrecioConector,
-      cantidadConector: txtCantConector,
+      costoalquilersintotizador: parseFloat(txtCostoAlquiler) || 0,
+      costocable: parseFloat(txtCostoCable) || 0,
+      costoconector: parseFloat(txtCostoConector) || 0,
+      cantidadcable: txtCantCable,
+      preciocable: txtPrecioCable,
+      precioconector: txtPrecioConector,
+      cantidadconector: txtCantConector,
       detalle: txtDetalle,
     };
-    jsonCosto.cableCosto = jsonCostoCable;
+    jsonCosto.cablecosto = jsonCostoCable;
 
     return jsonCosto;
   }
@@ -355,7 +355,7 @@ document.addEventListener("DOMContentLoaded", () => {
     numeroSintotizadores++;
     const jsonSintotizadorNuevo = {
       numero: numeroSintotizadores,
-      codigoBarra: txtCodigoBarraSintonizador,
+      codigobarra: txtCodigoBarraSintonizador,
       marca: txtMarcaSintonizador,
       modelo: txtModeloSintonizador,
       serie: txtSerieSintonizador,

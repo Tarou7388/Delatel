@@ -107,24 +107,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Cargar datos de la ficha de instalación
       const fichaInstalacion = JSON.parse(data[0].ficha_instalacion);
-      if (!fichaInstalacion || !fichaInstalacion.fibraOptica) {
+      if (!fichaInstalacion || !fichaInstalacion.fibraoptica) {
         showToast('No se encontraron datos de fibra óptica', "INFO");
         return;
       }
-      const fibraOptica = fichaInstalacion.fibraOptica;
+      const fibraOptica = fichaInstalacion.fibraoptica;
 
       document.getElementById("txtPeriodo").value = fibraOptica.periodo;
       document.getElementById("txtUsuario").value = fibraOptica.usuario;
-      document.getElementById("txtClaveAcceso").value = fibraOptica.claveAcceso;
+      document.getElementById("txtClaveAcceso").value = fibraOptica.claveacceso;
       document.getElementById("txtVlan").value = fibraOptica.vlan;
       document.getElementById("txtPlan").value = fibraOptica.plan;
       document.getElementById("txtPotenciaFibra").value = fibraOptica.potencia;
       document.getElementById("txtSsid").value = fibraOptica.moden.ssid;
       document.getElementById("txtSeguridad").value = fibraOptica.moden.seguridad;
-      document.getElementById("txtCodigoBarra").value = fibraOptica.moden.codigoBarra;
+      document.getElementById("txtCodigoBarra").value = fibraOptica.moden.codigobarra;
       document.getElementById("txtMarca").value = fibraOptica.moden.marca;
       document.getElementById("txtModelo").value = fibraOptica.moden.modelo;
-      document.getElementById("txtSerieModen").value = fibraOptica.moden.serie;
+      document.getElementById("txtSerie").value = fibraOptica.moden.serie;
       document.getElementById("slcBanda").value = fibraOptica.moden.banda.join(",");
       document.getElementById("txtAntenas").value = fibraOptica.moden.numeroantena;
       document.getElementById("chkCatv").checked = fibraOptica.moden.catv;
@@ -235,16 +235,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const txtMAC = document.querySelector("#txtCodigoBarra").value;
     const txtMarca = document.querySelector("#txtMarca").value;
     const txtModelo = document.querySelector("#txtModelo").value;
-    const txtSerieModen = document.querySelector("#txtSerieModen").value;
+    const txtSerie = document.querySelector("#txtSerie").value;
     const slcBanda = document.querySelector("#slcBanda").value;
     const txtAntenas = document.querySelector("#txtAntenas").value;
     const chkCatv = document.querySelector("#chkCatv").checked;
     const txtDetalles = document.querySelector("#txtDetalles").value;
 
     jsonData = {
-      fibraOptica: {
+      fibraoptica: {
         usuario: txtUsuario,
-        claveAcceso: txtClaveAcceso,
+        claveacceso: txtClaveAcceso,
         vlan: txtVlan,
         periodo: txtPeriodo,
         plan: txtPlan,
@@ -252,10 +252,10 @@ document.addEventListener('DOMContentLoaded', () => {
         router: {
           ssid: txtSsid,
           seguridad: txtSeguridad,
-          codigoBarra: txtMAC,
+          codigobarra: txtMAC,
           marca: txtMarca,
           modelo: txtModelo,
-          serie: txtSerieModen,
+          serie: txtSerie,
           banda: slcBanda.split(","),
           numeroantena: parseInt(txtAntenas),
           catv: chkCatv,
@@ -263,7 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
         detalles: txtDetalles,
         repetidores: jsonRepetidor
       },
-      idCaja: idCaja,
+      idcaja: idCaja,
     }
   }
 
@@ -293,7 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
       numero: numeroRepetidores,
       ssid: ssid,
       contrasenia: contrasenia,
-      codigoBarraRepetidor: codigoBarra,
+      codigobarrarepetidor: codigoBarra,
       marca: marca,
       modelo: modelo,
       precio: precio,
@@ -458,7 +458,7 @@ document.addEventListener('DOMContentLoaded', () => {
       "txtSsid",
       "txtSeguridad",
       "txtCodigoBarra",
-      "txtSerieModen",
+      "txtSerie",
       "slcBanda",
       "txtAntenas"
     ];
