@@ -235,6 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const txtMAC = document.querySelector("#txtCodigoBarra").value;
     const txtMarca = document.querySelector("#txtMarca").value;
     const txtModelo = document.querySelector("#txtModelo").value;
+    const txtIp = document.querySelector("#txtIp").value;
     const txtSerie = document.querySelector("#txtSerie").value;
     const slcBanda = document.querySelector("#slcBanda").value;
     const txtAntenas = document.querySelector("#txtAntenas").value;
@@ -253,6 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
           ssid: txtSsid,
           seguridad: txtSeguridad,
           codigobarra: txtMAC,
+          ip: txtIp,
           marca: txtMarca,
           modelo: txtModelo,
           serie: txtSerie,
@@ -456,6 +458,7 @@ document.addEventListener('DOMContentLoaded', () => {
       "txtPeriodo",
       "txtPotenciaFibra",
       "txtSsid",
+      "txtIp",
       "txtSeguridad",
       "txtCodigoBarra",
       "txtSerie",
@@ -655,6 +658,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }); */
 
   $("#txtIpRepetidor").on("input", function (event) {
+    formatoIPinput(event);
+  });
+
+  $("#txtIp").on("input", function (event) {
     formatoIPinput(event);
   });
 
