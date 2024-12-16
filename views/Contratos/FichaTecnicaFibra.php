@@ -172,13 +172,13 @@ $idContrato = $_GET['idContrato'];
                 </div>
               </div>
             </div>
-            <h5> Datos del Modém</h5>
+            <h5> Datos del Router</h5>
 
             <div class="row g-2 mb-2">
               <div class="col-12 col-md-6">
                 <div class="form-floating">
-                  <input type="text" class="form-control" id="txtSsdi" placeholder="SSDI">
-                  <label for="lblSsdi">SSDI <span class="required-asterisk" style="color: red;">*</span></label>
+                  <input type="text" class="form-control" id="txtSsdi" placeholder="SSID">
+                  <label for="lblSsdi">SSID <span class="required-asterisk" style="color: red;">*</span></label>
                   <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
                 </div>
               </div>
@@ -260,7 +260,7 @@ $idContrato = $_GET['idContrato'];
               </div>
               <div class="mt-4">
                 <div class="form-floating">
-                  <textarea type="text" class="form-control" id="txtDetallesModen" placeholder="Detalles"></textarea>
+                  <textarea type="text" class="form-control" id="txtDetalles" placeholder="Detalles"></textarea>
                   <label for="lblDetalle">Detalles</label>
                 </div>
               </div>

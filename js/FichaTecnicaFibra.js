@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById("txtVlan").value = fibraOptica.vlan;
       document.getElementById("txtPlan").value = fibraOptica.plan;
       document.getElementById("txtPotenciaFibra").value = fibraOptica.potencia;
-      document.getElementById("txtSsdi").value = fibraOptica.moden.ssid;
+      document.getElementById("txtSsid").value = fibraOptica.moden.ssid;
       document.getElementById("txtSeguridad").value = fibraOptica.moden.seguridad;
       document.getElementById("txtCodigoBarra").value = fibraOptica.moden.codigoBarra;
       document.getElementById("txtMarca").value = fibraOptica.moden.marca;
@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById("slcBanda").value = fibraOptica.moden.banda.join(",");
       document.getElementById("txtAntenas").value = fibraOptica.moden.numeroantena;
       document.getElementById("chkCatv").checked = fibraOptica.moden.catv;
-      document.getElementById("txtDetallesModen").value = fibraOptica.detallesModen;
+      document.getElementById("txtDetalles").value = fibraOptica.detalles;
 
       // Actualizar el texto del estado del CATV
       var statusText = document.getElementById('statusText');
@@ -230,7 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const txtPlan = document.querySelector("#txtPlan").value;
     const txtPeriodo = document.querySelector("#txtPeriodo").value;
     const txtPotencia = document.querySelector("#txtPotenciaFibra").value;
-    const txtSsdi = document.querySelector("#txtSsdi").value;
+    const txtSsid = document.querySelector("#txtSsid").value;
     const txtSeguridad = document.querySelector("#txtSeguridad").value;
     const txtMAC = document.querySelector("#txtCodigoBarra").value;
     const txtMarca = document.querySelector("#txtMarca").value;
@@ -239,7 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const slcBanda = document.querySelector("#slcBanda").value;
     const txtAntenas = document.querySelector("#txtAntenas").value;
     const chkCatv = document.querySelector("#chkCatv").checked;
-    const txtaDetallesModen = document.querySelector("#txtDetallesModen").value;
+    const txtDetalles = document.querySelector("#txtDetalles").value;
 
     jsonData = {
       fibraOptica: {
@@ -249,8 +249,8 @@ document.addEventListener('DOMContentLoaded', () => {
         periodo: txtPeriodo,
         plan: txtPlan,
         potencia: txtPotencia,
-        moden: {
-          ssid: txtSsdi,
+        router: {
+          ssid: txtSsid,
           seguridad: txtSeguridad,
           codigoBarra: txtMAC,
           marca: txtMarca,
@@ -260,7 +260,7 @@ document.addEventListener('DOMContentLoaded', () => {
           numeroantena: parseInt(txtAntenas),
           catv: chkCatv,
         },
-        detallesModen: txtaDetallesModen,
+        detalles: txtDetalles,
         repetidores: jsonRepetidor
       },
       idCaja: idCaja,
@@ -455,7 +455,7 @@ document.addEventListener('DOMContentLoaded', () => {
       "txtPlan",
       "txtPeriodo",
       "txtPotenciaFibra",
-      "txtSsdi",
+      "txtSsid",
       "txtSeguridad",
       "txtCodigoBarra",
       "txtSerieModen",
@@ -544,20 +544,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById("btnAñadirRepetidor").addEventListener("click", async function () {
     const codigoBarra = document.getElementById("txtCodigoBarrasRepetidor").value;
-    const ssdi = document.getElementById("txtSsidRepetidor").value;
+    const ssid = document.getElementById("txtSsidRepetidor").value;
     const contrasenia = document.getElementById("txtContraseniaRepetidor").value;
     const ip = document.getElementById("txtIpRepetidor").value;
     const condicion = document.getElementById("slcCondicionRepetidor").value;
     const serie = document.getElementById("txtSerieRepetidor").value;
 
-    if (codigoBarra === "" || ssdi === "" || contrasenia === "" || ip === "" || condicion === "") {
+    if (codigoBarra === "" || ssid === "" || contrasenia === "" || ip === "" || condicion === "") {
       if (!codigoBarra) {
         document.getElementById("txtCodigoBarrasRepetidor").classList.add("is-invalid");
       } else {
         document.getElementById("txtCodigoBarrasRepetidor").classList.remove("is-invalid");
       }
 
-      if (!ssdi) {
+      if (!ssid) {
         document.getElementById("txtSsidRepetidor").classList.add("is-invalid");
       } else {
         document.getElementById("txtSsidRepetidor").classList.remove("is-invalid");

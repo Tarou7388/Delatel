@@ -150,11 +150,11 @@ document.addEventListener("DOMContentLoaded", () => {
       // Verificar si existe ficha_instalacion
       if (ficha.ficha_instalacion) {
         const installationData = JSON.parse(ficha.ficha_instalacion);
-        const fibra = installationData.fibraOptica || {};
+        const fibra = installationData.fibraoptica || {};
         const cable = installationData.cable || {};
 
         document.getElementById("txtPotenciaFibra").value = fibra.potencia || "";
-        document.getElementById("txtSsdi").value = fibra.moden?.ssid || "";
+        document.getElementById("txtSsid").value = fibra.moden?.ssid || "";
         document.getElementById("txtPeriodo").value = fibra.periodo || "";
         document.getElementById("txtPlan").value = fibra.plan || "";
         document.getElementById("txtVlan").value = fibra.vlan || "";
@@ -162,11 +162,11 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("txtCodigoBarra").value = fibra.moden?.codigoBarra || "";
         document.getElementById("txtMarca").value = fibra.moden?.marca || "";
         document.getElementById("txtModelo").value = fibra.moden?.modelo || "";
-        document.getElementById("txtSerieModen").value = fibra.moden?.serie || "";
+        document.getElementById("txtSerie").value = fibra.moden?.serie || "";
         document.getElementById("slcBanda").value = fibra.moden?.banda || "";
         document.getElementById("txtAntenas").value = fibra.moden?.numeroantena || "";
         document.getElementById("chkCatv").checked = fibra.moden?.catv || false;
-        document.getElementById("txtaDetallesModen").value = fibra.detalles || "";
+        document.getElementById("txtDetalleRouter").value = fibra.detalles || "";
 
         // Actualizar el texto del estado del CATV
         var statusText = document.getElementById('statusText');
@@ -340,19 +340,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Mostrar Costos
         const costo = installationData.costo || {};
-        document.getElementById("txtPagoAdelantado").value = costo.pagoAdelantado || "";
+        document.getElementById("txtPagoAdelantado").value = costo.pagoadelantado || "";
         document.getElementById("txtDescuento").value = costo.descuento || "";
         document.getElementById("txtGponNap").value = costo.nap?.gpon || "";
         document.getElementById("txtCatvNap").value = costo.nap?.catv || "";
         document.getElementById("txtGponCasa").value = costo.casa?.gpon || "";
         document.getElementById("txtCatvCasa").value = costo.casa?.catv || "";
-        document.getElementById("txtCantSintotizador").value = costo.cableCosto?.numerosintotizadores || "";
-        document.getElementById("txtCostoAlquiler").value = costo.cableCosto?.costoAlquilerSintotizador || "";
-        document.getElementById("txtCantCable").value = costo.cableCosto?.cantidadCable || "";
-        document.getElementById("txtPrecioCable").value = costo.cableCosto?.precioCable || "";
-        document.getElementById("txtPrecioConector").value = costo.cableCosto?.precioConector || "";
-        document.getElementById("txtCantConector").value = costo.cableCosto?.cantidadConector || "";
-        document.getElementById("txtDetalle").value = costo.cableCosto?.detalle || "";
+        document.getElementById("txtCantSintotizador").value = costo.cablecosto?.numerosintotizadores || "";
+        document.getElementById("txtCostoAlquiler").value = costo.cablecosto?.costoalquilersintotizador || "";
+        document.getElementById("txtCantCable").value = costo.cablecosto?.cantidadcable || "";
+        document.getElementById("txtPrecioCable").value = costo.cablecosto?.preciocable || "";
+        document.getElementById("txtPrecioConector").value = costo.cablecosto?.precioconector || "";
+        document.getElementById("txtCantConector").value = costo.cablecosto?.cantidadconector || "";
+        document.getElementById("txtDetalleCable").value = costo.cablecosto?.detalle || "";
 
         // Calcular costos de cable y conector
         calcularCostos();
@@ -371,39 +371,39 @@ document.addEventListener("DOMContentLoaded", () => {
     const txtPeriodo = document.querySelector("#txtPeriodo").value;
     const txtVlan = document.querySelector("#txtVlan").value;
     const txtPotencia = document.querySelector("#txtPotenciaFibra").value;
-    const txtSsdi = document.querySelector("#txtSsdi").value;
+    const txtSsid = document.querySelector("#txtSsid").value;
     const txtSeguridad = document.querySelector("#txtSeguridad").value;
     const txtCodigoBarra = document.querySelector("#txtCodigoBarra").value;
     const txtMarca = document.querySelector("#txtMarca").value;
     const txtModelo = document.querySelector("#txtModelo").value;
-    const txtSerieModen = document.querySelector("#txtSerieModen").value;
+    const txtSerie = document.querySelector("#txtSerie").value;
     const slcBanda = document.querySelector("#slcBanda").value;
     const txtAntenas = document.querySelector("#txtAntenas").value;
     const chkCatv = document.querySelector("#chkCatv").checked;
-    const txtaDetallesModen = document.querySelector("#txtaDetallesModen").value;
+    const txtDetallesRouter = document.querySelector("#txtDetalleRouter").value;
 
     jsonData = {
-      fibraOptica: {
+      fibraoptica: {
         usuario: txtUsuario,
-        claveAcceso: txtClaveAcceso,
+        claveacceso: txtClaveAcceso,
         vlan: txtVlan,
         periodo: txtPeriodo,
         plan: txtPlan,
         potencia: parseInt(txtPotencia),
-        moden: {
-          ssid: txtSsdi,
+        router: {
+          ssid: txtSsid,
           seguridad: txtSeguridad,
-          codigoBarra: parseInt(txtCodigoBarra),
+          codigobarra: parseInt(txtCodigoBarra),
           marca: txtMarca,
           modelo: txtModelo,
-          serie: txtSerieModen,
+          serie: txtSerie,
           banda: slcBanda.split(","),
           numeroantena: parseInt(txtAntenas),
           catv: chkCatv,
         },
-        detalles: txtaDetallesModen,
+        detalles: txtDetallesRouter,
       },
-      idCaja: idCaja, // id de la caja
+      idcaja: idCaja, // id de la caja
     };
   }
 
@@ -458,7 +458,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const txtCatvCasa = document.querySelector("#txtCatvCasa").value;
 
     const jsonCosto = {
-      pagoAdelantado: txtPagoAdelantado,
+      pagoadelantado: txtPagoAdelantado,
       descuento: txtDescuento,
       nap: {
         gpon: txtGponNap,
@@ -475,22 +475,22 @@ document.addEventListener("DOMContentLoaded", () => {
       const txtPrecioCable = document.querySelector("#txtPrecioCable").value;
       const txtPrecioConector = document.querySelector("#txtPrecioConector").value;
       const txtCantConector = document.querySelector("#txtCantConector").value;
-      const txtDetalle = document.querySelector("#txtDetalle").value;
+      const txtDetalleCable = document.querySelector("#txtDetalleCable").value;
       const txtCostoCable = document.querySelector("#txtCostoCable").value;
       const txtCostoConector = document.querySelector("#txtCostoConector").value;
 
       const jsonCostoCable = {
         numerosintotizadores: parseInt(txtCantSintotizador) || 0,
-        costoAlquilerSintotizador: parseFloat(txtCostoAlquiler) || 0,
-        costoCable: parseFloat(txtCostoCable) || 0,
-        costoConector: parseFloat(txtCostoConector) || 0,
-        cantidadCable: txtCantCable,
-        precioCable: txtPrecioCable,
-        precioConector: txtPrecioConector,
-        cantidadConector: txtCantConector,
-        detalle: txtDetalle,
+        costoalquilersintotizador: parseFloat(txtCostoAlquiler) || 0,
+        costocable: parseFloat(txtCostoCable) || 0,
+        costoconector: parseFloat(txtCostoConector) || 0,
+        cantidadcable: txtCantCable,
+        preciocable: txtPrecioCable,
+        precioconector: txtPrecioConector,
+        cantidadconector: txtCantConector,
+        detalle: txtDetalleCable,
       };
-      jsonCosto.cableCosto = jsonCostoCable;
+      jsonCosto.cablecosto = jsonCostoCable;
     }
 
     return jsonCosto;
@@ -539,7 +539,7 @@ document.addEventListener("DOMContentLoaded", () => {
         numero: numeroRepetidores,
         ssid: ssid,
         contrasenia: contrasenia,
-        codigoBarra: codigoBarra,
+        codigobarra: codigoBarra,
         modelo: modelo,
         marca: marca,
         precio: precio,
@@ -638,7 +638,7 @@ document.addEventListener("DOMContentLoaded", () => {
     numeroSintotizadores++;
     const jsonSintotizadorNuevo = {
       numero: numeroSintotizadores,
-      codigoBarra: txtCodigoBarraSintonizador,
+      codigobarra: txtCodigoBarraSintonizador,
       marca: txtMarcaSintonizador,
       modelo: txtModeloSintonizador,
       serie: txtSerieSintonizador,
@@ -774,7 +774,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const jsonCosto = await costos();
 
     if (numeroRepetidores > 0) {
-      jsonData.fibraOptica.repetidores = jsonRepetidor;
+      jsonData.fibraoptica.repetidores = jsonRepetidor;
     }
 
     if (tipoServicio === "FIBR,CABL" || tipoServicio === "CABL,FIBR") {
@@ -814,10 +814,10 @@ document.addEventListener("DOMContentLoaded", () => {
       "txtVlan",
       "txtPeriodo",
       "txtPotenciaFibra",
-      "txtSsdi",
+      "txtSsid",
       "txtSeguridad",
       "txtCodigoBarra",
-      "txtSerieModen",
+      "txtSerie",
       "txtAntenas",
       "txtPotenciaCable",
       "txtCantConector",
@@ -903,20 +903,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("btnAñadirRepetidor").addEventListener("click", async function () {
     const codigoBarra = document.getElementById("txtCodigoBarrasRepetidor").value;
-    const ssdi = document.getElementById("txtSsidRepetidor").value;
+    const ssid = document.getElementById("txtSsidRepetidor").value;
     const contrasenia = document.getElementById("txtContraseniaRepetidor").value;
     const ip = document.getElementById("txtIpRepetidor").value;
     const condicion = document.getElementById("slcCondicionRepetidor").value;
     const serie = document.getElementById("txtSerieRepetidor").value;
 
-    if (codigoBarra === "" || ssdi === "" || contrasenia === "" || ip === "" || condicion === "") {
+    if (codigoBarra === "" || ssid === "" || contrasenia === "" || ip === "" || condicion === "") {
       if (!codigoBarra) {
         document.getElementById("txtCodigoBarrasRepetidor").classList.add("is-invalid");
       } else {
         document.getElementById("txtCodigoBarrasRepetidor").classList.remove("is-invalid");
       }
 
-      if (!ssdi) {
+      if (!ssid) {
         document.getElementById("txtSsidRepetidor").classList.add("is-invalid");
       } else {
         document.getElementById("txtSsidRepetidor").classList.remove("is-invalid");
