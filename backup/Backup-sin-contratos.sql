@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 16-12-2024 a las 23:47:17
+-- Tiempo de generación: 17-12-2024 a las 02:30:11
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.1.25
 
@@ -20,6 +20,7 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `delatel`
 --
+DROP DATABASE IF EXISTS `delatel`;
 CREATE DATABASE IF NOT EXISTS `delatel` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `delatel`;
 
@@ -597,6 +598,20 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_ficha_tecnica_registrar` (`p_id
     WHERE id_contrato = p_id_contrato;
 END$$
 
+DROP PROCEDURE IF EXISTS `spu_instalacion_ficha_IdSoporte`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_instalacion_ficha_IdSoporte` (IN `p_idsoporte` INT)   BEGIN
+    SELECT 
+        ct.ficha_instalacion,
+        ct.id_contrato
+    FROM tb_soporte s
+    INNER JOIN tb_contratos ct ON s.id_contrato = ct.id_contrato
+    INNER JOIN tb_clientes cl ON ct.id_cliente = cl.id_cliente
+    LEFT JOIN tb_personas p ON cl.id_persona = p.id_persona
+    LEFT JOIN tb_empresas e ON cl.id_empresa = e.id_empresa
+    WHERE 
+        s.id_soporte = p_idsoporte;
+END$$
+
 DROP PROCEDURE IF EXISTS `spu_kardex_buscar`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_kardex_buscar` (IN `p_id_producto` INT)   BEGIN
     SELECT * FROM vw_kardex_listar 
@@ -1110,6 +1125,16 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_soporte_actualizar` (IN `p_id_s
     WHERE id_soporte = p_id_soporte;
 END$$
 
+DROP PROCEDURE IF EXISTS `spu_soporte_CompletarbyId`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_soporte_CompletarbyId` (IN `p_id_soporte` INT, IN `p_iduser_update` INT)   BEGIN
+    UPDATE tb_soporte
+    SET
+        estaCompleto = 1,
+        update_at = NOW(),
+        iduser_update = p_iduser_update
+    WHERE id_soporte = p_id_soporte;
+END$$
+
 DROP PROCEDURE IF EXISTS `spu_soporte_eliminarbyId`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_soporte_eliminarbyId` (IN `p_id_soporte` INT, IN `p_iduser_inactive` INT)   BEGIN
     UPDATE tb_soporte
@@ -1136,48 +1161,54 @@ END$$
 DROP PROCEDURE IF EXISTS `spu_soporte_filtrar_prioridad`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_soporte_filtrar_prioridad` (IN `p_prioridad` VARCHAR(50))   BEGIN
     SELECT
-        c.coordenada,
-        c.id_sector,
-        sct.sector,
-        s.fecha_hora_solicitud,
-        s.fecha_hora_asistencia,
-        c.direccion_servicio,
-        s.id_soporte,
-        s.prioridad,
-        s.soporte,
-        s.descripcion_problema,
-        s.descripcion_solucion,
-        ts.tipo_soporte,
-        c.id_cliente,
-        CASE
-            WHEN cl.id_persona IS NOT NULL THEN CONCAT(p_cliente.nombres, ' ', p_cliente.apellidos)
-            WHEN cl.id_empresa IS NOT NULL THEN e.razon_social
-        END AS nombre_cliente,
-        c.direccion_servicio,
-        r.id_usuario AS id_tecnico,
-        CONCAT(p_tecnico.nombres, ' ', p_tecnico.apellidos) AS nombre_tecnico
-    FROM 
-        tb_soporte s
-    LEFT JOIN 
-        tb_contratos c ON s.id_contrato = c.id_contrato
-    INNER JOIN
-        tb_sectores sct ON c.id_sector = sct.id_sector
-    LEFT JOIN 
-        tb_tipo_soporte ts ON s.id_tipo_soporte = ts.id_tipo_soporte
-    LEFT JOIN 
-        tb_responsables r ON s.id_tecnico = r.id_responsable
-    LEFT JOIN 
-        tb_usuarios u ON r.id_usuario = u.id_usuario
-    LEFT JOIN 
-        tb_personas p_tecnico ON u.id_persona = p_tecnico.id_persona
-    LEFT JOIN 
-        tb_clientes cl ON c.id_cliente = cl.id_cliente
-    LEFT JOIN 
-        tb_personas p_cliente ON cl.id_persona = p_cliente.id_persona 
-    LEFT JOIN 
-        tb_empresas e ON cl.id_empresa = e.id_empresa
+    s.id_soporte,
+    c.coordenada,
+    c.id_sector,
+    sct.sector,
+    s.fecha_hora_solicitud,
+    s.fecha_hora_asistencia,
+    c.direccion_servicio,
+    s.prioridad,
+    s.soporte,
+    s.descripcion_problema,
+    s.descripcion_solucion,
+    ts.tipo_soporte,
+    c.id_cliente,
+    CASE
+        WHEN cl.id_persona IS NOT NULL THEN CONCAT(p_cliente.nombres, ' ', p_cliente.apellidos)
+        WHEN cl.id_empresa IS NOT NULL THEN e.razon_social
+    END AS nombre_cliente,
+    c.direccion_servicio,
+    r.id_usuario AS id_tecnico,
+    CONCAT(p_tecnico.nombres, ' ', p_tecnico.apellidos) AS nombre_tecnico,
+    GROUP_CONCAT(srv.tipo_servicio) AS tipos_servicio,
+    GROUP_CONCAT(srv.servicio) AS servicios
+    FROM
+    tb_soporte s
+    LEFT JOIN tb_contratos c ON s.id_contrato = c.id_contrato
+    INNER JOIN tb_sectores sct ON c.id_sector = sct.id_sector
+    LEFT JOIN tb_tipo_soporte ts ON s.id_tipo_soporte = ts.id_tipo_soporte
+    LEFT JOIN tb_responsables r ON s.id_tecnico = r.id_responsable
+    LEFT JOIN tb_usuarios u ON r.id_usuario = u.id_usuario
+    LEFT JOIN tb_personas p_tecnico ON u.id_persona = p_tecnico.id_persona
+    LEFT JOIN tb_clientes cl ON c.id_cliente = cl.id_cliente
+    LEFT JOIN tb_personas p_cliente ON cl.id_persona = p_cliente.id_persona
+    LEFT JOIN tb_empresas e ON cl.id_empresa = e.id_empresa
+    INNER JOIN tb_paquetes p ON c.id_paquete = p.id_paquete
+    INNER JOIN tb_servicios srv ON JSON_CONTAINS(
+        p.id_servicio,
+        CONCAT(
+        '{"id_servicio":',
+        srv.id_servicio,
+        '}'
+        )
+    )
     WHERE
-        (p_prioridad = "" OR s.prioridad = p_prioridad) AND s.inactive_at IS NULL;
+    c.inactive_at IS NULL
+    AND c.ficha_instalacion IS NOT NULL
+    AND s.estaCompleto != 1
+    AND (p_prioridad = "" OR s.prioridad = p_prioridad) AND s.inactive_at IS NULL
+    GROUP BY c.id_contrato, c.create_at;
 END$$
 
 DROP PROCEDURE IF EXISTS `spu_tipo_soporte_registrar`$$
@@ -1279,6 +1310,7 @@ INSERT INTO `tb_almacen` (`id_almacen`, `nombre_almacen`, `ubicacion`, `coordena
 -- Estructura de tabla para la tabla `tb_cajas`
 --
 -- Creación: 16-12-2024 a las 22:40:57
+-- Última actualización: 16-12-2024 a las 23:24:37
 --
 
 DROP TABLE IF EXISTS `tb_cajas`;
@@ -1302,6 +1334,13 @@ CREATE TABLE `tb_cajas` (
 --   `id_sector`
 --       `tb_sectores` -> `id_sector`
 --
+
+--
+-- Volcado de datos para la tabla `tb_cajas`
+--
+
+INSERT INTO `tb_cajas` (`id_caja`, `nombre`, `descripcion`, `numero_entradas`, `id_sector`, `coordenadas`, `create_at`, `update_at`, `inactive_at`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
+(1, 'Caja 1', 'Esta es la caja 1 para los testeos', 7, 4, '-13.411640591160554,-76.14764672213997', '2024-12-16 17:50:46', '2024-12-16 18:24:37', NULL, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1498,6 +1537,7 @@ INSERT INTO `tb_contactabilidad` (`id_contactabilidad`, `id_persona`, `id_empres
 -- Estructura de tabla para la tabla `tb_contratos`
 --
 -- Creación: 16-12-2024 a las 22:40:58
+-- Última actualización: 16-12-2024 a las 23:35:29
 --
 
 DROP TABLE IF EXISTS `tb_contratos`;
@@ -1536,6 +1576,14 @@ CREATE TABLE `tb_contratos` (
 --   `id_usuario_tecnico`
 --       `tb_responsables` -> `id_responsable`
 --
+
+--
+-- Volcado de datos para la tabla `tb_contratos`
+--
+
+INSERT INTO `tb_contratos` (`id_contrato`, `id_cliente`, `id_paquete`, `id_sector`, `id_usuario_registro`, `id_usuario_tecnico`, `direccion_servicio`, `referencia`, `ficha_instalacion`, `coordenada`, `fecha_inicio`, `fecha_registro`, `fecha_fin`, `nota`, `create_at`, `update_at`, `inactive_at`, `iduser_update`, `iduser_inactive`) VALUES
+(1, 14, 19, 24, 1, NULL, 'Upis Divina Misericordia MzB Lt6A', 'Chincha Alta', '{\"parametros\":{\"periodo\":\"2025-06-16\",\"plan\":\"Plan Salvador Residencial 20MB - 50\",\"frecuencia\":[\"2.4GHZ\"],\"base\":[{\"id\":\"602\",\"nombre\":\"Cajabamba\"}],\"subbase\":[{\"id\":\"60202\",\"nombre\":\"Cachachi\"}],\"signalstrength\":\"-40\",\"noisefloor\":\"-30\",\"transmitccq\":40,\"txrate\":20.2,\"rxrate\":20,\"routers\":[{\"numero\":1,\"codigobarra\":\"1234567890130\",\"modelo\":\"Supresor de Pisco\",\"marca\":\"Omega\",\"wan\":\"192.168.111.111\",\"mascara\":\"255.255.255.0\",\"puertaenlace\":\"192.168.999.999\",\"dns1\":\"8.8.8.8\",\"dns2\":\"8.8.4.4\",\"lan\":\"192.168.666.666\",\"acceso\":\"AccesoRouter\",\"ssid\":\"NombreWifi\",\"seguridad\":\"SeguridadWifi\",\"otros\":\"Por si acaso se desea llenar algo mas\"}]},\"venta\":{\"costoantena\":15,\"costorouter\":150,\"subtotal\":273,\"adelanto\":1,\"saldoequipos\":2,\"materialadicional\":\"123\",\"condicion\":{\"Adelantado\":true,\"Cumpliendo el mes\":\"\"},\"antena\":{\"marca\":\"Omega\",\"modelo\":\"Supresor de Pisco\",\"mac\":\"1234567890130\",\"serial\":\"123456789ABC1\",\"descripcion\":\"Una antena que te provee esto\"},\"router\":{\"marca\":\"TP Link\",\"modelo\":\"Router\",\"mac\":\"1234567890123\",\"serial\":\"123456789ABC2\",\"descripcion\":\"Routerpredeterminado\"},\"detalle\":\"\"},\"alquilado\":null,\"deuda\":{\"pagoservicio\":\"3.99\",\"adelantoequipo\":\"3.99\",\"costoalquiler\":\"3.99\",\"materialadicional\":\"3.99\",\"totalcancelado\":\"3.99\",\"saldopendiente\":\"3.99\",\"detalle\":\"3.99\"}}', '13.416028, 76.144944', '2024-12-16', '2024-12-16', NULL, '123456789', '2024-12-16 17:57:00', NULL, NULL, NULL, NULL),
+(2, 14, 10, 4, 1, NULL, 'Upis Divina Misericordia MzB Lt6A', 'Chincha Alta', '{\"fibraoptica\":{\"usuario\":\"VICSAN2\",\"claveacceso\":\"@VICSAN2\",\"vlan\":\"2000\",\"periodo\":\"2025-06-16\",\"plan\":\"Plan Internet Duo Oro 210MB - 120\",\"potencia\":-10,\"router\":{\"ssid\":\"NombreRouter\",\"seguridad\":\"SeguridadRouter\",\"codigobarra\":1234567890123,\"ip\":\"192.168.020.202\",\"marca\":\"TP Link\",\"modelo\":\"Router\",\"serie\":\"1234567890123AFGRS\",\"banda\":[\"5G\"],\"numeroantena\":6,\"catv\":false},\"detalles\":\"Este detalle esta para solo ese repetidor del FIBR de GPON\",\"repetidores\":[{\"numero\":1,\"ssid\":\"NombreRepetidor\",\"contrasenia\":\"Contrase\\u00f1aRepetidor\",\"codigobarra\":\"1234567890123\",\"modelo\":\"Router\",\"marca\":\"TP Link\",\"precio\":\"150.00\",\"serie\":\"SerieRepetidor\",\"ip\":\"192.168.000.000\",\"condicion\":\"venta\"}]},\"idcaja\":\"1\",\"cable\":{\"pagoinstalacion\":300,\"potencia\":\"-30\",\"plan\":\"Plan Internet Duo Oro 210MB - 120\",\"triplexor\":{\"requerido\":\"false\",\"cargador\":\" false\"},\"conector\":{\"numeroconector\":200,\"precio\":1.5},\"splitter\":[{\"cantidad\":1,\"tipo\":\"1x5\"}],\"cable\":{\"metrosadicionales\":200,\"preciometro\":1.3},\"sintonizadores\":[{\"numero\":1,\"codigobarra\":\"1234567890123\",\"marca\":\"TP Link\",\"modelo\":\"Router\",\"serie\":\"1234567890123SINTONIZADOR\",\"precio\":\"150.00\"}]},\"costo\":{\"pagoadelantado\":\"1000\",\"descuento\":\"12\",\"nap\":{\"gpon\":\"-21\",\"catv\":\"-21\"},\"casa\":{\"gpon\":\"-21\",\"catv\":\"-21\"},\"cablecosto\":{\"numerosintotizadores\":1,\"costoalquilersintotizador\":40,\"costocable\":260,\"costoconector\":300,\"cantidadcable\":\"200\",\"preciocable\":\"1.30\",\"precioconector\":\"1.50\",\"cantidadconector\":\"200\",\"detalle\":\"Detalle del cable del GPON\"}}}', '13.417514726072998,76.14644600523732', '2024-12-16', '2024-12-16', NULL, '12312313123', '2024-12-16 18:24:37', NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -3614,7 +3662,7 @@ CREATE TABLE `tb_kardex` (
 -- Estructura de tabla para la tabla `tb_lineas`
 --
 -- Creación: 16-12-2024 a las 22:40:57
--- Última actualización: 16-12-2024 a las 22:41:08
+-- Última actualización: 16-12-2024 a las 22:50:46
 --
 
 DROP TABLE IF EXISTS `tb_lineas`;
@@ -3644,7 +3692,8 @@ CREATE TABLE `tb_lineas` (
 --
 
 INSERT INTO `tb_lineas` (`id_linea`, `id_mufa`, `id_caja`, `coordenadas`, `create_at`, `update_at`, `inactive_at`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
-(1, NULL, NULL, '[\n{ \"lng\": -76.15641392505843, \"lat\": -13.397719734585584 },\n{ \"lng\": -76.16154547830996, \"lat\": -13.410886698897501 },\n{ \"lng\": -76.14167574818575, \"lat\": -13.41583679233458 },\n{ \"lng\": -76.14083525733821, \"lat\": -13.41600924539936 },\n{ \"lng\": -76.13984845316173, \"lat\": -13.416401031545197 },\n{ \"lng\": -76.13867616029974, \"lat\": -13.412289403614626 },\n{ \"lng\": -76.13245952695715, \"lat\": -13.41515804681155 },\n{ \"lng\": -76.13089498449008, \"lat\": -13.40911096082754 },\n{ \"lng\": -76.12891921992468, \"lat\": -13.41029929944115 }\n]', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL);
+(1, NULL, NULL, '[\n{ \"lng\": -76.15641392505843, \"lat\": -13.397719734585584 },\n{ \"lng\": -76.16154547830996, \"lat\": -13.410886698897501 },\n{ \"lng\": -76.14167574818575, \"lat\": -13.41583679233458 },\n{ \"lng\": -76.14083525733821, \"lat\": -13.41600924539936 },\n{ \"lng\": -76.13984845316173, \"lat\": -13.416401031545197 },\n{ \"lng\": -76.13867616029974, \"lat\": -13.412289403614626 },\n{ \"lng\": -76.13245952695715, \"lat\": -13.41515804681155 },\n{ \"lng\": -76.13089498449008, \"lat\": -13.40911096082754 },\n{ \"lng\": -76.12891921992468, \"lat\": -13.41029929944115 }\n]', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(2, 1, 1, '[{\"lat\":-13.411640591160554,\"lng\":-76.14764672213997},{\"lat\":-13.412527670565172,\"lng\":-76.1477969258448},{\"lat\":-13.413320821141884,\"lng\":-76.14792567187752},{\"lat\":-13.41372783160547,\"lng\":-76.14799004489387},{\"lat\":-13.414195690454813,\"lng\":-76.14828601228358}]', '2024-12-16 17:50:46', NULL, NULL, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -3694,6 +3743,7 @@ INSERT INTO `tb_marca` (`id_marca`, `marca`, `inactive_at`, `iduser_inactive`, `
 -- Estructura de tabla para la tabla `tb_mufas`
 --
 -- Creación: 16-12-2024 a las 22:40:57
+-- Última actualización: 16-12-2024 a las 22:49:44
 --
 
 DROP TABLE IF EXISTS `tb_mufas`;
@@ -3714,6 +3764,13 @@ CREATE TABLE `tb_mufas` (
 --
 -- RELACIONES PARA LA TABLA `tb_mufas`:
 --
+
+--
+-- Volcado de datos para la tabla `tb_mufas`
+--
+
+INSERT INTO `tb_mufas` (`id_mufa`, `nombre`, `descripcion`, `coordenadas`, `direccion`, `create_at`, `update_at`, `inactive_at`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
+(1, 'Mufa 1', 'Esta es la mufa 1', '-13.414195690454813,-76.14828601228358', 'No hay', '2024-12-16 17:49:44', NULL, NULL, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -4381,6 +4438,7 @@ INSERT INTO `tb_servicios` (`id_servicio`, `tipo_servicio`, `servicio`, `create_
 -- Estructura de tabla para la tabla `tb_soporte`
 --
 -- Creación: 16-12-2024 a las 22:40:58
+-- Última actualización: 17-12-2024 a las 01:29:06
 --
 
 DROP TABLE IF EXISTS `tb_soporte`;
@@ -4413,6 +4471,14 @@ CREATE TABLE `tb_soporte` (
 --   `id_tipo_soporte`
 --       `tb_tipo_soporte` -> `id_tipo_soporte`
 --
+
+--
+-- Volcado de datos para la tabla `tb_soporte`
+--
+
+INSERT INTO `tb_soporte` (`id_soporte`, `id_contrato`, `id_tipo_soporte`, `id_tecnico`, `fecha_hora_solicitud`, `fecha_hora_asistencia`, `descripcion_problema`, `descripcion_solucion`, `estaCompleto`, `prioridad`, `soporte`, `create_at`, `update_at`, `inactive_at`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
+(1, 1, NULL, NULL, '2024-12-16 18:06:42', NULL, 'Ha ocurrido un problema con el router en la casa y se necesita hacer una verificacion de los parametros', NULL, 0, 'Media', '{}', '2024-12-16 18:06:42', NULL, NULL, 1, 1, NULL),
+(2, 2, NULL, NULL, '2024-12-16 18:37:53', NULL, 'Esto esta pensado para testear en FIBRA y CABLE asi que tenga consideración.', NULL, 0, 'Media', '{}', '2024-12-16 18:37:53', NULL, NULL, 1, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -5510,7 +5576,7 @@ ALTER TABLE `tb_almacen`
 -- AUTO_INCREMENT de la tabla `tb_cajas`
 --
 ALTER TABLE `tb_cajas`
-  MODIFY `id_caja` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_caja` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `tb_clientes`
@@ -5528,7 +5594,7 @@ ALTER TABLE `tb_contactabilidad`
 -- AUTO_INCREMENT de la tabla `tb_contratos`
 --
 ALTER TABLE `tb_contratos`
-  MODIFY `id_contrato` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_contrato` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `tb_empresas`
@@ -5546,7 +5612,7 @@ ALTER TABLE `tb_kardex`
 -- AUTO_INCREMENT de la tabla `tb_lineas`
 --
 ALTER TABLE `tb_lineas`
-  MODIFY `id_linea` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_linea` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `tb_marca`
@@ -5558,7 +5624,7 @@ ALTER TABLE `tb_marca`
 -- AUTO_INCREMENT de la tabla `tb_mufas`
 --
 ALTER TABLE `tb_mufas`
-  MODIFY `id_mufa` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_mufa` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `tb_paquetes`
@@ -5606,7 +5672,7 @@ ALTER TABLE `tb_servicios`
 -- AUTO_INCREMENT de la tabla `tb_soporte`
 --
 ALTER TABLE `tb_soporte`
-  MODIFY `id_soporte` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_soporte` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `tb_tipooperacion`
