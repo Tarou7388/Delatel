@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const txtaEstadoInicial = document.getElementById("txtaEstadoInicial");
 
   const txtIpRouter = document.getElementById("txtIpRouter");
-  const txtIpRepetidor = documet.getElementById("txtIpRepetidor");
+  const txtIpRepetidor = document.getElementById("txtIpRepetidor");
 
   const txtSSIDRepetidor = document.getElementById("txtSSIDRepetidor");
   const txtPassRepetidor = document.getElementById("txtPassRepetidor");
@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const chkCambiosCatv = document.getElementById("chkCambiosCatv");
   const txtCambiosPass = document.getElementById("txtCambiosPass");
 
-  const txtCambiosIpRouter = documet.getElementById("txtCambiosIpRouter");
+  const txtCambiosIpRouter = document.getElementById("txtCambiosIpRouter");
   const txtCambiosIpRepetidor = document.getElementById("txtCambiosIpRepetidor");
 
 
