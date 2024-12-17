@@ -19,6 +19,7 @@ CREATE TABLE tb_distritos (
     distrito VARCHAR(45) DEFAULT NULL,
     id_provincia INT DEFAULT NULL,
     id_departamento INT DEFAULT NULL,
+    limites JSON NULL,
     CONSTRAINT distr_fk_id_provincia FOREIGN KEY (id_provincia) REFERENCES tb_provincias(id_provincia),
     CONSTRAINT distr_fk_id_departamento FOREIGN KEY (id_departamento) REFERENCES tb_departamentos(id_departamento)
 ) ENGINE=InnoDB;
