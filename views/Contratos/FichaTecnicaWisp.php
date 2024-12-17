@@ -177,6 +177,7 @@ $idContrato = $_GET['idContrato'];
               <div class="form-floating">
                 <input type="text" id="txtCodigoBarraRouter" class="form-control" value="" placeholder="Código de Barra" required>
                 <label for="txtCodigoBarraRouter">Código de Barra <span class="text-danger">*</span></label>
+                <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
               </div>
             </div>
             <div class="col-md">
@@ -196,39 +197,39 @@ $idContrato = $_GET['idContrato'];
           <div class="row g-2 mb-2">
             <div class="col-md">
               <div class="form-floating">
-                <input type="text" id="txtWanRouter" class="form-control" value="172.16.16.159"
-                  placeholder="WAN" required>
+                <input type="text" id="txtWanRouter" class="form-control" placeholder="WAN" required>
                 <label for="txtWanRouter">WAN <span class="text-danger">*</span></label>
+                <div class="invalid-feedback">Por favor, complete el IP.</div>
               </div>
             </div>
             <div class="col-md">
               <div class="form-floating">
-                <input type="text" id="txtMascaraRouter" class="form-control" value="255.255.255.0"
-                  placeholder="Máscara" required>
+                <input type="text" id="txtMascaraRouter" class="form-control" placeholder="Máscara" required>
                 <label for="txtMascaraRouter">Máscara <span class="text-danger">*</span></label>
+                <div class="invalid-feedback">Por favor, complete la Máscara.</div>
               </div>
             </div>
             <div class="col-md">
               <div class="form-floating">
-                <input type="text" id="txtPuertaEnlaceRouter" class="form-control"
-                  value="172.16.16.1" placeholder="Puerta de Enlace" required>
+                <input type="text" id="txtPuertaEnlaceRouter" class="form-control" placeholder="Puerta de Enlace" required>
                 <label for="txtPuertaEnlaceRouter">Puerta de Enlace <span class="text-danger">*</span></label>
+                <div class="invalid-feedback">Por favor, complete la Puerta de Enlace.</div>
               </div>
             </div>
           </div>
           <div class="row g-2 mb-4">
             <div class="col">
               <div class="form-floating">
-                <input type="text" id="txtDns1Router" class="form-control" placeholder="DNS 1"
-                  value="8.8.8.8" required>
-                <label for="txtDns1Router">DNS 1</label>
+                <input type="text" id="txtDns1Router" class="form-control" placeholder="DNS 1" required>
+                <label for="txtDns1Router">DNS 1 <span class="text-danger">*</span></label>
+                <div class="invalid-feedback">Por favor, complete el DNS1.</div>
               </div>
             </div>
             <div class="col">
               <div class="form-floating">
-                <input type="text" id="txtDns2Router" class="form-control" placeholder="DNS 2"
-                  value="8.8.4.4" required>
-                <label for="txtDns2Router">DNS 2</label>
+                <input type="text" id="txtDns2Router" class="form-control" placeholder="DNS 2" required>
+                <label for="txtDns2Router">DNS 2 <span class="text-danger">*</span></label>
+                <div class="invalid-feedback">Por favor, complete el DNS1.</div>
               </div>
             </div>
           </div>
@@ -239,9 +240,10 @@ $idContrato = $_GET['idContrato'];
           <div class="row g-2 mb-2">
             <div class="col">
               <div class="form-floating">
-                <input type="text" id="txtLanWireless" value="192.168.10.1" class="form-control"
+                <input type="text" id="txtLanWireless" class="form-control"
                   placeholder="LAN" required>
                 <label for="txtLanWireless">LAN <span class="text-danger">*</span></label>
+                <div class="invalid-feedback">Por favor, complete el LAN.</div>
               </div>
             </div>
             <div class="col">
@@ -249,6 +251,7 @@ $idContrato = $_GET['idContrato'];
                 <input type="text" id="txtAccesoWireless" class="form-control" placeholder="Acceso"
                   required>
                 <label for="txtAccesoWireless">Acceso <span class="text-danger">*</span></label>
+                <div class="invalid-feedback">Por favor, complete el campo.</div>
               </div>
             </div>
           </div>
@@ -258,6 +261,7 @@ $idContrato = $_GET['idContrato'];
                 <input type="text" id="txtSsidWireless" class="form-control" placeholder="SSID"
                   required>
                 <label for="txtSsidWireless">SSID <span class="text-danger">*</span></label>
+                <div class="invalid-feedback">Por favor, complete el campo.</div>
               </div>
             </div>
             <div class="col">
@@ -265,6 +269,7 @@ $idContrato = $_GET['idContrato'];
                 <input type="text" id="txtSeguridadWireless" class="form-control"
                   placeholder="Seguridad" required>
                 <label for="txtSeguridadWireless">Seguridad <span class="text-danger">*</span></label>
+                <div class="invalid-feedback">Por favor, complete el campo.</div>
               </div>
             </div>
           </div>
@@ -321,6 +326,7 @@ $idContrato = $_GET['idContrato'];
                 <div class="form-floating mt-2">
                   <input type="text" class="form-control" id="txtMacVentaAntena" placeholder="MAC">
                   <label for="txtMacVentaAntena">MAC <span class="text-danger">*</span></label>
+                  <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
                 </div>
                 <div class="form-floating mt-2">
                   <input type="text" id="txtMarcaVentaAntena" class="form-control" placeholder="Marca" disabled>
@@ -333,10 +339,12 @@ $idContrato = $_GET['idContrato'];
                 <div class="form-floating mt-2">
                   <input type="text" class="form-control" id="txtSerialVentaAntena" placeholder="Serial">
                   <label for="txtSerialVentaAntena">Serial <span class="text-danger">*</span></label>
+                  <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
                 </div>
                 <div class="form-floating mt-2">
                   <input type="text" class="form-control" id="txtDescripcionVentaAntena" placeholder="Descripción">
                   <label for="txtDescripcionVentaAntena">Descripción <span class="text-danger">*</span></label>
+                  <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
                 </div>
               </div>
 
@@ -346,6 +354,7 @@ $idContrato = $_GET['idContrato'];
                 <div class="form-floating mt-2">
                   <input type="text" class="form-control" id="txtMacVentaRouter" placeholder="MAC">
                   <label for="txtMacVentaRouter">MAC <span class="text-danger">*</span></label>
+                  <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
                 </div>
                 <div class="form-floating mt-2">
                   <input type="text" id="txtMarcaVentaRouter" class="form-control" placeholder="Marca" disabled>
@@ -358,10 +367,12 @@ $idContrato = $_GET['idContrato'];
                 <div class="form-floating mt-2">
                   <input type="text" class="form-control" id="txtSerialVentaRouter" placeholder="Serial">
                   <label for="txtSerialVentaRouter">Serial <span class="text-danger">*</span></label>
+                  <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
                 </div>
                 <div class="form-floating mt-2">
                   <input type="text" class="form-control" id="txtDescripcionVentaRouter" placeholder="Descripción">
                   <label for="txtDescripcionVentaRouter">Descripción <span class="text-danger">*</span></label>
+                  <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
                 </div>
               </div>
 
@@ -382,14 +393,17 @@ $idContrato = $_GET['idContrato'];
                 <div class="form-floating mt-2">
                   <input type="number" min="0" class="form-control" id="txtAdelantoVenta" placeholder="Adelanto">
                   <label for="txtAdelantoVenta">Adelanto <span class="text-danger">*</span></label>
+                  <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
                 </div>
                 <div class="form-floating mt-2">
                   <input type="number" min="0" class="form-control" id="txtSaldoEquipoVenta" placeholder="Saldo Equipos">
                   <label for="txtSaldoEquipoVenta">Saldo Equipos <span class="text-danger">*</span></label>
+                  <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
                 </div>
                 <div class="form-floating mt-2">
                   <input type="number" min="0" class="form-control" id="txtMaterialAdicionalVenta" placeholder="Material Adicional">
                   <label for="txtMaterialAdicionalVenta">Material Adicional <span class="text-danger">*</span></label>
+                  <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
                 </div>
               </div>
             </div>
@@ -430,80 +444,91 @@ $idContrato = $_GET['idContrato'];
             <div class="row mb-3">
               <!-- Columna de Antena -->
               <div class="col-12 col-md-4 mt-2">
-              <div class="antena-header p-3 text-center border py-3">Antena</div>
-              <div class="form-floating mt-2">
-                <input type="text" class="form-control" id="txtMacAntenaAlquilados" placeholder="MAC">
-                <label for="txtMacAntenaAlquilados">MAC <span class="text-danger">*</span></label>
-              </div>
-              <div class="form-floating mt-2">
-                <input type="text" id="txtMarcaAntenaAlquilados" class="form-control" placeholder="Marca" disabled>
-                <label for="txtMarcaAntenaAlquilados" class="form-label mb-0">Marca</label>
-              </div>
-              <div class="form-floating mt-2">
-                <input type="text" id="txtModeloAntenaAlquilados" placeholder="Modelo" class="form-control" disabled>
-                <label for="txtModeloAntenaAlquilados">Modelo</label>
-              </div>
-              <div class="form-floating mt-2">
-                <input type="text" class="form-control" id="txtSerialAntenaAlquilados" placeholder="Serial">
-                <label for="txtSerialAntenaAlquilados">Serial <span class="text-danger">*</span></label>
-              </div>
-              <div class="form-floating mt-2">
-                <input type="text" class="form-control" id="txtDescripcionAntenaAlquilados" placeholder="Descripción">
-                <label for="txtDescripcionAntenaAlquilados">Descripción <span class="text-danger">*</span></label>
-              </div>
+                <div class="antena-header p-3 text-center border py-3">Antena</div>
+                <div class="form-floating mt-2">
+                  <input type="text" class="form-control" id="txtMacAntenaAlquilados" placeholder="MAC">
+                  <label for="txtMacAntenaAlquilados">MAC <span class="text-danger">*</span></label>
+                  <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
+                </div>
+                <div class="form-floating mt-2">
+                  <input type="text" id="txtMarcaAntenaAlquilados" class="form-control" placeholder="Marca" disabled>
+                  <label for="txtMarcaAntenaAlquilados" class="form-label mb-0">Marca</label>
+                </div>
+                <div class="form-floating mt-2">
+                  <input type="text" id="txtModeloAntenaAlquilados" placeholder="Modelo" class="form-control" disabled>
+                  <label for="txtModeloAntenaAlquilados">Modelo</label>
+                </div>
+                <div class="form-floating mt-2">
+                  <input type="text" class="form-control" id="txtSerialAntenaAlquilados" placeholder="Serial">
+                  <label for="txtSerialAntenaAlquilados">Serial <span class="text-danger">*</span></label>
+                  <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
+                </div>
+                <div class="form-floating mt-2">
+                  <input type="text" class="form-control" id="txtDescripcionAntenaAlquilados" placeholder="Descripción">
+                  <label for="txtDescripcionAntenaAlquilados">Descripción <span class="text-danger">*</span></label>
+                  <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
+                </div>
               </div>
 
               <!-- Columna de Router -->
               <div class="col-12 col-md-4 mt-2">
-              <div class="router-header p-3 text-center border py-3">Router</div>
-              <div class="form-floating mt-2">
-                <input type="text" class="form-control" id="txtMacRouterAlquilados" placeholder="MAC">
-                <label for="txtMacRouterAlquilados">MAC <span class="text-danger">*</span></label>
-              </div>
-              <div class="form-floating mt-2">
-                <input type="text" id="txtMarcaRouterAlquilados" class="form-control" placeholder="Marca" disabled>
-                <label for="txtMarcaRouterAlquilados" class="form-label mb-0">Marca</label>
-              </div>
-              <div class="form-floating mt-2">
-                <input type="text" id="txtModeloRouterAlquilados" placeholder="Modelo" class="form-control" disabled>
-                <label for="txtModeloRouterAlquilados">Modelo</label>
-              </div>
-              <div class="form-floating mt-2">
-                <input type="text" class="form-control" id="txtSerialRouterAlquilados" placeholder="Serial">
-                <label for="txtSerialRouterAlquilados">Serial <span class="text-danger">*</span></label>
-              </div>
-              <div class="form-floating mt-2">
-                <input type="text" class="form-control" id="txtDescripcionRouterAlquilados" placeholder="Descripción">
-                <label for="txtDescripcionRouterAlquilados">Descripción <span class="text-danger">*</span></label>
-              </div>
+                <div class="router-header p-3 text-center border py-3">Router</div>
+                <div class="form-floating mt-2">
+                  <input type="text" class="form-control" id="txtMacRouterAlquilados" placeholder="MAC">
+                  <label for="txtMacRouterAlquilados">MAC <span class="text-danger">*</span></label>
+                  <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
+                </div>
+                <div class="form-floating mt-2">
+                  <input type="text" id="txtMarcaRouterAlquilados" class="form-control" placeholder="Marca" disabled>
+                  <label for="txtMarcaRouterAlquilados" class="form-label mb-0">Marca</label>
+                </div>
+                <div class="form-floating mt-2">
+                  <input type="text" id="txtModeloRouterAlquilados" placeholder="Modelo" class="form-control" disabled>
+                  <label for="txtModeloRouterAlquilados">Modelo</label>
+                </div>
+                <div class="form-floating mt-2">
+                  <input type="text" class="form-control" id="txtSerialRouterAlquilados" placeholder="Serial">
+                  <label for="txtSerialRouterAlquilados">Serial <span class="text-danger">*</span></label>
+                  <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
+                </div>
+                <div class="form-floating mt-2">
+                  <input type="text" class="form-control" id="txtDescripcionRouterAlquilados" placeholder="Descripción">
+                  <label for="txtDescripcionRouterAlquilados">Descripción <span class="text-danger">*</span></label>
+                  <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
+                </div>
               </div>
 
               <!-- Columna de Costo, Condición de Pago y Material -->
               <div class="col-12 col-md-4">
-              <div class="form-floating mt-2">
-                <select class="form-select" id="slcCondicionAlquilados" aria-label="Condición de equipos">
-                <option value="" selected disabled>Seleccione</option>
-                <option value="Alquilado">Alquilado</option>
-                <option value="Prestado">Prestado</option>
-                </select>
-                <label for="slcCondicionAlquilados">Condición <span class="text-danger">*</span></label>
-              </div>
-              <div class="form-floating mt-2">
-                <input type="text" class="form-control" id="txtPeriodoAlquilados" placeholder="Periodo">
-                <label for="txtPeriodoAlquilados">Periodo <span class="text-danger">*</span></label>
-              </div>
-              <div class="form-floating mt-2">
-                <input type="date" class="form-control" id="txtFechaInicioAlquilados" placeholder="Fecha de Inicio">
-                <label for="txtFechaInicioAlquilados">Fecha de Inicio <span class="text-danger">*</span></label>
-              </div>
-              <div class="form-floating mt-2">
-                <input type="date" class="form-control" id="txtFechaFinAlquilados" placeholder="Fecha de Fin">
-                <label for="txtFechaFinAlquilados">Fecha de Término <span class="text-danger">*</span></label>
-              </div>
-              <div class="form-floating mt-2">
-                <input type="text" class="form-control" min="0" id="txtCostoAlquilerAlquilados" placeholder="Costo Alquiler">
-                <label for="txtCostoAlquilerAlquilados">Costo Alquiler <span class="text-danger">*</span></label>
-              </div>
+                <div class="form-floating mt-2">
+                  <select class="form-select" id="slcCondicionAlquilados" aria-label="Condición de equipos">
+                    <option value="" selected disabled>Seleccione</option>
+                    <option value="Alquilado">Alquilado</option>
+                    <option value="Prestado">Prestado</option>
+                  </select>
+                  <label for="slcCondicionAlquilados">Condición <span class="text-danger">*</span></label>
+                  <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
+                </div>
+                <div class="form-floating mt-2">
+                  <input type="text" class="form-control" id="txtPeriodoAlquilados" placeholder="Periodo">
+                  <label for="txtPeriodoAlquilados">Periodo <span class="text-danger">*</span></label>
+                  <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
+                </div>
+                <div class="form-floating mt-2">
+                  <input type="date" class="form-control" id="txtFechaInicioAlquilados" placeholder="Fecha de Inicio">
+                  <label for="txtFechaInicioAlquilados">Fecha de Inicio <span class="text-danger">*</span></label>
+                  <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
+                </div>
+                <div class="form-floating mt-2">
+                  <input type="date" class="form-control" id="txtFechaFinAlquilados" placeholder="Fecha de Fin">
+                  <label for="txtFechaFinAlquilados">Fecha de Término <span class="text-danger">*</span></label>
+                  <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
+                </div>
+                <div class="form-floating mt-2">
+                  <input type="text" class="form-control" min="0" id="txtCostoAlquilerAlquilados" placeholder="Costo Alquiler">
+                  <label for="txtCostoAlquilerAlquilados">Costo Alquiler <span class="text-danger">*</span></label>
+                  <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
+                </div>
               </div>
             </div>
 
@@ -538,6 +563,7 @@ $idContrato = $_GET['idContrato'];
   </div>
 </div>
 
+<!-- Deuda -->
 <div class="container-fluid px-5">
   <div class="conteiner">
     <div class="card mb-4">
@@ -551,6 +577,7 @@ $idContrato = $_GET['idContrato'];
               <input type="number" class="form-control" id="txtPagoServicio"
                 placeholder="Pago Servicio" min="0" step="0.01">
               <label for="txtPagoServicio">Pago Servicio <span class="text-danger">*</span></label>
+              <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
             </div>
           </div>
           <div class="col-md">
@@ -558,6 +585,7 @@ $idContrato = $_GET['idContrato'];
               <input type="number" class="form-control" id="txtAdelantoEquipo"
                 placeholder="Adelanto Equipo" min="0" step="0.01">
               <label for="txtAdelantoEquipo">Adelanto Equipo <span class="text-danger">*</span></label>
+              <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
             </div>
           </div>
           <div class="col-md">
@@ -565,6 +593,7 @@ $idContrato = $_GET['idContrato'];
               <input type="number" class="form-control" id="txtCostoAlquiler" placeholder="Anticipo"
                 min="0" step="0.01">
               <label for="txtCostoAlquiler">Costo de Alquiler <span class="text-danger">*</span></label>
+              <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
             </div>
           </div>
         </div>
@@ -574,6 +603,7 @@ $idContrato = $_GET['idContrato'];
               <input type="number" class="form-control" id="txtMaterialAdicional"
                 placeholder="Material Adicional" min="0" step="0.01">
               <label for="txtMaterialAdicional">Material Adicional <span class="text-danger">*</span></label>
+              <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
             </div>
           </div>
           <div class="col-md">
@@ -581,6 +611,7 @@ $idContrato = $_GET['idContrato'];
               <input type="number" class="form-control" id="txtTotalCancelado"
                 placeholder="Total Cancelado" min="0" step="0.01">
               <label for="txtTotalCancelado">Total Cancelado <span class="text-danger">*</span></label>
+              <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
             </div>
           </div>
           <div class="col-md">
@@ -588,6 +619,7 @@ $idContrato = $_GET['idContrato'];
               <input type="number" class="form-control" id="txtSaldoPendiente"
                 placeholder="Saldo Pendiente" min="0" step="0.01">
               <label for="txtSaldoPendiente">Saldo Pendiente <span class="text-danger">*</span></label>
+              <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
             </div>
           </div>
         </div>

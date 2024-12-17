@@ -392,6 +392,24 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      // Validar que WAN, LAN, máscara y puerta de enlace contengan al menos 3 puntos
+      const camposTresPuntos = [wan, lan, mascara, puertaEnlace];
+      for (const campo of camposTresPuntos) {
+        if ((campo.match(/\./g) || []).length < 3) {
+          showToast("WAN, LAN, Máscara y Puerta de Enlace deben contener al menos 3 puntos", "INFO");
+          return;
+        }
+      }
+
+      // Validar que DNS1 y DNS2 contengan al menos 4 puntos
+      const camposCuatroPuntos = [dns1, dns2];
+      for (const campo of camposCuatroPuntos) {
+        if ((campo.match(/\./g) || []).length < 4) {
+          showToast("DNS1 y DNS2 deben contener al menos 4 puntos", "INFO");
+          return;
+        }
+      }
+
       const router = {
         numero: ++numeroRouter, // Incrementar el contador antes de asignarlo
         codigobarra: codigoBarra,
@@ -509,6 +527,11 @@ document.addEventListener("DOMContentLoaded", () => {
       routerConfigModal.hide();
     }
   }
+
+  // Evento para el botón de agregar router
+  btnAgregarRouter.addEventListener("click", async () => {
+    await agregarRouter();
+  });
 
   // Actualizar los números de los routers
   function actualizarNumeros() {
@@ -792,6 +815,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "txtMacRouterAlquilados",
     "txtPeriodoAlquilados",
     "txtFechaInicioAlquilados",
+    "slcCondicionAlquilados",
     "txtFechaFinAlquilados",
     "txtSerialAntenaAlquilados",
     "txtSerialRouterAlquilados",
@@ -839,7 +863,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    if(jsonRouter.length === 0){
+    if (jsonRouter.length === 0) {
       showToast("Debe agregar al menos un router.", "WARNING", 1500);
       return;
     }
@@ -962,10 +986,6 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("btnCancelar").addEventListener("click", () => {
     window.location.href = `${config.HOST}views/Contratos/`;
   });
-
-  /* document.getElementById("btnReporte").addEventListener("click", () => {
-    window.open(`${config.HOST}views/reports/Contrato_WISP/soporte.php?id=${idContrato}`, '_blank');
-  }); */
 
   btnAgregarRouter.addEventListener("click", async () => {
     await agregarRouter();
