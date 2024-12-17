@@ -167,7 +167,6 @@ BEGIN
     )
     WHERE
     c.inactive_at IS NULL
-    AND c.ficha_instalacion IS NOT NULL
     AND s.estaCompleto != 1
     AND (p_prioridad = "" OR s.prioridad = p_prioridad) AND s.inactive_at IS NULL
     GROUP BY c.id_contrato, c.create_at;

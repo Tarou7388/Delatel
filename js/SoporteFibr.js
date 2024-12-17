@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const idReporte = urlParams.get("idReporte");
   const serv = urlParams.get("tiposervicio");
   const form = document.getElementById("frm-registro-gpon");
+
   //Parametros tecnicos de la ficha
   const txtPlan = document.getElementById("txtPlan");
   const txtCliente = document.getElementById("txtCliente");
@@ -24,22 +25,25 @@ document.addEventListener("DOMContentLoaded", () => {
   const slcRpetidor = document.getElementById("slcRpetidor");
   const txtaEstadoInicial = document.getElementById("txtaEstadoInicial");
 
+  const txtIpRouter = document.getElementById("txtIpRouter");
+  const txtIpRepetidor = documet.getElementById("txtIpRepetidor");
+
   const txtSSIDRepetidor = document.getElementById("txtSSIDRepetidor");
-  const txtPassRepetidor = document.getElementById("txtPassRepetidor"); 
-  const txtIpRepetidor = document.getElementById("txtIpRepetidor");
+  const txtPassRepetidor = document.getElementById("txtPassRepetidor");
 
   //Cambios de la ficha
   const txtCambiosPppoe = document.getElementById("txtCambiosPppoe");
   const txtCambiosClave = document.getElementById("txtCambiosClave");
   const txtCambiosVlan = document.getElementById("txtCambiosVlan");
 
-  const txtRepetidor = document.getElementById("txtRepetidor");
-
   const txtCambiosPotencia = document.getElementById("txtCambiosPotencia");
   const txtCambiosSsid = document.getElementById("txtCambiosSsid");
   const txtCambiosIp = document.getElementById("txtCambiosIp");
   const chkCambiosCatv = document.getElementById("chkCambiosCatv");
   const txtCambiosPass = document.getElementById("txtCambiosPass");
+
+  const txtCambiosIpRouter = documet.getElementById("txtCambiosIpRouter");
+  const txtCambiosIpRepetidor = document.getElementById("txtCambiosIpRepetidor");
 
 
   const solutionTextarea = document.getElementById("txtaCambiosProceSolucion");
@@ -90,7 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
         txtSsid.value = fibr.parametrosgpon.moden?.ssid || "";
         txtPass.value = fibr.parametrosgpon.moden?.seguridad || "";
         txtIp.value = fibr.parametrosgpon.repetidor?.[0]?.ip || "";
-        slcRpetidor.value = fibr.parametrosgpon.repetidor?.length || 0; // Cantidad de repetidores
+        slcRpetidor.value = fibr.parametrosgpon.repetidor?.length || 0;
 
         // Cambios realizados (cambiosgpon)
         txtCambiosPppoe.value = fibr.cambiosgpon.pppoe || "";
@@ -139,15 +143,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const respuesta = await FichaSoporteporDocServCoordenada(doc, tiposervicio, coordenada);
 
-    if (respuesta[0].soporte != "{}") {
-      if (JSON.parse(respuesta[0].soporte).FIBR) {
-        await cargardatos(JSON.parse(respuesta[0].soporte).FIBR);
-      }
-      else {
-        await llenadoDeDatos(doc, idSoporte);
-      }
+    if (respuesta[0].soporte != "{}" && JSON.parse(respuesta[0].soporte).FIBR) {
+      await cargarSoporteAnterior(JSON.parse(respuesta[0].soporte).FIBR)
     } else {
-      await llenadoDeDatos(doc, idSoporte);
+      await CargarDatosInstalacion(doc, idSoporte);
     }
 
   }
@@ -163,39 +162,29 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  async function cargardatos(data) {
+  async function cargarSoporteAnterior(data) {
     console.log(data);
-    //Asignar el nombre del cliente
     txtCliente.value = data.parametroscliente.usuario;
-    //Asignar el documento del cliente
     txtNrodocumento.value = data.parametroscliente.Nrodoc;
-    //Asignar el plan
     txtPlan.value = data.parametroscliente.plan;
 
-    //Asignar el usuario PPPoE
     txtPppoe.value = data.cambiosgpon.pppoe;
-    //Asignar la clave PPPoE
     txtClave.value = data.cambiosgpon.clave;
-    //Asignar la potencia
     txtPotencia.value = data.cambiosgpon.potencia;
-    //Asignar si tiene CATV
     chkCatv.checked = data.cambiosgpon.catv;
-    //Asignar la VLAN
     txtVlan.value = data.cambiosgpon.vlan;
 
-    //Asignacion de los campos que no pueden cambiar sin procesos externos
     txtCambiosPppoe.value = data.cambiosgpon.pppoe;
     txtCambiosClave.value = data.cambiosgpon.clave;
     txtCambiosVlan.value = data.cambiosgpon.vlan;
 
-    //Asignar el repetidor
-    console.log(data.cambiosgpon);
 
-    if (!data.cambiosgpon.repetidor || data.cambiosgpon.repetidor == null) {
-      console.log(data.cambiosgpon);
-      await cargardatosModem(data.cambiosgpon);
+    console.log(data.cambiosgpon.repetidores);
+    await cargarDatosRouter(data.cambiosgpon);
+    if (data.cambiosgpon.repetidores) {
+      await cargarRepetidores(data.cambiosgpon.repetidores);
+      return;
     }
-    await cargarRepetidores(data.cambiosgpon.repetidor);
   }
 
   function crearSelectYBoton() {
@@ -246,80 +235,38 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function obtenerReferencias() {
     const urlParams = new URLSearchParams(window.location.search);
-    // Obtener el id del soporte desde la URL
     return urlParams.get("idsoporte");
   };
 
-  /**
-   * Documentacion sobre que hace:
-   * Llenado de datos del cliente y soporte de fibra.
-   *
-   * @async
-   * @function llenadoDeDatos
-   * @param {string} doct - Documento del cliente.
-   * @param {number} idSoporte - ID del soporte.
-   * @param {string} tiposervicio - Tipo de servicio.
-   * @returns {Promise<void>} - Promesa que se resuelve cuando los datos han sido llenados.
-   * @throws {Error} - Lanza un error si ocurre un problema al obtener los datos del cliente o del soporte.
-   */
-  async function llenadoDeDatos(doct, idSoporte, tiposervicio) {
+  async function CargarDatosInstalacion(doct, idSoporte, tiposervicio) {
     try {
       const respuesta = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${doct}`);
       const data = await respuesta.json();
-      //Asignacion del Nombre del cliente
       txtCliente.value = data[0].nombre;
-      //Asignacion del Documento del cliente
       txtNrodocumento.value = doct;
 
     } catch (error) {
-      console.error("Error en llenadoDeDatos:", error);
+      console.error("Error en CargarDatosInstalacion:", error);
     }
 
     try {
-      const dataFibra = await FichaSoporte(idSoporte);
-      const fibraFiltrado = JSON.parse(dataFibra[0].ficha_instalacion).fibraoptica;
       const dataFibra = await FichaInstalacion(idSoporte);
-      const fibraFiltrado = JSON.parse(dataFibra[0].ficha_instalacion).fibraOptica;
+      const fibraFiltrado = JSON.parse(dataFibra[0].ficha_instalacion).fibraoptica;
       console.log(dataFibra[0]);
 
-      // Asignacion para el campo de plan.
-      console.log(fibraFiltrado.plan);
       txtPlan.value = fibraFiltrado.plan;
-
-      // Asignacion de Usuario PPPoE
-      console.log(fibraFiltrado.usuario);
       txtPppoe.value = fibraFiltrado.usuario;
-
-      // Asignacion de clave PPPoE
-      console.log(fibraFiltrado.claveacceso);
       txtClave.value = fibraFiltrado.claveacceso;
-
-      //Asignacion de los campos que no pueden cambiar sin procesos externos
       txtCambiosPppoe.value = fibraFiltrado.usuario;
       txtCambiosClave.value = fibraFiltrado.claveacceso;
       txtCambiosVlan.value = fibraFiltrado.vlan;
-
-      // Asignacion potencia 
-      console.log(fibraFiltrado);
       txtPotencia.value = fibraFiltrado.potencia;
-
       chkCatv.checked = fibraFiltrado.router.catv;
-
-      // Vlan
-      console.log(fibraFiltrado.vlan);
       txtVlan.value = fibraFiltrado.vlan;
-
-      console.log(fibraFiltrado.router);
-
-      // DATOS MODEN
-      await cargardatosModem(fibraFiltrado);
-      // Asignacion repetidores
+      await cargarDatosRouter(fibraFiltrado);
       if (fibraFiltrado.repetidores) {
         await cargarRepetidores(fibraFiltrado.repetidores);
         return;
-      }else{
-        slcRpetidor.disabled = true;
-        txtRepetidor.value = "No hay repetidores";
       }
 
     } catch (error) {
@@ -366,17 +313,17 @@ document.addEventListener("DOMContentLoaded", () => {
       let datosgenerales = null;
       if (!respuesta2[0]?.soporte || respuesta2[0]?.soporte === "{}" || !JSON.parse(respuesta2[0].soporte)?.FIBR) {
         const fichaInstalacion = JSON.parse(respuesta[0]?.ficha_instalacion || "{}");
-        
+
         fibraFiltrado = fichaInstalacion?.fibraoptica?.repetidores || null;
         datosgenerales = fichaInstalacion?.fibraoptica || null;
       } else {
         const soporte = JSON.parse(respuesta2[0]?.soporte || "{}");
-        fibraFiltrado = soporte?.FIBR?.cambiosgpon?.repetidor || null;
+        fibraFiltrado = soporte?.FIBR?.cambiosgpon?.repetidores || null;
         datosgenerales = soporte?.FIBR?.cambiosgpon || null;
       }
       if (!fibraFiltrado) {
         console.log(datosgenerales);
-        await cargardatosModem(datosgenerales);
+        await cargarDatosRouter(datosgenerales);
         return;
       }
       const repetidorSeleccionado = fibraFiltrado.find(
@@ -395,22 +342,19 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-
   //Funcion para cargar los datos del modem en caso no haya repetidor
-  async function cargardatosModem(DatoModem) {
-    console.log(DatoModem);
-    slcRpetidor.innerHTML = 'No hay repetidores';
-    txtIp.value = DatoModem.router.ip;
-    txtSsid.value = DatoModem.router.ssid;
-    txtPass.value = DatoModem.router.seguridad;
+  async function cargarDatosRouter(datoRouters) {
+    console.log(datoRouters);
+    txtIpRouter.value = datoRouters.router.ip;
+    txtSsid.value = datoRouters.router.ssid;
+    txtPass.value = datoRouters.router.seguridad;
   }
 
-
-  async function ArmadoJsonGpon() {
+  async function armadoJsonFibra() {
     const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
     const result = await response.json();
 
-    const dataFibra = await FichaSoporte(idSoporte);
+    const dataFibra = await FichaInstalacion(idSoporte);
     const fibrafiltrado = JSON.parse(dataFibra[0].ficha_instalacion).fibraoptica;
 
     let soporte = result[0].soporte ? JSON.parse(result[0].soporte) : {};
@@ -431,16 +375,16 @@ document.addEventListener("DOMContentLoaded", () => {
           router: JSON.parse(JSON.stringify(fibrafiltrado.router)),
           catv: document.getElementById("chkCatv").checked,
           vlan: document.getElementById("txtVlan").value,
-          repetidor: fibrafiltrado.repetidores ? JSON.parse(JSON.stringify(fibrafiltrado.repetidores)) : null
+          repetidores: JSON.parse(JSON.stringify(fibrafiltrado.repetidores))
         },
         cambiosgpon: {
           pppoe: txtCambiosPppoe.value,
           clave: txtCambiosClave.value,
           potencia: txtCambiosPotencia.value,
-          router: await modificadoModem(fibrafiltrado.router),
+          router: await modificadoRouter(fibrafiltrado.router),
           catv: chkCambiosCatv.checked,
           vlan: txtCambiosVlan.value,
-          repetidor: await moficadoRepetidor(fibrafiltrado.repetidores)
+          repetidores: await moficadoRepetidor(fibrafiltrado.repetidores)
         }
       };
     }
@@ -458,18 +402,18 @@ document.addEventListener("DOMContentLoaded", () => {
       if (repetidor.numero === selectedValue) {
         repetidor.ssid = txtCambiosSsid.value;
         repetidor.contrasenia = txtCambiosPass.value;
-        repetidor.ip = txtCambiosIp.value;
+        repetidor.ip = txtCambiosIpRepetidor.value;
       }
       return repetidor;
     });
   }
 
-  async function modificadoModem(modem) {
-    modem.ssid = txtCambiosSsid.value;
-    modem.seguridad = txtCambiosPass.value;
-    //modem.ip = txtCambiosIp.value;
-    console.log(modem);
-    return modem;
+  async function modificadoRouter(router) {
+    router.ssid = txtCambiosSsid.value;
+    router.seguridad = txtCambiosPass.value;
+    router.ip = txtCambiosIpRouter.value;
+    console.log(router);
+    return router;
   }
 
   async function guardarSoporte(data) {
@@ -504,23 +448,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-
-  /**
-   * Llama a la función ArmadoJsonCable para recuperar datos.
-   * 
-   * @returns {Promise<Object>} Los datos devueltos por la función ArmadoJsonCable.
-   */
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
-    const data = await ArmadoJsonGpon();
+    const data = await armadoJsonFibra();
     if (await ask("¿Desea guardar la ficha?")) {
       await guardarSoporte(data);
-      window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
+      //window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
     }
   });
 
-  txtCambiosIp.addEventListener("input", async (event) => {
-    await formatoIPinput(event);
-  });
+  txtIpRouter, txtIpRepetidor, txtCambiosIpRouter, txtCambiosIpRepetidor.addEventListener("input", formatoIPinput);
 
 });

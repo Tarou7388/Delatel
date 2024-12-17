@@ -40,7 +40,7 @@
         <hr>
 
         <!-- Segunda Fila -->
-        <h5 class="mb-4">Parámetros Técnicos de Fibra</h5>
+        <h4 class="mb-4">Parámetros Técnicos de Fibra</h4>
 
         <div class="row g-3 mb-3 align-items-center">
           <div class="col-md">
@@ -56,44 +56,43 @@
         <div class="">
           <!-- Primera Fila -->
           <div class="row g-3 mb-3 align-items-center">
-            <div class="col-md-4">
+            <div class="col-md">
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtPppoe" placeholder="PPPoE" disabled required>
                 <label for="txtPppoe">PPPoE</label>
               </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md">
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtClave" placeholder="Clave" disabled required>
                 <label for="txtClave">Clave</label>
               </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md">
               <div class="form-floating">
                 <input type="number" class="form-control" id="txtPotencia" placeholder="Potencia" disabled required>
                 <label for="txtPotencia">Potencia</label>
+              </div>
+            </div>
+            <div class="col-md">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="txtVlan" placeholder="VLAN" disabled required>
+                <label for="txtVlan">VLAN</label>
+              </div>
+            </div>
+            <div class="col-md d-flex align-items-center">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="chkCatv" disabled>
+                <label class="form-check-label ms-2" for="chkCatv">CATV</label>
               </div>
             </div>
 
           </div>
 
           <!-- Segunda Fila -->
-          <div class="row g-3 mb-3 align-items-center">
-            <div class="col-md-4">
-              <div class="form-floating">
-                <input type="text" class="form-control" id="txtVlan" placeholder="VLAN" disabled required>
-                <label for="txtVlan">VLAN</label>
-              </div>
-            </div>
-            <div class="col-md-4 d-flex align-items-center">
-              <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" id="chkCatv" disabled>
-                <label class="form-check-label ms-2" for="chkCatv">CATV</label>
-              </div>
-            </div>
+          <div class="mt-3 mb-3">
+            <h5> Datos del router </h5>
           </div>
-
-          <!-- Tercera Fila -->
           <div class="row g-3 mb-3 align-items-center">
             <div class="col-md-4">
               <div class="form-floating">
@@ -109,12 +108,16 @@
             </div>
             <div class="col-md-4">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtIp" placeholder="IP" disabled required>
-                <label for="txtIp">IP</label>
+                <input type="text" class="form-control" id="txtIpRouter" placeholder="IP" disabled required>
+                <label for="txtIpRouter">IP</label>
               </div>
             </div>
           </div>
           <!-- repetidor -->
+          <div class="mt-3 mb-3">
+            <h5> Datos del repetidor </h5>
+          </div>
+
           <div class="row g-3 mb-3">
             <div class="col-mb-4">
               <div class="form-floating">
@@ -139,7 +142,7 @@
             <div class="col-md-4">
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtIpRepetidor" placeholder="IP" disabled required>
-                <label for="txtIp">IP</label>
+                <label for="txtIpRepetidor">IP</label>
               </div>
             </div>
           </div>
@@ -166,44 +169,40 @@
           <div class="">
             <!-- Primera Fila -->
             <div class="row g-3 mb-3 align-items-center">
-              <div class="col-md-4">
+              <div class="col-md">
                 <div class="form-floating">
                   <input type="text" class="form-control" id="txtCambiosPppoe" placeholder="PPPoE" disabled required>
                   <label for="txtCambiosPppoe">PPPoE</label>
                 </div>
               </div>
-              <div class="col-md-4">
+              <div class="col-md">
                 <div class="form-floating">
                   <input type="text" class="form-control" id="txtCambiosClave" placeholder="Clave" disabled required>
                   <label for="txtCambiosClave">Clave</label>
                 </div>
               </div>
-              <div class="col-md-4">
+              <div class="col-md">
                 <div class="form-floating">
                   <input type="number" class="form-control" id="txtCambiosPotencia" placeholder="Potencia" required>
                   <label for="txtCambiosPotencia">Potencia</label>
                 </div>
               </div>
-
-            </div>
-
-            <!-- Segunda Fila -->
-            <div class="row g-3 mb-3 align-items-center">
-              <div class="col-md-4">
+              <div class="col-md">
                 <div class="form-floating">
                   <input type="text" class="form-control" id="txtCambiosVlan" placeholder="VLAN" disabled required>
                   <label for="txtCambiosVlan">VLAN</label>
                 </div>
               </div>
-              <div class="col-md-4 d-flex align-items-center">
-                <div class="form-check form-switch">
+              <div class="col-md d-flex align-items-center">
+                <div class="form-check form-switch tgl-default">
                   <input class="form-check-input" type="checkbox" id="chkCambiosCatv">
                   <label class="form-check-label ms-2" for="chkCambiosCatv">CATV</label>
                 </div>
               </div>
             </div>
 
-            <!-- Tercera Fila -->
+
+            <!-- Segunda Fila -->
             <div class="row g-3 mb-3 align-items-center">
               <div class="col-md-4">
                 <div class="form-floating">
@@ -219,35 +218,34 @@
               </div>
               <div class="col-md-4">
                 <div class="form-floating">
-                  <input type="text" class="form-control" id="txtCambiosIp" placeholder="IP" required>
-                  <label for="txtCambiosIp">IP</label>
+                  <input type="text" class="form-control" id="txtCambiosIpRouter" placeholder="IP" required>
+                  <label for="txtCambiosIpRouter">IP</label>
                 </div>
               </div>
             </div>
             <!-- repetidor -->
+            <div class="mt-3 mb-3">
+              <h5> Datos del repetidor asignado </h5>
+            </div>
             <div class="row g-3 mb-3">
-              <div class="col-md-6">
-                <div class="form-floating">
-                  <input type="text" class="form-control" id="txtRepetidor" placeholder="Repetidor" disabled required>
-                  <label for="txtRepetidor">Repetidor (Nombre)</label>
-                </div>
-              </div>
-              <div class="col-md-6">
+
+
+              <div class="col-md-4">
                 <div class="form-floating">
                   <input type="text" class="form-control" id="txtCambiosSsidRepetidor" placeholder="SSID" required>
                   <label for="txtCambiosSsidRepetidor">SSID</label>
                 </div>
               </div>
-            </div>
 
-            <div class="row g-3 mb-3">
-              <div class="col-md-6">
+
+              <div class="col-md-4">
                 <div class="form-floating">
                   <input type="text" class="form-control" id="txtCambiosPassRepetidor" placeholder="Password" required>
                   <label for="txtCambiosPassRepetidor">Password</label>
                 </div>
               </div>
-              <div class="col-md-6">
+
+              <div class="col-md-4">
                 <div class="form-floating">
                   <input type="text" class="form-control" id="txtCambiosIpRepetidor" placeholder="IP" required>
                   <label for="txtCambiosIpRepetidor">IP</label>
