@@ -176,10 +176,10 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log('ID del contrato:', id_contrato);
     await mapa.renderizarCoordenadaMapa(id_contrato);
 
-    const params = { cajas: false, mufas: false }
+   /*  const params = { cajas: false, mufas: false }
     const ip = "map"
     const renderizado = "modal"
-    mapa.iniciarMapa(params, ip, renderizado);
+    mapa.iniciarMapa(params, ip, renderizado); */
   });
 
   $('.card-body').on('click', '.btnCompleto', async function () {

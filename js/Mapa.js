@@ -1,5 +1,5 @@
 import config from "../env.js";
-let Map, Circle, Polyline, AdvancedMarkerElement, mapa
+let Map, Circle, Polyline, AdvancedMarkerElement, mapa;
 let datosCajas = [];
 let marcador = null;
 let marcadorCoordenada = null
@@ -301,23 +301,18 @@ async function buscarCoordenadas(latitud, longitud) {
   }
 }
 
-//Función que renderize la coordenada del contrato en el mapa
-/* export async function renderizarCoordenadaMapa(latitud, longitud) {
-  const posicion = new google.maps.LatLng(latitud, longitud);
-  mapa.setCenter(posicion);
-  mapa.setZoom(15);
-
-  if (marcador) {
-    marcador.setMap(null);
-  }
-
-  marcador = new AdvancedMarkerElement({
-    position: posicion,
-    map: mapa,
-    title: "Ubicación buscada"
+function initMap() {
+  // Inicializar el mapa
+  mapa = new google.maps.Map(document.getElementById('map'), {
+    center: { lat: -34.397, lng: 150.644 },
+    zoom: 8
   });
-} */
+}
 
+// Asegúrate de que initMap se llame cuando la página se cargue
+window.onload = initMap;
+
+//Función que renderize la coordenada del contrato en el mapa
 export async function renderizarCoordenadaMapa(id) {
   try {
     // Hacer la solicitud HTTP para obtener las coordenadas
@@ -330,6 +325,8 @@ export async function renderizarCoordenadaMapa(id) {
       const latitud = parseFloat(coordenada[0]);
       const longitud = parseFloat(coordenada[1]);
 
+      console.log('Coordenadas obtenidas:', latitud, longitud);
+
       // Crear una nueva posición y centrar el mapa
       const posicion = new google.maps.LatLng(latitud, longitud);
       mapa.setCenter(posicion);
@@ -341,11 +338,14 @@ export async function renderizarCoordenadaMapa(id) {
       }
 
       // Agregar un nuevo marcador en la nueva posición
-      marcador = new AdvancedMarkerElement({
+      marcador = new google.maps.Marker({
         position: posicion,
         map: mapa,
         title: "Ubicación buscada"
       });
+
+      // Mensaje de depuración para verificar la nueva posición
+      console.log('Nueva posición del mapa:', posicion.lat(), posicion.lng());
     } else {
       console.error('No se encontraron coordenadas en la respuesta.');
     }

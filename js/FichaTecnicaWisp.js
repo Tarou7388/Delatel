@@ -528,11 +528,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Evento para el botón de agregar router
-  btnAgregarRouter.addEventListener("click", async () => {
-    await agregarRouter();
-  });
-
   // Actualizar los números de los routers
   function actualizarNumeros() {
     const routerCards = routersContainer.querySelectorAll(".card");
@@ -815,7 +810,6 @@ document.addEventListener("DOMContentLoaded", () => {
     "txtMacRouterAlquilados",
     "txtPeriodoAlquilados",
     "txtFechaInicioAlquilados",
-    "slcCondicionAlquilados",
     "txtFechaFinAlquilados",
     "txtSerialAntenaAlquilados",
     "txtSerialRouterAlquilados",
@@ -863,7 +857,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    if (jsonRouter.length === 0) {
+    if(jsonRouter.length === 0){
       showToast("Debe agregar al menos un router.", "WARNING", 1500);
       return;
     }
