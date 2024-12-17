@@ -31,21 +31,76 @@ window.addEventListener("DOMContentLoaded", async () => {
   document.addEventListener("servicioActualizado", cargarServicios);
 
   async function getQueryParams() {
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const params = Object.fromEntries(urlParams.entries());
-    if (params.nroDoc) {
-      nroDoc.value = params.nroDoc;
-      coordenada.value = params.coordenadas;
-      coordenada.dispatchEvent(new Event('change', { bubbles: true }));
-      direccion.value = params.direccion;
-      referencia.value = params.referencia;
-      const optionToSelect = document.querySelector(`#slcSector option[value="${params.idSector}"]`);
-      if (optionToSelect) {
-        optionToSelect.selected = true;
-        const selectElement = document.querySelector("#slcSector");
-        selectElement.dispatchEvent(new Event('change'));
+    try {
+      // Obtén los parámetros de la URL
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const params = Object.fromEntries(urlParams.entries());
+      console.log(params);
+  
+      // Validación y asignación de parámetros
+      if (params.nroDoc && document.querySelector("#txtNumDoc")) {
+        const nroDoc = document.querySelector("#txtNumDoc");
+        nroDoc.value = params.nroDoc;
       }
+  
+      if (params.coordenadas && document.querySelector("#txtCoordenadasMapa")) {
+        const coordenada = document.querySelector("#txtCoordenadasMapa");
+        coordenada.value = params.coordenadas;
+        coordenada.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+  
+      if (params.direccion && document.querySelector("#txtDireccion")) {
+        const direccion = document.querySelector("#txtDireccion");
+        direccion.value = params.direccion;
+      }
+  
+      if (params.referencia && document.querySelector("#txtReferencia")) {
+        const referencia = document.querySelector("#txtReferencia");
+        referencia.value = params.referencia;
+      }
+  
+      // Seleccionar el servicio
+      if (params.Servicio) {
+        const slcTipoServicio = document.querySelector("#slcTipoServicio");
+        if (slcTipoServicio) {
+          const optionToSelect = document.querySelector(`#slcTipoServicio option[value="${params.Servicio}"]`);
+          if (optionToSelect) {
+            optionToSelect.selected = true;
+  
+            // Simular el cambio de servicio
+            slcTipoServicio.dispatchEvent(new Event("change"));
+  
+            // Esperar a que se carguen los paquetes en cascada
+            await cargarPaquetes(params.Servicio);
+  
+            // Seleccionar el paquete si está presente
+            if (params.Paquete) {
+              const slcPaquetes = document.querySelector("#slcPaquetes");
+              if (slcPaquetes) {
+                const optionToSelectPaquete = document.querySelector(`#slcPaquetes option[value="${params.Paquete}"]`);
+                if (optionToSelectPaquete) {
+                  optionToSelectPaquete.selected = true;
+                  slcPaquetes.dispatchEvent(new Event("change"));
+                }
+              }
+            }
+          }
+        }
+      }
+      // Seleccionar el sector
+      if (params.idSector) {
+        const selectElement = document.querySelector("#slcSector");
+        if (selectElement) {
+          const optionToSelect = document.querySelector(`#slcSector option[value="${params.idSector}"]`);
+          if (optionToSelect) {
+            optionToSelect.selected = true;
+            selectElement.dispatchEvent(new Event("change"));
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error al procesar los parámetros de la URL:", error);
     }
   }
 
@@ -170,7 +225,8 @@ window.addEventListener("DOMContentLoaded", async () => {
             idPersona = "";
             idEmpresa = data[0].id_empresa;
           }
-          nombre.value = data[0].nombres;
+          nombre.value = data[0].nombres + ", " + data[0].apellidos;
+
         } else {
           const response = await fetch(
             `${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${nroDoc}`
