@@ -103,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
         "telefono"        => Herramientas::sanitizarEntrada($datos['telefono']),
         "direccion"       => Herramientas::sanitizarEntrada($datos['direccion']),
         "referencia"      => Herramientas::sanitizarEntrada($datos['referencia']),
-        "coordenadas"     => Herramientas::sanitizarEntrada($datos['coordenadas']),
+        "coordenadas"     => $datos['coordenadas'],
         "idUsuario"       => Herramientas::sanitizarEntrada($datos['idUsuario'])
       ];
 

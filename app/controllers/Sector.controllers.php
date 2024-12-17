@@ -18,12 +18,12 @@ if (isset($_POST["operacion"])) {
 				"idDistrito"   => Herramientas::sanitizarEntrada($_POST["idDistrito"]),
 				"sector"       => Herramientas::sanitizarEntrada($_POST["sector"]),
 				"descripcion"    => Herramientas::sanitizarEntrada($_POST["descripcion"]),
-				"coordenadas"    => Herramientas::sanitizarEntrada($_POST["coordenadas"]),
+				"coordenadas"    => $_POST["coordenadas"],
 				"idUsuario"    => Herramientas::sanitizarEntrada($_POST["idUsuario"]),
 			];
 
 			$resultado = $sectores->registrarSector($datos);
-			echo json_encode(["guardado" => $resultado]);
+			echo json_encode($resultado);
 			break;
 	}
 }
