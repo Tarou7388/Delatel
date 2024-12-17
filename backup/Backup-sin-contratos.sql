@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 16-12-2024 a las 15:53:51
+-- Tiempo de generación: 17-12-2024 a las 02:30:11
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.1.25
 
@@ -20,7 +20,7 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `delatel`
 --
-DROP DATABASE IF EXISTS `Delatel`;
+DROP DATABASE IF EXISTS `delatel`;
 CREATE DATABASE IF NOT EXISTS `delatel` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `delatel`;
 
@@ -77,6 +77,17 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_buscar_datos_cliente_id` (`p_id
         LEFT JOIN tb_empresas e ON c.id_empresa = e.id_empresa
     WHERE
         c.id_cliente = p_id_cliente;
+END$$
+
+DROP PROCEDURE IF EXISTS `spu_buscar_distrito`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_buscar_distrito` (IN `p_id_provincia` INT)   BEGIN
+    SELECT 
+        id_distrito, 
+        distrito 
+    FROM 
+        tb_distritos
+    WHERE 
+        id_provincia = p_id_provincia;
 END$$
 
 DROP PROCEDURE IF EXISTS `spu_buscar_ficha_por_dni`$$
@@ -436,6 +447,18 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_contratos_registrar` (IN `p_id_
     );
 END$$
 
+DROP PROCEDURE IF EXISTS `spu_contrato_buscar_coordenada`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_contrato_buscar_coordenada` (IN `p_id_contrato` INT)   BEGIN 
+    SELECT 
+        c.id_contrato,
+        c.coordenada,
+        c.direccion_servicio
+    FROM 
+        tb_contratos c
+    WHERE 
+        c.id_contrato = p_id_contrato;
+END$$
+
 DROP PROCEDURE IF EXISTS `spu_contrato_buscar_id`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_contrato_buscar_id` (`p_id_contrato` INT)   BEGIN
     SELECT
@@ -573,6 +596,20 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_ficha_tecnica_registrar` (`p_id
     SET ficha_instalacion = p_ficha_instalacion,
     id_usuario_registro = p_id_usuario_registro
     WHERE id_contrato = p_id_contrato;
+END$$
+
+DROP PROCEDURE IF EXISTS `spu_instalacion_ficha_IdSoporte`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_instalacion_ficha_IdSoporte` (IN `p_idsoporte` INT)   BEGIN
+    SELECT 
+        ct.ficha_instalacion,
+        ct.id_contrato
+    FROM tb_soporte s
+    INNER JOIN tb_contratos ct ON s.id_contrato = ct.id_contrato
+    INNER JOIN tb_clientes cl ON ct.id_cliente = cl.id_cliente
+    LEFT JOIN tb_personas p ON cl.id_persona = p.id_persona
+    LEFT JOIN tb_empresas e ON cl.id_empresa = e.id_empresa
+    WHERE 
+        s.id_soporte = p_idsoporte;
 END$$
 
 DROP PROCEDURE IF EXISTS `spu_kardex_buscar`$$
@@ -1029,9 +1066,9 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_sectores_actualizar_id` (IN `p_
 END$$
 
 DROP PROCEDURE IF EXISTS `spu_sectores_registrar`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_sectores_registrar` (`p_id_distrito` INT, `p_sector` VARCHAR(60), `p_iduser_create` INT)   BEGIN
-    INSERT INTO tb_sectores (id_distrito, sector, iduser_create)
-    VALUES (p_id_distrito, p_sector, p_iduser_create);
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_sectores_registrar` (`p_id_distrito` INT, `p_sector` VARCHAR(60), `p_descripcion` VARCHAR(100), `p_coordenadas` VARCHAR(100), `p_iduser_create` INT)   BEGIN
+    INSERT INTO tb_sectores (id_distrito, sector,descripcion,coordenadas, iduser_create)
+    VALUES (p_id_distrito, p_sector,p_descripcion,p_coordenadas, p_iduser_create);
 END$$
 
 DROP PROCEDURE IF EXISTS `spu_servicio_actualizar`$$
@@ -1088,6 +1125,16 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_soporte_actualizar` (IN `p_id_s
     WHERE id_soporte = p_id_soporte;
 END$$
 
+DROP PROCEDURE IF EXISTS `spu_soporte_CompletarbyId`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_soporte_CompletarbyId` (IN `p_id_soporte` INT, IN `p_iduser_update` INT)   BEGIN
+    UPDATE tb_soporte
+    SET
+        estaCompleto = 1,
+        update_at = NOW(),
+        iduser_update = p_iduser_update
+    WHERE id_soporte = p_id_soporte;
+END$$
+
 DROP PROCEDURE IF EXISTS `spu_soporte_eliminarbyId`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_soporte_eliminarbyId` (IN `p_id_soporte` INT, IN `p_iduser_inactive` INT)   BEGIN
     UPDATE tb_soporte
@@ -1100,7 +1147,8 @@ END$$
 DROP PROCEDURE IF EXISTS `spu_soporte_ficha_doc`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_soporte_ficha_doc` (IN `p_idsoporte` INT)   BEGIN
     SELECT 
-        ct.ficha_instalacion
+        ct.ficha_instalacion,
+        ct.id_contrato
     FROM tb_soporte s
     INNER JOIN tb_contratos ct ON s.id_contrato = ct.id_contrato
     INNER JOIN tb_clientes cl ON ct.id_cliente = cl.id_cliente
@@ -1113,48 +1161,54 @@ END$$
 DROP PROCEDURE IF EXISTS `spu_soporte_filtrar_prioridad`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_soporte_filtrar_prioridad` (IN `p_prioridad` VARCHAR(50))   BEGIN
     SELECT
-        c.coordenada,
-        c.id_sector,
-        sct.sector,
-        s.fecha_hora_solicitud,
-        s.fecha_hora_asistencia,
-        c.direccion_servicio,
-        s.id_soporte,
-        s.prioridad,
-        s.soporte,
-        s.descripcion_problema,
-        s.descripcion_solucion,
-        ts.tipo_soporte,
-        c.id_cliente,
-        CASE
-            WHEN cl.id_persona IS NOT NULL THEN CONCAT(p_cliente.nombres, ' ', p_cliente.apellidos)
-            WHEN cl.id_empresa IS NOT NULL THEN e.razon_social
-        END AS nombre_cliente,
-        c.direccion_servicio,
-        r.id_usuario AS id_tecnico,
-        CONCAT(p_tecnico.nombres, ' ', p_tecnico.apellidos) AS nombre_tecnico
-    FROM 
-        tb_soporte s
-    LEFT JOIN 
-        tb_contratos c ON s.id_contrato = c.id_contrato
-    INNER JOIN
-        tb_sectores sct ON c.id_sector = sct.id_sector
-    LEFT JOIN 
-        tb_tipo_soporte ts ON s.id_tipo_soporte = ts.id_tipo_soporte
-    LEFT JOIN 
-        tb_responsables r ON s.id_tecnico = r.id_responsable
-    LEFT JOIN 
-        tb_usuarios u ON r.id_usuario = u.id_usuario
-    LEFT JOIN 
-        tb_personas p_tecnico ON u.id_persona = p_tecnico.id_persona
-    LEFT JOIN 
-        tb_clientes cl ON c.id_cliente = cl.id_cliente
-    LEFT JOIN 
-        tb_personas p_cliente ON cl.id_persona = p_cliente.id_persona 
-    LEFT JOIN 
-        tb_empresas e ON cl.id_empresa = e.id_empresa
+    s.id_soporte,
+    c.coordenada,
+    c.id_sector,
+    sct.sector,
+    s.fecha_hora_solicitud,
+    s.fecha_hora_asistencia,
+    c.direccion_servicio,
+    s.prioridad,
+    s.soporte,
+    s.descripcion_problema,
+    s.descripcion_solucion,
+    ts.tipo_soporte,
+    c.id_cliente,
+    CASE
+        WHEN cl.id_persona IS NOT NULL THEN CONCAT(p_cliente.nombres, ' ', p_cliente.apellidos)
+        WHEN cl.id_empresa IS NOT NULL THEN e.razon_social
+    END AS nombre_cliente,
+    c.direccion_servicio,
+    r.id_usuario AS id_tecnico,
+    CONCAT(p_tecnico.nombres, ' ', p_tecnico.apellidos) AS nombre_tecnico,
+    GROUP_CONCAT(srv.tipo_servicio) AS tipos_servicio,
+    GROUP_CONCAT(srv.servicio) AS servicios
+    FROM
+    tb_soporte s
+    LEFT JOIN tb_contratos c ON s.id_contrato = c.id_contrato
+    INNER JOIN tb_sectores sct ON c.id_sector = sct.id_sector
+    LEFT JOIN tb_tipo_soporte ts ON s.id_tipo_soporte = ts.id_tipo_soporte
+    LEFT JOIN tb_responsables r ON s.id_tecnico = r.id_responsable
+    LEFT JOIN tb_usuarios u ON r.id_usuario = u.id_usuario
+    LEFT JOIN tb_personas p_tecnico ON u.id_persona = p_tecnico.id_persona
+    LEFT JOIN tb_clientes cl ON c.id_cliente = cl.id_cliente
+    LEFT JOIN tb_personas p_cliente ON cl.id_persona = p_cliente.id_persona
+    LEFT JOIN tb_empresas e ON cl.id_empresa = e.id_empresa
+    INNER JOIN tb_paquetes p ON c.id_paquete = p.id_paquete
+    INNER JOIN tb_servicios srv ON JSON_CONTAINS(
+        p.id_servicio,
+        CONCAT(
+        '{"id_servicio":',
+        srv.id_servicio,
+        '}'
+        )
+    )
     WHERE
-        (p_prioridad = "" OR s.prioridad = p_prioridad) AND s.inactive_at IS NULL;
+    c.inactive_at IS NULL
+    AND c.ficha_instalacion IS NOT NULL
+    AND s.estaCompleto != 1
+    AND (p_prioridad = "" OR s.prioridad = p_prioridad) AND s.inactive_at IS NULL
+    GROUP BY c.id_contrato, c.create_at;
 END$$
 
 DROP PROCEDURE IF EXISTS `spu_tipo_soporte_registrar`$$
@@ -1220,8 +1274,8 @@ DELIMITER ;
 --
 -- Estructura de tabla para la tabla `tb_almacen`
 --
--- Creación: 16-12-2024 a las 14:29:43
--- Última actualización: 16-12-2024 a las 14:30:37
+-- Creación: 16-12-2024 a las 22:40:59
+-- Última actualización: 16-12-2024 a las 22:41:07
 --
 
 DROP TABLE IF EXISTS `tb_almacen`;
@@ -1247,16 +1301,16 @@ CREATE TABLE `tb_almacen` (
 --
 
 INSERT INTO `tb_almacen` (`id_almacen`, `nombre_almacen`, `ubicacion`, `coordenada`, `inactive_at`, `iduser_inactive`, `create_at`, `update_at`, `iduser_create`, `iduser_update`) VALUES
-(1, 'Almacen 1', 'Av 123', '-13.415960344185644, -76.13418174072265', NULL, NULL, '2024-12-16 09:30:37', NULL, 1, NULL),
-(2, 'Almacen 2', 'Av 123456', '-13.427602649212902, -76.13979326342246', NULL, NULL, '2024-12-16 09:30:37', NULL, 1, NULL);
+(1, 'Almacen 1', 'Av 123', '-13.415960344185644, -76.13418174072265', NULL, NULL, '2024-12-16 17:41:07', NULL, 1, NULL),
+(2, 'Almacen 2', 'Av 123456', '-13.427602649212902, -76.13979326342246', NULL, NULL, '2024-12-16 17:41:07', NULL, 1, NULL);
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `tb_cajas`
 --
--- Creación: 16-12-2024 a las 14:29:29
--- Última actualización: 16-12-2024 a las 14:42:45
+-- Creación: 16-12-2024 a las 22:40:57
+-- Última actualización: 16-12-2024 a las 23:24:37
 --
 
 DROP TABLE IF EXISTS `tb_cajas`;
@@ -1286,15 +1340,15 @@ CREATE TABLE `tb_cajas` (
 --
 
 INSERT INTO `tb_cajas` (`id_caja`, `nombre`, `descripcion`, `numero_entradas`, `id_sector`, `coordenadas`, `create_at`, `update_at`, `inactive_at`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
-(1, '123456', '456897', 7, 3, '-13.41761846202605,-76.15259000544998', '2024-12-16 09:40:58', '2024-12-16 09:42:45', NULL, 1, NULL, NULL);
+(1, 'Caja 1', 'Esta es la caja 1 para los testeos', 7, 4, '-13.411640591160554,-76.14764672213997', '2024-12-16 17:50:46', '2024-12-16 18:24:37', NULL, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `tb_clientes`
 --
--- Creación: 16-12-2024 a las 14:29:37
--- Última actualización: 16-12-2024 a las 14:42:44
+-- Creación: 16-12-2024 a las 22:40:58
+-- Última actualización: 16-12-2024 a las 22:41:08
 --
 
 DROP TABLE IF EXISTS `tb_clientes`;
@@ -1326,101 +1380,100 @@ CREATE TABLE `tb_clientes` (
 --
 
 INSERT INTO `tb_clientes` (`id_cliente`, `id_persona`, `id_empresa`, `direccion`, `referencia`, `coordenadas`, `create_at`, `update_at`, `inactive_at`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
-(1, 6, NULL, 'Av. Luis Alva Maurtua S/N', 'Cruz blanca 4ta cuadra - Oruro', '-13.430139, -76.113639', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(2, 7, NULL, 'Calle San Luis #139', 'Chincha alta', '-13.421583, -76.122361', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(3, 8, NULL, 'AA.HH. Virgen Del Carmen Mz-G N-18 ', 'Chincha Alta', '-13.427278, -76.124889', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(4, 9, NULL, 'Av San Martin #103', 'Sunampe', '-13.433306, -76.137694', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(5, 10, NULL, 'Psj. Los Angeles S/N', 'Mina de oro', '-13.431694, -76.144278', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(6, 11, NULL, 'Av. Santa Rosa N° 312', 'Lomo largo', '-13.424111, -76.168028', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(7, 12, NULL, 'Psj. San Cosme #185', 'Calle Rosario 7ma Cuadra', '-13.406222, -76.138167', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(8, 13, NULL, 'Psj. San Vicente Mz-P Lt-16', 'Sunampe', '-13.411083, -76.163611', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(9, 14, NULL, 'Av. San Antonio', 'Santa Rosa - Sunampe', '-13.421583, -76.157194', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(10, 15, NULL, 'PSj. Primaveral Lt-11022', 'Cruz Blanca', '-13.430250, -76.121194', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(11, 16, NULL, 'Psj. Los Claveles N° 207', 'Cruz Blanca - Chinhca Alta', '-13.423222, -76.123889', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(12, 17, NULL, 'Calle Parada de los amigos', 'Sunampe', '-13.412833, -76.164778', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(13, 18, NULL, 'Barrio el por venir', 'Grocio Prado', '-13.403472, -76.165472', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(14, 19, NULL, 'Upis Divina Misericordia Mz-B Lt-6A', 'Chincha Alta', '-13.416028, -76.144944', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(15, 20, NULL, 'Psj. 2 de mayo N°228', 'Cruz Blanca', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(16, 21, NULL, 'Urb Los Viñedos N° UZ-12', 'Chincha Alta', '-13.406250, -76.140111', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(17, 22, NULL, 'Psj. San Jose Mz-H Lt-10', 'Sunampe', '-13.421139, -76.169333', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(18, 23, NULL, 'Calle Sebastian Barranca Lt-14C', 'Grocio Prado', '-13.382250, -76.156000', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(19, 24, NULL, 'Psj. San Blas - Calle A Lt-02', 'Alfonso Ugarte Norte-Sunampe', '-13.418639, -76.170583', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(20, 25, NULL, 'Av. Unión N°3A - Los Alamos', 'Pueblo Nuevo', '-13.403750, -76.138222', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(21, 26, NULL, 'Psj. La frontera N° 257', 'Lomo Largo - Sunampe', '-13.420250, -76.165306', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(22, 27, NULL, 'AA.HH El Salvador Mz-J Sub Lt-2-2', 'Pueblo Nuevo a 2 casas de la torre', '-13.395750, -76.142361', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(23, 28, NULL, 'Av. Alva Maurtua Mz-J Lt-16', 'Cruz Blanca', '-13.428611, -76.117278', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(24, 29, NULL, 'Upis San Andrés Mz-A Lt-6', 'Pueblo Nuevo', '-13.392583, -76.139028', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(25, 30, NULL, 'Upis San Andrés Mz-I Lt-19', 'Pueblo Nuevo', '-13.394111, -76.137361', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(26, 31, NULL, 'Calle Los Angeles N°368', 'Lomo Largo', '-13.419361, -76.168944', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(27, 32, NULL, 'Calle Pedro Moreno N° 130', 'Grocio Prado', '-13.410833, -76.140333', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(28, 33, NULL, 'Av. Los Angeles #512 - Sunampe', 'Frente discoteca the boss', '-13.419139, -76.170278', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(29, 34, NULL, 'Condorillo alto Mz-I Lt-12', 'Chincha Alta', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(30, 35, NULL, 'Psj. San gregorio S/N', 'Alameda - Sunampe', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(31, 36, NULL, 'Psj. 2 de mayo #309', 'Cruz Blanca', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(32, 37, NULL, 'Psj. San Juan de Dios', 'Cruz Blanca', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(33, 38, NULL, 'AA.HH Jesús María y Jesús Mz-D Lt-02', 'Chincha Alta', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(34, 39, NULL, 'Upis Biggio Mz-D Puerta 02', '', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(35, 40, NULL, 'Calle El Carmen N°210', 'Cruz Blanca', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(36, 41, NULL, 'C.P Condorillo alto Mz-T Lt-23', 'Chincha Alta', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(37, 42, NULL, 'Calle Sebastion Barranca Lt-3 C-1', 'Fundo colorado - Grocio Prado', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(38, 43, NULL, 'Calle Mina de oro Puerta 06 / Sin barrio', 'Mina de oro - cinco esquinas', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(39, 44, NULL, 'AA.HH Jesus Maria y Jose #A-05', 'Chincha Alta', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(40, 45, NULL, 'Prol. Juan Castilla Roncero Lt-3B', 'Grocio Prado - Barrio el por venir', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(41, 46, NULL, 'Calle San Pedro de Pilpa #256-1', 'Sunampe', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(42, 47, NULL, 'Condorillo Alto Mz-P Lt-15', 'Cruz Blanca', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(43, 48, NULL, 'Av. Luis Alva Maurtua N° 525', 'Cruz Blanca - Chincha Alta', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(44, 49, NULL, 'AA.HH Husares de Junin', 'Mz-C Lt-8', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(45, 50, NULL, 'Psj. Anampa Puerta 160', 'Antiguo Sunampe', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(46, 51, NULL, 'Calle Prol. Benavides', 'Grocio Prado', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(47, 52, NULL, 'Av. Paraiso Lt. 5-B', 'Loimo Largo - Sunampe', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(48, 53, NULL, 'AA.HH Virgen del Carmen - Cruz Blanca', 'Mz-D Lt-17', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(49, 54, NULL, 'Luis Massaro ex Pilpa Plaza center', 'Chincha Frente SJB Stand 210-D', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(50, 55, NULL, 'Calle El Carmen N° 196', 'Cruz Blanca - Chincha', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(51, 56, NULL, 'Calle San Pedro de Pilpa #588', 'Sunampe', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(52, 57, NULL, 'Upis 15 de Noviembre', 'Jose olaya B-13-2 puertas', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(53, 58, NULL, 'AA.HH El milagro de San Judas Tadeo', 'Mz-D Lt-8 - Sunampe - Mina de Oro', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(54, 59, NULL, 'El por venir Mz-E Lt-19', 'Grocio Prado', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(55, 60, NULL, 'Av. Primavera #711', 'Antes de la baja del socorro - Sunampe', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(56, 61, NULL, 'Psj. San Martin  N°114', 'Mina de oro', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(57, 62, NULL, 'AA.HH Virgen del Carmen', 'Mz-B Lt-04', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(58, 63, NULL, 'Psj. Arena Costa Mz-D Lt-7', 'San Ignacio', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(59, 64, NULL, 'CP. Condorillo alto', 'Mz-U Lt-01', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(60, 65, NULL, 'Av. San Rafael #258 - Grocio Prado', 'Frente a los mejilloneros', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(61, 66, NULL, 'Barrio Cruz Blanca - Alva Maurtua', 'Ultimo paradero - Oruro', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(62, 67, NULL, 'AA.HH El salvador Mz-B Puerta 17', 'Pueblo Nuevo - El salvador', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(63, 68, NULL, 'AA.HH San Judas Tadeo Mz-E Lt-1', 'Sunampe', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(64, 69, NULL, 'AA.HH San Judas Tadeo Mz-E Lt-4', 'Sunampe', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(65, 70, NULL, 'AA.HH San Judas Tadeo Mz-E Lt-5', 'Sunampe', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(66, 71, NULL, 'Estadio Cruz blanca', 'Chincha Alta', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(67, 72, NULL, 'Condorillo alto N°15 primera cuadra', 'Antes de la posta', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(68, 73, NULL, 'Centro Poblado El Tigre 141', 'Int. O1 - Chincha Alta', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(69, 74, NULL, 'Calle El Carmen N° 190', 'Cruz blanca', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(70, 75, NULL, 'Toma de Cala', 'Cruz blanca', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(71, 76, NULL, 'Psj San Francisco N°111 Int-20', 'Sunampe', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(72, 77, NULL, 'Condominio San Pablo Mz S/N Lt-2-1', 'Sunampe', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(73, 78, NULL, 'Av. Victor Raúl Haya de la Torre Lt-2', 'Chacarita - Sunampe - Costado del grifo Green', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(74, 79, NULL, 'Av. Fátima N°373', 'Sunampe', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(75, 80, NULL, 'Psj. Santa Rosa S/N', 'Cruz Blanca', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(76, 81, NULL, 'AA.HH San Valentin Mz-I Lt-12', 'Condorillo bajo', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(77, 82, NULL, 'Barrio el por venir Psj. San vicente', 'Lt-35 Mz-G - Grocio Prado', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(78, 83, NULL, 'Psj. Sucre N° 470', 'Espalda de mina de oro', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(79, 84, NULL, 'Cale el por venir N° 1138 - D', 'Barrio el por venir - Grocio Prado', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(80, 85, NULL, 'Av. Monterrico #405 - Sunampe', 'Pasando el colegio Simón bolivar', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(81, 86, NULL, 'Av. Primavera N°300', 'Sunampe', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(82, 87, NULL, 'HU.CA Santa Teresa S/N', 'Sunampe', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(83, 88, NULL, 'AA.HH Las flores de mina Mz-A Lt-6', 'Grocio Prado - Mina de oro', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(84, 89, NULL, 'Calle Victor Haya de la Torre Lt-02', 'Chacarita Sunampe', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(85, 90, NULL, 'Psj. San Juan Lt-94A', 'Alfonso Ugarte - Sunampe', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(86, 91, NULL, 'Calle La Palma 114 cercado de grocio prado', 'Toma el carriso', '-1', '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(87, 3, NULL, 'Av. Siempre Viva 123, Springfield', 'Frente al parque central', '-13.423764433433108,-76.15787101074218', '2024-12-16 09:42:44', NULL, NULL, 1, NULL, NULL);
+(1, 6, NULL, 'Av. Luis Alva Maurtua S/N', 'Cruz blanca 4ta cuadra - Oruro', '-13.430139, -76.113639', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(2, 7, NULL, 'Calle San Luis #139', 'Chincha alta', '-13.421583, -76.122361', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(3, 8, NULL, 'AA.HH. Virgen Del Carmen Mz-G N-18 ', 'Chincha Alta', '-13.427278, -76.124889', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(4, 9, NULL, 'Av San Martin #103', 'Sunampe', '-13.433306, -76.137694', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(5, 10, NULL, 'Psj. Los Angeles S/N', 'Mina de oro', '-13.431694, -76.144278', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(6, 11, NULL, 'Av. Santa Rosa N° 312', 'Lomo largo', '-13.424111, -76.168028', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(7, 12, NULL, 'Psj. San Cosme #185', 'Calle Rosario 7ma Cuadra', '-13.406222, -76.138167', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(8, 13, NULL, 'Psj. San Vicente Mz-P Lt-16', 'Sunampe', '-13.411083, -76.163611', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(9, 14, NULL, 'Av. San Antonio', 'Santa Rosa - Sunampe', '-13.421583, -76.157194', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(10, 15, NULL, 'PSj. Primaveral Lt-11022', 'Cruz Blanca', '-13.430250, -76.121194', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(11, 16, NULL, 'Psj. Los Claveles N° 207', 'Cruz Blanca - Chinhca Alta', '-13.423222, -76.123889', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(12, 17, NULL, 'Calle Parada de los amigos', 'Sunampe', '-13.412833, -76.164778', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(13, 18, NULL, 'Barrio el por venir', 'Grocio Prado', '-13.403472, -76.165472', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(14, 19, NULL, 'Upis Divina Misericordia Mz-B Lt-6A', 'Chincha Alta', '-13.416028, -76.144944', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(15, 20, NULL, 'Psj. 2 de mayo N°228', 'Cruz Blanca', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(16, 21, NULL, 'Urb Los Viñedos N° UZ-12', 'Chincha Alta', '-13.406250, -76.140111', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(17, 22, NULL, 'Psj. San Jose Mz-H Lt-10', 'Sunampe', '-13.421139, -76.169333', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(18, 23, NULL, 'Calle Sebastian Barranca Lt-14C', 'Grocio Prado', '-13.382250, -76.156000', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(19, 24, NULL, 'Psj. San Blas - Calle A Lt-02', 'Alfonso Ugarte Norte-Sunampe', '-13.418639, -76.170583', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(20, 25, NULL, 'Av. Unión N°3A - Los Alamos', 'Pueblo Nuevo', '-13.403750, -76.138222', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(21, 26, NULL, 'Psj. La frontera N° 257', 'Lomo Largo - Sunampe', '-13.420250, -76.165306', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(22, 27, NULL, 'AA.HH El Salvador Mz-J Sub Lt-2-2', 'Pueblo Nuevo a 2 casas de la torre', '-13.395750, -76.142361', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(23, 28, NULL, 'Av. Alva Maurtua Mz-J Lt-16', 'Cruz Blanca', '-13.428611, -76.117278', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(24, 29, NULL, 'Upis San Andrés Mz-A Lt-6', 'Pueblo Nuevo', '-13.392583, -76.139028', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(25, 30, NULL, 'Upis San Andrés Mz-I Lt-19', 'Pueblo Nuevo', '-13.394111, -76.137361', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(26, 31, NULL, 'Calle Los Angeles N°368', 'Lomo Largo', '-13.419361, -76.168944', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(27, 32, NULL, 'Calle Pedro Moreno N° 130', 'Grocio Prado', '-13.410833, -76.140333', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(28, 33, NULL, 'Av. Los Angeles #512 - Sunampe', 'Frente discoteca the boss', '-13.419139, -76.170278', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(29, 34, NULL, 'Condorillo alto Mz-I Lt-12', 'Chincha Alta', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(30, 35, NULL, 'Psj. San gregorio S/N', 'Alameda - Sunampe', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(31, 36, NULL, 'Psj. 2 de mayo #309', 'Cruz Blanca', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(32, 37, NULL, 'Psj. San Juan de Dios', 'Cruz Blanca', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(33, 38, NULL, 'AA.HH Jesús María y Jesús Mz-D Lt-02', 'Chincha Alta', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(34, 39, NULL, 'Upis Biggio Mz-D Puerta 02', '', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(35, 40, NULL, 'Calle El Carmen N°210', 'Cruz Blanca', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(36, 41, NULL, 'C.P Condorillo alto Mz-T Lt-23', 'Chincha Alta', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(37, 42, NULL, 'Calle Sebastion Barranca Lt-3 C-1', 'Fundo colorado - Grocio Prado', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(38, 43, NULL, 'Calle Mina de oro Puerta 06 / Sin barrio', 'Mina de oro - cinco esquinas', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(39, 44, NULL, 'AA.HH Jesus Maria y Jose #A-05', 'Chincha Alta', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(40, 45, NULL, 'Prol. Juan Castilla Roncero Lt-3B', 'Grocio Prado - Barrio el por venir', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(41, 46, NULL, 'Calle San Pedro de Pilpa #256-1', 'Sunampe', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(42, 47, NULL, 'Condorillo Alto Mz-P Lt-15', 'Cruz Blanca', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(43, 48, NULL, 'Av. Luis Alva Maurtua N° 525', 'Cruz Blanca - Chincha Alta', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(44, 49, NULL, 'AA.HH Husares de Junin', 'Mz-C Lt-8', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(45, 50, NULL, 'Psj. Anampa Puerta 160', 'Antiguo Sunampe', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(46, 51, NULL, 'Calle Prol. Benavides', 'Grocio Prado', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(47, 52, NULL, 'Av. Paraiso Lt. 5-B', 'Loimo Largo - Sunampe', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(48, 53, NULL, 'AA.HH Virgen del Carmen - Cruz Blanca', 'Mz-D Lt-17', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(49, 54, NULL, 'Luis Massaro ex Pilpa Plaza center', 'Chincha Frente SJB Stand 210-D', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(50, 55, NULL, 'Calle El Carmen N° 196', 'Cruz Blanca - Chincha', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(51, 56, NULL, 'Calle San Pedro de Pilpa #588', 'Sunampe', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(52, 57, NULL, 'Upis 15 de Noviembre', 'Jose olaya B-13-2 puertas', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(53, 58, NULL, 'AA.HH El milagro de San Judas Tadeo', 'Mz-D Lt-8 - Sunampe - Mina de Oro', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(54, 59, NULL, 'El por venir Mz-E Lt-19', 'Grocio Prado', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(55, 60, NULL, 'Av. Primavera #711', 'Antes de la baja del socorro - Sunampe', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(56, 61, NULL, 'Psj. San Martin  N°114', 'Mina de oro', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(57, 62, NULL, 'AA.HH Virgen del Carmen', 'Mz-B Lt-04', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(58, 63, NULL, 'Psj. Arena Costa Mz-D Lt-7', 'San Ignacio', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(59, 64, NULL, 'CP. Condorillo alto', 'Mz-U Lt-01', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(60, 65, NULL, 'Av. San Rafael #258 - Grocio Prado', 'Frente a los mejilloneros', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(61, 66, NULL, 'Barrio Cruz Blanca - Alva Maurtua', 'Ultimo paradero - Oruro', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(62, 67, NULL, 'AA.HH El salvador Mz-B Puerta 17', 'Pueblo Nuevo - El salvador', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(63, 68, NULL, 'AA.HH San Judas Tadeo Mz-E Lt-1', 'Sunampe', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(64, 69, NULL, 'AA.HH San Judas Tadeo Mz-E Lt-4', 'Sunampe', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(65, 70, NULL, 'AA.HH San Judas Tadeo Mz-E Lt-5', 'Sunampe', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(66, 71, NULL, 'Estadio Cruz blanca', 'Chincha Alta', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(67, 72, NULL, 'Condorillo alto N°15 primera cuadra', 'Antes de la posta', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(68, 73, NULL, 'Centro Poblado El Tigre 141', 'Int. O1 - Chincha Alta', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(69, 74, NULL, 'Calle El Carmen N° 190', 'Cruz blanca', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(70, 75, NULL, 'Toma de Cala', 'Cruz blanca', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(71, 76, NULL, 'Psj San Francisco N°111 Int-20', 'Sunampe', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(72, 77, NULL, 'Condominio San Pablo Mz S/N Lt-2-1', 'Sunampe', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(73, 78, NULL, 'Av. Victor Raúl Haya de la Torre Lt-2', 'Chacarita - Sunampe - Costado del grifo Green', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(74, 79, NULL, 'Av. Fátima N°373', 'Sunampe', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(75, 80, NULL, 'Psj. Santa Rosa S/N', 'Cruz Blanca', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(76, 81, NULL, 'AA.HH San Valentin Mz-I Lt-12', 'Condorillo bajo', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(77, 82, NULL, 'Barrio el por venir Psj. San vicente', 'Lt-35 Mz-G - Grocio Prado', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(78, 83, NULL, 'Psj. Sucre N° 470', 'Espalda de mina de oro', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(79, 84, NULL, 'Cale el por venir N° 1138 - D', 'Barrio el por venir - Grocio Prado', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(80, 85, NULL, 'Av. Monterrico #405 - Sunampe', 'Pasando el colegio Simón bolivar', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(81, 86, NULL, 'Av. Primavera N°300', 'Sunampe', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(82, 87, NULL, 'HU.CA Santa Teresa S/N', 'Sunampe', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(83, 88, NULL, 'AA.HH Las flores de mina Mz-A Lt-6', 'Grocio Prado - Mina de oro', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(84, 89, NULL, 'Calle Victor Haya de la Torre Lt-02', 'Chacarita Sunampe', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(85, 90, NULL, 'Psj. San Juan Lt-94A', 'Alfonso Ugarte - Sunampe', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(86, 91, NULL, 'Calle La Palma 114 cercado de grocio prado', 'Toma el carriso', '-1', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `tb_contactabilidad`
 --
--- Creación: 16-12-2024 a las 14:29:40
--- Última actualización: 16-12-2024 a las 14:30:42
+-- Creación: 16-12-2024 a las 22:40:58
+-- Última actualización: 16-12-2024 a las 22:41:08
 --
 
 DROP TABLE IF EXISTS `tb_contactabilidad`;
@@ -1456,35 +1509,35 @@ CREATE TABLE `tb_contactabilidad` (
 --
 
 INSERT INTO `tb_contactabilidad` (`id_contactabilidad`, `id_persona`, `id_empresa`, `id_paquete`, `fecha_hora_contacto`, `direccion_servicio`, `nota`, `fecha_limite`, `create_at`, `update_at`, `inactive_at`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
-(1, 20, NULL, 1, '2024-01-10 14:30:00', 'Av. San Martín 500, Chincha Alta', 'Se realizó la instalación del servicio.', NULL, '2024-12-16 09:30:42', NULL, NULL, 1, NULL, NULL),
-(2, NULL, 21, 2, '2024-01-12 10:15:00', 'Calle Ayacucho 345, Chincha Alta', 'Cliente solicitó soporte técnico.', NULL, '2024-12-16 09:30:42', NULL, NULL, 1, NULL, NULL),
-(3, 22, NULL, 3, '2024-01-14 11:45:00', 'Calle Grau 125, Chincha Alta', 'Se acordó la renovación del contrato.', NULL, '2024-12-16 09:30:42', NULL, NULL, 1, NULL, NULL),
-(4, NULL, 23, 4, '2024-01-16 13:00:00', 'Av. Benavides 567, Chincha Alta', 'Se envió la propuesta de nuevos servicios.', NULL, '2024-12-16 09:30:42', NULL, NULL, 1, NULL, NULL),
-(5, 24, NULL, 5, '2024-01-18 09:30:00', 'Calle Libertad 890, Chincha Alta', 'Cliente solicitó información adicional.', NULL, '2024-12-16 09:30:42', NULL, NULL, 1, NULL, NULL),
-(6, NULL, 25, 6, '2024-01-20 12:00:00', 'Jirón Pisco 300, Chincha Alta', 'Se confirmó la fecha de instalación.', NULL, '2024-12-16 09:30:42', NULL, NULL, 1, NULL, NULL),
-(7, 26, NULL, 7, '2024-01-22 14:45:00', 'Av. América 444, Chincha Alta', 'Se realizó el seguimiento al cliente.', NULL, '2024-12-16 09:30:42', NULL, NULL, 1, NULL, NULL),
-(8, NULL, 27, 8, '2024-01-24 10:00:00', 'Calle Bolognesi 678, Chincha Alta', 'Cliente solicitó una ampliación del servicio.', NULL, '2024-12-16 09:30:42', NULL, NULL, 1, NULL, NULL),
-(9, 28, NULL, 9, '2024-01-26 16:15:00', 'Av. Progreso 234, Chincha Alta', 'Se completó la instalación del servicio adicional.', NULL, '2024-12-16 09:30:42', NULL, NULL, 1, NULL, NULL),
-(10, NULL, 29, 10, '2024-01-28 11:30:00', 'Calle Comercio 123, Chincha Alta', 'Cliente confirmó su satisfacción con el servicio.', NULL, '2024-12-16 09:30:42', NULL, NULL, 1, NULL, NULL),
-(11, 30, NULL, 11, '2024-01-30 15:00:00', 'Av. Victoria 876, Chincha Alta', 'Se acordó una visita técnica para revisar el servicio.', NULL, '2024-12-16 09:30:42', NULL, NULL, 1, NULL, NULL),
-(12, NULL, 31, 12, '2024-02-01 09:45:00', 'Calle Callao 789, Chincha Alta', 'Cliente solicitó una mejora en el plan contratado.', NULL, '2024-12-16 09:30:42', NULL, NULL, 1, NULL, NULL),
-(13, 32, NULL, 13, '2024-02-03 13:15:00', 'Jirón Lima 321, Chincha Alta', 'Se finalizó la modificación solicitada.', NULL, '2024-12-16 09:30:42', NULL, NULL, 1, NULL, NULL),
-(14, NULL, 33, 14, '2024-02-05 16:00:00', 'Calle Loreto 654, Chincha Alta', 'Se discutió la posibilidad de un nuevo contrato.', NULL, '2024-12-16 09:30:42', NULL, NULL, 1, NULL, NULL),
-(15, 34, NULL, 15, '2024-02-07 11:45:00', 'Av. Mariscal Castilla 555, Chincha Alta', 'Se realizó una revisión técnica.', NULL, '2024-12-16 09:30:42', NULL, NULL, 1, NULL, NULL),
-(16, NULL, 35, 16, '2024-02-09 14:30:00', 'Calle Zepita 412, Chincha Alta', 'Cliente aceptó el nuevo contrato propuesto.', NULL, '2024-12-16 09:30:42', NULL, NULL, 1, NULL, NULL),
-(17, 36, NULL, 17, '2024-02-11 12:15:00', 'Jirón Túpac Amaru 876, Chincha Alta', 'Se confirmó el pago del nuevo contrato.', NULL, '2024-12-16 09:30:42', NULL, NULL, 1, NULL, NULL),
-(18, NULL, 37, 18, '2024-02-13 09:30:00', 'Calle Junín 210, Chincha Alta', 'Se discutió un posible cambio en los términos del contrato.', NULL, '2024-12-16 09:30:42', NULL, NULL, 1, NULL, NULL),
-(19, 38, NULL, 19, '2024-02-15 15:45:00', 'Av. Nicolás de Piérola 654, Chincha Alta', 'Cliente solicitó una visita técnica adicional.', NULL, '2024-12-16 09:30:42', NULL, NULL, 1, NULL, NULL),
-(20, NULL, 39, 20, '2024-02-17 13:00:00', 'Calle Sucre 444, Chincha Alta', 'Se realizó el mantenimiento solicitado.', NULL, '2024-12-16 09:30:42', NULL, NULL, 1, NULL, NULL),
-(21, 40, NULL, 21, '2024-02-19 10:30:00', 'Av. Arica 765, Chincha Alta', 'Se acordó una renovación del plan actual.', NULL, '2024-12-16 09:30:42', NULL, NULL, 1, NULL, NULL);
+(1, 20, NULL, 1, '2024-01-10 14:30:00', 'Av. San Martín 500, Chincha Alta', 'Se realizó la instalación del servicio.', NULL, '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(2, NULL, 21, 2, '2024-01-12 10:15:00', 'Calle Ayacucho 345, Chincha Alta', 'Cliente solicitó soporte técnico.', NULL, '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(3, 22, NULL, 3, '2024-01-14 11:45:00', 'Calle Grau 125, Chincha Alta', 'Se acordó la renovación del contrato.', NULL, '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(4, NULL, 23, 4, '2024-01-16 13:00:00', 'Av. Benavides 567, Chincha Alta', 'Se envió la propuesta de nuevos servicios.', NULL, '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(5, 24, NULL, 5, '2024-01-18 09:30:00', 'Calle Libertad 890, Chincha Alta', 'Cliente solicitó información adicional.', NULL, '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(6, NULL, 25, 6, '2024-01-20 12:00:00', 'Jirón Pisco 300, Chincha Alta', 'Se confirmó la fecha de instalación.', NULL, '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(7, 26, NULL, 7, '2024-01-22 14:45:00', 'Av. América 444, Chincha Alta', 'Se realizó el seguimiento al cliente.', NULL, '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(8, NULL, 27, 8, '2024-01-24 10:00:00', 'Calle Bolognesi 678, Chincha Alta', 'Cliente solicitó una ampliación del servicio.', NULL, '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(9, 28, NULL, 9, '2024-01-26 16:15:00', 'Av. Progreso 234, Chincha Alta', 'Se completó la instalación del servicio adicional.', NULL, '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(10, NULL, 29, 10, '2024-01-28 11:30:00', 'Calle Comercio 123, Chincha Alta', 'Cliente confirmó su satisfacción con el servicio.', NULL, '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(11, 30, NULL, 11, '2024-01-30 15:00:00', 'Av. Victoria 876, Chincha Alta', 'Se acordó una visita técnica para revisar el servicio.', NULL, '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(12, NULL, 31, 12, '2024-02-01 09:45:00', 'Calle Callao 789, Chincha Alta', 'Cliente solicitó una mejora en el plan contratado.', NULL, '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(13, 32, NULL, 13, '2024-02-03 13:15:00', 'Jirón Lima 321, Chincha Alta', 'Se finalizó la modificación solicitada.', NULL, '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(14, NULL, 33, 14, '2024-02-05 16:00:00', 'Calle Loreto 654, Chincha Alta', 'Se discutió la posibilidad de un nuevo contrato.', NULL, '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(15, 34, NULL, 15, '2024-02-07 11:45:00', 'Av. Mariscal Castilla 555, Chincha Alta', 'Se realizó una revisión técnica.', NULL, '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(16, NULL, 35, 16, '2024-02-09 14:30:00', 'Calle Zepita 412, Chincha Alta', 'Cliente aceptó el nuevo contrato propuesto.', NULL, '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(17, 36, NULL, 17, '2024-02-11 12:15:00', 'Jirón Túpac Amaru 876, Chincha Alta', 'Se confirmó el pago del nuevo contrato.', NULL, '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(18, NULL, 37, 18, '2024-02-13 09:30:00', 'Calle Junín 210, Chincha Alta', 'Se discutió un posible cambio en los términos del contrato.', NULL, '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(19, 38, NULL, 19, '2024-02-15 15:45:00', 'Av. Nicolás de Piérola 654, Chincha Alta', 'Cliente solicitó una visita técnica adicional.', NULL, '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(20, NULL, 39, 20, '2024-02-17 13:00:00', 'Calle Sucre 444, Chincha Alta', 'Se realizó el mantenimiento solicitado.', NULL, '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(21, 40, NULL, 21, '2024-02-19 10:30:00', 'Av. Arica 765, Chincha Alta', 'Se acordó una renovación del plan actual.', NULL, '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `tb_contratos`
 --
--- Creación: 16-12-2024 a las 14:29:39
--- Última actualización: 16-12-2024 a las 14:47:04
+-- Creación: 16-12-2024 a las 22:40:58
+-- Última actualización: 16-12-2024 a las 23:35:29
 --
 
 DROP TABLE IF EXISTS `tb_contratos`;
@@ -1529,15 +1582,16 @@ CREATE TABLE `tb_contratos` (
 --
 
 INSERT INTO `tb_contratos` (`id_contrato`, `id_cliente`, `id_paquete`, `id_sector`, `id_usuario_registro`, `id_usuario_tecnico`, `direccion_servicio`, `referencia`, `ficha_instalacion`, `coordenada`, `fecha_inicio`, `fecha_registro`, `fecha_fin`, `nota`, `create_at`, `update_at`, `inactive_at`, `iduser_update`, `iduser_inactive`) VALUES
-(1, 87, 9, 3, 1, NULL, 'Av. Siempre Viva 123, Springfield', 'Frente al parque central', '{\"fibraOptica\":{\"usuario\":\"BRAMES1\",\"claveAcceso\":\"@BRAMES1\",\"vlan\":\"110\",\"periodo\":\"2025-06-16\",\"plan\":\"Plan Internet Duo Plata\",\"potencia\":-20,\"moden\":{\"ssid\":\"CARAJO\",\"seguridad\":\"123456789\",\"codigoBarra\":1234567890131,\"marca\":\"Genius\",\"modelo\":\"Mouse\",\"serie\":\"123456498979\",\"banda\":[\"5G\"],\"numeroantena\":2,\"catv\":false},\"detalles\":\"\",\"repetidores\":[{\"numero\":1,\"ssid\":\"123154654987\",\"contrasenia\":\"123456789\",\"codigoBarra\":\"1234567890123\",\"modelo\":\"Router\",\"marca\":\"TP Link\",\"precio\":\"150.00\",\"serie\":\"123456789\",\"ip\":\"192.168.123.456\",\"condicion\":\"venta\"}]},\"idCaja\":\"1\",\"cable\":{\"pagoinstalacion\":30,\"potencia\":\"-20\",\"plan\":\"Plan Internet Duo Plata\",\"triplexor\":{\"requerido\":\"true\",\"cargador\":\"false\"},\"conector\":{\"numeroconector\":210,\"precio\":1.5},\"splitter\":[{\"cantidad\":400,\"tipo\":\"1x5\"}],\"cable\":{\"metrosadicionales\":200,\"preciometro\":1.3},\"sintonizadores\":[{\"numero\":1,\"codigoBarra\":\"1234567890123\",\"marca\":\"TP Link\",\"modelo\":\"Router\",\"serie\":\"asdaweq2w4eq\",\"precio\":\"150.00\"}]},\"costo\":{\"pagoAdelantado\":\"205\",\"descuento\":\"20\",\"nap\":{\"gpon\":\"-20\",\"catv\":\"-20\"},\"casa\":{\"gpon\":\"-20\",\"catv\":\"-20\"},\"cableCosto\":{\"numerosintotizadores\":1,\"costoAlquilerSintotizador\":40,\"costoCable\":260,\"costoConector\":315,\"cantidadCable\":\"200\",\"precioCable\":\"1.30\",\"precioConector\":\"1.50\",\"cantidadConector\":\"210\",\"detalle\":\"-20\"}}}', '13.423764433433108,76.15787101074218', '2024-12-16', '2024-12-16', NULL, 'wqweqweqw', '2024-12-16 09:42:45', NULL, NULL, NULL, NULL);
+(1, 14, 19, 24, 1, NULL, 'Upis Divina Misericordia MzB Lt6A', 'Chincha Alta', '{\"parametros\":{\"periodo\":\"2025-06-16\",\"plan\":\"Plan Salvador Residencial 20MB - 50\",\"frecuencia\":[\"2.4GHZ\"],\"base\":[{\"id\":\"602\",\"nombre\":\"Cajabamba\"}],\"subbase\":[{\"id\":\"60202\",\"nombre\":\"Cachachi\"}],\"signalstrength\":\"-40\",\"noisefloor\":\"-30\",\"transmitccq\":40,\"txrate\":20.2,\"rxrate\":20,\"routers\":[{\"numero\":1,\"codigobarra\":\"1234567890130\",\"modelo\":\"Supresor de Pisco\",\"marca\":\"Omega\",\"wan\":\"192.168.111.111\",\"mascara\":\"255.255.255.0\",\"puertaenlace\":\"192.168.999.999\",\"dns1\":\"8.8.8.8\",\"dns2\":\"8.8.4.4\",\"lan\":\"192.168.666.666\",\"acceso\":\"AccesoRouter\",\"ssid\":\"NombreWifi\",\"seguridad\":\"SeguridadWifi\",\"otros\":\"Por si acaso se desea llenar algo mas\"}]},\"venta\":{\"costoantena\":15,\"costorouter\":150,\"subtotal\":273,\"adelanto\":1,\"saldoequipos\":2,\"materialadicional\":\"123\",\"condicion\":{\"Adelantado\":true,\"Cumpliendo el mes\":\"\"},\"antena\":{\"marca\":\"Omega\",\"modelo\":\"Supresor de Pisco\",\"mac\":\"1234567890130\",\"serial\":\"123456789ABC1\",\"descripcion\":\"Una antena que te provee esto\"},\"router\":{\"marca\":\"TP Link\",\"modelo\":\"Router\",\"mac\":\"1234567890123\",\"serial\":\"123456789ABC2\",\"descripcion\":\"Routerpredeterminado\"},\"detalle\":\"\"},\"alquilado\":null,\"deuda\":{\"pagoservicio\":\"3.99\",\"adelantoequipo\":\"3.99\",\"costoalquiler\":\"3.99\",\"materialadicional\":\"3.99\",\"totalcancelado\":\"3.99\",\"saldopendiente\":\"3.99\",\"detalle\":\"3.99\"}}', '13.416028, 76.144944', '2024-12-16', '2024-12-16', NULL, '123456789', '2024-12-16 17:57:00', NULL, NULL, NULL, NULL),
+(2, 14, 10, 4, 1, NULL, 'Upis Divina Misericordia MzB Lt6A', 'Chincha Alta', '{\"fibraoptica\":{\"usuario\":\"VICSAN2\",\"claveacceso\":\"@VICSAN2\",\"vlan\":\"2000\",\"periodo\":\"2025-06-16\",\"plan\":\"Plan Internet Duo Oro 210MB - 120\",\"potencia\":-10,\"router\":{\"ssid\":\"NombreRouter\",\"seguridad\":\"SeguridadRouter\",\"codigobarra\":1234567890123,\"ip\":\"192.168.020.202\",\"marca\":\"TP Link\",\"modelo\":\"Router\",\"serie\":\"1234567890123AFGRS\",\"banda\":[\"5G\"],\"numeroantena\":6,\"catv\":false},\"detalles\":\"Este detalle esta para solo ese repetidor del FIBR de GPON\",\"repetidores\":[{\"numero\":1,\"ssid\":\"NombreRepetidor\",\"contrasenia\":\"Contrase\\u00f1aRepetidor\",\"codigobarra\":\"1234567890123\",\"modelo\":\"Router\",\"marca\":\"TP Link\",\"precio\":\"150.00\",\"serie\":\"SerieRepetidor\",\"ip\":\"192.168.000.000\",\"condicion\":\"venta\"}]},\"idcaja\":\"1\",\"cable\":{\"pagoinstalacion\":300,\"potencia\":\"-30\",\"plan\":\"Plan Internet Duo Oro 210MB - 120\",\"triplexor\":{\"requerido\":\"false\",\"cargador\":\" false\"},\"conector\":{\"numeroconector\":200,\"precio\":1.5},\"splitter\":[{\"cantidad\":1,\"tipo\":\"1x5\"}],\"cable\":{\"metrosadicionales\":200,\"preciometro\":1.3},\"sintonizadores\":[{\"numero\":1,\"codigobarra\":\"1234567890123\",\"marca\":\"TP Link\",\"modelo\":\"Router\",\"serie\":\"1234567890123SINTONIZADOR\",\"precio\":\"150.00\"}]},\"costo\":{\"pagoadelantado\":\"1000\",\"descuento\":\"12\",\"nap\":{\"gpon\":\"-21\",\"catv\":\"-21\"},\"casa\":{\"gpon\":\"-21\",\"catv\":\"-21\"},\"cablecosto\":{\"numerosintotizadores\":1,\"costoalquilersintotizador\":40,\"costocable\":260,\"costoconector\":300,\"cantidadcable\":\"200\",\"preciocable\":\"1.30\",\"precioconector\":\"1.50\",\"cantidadconector\":\"200\",\"detalle\":\"Detalle del cable del GPON\"}}}', '13.417514726072998,76.14644600523732', '2024-12-16', '2024-12-16', NULL, '12312313123', '2024-12-16 18:24:37', NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `tb_departamentos`
 --
--- Creación: 16-12-2024 a las 14:29:16
--- Última actualización: 16-12-2024 a las 14:29:53
+-- Creación: 16-12-2024 a las 22:40:55
+-- Última actualización: 16-12-2024 a las 22:41:04
 --
 
 DROP TABLE IF EXISTS `tb_departamentos`;
@@ -1586,8 +1640,8 @@ INSERT INTO `tb_departamentos` (`id_departamento`, `departamento`) VALUES
 --
 -- Estructura de tabla para la tabla `tb_distritos`
 --
--- Creación: 16-12-2024 a las 14:29:20
--- Última actualización: 16-12-2024 a las 14:29:56
+-- Creación: 16-12-2024 a las 22:40:56
+-- Última actualización: 16-12-2024 a las 22:41:04
 --
 
 DROP TABLE IF EXISTS `tb_distritos`;
@@ -3492,8 +3546,8 @@ INSERT INTO `tb_distritos` (`id_distrito`, `distrito`, `id_provincia`, `id_depar
 --
 -- Estructura de tabla para la tabla `tb_empresas`
 --
--- Creación: 16-12-2024 a las 14:29:33
--- Última actualización: 16-12-2024 a las 14:30:36
+-- Creación: 16-12-2024 a las 22:40:57
+-- Última actualización: 16-12-2024 a las 22:41:07
 --
 
 DROP TABLE IF EXISTS `tb_empresas`;
@@ -3522,56 +3576,56 @@ CREATE TABLE `tb_empresas` (
 --
 
 INSERT INTO `tb_empresas` (`id_empresa`, `ruc`, `representante_legal`, `razon_social`, `nombre_comercial`, `telefono`, `email`, `create_at`, `update_at`, `inactive_at`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
-(1, '20123456789', 'Luis García', 'Servicios Informáticos S.A.', 'InfoTech', '987654321', 'info@infotech.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(2, '20234567890', 'Ana Martínez', 'Soluciones Empresariales S.R.L.', 'SolEmp', '976543210', 'contacto@solemp.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(3, '20345678901', 'Carlos Lopez', 'Desarrollo y Consultoría', 'DevConsult', '965432109', 'consultoria@devconsult.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(4, '20456789012', 'María Pérez', 'Tecnología Avanzada', 'TechAdvance', '954321098', 'info@techadvance.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(5, '20567890123', 'José Fernández', 'Consultores Asociados', 'ConAsociados', '943210987', 'contacto@conasociados.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(6, '20678901234', 'Claudia Torres', 'Innovación Digital S.A.C.', 'InnovaDigital', '932109876', 'info@innovadigital.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(7, '20789012345', 'Andrés Ruiz', 'Gestión de Proyectos S.R.L.', 'ProyGest', '921098765', 'contacto@proygest.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(8, '20890123456', 'Laura Sánchez', 'Soluciones Logísticas', 'LogiSol', '910987654', 'info@logisol.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(9, '20901234567', 'Ricardo Jiménez', 'Tecnologías de la Información', 'TechInfo', '909876543', 'contacto@techinfo.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(10, '21012345678', 'Patricia Silva', 'Estrategias Comerciales S.A.', 'EstrategiaCom', '898765432', 'info@estrategiacom.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(11, '21123456789', 'Javier Morales', 'Desarrollo Web S.R.L.', 'WebDev', '887654321', 'contacto@webdev.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(12, '21234567890', 'Verónica Castro', 'Consultoría Financiera', 'FinanConsult', '876543210', 'info@financonsult.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(13, '21345678901', 'Fernando Delgado', 'Servicios de Marketing', 'MarketServ', '865432109', 'contacto@marketserv.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(14, '21456789012', 'Mónica Herrera', 'Desarrollo de Software', 'SoftDev', '854321098', 'info@softdev.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(15, '21567890123', 'Santiago Castillo', 'Consultores de Negocios', 'ConNegocios', '843210987', 'contacto@connegocios.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(16, '21678901234', 'Elena Mendoza', 'Soluciones Ambientales', 'AmbiSol', '832109876', 'info@ambisol.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(17, '21789012345', 'Pablo Romero', 'Sistemas Integrales S.R.L.', 'SistInteg', '821098765', 'contacto@sistinteg.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(18, '21890123456', 'Gabriela López', 'Innovación Empresarial', 'InnovaEmp', '810987654', 'info@innovaemp.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(19, '21901234567', 'Hugo Pérez', 'Desarrollo Sostenible', 'DesaSostenible', '809876543', 'contacto@desasostenible.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(20, '22012345678', 'Raquel Salas', 'Tecnologías Avanzadas', 'TechAvan', '798765432', 'info@techavan.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(21, '22123456789', 'Diego García', 'Soluciones Creativas S.A.C.', 'CreaSol', '787654321', 'contacto@creasol.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(22, '22234567890', 'Susana Ríos', 'Asesoría en TI', 'AsesoriaTI', '776543210', 'info@asesoriati.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(23, '22345678901', 'Jorge Castro', 'Innovaciones Técnicas', 'InnovaTec', '765432109', 'contacto@innovatec.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(24, '22456789012', 'Carla Ramos', 'Desarrollo de Aplicaciones', 'AppDev', '754321098', 'info@appdev.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(25, '22567890123', 'Nicolás Mendoza', 'Gestión de Recursos S.R.L.', 'RecursosGest', '743210987', 'contacto@recursosgest.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(26, '22678901234', 'Marta Ortega', 'Consultoría en Procesos', 'ProcCon', '732109876', 'info@proccon.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(27, '22789012345', 'Mauricio López', 'Soluciones Educativas', 'EduSol', '721098765', 'contacto@edusol.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(28, '22890123456', 'Adriana Flores', 'Marketing Digital', 'DigitalMarket', '710987654', 'info@digitalmarket.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(29, '22901234567', 'Felipe Morales', 'Consultoría Jurídica', 'JuridConsult', '709876543', 'contacto@juridconsult.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(30, '23012345678', 'Olga Fernández', 'Estrategias de Ventas', 'EstrategiaVentas', '698765432', 'info@estrategiaventas.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(31, '23123456789', 'Ignacio Torres', 'Servicios de Diseño', 'DiseñoServ', '687654321', 'contacto@disenoserv.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(32, '23234567890', 'Natalia Guzmán', 'Innovación en Salud', 'SaludInnova', '676543210', 'info@saludinnova.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(33, '23345678901', 'Ricardo Salcedo', 'Soluciones de Recursos Humanos', 'RecursosHum', '665432109', 'contacto@recursoshum.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(34, '23456789012', 'Silvia Morales', 'Consultoría en Tecnologías', 'TecConsult', '654321098', 'info@tecconsult.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(35, '23567890123', 'Raúl Gutiérrez', 'Servicios de Ingeniería', 'EngiServ', '643210987', 'contacto@engiserv.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(36, '23678901234', 'Camila Sánchez', 'Innovación Empresarial S.R.L.', 'EmpInnova', '632109876', 'info@empinnova.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(37, '23789012345', 'Julio Ramírez', 'Gestión Ambiental S.A.C.', 'AmbientalGest', '621098765', 'contacto@ambientalgest.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(38, '23890123456', 'Sofía Herrera', 'Tecnologías Sustentables', 'SustenTech', '610987654', 'info@sustentech.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(39, '23901234567', 'David Torres', 'Asesoría Financiera S.A.', 'FinanAses', '609876543', 'contacto@finanases.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(40, '24012345678', 'María Vargas', 'Consultores Legales', 'LegalConsult', '598765432', 'info@legalconsult.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(41, '24123456789', 'Esteban Gálvez', 'Desarrollo de Proyectos', 'ProyectDev', '587654321', 'contacto@proyectdev.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(42, '24234567890', 'Daniela Ortiz', 'Servicios Médicos S.A.C.', 'MedServ', '576543210', 'info@medserv.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL),
-(43, '24345678901', 'Gustavo Peña', 'Consultores en Ventas', 'VentasConsult', '565432109', 'contacto@ventasconsult.com', '2024-12-16 09:30:36', NULL, NULL, 1, NULL, NULL);
+(1, '20123456789', 'Luis García', 'Servicios Informáticos S.A.', 'InfoTech', '987654321', 'info@infotech.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(2, '20234567890', 'Ana Martínez', 'Soluciones Empresariales S.R.L.', 'SolEmp', '976543210', 'contacto@solemp.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(3, '20345678901', 'Carlos Lopez', 'Desarrollo y Consultoría', 'DevConsult', '965432109', 'consultoria@devconsult.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(4, '20456789012', 'María Pérez', 'Tecnología Avanzada', 'TechAdvance', '954321098', 'info@techadvance.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(5, '20567890123', 'José Fernández', 'Consultores Asociados', 'ConAsociados', '943210987', 'contacto@conasociados.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(6, '20678901234', 'Claudia Torres', 'Innovación Digital S.A.C.', 'InnovaDigital', '932109876', 'info@innovadigital.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(7, '20789012345', 'Andrés Ruiz', 'Gestión de Proyectos S.R.L.', 'ProyGest', '921098765', 'contacto@proygest.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(8, '20890123456', 'Laura Sánchez', 'Soluciones Logísticas', 'LogiSol', '910987654', 'info@logisol.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(9, '20901234567', 'Ricardo Jiménez', 'Tecnologías de la Información', 'TechInfo', '909876543', 'contacto@techinfo.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(10, '21012345678', 'Patricia Silva', 'Estrategias Comerciales S.A.', 'EstrategiaCom', '898765432', 'info@estrategiacom.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(11, '21123456789', 'Javier Morales', 'Desarrollo Web S.R.L.', 'WebDev', '887654321', 'contacto@webdev.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(12, '21234567890', 'Verónica Castro', 'Consultoría Financiera', 'FinanConsult', '876543210', 'info@financonsult.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(13, '21345678901', 'Fernando Delgado', 'Servicios de Marketing', 'MarketServ', '865432109', 'contacto@marketserv.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(14, '21456789012', 'Mónica Herrera', 'Desarrollo de Software', 'SoftDev', '854321098', 'info@softdev.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(15, '21567890123', 'Santiago Castillo', 'Consultores de Negocios', 'ConNegocios', '843210987', 'contacto@connegocios.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(16, '21678901234', 'Elena Mendoza', 'Soluciones Ambientales', 'AmbiSol', '832109876', 'info@ambisol.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(17, '21789012345', 'Pablo Romero', 'Sistemas Integrales S.R.L.', 'SistInteg', '821098765', 'contacto@sistinteg.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(18, '21890123456', 'Gabriela López', 'Innovación Empresarial', 'InnovaEmp', '810987654', 'info@innovaemp.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(19, '21901234567', 'Hugo Pérez', 'Desarrollo Sostenible', 'DesaSostenible', '809876543', 'contacto@desasostenible.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(20, '22012345678', 'Raquel Salas', 'Tecnologías Avanzadas', 'TechAvan', '798765432', 'info@techavan.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(21, '22123456789', 'Diego García', 'Soluciones Creativas S.A.C.', 'CreaSol', '787654321', 'contacto@creasol.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(22, '22234567890', 'Susana Ríos', 'Asesoría en TI', 'AsesoriaTI', '776543210', 'info@asesoriati.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(23, '22345678901', 'Jorge Castro', 'Innovaciones Técnicas', 'InnovaTec', '765432109', 'contacto@innovatec.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(24, '22456789012', 'Carla Ramos', 'Desarrollo de Aplicaciones', 'AppDev', '754321098', 'info@appdev.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(25, '22567890123', 'Nicolás Mendoza', 'Gestión de Recursos S.R.L.', 'RecursosGest', '743210987', 'contacto@recursosgest.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(26, '22678901234', 'Marta Ortega', 'Consultoría en Procesos', 'ProcCon', '732109876', 'info@proccon.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(27, '22789012345', 'Mauricio López', 'Soluciones Educativas', 'EduSol', '721098765', 'contacto@edusol.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(28, '22890123456', 'Adriana Flores', 'Marketing Digital', 'DigitalMarket', '710987654', 'info@digitalmarket.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(29, '22901234567', 'Felipe Morales', 'Consultoría Jurídica', 'JuridConsult', '709876543', 'contacto@juridconsult.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(30, '23012345678', 'Olga Fernández', 'Estrategias de Ventas', 'EstrategiaVentas', '698765432', 'info@estrategiaventas.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(31, '23123456789', 'Ignacio Torres', 'Servicios de Diseño', 'DiseñoServ', '687654321', 'contacto@disenoserv.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(32, '23234567890', 'Natalia Guzmán', 'Innovación en Salud', 'SaludInnova', '676543210', 'info@saludinnova.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(33, '23345678901', 'Ricardo Salcedo', 'Soluciones de Recursos Humanos', 'RecursosHum', '665432109', 'contacto@recursoshum.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(34, '23456789012', 'Silvia Morales', 'Consultoría en Tecnologías', 'TecConsult', '654321098', 'info@tecconsult.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(35, '23567890123', 'Raúl Gutiérrez', 'Servicios de Ingeniería', 'EngiServ', '643210987', 'contacto@engiserv.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(36, '23678901234', 'Camila Sánchez', 'Innovación Empresarial S.R.L.', 'EmpInnova', '632109876', 'info@empinnova.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(37, '23789012345', 'Julio Ramírez', 'Gestión Ambiental S.A.C.', 'AmbientalGest', '621098765', 'contacto@ambientalgest.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(38, '23890123456', 'Sofía Herrera', 'Tecnologías Sustentables', 'SustenTech', '610987654', 'info@sustentech.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(39, '23901234567', 'David Torres', 'Asesoría Financiera S.A.', 'FinanAses', '609876543', 'contacto@finanases.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(40, '24012345678', 'María Vargas', 'Consultores Legales', 'LegalConsult', '598765432', 'info@legalconsult.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(41, '24123456789', 'Esteban Gálvez', 'Desarrollo de Proyectos', 'ProyectDev', '587654321', 'contacto@proyectdev.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(42, '24234567890', 'Daniela Ortiz', 'Servicios Médicos S.A.C.', 'MedServ', '576543210', 'info@medserv.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(43, '24345678901', 'Gustavo Peña', 'Consultores en Ventas', 'VentasConsult', '565432109', 'contacto@ventasconsult.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `tb_kardex`
 --
--- Creación: 16-12-2024 a las 14:29:50
+-- Creación: 16-12-2024 a las 22:41:00
 --
 
 DROP TABLE IF EXISTS `tb_kardex`;
@@ -3607,8 +3661,8 @@ CREATE TABLE `tb_kardex` (
 --
 -- Estructura de tabla para la tabla `tb_lineas`
 --
--- Creación: 16-12-2024 a las 14:29:31
--- Última actualización: 16-12-2024 a las 14:40:58
+-- Creación: 16-12-2024 a las 22:40:57
+-- Última actualización: 16-12-2024 a las 22:50:46
 --
 
 DROP TABLE IF EXISTS `tb_lineas`;
@@ -3638,16 +3692,16 @@ CREATE TABLE `tb_lineas` (
 --
 
 INSERT INTO `tb_lineas` (`id_linea`, `id_mufa`, `id_caja`, `coordenadas`, `create_at`, `update_at`, `inactive_at`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
-(1, NULL, NULL, '[\n{ \"lng\": -76.15641392505843, \"lat\": -13.397719734585584 },\n{ \"lng\": -76.16154547830996, \"lat\": -13.410886698897501 },\n{ \"lng\": -76.14167574818575, \"lat\": -13.41583679233458 },\n{ \"lng\": -76.14083525733821, \"lat\": -13.41600924539936 },\n{ \"lng\": -76.13984845316173, \"lat\": -13.416401031545197 },\n{ \"lng\": -76.13867616029974, \"lat\": -13.412289403614626 },\n{ \"lng\": -76.13245952695715, \"lat\": -13.41515804681155 },\n{ \"lng\": -76.13089498449008, \"lat\": -13.40911096082754 },\n{ \"lng\": -76.12891921992468, \"lat\": -13.41029929944115 }\n]', '2024-12-16 09:40:15', NULL, NULL, 1, NULL, NULL),
-(2, 1, 1, '[{\"lat\":-13.41761846202605,\"lng\":-76.15259000544998},{\"lat\":-13.417827181692608,\"lng\":-76.1541778731868},{\"lat\":-13.415948698163954,\"lng\":-76.15449973826858},{\"lat\":-13.41419543361646,\"lng\":-76.15334102397415},{\"lat\":-13.41498857868724,\"lng\":-76.15055152659866},{\"lat\":-13.412893827101229,\"lng\":-76.15348553528803}]', '2024-12-16 09:40:58', NULL, NULL, 1, NULL, NULL);
+(1, NULL, NULL, '[\n{ \"lng\": -76.15641392505843, \"lat\": -13.397719734585584 },\n{ \"lng\": -76.16154547830996, \"lat\": -13.410886698897501 },\n{ \"lng\": -76.14167574818575, \"lat\": -13.41583679233458 },\n{ \"lng\": -76.14083525733821, \"lat\": -13.41600924539936 },\n{ \"lng\": -76.13984845316173, \"lat\": -13.416401031545197 },\n{ \"lng\": -76.13867616029974, \"lat\": -13.412289403614626 },\n{ \"lng\": -76.13245952695715, \"lat\": -13.41515804681155 },\n{ \"lng\": -76.13089498449008, \"lat\": -13.40911096082754 },\n{ \"lng\": -76.12891921992468, \"lat\": -13.41029929944115 }\n]', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(2, 1, 1, '[{\"lat\":-13.411640591160554,\"lng\":-76.14764672213997},{\"lat\":-13.412527670565172,\"lng\":-76.1477969258448},{\"lat\":-13.413320821141884,\"lng\":-76.14792567187752},{\"lat\":-13.41372783160547,\"lng\":-76.14799004489387},{\"lat\":-13.414195690454813,\"lng\":-76.14828601228358}]', '2024-12-16 17:50:46', NULL, NULL, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `tb_marca`
 --
--- Creación: 16-12-2024 a las 14:29:44
--- Última actualización: 16-12-2024 a las 14:30:37
+-- Creación: 16-12-2024 a las 22:40:59
+-- Última actualización: 16-12-2024 a las 22:41:07
 --
 
 DROP TABLE IF EXISTS `tb_marca`;
@@ -3671,25 +3725,25 @@ CREATE TABLE `tb_marca` (
 --
 
 INSERT INTO `tb_marca` (`id_marca`, `marca`, `inactive_at`, `iduser_inactive`, `create_at`, `update_at`, `iduser_create`, `iduser_update`) VALUES
-(1, 'TP Link', NULL, NULL, '2024-12-16 09:30:37', NULL, 1, NULL),
-(2, 'Logitech', NULL, NULL, '2024-12-16 09:30:37', NULL, 1, NULL),
-(3, 'Satra', NULL, NULL, '2024-12-16 09:30:37', NULL, 1, NULL),
-(4, 'Epson', NULL, NULL, '2024-12-16 09:30:37', NULL, 1, NULL),
-(5, 'Kingston', NULL, NULL, '2024-12-16 09:30:37', NULL, 1, NULL),
-(6, 'Micronics', NULL, NULL, '2024-12-16 09:30:37', NULL, 1, NULL),
-(7, 'Canon', NULL, NULL, '2024-12-16 09:30:37', NULL, 1, NULL),
-(8, 'Omega', NULL, NULL, '2024-12-16 09:30:37', NULL, 1, NULL),
-(9, 'Genius', NULL, NULL, '2024-12-16 09:30:37', NULL, 1, NULL),
-(10, 'Generico', NULL, NULL, '2024-12-16 09:30:37', NULL, 1, NULL),
-(11, 'Sin Marca', NULL, NULL, '2024-12-16 09:30:37', NULL, 1, NULL);
+(1, 'TP Link', NULL, NULL, '2024-12-16 17:41:07', NULL, 1, NULL),
+(2, 'Logitech', NULL, NULL, '2024-12-16 17:41:07', NULL, 1, NULL),
+(3, 'Satra', NULL, NULL, '2024-12-16 17:41:07', NULL, 1, NULL),
+(4, 'Epson', NULL, NULL, '2024-12-16 17:41:07', NULL, 1, NULL),
+(5, 'Kingston', NULL, NULL, '2024-12-16 17:41:07', NULL, 1, NULL),
+(6, 'Micronics', NULL, NULL, '2024-12-16 17:41:07', NULL, 1, NULL),
+(7, 'Canon', NULL, NULL, '2024-12-16 17:41:07', NULL, 1, NULL),
+(8, 'Omega', NULL, NULL, '2024-12-16 17:41:07', NULL, 1, NULL),
+(9, 'Genius', NULL, NULL, '2024-12-16 17:41:07', NULL, 1, NULL),
+(10, 'Generico', NULL, NULL, '2024-12-16 17:41:07', NULL, 1, NULL),
+(11, 'Sin Marca', NULL, NULL, '2024-12-16 17:41:07', NULL, 1, NULL);
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `tb_mufas`
 --
--- Creación: 16-12-2024 a las 14:29:29
--- Última actualización: 16-12-2024 a las 14:40:41
+-- Creación: 16-12-2024 a las 22:40:57
+-- Última actualización: 16-12-2024 a las 22:49:44
 --
 
 DROP TABLE IF EXISTS `tb_mufas`;
@@ -3716,15 +3770,15 @@ CREATE TABLE `tb_mufas` (
 --
 
 INSERT INTO `tb_mufas` (`id_mufa`, `nombre`, `descripcion`, `coordenadas`, `direccion`, `create_at`, `update_at`, `inactive_at`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
-(1, 'sdfsdfs', 'sdfsdf', '-13.412893827101229,-76.15348553528803', 'sdfs', '2024-12-16 09:40:41', NULL, NULL, 1, NULL, NULL);
+(1, 'Mufa 1', 'Esta es la mufa 1', '-13.414195690454813,-76.14828601228358', 'No hay', '2024-12-16 17:49:44', NULL, NULL, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `tb_paquetes`
 --
--- Creación: 16-12-2024 a las 14:29:36
--- Última actualización: 16-12-2024 a las 14:30:35
+-- Creación: 16-12-2024 a las 22:40:58
+-- Última actualización: 16-12-2024 a las 22:41:07
 --
 
 DROP TABLE IF EXISTS `tb_paquetes`;
@@ -3751,61 +3805,61 @@ CREATE TABLE `tb_paquetes` (
 --
 
 INSERT INTO `tb_paquetes` (`id_paquete`, `id_servicio`, `paquete`, `precio`, `velocidad`, `create_at`, `update_at`, `inactive_at`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
-(1, '{\"id_servicio\": [3]}', 'Plan Internet Corporativo 300MB - 270', 65.00, '{\"bajada\":{\"maxima\":300,\"minima_garantizada\":270},\"subida\":{\"maxima\":300,\"minima_garantizada\":270}}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(2, '{\"id_servicio\": [3]}', 'Plan Internet 55MB - 50', 60.00, '{\"bajada\":{\"maxima\":55,\"minima_garantizada\":50},\"subida\":{\"maxima\":55,\"minima_garantizada\":50}}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(3, '{\"id_servicio\": [3]}', 'Plan Internet 110MB - 70', 70.00, '{\"bajada\":{\"maxima\":110,\"minima_garantizada\":70},\"subida\":{\"maxima\":110,\"minima_garantizada\":70}}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(4, '{\"id_servicio\": [3]}', 'Plan Internet 155MB - 90', 68.00, '{\"bajada\":{\"maxima\":155,\"minima_garantizada\":90},\"subida\":{\"maxima\":155,\"minima_garantizada\":90}}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(5, '{\"id_servicio\": [3]}', 'Plan Internet 165MB - 95', 67.00, '{\"bajada\":{\"maxima\":165,\"minima_garantizada\":95},\"subida\":{\"maxima\":165,\"minima_garantizada\":95}}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(6, '{\"id_servicio\": [3]}', 'Plan Internet MIGRA 210MB - 110', 69.00, '{\"bajada\":{\"maxima\":210,\"minima_garantizada\":110},\"subida\":{\"maxima\":210,\"minima_garantizada\":110}}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(7, '{\"id_servicio\": [3]}', 'Plan Internet 280MB - 150', 66.00, '{\"bajada\":{\"maxima\":280,\"minima_garantizada\":150},\"subida\":{\"maxima\":280,\"minima_garantizada\":150}}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(8, '{\"id_servicio\": [1,3]}', 'Plan Internet Duo Bronce 110MB - 80', 100.00, '{\"bajada\":{\"maxima\":110,\"minima_garantizada\":80},\"subida\":{\"maxima\":110,\"minima_garantizada\":80}}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(9, '{\"id_servicio\": [1,3]}', 'Plan Internet Duo Plata', 105.00, '{\"bajada\":{\"maxima\":100,\"minima_garantizada\":80},\"subida\":{\"maxima\":100,\"minima_garantizada\":80}}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(10, '{\"id_servicio\": [1,3]}', 'Plan Internet Duo Oro 210MB - 120', 110.00, '{\"bajada\":{\"maxima\":210,\"minima_garantizada\":120},\"subida\":{\"maxima\":210,\"minima_garantizada\":120}}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(11, '{\"id_servicio\": [1,3]}', 'Plan Internet Duo 180MB - 100', 95.00, '{\"bajada\":{\"maxima\":180,\"minima_garantizada\":100},\"subida\":{\"maxima\":180,\"minima_garantizada\":100}}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(12, '{\"id_servicio\": [1,3]}', 'Plan Internet Duo 410MB - 140', 120.00, '{\"bajada\":{\"maxima\":410,\"minima_garantizada\":140},\"subida\":{\"maxima\":410,\"minima_garantizada\":140}}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(13, '{\"id_servicio\": [1,3]}', 'Plan Internet Full Duo 2 - 190MB - 99', 115.00, '{\"bajada\":{\"maxima\":190,\"minima_garantizada\":99},\"subida\":{\"maxima\":190,\"minima_garantizada\":99}}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(14, '{\"id_servicio\": [1,3]}', 'Plan Internet Full Duo 3 - 260MB - 120', 130.00, '{\"bajada\":{\"maxima\":260,\"minima_garantizada\":120},\"subida\":{\"maxima\":260,\"minima_garantizada\":120}}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(15, '{\"id_servicio\": [1,3]}', 'Plan Internet Full Duo 4 - 320MB - 135', 125.00, '{\"bajada\":{\"maxima\":320,\"minima_garantizada\":135},\"subida\":{\"maxima\":320,\"minima_garantizada\":135}}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(16, '{\"id_servicio\": [1,3]}', 'Plan Internet Full Duo 5 - 410MB - 159', 140.00, '{\"bajada\":{\"maxima\":410,\"minima_garantizada\":159},\"subida\":{\"maxima\":410,\"minima_garantizada\":159}}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(17, '{\"id_servicio\": [2]}', 'Plan TamboMora Residencial 40MB - 50', 120.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(18, '{\"id_servicio\": [2]}', 'Techo Videna Residencial 20MB - 50', 110.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(19, '{\"id_servicio\": [2]}', 'Plan Salvador Residencial 20MB - 50', 115.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(20, '{\"id_servicio\": [2]}', 'Plan Sunampe Residencial 15MB', 105.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(21, '{\"id_servicio\": [2]}', 'Plan Chacarita Residencial 40MB - 50', 130.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(22, '{\"id_servicio\": [2]}', 'Plan Chacarita Residencial 40MB - 80', 140.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(23, '{\"id_servicio\": [2]}', 'Plan Satelite Residencial 40MB - 70', 125.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(24, '{\"id_servicio\": [2]}', 'Plan TamboMora Residencial 40MB', 120.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(25, '{\"id_servicio\": [2]}', 'Plan Sunampe Corporativo 50MB - 210', 150.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(26, '{\"id_servicio\": [2]}', 'Plan Sunampe Corporativo 50MB - 280', 160.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(27, '{\"id_servicio\": [2]}', 'Plan Chincha Corporativo 50MB - 280', 170.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(28, '{\"id_servicio\": [2]}', 'Plan Grocio Residencial 10MB', 90.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(29, '{\"id_servicio\": [2]}', 'Plan Grocio Residencial 12MB', 95.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(30, '{\"id_servicio\": [2]}', 'Plan Grocio Residencial 20MB', 100.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(31, '{\"id_servicio\": [2]}', 'Plan TechoPropio Residencial 10MB', 85.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(32, '{\"id_servicio\": [2]}', 'Plan TechoPropio Residencial 20MB', 105.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(33, '{\"id_servicio\": [2]}', 'Plan Satelite Residencial 10MB', 80.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(34, '{\"id_servicio\": [2]}', 'Plan Satelite Residencial 12MB', 90.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(35, '{\"id_servicio\": [2]}', 'Plan Satelite Residencial 20MB', 110.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(36, '{\"id_servicio\": [2]}', 'Plan CruzBlanca Residencial 10MB', 75.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(37, '{\"id_servicio\": [2]}', 'Plan CruzBlanca Residencial 12MB', 85.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(38, '{\"id_servicio\": [2]}', 'Plan CruzBlanca Residencial 20MB', 95.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(39, '{\"id_servicio\": [2]}', 'Plan Salvador Residencial 10MB', 70.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(40, '{\"id_servicio\": [2]}', 'Plan Salvador Residencial 20MB', 100.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(41, '{\"id_servicio\": [2]}', 'Plan Salvador Residencial 10MB', 75.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(42, '{\"id_servicio\": [1]}', 'ABRO1 SERVICIO CATV 2 TV-BASICO + 1 APL - DUO 80 ANTERIOR', 45.00, NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(43, '{\"id_servicio\": [1]}', 'AGOS080 NUEVO SERVICIO SOLO CATV3 TV - BASICO + 1 APL', 50.00, NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(44, '{\"id_servicio\": [1]}', 'JUN056 PLAN DUO + 01 TV = CATV 4 TV - BASICO + 1 APL', 48.00, NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(45, '{\"id_servicio\": [1]}', 'MAY053 NUEVO SERVICIO CATV 3 TV - BASICO + 1 APL', 49.00, NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(46, '{\"id_servicio\": [1]}', 'MAY054 NUEVO SERVICIO SOLO CATV 3 TV - BASICO + 1 APL', 47.00, NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(47, '{\"id_servicio\": [1]}', 'MAY055 NUEVO SERVICIO DUO CATV 4 TV - BASICO + 1 APL', 46.00, NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL);
+(1, '{\"id_servicio\": [3]}', 'Plan Internet Corporativo 300MB - 270', 65.00, '{\"bajada\":{\"maxima\":300,\"minima_garantizada\":270},\"subida\":{\"maxima\":300,\"minima_garantizada\":270}}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(2, '{\"id_servicio\": [3]}', 'Plan Internet 55MB - 50', 60.00, '{\"bajada\":{\"maxima\":55,\"minima_garantizada\":50},\"subida\":{\"maxima\":55,\"minima_garantizada\":50}}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(3, '{\"id_servicio\": [3]}', 'Plan Internet 110MB - 70', 70.00, '{\"bajada\":{\"maxima\":110,\"minima_garantizada\":70},\"subida\":{\"maxima\":110,\"minima_garantizada\":70}}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(4, '{\"id_servicio\": [3]}', 'Plan Internet 155MB - 90', 68.00, '{\"bajada\":{\"maxima\":155,\"minima_garantizada\":90},\"subida\":{\"maxima\":155,\"minima_garantizada\":90}}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(5, '{\"id_servicio\": [3]}', 'Plan Internet 165MB - 95', 67.00, '{\"bajada\":{\"maxima\":165,\"minima_garantizada\":95},\"subida\":{\"maxima\":165,\"minima_garantizada\":95}}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(6, '{\"id_servicio\": [3]}', 'Plan Internet MIGRA 210MB - 110', 69.00, '{\"bajada\":{\"maxima\":210,\"minima_garantizada\":110},\"subida\":{\"maxima\":210,\"minima_garantizada\":110}}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(7, '{\"id_servicio\": [3]}', 'Plan Internet 280MB - 150', 66.00, '{\"bajada\":{\"maxima\":280,\"minima_garantizada\":150},\"subida\":{\"maxima\":280,\"minima_garantizada\":150}}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(8, '{\"id_servicio\": [1,3]}', 'Plan Internet Duo Bronce 110MB - 80', 100.00, '{\"bajada\":{\"maxima\":110,\"minima_garantizada\":80},\"subida\":{\"maxima\":110,\"minima_garantizada\":80}}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(9, '{\"id_servicio\": [1,3]}', 'Plan Internet Duo Plata', 105.00, '{\"bajada\":{\"maxima\":100,\"minima_garantizada\":80},\"subida\":{\"maxima\":100,\"minima_garantizada\":80}}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(10, '{\"id_servicio\": [1,3]}', 'Plan Internet Duo Oro 210MB - 120', 110.00, '{\"bajada\":{\"maxima\":210,\"minima_garantizada\":120},\"subida\":{\"maxima\":210,\"minima_garantizada\":120}}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(11, '{\"id_servicio\": [1,3]}', 'Plan Internet Duo 180MB - 100', 95.00, '{\"bajada\":{\"maxima\":180,\"minima_garantizada\":100},\"subida\":{\"maxima\":180,\"minima_garantizada\":100}}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(12, '{\"id_servicio\": [1,3]}', 'Plan Internet Duo 410MB - 140', 120.00, '{\"bajada\":{\"maxima\":410,\"minima_garantizada\":140},\"subida\":{\"maxima\":410,\"minima_garantizada\":140}}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(13, '{\"id_servicio\": [1,3]}', 'Plan Internet Full Duo 2 - 190MB - 99', 115.00, '{\"bajada\":{\"maxima\":190,\"minima_garantizada\":99},\"subida\":{\"maxima\":190,\"minima_garantizada\":99}}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(14, '{\"id_servicio\": [1,3]}', 'Plan Internet Full Duo 3 - 260MB - 120', 130.00, '{\"bajada\":{\"maxima\":260,\"minima_garantizada\":120},\"subida\":{\"maxima\":260,\"minima_garantizada\":120}}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(15, '{\"id_servicio\": [1,3]}', 'Plan Internet Full Duo 4 - 320MB - 135', 125.00, '{\"bajada\":{\"maxima\":320,\"minima_garantizada\":135},\"subida\":{\"maxima\":320,\"minima_garantizada\":135}}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(16, '{\"id_servicio\": [1,3]}', 'Plan Internet Full Duo 5 - 410MB - 159', 140.00, '{\"bajada\":{\"maxima\":410,\"minima_garantizada\":159},\"subida\":{\"maxima\":410,\"minima_garantizada\":159}}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(17, '{\"id_servicio\": [2]}', 'Plan TamboMora Residencial 40MB - 50', 120.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(18, '{\"id_servicio\": [2]}', 'Techo Videna Residencial 20MB - 50', 110.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(19, '{\"id_servicio\": [2]}', 'Plan Salvador Residencial 20MB - 50', 115.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(20, '{\"id_servicio\": [2]}', 'Plan Sunampe Residencial 15MB', 105.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(21, '{\"id_servicio\": [2]}', 'Plan Chacarita Residencial 40MB - 50', 130.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(22, '{\"id_servicio\": [2]}', 'Plan Chacarita Residencial 40MB - 80', 140.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(23, '{\"id_servicio\": [2]}', 'Plan Satelite Residencial 40MB - 70', 125.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(24, '{\"id_servicio\": [2]}', 'Plan TamboMora Residencial 40MB', 120.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(25, '{\"id_servicio\": [2]}', 'Plan Sunampe Corporativo 50MB - 210', 150.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(26, '{\"id_servicio\": [2]}', 'Plan Sunampe Corporativo 50MB - 280', 160.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(27, '{\"id_servicio\": [2]}', 'Plan Chincha Corporativo 50MB - 280', 170.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(28, '{\"id_servicio\": [2]}', 'Plan Grocio Residencial 10MB', 90.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(29, '{\"id_servicio\": [2]}', 'Plan Grocio Residencial 12MB', 95.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(30, '{\"id_servicio\": [2]}', 'Plan Grocio Residencial 20MB', 100.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(31, '{\"id_servicio\": [2]}', 'Plan TechoPropio Residencial 10MB', 85.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(32, '{\"id_servicio\": [2]}', 'Plan TechoPropio Residencial 20MB', 105.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(33, '{\"id_servicio\": [2]}', 'Plan Satelite Residencial 10MB', 80.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(34, '{\"id_servicio\": [2]}', 'Plan Satelite Residencial 12MB', 90.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(35, '{\"id_servicio\": [2]}', 'Plan Satelite Residencial 20MB', 110.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(36, '{\"id_servicio\": [2]}', 'Plan CruzBlanca Residencial 10MB', 75.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(37, '{\"id_servicio\": [2]}', 'Plan CruzBlanca Residencial 12MB', 85.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(38, '{\"id_servicio\": [2]}', 'Plan CruzBlanca Residencial 20MB', 95.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(39, '{\"id_servicio\": [2]}', 'Plan Salvador Residencial 10MB', 70.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(40, '{\"id_servicio\": [2]}', 'Plan Salvador Residencial 20MB', 100.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(41, '{\"id_servicio\": [2]}', 'Plan Salvador Residencial 10MB', 75.00, '{\"bajada\":20,\"subida\":20}', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(42, '{\"id_servicio\": [1]}', 'ABRO1 SERVICIO CATV 2 TV-BASICO + 1 APL - DUO 80 ANTERIOR', 45.00, NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(43, '{\"id_servicio\": [1]}', 'AGOS080 NUEVO SERVICIO SOLO CATV3 TV - BASICO + 1 APL', 50.00, NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(44, '{\"id_servicio\": [1]}', 'JUN056 PLAN DUO + 01 TV = CATV 4 TV - BASICO + 1 APL', 48.00, NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(45, '{\"id_servicio\": [1]}', 'MAY053 NUEVO SERVICIO CATV 3 TV - BASICO + 1 APL', 49.00, NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(46, '{\"id_servicio\": [1]}', 'MAY054 NUEVO SERVICIO SOLO CATV 3 TV - BASICO + 1 APL', 47.00, NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(47, '{\"id_servicio\": [1]}', 'MAY055 NUEVO SERVICIO DUO CATV 4 TV - BASICO + 1 APL', 46.00, NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `tb_personas`
 --
--- Creación: 16-12-2024 a las 14:29:32
--- Última actualización: 16-12-2024 a las 14:30:36
+-- Creación: 16-12-2024 a las 22:40:57
+-- Última actualización: 16-12-2024 a las 22:41:07
 --
 
 DROP TABLE IF EXISTS `tb_personas`;
@@ -3835,107 +3889,107 @@ CREATE TABLE `tb_personas` (
 --
 
 INSERT INTO `tb_personas` (`id_persona`, `tipo_doc`, `nro_doc`, `apellidos`, `nombres`, `telefono`, `nacionalidad`, `email`, `create_at`, `update_at`, `inactive_at`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
-(1, 'DNI', '12345678', 'PEREZ GARCIA', 'JUAN', '987654321', 'Peruano', 'juan.perezgarcia@example.com', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(2, 'DNI', '73884605', 'MATTA RAMOS', 'JESUS EDUARDO', '904217929', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(3, 'DNI', '73310144', 'MESIAS TASAYCO', 'BRAYAN', '933293445', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(4, 'DNI', '72845296', 'DE LA CRUZ PEÑALOZA', 'ELOY ALEXANDER', '920520306', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(5, 'DNI', '71592495', 'TALLA SARAVIA', 'ALEXIS ALEXANDER', '907277520', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(6, 'DNI', '73753884', 'NAPA ABREGU', 'ANGEL DANIEL', '966557234', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(7, 'DNI', '21781164', 'YATACO GARCIA', 'MOISES', '944420613', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(8, 'DNI', '73602072', 'MESIAS ALMEYDA', 'MARYORI ELIZABETH', '985797500', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(9, 'DNI', '47934103', 'ANCHANTE RICALES', 'ROBERTO CARLOS', '965973468', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(10, 'DNI', '40956921', 'TASAYCO LEVANO', 'MIGUEL ANGEL', '962278152', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(11, 'DNI', '72517098', 'PASTOR ROJAS', 'PATRICIA', '924594304', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(12, 'DNI', '41114586', 'GOITIA PEREZ', 'YHONSONN', '946090592', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(13, 'DNI', '21866147', 'MENDIGUETE LOYOLA', 'MARIA JULIA', '962402706', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(14, 'DNI', '22303840', 'SARAVIA VELA', 'ROCIO MAYDEE', '981168789', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(15, 'DNI', '21861430', 'TASAYCO TORRES', 'MARITZA LILIANA', '904712454', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(16, 'DNI', '21867629', 'LEVANO TORRES', 'MARITZA', '955446960', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(17, 'DNI', '45715311', 'CARBAJAL SANCHEZ', 'ROSA', '952567956', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(18, 'DNI', '70365628', 'GARCIA TASAYCO', 'RONALD STALIN', '950639761', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(19, 'DNI', '43628022', 'SANTIAGO SARAVIA', 'VICTOR HUGO', '948829288', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(20, 'DNI', '21815949', 'YATACO GARCIA', 'MARIA SANTOS', '965696054', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(21, 'DNI', '21866254', 'GARCIA MARTINEZ', 'CECILIA PATRICIA', '947929771', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(22, 'DNI', '47898813', 'GENTILLE GUTARRA', 'CRISTAL', '934444810', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(23, 'DNI', '44176871', 'BARILLAS PEVE', 'DANIEL', '962308941', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(24, 'DNI', '71616251', 'CRISOSTOMO LEVANO', 'PEDRO MANUEL', '955127262', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(25, 'DNI', '41135592', 'HUANQUI TRILLO DE GARAY', 'NAYADE SAIDA', '960169072', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(26, 'DNI', '72082086', 'LOBO MENESES', 'LUIS', '930197086', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(27, 'DNI', '45252181', 'DIAZ REBATTA', 'EDDER RUBEN', '994323996', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(28, 'DNI', '75234060', 'NAPA CASTILLO', 'DELIA LIBERTAD', '928589038', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(29, 'DNI', '40905473', 'MARTINEZ VILLAR', 'EPIFANIA CLEMENCIA', '971615965', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(30, 'DNI', '15439628', 'CAMPOS BARRIOS', 'JUANA MILAGROS', '956517578', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(31, 'DNI', '41256049', 'GONZALES ATUNCAR', 'MARIA', '924052883', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(32, 'DNI', '42869491', 'DE LA CRUZ TORRES', 'LUIS', '937233140', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(33, 'DNI', '71616237', 'SARAVIA MEDINA', 'LUIS', '977537270', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(34, 'DNI', '41893651', 'MENESES CRISOSTOMO', 'MARILU', '916728107', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(35, 'DNI', '47841679', 'ATUNCAR MARQUEZ', 'HAROLD', '906467373', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(36, 'DNI', '43210229', 'PEVE GUERRA', 'OSWALDO EFRAIN', '914717616', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(37, 'DNI', '72872536', 'VALENCIA SARAVIA', 'ELIZABETH', '950162295', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(38, 'DNI', '43510116', 'TORRES TASAYCO', 'VICTOR HUGO', '922397715', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(39, 'DNI', '21862542', 'YATACO GARCIA DE GARCIA', 'NELLY', '912700722', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(40, 'DNI', '41730654', 'CASTILLA MATEO', 'JUAN CARLOS', '941327977', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(41, 'DNI', '41637529', 'QUISPE SANCHEZ', 'LINO', '945160889', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(42, 'DNI', '41455781', 'MENESES TASAYCO', 'BLANCA MARIBEL', '955962818', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(43, 'DNI', '21876020', 'ALVAREZ CUEVA', 'MARTIN WILLIAM', '964347449', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(44, 'DNI', '44364538', 'VASQUEZ CHUQUISPUMA', 'RUTH ESTHER', '972573295', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(45, 'DNI', '60454449', 'PEREZ TERRONES', 'GRETY', '912143217', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(46, 'DNI', '09688142', 'GAMEZ CHACON', 'ERCELIZ', '956138789', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(47, 'DNI', '41075262', 'QUISPE PACHAS', 'RONNY RAUL', '994980680', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(48, 'DNI', '44972815', 'NAPA CASTILLA', 'OSCAR JAVIER', '960162907', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(49, 'DNI', '45778769', 'BRICEÑO DEL RIO', 'FREDY JHON', '952128903', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(50, 'DNI', '23019806', 'JUAREZ TORRES', 'LUCY YAMALI', '967591253', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(51, 'DNI', '44136139', 'PAZ CASAVERDE', 'VANESSA', '902226993', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(52, 'DNI', '71789780', 'CUADROS SARAVIA', 'DIANA', '927744936', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(53, 'DNI', '48222293', 'APOLAYA ROMERO', 'NELZI', '922693855', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(54, 'DNI', '48040901', 'MATIAS CRISOSTOMO', 'ANGEL ALBERTO', '933241678', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(55, 'DNI', '73819477', 'ANTON OSTIA', 'BRYAN LUIS', '955029880', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(56, 'DNI', '41748230', 'ANGULO LOYOLA', 'JHAN CARLOS', '998308628', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(57, 'DNI', '21794090', 'MAGALLANES ORTIZ', 'VICTOR LUIS', '912074015', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(58, 'DNI', '21881955', 'TASAYCO MENDOZA', 'LILIANA CATALINA', '912180079', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(59, 'DNI', '75352738', 'MEREDIA MUÑOZ', 'GIANELA CORAIMA', '997259195', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(60, 'DNI', '21857534', 'VALVERDE ORTIZ', 'SANTA ANGELICA', '960999975', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(61, 'DNI', '45442612', 'ORTIZ HERNANDEZ', 'MARIANELLA', '946916479', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(62, 'DNI', '21794453', 'MELO GUERRA', 'ANSELMO', '977867820', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(63, 'DNI', '44771538', 'ALMEYDA NAPA', 'GLORIA', '942370984', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(64, 'DNI', '74421607', 'DIAZ DE LA CRUZ', 'ARIANA', '933155682', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(65, 'DNI', '21873544', 'CASTILLA RILQUELME', 'ALEXANDER', '952683121', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(66, 'DNI', '45682504', 'TASAYCO ARIAS', 'GREGORIO JHONATHAN', '947700239', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(67, 'DNI', '76307312', 'SARAVIA LEVANO', 'MARYORI', '943735454', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(68, 'DNI', '80487137', 'DE LA CRUZ ABREGU', 'MIGUEL ANGEL', '917163741', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(69, 'DNI', '21882395', 'HUARANCA DURAND', 'VCITOR', '932904801', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(70, 'DNI', '44521340', 'BOGA SIGUAS', 'GIANCARLOS', '995734338', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(71, 'DNI', '42777407', 'DIAZ TASAYCO', 'CARLOS YVAN', '908601428', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(72, 'DNI', '74035877', 'DAVILA DIAZ', 'HILDA XIOMARA', '904354801', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(73, 'DNI', '40907806', 'QUISPE PAUCAR', 'MIRIAN', '904275168', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(74, 'DNI', '62892038', 'ALVAREZ CHIQUISPUMA', 'JHAN MARTINEZ', '924702432', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(75, 'DNI', '42876347', 'ROJAS GUERRA', 'EDGAR', '960329089', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(76, 'DNI', '73472203', 'MAGALLANES MURILLO', 'MIOSIRY LILIANA', '902492034', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(77, 'DNI', '21887823', 'MAGALLANES GARCIA', 'JULIO CESAR', '953433332', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(78, 'DNI', '44645111', 'DE LA CRUZ TORRES', 'MIRIAM', '977393013', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(79, 'DNI', '71440787', 'ATUNCAR ALMEYDA', 'DIEGO ALFONSO', '949792659', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(80, 'DNI', '42296834', 'HERNANDEZ NAPA', 'JOSE LUIS', '902151026', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(81, 'DNI', '21850270', 'DE LA CRUZ QUISPE', 'VICTORIA ISABEL', '997067532', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(82, 'DNI', '21846116', 'CRISOSTOMO CUELLAR', 'ARNALDO', '955017366', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(83, 'DNI', '75957606', 'CASTAÑEDA SULCA', 'ROSA LINDA', '900648734', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(84, 'DNI', '77923612', 'SARAVIA BONIFACIO', 'JENNIFER DENIS', '907539262', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(85, 'DNI', '41405135', 'ROJAS PACHAS', 'YOVANA VANESA', '904410306', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(86, 'DNI', '46132681', 'TORRES FAJARDO', 'ERICK JOHANY', '902301220', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(87, 'DNI', '41834203', 'ROJAS CONTRERAS', 'CECILIA', '943326467', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(88, 'DNI', '45852739', 'DE LA CRUZ JACOBO', 'JULIO CESAR', '902572234', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(89, 'DNI', '75178691', 'ATUNCAR ALMEYDA', 'ANGEL JESUS', '977655697', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(90, 'DNI', '42116747', 'ALVAREZ TOMASTO', 'JUAN MARTIN', '904384806', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(91, 'DNI', '40679555', 'NAPA MARTINEZ', 'MARIA', '902755736', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(92, 'DNI', '09736546', 'BENITES BOCANEGRA', 'FRANCISCO HERMAN', '943656810', 'Peruano', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(93, 'DNI', '40813108', 'SARAVIA TORRES', 'TERESA YSABEL', '951679716', 'Peruana', NULL, '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL);
+(1, 'DNI', '12345678', 'PEREZ GARCIA', 'JUAN', '987654321', 'Peruano', 'juan.perezgarcia@example.com', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(2, 'DNI', '73884605', 'MATTA RAMOS', 'JESUS EDUARDO', '904217929', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(3, 'DNI', '73310144', 'MESIAS TASAYCO', 'BRAYAN', '933293445', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(4, 'DNI', '72845296', 'DE LA CRUZ PEÑALOZA', 'ELOY ALEXANDER', '920520306', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(5, 'DNI', '71592495', 'TALLA SARAVIA', 'ALEXIS ALEXANDER', '907277520', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(6, 'DNI', '73753884', 'NAPA ABREGU', 'ANGEL DANIEL', '966557234', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(7, 'DNI', '21781164', 'YATACO GARCIA', 'MOISES', '944420613', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(8, 'DNI', '73602072', 'MESIAS ALMEYDA', 'MARYORI ELIZABETH', '985797500', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(9, 'DNI', '47934103', 'ANCHANTE RICALES', 'ROBERTO CARLOS', '965973468', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(10, 'DNI', '40956921', 'TASAYCO LEVANO', 'MIGUEL ANGEL', '962278152', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(11, 'DNI', '72517098', 'PASTOR ROJAS', 'PATRICIA', '924594304', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(12, 'DNI', '41114586', 'GOITIA PEREZ', 'YHONSONN', '946090592', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(13, 'DNI', '21866147', 'MENDIGUETE LOYOLA', 'MARIA JULIA', '962402706', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(14, 'DNI', '22303840', 'SARAVIA VELA', 'ROCIO MAYDEE', '981168789', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(15, 'DNI', '21861430', 'TASAYCO TORRES', 'MARITZA LILIANA', '904712454', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(16, 'DNI', '21867629', 'LEVANO TORRES', 'MARITZA', '955446960', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(17, 'DNI', '45715311', 'CARBAJAL SANCHEZ', 'ROSA', '952567956', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(18, 'DNI', '70365628', 'GARCIA TASAYCO', 'RONALD STALIN', '950639761', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(19, 'DNI', '43628022', 'SANTIAGO SARAVIA', 'VICTOR HUGO', '948829288', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(20, 'DNI', '21815949', 'YATACO GARCIA', 'MARIA SANTOS', '965696054', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(21, 'DNI', '21866254', 'GARCIA MARTINEZ', 'CECILIA PATRICIA', '947929771', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(22, 'DNI', '47898813', 'GENTILLE GUTARRA', 'CRISTAL', '934444810', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(23, 'DNI', '44176871', 'BARILLAS PEVE', 'DANIEL', '962308941', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(24, 'DNI', '71616251', 'CRISOSTOMO LEVANO', 'PEDRO MANUEL', '955127262', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(25, 'DNI', '41135592', 'HUANQUI TRILLO DE GARAY', 'NAYADE SAIDA', '960169072', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(26, 'DNI', '72082086', 'LOBO MENESES', 'LUIS', '930197086', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(27, 'DNI', '45252181', 'DIAZ REBATTA', 'EDDER RUBEN', '994323996', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(28, 'DNI', '75234060', 'NAPA CASTILLO', 'DELIA LIBERTAD', '928589038', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(29, 'DNI', '40905473', 'MARTINEZ VILLAR', 'EPIFANIA CLEMENCIA', '971615965', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(30, 'DNI', '15439628', 'CAMPOS BARRIOS', 'JUANA MILAGROS', '956517578', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(31, 'DNI', '41256049', 'GONZALES ATUNCAR', 'MARIA', '924052883', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(32, 'DNI', '42869491', 'DE LA CRUZ TORRES', 'LUIS', '937233140', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(33, 'DNI', '71616237', 'SARAVIA MEDINA', 'LUIS', '977537270', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(34, 'DNI', '41893651', 'MENESES CRISOSTOMO', 'MARILU', '916728107', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(35, 'DNI', '47841679', 'ATUNCAR MARQUEZ', 'HAROLD', '906467373', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(36, 'DNI', '43210229', 'PEVE GUERRA', 'OSWALDO EFRAIN', '914717616', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(37, 'DNI', '72872536', 'VALENCIA SARAVIA', 'ELIZABETH', '950162295', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(38, 'DNI', '43510116', 'TORRES TASAYCO', 'VICTOR HUGO', '922397715', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(39, 'DNI', '21862542', 'YATACO GARCIA DE GARCIA', 'NELLY', '912700722', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(40, 'DNI', '41730654', 'CASTILLA MATEO', 'JUAN CARLOS', '941327977', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(41, 'DNI', '41637529', 'QUISPE SANCHEZ', 'LINO', '945160889', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(42, 'DNI', '41455781', 'MENESES TASAYCO', 'BLANCA MARIBEL', '955962818', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(43, 'DNI', '21876020', 'ALVAREZ CUEVA', 'MARTIN WILLIAM', '964347449', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(44, 'DNI', '44364538', 'VASQUEZ CHUQUISPUMA', 'RUTH ESTHER', '972573295', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(45, 'DNI', '60454449', 'PEREZ TERRONES', 'GRETY', '912143217', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(46, 'DNI', '09688142', 'GAMEZ CHACON', 'ERCELIZ', '956138789', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(47, 'DNI', '41075262', 'QUISPE PACHAS', 'RONNY RAUL', '994980680', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(48, 'DNI', '44972815', 'NAPA CASTILLA', 'OSCAR JAVIER', '960162907', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(49, 'DNI', '45778769', 'BRICEÑO DEL RIO', 'FREDY JHON', '952128903', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(50, 'DNI', '23019806', 'JUAREZ TORRES', 'LUCY YAMALI', '967591253', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(51, 'DNI', '44136139', 'PAZ CASAVERDE', 'VANESSA', '902226993', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(52, 'DNI', '71789780', 'CUADROS SARAVIA', 'DIANA', '927744936', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(53, 'DNI', '48222293', 'APOLAYA ROMERO', 'NELZI', '922693855', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(54, 'DNI', '48040901', 'MATIAS CRISOSTOMO', 'ANGEL ALBERTO', '933241678', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(55, 'DNI', '73819477', 'ANTON OSTIA', 'BRYAN LUIS', '955029880', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(56, 'DNI', '41748230', 'ANGULO LOYOLA', 'JHAN CARLOS', '998308628', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(57, 'DNI', '21794090', 'MAGALLANES ORTIZ', 'VICTOR LUIS', '912074015', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(58, 'DNI', '21881955', 'TASAYCO MENDOZA', 'LILIANA CATALINA', '912180079', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(59, 'DNI', '75352738', 'MEREDIA MUÑOZ', 'GIANELA CORAIMA', '997259195', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(60, 'DNI', '21857534', 'VALVERDE ORTIZ', 'SANTA ANGELICA', '960999975', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(61, 'DNI', '45442612', 'ORTIZ HERNANDEZ', 'MARIANELLA', '946916479', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(62, 'DNI', '21794453', 'MELO GUERRA', 'ANSELMO', '977867820', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(63, 'DNI', '44771538', 'ALMEYDA NAPA', 'GLORIA', '942370984', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(64, 'DNI', '74421607', 'DIAZ DE LA CRUZ', 'ARIANA', '933155682', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(65, 'DNI', '21873544', 'CASTILLA RILQUELME', 'ALEXANDER', '952683121', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(66, 'DNI', '45682504', 'TASAYCO ARIAS', 'GREGORIO JHONATHAN', '947700239', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(67, 'DNI', '76307312', 'SARAVIA LEVANO', 'MARYORI', '943735454', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(68, 'DNI', '80487137', 'DE LA CRUZ ABREGU', 'MIGUEL ANGEL', '917163741', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(69, 'DNI', '21882395', 'HUARANCA DURAND', 'VCITOR', '932904801', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(70, 'DNI', '44521340', 'BOGA SIGUAS', 'GIANCARLOS', '995734338', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(71, 'DNI', '42777407', 'DIAZ TASAYCO', 'CARLOS YVAN', '908601428', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(72, 'DNI', '74035877', 'DAVILA DIAZ', 'HILDA XIOMARA', '904354801', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(73, 'DNI', '40907806', 'QUISPE PAUCAR', 'MIRIAN', '904275168', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(74, 'DNI', '62892038', 'ALVAREZ CHIQUISPUMA', 'JHAN MARTINEZ', '924702432', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(75, 'DNI', '42876347', 'ROJAS GUERRA', 'EDGAR', '960329089', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(76, 'DNI', '73472203', 'MAGALLANES MURILLO', 'MIOSIRY LILIANA', '902492034', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(77, 'DNI', '21887823', 'MAGALLANES GARCIA', 'JULIO CESAR', '953433332', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(78, 'DNI', '44645111', 'DE LA CRUZ TORRES', 'MIRIAM', '977393013', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(79, 'DNI', '71440787', 'ATUNCAR ALMEYDA', 'DIEGO ALFONSO', '949792659', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(80, 'DNI', '42296834', 'HERNANDEZ NAPA', 'JOSE LUIS', '902151026', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(81, 'DNI', '21850270', 'DE LA CRUZ QUISPE', 'VICTORIA ISABEL', '997067532', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(82, 'DNI', '21846116', 'CRISOSTOMO CUELLAR', 'ARNALDO', '955017366', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(83, 'DNI', '75957606', 'CASTAÑEDA SULCA', 'ROSA LINDA', '900648734', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(84, 'DNI', '77923612', 'SARAVIA BONIFACIO', 'JENNIFER DENIS', '907539262', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(85, 'DNI', '41405135', 'ROJAS PACHAS', 'YOVANA VANESA', '904410306', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(86, 'DNI', '46132681', 'TORRES FAJARDO', 'ERICK JOHANY', '902301220', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(87, 'DNI', '41834203', 'ROJAS CONTRERAS', 'CECILIA', '943326467', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(88, 'DNI', '45852739', 'DE LA CRUZ JACOBO', 'JULIO CESAR', '902572234', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(89, 'DNI', '75178691', 'ATUNCAR ALMEYDA', 'ANGEL JESUS', '977655697', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(90, 'DNI', '42116747', 'ALVAREZ TOMASTO', 'JUAN MARTIN', '904384806', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(91, 'DNI', '40679555', 'NAPA MARTINEZ', 'MARIA', '902755736', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(92, 'DNI', '09736546', 'BENITES BOCANEGRA', 'FRANCISCO HERMAN', '943656810', 'Peruano', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(93, 'DNI', '40813108', 'SARAVIA TORRES', 'TERESA YSABEL', '951679716', 'Peruana', NULL, '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `tb_productos`
 --
--- Creación: 16-12-2024 a las 14:29:48
--- Última actualización: 16-12-2024 a las 14:30:39
+-- Creación: 16-12-2024 a las 22:40:59
+-- Última actualización: 16-12-2024 a las 22:41:08
 --
 
 DROP TABLE IF EXISTS `tb_productos`;
@@ -3970,23 +4024,23 @@ CREATE TABLE `tb_productos` (
 --
 
 INSERT INTO `tb_productos` (`id_producto`, `id_marca`, `id_tipo`, `id_unidad`, `modelo`, `precio_actual`, `codigo_barra`, `create_at`, `update_at`, `inactive_at`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
-(1, 1, 1, 1, 'Router', 150.00, '1234567890123', '2024-12-16 09:30:39', NULL, NULL, 1, NULL, NULL),
-(2, 2, 2, 1, 'Teclado USB', 25.00, '1234567890124', '2024-12-16 09:30:39', NULL, NULL, 1, NULL, NULL),
-(3, 3, 1, 2, 'Cable UTP Cat. 6', 1.50, '1234567890125', '2024-12-16 09:30:39', NULL, NULL, 1, NULL, NULL),
-(4, 4, 3, 1, 'Tinta Magenta', 10.00, '1234567890126', '2024-12-16 09:30:39', NULL, NULL, 1, NULL, NULL),
-(5, 5, 4, 1, 'Memoria RAM', 80.00, '1234567890127', '2024-12-16 09:30:39', NULL, NULL, 1, NULL, NULL),
-(6, 6, 2, 1, 'Cámara Web MIC W360 + micrófono', 45.00, '1234567890128', '2024-12-16 09:30:39', NULL, NULL, 1, NULL, NULL),
-(7, 7, 3, 1, 'Tinta Yellow', 10.00, '1234567890129', '2024-12-16 09:30:39', NULL, NULL, 1, NULL, NULL),
-(8, 8, 2, 1, 'Supresor de Pisco', 15.00, '1234567890130', '2024-12-16 09:30:39', NULL, NULL, 1, NULL, NULL),
-(9, 9, 2, 1, 'Mouse', 8.00, '1234567890131', '2024-12-16 09:30:39', NULL, NULL, 1, NULL, NULL);
+(1, 1, 1, 1, 'Router', 150.00, '1234567890123', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(2, 2, 2, 1, 'Teclado USB', 25.00, '1234567890124', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(3, 3, 1, 2, 'Cable UTP Cat. 6', 1.50, '1234567890125', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(4, 4, 3, 1, 'Tinta Magenta', 10.00, '1234567890126', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(5, 5, 4, 1, 'Memoria RAM', 80.00, '1234567890127', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(6, 6, 2, 1, 'Cámara Web MIC W360 + micrófono', 45.00, '1234567890128', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(7, 7, 3, 1, 'Tinta Yellow', 10.00, '1234567890129', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(8, 8, 2, 1, 'Supresor de Pisco', 15.00, '1234567890130', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(9, 9, 2, 1, 'Mouse', 8.00, '1234567890131', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `tb_provincias`
 --
--- Creación: 16-12-2024 a las 14:29:18
--- Última actualización: 16-12-2024 a las 14:29:54
+-- Creación: 16-12-2024 a las 22:40:56
+-- Última actualización: 16-12-2024 a las 22:41:04
 --
 
 DROP TABLE IF EXISTS `tb_provincias`;
@@ -4209,8 +4263,8 @@ INSERT INTO `tb_provincias` (`id_provincia`, `provincia`, `id_departamento`) VAL
 --
 -- Estructura de tabla para la tabla `tb_responsables`
 --
--- Creación: 16-12-2024 a las 14:29:35
--- Última actualización: 16-12-2024 a las 14:30:41
+-- Creación: 16-12-2024 a las 22:40:58
+-- Última actualización: 16-12-2024 a las 22:41:08
 --
 
 DROP TABLE IF EXISTS `tb_responsables`;
@@ -4239,19 +4293,19 @@ CREATE TABLE `tb_responsables` (
 --
 
 INSERT INTO `tb_responsables` (`id_responsable`, `id_usuario`, `id_rol`, `fecha_inicio`, `update_at`, `fecha_fin`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
-(1, 1, 1, '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(2, 2, 2, '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(3, 3, 3, '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(4, 4, 4, '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL),
-(5, 5, 5, '2024-12-16 09:30:41', NULL, NULL, 1, NULL, NULL);
+(1, 1, 1, '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(2, 2, 2, '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(3, 3, 3, '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(4, 4, 4, '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(5, 5, 5, '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `tb_roles`
 --
--- Creación: 16-12-2024 a las 14:29:23
--- Última actualización: 16-12-2024 a las 14:30:40
+-- Creación: 16-12-2024 a las 22:40:56
+-- Última actualización: 16-12-2024 a las 22:41:08
 --
 
 DROP TABLE IF EXISTS `tb_roles`;
@@ -4276,19 +4330,19 @@ CREATE TABLE `tb_roles` (
 --
 
 INSERT INTO `tb_roles` (`id_rol`, `rol`, `permisos`, `create_at`, `update_at`, `inactive_at`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
-(1, 'Administrador', '{\"actividad\":\"Mapa\", \"administracion\":{\"leer\":true,\"crear\":true,\"actualizar\":true,\"eliminar\":true}, \"soporte\":{\"leer\":true,\"crear\":true,\"actualizar\":true,\"eliminar\":true},\"contratos\":{\"leer\":true,\"crear\":true,\"actualizar\":true,\"eliminar\":true},\"inventariado\":{\"leer\":true,\"crear\":true,\"actualizar\":true,\"eliminar\":true},\"personas\":{\"leer\":true,\"crear\":true,\"actualizar\":true,\"eliminar\":true},\"roles\":{\"leer\":true,\"crear\":true,\"actualizar\":true,\"eliminar\":true},\"usuarios\":{\"leer\":true,\"crear\":true,\"actualizar\":true,\"eliminar\":true},\"reportes\":{\"leer\":true,\"crear\":true,\"actualizar\":true,\"eliminar\":true},\"paquetes\":{\"leer\":true,\"crear\":true,\"actualizar\":true,\"eliminar\":true}}', '2024-12-16 09:30:40', NULL, NULL, 1, NULL, NULL),
-(2, 'Tecnico Oficina', '{\"actividad\":\"Soporte\", \"administracion\":{},\"soporte\":false,\"contratos\":{\"leer\":true,\"crear\":true,\"actualizar\":true,\"eliminar\":true},\"inventariado\":{\"leer\":true,\"crear\":true,\"actualizar\":true,\"eliminar\":true},\"personas\":{\"leer\":true,\"crear\":true,\"actualizar\":true,\"eliminar\":true},\"roles\":false,\"usuarios\":{\"leer\":true,\"crear\":true,\"actualizar\":true,\"eliminar\":true},\"paquetes\":false}', '2024-12-16 09:30:40', NULL, NULL, 1, NULL, NULL),
-(3, 'Oficina', '{\"actividad\":\"Contratos\", \"administracion\":{},\"soporte\":{\"leer\":true,\"crear\":true,\"actualizar\":true,\"eliminar\":true},\"contratos\":{\"leer\":true,\"crear\":true,\"actualizar\":true,\"eliminar\":true},\"inventariado\":false,\"personas\":{\"leer\":true,\"crear\":true,\"actualizar\":true,\"eliminar\":true},\"roles\":false,\"usuarios\":false,\"paquetes\":false}', '2024-12-16 09:30:40', NULL, NULL, 1, NULL, NULL),
-(4, 'Tecnico Campo', '{\"actividad\":\"Fichas\", \"administracion\":{},\"soporte\":{\"leer\":true,\"crear\":true,\"actualizar\":true,\"eliminar\":true},\"contratos\":{\"leer\":true,\"crear\":true,\"actualizar\":true,\"eliminar\":true},\"inventariado\":false,\"personas\":false,\"roles\":false,\"usuarios\":false,\"paquetes\":false}', '2024-12-16 09:30:40', NULL, NULL, 1, NULL, NULL),
-(5, 'Almacen - Tecnico', '{\"actividad\":\"Kardex\", \"administracion\":{},\"soporte\":false,\"contratos\":false,\"inventariado\":{\"leer\":true,\"crear\":true,\"actualizar\":true,\"eliminar\":true},\"personas\":false,\"roles\":false,\"usuarios\":false,\"paquetes\":false}', '2024-12-16 09:30:40', NULL, NULL, 1, NULL, NULL);
+(1, 'Administrador', '{\"actividad\":\"Mapa\", \"administracion\":{\"leer\":true,\"crear\":true,\"actualizar\":true,\"eliminar\":true}, \"soporte\":{\"leer\":true,\"crear\":true,\"actualizar\":true,\"eliminar\":true},\"contratos\":{\"leer\":true,\"crear\":true,\"actualizar\":true,\"eliminar\":true},\"inventariado\":{\"leer\":true,\"crear\":true,\"actualizar\":true,\"eliminar\":true},\"personas\":{\"leer\":true,\"crear\":true,\"actualizar\":true,\"eliminar\":true},\"roles\":{\"leer\":true,\"crear\":true,\"actualizar\":true,\"eliminar\":true},\"usuarios\":{\"leer\":true,\"crear\":true,\"actualizar\":true,\"eliminar\":true},\"reportes\":{\"leer\":true,\"crear\":true,\"actualizar\":true,\"eliminar\":true},\"paquetes\":{\"leer\":true,\"crear\":true,\"actualizar\":true,\"eliminar\":true}}', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(2, 'Tecnico Oficina', '{\"actividad\":\"Soporte\", \"administracion\":{},\"soporte\":false,\"contratos\":{\"leer\":true,\"crear\":true,\"actualizar\":true,\"eliminar\":true},\"inventariado\":{\"leer\":true,\"crear\":true,\"actualizar\":true,\"eliminar\":true},\"personas\":{\"leer\":true,\"crear\":true,\"actualizar\":true,\"eliminar\":true},\"roles\":false,\"usuarios\":{\"leer\":true,\"crear\":true,\"actualizar\":true,\"eliminar\":true},\"paquetes\":false}', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(3, 'Oficina', '{\"actividad\":\"Contratos\", \"administracion\":{},\"soporte\":{\"leer\":true,\"crear\":true,\"actualizar\":true,\"eliminar\":true},\"contratos\":{\"leer\":true,\"crear\":true,\"actualizar\":true,\"eliminar\":true},\"inventariado\":false,\"personas\":{\"leer\":true,\"crear\":true,\"actualizar\":true,\"eliminar\":true},\"roles\":false,\"usuarios\":false,\"paquetes\":false}', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(4, 'Tecnico Campo', '{\"actividad\":\"Fichas\", \"administracion\":{},\"soporte\":{\"leer\":true,\"crear\":true,\"actualizar\":true,\"eliminar\":true},\"contratos\":{\"leer\":true,\"crear\":true,\"actualizar\":true,\"eliminar\":true},\"inventariado\":false,\"personas\":false,\"roles\":false,\"usuarios\":false,\"paquetes\":false}', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(5, 'Almacen - Tecnico', '{\"actividad\":\"Kardex\", \"administracion\":{},\"soporte\":false,\"contratos\":false,\"inventariado\":{\"leer\":true,\"crear\":true,\"actualizar\":true,\"eliminar\":true},\"personas\":false,\"roles\":false,\"usuarios\":false,\"paquetes\":false}', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `tb_sectores`
 --
--- Creación: 16-12-2024 a las 14:29:27
--- Última actualización: 16-12-2024 a las 14:30:40
+-- Creación: 16-12-2024 a las 22:40:56
+-- Última actualización: 16-12-2024 a las 22:41:08
 --
 
 DROP TABLE IF EXISTS `tb_sectores`;
@@ -4297,8 +4351,8 @@ CREATE TABLE `tb_sectores` (
   `id_distrito` int(11) NOT NULL,
   `sector` varchar(60) NOT NULL,
   `descripcion` varchar(100) NOT NULL,
+  `direccion` varchar(200) DEFAULT NULL,
   `coordenadas` varchar(50) NOT NULL,
-  `direccion` varchar(200) NOT NULL,
   `create_at` datetime NOT NULL DEFAULT current_timestamp(),
   `update_at` datetime DEFAULT NULL,
   `inactive_at` datetime DEFAULT NULL,
@@ -4317,39 +4371,39 @@ CREATE TABLE `tb_sectores` (
 -- Volcado de datos para la tabla `tb_sectores`
 --
 
-INSERT INTO `tb_sectores` (`id_sector`, `id_distrito`, `sector`, `descripcion`, `coordenadas`, `direccion`, `create_at`, `update_at`, `inactive_at`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
-(1, 110210, 'COLEGIO', 'Descripción del sector', '-13.42544269617297, -76.15808116947606', 'Dirección del sector', '2024-12-16 09:30:40', NULL, NULL, 1, NULL, NULL),
-(2, 110210, 'SANTA ROSA', 'Descripción del sector', '-13.4236801469295, -76.15636428337336', 'Dirección del sector', '2024-12-16 09:30:40', NULL, NULL, 1, NULL, NULL),
-(3, 110210, 'SAN IGNACIO', 'Descripción del sector', '-13.42084308470873, -76.15172619142008', 'Dirección del sector', '2024-12-16 09:30:40', NULL, NULL, 1, NULL, NULL),
-(4, 110210, 'VILLA JULIA', 'Descripción del sector', '-13.41865293087071, -76.14804412727285', 'Dirección del sector', '2024-12-16 09:30:40', NULL, NULL, 1, NULL, NULL),
-(5, 110210, 'PARAISO', 'Descripción del sector', '-13.42056044489115, -76.1658703095588', 'Dirección del sector', '2024-12-16 09:30:40', NULL, NULL, 1, NULL, NULL),
-(6, 110210, 'SAN PILPA', 'Descripción del sector', '-13.41763371580861, -76.1636141502515', 'Dirección del sector', '2024-12-16 09:30:40', NULL, NULL, 1, NULL, NULL),
-(7, 110210, 'CRUZ BLANCA', 'Descripción del sector', '-13.4292202892175, -76.12004531160598', 'Dirección del sector', '2024-12-16 09:30:40', NULL, NULL, 1, NULL, NULL),
-(8, 110210, 'MINA ORO', 'Descripción del sector', '-13.42704443028948, -76.13963358072775', 'Dirección del sector', '2024-12-16 09:30:40', NULL, NULL, 1, NULL, NULL),
-(9, 110210, 'SANTA FE', 'Descripción del sector', '-13.42720878737056, -76.17156138732457', 'Dirección del sector', '2024-12-16 09:30:40', NULL, NULL, 1, NULL, NULL),
-(10, 110210, 'HUACA GRANDE', 'Descripción del sector', '-13.4288474271221, -76.15446500188271', 'Dirección del sector', '2024-12-16 09:30:40', NULL, NULL, 1, NULL, NULL),
-(11, 110206, 'MEJILLONEROS', 'Descripción del sector', '-13.40788239712879, -76.15983137626122', 'Dirección del sector', '2024-12-16 09:30:40', NULL, NULL, 1, NULL, NULL),
-(12, 110206, 'PORVENIR', 'Descripción del sector', '-13.40498211432371, -76.15983221931539', 'Dirección del sector', '2024-12-16 09:30:40', NULL, NULL, 1, NULL, NULL),
-(13, 110206, 'PROGRESO', 'Descripción del sector', '-13.4344505095856, -76.13017637387277', 'Dirección del sector', '2024-12-16 09:30:40', NULL, NULL, 1, NULL, NULL),
-(14, 110107, 'SALVADOR 1', 'Descripción del sector', '-13.39336425906626, -76.1488242018644', 'Dirección del sector', '2024-12-16 09:30:40', NULL, NULL, 1, NULL, NULL),
-(15, 110107, 'TECHO MAX', 'Descripción del sector', '-13.40220429678562, -76.13732471155042', 'Dirección del sector', '2024-12-16 09:30:40', NULL, NULL, 1, NULL, NULL),
-(16, 110107, 'SATELITE 1', 'Descripción del sector', '-13.38765487990007, -76.11958212522634', 'Dirección del sector', '2024-12-16 09:30:40', NULL, NULL, 1, NULL, NULL),
-(17, 110107, 'SATELITE 2', 'Descripción del sector', '-13.38534611704822, -76.12102025177141', 'Dirección del sector', '2024-12-16 09:30:40', NULL, NULL, 1, NULL, NULL),
-(18, 110107, 'ROSEDAL', 'Descripción del sector', '-13.399712698456614, -76.12151072760331', 'Dirección del sector', '2024-12-16 09:30:40', NULL, NULL, 1, NULL, NULL),
-(19, 110201, 'CRUZBLANCA', 'Descripción del sector', '-13.4292202892175, -76.12004531160598', 'Dirección del sector', '2024-12-16 09:30:40', NULL, NULL, 1, NULL, NULL),
-(20, 110201, 'ORURO', 'Descripción del sector', '-13.42999374526452, -76.11673399746118', 'Dirección del sector', '2024-12-16 09:30:40', NULL, NULL, 1, NULL, NULL),
-(21, 110201, 'VR DEL CARMEN', 'Descripción del sector', '-13.42802163353247, -76.12165813154482', 'Dirección del sector', '2024-12-16 09:30:40', NULL, NULL, 1, NULL, NULL),
-(22, 110201, 'CAMPO COND', 'Descripción del sector', '-13.4316581916571, -76.11842467768329', 'Dirección del sector', '2024-12-16 09:30:40', NULL, NULL, 1, NULL, NULL),
-(23, 110201, 'COND. ALTA', 'Descripción del sector', '-13.43669652995902, -76.11306320932194', 'Dirección del sector', '2024-12-16 09:30:40', NULL, NULL, 1, NULL, NULL),
-(24, 110201, 'COND. BAJA', 'Descripción del sector', '-13.43473693459032, -76.11455679499767', 'Dirección del sector', '2024-12-16 09:30:40', NULL, NULL, 1, NULL, NULL);
+INSERT INTO `tb_sectores` (`id_sector`, `id_distrito`, `sector`, `descripcion`, `direccion`, `coordenadas`, `create_at`, `update_at`, `inactive_at`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
+(1, 110210, 'COLEGIO', 'Descripción del sector', NULL, '-13.42544269617297, -76.15808116947606', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(2, 110210, 'SANTA ROSA', 'Descripción del sector', NULL, '-13.4236801469295, -76.15636428337336', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(3, 110210, 'SAN IGNACIO', 'Descripción del sector', NULL, '-13.42084308470873, -76.15172619142008', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(4, 110210, 'VILLA JULIA', 'Descripción del sector', NULL, '-13.41865293087071, -76.14804412727285', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(5, 110210, 'PARAISO', 'Descripción del sector', NULL, '-13.42056044489115, -76.1658703095588', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(6, 110210, 'SAN PILPA', 'Descripción del sector', NULL, '-13.41763371580861, -76.1636141502515', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(7, 110210, 'CRUZ BLANCA', 'Descripción del sector', NULL, '-13.4292202892175, -76.12004531160598', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(8, 110210, 'MINA ORO', 'Descripción del sector', NULL, '-13.42704443028948, -76.13963358072775', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(9, 110210, 'SANTA FE', 'Descripción del sector', NULL, '-13.42720878737056, -76.17156138732457', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(10, 110210, 'HUACA GRANDE', 'Descripción del sector', NULL, '-13.4288474271221, -76.15446500188271', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(11, 110206, 'MEJILLONEROS', 'Descripción del sector', NULL, '-13.40788239712879, -76.15983137626122', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(12, 110206, 'PORVENIR', 'Descripción del sector', NULL, '-13.40498211432371, -76.15983221931539', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(13, 110206, 'PROGRESO', 'Descripción del sector', NULL, '-13.4344505095856, -76.13017637387277', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(14, 110107, 'SALVADOR 1', 'Descripción del sector', NULL, '-13.39336425906626, -76.1488242018644', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(15, 110107, 'TECHO MAX', 'Descripción del sector', NULL, '-13.40220429678562, -76.13732471155042', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(16, 110107, 'SATELITE 1', 'Descripción del sector', NULL, '-13.38765487990007, -76.11958212522634', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(17, 110107, 'SATELITE 2', 'Descripción del sector', NULL, '-13.38534611704822, -76.12102025177141', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(18, 110107, 'ROSEDAL', 'Descripción del sector', NULL, '-13.399712698456614, -76.12151072760331', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(19, 110201, 'CRUZBLANCA', 'Descripción del sector', NULL, '-13.4292202892175, -76.12004531160598', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(20, 110201, 'ORURO', 'Descripción del sector', NULL, '-13.42999374526452, -76.11673399746118', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(21, 110201, 'VR DEL CARMEN', 'Descripción del sector', NULL, '-13.42802163353247, -76.12165813154482', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(22, 110201, 'CAMPO COND', 'Descripción del sector', NULL, '-13.4316581916571, -76.11842467768329', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(23, 110201, 'COND. ALTA', 'Descripción del sector', NULL, '-13.43669652995902, -76.11306320932194', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(24, 110201, 'COND. BAJA', 'Descripción del sector', NULL, '-13.43473693459032, -76.11455679499767', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `tb_servicios`
 --
--- Creación: 16-12-2024 a las 14:29:25
--- Última actualización: 16-12-2024 a las 14:30:35
+-- Creación: 16-12-2024 a las 22:40:56
+-- Última actualización: 16-12-2024 a las 22:41:07
 --
 
 DROP TABLE IF EXISTS `tb_servicios`;
@@ -4374,17 +4428,17 @@ CREATE TABLE `tb_servicios` (
 --
 
 INSERT INTO `tb_servicios` (`id_servicio`, `tipo_servicio`, `servicio`, `create_at`, `update_at`, `inactive_at`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
-(1, 'CABL', 'Cable', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(2, 'WISP', 'Wireless Internet Service Provider', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(3, 'FIBR', 'Fibra Óptica', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL);
+(1, 'CABL', 'Cable', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(2, 'WISP', 'Wireless Internet Service Provider', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(3, 'FIBR', 'Fibra Óptica', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `tb_soporte`
 --
--- Creación: 16-12-2024 a las 14:29:43
--- Última actualización: 16-12-2024 a las 14:47:44
+-- Creación: 16-12-2024 a las 22:40:58
+-- Última actualización: 17-12-2024 a las 01:29:06
 --
 
 DROP TABLE IF EXISTS `tb_soporte`;
@@ -4423,15 +4477,16 @@ CREATE TABLE `tb_soporte` (
 --
 
 INSERT INTO `tb_soporte` (`id_soporte`, `id_contrato`, `id_tipo_soporte`, `id_tecnico`, `fecha_hora_solicitud`, `fecha_hora_asistencia`, `descripcion_problema`, `descripcion_solucion`, `estaCompleto`, `prioridad`, `soporte`, `create_at`, `update_at`, `inactive_at`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
-(1, 1, NULL, NULL, '2024-12-16 09:47:44', NULL, 'MATARSE', NULL, 0, 'Media', '{}', '2024-12-16 09:47:44', NULL, NULL, 1, NULL, NULL);
+(1, 1, NULL, NULL, '2024-12-16 18:06:42', NULL, 'Ha ocurrido un problema con el router en la casa y se necesita hacer una verificacion de los parametros', NULL, 0, 'Media', '{}', '2024-12-16 18:06:42', NULL, NULL, 1, 1, NULL),
+(2, 2, NULL, NULL, '2024-12-16 18:37:53', NULL, 'Esto esta pensado para testear en FIBRA y CABLE asi que tenga consideración.', NULL, 0, 'Media', '{}', '2024-12-16 18:37:53', NULL, NULL, 1, 1, NULL);
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `tb_tipooperacion`
 --
--- Creación: 16-12-2024 a las 14:29:49
--- Última actualización: 16-12-2024 a las 14:30:39
+-- Creación: 16-12-2024 a las 22:40:59
+-- Última actualización: 16-12-2024 a las 22:41:08
 --
 
 DROP TABLE IF EXISTS `tb_tipooperacion`;
@@ -4468,8 +4523,8 @@ INSERT INTO `tb_tipooperacion` (`id_tipooperacion`, `descripcion`, `movimiento`)
 --
 -- Estructura de tabla para la tabla `tb_tipoproducto`
 --
--- Creación: 16-12-2024 a las 14:29:45
--- Última actualización: 16-12-2024 a las 14:30:37
+-- Creación: 16-12-2024 a las 22:40:59
+-- Última actualización: 16-12-2024 a las 22:41:07
 --
 
 DROP TABLE IF EXISTS `tb_tipoproducto`;
@@ -4493,18 +4548,18 @@ CREATE TABLE `tb_tipoproducto` (
 --
 
 INSERT INTO `tb_tipoproducto` (`id_tipo`, `tipo_nombre`, `create_at`, `update_at`, `inactive_at`, `iduser_inactive`, `iduser_create`, `iduser_update`) VALUES
-(1, 'Redes', '2024-12-16 09:30:37', NULL, NULL, NULL, 1, NULL),
-(2, 'Accesorios', '2024-12-16 09:30:37', NULL, NULL, NULL, 1, NULL),
-(3, 'Consumibles', '2024-12-16 09:30:37', NULL, NULL, NULL, 1, NULL),
-(4, 'Componentes', '2024-12-16 09:30:37', NULL, NULL, NULL, 1, NULL);
+(1, 'Redes', '2024-12-16 17:41:07', NULL, NULL, NULL, 1, NULL),
+(2, 'Accesorios', '2024-12-16 17:41:07', NULL, NULL, NULL, 1, NULL),
+(3, 'Consumibles', '2024-12-16 17:41:07', NULL, NULL, NULL, 1, NULL),
+(4, 'Componentes', '2024-12-16 17:41:07', NULL, NULL, NULL, 1, NULL);
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `tb_tipo_soporte`
 --
--- Creación: 16-12-2024 a las 14:29:21
--- Última actualización: 16-12-2024 a las 14:30:35
+-- Creación: 16-12-2024 a las 22:40:56
+-- Última actualización: 16-12-2024 a las 22:41:07
 --
 
 DROP TABLE IF EXISTS `tb_tipo_soporte`;
@@ -4528,34 +4583,34 @@ CREATE TABLE `tb_tipo_soporte` (
 --
 
 INSERT INTO `tb_tipo_soporte` (`id_tipo_soporte`, `tipo_soporte`, `create_at`, `update_at`, `inactive_at`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
-(1, 'Instalación de servicio', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(2, 'Mantenimiento preventivo', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(3, 'Problema de conexión', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(4, 'Soporte técnico', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(5, 'Consulta de facturación', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(6, 'Cambio de plan', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(7, 'Reinstalación de equipos', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(8, 'Consulta de saldo', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(9, 'Reportar caída de servicio', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(10, 'Activación de servicio', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(11, 'Desactivación de servicio', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(12, 'Actualización de datos', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(13, 'Asistencia en instalación de router', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(14, 'Problema con el router', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(15, 'Configuración de red', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(16, 'Consulta sobre promociones', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(17, 'Cambio de dirección de servicio', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(18, 'Aumento de velocidad', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(19, 'Sugerencias y quejas', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL),
-(20, 'Desbloqueo de cuenta', '2024-12-16 09:30:35', NULL, NULL, 1, NULL, NULL);
+(1, 'Instalación de servicio', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(2, 'Mantenimiento preventivo', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(3, 'Problema de conexión', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(4, 'Soporte técnico', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(5, 'Consulta de facturación', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(6, 'Cambio de plan', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(7, 'Reinstalación de equipos', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(8, 'Consulta de saldo', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(9, 'Reportar caída de servicio', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(10, 'Activación de servicio', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(11, 'Desactivación de servicio', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(12, 'Actualización de datos', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(13, 'Asistencia en instalación de router', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(14, 'Problema con el router', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(15, 'Configuración de red', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(16, 'Consulta sobre promociones', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(17, 'Cambio de dirección de servicio', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(18, 'Aumento de velocidad', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(19, 'Sugerencias y quejas', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL),
+(20, 'Desbloqueo de cuenta', '2024-12-16 17:41:07', NULL, NULL, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `tb_unidadmedida`
 --
--- Creación: 16-12-2024 a las 14:29:46
--- Última actualización: 16-12-2024 a las 14:30:39
+-- Creación: 16-12-2024 a las 22:40:59
+-- Última actualización: 16-12-2024 a las 22:41:08
 --
 
 DROP TABLE IF EXISTS `tb_unidadmedida`;
@@ -4577,16 +4632,16 @@ CREATE TABLE `tb_unidadmedida` (
 --
 
 INSERT INTO `tb_unidadmedida` (`id_unidad`, `unidad_nombre`, `create_at`, `update_at`, `iduser_create`, `iduser_update`) VALUES
-(1, 'Unidades', '2024-12-16 09:30:37', NULL, 1, NULL),
-(2, 'Metros', '2024-12-16 09:30:37', NULL, 1, NULL);
+(1, 'Unidades', '2024-12-16 17:41:08', NULL, 1, NULL),
+(2, 'Metros', '2024-12-16 17:41:08', NULL, 1, NULL);
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `tb_usuarios`
 --
--- Creación: 16-12-2024 a las 14:29:33
--- Última actualización: 16-12-2024 a las 14:30:39
+-- Creación: 16-12-2024 a las 22:40:58
+-- Última actualización: 16-12-2024 a las 22:41:08
 --
 
 DROP TABLE IF EXISTS `tb_usuarios`;
@@ -4614,11 +4669,11 @@ CREATE TABLE `tb_usuarios` (
 --
 
 INSERT INTO `tb_usuarios` (`id_usuario`, `id_persona`, `nombre_user`, `pass`, `create_at`, `update_at`, `inactive_at`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
-(1, 1, 'Lgarcia', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', '2024-12-16 09:30:39', NULL, NULL, 1, NULL, NULL),
-(2, 2, 'Mramos', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', '2024-12-16 09:30:39', NULL, NULL, 1, NULL, NULL),
-(3, 3, 'Mtasayco', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', '2024-12-16 09:30:39', NULL, NULL, 1, NULL, NULL),
-(4, 4, 'Dpeñaloza', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', '2024-12-16 09:30:39', NULL, NULL, 1, NULL, NULL),
-(5, 5, 'Tsaravia', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', '2024-12-16 09:30:39', NULL, NULL, 1, NULL, NULL);
+(1, 1, 'Lgarcia', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(2, 2, 'Mramos', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(3, 3, 'Mtasayco', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(4, 4, 'Dpeñaloza', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL),
+(5, 5, 'Tsaravia', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', '2024-12-16 17:41:08', NULL, NULL, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -4913,8 +4968,8 @@ CREATE TABLE `vw_sectores_obtener` (
 ,`sector` varchar(60)
 ,`id_distrito` int(11)
 ,`descripcion` varchar(100)
-,`coordenadas` varchar(50)
 ,`direccion` varchar(200)
+,`coordenadas` varchar(50)
 ,`distrito` varchar(45)
 ,`create_at` datetime
 ,`update_at` datetime
@@ -5222,7 +5277,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 DROP TABLE IF EXISTS `vw_sectores_obtener`;
 
 DROP VIEW IF EXISTS `vw_sectores_obtener`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_sectores_obtener`  AS SELECT `s`.`id_sector` AS `id_sector`, `s`.`sector` AS `sector`, `s`.`id_distrito` AS `id_distrito`, `s`.`descripcion` AS `descripcion`, `s`.`coordenadas` AS `coordenadas`, `s`.`direccion` AS `direccion`, `d`.`distrito` AS `distrito`, `s`.`create_at` AS `create_at`, `s`.`update_at` AS `update_at`, `s`.`inactive_at` AS `inactive_at`, `s`.`iduser_create` AS `iduser_create`, `s`.`iduser_update` AS `iduser_update`, `s`.`iduser_inactive` AS `iduser_inactive` FROM (`tb_sectores` `s` left join `tb_distritos` `d` on(`s`.`id_distrito` = `d`.`id_distrito`)) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_sectores_obtener`  AS SELECT `s`.`id_sector` AS `id_sector`, `s`.`sector` AS `sector`, `s`.`id_distrito` AS `id_distrito`, `s`.`descripcion` AS `descripcion`, `s`.`direccion` AS `direccion`, `s`.`coordenadas` AS `coordenadas`, `d`.`distrito` AS `distrito`, `s`.`create_at` AS `create_at`, `s`.`update_at` AS `update_at`, `s`.`inactive_at` AS `inactive_at`, `s`.`iduser_create` AS `iduser_create`, `s`.`iduser_update` AS `iduser_update`, `s`.`iduser_inactive` AS `iduser_inactive` FROM (`tb_sectores` `s` left join `tb_distritos` `d` on(`s`.`id_distrito` = `d`.`id_distrito`)) ;
 
 -- --------------------------------------------------------
 
@@ -5527,7 +5582,7 @@ ALTER TABLE `tb_cajas`
 -- AUTO_INCREMENT de la tabla `tb_clientes`
 --
 ALTER TABLE `tb_clientes`
-  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
+  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
 
 --
 -- AUTO_INCREMENT de la tabla `tb_contactabilidad`
@@ -5539,7 +5594,7 @@ ALTER TABLE `tb_contactabilidad`
 -- AUTO_INCREMENT de la tabla `tb_contratos`
 --
 ALTER TABLE `tb_contratos`
-  MODIFY `id_contrato` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_contrato` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `tb_empresas`
@@ -5617,7 +5672,7 @@ ALTER TABLE `tb_servicios`
 -- AUTO_INCREMENT de la tabla `tb_soporte`
 --
 ALTER TABLE `tb_soporte`
-  MODIFY `id_soporte` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_soporte` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `tb_tipooperacion`
@@ -5752,7 +5807,7 @@ DELIMITER $$
 -- Eventos
 --
 DROP EVENT IF EXISTS `ev_inhabilitar_contactos`$$
-CREATE DEFINER=`root`@`localhost` EVENT `ev_inhabilitar_contactos` ON SCHEDULE EVERY 1 DAY STARTS '2024-12-16 09:30:54' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN
+CREATE DEFINER=`root`@`localhost` EVENT `ev_inhabilitar_contactos` ON SCHEDULE EVERY 1 DAY STARTS '2024-12-16 17:41:13' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN
     CALL spu_contactabilidad_inhabilitar();
 END$$
 

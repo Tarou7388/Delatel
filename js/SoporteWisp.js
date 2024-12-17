@@ -1,5 +1,5 @@
 import config from "../env.js";
-import { FichaSoporte, FichaSoportePorId } from "./Herramientas.js";
+import { FichaInstalacion, FichaSoporteporDocServCoordenada, formatoIPinput, validarValorRango, CompletarSoporte } from "./Herramientas.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("frmRegistroWisp");
@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const txtRouterSeguridad = document.getElementById("txtRouterSeguridad");
   const txtRouterpuertaEnlace = document.getElementById("txtRouterpuertaEnlace");
   const txtRouterWan = document.getElementById("txtRouterWan");
+  const txtAcceso = document.getElementById("txtAcceso");
 
   // Cambios Wireless
   const txtBaseNuevo = document.getElementById("txtBaseNuevo");
@@ -39,7 +40,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let idSoporte = -1;
 
   (async function () {
-    idSoporte = await obtenerReferencias();
+    const urlParams = new URLSearchParams(window.location.search);
+    idSoporte = urlParams.get("idsoporte");
     if (idSoporte) {
       await cargarProblema(idSoporte);
       await crearSelectYBoton();
@@ -51,11 +53,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   })();
 
-  async function obtenerReferencias() {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get("idsoporte");
-  };
-
   async function ObtenerValores() {
     const urlParams = new URLSearchParams(window.location.search);
     const doc = urlParams.get("doc");
@@ -63,16 +60,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const tiposervicio = urlParams.get("tiposervicio");
     const coordenada = urlParams.get("coordenada");
 
-    const respuesta = await FichaSoportePorId(doc, tiposervicio, coordenada);
+    const respuesta = await FichaSoporteporDocServCoordenada(doc, tiposervicio, coordenada);
 
     if (respuesta[0].soporte != "{}" && JSON.parse(respuesta[0].soporte).WISP) {
-      await cargardatos(JSON.parse(respuesta[0].soporte).WISP);
+      await cargarSoporteAnterior(JSON.parse(respuesta[0].soporte).WISP);
     } else {
-      await llenadoDeDatos(doc, idSoporte);
+      await traerDatosInstalacion(doc, idSoporte);
     }
   }
 
-  async function llenadoDeDatos(doct, idSoporte, tiposervicio) {
+  async function traerDatosInstalacion(doct, idSoporte, tiposervicio) {
     try {
       const respuesta = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${doct}`);
       const data = await respuesta.json();
@@ -82,11 +79,11 @@ document.addEventListener("DOMContentLoaded", () => {
       txtNrodocumento.value = doct;
 
     } catch (error) {
-      console.error("Error en llenadoDeDatos:", error);
+      console.error("Error en traer datos Instalacion:", error);
     }
 
     try {
-      const datawisp = await FichaSoporte(idSoporte);
+      const datawisp = await FichaInstalacion(idSoporte);
       const wispFiltrado = JSON.parse(datawisp[0].ficha_instalacion).parametros;
 
       console.log(wispFiltrado);
@@ -96,13 +93,13 @@ document.addEventListener("DOMContentLoaded", () => {
       txtBase.value = wispFiltrado.base[0].nombre;
       txtBaseNuevo.value = wispFiltrado.base[0].nombre;
 
-      console.log(wispFiltrado.subBase[0].nombre);
+      console.log(wispFiltrado.subbase[0].nombre);
 
-      txtSenial.value = wispFiltrado.signalStrength;
+      txtSenial.value = wispFiltrado.signalstrength;
 
       await cargarRouters(wispFiltrado.routers)
     } catch (error) {
-      console.error("Error en data de Fibra:", error);
+      console.error("Error en data de WISP:", error);
     }
   };
 
@@ -128,8 +125,8 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const selectedValue = parseInt(slcWireless.value);
       const coordenada = urlParams.get("coordenada");
-      const respuesta = await FichaSoporte(idSoporte);
-      const respuesta2 = await FichaSoportePorId(txtNrodocumento.value, serv, coordenada);
+      const respuesta = await FichaInstalacion(idSoporte);
+      const respuesta2 = await FichaSoporteporDocServCoordenada(txtNrodocumento.value, serv, coordenada);
 
       let wispFiltrado = null;
       let datosgenerales = null;
@@ -148,8 +145,9 @@ document.addEventListener("DOMContentLoaded", () => {
         txtIp.value = routerseleccionado.lan;
         txtRouterSsid.value = routerseleccionado.ssid;
         txtRouterSeguridad.value = routerseleccionado.seguridad;
-        txtRouterpuertaEnlace.value = routerseleccionado.puertaEnlace;
+        txtRouterpuertaEnlace.value = routerseleccionado.puertaenlace;
         txtRouterWan.value = routerseleccionado.wan;
+        txtAcceso.value = routerseleccionado.acceso;
       } else {
         console.warn("No se encontró un repetidor con el valor seleccionado.");
       }
@@ -158,7 +156,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  async function cargardatos(data) {
+  async function cargarSoporteAnterior(data) {
     console.log(data);
   }
 
@@ -225,8 +223,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let soporte = result[0].soporte ? JSON.parse(result[0].soporte) : {};
 
-      const datawisp = await FichaSoporte(idSoporte);
-      const wispFiltrado = JSON.parse(datawisp[0].ficha_instalacion).parametros;
+    const datawisp = await FichaInstalacion(idSoporte);
+    const wispFiltrado = JSON.parse(datawisp[0].ficha_instalacion).parametros;
 
     const existeClave = Object.keys(soporte).includes(serv);
 
@@ -235,16 +233,16 @@ document.addEventListener("DOMContentLoaded", () => {
         parametroscliente: {
           plan: txtPlan.value,
           usuario: txtCliente.value,
-          Nrodoc: txtNrodocumento.value,
+          nrodoc: txtNrodocumento.value,
         },
         parametros: {
           base: txtBase.value,
           routers: JSON.parse(JSON.stringify(wispFiltrado.routers)),
-          signalStrength: txtSenial.value
+          signalstrength: txtSenial.value
         },
         cambios: {
-          nuevaBase: txtBaseNuevo.value,
-          signalStrength: txtSenialNuevo.value,
+          nuevabase: txtBaseNuevo.value,
+          signalstrength: txtSenialNuevo.value,
           routers: await moficadoRuter(wispFiltrado.routers)
         },
       };
@@ -252,7 +250,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     console.log(soporte);
     return soporte;
-    
+
   };
 
   async function moficadoRuter(routers) {
@@ -300,11 +298,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
+    idSoporte = urlParams.get("idsoporte");
     const data = await ArmadoJsonWisp();
     if (await ask("¿Desea guardar la ficha?")) {
       await guardarSoporte(data)
-      //window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
+      if (await CompletarSoporte(idSoporte)) {
+        window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
+      }
     }
+  });
+
+  txtSenial, txtSenialNuevo.addEventListener("input", validarValorRango);
+
+  txtIp, txtIpNuevo.addEventListener("input", (event) => {
+    formatoIPinput(event);
   });
 
 });

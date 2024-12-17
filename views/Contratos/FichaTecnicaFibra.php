@@ -175,22 +175,20 @@ $idContrato = $_GET['idContrato'];
             <h5> Datos del Router</h5>
 
             <div class="row g-2 mb-2">
-              <div class="col-12 col-md-6">
+              <div class="col-12 col-md-4">
                 <div class="form-floating">
                   <input type="text" class="form-control" id="txtSsid" placeholder="SSID">
                   <label for="lblSsid">SSID <span class="required-asterisk" style="color: red;">*</span></label>
                   <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
                 </div>
               </div>
-              <div class="col-12 col-md-6">
+              <div class="col-12 col-md-4">
                 <div class="form-floating">
                   <input type="text" class="form-control" id="txtSeguridad" placeholder="Contraseña">
                   <label for="lblSeguridad">Seguridad <span class="required-asterisk" style="color: red;">*</span></label>
                   <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
                 </div>
               </div>
-            </div>
-            <div class="row g-2 mb-2">
               <div class="col-12 col-md-4">
                 <div class="form-floating">
                   <input type="text" class="form-control" id="txtCodigoBarra" placeholder="Codigo de barra">
@@ -198,6 +196,8 @@ $idContrato = $_GET['idContrato'];
                   <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
                 </div>
               </div>
+            </div>
+            <div class="row g-2 mb-2">
               <div class="col-12 col-md-4">
                 <div class="form-floating">
                   <input type="text" class="form-control" id="txtMarca" placeholder="Marca" disabled>
@@ -209,6 +209,13 @@ $idContrato = $_GET['idContrato'];
                 <div class="form-floating">
                   <input type="text" class="form-control" id="txtModelo" placeholder="Modelo" disabled>
                   <label for="lblModelo">Modelo <span class="required-asterisk" style="color: red;">*</span></label>
+                  <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
+                </div>
+              </div>
+              <div class="col-12 col-md-4">
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="txtIp" placeholder="IP">
+                  <label for="txtIp">IP <span class="required-asterisk" style="color: red;">*</span></label>
                   <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
                 </div>
               </div>

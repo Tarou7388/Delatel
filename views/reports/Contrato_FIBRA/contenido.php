@@ -61,39 +61,39 @@ $HOST = "http://localhost/Delatel";
     <tbody>
       <tr>
         <td><strong>USUARIO:</strong></td>
-        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraOptica']['usuario']); ?></td>
+        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['usuario']); ?></td>
         <td><strong>MARCA:</strong></td>
-        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraOptica']['moden']['marca']); ?></td>
+        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['router']['marca']); ?></td>
       </tr>
       <tr>
         <td><strong>CLAVE:</strong></td>
-        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraOptica']['claveAcceso']); ?></td>
+        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['claveacceso']); ?></td>
         <td><strong>BANDA:</strong></td>
-        <td class="text-center"><?= htmlspecialchars(implode(", ", $fichaTecnica['fibraOptica']['moden']['banda'])); ?></td>
+        <td class="text-center"><?= htmlspecialchars(implode(", ", $fichaTecnica['fibraoptica']['router']['banda'])); ?></td>
       </tr>
       <tr>
         <td><strong>VLAN:</strong></td>
-        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraOptica']['vlan']); ?></td>
+        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['vlan']); ?></td>
         <td><strong>N° ANTENA:</strong></td>
-        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraOptica']['moden']['numeroantena']); ?></td>
+        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['router']['numeroantena']); ?></td>
       </tr>
       <tr>
         <td><strong>SSID:</strong></td>
-        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraOptica']['moden']['ssid']); ?></td>
+        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['router']['ssid']); ?></td>
         <td><strong>CATV:</strong></td>
-        <td class="text-center"><?= $fichaTecnica['fibraOptica']['moden']['catv'] ? 'Sí' : 'No'; ?></td>
+        <td class="text-center"><?= $fichaTecnica['fibraoptica']['router']['catv'] ? 'Sí' : 'No'; ?></td>
       </tr>
       <tr>
         <td><strong>SEGURIDAD:</strong></td>
-        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraOptica']['moden']['seguridad']); ?></td>
+        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['router']['seguridad']); ?></td>
         <td><strong>MAC:</strong></td>
-        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraOptica']['moden']['codigoBarra']) ?></td>
-      <?php if (!empty($fichaTecnica['fibraOptica']['detallesModen'])): ?>
+        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['router']['codigobarra']) ?></td>
+      <?php if (!empty($fichaTecnica['fibraoptica']['detalles'])): ?>
         <tr>
           <td colspan="4" class="text-center"><strong>DETALLES:</strong></td>
         </tr>
         <tr>
-          <td colspan="4"><?= htmlspecialchars($fichaTecnica['fibraOptica']['detallesModen']); ?></td>
+          <td colspan="4"><?= htmlspecialchars($fichaTecnica['fibraoptica']['detalles']); ?></td>
         </tr>
       <?php endif; ?>
     </tbody>
@@ -102,8 +102,8 @@ $HOST = "http://localhost/Delatel";
 
 <div class="container">
   <table class="tabla2">
-    <?php if (!empty($fichaTecnica['fibraOptica']['repetidores'])): ?>
-      <?php foreach ($fichaTecnica['fibraOptica']['repetidores'] as $repetidor): ?>
+    <?php if (!empty($fichaTecnica['fibraoptica']['repetidores'])): ?>
+      <?php foreach ($fichaTecnica['fibraoptica']['repetidores'] as $repetidor): ?>
         <thead>
           <tr>
             <td colspan="6" class="text-center thead-cabecera"><strong>EQUIPOS ADICIONALES WIFI</strong></td>

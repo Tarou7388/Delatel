@@ -229,40 +229,47 @@ $idContrato = $_GET['idContrato'];
           <h6>Datos del Router</h6>
 
           <div class="row g-3 mb-2">
-            <div class="col md-6">
+            <div class="col-12 col-md-4">
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtSsid" placeholder="SSID">
                 <label for="lblSsid">SSID <span class="required-asterisk" style="color: red;">*</span></label>
                 <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
               </div>
             </div>
-            <div class="col md-6">
+            <div class="col-12 col-md-4">
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtSeguridad" placeholder="Contraseña">
                 <label for="lblSeguridad">Seguridad <span class="required-asterisk" style="color: red;">*</span></label>
                 <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
               </div>
             </div>
-          </div>
-          <div class="row g-3 mb-2">
-            <div class="col-4 mb-2">
+            <div class="col-12 col-md-4">
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtCodigoBarra" placeholder="Codigo de barra">
                 <label for="lblCodigoBarra">Código de barras <span class="required-asterisk" style="color: red;">*</span></label>
                 <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
               </div>
             </div>
-            <div class="col-4 mb-2">
+          </div>
+          <div class="row g-3 mb-2">
+            <div class="col-12 col-md-4">
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtMarca" placeholder="Marca" disabled>
                 <label for="marca">Marca <span class="required-asterisk" style="color: red;">*</span></label>
                 <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
               </div>
             </div>
-            <div class=" col-4 mb-2">
+            <div class="col-12 col-md-4">
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtModelo" placeholder="Modelo" disabled>
                 <label for="lblModelo">Modelo <span class="required-asterisk" style="color: red;">*</span></label>
+                <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
+              </div>
+            </div>
+            <div class="col-12 col-md-4">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="txtIp" placeholder="IP">
+                <label for="txtIp">IP <span class="required-asterisk" style="color: red;">*</span></label>
                 <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
               </div>
             </div>
@@ -314,7 +321,7 @@ $idContrato = $_GET['idContrato'];
             <div class="mt-4">
               <div class="form-floating">
                 <textarea type="text" class="form-control" id="txtDetalleRouter" placeholder="Detalles"></textarea>
-                <label for="txtDetalleRouter">Detalles  <span class="required-asterisk" style="color: red;">*</span></label>
+                <label for="txtDetalleRouter">Detalles <span class="required-asterisk" style="color: red;">*</span></label>
               </div>
             </div>
           </div>
@@ -514,7 +521,7 @@ $idContrato = $_GET['idContrato'];
           <div class="col-md-12">
             <div class="form-floating">
               <textarea class="form-control" id="txtDetalleCable" placeholder="Detalle" rows="3"></textarea>
-              <label for="txtDetalleCable">Detalle  <span class="required-asterisk" style="color: red;">*</span></label>
+              <label for="txtDetalleCable">Detalle <span class="required-asterisk" style="color: red;">*</span></label>
             </div>
           </div>
         </div>

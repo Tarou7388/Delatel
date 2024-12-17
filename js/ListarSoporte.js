@@ -1,5 +1,6 @@
 import config from "../env.js";
-import { inicializarDataTable } from "./Herramientas.js";
+import * as mapa from "./Mapa.js";
+import { inicializarDataTable, FichaInstalacion, CompletarSoporte } from "./Herramientas.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   let ruta = `${config.HOST}app/controllers/Soporte.controllers.php?operacion=FiltrarSoportePrioridad&prioridad=`;
@@ -66,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
       })
     });
     const data = await respuesta.json();
-    if (data) { 
+    if (data) {
       showToast('Soporte eliminado correctamente', 'SUCCESS');
       table.ajax.reload();
     }
@@ -84,6 +85,14 @@ document.addEventListener("DOMContentLoaded", () => {
       {
         data: "tipo_soporte",
         title: "Tipo de Soporte",
+        className: "text-center user-select-none",
+        render: function (data, type, row) {
+          return data ? data : '<i>No asignado</i>';
+        }
+      },
+      {
+        data: "tipos_servicio",
+        title: "Servicios",
         className: "text-center user-select-none",
         render: function (data, type, row) {
           return data ? data : '<i>No asignado</i>';
@@ -124,19 +133,20 @@ document.addEventListener("DOMContentLoaded", () => {
           const isDisabled = prioridad === "incidencia" ? "disabled" : "";
           return `<button class="btnActualizar btn btn-primary" data-id="${row.id_soporte}" ${isDisabled}>Atender</button>
                   <button class="btnEliminar btn btn-danger" data-id="${row.id_soporte}" ><i class="fa-solid fa-trash"></i></button>
-                  <button class="btnMapa btn btn-dark" data-id="${row.id_soporte}" ><i class="fa-solid fa-map"></i></button>
+                  <button class="btnMapa btn btn-dark" data-id="${row.id_soporte}" data-toggle="modal" data-target="#ModalMapa"><i class="fa-solid fa-map"></i></button>
                   <button class="btnCompleto btn btn-success" data-id="${row.id_soporte}" ><i class="fa-solid fa-check"></i></button>`;
         }
       }
     ],
     [
       { width: "4%", targets: 0 },
-      { width: "10%", targets: 1 },
-      { width: "15%", targets: 2 },
-      { width: "25%", targets: 3 },
-      { width: "10%", targets: 4 },
-      { width: "20%", targets: 5 },
-      { width: "10%", targets: 6 }
+      { width: "15%", targets: 1 },
+      { width: "10%", targets: 2 },
+      { width: "20%", targets: 3 },
+      { width: "20%", targets: 4 },
+      { width: "10%", targets: 5 },
+      { width: "10%", targets: 6 },
+      { width: "10%", targets: 7 }
     ]
   );
 
@@ -153,15 +163,31 @@ document.addEventListener("DOMContentLoaded", () => {
       await inhabilitarSoporte(id_soporte);
     }
   });
-  
+
   $('.card-body').on('click', '.btnMapa', async function () {
+    //asignar la funcion del boton del mapa para que me obtenga el id del contrato la funcion esta en Herramientas.js
     let id_soporte = $(this).data('id');
-    console.log("Aqui esta el mapa");
+    const data = await FichaInstalacion(id_soporte);
+    console.log('id del soporte:', id_soporte);
+    console.log('Datos del contrato:', data);
+
+    //Extraer y almacenar el id_contrato
+    const id_contrato = data[0].id_contrato;
+    console.log('ID del contrato:', id_contrato);
+    await mapa.renderizarCoordenadaMapa(id_contrato);
+
+    const params = { cajas: false, mufas: false }
+    const ip = "map"
+    const renderizado = "modal"
+    mapa.iniciarMapa(params, ip, renderizado);
   });
 
   $('.card-body').on('click', '.btnCompleto', async function () {
     let id_soporte = $(this).data('id');
-    console.log("Aqui sera para completarlo");
+    if (await ask("¿Está seguro de completar este soporte? Ya no aparecera en la tabla.")) {
+      CompletarSoporte(id_soporte);
+      table.ajax.reload();
+    }
   });
 
   var today = new Date().toISOString().split('T')[0];
@@ -171,4 +197,6 @@ document.addEventListener("DOMContentLoaded", () => {
     ruta = `${config.HOST}app/controllers/Soporte.controllers.php?operacion=FiltrarSoportePrioridad&prioridad=` + Prioridad.value;
     table.ajax.url(ruta).load();
   });
+
+
 });

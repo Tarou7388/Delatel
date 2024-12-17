@@ -26,8 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     case 'obtenerServiciosId':
       echo json_encode($soporte->obtenerServiciosId(["idservicio" => $_GET['idservicio']]));
       break;
-    case 'obtenerfichaSoporteporDoc':
-      echo json_encode($soporte->obtenerfichaSoporteporDoc(["nroDoc" => $_GET['nroDoc']]));
+    case 'obtenerfichaInstalacionporIdSoporte':
+      echo json_encode($soporte->obtenerfichaInstalacionporIdSoporte(["idSoporte" => $_GET['idSoporte']]));
       break;
   }
 }
@@ -94,7 +94,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
         'idUserInactive' => Herramientas::sanitizarEntrada($datos['data']['idUserInactive'])
       ];
       $status = $soporte->inhabilitarSoportebyID($values);
-      echo json_encode ($status);
+      echo json_encode($status);
+      break;
+    case 'completarSoportebyId':
+      $values = [
+        'idSoporte' => Herramientas::sanitizarEntrada($datos['data']['idSoporte']),
+        'idUserUpdate' => Herramientas::sanitizarEntrada($datos['data']['idUserUpdate'])
+      ];
+      $status = $soporte->completarSoportebyId($values);
+      echo json_encode($status);
       break;
   }
 }

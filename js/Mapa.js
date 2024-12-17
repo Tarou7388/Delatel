@@ -112,14 +112,14 @@ export async function iniciarMapa(params = { cajas: true, mufas: true }, id = "m
       document.getElementById('btnGuardarModalMapa').addEventListener('click', () => {
         if (marcadorCoordenada != null) {
           const modal = bootstrap.Modal.getInstance(document.getElementById('ModalMapa'));
-          if(document.getElementById('txtCoordenadasMapa')) {
+          if (document.getElementById('txtCoordenadasMapa')) {
             document.getElementById('txtCoordenadasMapa').value = `${marcadorCoordenada.lat()},${marcadorCoordenada.lng()}`;
             document.getElementById('txtCoordenadasMapa').dispatchEvent(new Event('change', { bubbles: true }));
           }
-          if(document.getElementById('txtCoordenadas')) {
+          if (document.getElementById('txtCoordenadas')) {
             document.getElementById('txtCoordenadas').value = `${marcadorCoordenada.lat()},${marcadorCoordenada.lng()}`;
           }
-          if(document.getElementById('txtCoordenadasPersona')) {
+          if (document.getElementById('txtCoordenadasPersona')) {
             document.getElementById('txtCoordenadasPersona').value = `${marcadorCoordenada.lat()},${marcadorCoordenada.lng()}`;
           }
         }
@@ -298,5 +298,58 @@ async function buscarCoordenadas(latitud, longitud) {
     google.maps.event.trigger(mapa, 'click', {
       latLng: posicion
     });
+  }
+}
+
+//Función que renderize la coordenada del contrato en el mapa
+/* export async function renderizarCoordenadaMapa(latitud, longitud) {
+  const posicion = new google.maps.LatLng(latitud, longitud);
+  mapa.setCenter(posicion);
+  mapa.setZoom(15);
+
+  if (marcador) {
+    marcador.setMap(null);
+  }
+
+  marcador = new AdvancedMarkerElement({
+    position: posicion,
+    map: mapa,
+    title: "Ubicación buscada"
+  });
+} */
+
+export async function renderizarCoordenadaMapa(id) {
+  try {
+    // Hacer la solicitud HTTP para obtener las coordenadas
+    const response = await fetch(`http://localhost/Delatel/app/controllers/Contrato.controllers.php?operacion=obtenerCoordenadasbyId&id=${id}`);
+    const data = await response.json();
+
+    // Verificar que la respuesta contiene las coordenadas
+    if (data && data.length > 0 && data[0].coordenada) {
+      const coordenada = data[0].coordenada.split(',');
+      const latitud = parseFloat(coordenada[0]);
+      const longitud = parseFloat(coordenada[1]);
+
+      // Crear una nueva posición y centrar el mapa
+      const posicion = new google.maps.LatLng(latitud, longitud);
+      mapa.setCenter(posicion);
+      mapa.setZoom(15);
+
+      // Eliminar el marcador anterior, si existe
+      if (marcador) {
+        marcador.setMap(null);
+      }
+
+      // Agregar un nuevo marcador en la nueva posición
+      marcador = new AdvancedMarkerElement({
+        position: posicion,
+        map: mapa,
+        title: "Ubicación buscada"
+      });
+    } else {
+      console.error('No se encontraron coordenadas en la respuesta.');
+    }
+  } catch (error) {
+    console.error('Error al obtener las coordenadas:', error);
   }
 }

@@ -1,5 +1,5 @@
 import config from "../env.js";
-import { FichaSoporte, formatoIPinput, FichaSoportePorId } from "./Herramientas.js";
+import { FichaInstalacion, formatoIPinput, FichaSoporteporDocServCoordenada } from "./Herramientas.js";
 
 // Evento que se ejecuta cuando el DOM ha sido completamente cargado
 document.addEventListener("DOMContentLoaded", () => {
@@ -137,7 +137,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     console.log(doc);
 
-    const respuesta = await FichaSoportePorId(doc, tiposervicio, coordenada);
+    const respuesta = await FichaSoporteporDocServCoordenada(doc, tiposervicio, coordenada);
 
     if (respuesta[0].soporte != "{}") {
       if (JSON.parse(respuesta[0].soporte).FIBR) {
@@ -278,6 +278,8 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const dataFibra = await FichaSoporte(idSoporte);
       const fibraFiltrado = JSON.parse(dataFibra[0].ficha_instalacion).fibraoptica;
+      const dataFibra = await FichaInstalacion(idSoporte);
+      const fibraFiltrado = JSON.parse(dataFibra[0].ficha_instalacion).fibraOptica;
       console.log(dataFibra[0]);
 
       // Asignacion para el campo de plan.
@@ -357,8 +359,8 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const selectedValue = parseInt(slcRpetidor.value);
       const coordenada = urlParams.get("coordenada");
-      const respuesta = await FichaSoporte(idSoporte);
-      const respuesta2 = await FichaSoportePorId(txtNrodocumento.value, serv, coordenada);
+      const respuesta = await FichaInstalacion(idSoporte);
+      const respuesta2 = await FichaSoporteporDocServCoordenada(txtNrodocumento.value, serv, coordenada);
 
       let fibraFiltrado = null;
       let datosgenerales = null;

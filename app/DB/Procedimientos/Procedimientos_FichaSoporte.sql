@@ -123,53 +123,58 @@ CREATE PROCEDURE spu_soporte_filtrar_prioridad (
 )
 BEGIN
     SELECT
-        c.coordenada,
-        c.id_sector,
-        sct.sector,
-        s.fecha_hora_solicitud,
-        s.fecha_hora_asistencia,
-        c.direccion_servicio,
-        s.id_soporte,
-        s.prioridad,
-        s.soporte,
-        s.descripcion_problema,
-        s.descripcion_solucion,
-        ts.tipo_soporte,
-        c.id_cliente,
-        CASE
-            WHEN cl.id_persona IS NOT NULL THEN CONCAT(p_cliente.nombres, ' ', p_cliente.apellidos)
-            WHEN cl.id_empresa IS NOT NULL THEN e.razon_social
-        END AS nombre_cliente,
-        c.direccion_servicio,
-        r.id_usuario AS id_tecnico,
-        CONCAT(p_tecnico.nombres, ' ', p_tecnico.apellidos) AS nombre_tecnico
-    FROM 
-        tb_soporte s
-    LEFT JOIN 
-        tb_contratos c ON s.id_contrato = c.id_contrato
-    INNER JOIN
-        tb_sectores sct ON c.id_sector = sct.id_sector
-    LEFT JOIN 
-        tb_tipo_soporte ts ON s.id_tipo_soporte = ts.id_tipo_soporte
-    LEFT JOIN 
-        tb_responsables r ON s.id_tecnico = r.id_responsable
-    LEFT JOIN 
-        tb_usuarios u ON r.id_usuario = u.id_usuario
-    LEFT JOIN 
-        tb_personas p_tecnico ON u.id_persona = p_tecnico.id_persona
-    LEFT JOIN 
-        tb_clientes cl ON c.id_cliente = cl.id_cliente
-    LEFT JOIN 
-        tb_personas p_cliente ON cl.id_persona = p_cliente.id_persona 
-    LEFT JOIN 
-        tb_empresas e ON cl.id_empresa = e.id_empresa
+    s.id_soporte,
+    c.coordenada,
+    c.id_sector,
+    sct.sector,
+    s.fecha_hora_solicitud,
+    s.fecha_hora_asistencia,
+    c.direccion_servicio,
+    s.prioridad,
+    s.soporte,
+    s.descripcion_problema,
+    s.descripcion_solucion,
+    ts.tipo_soporte,
+    c.id_cliente,
+    CASE
+        WHEN cl.id_persona IS NOT NULL THEN CONCAT(p_cliente.nombres, ' ', p_cliente.apellidos)
+        WHEN cl.id_empresa IS NOT NULL THEN e.razon_social
+    END AS nombre_cliente,
+    c.direccion_servicio,
+    r.id_usuario AS id_tecnico,
+    CONCAT(p_tecnico.nombres, ' ', p_tecnico.apellidos) AS nombre_tecnico,
+    GROUP_CONCAT(srv.tipo_servicio) AS tipos_servicio,
+    GROUP_CONCAT(srv.servicio) AS servicios
+    FROM
+    tb_soporte s
+    LEFT JOIN tb_contratos c ON s.id_contrato = c.id_contrato
+    INNER JOIN tb_sectores sct ON c.id_sector = sct.id_sector
+    LEFT JOIN tb_tipo_soporte ts ON s.id_tipo_soporte = ts.id_tipo_soporte
+    LEFT JOIN tb_responsables r ON s.id_tecnico = r.id_responsable
+    LEFT JOIN tb_usuarios u ON r.id_usuario = u.id_usuario
+    LEFT JOIN tb_personas p_tecnico ON u.id_persona = p_tecnico.id_persona
+    LEFT JOIN tb_clientes cl ON c.id_cliente = cl.id_cliente
+    LEFT JOIN tb_personas p_cliente ON cl.id_persona = p_cliente.id_persona
+    LEFT JOIN tb_empresas e ON cl.id_empresa = e.id_empresa
+    INNER JOIN tb_paquetes p ON c.id_paquete = p.id_paquete
+    INNER JOIN tb_servicios srv ON JSON_CONTAINS(
+        p.id_servicio,
+        CONCAT(
+        '{"id_servicio":',
+        srv.id_servicio,
+        '}'
+        )
+    )
     WHERE
-        (p_prioridad = "" OR s.prioridad = p_prioridad) AND s.inactive_at IS NULL;
+    c.inactive_at IS NULL
+    AND c.ficha_instalacion IS NOT NULL
+    AND s.estaCompleto != 1
+    AND (p_prioridad = "" OR s.prioridad = p_prioridad) AND s.inactive_at IS NULL
+    GROUP BY c.id_contrato, c.create_at;
 END $$
 
-DROP PROCEDURE IF EXISTS spu_soporte_ficha_doc$$
-
-CREATE PROCEDURE spu_soporte_ficha_doc (
+DROP PROCEDURE IF EXISTS spu_instalacion_ficha_IdSoporte$$
+CREATE PROCEDURE spu_instalacion_ficha_IdSoporte(
     IN p_idsoporte INT
 )
 BEGIN
@@ -248,5 +253,20 @@ BEGIN
     SET
         inactive_at = NOW(),
         iduser_inactive = p_iduser_inactive
+    WHERE id_soporte = p_id_soporte;
+END $$
+
+DROP PROCEDURE IF EXISTS spu_soporte_CompletarbyId$$
+
+CREATE PROCEDURE spu_soporte_CompletarbyId (
+    IN p_id_soporte INT,
+    IN p_iduser_update INT 
+)
+BEGIN
+    UPDATE tb_soporte
+    SET
+        estaCompleto = 1,
+        update_at = NOW(),
+        iduser_update = p_iduser_update
     WHERE id_soporte = p_id_soporte;
 END $$

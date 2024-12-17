@@ -354,7 +354,7 @@ BEGIN
         co.id_contrato = p_id_contrato;
 END$$
 
-
+DROP PROCEDURE IF EXISTS spu_contratos_JsonFichabyId$$
 CREATE PROCEDURE spu_contratos_JsonFichabyId(IN p_id_contrato INT)
 BEGIN
     SELECT 
@@ -364,3 +364,21 @@ BEGIN
     WHERE 
         id_contrato = p_id_contrato;
 END$$
+
+ -- Función buscar coordenada por el idContrato
+DELIMITER $$
+DROP PROCEDURE IF EXISTS spu_contrato_buscar_coordenada$$
+CREATE PROCEDURE spu_contrato_buscar_coordenada(
+    IN p_id_contrato INT
+)
+BEGIN 
+    SELECT 
+        c.id_contrato,
+        c.coordenada,
+        c.direccion_servicio
+    FROM 
+        tb_contratos c
+    WHERE 
+        c.id_contrato = p_id_contrato;
+END$$
+

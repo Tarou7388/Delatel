@@ -122,10 +122,10 @@ class Soporte extends Conexion
     return $this->registrar($sql, $values);
   }
 
-  public function obtenerfichaSoporteporDoc($params = [])
+  public function obtenerfichaInstalacionporIdSoporte($params = [])
   {
-    $sql = "CALL spu_soporte_ficha_doc(?)";
-    $values = array($params['nroDoc']);
+    $sql = "CALL spu_instalacion_ficha_IdSoporte(?)";
+    $values = array($params['idSoporte']);
     return $this->consultaParametros($sql, $values);
   }
 
@@ -136,6 +136,16 @@ class Soporte extends Conexion
       $params['nrodoc'],
       $params['tipoServicio'],
       $params['coordenada']
+    ];
+    return $this->consultaParametros($sql, $values);
+  }
+
+  public function completarSoportebyId($params = [])
+  {
+    $sql = "CALL spu_soporte_CompletarbyId(?,?)";
+    $values = [
+      $params['idSoporte'],
+      $params['idUserUpdate']
     ];
     return $this->consultaParametros($sql, $values);
   }
