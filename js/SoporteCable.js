@@ -1,5 +1,5 @@
 import config from "../env.js";
-import { FichaInstalacion, FichaSoportePorId } from "./Herramientas.js";
+import { FichaInstalacion, FichaSoporteporDocServCoordenada } from "./Herramientas.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const txtPotencia = document.getElementById("txtPotencia");
@@ -154,7 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     console.log(doc);
 
-    const respuesta = await FichaSoportePorId(doc, tiposervicio, coordenada);
+    const respuesta = await FichaSoporteporDocServCoordenada(doc, tiposervicio, coordenada);
 
     if (respuesta[0].soporte != "{}") {
       if (JSON.parse(respuesta[0].soporte).CABL) {

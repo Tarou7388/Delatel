@@ -1,5 +1,5 @@
 import config from "../env.js";
-import { FichaInstalacion, FichaSoportePorId, formatoIPinput } from "./Herramientas.js";
+import { FichaInstalacion, FichaSoporteporDocServCoordenada, formatoIPinput } from "./Herramientas.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("frmRegistroWisp");
@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const tiposervicio = urlParams.get("tiposervicio");
     const coordenada = urlParams.get("coordenada");
 
-    const respuesta = await FichaSoportePorId(doc, tiposervicio, coordenada);
+    const respuesta = await FichaSoporteporDocServCoordenada(doc, tiposervicio, coordenada);
 
     if (respuesta[0].soporte != "{}" && JSON.parse(respuesta[0].soporte).WISP) {
       await cargarSoporteAnterior(JSON.parse(respuesta[0].soporte).WISP);
@@ -130,7 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const selectedValue = parseInt(slcWireless.value);
       const coordenada = urlParams.get("coordenada");
       const respuesta = await FichaInstalacion(idSoporte);
-      const respuesta2 = await FichaSoportePorId(txtNrodocumento.value, serv, coordenada);
+      const respuesta2 = await FichaSoporteporDocServCoordenada(txtNrodocumento.value, serv, coordenada);
 
       let wispFiltrado = null;
       let datosgenerales = null;

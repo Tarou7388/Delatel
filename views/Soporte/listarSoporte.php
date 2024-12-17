@@ -87,6 +87,7 @@
             <tr>
               <th class="text-center">Prioridad</th>
               <th class="text-center">Tipo Soporte</th>
+              <th class="text-center">Servicios</th>
               <th class="text-center">Nombre Cliente</th>
               <th class="text-center">Dirección</th>
               <th class="text-center">Hora de solicitud</th>

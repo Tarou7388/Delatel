@@ -26,7 +26,7 @@ export async function FichaInstalacion(Value) {
   return data
 }
 
-export async function FichaSoportePorId(nrodoc, tipoServicio, coordenada) {
+export async function FichaSoporteporDocServCoordenada(nrodoc, tipoServicio, coordenada) {
   const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php`, {
     method: 'POST',
     body: JSON.stringify({

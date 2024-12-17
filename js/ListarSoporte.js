@@ -1,6 +1,6 @@
 import config from "../env.js";
 import * as mapa from "./Mapa.js";
-import { inicializarDataTable, FichaInstalacion} from "./Herramientas.js";
+import { inicializarDataTable, FichaInstalacion } from "./Herramientas.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   let ruta = `${config.HOST}app/controllers/Soporte.controllers.php?operacion=FiltrarSoportePrioridad&prioridad=`;
@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
       })
     });
     const data = await respuesta.json();
-    if (data) { 
+    if (data) {
       showToast('Soporte eliminado correctamente', 'SUCCESS');
       table.ajax.reload();
     }
@@ -85,6 +85,14 @@ document.addEventListener("DOMContentLoaded", () => {
       {
         data: "tipo_soporte",
         title: "Tipo de Soporte",
+        className: "text-center user-select-none",
+        render: function (data, type, row) {
+          return data ? data : '<i>No asignado</i>';
+        }
+      },
+      {
+        data: "tipos_servicio",
+        title: "Servicios",
         className: "text-center user-select-none",
         render: function (data, type, row) {
           return data ? data : '<i>No asignado</i>';
@@ -131,13 +139,14 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     ],
     [
-      { width: "4%", targets: 0 },
-      { width: "10%", targets: 1 },
-      { width: "15%", targets: 2 },
-      { width: "25%", targets: 3 },
-      { width: "10%", targets: 4 },
-      { width: "20%", targets: 5 },
-      { width: "10%", targets: 6 }
+      { width: "4%",  targets: 0 },
+      { width: "15%", targets: 1 },
+      { width: "10%", targets: 2 },
+      { width: "20%", targets: 3 },
+      { width: "20%", targets: 4 },
+      { width: "10%", targets: 5 },
+      { width: "10%", targets: 6 },
+      { width: "10%", targets: 7 }
     ]
   );
 
@@ -154,7 +163,7 @@ document.addEventListener("DOMContentLoaded", () => {
       await inhabilitarSoporte(id_soporte);
     }
   });
-  
+
   $('.card-body').on('click', '.btnMapa', async function () {
     //asignar la funcion del boton del mapa para que me obtenga el id del contrato la funcion esta en Herramientas.js
     let id_soporte = $(this).data('id');
@@ -186,5 +195,5 @@ document.addEventListener("DOMContentLoaded", () => {
     table.ajax.url(ruta).load();
   });
 
-  
+
 });

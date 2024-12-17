@@ -1,5 +1,5 @@
 import config from "../env.js";
-import { FichaInstalacion, formatoIPinput, FichaSoportePorId } from "./Herramientas.js";
+import { FichaInstalacion, formatoIPinput, FichaSoporteporDocServCoordenada } from "./Herramientas.js";
 
 // Evento que se ejecuta cuando el DOM ha sido completamente cargado
 document.addEventListener("DOMContentLoaded", () => {
@@ -133,7 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     console.log(doc);
 
-    const respuesta = await FichaSoportePorId(doc, tiposervicio, coordenada);
+    const respuesta = await FichaSoporteporDocServCoordenada(doc, tiposervicio, coordenada);
 
     if (respuesta[0].soporte != "{}") {
       if (JSON.parse(respuesta[0].soporte).FIBR) {
@@ -354,7 +354,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const nombreRepetidor = slcRpetidor.options[slcRpetidor.selectedIndex]?.text || "Sin nombre";
       const coordenada = urlParams.get("coordenada");
       const respuesta = await FichaInstalacion(idSoporte);
-      const respuesta2 = await FichaSoportePorId(txtNrodocumento.value, serv, coordenada);
+      const respuesta2 = await FichaSoporteporDocServCoordenada(txtNrodocumento.value, serv, coordenada);
 
       let fibraFiltrado = null;
       let datosgenerales = null;
