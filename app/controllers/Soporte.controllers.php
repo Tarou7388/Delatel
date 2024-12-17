@@ -96,5 +96,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
       $status = $soporte->inhabilitarSoportebyID($values);
       echo json_encode($status);
       break;
+    case 'completarSoportebyId':
+      $values = [
+        'idSoporte' => Herramientas::sanitizarEntrada($datos['data']['idSoporte']),
+        'idUserUpdate' => Herramientas::sanitizarEntrada($datos['data']['idUserUpdate'])
+      ];
+      $status = $soporte->completarSoportebyId($values);
+      echo json_encode($status);
+      break;
   }
 }

@@ -139,4 +139,14 @@ class Soporte extends Conexion
     ];
     return $this->consultaParametros($sql, $values);
   }
+
+  public function completarSoportebyId($params = [])
+  {
+    $sql = "CALL spu_soporte_CompletarbyId(?,?)";
+    $values = [
+      $params['idSoporte'],
+      $params['idUserUpdate']
+    ];
+    return $this->consultaParametros($sql, $values);
+  }
 }

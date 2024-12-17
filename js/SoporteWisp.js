@@ -1,5 +1,5 @@
 import config from "../env.js";
-import { FichaInstalacion, FichaSoporteporDocServCoordenada, formatoIPinput } from "./Herramientas.js";
+import { FichaInstalacion, FichaSoporteporDocServCoordenada, formatoIPinput, validarValorRango, CompletarSoporte } from "./Herramientas.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("frmRegistroWisp");
@@ -40,7 +40,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let idSoporte = -1;
 
   (async function () {
-    idSoporte = await obtenerReferencias();
+    const urlParams = new URLSearchParams(window.location.search);
+    idSoporte = urlParams.get("idsoporte");
     if (idSoporte) {
       await cargarProblema(idSoporte);
       await crearSelectYBoton();
@@ -51,11 +52,6 @@ document.addEventListener("DOMContentLoaded", () => {
       await reporte(urlParams.get("idReporte"));
     }
   })();
-
-  async function obtenerReferencias() {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get("idsoporte");
-  };
 
   async function ObtenerValores() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -302,12 +298,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
+    idSoporte = urlParams.get("idsoporte");
     const data = await ArmadoJsonWisp();
     if (await ask("¿Desea guardar la ficha?")) {
       await guardarSoporte(data)
-      //window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
+      if (await CompletarSoporte(idSoporte)) {
+        window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
+      }
     }
   });
+
+  txtSenial, txtSenialNuevo.addEventListener("input", validarValorRango);
 
   txtIp, txtIpNuevo.addEventListener("input", (event) => {
     formatoIPinput(event);

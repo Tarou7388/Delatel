@@ -80,6 +80,7 @@
           <div class="col-md">
             <div class="form-floating">
               <input type="number" class="form-control" id="txtSenial" placeholder="Señal" required disabled>
+              <div class="invalid-feedback">Por favor, ingrese su valor válido (-90 a -20).</div>
               <label>Señal (ST)</label>
             </div>
           </div>
@@ -137,20 +138,21 @@
           <div class="col-md">
             <div class="form-floating">
               <input type="text" class="form-control" id="txtIpNuevo" placeholder="Fecha" required>
-              <label>IP</label>
+              <label>IP (Lan)</label>
             </div>
           </div>
 
           <div class="col-md">
             <div class="form-floating">
               <input type="text" class="form-control" id="txtAccesoNuevo" placeholder="Fecha" required>
-              <label>Acceso(lan)</label>
+              <label>Acceso (Lan)</label>
             </div>
           </div>
 
           <div class="col-md">
             <div class="form-floating">
-              <input type="number" class="form-control" id="txtSenialNuevo" placeholder="Fecha" required>
+              <input type="number" class="form-control" id="txtSenialNuevo" placeholder="Fecha" required min="-90" max="-20">
+              <div class="invalid-feedback">Por favor, ingrese su valor válido (-90 a -20).</div>
               <label>Señal (ST)</label>
             </div>
           </div>

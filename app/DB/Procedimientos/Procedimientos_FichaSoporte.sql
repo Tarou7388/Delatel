@@ -168,6 +168,7 @@ BEGIN
     WHERE
     c.inactive_at IS NULL
     AND c.ficha_instalacion IS NOT NULL
+    AND s.estaCompleto != 1
     AND (p_prioridad = "" OR s.prioridad = p_prioridad) AND s.inactive_at IS NULL
     GROUP BY c.id_contrato, c.create_at;
 END $$
@@ -252,5 +253,20 @@ BEGIN
     SET
         inactive_at = NOW(),
         iduser_inactive = p_iduser_inactive
+    WHERE id_soporte = p_id_soporte;
+END $$
+
+DROP PROCEDURE IF EXISTS spu_soporte_CompletarbyId$$
+
+CREATE PROCEDURE spu_soporte_CompletarbyId (
+    IN p_id_soporte INT,
+    IN p_iduser_update INT 
+)
+BEGIN
+    UPDATE tb_soporte
+    SET
+        estaCompleto = 1,
+        update_at = NOW(),
+        iduser_update = p_iduser_update
     WHERE id_soporte = p_id_soporte;
 END $$

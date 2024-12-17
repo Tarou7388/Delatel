@@ -82,3 +82,42 @@ export async function formatoIPinput(event) {
   event.target.value = formattedInput.slice(0, 15);
 }
 
+export async function validarValorRango(event) {
+  const elemento = event.target;
+  const min = parseFloat(elemento.min);
+  const max = parseFloat(elemento.max);
+  const mensaje = `${elemento.placeholder} debe estar entre ${min} y ${max}.`;
+  const invalidFeedback = elemento.nextElementSibling;
+
+  if (parseFloat(elemento.value) < min || parseFloat(elemento.value) > max) {
+    elemento.classList.add("is-invalid");
+    invalidFeedback.textContent = mensaje;
+    invalidFeedback.style.display = "block";
+  } else {
+    elemento.classList.remove("is-invalid");
+    invalidFeedback.style.display = "none";
+  }
+}
+
+
+export async  function CompletarSoporte(idSoporte) {
+  try {
+    const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        operacion: 'completarSoportebyId',
+        data: {
+          idSoporte: idSoporte,
+          idUserUpdate: user['idUsuario'],
+        },
+      }),
+    });
+    const result = await response.json();
+    return result
+  } catch (error) {
+    console.error('Error en la solicitud:', error);
+  }
+}

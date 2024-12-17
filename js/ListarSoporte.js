@@ -1,6 +1,6 @@
 import config from "../env.js";
 import * as mapa from "./Mapa.js";
-import { inicializarDataTable, FichaInstalacion } from "./Herramientas.js";
+import { inicializarDataTable, FichaInstalacion, CompletarSoporte } from "./Herramientas.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   let ruta = `${config.HOST}app/controllers/Soporte.controllers.php?operacion=FiltrarSoportePrioridad&prioridad=`;
@@ -139,7 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     ],
     [
-      { width: "4%",  targets: 0 },
+      { width: "4%", targets: 0 },
       { width: "15%", targets: 1 },
       { width: "10%", targets: 2 },
       { width: "20%", targets: 3 },
@@ -184,7 +184,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   $('.card-body').on('click', '.btnCompleto', async function () {
     let id_soporte = $(this).data('id');
-    console.log("Aqui sera para completarlo");
+    if (await ask("¿Está seguro de completar este soporte? Ya no aparecera en la tabla.")) {
+      CompletarSoporte(id_soporte);
+      table.ajax.reload();
+    }
   });
 
   var today = new Date().toISOString().split('T')[0];
