@@ -36,9 +36,35 @@ window.addEventListener("DOMContentLoaded", async () => {
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
       const params = Object.fromEntries(urlParams.entries());
-      console.log(params);
+      console.log("Parámetros de la URL:", params);
   
-      // Validación y asignación de parámetros
+      // Seleccionar el servicio y cargar paquetes
+      if (params.Servicio) {
+        const slcTipoServicio = document.querySelector("#slcTipoServicio");
+        if (slcTipoServicio) {
+          const optionToSelect = document.querySelector(`#slcTipoServicio option[value="${params.Servicio}"]`);
+          if (optionToSelect) {
+            // Selecciona el servicio
+            optionToSelect.selected = true;
+            slcTipoServicio.dispatchEvent(new Event("change")); // Simula el cambio
+  
+            // Esperar a que los paquetes se carguen
+            await cargarPaquetes(params.Servicio);
+  
+            // Seleccionar el paquete específico si está en los parámetros
+            if (params.Paquete) {
+              const slcPaquetes = document.querySelector("#slcPaquetes");
+              if (slcPaquetes) {
+                const optionToSelectPaquete = document.querySelector(`#slcPaquetes option[value="${params.Paquete}"]`);
+                if (optionToSelectPaquete) {
+                  optionToSelectPaquete.selected = true;
+                  slcPaquetes.dispatchEvent(new Event("change"));
+                }
+              }
+            }
+          }
+        }
+      }
       if (params.nroDoc && document.querySelector("#txtNumDoc")) {
         const nroDoc = document.querySelector("#txtNumDoc");
         nroDoc.value = params.nroDoc;
@@ -59,58 +85,11 @@ window.addEventListener("DOMContentLoaded", async () => {
         const referencia = document.querySelector("#txtReferencia");
         referencia.value = params.referencia;
       }
-  
-      // Seleccionar el servicio
-      if (params.Servicio) {
-        const slcTipoServicio = document.querySelector("#slcTipoServicio");
-        if (slcTipoServicio) {
-          const optionToSelect = document.querySelector(`#slcTipoServicio option[value="${params.Servicio}"]`);
-          if (optionToSelect) {
-            optionToSelect.selected = true;
-  
-            // Simular el cambio de servicio
-            slcTipoServicio.dispatchEvent(new Event("change"));
-  
-            // Esperar a que se carguen los paquetes en cascada
-            await cargarPaquetes(params.Servicio);
-  
-            // Seleccionar el paquete si está presente
-            if (params.Paquete) {
-              const slcPaquetes = document.querySelector("#slcPaquetes");
-              if (slcPaquetes) {
-                const optionToSelectPaquete = document.querySelector(`#slcPaquetes option[value="${params.Paquete}"]`);
-                if (optionToSelectPaquete) {
-                  optionToSelectPaquete.selected = true;
-                  slcPaquetes.dispatchEvent(new Event("change"));
-                }
-              }
-            }
-          }
-        }
-      }
-      // Seleccionar el sector
-      if (params.idSector) {
-        const selectElement = document.querySelector("#slcSector");
-        if (selectElement) {
-          const optionToSelect = document.querySelector(`#slcSector option[value="${params.idSector}"]`);
-          if (optionToSelect) {
-            optionToSelect.selected = true;
-            selectElement.dispatchEvent(new Event("change"));
-          }
-        }
-      }
     } catch (error) {
       console.error("Error al procesar los parámetros de la URL:", error);
     }
   }
-
-  async function fetchSectores() {
-    const response = await fetch(
-      `${config.HOST}app/controllers/Sector.controllers.php?operacion=listarSectores`
-    );
-    return await response.json();
-  }
-
+  
   async function fetchPaquetesPorServicio(idServicio) {
     const response = await fetch(
       `${config.HOST}app/controllers/Paquete.controllers.php?operacion=buscarPaquetePorIdServicio&idServicio=${idServicio}`
@@ -120,91 +99,66 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 
   async function cargarPaquetes(idServicio) {
-    const dataPaquetes = await fetchPaquetesPorServicio(idServicio);
-    slcPaquetesActualizar.innerHTML = '';
-    slcPaquetes.innerHTML = '';
-    const paquetesFiltrados = dataPaquetes.filter(paquete => {
-      const servicios = JSON.parse(paquete.id_servicio).id_servicio;
-      return servicios.length === 1 && !paquete.inactive_at;
-    });
-
-    if (paquetesFiltrados.length === 0) {
-      const option = document.createElement("option");
-      option.value = "";
-      option.textContent = "No hay paquetes disponibles";
-      option.disabled = true;
-      slcPaquetes.appendChild(option);
-    } else {
-      const optionSeleccionar = document.createElement("option");
-      optionSeleccionar.value = "";
-      optionSeleccionar.textContent = "Seleccione un paquete";
-      optionSeleccionar.disabled = true;
-      optionSeleccionar.selected = true;
-      slcPaquetes.appendChild(optionSeleccionar);
-
-      paquetesFiltrados.forEach((paquete) => {
-        const option = document.createElement("option");
-        const id = `${paquete.id_paquete} - ${paquete.precio}`;
-        option.value = id;
-        option.textContent = paquete.paquete;
-        slcPaquetes.appendChild(option);
-      });
-    }
-    slcPaquetes.disabled = false;
-  }
-
-  async function cargarPaquetesMultiples(tipo) {
-    const response = await fetch(
-      `${config.HOST}app/controllers/Paquete.controllers.php?operacion=listarPaquetes`
-    );
-    const dataPaquetes = await response.json();
-    slcPaquetes.innerHTML = '';
-
-    let paquetesFiltrados = [];
-    if (tipo === "duos") {
-      paquetesFiltrados = dataPaquetes.filter(paquete => {
+    try {
+      const dataPaquetes = await fetchPaquetesPorServicio(idServicio);
+  
+      // Limpiar los selects
+      slcPaquetesActualizar.innerHTML = '';
+      slcPaquetes.innerHTML = '';
+  
+      // Filtrar paquetes válidos
+      const paquetesFiltrados = dataPaquetes.filter(paquete => {
         const servicios = JSON.parse(paquete.id_servicio).id_servicio;
-        return servicios.length === 2 && !paquete.inactive_at;
+        return servicios.length === 1 && !paquete.inactive_at;
       });
-    }
-
-    if (paquetesFiltrados.length === 0) {
-      const option = document.createElement("option");
-      option.value = "";
-      option.textContent = "No hay paquetes disponibles";
-      option.disabled = true;
-      slcPaquetes.appendChild(option);
-    } else {
-      const optionSeleccionar = document.createElement("option");
-      optionSeleccionar.value = "";
-      optionSeleccionar.textContent = "Seleccione un paquete";
-      optionSeleccionar.disabled = true;
-      optionSeleccionar.selected = true;
-      slcPaquetes.appendChild(optionSeleccionar);
-
-      paquetesFiltrados.forEach((paquete) => {
+  
+      if (paquetesFiltrados.length === 0) {
+        // Agregar opción si no hay paquetes disponibles
         const option = document.createElement("option");
-        const id = `${paquete.id_paquete} - ${paquete.precio}`;
-        option.value = id;
-        option.textContent = paquete.paquete;
+        option.value = "";
+        option.textContent = "No hay paquetes disponibles";
+        option.disabled = true;
         slcPaquetes.appendChild(option);
-      });
+      } else {
+        // Agregar opción inicial
+        const optionSeleccionar = document.createElement("option");
+        optionSeleccionar.value = "";
+        optionSeleccionar.textContent = "Seleccione un paquete";
+        optionSeleccionar.disabled = true;
+        optionSeleccionar.selected = true;
+        slcPaquetes.appendChild(optionSeleccionar);
+  
+        // Agregar paquetes con atributo `data-precio`
+        paquetesFiltrados.forEach(paquete => {
+          const option = document.createElement("option");
+          option.value = paquete.id_paquete; // ID del paquete
+          option.textContent = paquete.paquete; // Nombre del paquete
+          option.setAttribute("data-precio", paquete.precio); // Atributo personalizado para el precio
+          slcPaquetes.appendChild(option);
+        });
+      }
+  
+      slcPaquetes.disabled = false; // Habilitar el select
+    } catch (error) {
+      console.error("Error al cargar paquetes:", error);
     }
-    slcPaquetes.disabled = false;
   }
-
+  
   async function cargarSelectPaquetes() {
     const idServicioSeleccionado = slcTipoServicio.value;
-    if (idServicioSeleccionado === "duos") {
-      await cargarPaquetesMultiples(idServicioSeleccionado);
-    } else {
-      await cargarPaquetes(idServicioSeleccionado);
-    }
+    await cargarPaquetes(idServicioSeleccionado);
   }
 
   slcTipoServicio.addEventListener("change", async function () {
     cargarSelectPaquetes();
   });
+
+  async function fetchSectores() {
+    const response = await fetch(
+      `${config.HOST}app/controllers/Sector.controllers.php?operacion=listarSectores`
+    );
+    return await response.json();
+  }
 
   async function buscarCliente(nroDoc) {
     if (nroDoc == "") {
@@ -956,5 +910,18 @@ window.addEventListener("DOMContentLoaded", async () => {
     const renderizado = "modal"
     mapa.iniciarMapa(params, id, renderizado);
   });
+  document.querySelector("#slcPaquetes").addEventListener("change", function () {
+    const selectedOption = this.options[this.selectedIndex];
+    const precio = selectedOption.getAttribute("data-precio"); // Obtener el precio del atributo personalizado
+    const txtPrecio = document.querySelector("#txtPrecio");
+  
+    // Actualizar el cuadro de texto con el precio o dejarlo vacío si no hay selección
+    if (precio) {
+      txtPrecio.value = precio; // Formato del precio
+    } else {
+      txtPrecio.value = ""; // Limpiar si no hay paquete seleccionado
+    }
+  });
+  
 
 });
