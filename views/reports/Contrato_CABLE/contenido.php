@@ -75,7 +75,7 @@ $HOST = "http://localhost/Delatel";
       </tr>
       <tr>
         <td><strong>CABLE:</strong></td>
-        <td class="text-center"><?= htmlspecialchars($fichaTecnica['cable']['cable']['metrosadicionales']); ?></td>
+        <td class="text-center"><?= htmlspecialchars($fichaTecnica['cable']['cable']['metrosadicionales']); ?> METROS</td>
         <td class="text-center">S./ <?= htmlspecialchars($fichaTecnica['cable']['cable']['preciometro']); ?></td>
         <td><strong>CONECTORES:</strong></td>
         <td class="text-center"><?= htmlspecialchars($fichaTecnica['cable']['conector']['numeroconector']); ?></td>
@@ -96,12 +96,12 @@ $HOST = "http://localhost/Delatel";
     <tbody>
       <tr>
         <td><strong>CANTIDAD SINTONIZADOR:</strong></td>
-        <td><?= !empty($fichaTecnica['costo']['cableCosto']['numerosintotizadores']) ? htmlspecialchars($fichaTecnica['costo']['cableCosto']['numerosintotizadores']) : 'No tiene'; ?></td>
+        <td><?= !empty($fichaTecnica['costo']['cablecosto']['numerosintotizadores']) ? htmlspecialchars($fichaTecnica['costo']['cablecosto']['numerosintotizadores']) : 'No tiene'; ?></td>
         <td colspan="3" class="text-center thead-cabecera-4"><strong>MEDICIÓN EN CAJA NAP</strong></td>
       </tr>
       <tr>
         <td><strong>COSTO ALQUILER:</strong></td>
-        <td><?= !empty($fichaTecnica['costo']['cableCosto']['costoAlquilerSintotizador']) ? 'S./ ' . htmlspecialchars($fichaTecnica['costo']['cableCosto']['costoAlquilerSintotizador']) : 'No tiene'; ?></td>
+        <td><?= !empty($fichaTecnica['costo']['cablecosto']['costoalquilersintotizador']) ? 'S./ ' . htmlspecialchars($fichaTecnica['costo']['cablecosto']['costoalquilersintotizador']) : 'No tiene'; ?></td>
         <td colspan="2"><strong>CAJA GPON:</strong></td>
         <td class="text-center"><?= htmlspecialchars($fichaTecnica['costo']['nap']['gpon']); ?></td>
       </tr>
@@ -113,27 +113,27 @@ $HOST = "http://localhost/Delatel";
       </tr>
       <tr>
         <td><strong>COSTO CABLE:</strong></td>
-        <td>S./ <?= htmlspecialchars($fichaTecnica['costo']['cableCosto']['costoCable']); ?></td>
+        <td>S./ <?= htmlspecialchars($fichaTecnica['costo']['cablecosto']['costocable']); ?></td>
         <td colspan="3" class="text-center thead-cabecera-4"><strong>MEDICIÓN EN INTERIOR DE LA CASA</strong></td>
       </tr>
       <tr>
         <td><strong>COSTO CONECTOR:</strong></td>
-        <td>S./ <?= htmlspecialchars($fichaTecnica['costo']['cableCosto']['costoConector']); ?></td>
+        <td>S./ <?= htmlspecialchars($fichaTecnica['costo']['cablecosto']['costoconector']); ?></td>
         <td colspan="2"><strong>CASA GPON:</strong></td>
         <td class="text-center"><?= htmlspecialchars($fichaTecnica['costo']['casa']['gpon']); ?></td>
       </tr>
       <tr>
         <td><strong>CAJA:</strong></td>
-        <td>Número <?= htmlspecialchars($fichaTecnica['cable']['idCaja']); ?></td>
+        <td>Número <?= htmlspecialchars($fichaTecnica['cable']['idcaja']); ?></td>
         <td colspan="2"><strong>CASA CATV:</strong></td>
         <td class="text-center"><?= htmlspecialchars($fichaTecnica['costo']['casa']['catv']); ?></td>
       </tr>
-      <?php if (!empty($fichaTecnica['costo']['cableCosto']['detalle'])): ?>
+      <?php if (!empty($fichaTecnica['costo']['cablecosto']['detalle'])): ?>
         <tr>
           <td colspan="5" class="text-center"><strong>DETALLES:</strong></td>
         </tr>
         <tr>
-          <td colspan="5"><?= htmlspecialchars($fichaTecnica['costo']['cableCosto']['detalle']); ?></td>
+          <td colspan="5"><?= htmlspecialchars($fichaTecnica['costo']['cablecosto']['detalle']); ?></td>
         </tr>
       <?php endif; ?>
     </tbody>
@@ -154,7 +154,7 @@ $HOST = "http://localhost/Delatel";
             <td><strong>SINTONIZADOR:</strong></td>
             <td class="text-center" colspan="1"><?= htmlspecialchars($sintonizador['numero']); ?></td>
             <td><strong>CÓDIGO DE BARRA:</strong></td>
-            <td class="text-center" colspan="5"><?= htmlspecialchars($sintonizador['codigoBarra']); ?></td>
+            <td class="text-center" colspan="5"><?= htmlspecialchars($sintonizador['codigobarra']); ?></td>
           </tr>
           <tr>
             <td><strong>MARCA:</strong></td>
@@ -166,7 +166,7 @@ $HOST = "http://localhost/Delatel";
             <td><strong>SERIE:</strong></td>
             <td class="text-center" colspan="2"><?= htmlspecialchars($sintonizador['serie']); ?></td>
             <td><strong>PRECIO:</strong></td>
-            <td class="text-center" colspan="4"><?= htmlspecialchars($sintonizador['precio']); ?></td>
+            <td class="text-center" colspan="4">S/. <?= htmlspecialchars($sintonizador['precio']); ?></td>
           </tr>
         <?php endforeach; ?>
         </tbody>

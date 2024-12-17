@@ -554,15 +554,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
     });
-
-    //Validacion de datos para money
-    $(`#txtAdelantoVenta, 
-      #txtCostoAlquilerAlquilados, 
-      #txtSubTotalVenta, 
-      #txtSaldoEquipoVenta, 
-      #txtCostoAntenaVenta, 
-      #txtCostoRouterVenta`)
-      .mask('000.000.000.000.000,00', { reverse: true });
   });
 
   function toggleCheckbox(checkbox1, checkbox2) {
@@ -687,8 +678,8 @@ document.addEventListener("DOMContentLoaded", () => {
         saldoequipos: txtSaldoEquipoVenta,
         materialadicional: txtMaterialAdicionalVenta,
         condicion: {
-          "Adelantado": chkAdelantadoVenta ? true : "",
-          "Cumpliendo el mes": chkCumpliendoMesVenta ? true : ""
+          "adelantado": chkAdelantadoVenta ? true : "",
+          "cumpliendo el mes": chkCumpliendoMesVenta ? true : ""
         },
         antena: {
           marca: txtMarcaVentaAntena,
@@ -737,8 +728,8 @@ document.addEventListener("DOMContentLoaded", () => {
         fechafin: txtFechaFinAlquilado,
         costoalquiler: txtCostoAlquilerAlquilado,
         condiciontiempo: {
-          "Adelantado": chkAdelantadoAlquilado ? true : "",
-          "Cumpliendo el mes": chkCumpliendoMesAlquilados ? true : ""
+          "adelantado": chkAdelantadoAlquilado ? true : "",
+          "cumpliendo el mes": chkCumpliendoMesAlquilados ? true : ""
         },
         antena: {
           marca: txtMarcaAntenaAlquilado,
@@ -806,8 +797,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "txtSerialRouterAlquilados",
     "txtCostoAlquilerAlquilados",
     "txtDescripcionAntenaAlquilados",
-    "txtDescripcionRouterAlquilados",
-    "txtDetalleAlquilados"
+    "txtDescripcionRouterAlquilados"
   ];
 
   function addInputEventListeners(campos) {
@@ -846,6 +836,11 @@ document.addEventListener("DOMContentLoaded", () => {
   async function registrarFichaWisp() {
     if (!validarCampos()) {
       showToast("Por favor, llene todos los campos requeridos.", "WARNING", 1500);
+      return;
+    }
+
+    if(jsonRouter.length === 0){
+      showToast("Debe agregar al menos un router.", "WARNING", 1500);
       return;
     }
 
@@ -892,7 +887,6 @@ document.addEventListener("DOMContentLoaded", () => {
       window.location.href = `${config.HOST}views/Contratos/`;
     }, 2500);
   }
-
 
   function validarCampos() {
     const camposComunes = [

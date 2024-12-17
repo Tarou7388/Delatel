@@ -376,15 +376,15 @@ $idContrato = $_GET['idContrato'];
                   <label for="txtCostoRouterVenta">Costo Router</label>
                 </div>
                 <div class="form-floating mt-2">
-                  <input type="text" min="0" class="form-control" id="txtSubTotalVenta" placeholder="SubTotal" disabled>
+                  <input type="number" min="0" class="form-control" id="txtSubTotalVenta" placeholder="SubTotal" disabled>
                   <label for="txtSubTotalVenta">SubTotal</label>
                 </div>
                 <div class="form-floating mt-2">
-                  <input type="text" min="0" class="form-control" id="txtAdelantoVenta" placeholder="Adelanto">
+                  <input type="number" min="0" class="form-control" id="txtAdelantoVenta" placeholder="Adelanto">
                   <label for="txtAdelantoVenta">Adelanto <span class="text-danger">*</span></label>
                 </div>
                 <div class="form-floating mt-2">
-                  <input type="text" min="0" class="form-control" id="txtSaldoEquipoVenta" placeholder="Saldo Equipos">
+                  <input type="number" min="0" class="form-control" id="txtSaldoEquipoVenta" placeholder="Saldo Equipos">
                   <label for="txtSaldoEquipoVenta">Saldo Equipos <span class="text-danger">*</span></label>
                 </div>
                 <div class="form-floating mt-2">
