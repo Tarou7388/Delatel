@@ -20,11 +20,6 @@ document.addEventListener("DOMContentLoaded", () => {
   //Fecha
   document.getElementById("txtFecha").value = new Date().toISOString().split('T')[0];
 
-  //Obtener idCaja
-  const urlParams = new URLSearchParams(window.location.search);
-  const idCaja = urlParams.get('idCaja') || localStorage.getItem('idCaja');
-  console.log("idCaja:", idCaja);
-
   //Adelantar 6 meses la fecha de periodo
   const periodoDate = new Date();
   periodoDate.setMonth(periodoDate.getMonth() + 6);
@@ -32,6 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const camposRequeridos = document.querySelectorAll(".form-control");
 
+  //Validar Campos Requeridos en tiempo Real
   camposRequeridos.forEach(campo => {
     campo.addEventListener("input", () => {
       const grupoFormulario = campo.closest('.form-floating');
@@ -101,6 +97,11 @@ document.addEventListener("DOMContentLoaded", () => {
   // Cargar Datos de Ficha del Cliente y la Ficha Tecnica
   (async () => {
     try {
+      //Obtener idCaja
+      const urlParams = new URLSearchParams(window.location.search);
+      const idCaja = urlParams.get('idCaja') || localStorage.getItem('idCaja');
+      console.log("idCaja:", idCaja);
+
       const response = await fetch(
         `${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerFichaInstalacion&id=${idContrato}`
       );
@@ -116,6 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("txtUsuario").value = data[0].nombre_cliente;
       document.getElementById("txtPaquete").value = data[0].paquete;
       document.getElementById("txtNumFicha").value = data[0].id_contrato;
+      document.getElementById("txtIdCaja").value = idCaja;
 
     } catch (error) {
       console.error(
@@ -127,6 +129,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   //Datos de Cable
   async function cable() {
+    const txtIdCaja = document.querySelector("#txtIdCaja").value;
+    const slcFilaEntrada = document.querySelector("#slcFilaEntrada").value;
+    const txtPuerto = document.querySelector("#txtPuerto").value;
     const txtPaquete = document.querySelector("#txtPaquete").value;
     const txtPeriodo = document.querySelector("#txtPeriodo").value;
     const txtPagoInst = document.querySelector("#txtPagoInst").value;
@@ -159,14 +164,14 @@ document.addEventListener("DOMContentLoaded", () => {
         plan: txtPaquete,
         periodo: txtPeriodo,
         pagoinstalacion: parseFloat(txtPagoInst),
-        potencia: txtPotencia,
+        potencia: parseInt(txtPotencia),
         triplexor: {
           requerido: slcTriplexor[0],
           cargador: slcTriplexor[1],
         },
         conector: {
           numeroconector: parseInt(txtCantConector),
-          precio: parseFloat(txtPrecioConector),
+          precio: txtPrecioConector,
         },
         splitter: [
           {
@@ -176,9 +181,13 @@ document.addEventListener("DOMContentLoaded", () => {
         ],
         cable: {
           metrosadicionales: parseInt(txtCantCable),
-          preciometro: parseFloat(txtPrecioCable),
+          preciometro: txtPrecioCable,
         },
-        idcaja: idCaja, // idCaja
+        idcaja: parseInt(txtIdCaja),
+        tipoEntrada: {
+          fila: slcFilaEntrada.split(","),
+          puerto: parseInt(txtPuerto)
+        }
       };
     }
   }
@@ -196,12 +205,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const jsonCosto = {
       nap: {
-        gpon: txtGponNap,
-        catv: txtCatvNap,
+        gpon: parseInt(txtGponNap),
+        catv: parseInt(txtCatvNap),
       },
       casa: {
-        gpon: txtGponCasa,
-        catv: txtCatvCasa,
+        gpon: parseInt(txtGponCasa),
+        catv: parseInt(txtCatvCasa),
       },
     };
 
@@ -215,11 +224,11 @@ document.addEventListener("DOMContentLoaded", () => {
       numerosintotizadores: parseInt(txtCantSintotizador) || 0,
       costoalquilersintotizador: parseFloat(txtCostoAlquiler) || 0,
       costocable: parseFloat(txtCostoCable) || 0,
-      costoconector: parseFloat(txtCostoConector) || 0,
-      cantidadcable: txtCantCable,
+      costoconector: txtCostoConector,
+      cantidadcable: parseInt(txtCantCable),
       preciocable: txtPrecioCable,
       precioconector: txtPrecioConector,
-      cantidadconector: txtCantConector,
+      cantidadconector: parseInt(txtCantConector),
       detalle: txtDetalle,
     };
     jsonCosto.cablecosto = jsonCostoCable;
@@ -317,6 +326,10 @@ document.addEventListener("DOMContentLoaded", () => {
     await ActualizarCantidadSintotizador();
   }
 
+  document.getElementById("txtPuerto").addEventListener("input", function () {
+    validarPuerto();
+  });
+
   //Validación de campos
   function validarCampos() {
     const campos = [
@@ -338,7 +351,8 @@ document.addEventListener("DOMContentLoaded", () => {
       "txtGponNap",
       "txtCatvNap",
       "txtGponCasa",
-      "txtCatvCasa"
+      "txtCatvCasa",
+      "txtPuerto"
     ];
 
     let esValido = true;
@@ -373,7 +387,40 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
+    //Validar Puertos
+    validarPuerto();
+
     return esValido;
+  }
+
+  //Validación de Puertos
+  function validarPuerto() {
+    const filaEntrada = document.getElementById("slcFilaEntrada").value;
+    const columnaEntrada = document.getElementById("txtPuerto").value;
+    const columnaError = document.getElementById("columnaError");
+    const mensajeError = columnaError.closest('.form-floating').querySelector('.invalid-feedback');
+
+    let maxColumnas = 16;
+
+    if (filaEntrada === "1" || filaEntrada === "(4 y 4)") {
+      maxColumnas = 8;
+    } else if (filaEntrada === "2") {
+      maxColumnas = 16;
+    }
+
+    if (columnaEntrada === "" || columnaEntrada < 1 || columnaEntrada > maxColumnas) {
+      columnaError.textContent = `Por favor, ingrese un valor válido (1 a ${maxColumnas}).`;
+      document.getElementById("txtPuerto").classList.add("is-invalid");
+      if (mensajeError) {
+        mensajeError.style.display = "block";
+      }
+    } else {
+      columnaError.textContent = "";
+      document.getElementById("txtPuerto").classList.remove("is-invalid");
+      if (mensajeError) {
+        mensajeError.style.display = "none";
+      }
+    }
   }
 
   //Función para Guardar la Ficha de Instalación

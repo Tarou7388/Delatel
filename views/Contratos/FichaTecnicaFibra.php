@@ -171,7 +171,28 @@ $idContrato = $_GET['idContrato'];
                   <div class="invalid-feedback">Por favor, ingrese un valor válido (-30 a 24).</div>
                 </div>
               </div>
+              <div class="col-12 col-md-6 d-flex">
+                <div class="form-floating flex-grow-1 me-2">
+                  <input type="number" class="form-control" id="txtIdCaja" placeholder="Caja" disabled>
+                  <label for="lblSerieCaja">Caja</label>
+                </div>
+                <div class="form-floating flex-grow-1 me-2">
+                  <select class="form-select" id="slcFilaEntrada">
+                    <option value="1">Fila 1</option>
+                    <option value="2">Fila 2</option>
+                    <option value="(4 y 4)">Fila 2 (4 y 4)</option>
+                  </select>
+                  <label for="slcFilaEntrada">Fila Entrada <span class="required-asterisk" style="color: red;">*</span></label>
+                  <div class="invalid-feedback">Por favor, seleccione una opción válida.</div>
+                </div>
+                <div class="form-floating flex-grow-1">
+                  <input type="number" class="form-control" id="txtPuerto" placeholder="columnas" min="1" max="16">
+                  <label for="txtPuerto">Puerto <span class="required-asterisk" style="color: red;">*</span></label>
+                  <div class="invalid-feedback" id="columnaError">Por favor, ingrese un valor válido.</div>
+                </div>
+              </div>
             </div>
+
             <h5> Datos del Router</h5>
 
             <div class="row g-2 mb-2">
@@ -231,12 +252,12 @@ $idContrato = $_GET['idContrato'];
               </div>
               <div class="col md-6">
                 <div class="form-floating">
-                  <select type="text" class="form-select" id="slcBanda" placeholder="Banda">
+                  <select class="form-select" id="slcBanda" required>
                     <option value="2G">2G</option>
                     <option value="5G" selected>5G</option>
                     <option value="2G,5G">5G-2G</option>
                   </select>
-                  <label for="">Banda <span class="required-asterisk" style="color: red;">*</span></label>
+                  <label for="slcBanda">Banda <span class="required-asterisk" style="color: red;">*</span></label>
                   <div class="invalid-feedback">Por favor, seleccione una opción válida.</div>
                 </div>
               </div>

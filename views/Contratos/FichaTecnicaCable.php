@@ -120,7 +120,28 @@ $idContrato = $_GET['idContrato'];
                 <label for="txtPotenciaCable">Potencia <span class="required-asterisk" style="color: red;">*</span></label>
               </div>
             </div>
+            <div class="col-12 col-md-6 d-flex">
+              <div class="form-floating flex-grow-1 me-2">
+                <input type="number" class="form-control" id="txtIdCaja" placeholder="Caja" disabled>
+                <label for="lblSerieCaja">Caja</label>
+              </div>
+              <div class="form-floating flex-grow-1 me-2">
+                <select class="form-select" id="slcFilaEntrada">
+                  <option value="1">Fila 1</option>
+                  <option value="2">Fila 2</option>
+                  <option value="(4 y 4)">Fila 2 (4 y 4)</option>
+                </select>
+                <label for="slcFilaEntrada">Fila Entrada <span class="required-asterisk" style="color: red;">*</span></label>
+                <div class="invalid-feedback">Por favor, seleccione una opción válida.</div>
+              </div>
+              <div class="form-floating flex-grow-1">
+                <input type="number" class="form-control" id="txtPuerto" placeholder="columnas" min="1" max="16">
+                <label for="txtPuerto">Puerto <span class="required-asterisk" style="color: red;">*</span></label>
+                <div class="invalid-feedback" id="columnaError">Por favor, ingrese un valor válido.</div>
+              </div>
+            </div>
           </div>
+
           <b> Cantidad de implementos</b>
           <div class="mb-3">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mdlSintotizador">
@@ -162,7 +183,6 @@ $idContrato = $_GET['idContrato'];
                 </div>
                 <div class="form-floating">
                   <select class="form-select" id="slcSplitter" aria-label="Selecciona una opción">
-                    <option selected disabled>Elige una opción</option>
                     <option value="1x3">1x3</option>
                     <option value="1x5">1x5</option>
                     <option value="1x8">1x8</option>

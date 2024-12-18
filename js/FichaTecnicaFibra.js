@@ -1,14 +1,10 @@
 import config from '../env.js';
 document.addEventListener('DOMContentLoaded', () => {
   const userid = user["idUsuario"];
+
   let jsonData = [];
   let jsonRepetidor = [];
   let numeroRepetidores = 0;
-
-  //Obtener el idCaja
-  const urlParams = new URLSearchParams(window.location.search);
-  const idCaja = urlParams.get('idCaja') || localStorage.getItem('idCaja');
-  console.log("idCaja:", idCaja);
 
   document.getElementById("txtFecha").value = new Date().toISOString().split('T')[0];
 
@@ -73,6 +69,11 @@ document.addEventListener('DOMContentLoaded', () => {
   //Cargar Datos de la Ficha de Instalación
   (async () => {
     try {
+      //Obtener el idCaja
+      const urlParams = new URLSearchParams(window.location.search);
+      const idCaja = urlParams.get('idCaja') || localStorage.getItem('idCaja');
+      console.log("idCaja:", idCaja);
+
       const response = await fetch(
         `${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerFichaInstalacion&id=${idContrato}`
       );
@@ -98,6 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById("txtUsuario").value = usuario;
       document.getElementById("txtClaveAcceso").value = contrasenia;
       document.getElementById("txtPlan").value = data[0].paquete;
+      document.getElementById("txtIdCaja").value = idCaja;
 
       // Cargar datos de la ficha de instalación
       const fichaInstalacion = JSON.parse(data[0].ficha_instalacion);
@@ -116,6 +118,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   //Datos de Fibra Optica
   async function fibraOptica() {
+    const txtIdCaja = document.querySelector("#txtIdCaja").value;
+    const slcFilaEntrada = document.querySelector("#slcFilaEntrada").value;
+    const txtPuerto = document.querySelector("#txtPuerto").value;
     const txtUsuario = document.querySelector("#txtUsuario").value;
     const txtClaveAcceso = document.querySelector("#txtClaveAcceso").value;
     const txtVlan = document.querySelector("#txtVlan").value;
@@ -138,10 +143,10 @@ document.addEventListener('DOMContentLoaded', () => {
       fibraoptica: {
         usuario: txtUsuario,
         claveacceso: txtClaveAcceso,
-        vlan: txtVlan,
+        vlan: parseInt(txtVlan),
         periodo: txtPeriodo,
         plan: txtPlan,
-        potencia: txtPotencia,
+        potencia: parseInt(txtPotencia),
         router: {
           ssid: txtSsid,
           seguridad: txtSeguridad,
@@ -157,7 +162,11 @@ document.addEventListener('DOMContentLoaded', () => {
         detalles: txtDetalles,
         repetidores: jsonRepetidor
       },
-      idcaja: idCaja,
+      idcaja: parseInt(txtIdCaja),
+      tipoentrada: {
+        fila: slcFilaEntrada.split(","),
+        puerto: parseInt(txtPuerto)
+      }
     }
   }
 
@@ -337,7 +346,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  //Validación
+  document.getElementById("txtPuerto").addEventListener("input", function () {
+    validarPuerto();
+  });
+
+  //Validar campos de la ficha de instalación
   function validarCampos() {
     const campos = [
       "txtUsuario",
@@ -352,6 +365,7 @@ document.addEventListener('DOMContentLoaded', () => {
       "txtCodigoBarra",
       "txtSerie",
       "slcBanda",
+      "txtPuerto",
       "txtAntenas"
     ];
 
@@ -391,7 +405,40 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
+    // Validar Puertos
+    validarPuerto();
+
     return todosValidos;
+  }
+
+  //Validación de Puerto
+  function validarPuerto() {
+    const filaEntrada = document.getElementById("slcFilaEntrada").value;
+    const columnaEntrada = document.getElementById("txtPuerto").value;
+    const columnaError = document.getElementById("columnaError");
+    const mensajeError = columnaError.closest('.form-floating').querySelector('.invalid-feedback');
+
+    let maxColumnas = 16;
+
+    if (filaEntrada === "1" || filaEntrada === "(4 y 4)") {
+      maxColumnas = 8;
+    } else if (filaEntrada === "2") {
+      maxColumnas = 16;
+    }
+
+    if (columnaEntrada === "" || columnaEntrada < 1 || columnaEntrada > maxColumnas) {
+      columnaError.textContent = `Por favor, ingrese un valor válido (1 a ${maxColumnas}).`;
+      document.getElementById("txtPuerto").classList.add("is-invalid");
+      if (mensajeError) {
+        mensajeError.style.display = "block";
+      }
+    } else {
+      columnaError.textContent = "";
+      document.getElementById("txtPuerto").classList.remove("is-invalid");
+      if (mensajeError) {
+        mensajeError.style.display = "none";
+      }
+    }
   }
 
   //Función para guardar la ficha de instalación
