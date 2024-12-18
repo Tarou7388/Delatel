@@ -2,6 +2,7 @@ import config from "../env.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const userid = user["idUsuario"];
+  document.getElementById("txtFecha").value = new Date().toISOString().split('T')[0];
   const btnAgregarRouter = document.getElementById("btnAgregarRouter");
   const routersContainer = document.getElementById("routersContainer");
   const saveButton = document.getElementById("saveButton");
@@ -15,7 +16,50 @@ document.addEventListener("DOMContentLoaded", () => {
     backdrop: 'static',
     keyboard: false
   });
-  const txtPeriodo = document.getElementById('txtPeriodo');
+
+  let numeroRouter = 0;
+  let jsonParametros = {};
+  let jsonRouter = [];
+  let jsonVenta = {};
+  let jsonAlquilado = {};
+  let jsonDeuda = {};
+  let jsonData = {};
+
+  //Adelantar 6 meses al periodo por defecto 
+  const txtPeriodo = document.getElementById("txtPeriodo");
+  const periodoDate = new Date();
+  periodoDate.setMonth(periodoDate.getMonth() + 6);
+  txtPeriodo.value = txtPeriodo.min = periodoDate.toISOString().split("T")[0];
+
+  const camposRequeridos = document.querySelectorAll(".form-control");
+
+  // Validar campos requeridos en tiempo real
+  camposRequeridos.forEach(campo => {
+    campo.addEventListener("input", () => {
+      const grupoFormulario = campo.closest('.form-floating');
+      const etiqueta = grupoFormulario?.querySelector('label');
+      const asterisco = etiqueta?.querySelector('.required-asterisk');
+      const mensajeError = grupoFormulario?.querySelector('.invalid-feedback');
+
+      if (asterisco) {
+        if (campo.value.trim() !== "") {
+          asterisco.style.display = "none";
+          campo.classList.remove("is-invalid");
+          if (mensajeError) {
+            mensajeError.style.display = "none";
+          }
+        } else {
+          asterisco.style.display = "inline";
+          campo.classList.add("is-invalid");
+          if (mensajeError) {
+            mensajeError.style.display = "block";
+          }
+        }
+      } else {
+        console.warn("Asterisco no encontrado para el campo:", campo);
+      }
+    });
+  });
 
   // Validar valores dentro del rango para campos con rango
   function validarValorRango(event) {
@@ -34,32 +78,6 @@ document.addEventListener("DOMContentLoaded", () => {
       invalidFeedback.style.display = "none";
     }
   }
-
-  // Asignar eventos de validación en tiempo real a los campos
-  document.getElementById("txtSignalStrengthParametros").addEventListener("input", validarValorRango);
-  document.getElementById("txtNoiseFloorParametros").addEventListener("input", validarValorRango);
-  document.getElementById("txtTransmiTccqParametros").addEventListener("input", validarValorRango);
-  document.getElementById("txtTxRateParametros").addEventListener("input", validarValorRango);
-  document.getElementById("txtRxRateParametros").addEventListener("input", validarValorRango);
-
-  const periodoDate = new Date();
-  periodoDate.setMonth(periodoDate.getMonth() + 6);
-  const DateFormateado = periodoDate.toISOString().split("T")[0];
-  txtPeriodo.value = DateFormateado;
-  txtPeriodo.min = DateFormateado;
-
-  var today = new Date().toISOString().split("T")[0];
-  document.getElementById("txtFecha").value = today;
-
-  let tipoPaquete = "";
-  let numeroRouter = 0;
-  let jsonParametros = {};
-  let jsonRouter = [];
-  let jsonVenta = {};
-  let jsonAlquilado = {};
-  let jsonDeuda = {};
-  let jsonData = {};
-  let flagFichaInstalacion = false;
 
   //Cargar datos del router
   const valoresRouter = {
@@ -95,35 +113,36 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Función para verificar si el formulario está lleno
-  function isFormFilled(form) {
-    const inputs = form.querySelectorAll('input, select, textarea');
-    for (let input of inputs) {
-      if (input.value.trim() !== '') {
-        return true;
+  function formularioLleno(formulario) {
+    const campos = formulario.querySelectorAll('input, textarea, select');
+    // Verificar si hay algún campo con valor
+    for (const campo of campos) {
+      if (campo.value.trim() !== "") {
+        return true; // Si algún campo tiene valor, el formulario está lleno
       }
     }
-    return false;
+    return false; // Si todos los campos están vacíos, el formulario no está lleno
   }
 
   // Código para manejar la selección de operación (Venta o Alquiler)
   document.getElementById('slcOperacion').addEventListener('change', function () {
     const tipoOperacion = this.value;
-    const frmVenta = document.getElementById('frmVenta');
-    const frmAlquiler = document.getElementById('frmAlquiler');
+    const formularioVenta = document.getElementById('frmVenta');
+    const formularioAlquiler = document.getElementById('frmAlquiler');
 
     // Ocultar ambos formularios
-    frmVenta.classList.add('hidden');
-    frmAlquiler.classList.add('hidden');
+    formularioVenta.classList.add('hidden');
+    formularioAlquiler.classList.add('hidden');
 
     // Limpiar ambos formularios (opcional, si deseas limpiar los campos al cambiar de operación)
-    limpiarFormulario(frmVenta);
-    limpiarFormulario(frmAlquiler);
+    limpiarFormulario(formularioVenta);
+    limpiarFormulario(formularioAlquiler);
 
     // Mostrar el formulario correspondiente según el tipo de operación
     if (tipoOperacion === 'venta') {
-      frmVenta.classList.remove('hidden');
+      formularioVenta.classList.remove('hidden');
     } else if (tipoOperacion === 'alquiler') {
-      frmAlquiler.classList.remove('hidden');
+      formularioAlquiler.classList.remove('hidden');
     }
   });
 
@@ -135,13 +154,58 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Función para iniciar con la visibilidad correcta (inicialmente oculto)
-  window.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('frmVenta').classList.add('hidden');
-    document.getElementById('frmAlquiler').classList.add('hidden');
-  });
+  // Función para cargar las provincias
+  (async () => {
+    try {
+      const response = await fetch(`${config.HOST}app/controllers/Base.controllers.php?operacion=listarBase`);
+      const data = await response.json();
 
-  // Fetch de los datos y otras funciones
+      if (Array.isArray(data)) {
+        data.forEach(base => {
+          const option = document.createElement('option');
+          option.value = base.id_base;
+          option.textContent = base.nombre_base;
+          slcBase.appendChild(option);
+        });
+      } else {
+        console.error("La estructura de los datos devueltos no es la esperada:", data);
+      }
+
+    } catch (error) {
+      console.error("Error al cargar las bases:", error);
+    }
+  })();
+
+  // Función para cargar las subBases
+  async function cargarSubBases(baseId) {
+    if (!baseId || baseId === "0") {
+      console.warn("No hay provincia seleccionada para cargar sub-bases.");
+      return;
+    }
+    try {
+      const response = await fetch(`${config.HOST}app/controllers/Base.controllers.php?operacion=buscarBaseId&id=${baseId}`);
+      const data = await response.json();
+
+      const slcSubBase = document.getElementById('slcSubBaseParametros');
+      slcSubBase.innerHTML = '<option value="0" selected disabled>Seleccione</option>';
+
+      if (Array.isArray(data)) {
+        data.forEach(subBase => {
+          const option = document.createElement('option');
+          option.value = subBase.id_sub_base;
+          option.textContent = subBase.nombre_sub_base;
+          slcSubBase.appendChild(option);
+        });
+      } else {
+        console.error("La estructura de los datos devueltos no es la esperada:", data);
+      }
+
+    } catch (error) {
+      console.error("Error al cargar las subBases:", error);
+    }
+  }
+
+  //Cargar Datos
   (async () => {
     try {
       const response = await fetch(
@@ -160,208 +224,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       tipoPaquete = data[0].tipo_servicio;
-
-      if (data[0].ficha_instalacion) {
-        const installationData = JSON.parse(data[0].ficha_instalacion);
-
-        // Cargar datos de parámetros
-        const parametros = installationData.parametros;
-        document.getElementById("slcFrecuenciaParametros").value = parametros.frecuencia.join(", ");
-        // Cargar datos de base
-        const slcBase = document.getElementById("slcBaseParametros");
-        const base = parametros.base[0];
-        const baseOption = document.createElement('option');
-        baseOption.value = base.id;
-        baseOption.textContent = base.nombre;
-        baseOption.selected = true;
-        slcBase.appendChild(baseOption);
-
-        // Cargar datos de subBase
-        const slcSubBase = document.getElementById("slcSubBaseParametros");
-        const subBase = parametros.subbase[0];
-        const subBaseOption = document.createElement('option');
-        subBaseOption.value = subBase.id;
-        subBaseOption.textContent = subBase.nombre;
-        subBaseOption.selected = true;
-        slcSubBase.appendChild(subBaseOption);
-
-        document.getElementById("txtPeriodo").value = parametros.periodo;
-        document.getElementById("txtSignalStrengthParametros").value = parametros.signalstrength;
-        document.getElementById("txtNoiseFloorParametros").value = parametros.noisefloor;
-        document.getElementById("txtTransmiTccqParametros").value = parametros.transmitccq;
-        document.getElementById("txtTxRateParametros").value = parametros.txrate;
-        document.getElementById("txtRxRateParametros").value = parametros.rxrate;
-
-        // Cargar datos de routers
-        jsonRouter = parametros.routers || [];
-        numeroRouter = jsonRouter.length;
-        const rowContainer = document.createElement("div");
-        rowContainer.classList.add("row");
-
-        jsonRouter.forEach((routerData, index) => {
-          const routerCol = document.createElement("div");
-          routerCol.classList.add("col-md-4", "mb-4");
-
-          const routerCard = document.createElement("div");
-          routerCard.classList.add("card", "shadow-sm");
-          routerCard.style.maxWidth = '100%';
-
-          routerCard.innerHTML = `
-                    <div class="card-header text-white py-2">
-                        <h5 class="card-title mb-0 d-flex justify-content-between align-items-center fs-6">
-                            <span>Router N° ${routerData.numero}</span>
-                        </h5>
-                    </div>
-                    <div class="card-body p-0" id="carta${routerData.numero}">
-                        <table class="table table-sm table-hover mb-0">
-                            <tbody>
-                                <tr>
-                                    <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>Código de Barra</td>
-                                    <td class="py-1 px-2">${routerData.codigobarra}</td>
-                                </tr>
-                                <tr>
-                                    <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>Modelo</td>
-                                    <td class="py-1 px-2">${routerData.modelo}</td>
-                                </tr>
-                                <tr>
-                                    <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>Marca</td>
-                                    <td class="py-1 px-2">${routerData.marca}</td>
-                                </tr>
-                                <tr>
-                                    <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>WAN</td>
-                                    <td class="py-1 px-2">${routerData.wan}</td>
-                                </tr>
-                                <tr>
-                                    <td class="py-1 px-2"><i class="fas fa-mask text-primary me-2"></i>Máscara</td>
-                                    <td class="py-1 px-2">${routerData.mascara}</td>
-                                </tr>
-                                <tr>
-                                    <td class="py-1 px-2"><i class="fas fa-door-open text-primary me-2"></i>Puerta de Enlace</td>
-                                    <td class="py-1 px-2">${routerData.puertaenlace}</td>
-                                </tr>
-                                <tr>
-                                    <td class="py-1 px-2"><i class="fas fa-server text-primary me-2"></i>DNS 1</td>
-                                    <td class="py-1 px-2">${routerData.dns1}</td>
-                                </tr>
-                                <tr>
-                                    <td class="py-1 px-2"><i class="fas fa-server text-primary me-2"></i>DNS 2</td>
-                                    <td class="py-1 px-2">${routerData.dns2}</td>
-                                </tr>
-                                <tr>
-                                    <td class="py-1 px-2"><i class="fas fa-wifi text-primary me-2"></i>LAN Wireless</td>
-                                    <td class="py-1 px-2">${routerData.lan}</td>
-                                </tr>
-                                <tr>
-                                    <td class="py-1 px-2"><i class="fas fa-key text-primary me-2"></i>Acceso Wireless</td>
-                                    <td class="py-1 px-2">${routerData.acceso}</td>
-                                </tr>
-                                <tr>
-                                    <td class="py-1 px-2"><i class="fas fa-broadcast-tower text-primary me-2"></i>SSID</td>
-                                    <td class="py-1 px-2">${routerData.ssid}</td>
-                                </tr>
-                                <tr>
-                                    <td class="py-1 px-2"><i class="fas fa-shield-alt text-primary me-2"></i>Seguridad</td>
-                                    <td class="py-1 px-2">${routerData.seguridad}</td>
-                                </tr>
-                                <tr>
-                                    <td class="py-1 px-2"><i class="fas fa-info-circle text-primary me-2"></i>Otros</td>
-                                    <td class="py-1 px-2">${routerData.otros}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                `;
-
-          const deleteButton = document.createElement("button");
-          deleteButton.classList.add("btn", "btn-sm", "btn-outline-light", "mb-1", "me-2", "float-end");
-          deleteButton.style.backgroundColor = '#0459ad';
-          deleteButton.style.color = 'white';
-          deleteButton.innerHTML = '<i class="fas fa-trash-alt" style="color: white;"></i> Eliminar';
-
-          deleteButton.addEventListener("click", function () {
-            ask("¿Está seguro de eliminar este router?", "Ficha Técnica Wisp").then((respuesta) => {
-              if (respuesta) {
-                rowContainer.removeChild(routerCol);
-                jsonRouter.splice(index, 1);
-                actualizarNumeros();
-              }
-            });
-          });
-
-          routerCard.querySelector(".card-body").appendChild(deleteButton);
-          routerCol.appendChild(routerCard);
-          rowContainer.appendChild(routerCol);
-        });
-
-        if (routersContainer) {
-          routersContainer.appendChild(rowContainer);
-        } else {
-          console.error("El contenedor 'routersContainer' no existe en el DOM.");
-        }
-
-        // Mostrar y cargar datos de venta o alquiler
-        const frmVenta = document.getElementById('frmVenta');
-        const frmAlquiler = document.getElementById('frmAlquiler');
-
-        if (installationData.venta) {
-          frmVenta.classList.remove('hidden');
-          frmAlquiler.classList.add('hidden');
-          const venta = installationData.venta;
-          document.getElementById("txtCostoAntenaVenta").value = venta.costoantena;
-          document.getElementById("txtCostoRouterVenta").value = venta.costorouter;
-          document.getElementById("txtSubTotalVenta").value = venta.subtotal;
-          document.getElementById("txtAdelantoVenta").value = venta.adelanto;
-          document.getElementById("txtSaldoEquipoVenta").value = venta.saldoequipos;
-          document.getElementById("txtMaterialAdicionalVenta").value = venta.materialadicional;
-          document.getElementById("txtMarcaVentaAntena").value = venta.antena.marca;
-          document.getElementById("txtModeloVentaAntena").value = venta.antena.modelo;
-          document.getElementById("txtMacVentaAntena").value = venta.antena.mac;
-          document.getElementById("txtSerialVentaAntena").value = venta.antena.serial;
-          document.getElementById("txtDescripcionVentaAntena").value = venta.antena.descripcion;
-          document.getElementById("txtMarcaVentaRouter").value = venta.router.marca;
-          document.getElementById("txtModeloVentaRouter").value = venta.router.modelo;
-          document.getElementById("txtMacVentaRouter").value = venta.router.mac;
-          document.getElementById("txtSerialVentaRouter").value = venta.router.serial;
-          document.getElementById("txtDescripcionVentaRouter").value = venta.router.descripcion;
-          document.getElementById("chkAdelantadoVenta").checked = venta.condicion["Adelantado"] === true;
-          document.getElementById("chkCumpliendoMesVenta").checked = venta.condicion["Cumpliendo el mes"] === true;
-          document.getElementById("txtDetalleVenta").value = venta.detalle;
-        } else if (installationData.alquilado) {
-          frmVenta.classList.add('hidden');
-          frmAlquiler.classList.remove('hidden');
-          const alquilado = installationData.alquilado;
-          document.getElementById("slcCondicionAlquilados").value = alquilado.condicion ? "Alquilado" : "Prestado";
-          document.getElementById("txtPeriodoAlquilados").value = alquilado.periodo;
-          document.getElementById("txtFechaInicioAlquilados").value = alquilado.fechainicio;
-          document.getElementById("txtFechaFinAlquilados").value = alquilado.fechafin;
-          document.getElementById("txtCostoAlquilerAlquilados").value = alquilado.costoalquiler;
-          document.getElementById("txtMarcaAntenaAlquilados").value = alquilado.antena.marca;
-          document.getElementById("txtModeloAntenaAlquilados").value = alquilado.antena.modelo;
-          document.getElementById("txtMacAntenaAlquilados").value = alquilado.antena.mac;
-          document.getElementById("txtSerialAntenaAlquilados").value = alquilado.antena.serial;
-          document.getElementById("txtDescripcionAntenaAlquilados").value = alquilado.antena.descripcion;
-          document.getElementById("txtMarcaRouterAlquilados").value = alquilado.router.marca;
-          document.getElementById("txtModeloRouterAlquilados").value = alquilado.router.modelo;
-          document.getElementById("txtMacRouterAlquilados").value = alquilado.router.mac;
-          document.getElementById("txtSerialRouterAlquilados").value = alquilado.router.serial;
-          document.getElementById("txtDescripcionRouterAlquilados").value = alquilado.router.descripcion;
-          document.getElementById("chkAdelantadoAlquilados").checked = alquilado.condiciontiempo["Adelantado"] === true;
-          document.getElementById("chkCumpliendoMesAlquilados").checked = alquilado.condiciontiempo["Cumpliendo el mes"] === true;
-          document.getElementById("txtDetalleAlquilados").value = alquilado.detalle;
-        }
-
-        // Cargar datos de deuda
-        const deuda = installationData.deuda;
-        document.getElementById("txtPagoServicio").value = deuda.pagoservicio;
-        document.getElementById("txtAdelantoEquipo").value = deuda.adelantoequipo;
-        document.getElementById("txtCostoAlquiler").value = deuda.costoalquiler;
-        document.getElementById("txtMaterialAdicional").value = deuda.materialadicional;
-        document.getElementById("txtTotalCancelado").value = deuda.totalcancelado;
-        document.getElementById("txtSaldoPendiente").value = deuda.saldopendiente;
-        document.getElementById("txtDetalleDeuda").value = deuda.detalle;
-      } else {
-        showToast("No hay datos en la Ficha de Instalación.", "INFO");
-      }
 
     } catch (error) {
       console.error("Error al obtener los datos de la ficha de instalación:", error);
@@ -387,27 +249,53 @@ document.addEventListener("DOMContentLoaded", () => {
       const seguridad = document.getElementById("txtSeguridadWireless").value;
       const otros = document.getElementById("txtOtrosWireless").value;
 
-      if (!codigoBarra || !wan || !mascara || !puertaEnlace || !dns1 || !dns2 || !lan || !acceso || !ssid || !seguridad) {
-        showToast("Complete todo los campos del router", "INFO");
+      const campos = [
+        { id: 'txtCodigoBarraRouter', valor: codigoBarra },
+        { id: 'txtWanRouter', valor: wan },
+        { id: 'txtMascaraRouter', valor: mascara },
+        { id: 'txtPuertaEnlaceRouter', valor: puertaEnlace },
+        { id: 'txtDns1Router', valor: dns1 },
+        { id: 'txtDns2Router', valor: dns2 },
+        { id: 'txtLanWireless', valor: lan },
+        { id: 'txtAccesoWireless', valor: acceso },
+        { id: 'txtSsidWireless', valor: ssid },
+        { id: 'txtSeguridadWireless', valor: seguridad }
+      ];
+
+      let todosValidos = true;
+
+      campos.forEach(campo => {
+        const elemento = document.getElementById(campo.id);
+        if (campo.valor === "") {
+          elemento.classList.add("is-invalid");
+          todosValidos = false;
+        } else {
+          elemento.classList.remove("is-invalid");
+        }
+      });
+
+      // Validar que los campos contengan al menos 3 puntos
+      const camposTresPuntos = [
+        { id: 'txtWanRouter', valor: wan },
+        { id: 'txtLanWireless', valor: lan },
+        { id: 'txtMascaraRouter', valor: mascara },
+        { id: 'txtPuertaEnlaceRouter', valor: puertaEnlace },
+        { id: 'txtDns1Router', valor: dns1 },
+        { id: 'txtDns2Router', valor: dns2 }
+      ];
+
+      camposTresPuntos.forEach(campo => {
+        const elemento = document.getElementById(campo.id);
+        if ((campo.valor.match(/\./g) || []).length < 3) {
+          elemento.classList.add("is-invalid");
+          todosValidos = false;
+        } else {
+          elemento.classList.remove("is-invalid");
+        }
+      });
+
+      if (!todosValidos) {
         return;
-      }
-
-      // Validar que WAN, LAN, máscara y puerta de enlace contengan al menos 3 puntos
-      const camposTresPuntos = [wan, lan, mascara, puertaEnlace];
-      for (const campo of camposTresPuntos) {
-        if ((campo.match(/\./g) || []).length < 3) {
-          showToast("WAN, LAN, Máscara y Puerta de Enlace deben contener al menos 3 puntos", "INFO");
-          return;
-        }
-      }
-
-      // Validar que DNS1 y DNS2 contengan al menos 4 puntos
-      const camposCuatroPuntos = [dns1, dns2];
-      for (const campo of camposCuatroPuntos) {
-        if ((campo.match(/\./g) || []).length < 3) {
-          showToast("DNS1 y DNS2 deben contener al menos 3 puntos", "INFO");
-          return;
-        }
       }
 
       const router = {
@@ -433,70 +321,70 @@ document.addEventListener("DOMContentLoaded", () => {
       routerCard.classList.add("card", "shadow-sm");
       routerCard.style.maxWidth = '100%';
       routerCard.innerHTML = `
-        <div class="card-header text-white py-2">
-            <h5 class="card-title mb-0 d-flex justify-content-between align-items-center fs-6">
-            <span>Router N° ${numeroRouter}</span>
-            </h5>
-        </div>
-        <div class="card-body p-0" id="carta${numeroRouter}" >
-            <table class="table table-sm table-hover mb-0">
-            <tbody>
-                <tr>
-                <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>Código de Barra</td>
-                <td class="py-1 px-2">${codigoBarra}</td>
-                </tr>
-                <tr>
-                <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>Modelo</td>
-                <td class="py-1 px-2">${modelo}</td>
-                </tr>
-                <tr>
-                <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>Marca</td>
-                <td class="py-1 px-2">${marca}</td>
-                </tr>
-                <tr>
-                <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>WAN</td>
-                <td class="py-1 px-2">${wan}</td>
-                </tr>
-                <tr>
-                <td class="py-1 px-2"><i class="fas fa-mask text-primary me-2"></i>Máscara</td>
-                <td class="py-1 px-2">${mascara}</td>
-                </tr>
-                <tr>
-                <td class="py-1 px-2"><i class="fas fa-door-open text-primary me-2"></i>Puerta de Enlace</td>
-                <td class="py-1 px-2">${puertaEnlace}</td>
-                </tr>
-                <tr>
-                <td class="py-1 px-2"><i class="fas fa-server text-primary me-2"></i>DNS 1</td>
-                <td class="py-1 px-2">${dns1}</td>
-                </tr>
-                <tr>
-                <td class="py-1 px-2"><i class="fas fa-server text-primary me-2"></i>DNS 2</td>
-                <td class="py-1 px-2">${dns2}</td>
-                </tr>
-                <tr>
-                <td class="py-1 px-2"><i class="fas fa-wifi text-primary me-2"></i>LAN Wireless</td>
-                <td class="py-1 px-2">${lan}</td>
-                </tr>
-                <tr>
-                <td class="py-1 px-2"><i class="fas fa-key text-primary me-2"></i>Acceso Wireless</td>
-                <td class="py-1 px-2">${acceso}</td>
-                </tr>
-                <tr>
-                <td class="py-1 px-2"><i class="fas fa-broadcast-tower text-primary me-2"></i>SSID</td>
-                <td class="py-1 px-2">${ssid}</td>
-                </tr>
-                <tr>
-                <td class="py-1 px-2"><i class="fas fa-shield-alt text-primary me-2"></i>Seguridad</td>
-                <td class="py-1 px-2">${seguridad}</td>
-                </tr>
-                <tr>
-                <td class="py-1 px-2"><i class="fas fa-info-circle text-primary me-2"></i>Otros</td>
-                <td class="py-1 px-2">${otros}</td>
-                </tr>
-            </tbody>
-            </table>
-        </div>
-        `;
+            <div class="card-header text-white py-2">
+                <h5 class="card-title mb-0 d-flex justify-content-between align-items-center fs-6">
+                <span>Router N° ${numeroRouter}</span>
+                </h5>
+            </div>
+            <div class="card-body p-0" id="carta${numeroRouter}" >
+                <table class="table table-sm table-hover mb-0">
+                <tbody>
+                    <tr>
+                    <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>Código de Barra</td>
+                    <td class="py-1 px-2">${codigoBarra}</td>
+                    </tr>
+                    <tr>
+                    <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>Modelo</td>
+                    <td class="py-1 px-2">${modelo}</td>
+                    </tr>
+                    <tr>
+                    <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>Marca</td>
+                    <td class="py-1 px-2">${marca}</td>
+                    </tr>
+                    <tr>
+                    <td class="py-1 px-2"><i class="fas fa-globe text-primary me-2"></i>WAN</td>
+                    <td class="py-1 px-2">${wan}</td>
+                    </tr>
+                    <tr>
+                    <td class="py-1 px-2"><i class="fas fa-mask text-primary me-2"></i>Máscara</td>
+                    <td class="py-1 px-2">${mascara}</td>
+                    </tr>
+                    <tr>
+                    <td class="py-1 px-2"><i class="fas fa-door-open text-primary me-2"></i>Puerta de Enlace</td>
+                    <td class="py-1 px-2">${puertaEnlace}</td>
+                    </tr>
+                    <tr>
+                    <td class="py-1 px-2"><i class="fas fa-server text-primary me-2"></i>DNS 1</td>
+                    <td class="py-1 px-2">${dns1}</td>
+                    </tr>
+                    <tr>
+                    <td class="py-1 px-2"><i class="fas fa-server text-primary me-2"></i>DNS 2</td>
+                    <td class="py-1 px-2">${dns2}</td>
+                    </tr>
+                    <tr>
+                    <td class="py-1 px-2"><i class="fas fa-wifi text-primary me-2"></i>LAN Wireless</td>
+                    <td class="py-1 px-2">${lan}</td>
+                    </tr>
+                    <tr>
+                    <td class="py-1 px-2"><i class="fas fa-key text-primary me-2"></i>Acceso Wireless</td>
+                    <td class="py-1 px-2">${acceso}</td>
+                    </tr>
+                    <tr>
+                    <td class="py-1 px-2"><i class="fas fa-broadcast-tower text-primary me-2"></i>SSID</td>
+                    <td class="py-1 px-2">${ssid}</td>
+                    </tr>
+                    <tr>
+                    <td class="py-1 px-2"><i class="fas fa-shield-alt text-primary me-2"></i>Seguridad</td>
+                    <td class="py-1 px-2">${seguridad}</td>
+                    </tr>
+                    <tr>
+                    <td class="py-1 px-2"><i class="fas fa-info-circle text-primary me-2"></i>Otros</td>
+                    <td class="py-1 px-2">${otros}</td>
+                    </tr>
+                </tbody>
+                </table>
+            </div>
+            `;
 
       showToast("Agregado correctamente", "SUCCESS", 1500);
       const deleteButton = document.createElement("button");
@@ -545,48 +433,6 @@ document.addEventListener("DOMContentLoaded", () => {
     numeroRouter = routerCards.length; // Actualizar el contador de routers
   }
 
-  function formatDns(input) {
-    let value = input.value.replace(/\D/g, '');
-    if (value.length > 4) {
-      value = value.substring(0, 4);
-    }
-    value = value.replace(/(\d{1,1})(?=\d)/g, '$1.');
-    input.value = value;
-  }
-  const fieldsDns = ['txtDns1Router', 'txtDns2Router'];
-
-  fieldsDns.forEach(fieldId => {
-    const inputField = document.getElementById(fieldId);
-    inputField.addEventListener('input', function () {
-      formatDns(inputField);
-    });
-  });
-
-  //Validacion de datos para ip
-  $(document).ready(function () {
-    $('#txtLanWireless, #txtWanRouter, #txtMascaraRouter, #txtPuertaEnlaceRouter').mask('0ZZ.0ZZ.0ZZ.0ZZ', {
-      translation: {
-        'Z': {
-          pattern: /[0-9]/,
-          optional: true
-        }
-      }
-    });
-  });
-
-  function toggleCheckbox(checkbox1, checkbox2) {
-    checkbox1.addEventListener('change', function () {
-      if (checkbox1.checked) {
-        checkbox2.checked = false;
-      }
-    });
-  }
-
-  toggleCheckbox(chkAdelantadoVenta, chkCumpliendoMesVenta);
-  toggleCheckbox(chkCumpliendoMesVenta, chkAdelantadoVenta);
-  toggleCheckbox(chkAdelantadoAlquilado, chkCumpliendoMesAlquilado);
-  toggleCheckbox(chkCumpliendoMesAlquilado, chkAdelantadoAlquilado);
-
   //Json Parametros 
   async function parametros() {
     const txtPeriodo = document.getElementById('txtPeriodo').value;
@@ -627,45 +473,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     jsonData.parametros = jsonParametros.parametros;
   }
-
-  async function productoBarraBuscar(cajatxt) {
-    const caja = document.getElementById(cajatxt);
-    const response = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarra&codigoBarra=${caja.value}`);
-    const data = await response.json();
-    return data;
-  }
-
-  document.querySelector('#txtCodigoBarraRouter').addEventListener('change', async function () {
-    const datos = await productoBarraBuscar('txtCodigoBarraRouter');
-    document.querySelector('#txtMarcaRouter').value = datos[0].marca;
-    document.querySelector('#txtModeloRouter').value = datos[0].modelo;
-  });
-
-  document.querySelector('#txtMacAntenaAlquilados').addEventListener('change', async function () {
-    const datos = await productoBarraBuscar('txtMacAntenaAlquilados');
-    document.querySelector('#txtMarcaAntenaAlquilados').value = datos[0].marca;
-    document.querySelector('#txtModeloAntenaAlquilados').value = datos[0].modelo;
-  });
-
-  document.querySelector('#txtMacRouterAlquilados').addEventListener('change', async function () {
-    const datos = await productoBarraBuscar('txtMacRouterAlquilados');
-    document.querySelector('#txtMarcaRouterAlquilados').value = datos[0].marca;
-    document.querySelector('#txtModeloRouterAlquilados').value = datos[0].modelo;
-  });
-
-  document.querySelector('#txtMacVentaRouter').addEventListener('change', async function () {
-    const datos = await productoBarraBuscar('txtMacVentaRouter');
-    txtMarcaVentaRouter.value = datos[0].marca;
-    txtModeloVentaRouter.value = datos[0].modelo;
-    txtCostoRouterVenta.value = datos[0].precio_actual;
-  });
-
-  document.querySelector('#txtMacVentaAntena').addEventListener('change', async function () {
-    const datos = await productoBarraBuscar('txtMacVentaAntena');
-    txtMarcaVentaAntena.value = datos[0].marca;
-    txtModeloVentaAntena.value = datos[0].modelo;
-    txtCostoAntenaVenta.value = datos[0].precio_actual;
-  });
 
   //Json Venta
   async function venta() {
@@ -793,6 +600,104 @@ document.addEventListener("DOMContentLoaded", () => {
     jsonData.deuda = jsonDeuda.deuda;
   }
 
+  //Formato Dns
+  function formatDns(input) {
+    let value = input.value.replace(/\D/g, '');
+    if (value.length > 4) {
+      value = value.substring(0, 4);
+    }
+    value = value.replace(/(\d{1,1})(?=\d)/g, '$1.');
+    input.value = value;
+  }
+  const fieldsDns = ['txtDns1Router', 'txtDns2Router'];
+
+  fieldsDns.forEach(fieldId => {
+    const inputField = document.getElementById(fieldId);
+    inputField.addEventListener('input', function () {
+      formatDns(inputField);
+    });
+  });
+
+  //Validacion de datos para ip
+  $(document).ready(function () {
+    $('#txtLanWireless, #txtWanRouter, #txtMascaraRouter, #txtPuertaEnlaceRouter').mask('0ZZ.0ZZ.0ZZ.0ZZ', {
+      translation: {
+        'Z': {
+          pattern: /[0-9]/,
+          optional: true
+        }
+      }
+    });
+  });
+
+  //Chechbox
+  function toggleCheckbox(checkbox1, checkbox2) {
+    checkbox1.addEventListener('change', function () {
+      if (checkbox1.checked) {
+        checkbox2.checked = false;
+      }
+    });
+  }
+
+  async function productoBarraBuscar(cajatxt) {
+    const caja = document.getElementById(cajatxt);
+    const response = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarra&codigoBarra=${caja.value}`);
+    const data = await response.json();
+    return data;
+  }
+
+  document.querySelector('#txtCodigoBarraRouter').addEventListener('input', async function () {
+    const datos = await productoBarraBuscar('txtCodigoBarraRouter');
+    if (datos.length > 0) {
+      document.querySelector('#txtMarcaRouter').value = datos[0].marca;
+      document.querySelector('#txtModeloRouter').value = datos[0].modelo;
+    } else {
+      showToast("Producto no encontrado", "WARNING");
+    }
+  });
+
+  document.querySelector('#txtMacAntenaAlquilados').addEventListener('input', async function () {
+    const datos = await productoBarraBuscar('txtMacAntenaAlquilados');
+    if (datos.length > 0) {
+      document.querySelector('#txtMarcaAntenaAlquilados').value = datos[0].marca;
+      document.querySelector('#txtModeloAntenaAlquilados').value = datos[0].modelo;
+    } else {
+      showToast("Producto no encontrado", "WARNING");
+    }
+  });
+
+  document.querySelector('#txtMacRouterAlquilados').addEventListener('input', async function () {
+    const datos = await productoBarraBuscar('txtMacRouterAlquilados');
+    if (datos.length > 0) {
+      document.querySelector('#txtMarcaRouterAlquilados').value = datos[0].marca;
+      document.querySelector('#txtModeloRouterAlquilados').value = datos[0].modelo;
+    } else {
+      showToast("Producto no encontrado", "WARNING");
+    }
+  });
+
+  document.querySelector('#txtMacVentaRouter').addEventListener('input', async function () {
+    const datos = await productoBarraBuscar('txtMacVentaRouter');
+    if (datos.length > 0) {
+      txtMarcaVentaRouter.value = datos[0].marca;
+      txtModeloVentaRouter.value = datos[0].modelo;
+      txtCostoRouterVenta.value = datos[0].precio_actual;
+    } else {
+      showToast("Producto no encontrado", "WARNING");
+    }
+  });
+
+  document.querySelector('#txtMacVentaAntena').addEventListener('input', async function () {
+    const datos = await productoBarraBuscar('txtMacVentaAntena');
+    if (datos.length > 0) {
+      txtMarcaVentaAntena.value = datos[0].marca;
+      txtModeloVentaAntena.value = datos[0].modelo;
+      txtCostoAntenaVenta.value = datos[0].precio_actual;
+    } else {
+      showToast("Producto no encontrado", "WARNING");
+    }
+  });
+
   const camposVenta = [
     "txtMacVentaRouter",
     "txtMacVentaAntena",
@@ -806,6 +711,7 @@ document.addEventListener("DOMContentLoaded", () => {
   ];
 
   const camposAlquiler = [
+    "slcCondicionAlquilados",
     "txtMacAntenaAlquilados",
     "txtMacRouterAlquilados",
     "txtPeriodoAlquilados",
@@ -826,7 +732,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const frmAlquiler = document.getElementById('frmAlquiler');
 
         // Volver a comprobar si el formulario está lleno o vacío
-        if (isFormFilled(frmVenta) || isFormFilled(frmAlquiler)) {
+        if (formularioLleno(frmVenta) || formularioLleno(frmAlquiler)) {
           slcOperacion.disabled = true; // Deshabilitar si el formulario está lleno
         } else {
           slcOperacion.disabled = false; // Habilitar si los formularios están vacíos
@@ -835,19 +741,72 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  addInputEventListeners(camposVenta);
-  addInputEventListeners(camposAlquiler);
+  //Validar Campos
+  function validarCampos() {
+    const camposComunes = [
+      "txtPeriodo",
+      "slcFrecuenciaParametros",
+      "slcBaseParametros",
+      "slcSubBaseParametros",
+      "txtSignalStrengthParametros",
+      "txtNoiseFloorParametros",
+      "txtTransmiTccqParametros",
+      "txtTxRateParametros",
+      "txtRxRateParametros",
+      "txtPagoServicio",
+      "txtAdelantoEquipo",
+      "txtCostoAlquiler",
+      "txtMaterialAdicional",
+      "txtTotalCancelado",
+      "txtSaldoPendiente"
+    ];
 
-  // Función para verificar si el formulario está lleno
-  function isFormFilled(form) {
-    const inputs = form.querySelectorAll('input, textarea, select');
-    // Verificar si hay algún campo con valor
-    for (const input of inputs) {
-      if (input.value.trim() !== "") {
-        return true; // Si algún campo tiene valor, el formulario está lleno
+    let campos = [...camposComunes];
+
+    const tipoOperacion = document.getElementById('slcOperacion').value;
+    if (tipoOperacion === 'venta') {
+      campos = [...campos, ...camposVenta];
+    } else if (tipoOperacion === 'alquiler') {
+      campos = [...campos, ...camposAlquiler];
+    }
+
+    let allValid = true;
+
+    for (const campo of campos) {
+      const elemento = document.getElementById(campo);
+
+      // Validar si el campo está vacío
+      if (!elemento || elemento.value.trim() === "" || elemento.value === "0") {
+        if (elemento) {
+          elemento.classList.add("is-invalid");
+        }
+        allValid = false;
+        continue;
+      } else {
+        elemento.classList.remove("is-invalid");
+      }
+
+      // Validar solo si el campo es numérico
+      if (!isNaN(elemento.value)) {
+        const valor = parseFloat(elemento.value);
+        const min = elemento.hasAttribute('min') ? parseFloat(elemento.min) : null;
+        const max = elemento.hasAttribute('max') ? parseFloat(elemento.max) : null;
+
+        // Validar valores negativos (solo si el campo permite negativos)
+        if (min !== null && valor < min) {
+          elemento.classList.add("is-invalid");
+          allValid = false;
+        }
+
+        // Validar valores fuera de rango (solo si el campo tiene min y max definidos)
+        if (max !== null && valor > max) {
+          elemento.classList.add("is-invalid");
+          allValid = false;
+        }
       }
     }
-    return false; // Si todos los campos están vacíos, el formulario no está lleno
+
+    return allValid;
   }
 
   //Función Registrar Ficha Wisp
@@ -857,7 +816,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    if(jsonRouter.length === 0){
+    if (jsonRouter.length === 0) {
       showToast("Debe agregar al menos un router.", "WARNING", 1500);
       return;
     }
@@ -906,73 +865,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 2500);
   }
 
-  function validarCampos() {
-    const camposComunes = [
-      "txtPeriodo",
-      "slcFrecuenciaParametros",
-      "slcBaseParametros",
-      "slcSubBaseParametros",
-      "txtSignalStrengthParametros",
-      "txtNoiseFloorParametros",
-      "txtTransmiTccqParametros",
-      "txtTxRateParametros",
-      "txtRxRateParametros",
-      "txtPagoServicio",
-      "txtAdelantoEquipo",
-      "txtCostoAlquiler",
-      "txtMaterialAdicional",
-      "txtTotalCancelado",
-      "txtSaldoPendiente"
-    ];
-
-    let campos = [...camposComunes];
-
-    const tipoOperacion = document.getElementById('slcOperacion').value;
-    if (tipoOperacion === 'venta') {
-      campos = [...campos, ...camposVenta];
-    } else if (tipoOperacion === 'alquiler') {
-      campos = [...campos, ...camposAlquiler];
-    }
-
-    let allValid = true;
-
-    for (const campo of campos) {
-      const elemento = document.getElementById(campo);
-
-      // Validar si el campo está vacío
-      if (!elemento || elemento.value.trim() === "") {
-        if (elemento) {
-          elemento.classList.add("is-invalid");
-        }
-        allValid = false;
-        continue;
-      } else {
-        elemento.classList.remove("is-invalid");
-      }
-
-      // Validar solo si el campo es numérico
-      if (!isNaN(elemento.value)) {
-        const valor = parseFloat(elemento.value);
-        const min = elemento.hasAttribute('min') ? parseFloat(elemento.min) : null;
-        const max = elemento.hasAttribute('max') ? parseFloat(elemento.max) : null;
-
-        // Validar valores negativos (solo si el campo permite negativos)
-        if (min !== null && valor < min) {
-          elemento.classList.add("is-invalid");
-          allValid = false;
-        }
-
-        // Validar valores fuera de rango (solo si el campo tiene min y max definidos)
-        if (max !== null && valor > max) {
-          elemento.classList.add("is-invalid");
-          allValid = false;
-        }
-      }
-    }
-
-    return allValid;
-  }
-
   document.getElementById('btnRegistrar').addEventListener('click', async (event) => {
     await registrarFichaWisp();
   });
@@ -992,64 +884,10 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('txtSubTotalVenta').value = subtotal.toFixed(2);
   }
 
-  document.getElementById('txtAdelantoVenta').addEventListener('input', calcularSubtotal);
-  document.getElementById('txtMaterialAdicionalVenta').addEventListener('input', calcularSubtotal);
-
   $("#slcBaseParametros").on("change", function () {
     const baseId = this.value;
     cargarSubBases(baseId);
   });
-
-  // Función para cargar las provincias
-  (async () => {
-    try {
-      const response = await fetch(`${config.HOST}app/controllers/Base.controllers.php?operacion=listarBase`);
-      const data = await response.json();
-
-      if (Array.isArray(data)) {
-        data.forEach(base => {
-          const option = document.createElement('option');
-          option.value = base.id_base;
-          option.textContent = base.nombre_base;
-          slcBase.appendChild(option);
-        });
-      } else {
-        console.error("La estructura de los datos devueltos no es la esperada:", data);
-      }
-
-    } catch (error) {
-      console.error("Error al cargar las bases:", error);
-    }
-  })();
-
-  // Función para cargar las subBases
-  async function cargarSubBases(baseId) {
-    if (!baseId || baseId === "0") {
-      console.warn("No hay provincia seleccionada para cargar sub-bases.");
-      return;
-    }
-    try {
-      const response = await fetch(`${config.HOST}app/controllers/Base.controllers.php?operacion=buscarBaseId&id=${baseId}`);
-      const data = await response.json();
-
-      const slcSubBase = document.getElementById('slcSubBaseParametros');
-      slcSubBase.innerHTML = '<option value="0" selected disabled>Seleccione</option>';
-
-      if (Array.isArray(data)) {
-        data.forEach(subBase => {
-          const option = document.createElement('option');
-          option.value = subBase.id_sub_base;
-          option.textContent = subBase.nombre_sub_base;
-          slcSubBase.appendChild(option);
-        });
-      } else {
-        console.error("La estructura de los datos devueltos no es la esperada:", data);
-      }
-
-    } catch (error) {
-      console.error("Error al cargar las subBases:", error);
-    }
-  }
 
   $(document).ready(function () {
     $(".select2me").select2({
@@ -1077,5 +915,23 @@ document.addEventListener("DOMContentLoaded", () => {
   $(".select2me").parent("div").children("span").children("span").children("span").css("height", " calc(3.5rem + 2px)");
   $(".select2me").parent("div").children("span").children("span").children("span").children("span").css("margin-top", "18px");
   $(".select2me").parent("div").find("label").css("z-index", "1");
+
+  // Asignar eventos de validación en tiempo real a los campos
+  document.getElementById("txtSignalStrengthParametros").addEventListener("input", validarValorRango);
+  document.getElementById("txtNoiseFloorParametros").addEventListener("input", validarValorRango);
+  document.getElementById("txtTransmiTccqParametros").addEventListener("input", validarValorRango);
+  document.getElementById("txtTxRateParametros").addEventListener("input", validarValorRango);
+  document.getElementById("txtRxRateParametros").addEventListener("input", validarValorRango);
+
+  addInputEventListeners(camposVenta);
+  addInputEventListeners(camposAlquiler);
+
+  toggleCheckbox(chkAdelantadoVenta, chkCumpliendoMesVenta);
+  toggleCheckbox(chkCumpliendoMesVenta, chkAdelantadoVenta);
+  toggleCheckbox(chkAdelantadoAlquilado, chkCumpliendoMesAlquilado);
+  toggleCheckbox(chkCumpliendoMesAlquilado, chkAdelantadoAlquilado);
+
+  document.getElementById('txtAdelantoVenta').addEventListener('input', calcularSubtotal);
+  document.getElementById('txtMaterialAdicionalVenta').addEventListener('input', calcularSubtotal);
 });
 
