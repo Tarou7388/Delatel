@@ -20,7 +20,7 @@ class Base extends Conexion
    */
   public function listarBase()
   {
-    $sql = "CALL spu_provincias_listar";
+    $sql = "CALL spu_base_listar";
     return $this->listarDatos($sql);
   }
 
@@ -35,7 +35,7 @@ class Base extends Conexion
    */
   public function listarBasePorId($params = [])
   {
-    $sql = "CALL spu_distritos_por_provincia(?)";
+    $sql = "CALL spu_subBase_por_base(?)";
     $values = array($params['id']);
     return $this->consultaParametros($sql, $values);
   }

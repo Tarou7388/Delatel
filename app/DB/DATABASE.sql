@@ -390,3 +390,28 @@ CREATE TABLE tb_kardex (
 	CONSTRAINT fk_id_almacen FOREIGN KEY (id_almacen) REFERENCES tb_almacen(id_almacen),
 	CONSTRAINT fk_id_tipooperacion FOREIGN KEY (id_tipooperacion) REFERENCES tb_tipooperacion(id_tipooperacion)
 ) ENGINE = INNODB;
+
+CREATE TABLE tb_base (
+    id_base         INT PRIMARY KEY AUTO_INCREMENT,
+    nombre_base     VARCHAR(50) NOT NULL,
+    create_at       DATETIME NOT NULL DEFAULT NOW(),
+    update_at       DATETIME NULL,
+    inactive_at     DATETIME NULL,
+    iduser_create   INT NOT NULL,
+    iduser_update   INT NULL,
+    iduser_inactive INT NULL,
+    CONSTRAINT uk_base UNIQUE (nombre_base)
+) ENGINE = INNODB;
+
+CREATE TABLE tb_subbase (
+    id_sub_base     INT PRIMARY KEY AUTO_INCREMENT,
+    id_base         INT NOT NULL,
+    nombre_sub_base VARCHAR(50) NOT NULL,
+    create_at       DATETIME NOT NULL DEFAULT NOW(),
+    update_at       DATETIME NULL,
+    inactive_at     DATETIME NULL,
+    iduser_create   INT NOT NULL,
+    iduser_update   INT NULL,
+    iduser_inactive INT NULL,
+    CONSTRAINT fk_id_base FOREIGN KEY (id_base) REFERENCES tb_base (id_base)
+) ENGINE = INNODB;

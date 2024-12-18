@@ -487,3 +487,26 @@ INSERT INTO tb_contactabilidad (id_persona, id_empresa, id_paquete, fecha_hora_c
 (38, NULL, 19, '2024-02-15 15:45:00', 'Av. Nicolás de Piérola 654, Chincha Alta', 'Cliente solicitó una visita técnica adicional.', 1),
 (NULL, 39, 20, '2024-02-17 13:00:00', 'Calle Sucre 444, Chincha Alta', 'Se realizó el mantenimiento solicitado.', 1),
 (40, NULL, 21, '2024-02-19 10:30:00', 'Av. Arica 765, Chincha Alta', 'Se acordó una renovación del plan actual.', 1);
+
+INSERT INTO tb_base (nombre_base, iduser_create) VALUES
+('Chincha', 1),
+('Pueblo Nuevo', 1), 
+('Grocio Prado', 1), 
+('Tambo de Mora', 1),
+('Sunampe', 1);
+
+INSERT INTO tb_subbase (id_base, nombre_sub_base, iduser_create) VALUES 
+(1, 'Chincha', 1),
+(1, 'Rosedal', 1),
+(1, 'Señor de los Milagros', 1),
+(1, 'Cruz Blanca', 1),
+(1, 'Condorillo', 1),
+(2, 'Salvador', 1),
+(2, 'Satélite', 1),
+(3, 'Grocio', 1),
+(4, 'Tambo de Mora', 1),
+(4, 'Tambo Plaza Antiguo', 1),
+(5, 'Sunampe', 1),
+(5, 'San Ignacio', 1),
+(5, 'San Pilpa', 1),
+(5, 'Chacarita', 1);

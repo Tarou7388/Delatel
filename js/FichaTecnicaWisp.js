@@ -404,8 +404,8 @@ document.addEventListener("DOMContentLoaded", () => {
       // Validar que DNS1 y DNS2 contengan al menos 4 puntos
       const camposCuatroPuntos = [dns1, dns2];
       for (const campo of camposCuatroPuntos) {
-        if ((campo.match(/\./g) || []).length < 4) {
-          showToast("DNS1 y DNS2 deben contener al menos 4 puntos", "INFO");
+        if ((campo.match(/\./g) || []).length < 3) {
+          showToast("DNS1 y DNS2 deben contener al menos 3 puntos", "INFO");
           return;
         }
       }
@@ -996,8 +996,8 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById('txtMaterialAdicionalVenta').addEventListener('input', calcularSubtotal);
 
   $("#slcBaseParametros").on("change", function () {
-    const provinciaId = this.value;
-    cargarSubBases(provinciaId);
+    const baseId = this.value;
+    cargarSubBases(baseId);
   });
 
   // Función para cargar las provincias
@@ -1009,8 +1009,8 @@ document.addEventListener("DOMContentLoaded", () => {
       if (Array.isArray(data)) {
         data.forEach(base => {
           const option = document.createElement('option');
-          option.value = base.id_provincia;
-          option.textContent = base.provincia;
+          option.value = base.id_base;
+          option.textContent = base.nombre_base;
           slcBase.appendChild(option);
         });
       } else {
@@ -1023,13 +1023,13 @@ document.addEventListener("DOMContentLoaded", () => {
   })();
 
   // Función para cargar las subBases
-  async function cargarSubBases(provinciaId) {
-    if (!provinciaId || provinciaId === "0") {
+  async function cargarSubBases(baseId) {
+    if (!baseId || baseId === "0") {
       console.warn("No hay provincia seleccionada para cargar sub-bases.");
       return;
     }
     try {
-      const response = await fetch(`${config.HOST}app/controllers/Base.controllers.php?operacion=buscarBaseId&id=${provinciaId}`);
+      const response = await fetch(`${config.HOST}app/controllers/Base.controllers.php?operacion=buscarBaseId&id=${baseId}`);
       const data = await response.json();
 
       const slcSubBase = document.getElementById('slcSubBaseParametros');
@@ -1038,8 +1038,8 @@ document.addEventListener("DOMContentLoaded", () => {
       if (Array.isArray(data)) {
         data.forEach(subBase => {
           const option = document.createElement('option');
-          option.value = subBase.id_distrito;
-          option.textContent = subBase.distrito;
+          option.value = subBase.id_sub_base;
+          option.textContent = subBase.nombre_sub_base;
           slcSubBase.appendChild(option);
         });
       } else {
@@ -1058,11 +1058,11 @@ document.addEventListener("DOMContentLoaded", () => {
       placeholder: "Seleccione"
     }).on('select2:clear', function (e) {
       const selectElement = $(this);
-      const provinciaId = selectElement.val();
-      if (provinciaId) {
-        cargarSubBases(provinciaId);
+      const baseId = selectElement.val();
+      if (baseId) {
+        cargarSubBases(baseId);
       } else {
-        console.warn("No hay provincia seleccionada para cargar sub-bases.");
+        console.warn("No hay Bases seleccionada para cargar sub-bases.");
         // Limpia las sub-bases si no hay provincia seleccionada
         $('#slcSubBaseParametros').html('<option value="0" selected disabled>Seleccione</option>');
       }

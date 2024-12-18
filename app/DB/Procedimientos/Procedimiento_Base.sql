@@ -1,21 +1,20 @@
 USE Delatel;
 
 DELIMITER $$
-DROP PROCEDURE IF EXISTS spu_provincias_listar$$
-CREATE PROCEDURE spu_provincias_listar()
+DROP PROCEDURE IF EXISTS spu_base_listar$$
+CREATE PROCEDURE spu_base_listar()
 BEGIN
-    SELECT id_provincia, provincia, id_departamento
-    FROM tb_provincias;
+    SELECT id_base, nombre_base FROM tb_base;
 END $$
 
-DROP PROCEDURE IF EXISTS spu_distritos_por_provincia$$
-CREATE PROCEDURE spu_distritos_por_provincia(
-    p_id_provincia INT
+DROP PROCEDURE IF EXISTS spu_subBase_por_base$$
+CREATE PROCEDURE spu_subBase_por_base(
+    p_id_base INT
 )
 BEGIN
-    SELECT id_distrito, distrito, id_provincia, id_departamento
-    FROM tb_distritos
-    WHERE id_provincia = p_id_provincia;
+    SELECT id_sub_base, nombre_sub_base
+    FROM tb_subbase
+    WHERE id_base = p_id_base;
 END $$
 DELIMITER ;
 
