@@ -1,5 +1,6 @@
 import config from "../env.js";
 import * as Herramientas from "../js/Herramientas.js";
+import * as ListarPaquetes from "../js/ListarPaquetes.js";
 import * as mapa from "./Mapa.js";
 window.addEventListener("DOMContentLoaded", async () => {
   const nroDoc = document.querySelector("#txtNumDoc");
@@ -25,10 +26,10 @@ window.addEventListener("DOMContentLoaded", async () => {
   let tabla;
   let dataPaquetes = [];
 
-  document.addEventListener("servicioActivado", cargarServicios);
-  document.addEventListener("servicioDesactivado", cargarServicios);
-  document.addEventListener("servicioAgregado", cargarServicios);
-  document.addEventListener("servicioActualizado", cargarServicios);
+  document.addEventListener("servicioActivado", ListarPaquetes.fetchServicios);
+  document.addEventListener("servicioDesactivado", ListarPaquetes.fetchServicios);
+  document.addEventListener("servicioAgregado", ListarPaquetes.fetchServicios);
+  document.addEventListener("servicioActualizado", ListarPaquetes.fetchServicios);
 
   async function getQueryParams() {
     try {
@@ -36,8 +37,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
       const params = Object.fromEntries(urlParams.entries());
-      console.log("Parámetros de la URL:", params);
-  
+
       // Seleccionar el servicio y cargar paquetes
       if (params.Servicio) {
         const slcTipoServicio = document.querySelector("#slcTipoServicio");
@@ -47,10 +47,10 @@ window.addEventListener("DOMContentLoaded", async () => {
             // Selecciona el servicio
             optionToSelect.selected = true;
             slcTipoServicio.dispatchEvent(new Event("change")); // Simula el cambio
-  
+
             // Esperar a que los paquetes se carguen
-            await cargarPaquetes(params.Servicio);
-  
+            await ListarPaquetes.cargarPaquetesGenerico(params.Servicio, "#slcPaquetes");
+
             // Seleccionar el paquete específico si está en los parámetros
             if (params.Paquete) {
               const slcPaquetes = document.querySelector("#slcPaquetes");
@@ -69,18 +69,18 @@ window.addEventListener("DOMContentLoaded", async () => {
         const nroDoc = document.querySelector("#txtNumDoc");
         nroDoc.value = params.nroDoc;
       }
-  
+
       if (params.coordenadas && document.querySelector("#txtCoordenadasMapa")) {
         const coordenada = document.querySelector("#txtCoordenadasMapa");
         coordenada.value = params.coordenadas;
         coordenada.dispatchEvent(new Event("change", { bubbles: true }));
       }
-  
+
       if (params.direccion && document.querySelector("#txtDireccion")) {
         const direccion = document.querySelector("#txtDireccion");
         direccion.value = params.direccion;
       }
-  
+
       if (params.referencia && document.querySelector("#txtReferencia")) {
         const referencia = document.querySelector("#txtReferencia");
         referencia.value = params.referencia;
@@ -89,69 +89,6 @@ window.addEventListener("DOMContentLoaded", async () => {
       console.error("Error al procesar los parámetros de la URL:", error);
     }
   }
-  
-  async function fetchPaquetesPorServicio(idServicio) {
-    const response = await fetch(
-      `${config.HOST}app/controllers/Paquete.controllers.php?operacion=buscarPaquetePorIdServicio&idServicio=${idServicio}`
-    );
-    const data = await response.json();
-    return data;
-  }
-
-  async function cargarPaquetes(idServicio) {
-    try {
-      const dataPaquetes = await fetchPaquetesPorServicio(idServicio);
-  
-      // Limpiar los selects
-      slcPaquetesActualizar.innerHTML = '';
-      slcPaquetes.innerHTML = '';
-  
-      // Filtrar paquetes válidos
-      const paquetesFiltrados = dataPaquetes.filter(paquete => {
-        const servicios = JSON.parse(paquete.id_servicio).id_servicio;
-        return servicios.length === 1 && !paquete.inactive_at;
-      });
-  
-      if (paquetesFiltrados.length === 0) {
-        // Agregar opción si no hay paquetes disponibles
-        const option = document.createElement("option");
-        option.value = "";
-        option.textContent = "No hay paquetes disponibles";
-        option.disabled = true;
-        slcPaquetes.appendChild(option);
-      } else {
-        // Agregar opción inicial
-        const optionSeleccionar = document.createElement("option");
-        optionSeleccionar.value = "";
-        optionSeleccionar.textContent = "Seleccione un paquete";
-        optionSeleccionar.disabled = true;
-        optionSeleccionar.selected = true;
-        slcPaquetes.appendChild(optionSeleccionar);
-  
-        // Agregar paquetes con atributo `data-precio`
-        paquetesFiltrados.forEach(paquete => {
-          const option = document.createElement("option");
-          option.value = paquete.id_paquete; // ID del paquete
-          option.textContent = paquete.paquete; // Nombre del paquete
-          option.setAttribute("data-precio", paquete.precio); // Atributo personalizado para el precio
-          slcPaquetes.appendChild(option);
-        });
-      }
-  
-      slcPaquetes.disabled = false; // Habilitar el select
-    } catch (error) {
-      console.error("Error al cargar paquetes:", error);
-    }
-  }
-  
-  async function cargarSelectPaquetes() {
-    const idServicioSeleccionado = slcTipoServicio.value;
-    await cargarPaquetes(idServicioSeleccionado);
-  }
-
-  slcTipoServicio.addEventListener("change", async function () {
-    cargarSelectPaquetes();
-  });
 
   async function fetchSectores() {
     const response = await fetch(
@@ -261,7 +198,6 @@ window.addEventListener("DOMContentLoaded", async () => {
             idUsuario: user.idUsuario,
           },
         };
-        console.log(datosEnvio);
 
         const response = await fetch(
           `${config.HOST}app/controllers/Contrato.controllers.php`,
@@ -291,8 +227,6 @@ window.addEventListener("DOMContentLoaded", async () => {
             });
 
             const data = await respuesta.json();
-
-            console.log(data);
 
             showToast("¡Contrato registrado correctamente!", "SUCCESS", 1500);
             resetUI();
@@ -611,11 +545,11 @@ window.addEventListener("DOMContentLoaded", async () => {
       const tiposServicio = data[0].tipos_servicio.split(',').length;
 
       if (tiposServicio === 2) {
-        await cargarTipoServicioActualizar('duos');
-        await cargarPaquetesMultiplesActualizar("duos", data[0].id_paquete);
+        await ListarPaquetes.cargarTipoServicioActualizar('duos');
+        await ListarPaquetes.cargarPaquetesMultiplesActualizar("duos", data[0].id_paquete);
       } else {
-        await cargarTipoServicioActualizar(idServicio);
-        await cargarPaquetesActualizar(idServicio, data[0].id_paquete);
+        await ListarPaquetes.cargarTipoServicioActualizar(idServicio);
+        await ListarPaquetes.cargarPaquetesActualizar(idServicio, data[0].id_paquete);
       }
 
       const slcSector = document.getElementById("slcSectorActualizar");
@@ -642,19 +576,11 @@ window.addEventListener("DOMContentLoaded", async () => {
         modal.hide();
       });
 
-
+      const slcPaquetes = document.getElementById("slcPaquetesActualizar");
       slcPaquetes.addEventListener('change', (e) => {
         const paqueteId = e.target.value;
         if (paqueteId) {
-          const paqueteSeleccionado = paquetesActualizar.find(p => p.id_paquete == paqueteId);
-          document.getElementById("txtPrecioActualizar").value = paqueteSeleccionado ? paqueteSeleccionado.precio : '0';
-        }
-      });
-
-      slcPaquetes.addEventListener('change', (e) => {
-        const paqueteId = e.target.value;
-        if (paqueteId) {
-          const paqueteSeleccionado = paquetesActualizar.find(p => p.id_paquete == paqueteId);
+          const paqueteSeleccionado = dataPaquetes.find(p => p.id_paquete == paqueteId);
           document.getElementById("txtPrecioActualizar").value = paqueteSeleccionado ? paqueteSeleccionado.precio : '0';
         }
       });
@@ -664,135 +590,9 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
   };
 
-
-  async function fetchPaquetesPorServicioActualizar(idServicio) {
-    const response = await fetch(
-      `${config.HOST}app/controllers/Paquete.controllers.php?operacion=buscarPaquetePorIdServicio&idServicio=${idServicio}`
-    );
-    const data = await response.json();
-    return data;
-  }
-
-  async function cargarTipoServicioActualizar(idServicioSeleccionado) {
-    try {
-      const response = await fetch(
-        `${config.HOST}app/controllers/Servicio.controllers.php?operacion=listarServicio`
-      );
-      const servicios = await response.json();
-
-      const slcTipoServicioActualizar = document.getElementById("slcTipoServicioActualizar");
-      slcTipoServicioActualizar.innerHTML = '<option value="0" disabled selected>Seleccione</option>';
-      const opcionesAdicionales = [
-        { id_servicio: 'duos', tipo_servicio: 'Dúos' }
-      ];
-
-      opcionesAdicionales.forEach((servicio) => {
-        const option = document.createElement("option");
-        option.value = servicio.id_servicio;
-        option.textContent = servicio.tipo_servicio;
-        slcTipoServicioActualizar.appendChild(option);
-      });
-
-      servicios.forEach((servicio) => {
-        const option = document.createElement("option");
-        option.value = servicio.id_servicio;
-        option.textContent = servicio.tipo_servicio;
-        slcTipoServicioActualizar.appendChild(option);
-      });
-      slcTipoServicioActualizar.value = idServicioSeleccionado;
-      $('#slcTipoServicioActualizar').trigger('change');
-
-    } catch (error) {
-      console.error("Error al cargar los tipos de servicio:", error);
-    }
-  }
-
-  async function cargarPaquetesActualizar(idServicio, idPaqueteSeleccionado) {
-    dataPaquetes = await fetchPaquetesPorServicioActualizar(idServicio);
-    const slcPaquetes = document.getElementById("slcPaquetesActualizar");
-    slcPaquetes.innerHTML = '<option value="" disabled selected>Seleccione un paquete</option>';
-
-    const paquetesFiltrados = dataPaquetes.filter(paquete => {
-      const servicios = JSON.parse(paquete.id_servicio).id_servicio;
-      return servicios.length === 1 && !paquete.inactive_at;
-    });
-
-    if (paquetesFiltrados.length === 0) {
-      const option = document.createElement("option");
-      option.value = "";
-      option.textContent = "No hay paquetes disponibles";
-      option.disabled = true;
-      slcPaquetes.appendChild(option);
-    } else {
-      paquetesFiltrados.forEach((paquete) => {
-        const option = document.createElement("option");
-        option.value = paquete.id_paquete;
-        option.textContent = paquete.paquete;
-        slcPaquetes.appendChild(option);
-      });
-    }
-
-    slcPaquetes.value = idPaqueteSeleccionado;
-
-    const paqueteSeleccionado = dataPaquetes.find(p => p.id_paquete == idPaqueteSeleccionado);
-    document.getElementById("txtPrecioActualizar").value = paqueteSeleccionado ? paqueteSeleccionado.precio : '0';
-  }
-
-  async function cargarPaquetesMultiplesActualizar(tipo, idPaqueteSeleccionado) {
-    const response = await fetch(
-      `${config.HOST}app/controllers/Paquete.controllers.php?operacion=listarPaquetes`
-    );
-    dataPaquetes = await response.json();
-    const slcPaquetes = document.getElementById("slcPaquetesActualizar");
-    slcPaquetes.innerHTML = '<option value="" disabled selected>Seleccione un paquete</option>';
-
-    let paquetesFiltrados = [];
-    if (tipo === "duos") {
-      paquetesFiltrados = dataPaquetes.filter(paquete => {
-        const servicios = JSON.parse(paquete.id_servicio).id_servicio;
-        return servicios.length === 2 && !paquete.inactive_at;
-      });
-    }
-
-    if (paquetesFiltrados.length === 0) {
-      const option = document.createElement("option");
-      option.value = "";
-      option.textContent = "No hay paquetes disponibles";
-      option.disabled = true;
-      slcPaquetes.appendChild(option);
-    } else {
-      paquetesFiltrados.forEach((paquete) => {
-        const option = document.createElement("option");
-        option.value = paquete.id_paquete;
-        option.textContent = paquete.paquete;
-        slcPaquetes.appendChild(option);
-      });
-    }
-
-    slcPaquetes.value = idPaqueteSeleccionado;
-
-    const paqueteSeleccionado = dataPaquetes.find(p => p.id_paquete == idPaqueteSeleccionado);
-    document.getElementById("txtPrecioActualizar").value = paqueteSeleccionado ? paqueteSeleccionado.precio : '0';
-  }
-
-  async function cargarSelectPaquetesActualizar(idServicio, idPaqueteSeleccionado) {
-    const tipoServicioSeleccionado = document.getElementById("slcTipoServicioActualizar").value;
-    if (tipoServicioSeleccionado === "duos") {
-      await cargarPaquetesMultiplesActualizar(tipoServicioSeleccionado, idPaqueteSeleccionado);
-    } else {
-      await cargarPaquetesActualizar(idServicio, idPaqueteSeleccionado);
-    }
-  }
-
-  document.getElementById("slcTipoServicioActualizar").addEventListener("change", async function () {
-    const idServicio = this.value;
-    const idPaqueteSeleccionado = document.getElementById("slcPaquetesActualizar").value;
-    await cargarSelectPaquetesActualizar(idServicio, idPaqueteSeleccionado);
-  });
-
   (async () => {
     await cargarDatos();
-    await cargarServicios();
+    await ListarPaquetes.cargarServiciosGenerico("#slcTipoServicio", () => ListarPaquetes.cargarSelectPaquetesGenerico("#slcTipoServicio", "#slcPaquetes"));
     await getQueryParams();
   })();
 
@@ -830,79 +630,10 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  async function cargarPrecio() {
-    const selectedValue = slcPaquetes.value.split(" - ");
-    if (selectedValue.length > 1) {
-      precioServicio = selectedValue[1];
-      precio.value = precioServicio;
-    } else {
-      precio.value = '0';
-    }
-  }
-
-  $("#slcPaquetes").on("change", function () {
-    cargarPrecio();
-  });
-
-  $("#slcPaquetesActualizar").on("change", function () {
-    const paqueteId = slcPaquetesActualizar.value;
-    const paqueteSeleccionado = dataPaquetes.find(p => p.id_paquete == paqueteId);
-
-    if (paqueteSeleccionado) {
-      document.getElementById("txtPrecioActualizar").value = paqueteSeleccionado.precio;
-    } else {
-      document.getElementById("txtPrecioActualizar").value = '0';
-    }
-  });
-
   $(".select2me").select2({ theme: "bootstrap-5", allowClear: true });
   $(".select2me").parent("div").children("span").children("span").children("span").css("height", " calc(3.5rem + 2px)");
   $(".select2me").parent("div").children("span").children("span").children("span").children("span").css("margin-top", "18px");
   $(".select2me").parent("div").find("label").css("z-index", "1");
-
-  async function cargarServicios() {
-    try {
-      const response = await fetch(
-        `${config.HOST}app/controllers/Servicio.controllers.php?operacion=listarServicio`
-      );
-      const servicios = await response.json();
-
-      const slcTipoServicio = $("#slcTipoServicio");
-
-      slcTipoServicio.empty();
-
-      slcTipoServicio.append('<option value="" disabled selected>Seleccione</option>');
-
-      const serviciosActivos = servicios.filter((servicio) => servicio.inactive_at === null);
-      if (serviciosActivos.length === 0) {
-        slcTipoServicio.append('<option value="" disabled>No hay servicios disponibles</option>');
-      } else {
-        serviciosActivos.forEach((servicio) => {
-          const option = `<option value="${servicio.id_servicio}">${servicio.tipo_servicio} (${servicio.servicio})</option>`;
-          slcTipoServicio.append(option);
-        });
-
-        slcTipoServicio.append('<option value="duos">FIBRA + CABLE (GPON)</option>');
-      }
-
-      slcTipoServicio.on("change", function () {
-        const idServicio = $(this).val();
-        if (idServicio === "duos") {
-          cargarPaquetesMultiples(idServicio);
-          btnBuscarCoordenadas.disabled = false;
-          sector.disabled = true;
-        } else if (idServicio === "2") {
-          btnBuscarCoordenadas.disabled = true;
-          sector.disabled = false;
-        } else {
-          btnBuscarCoordenadas.disabled = false;
-          sector.disabled = true;
-        }
-      });
-    } catch (error) {
-      console.error("Error al cargar servicios:", error);
-    }
-  }
 
   btnBuscarCoordenadas.addEventListener("click", async () => {
     const params = { cajas: true, mufas: true }
@@ -910,18 +641,47 @@ window.addEventListener("DOMContentLoaded", async () => {
     const renderizado = "modal"
     mapa.iniciarMapa(params, id, renderizado);
   });
-  document.querySelector("#slcPaquetes").addEventListener("change", function () {
-    const selectedOption = this.options[this.selectedIndex];
-    const precio = selectedOption.getAttribute("data-precio"); // Obtener el precio del atributo personalizado
+
+  $('#slcPaquetes').on('change', function () {
+    const selectedOption = $(this).find("option:selected");
+    const precio = selectedOption.data("precio");
     const txtPrecio = document.querySelector("#txtPrecio");
-  
-    // Actualizar el cuadro de texto con el precio o dejarlo vacío si no hay selección
+
     if (precio) {
-      txtPrecio.value = precio; // Formato del precio
+      txtPrecio.value = precio;
     } else {
-      txtPrecio.value = ""; // Limpiar si no hay paquete seleccionado
+      txtPrecio.value = "";
     }
   });
-  
 
+  $('#slcPaquetesActualizar').on('change', function () {
+    const selectedOption = $(this).find("option:selected");
+    const precio = selectedOption.data("precio");
+    const txtPrecioActualizar = document.querySelector("#txtPrecioActualizar");
+
+    if (precio) {
+      txtPrecioActualizar.value = precio;
+    } else {
+      txtPrecioActualizar.value = "";
+    }
+  });
+
+  // Agregar el eventListener al select de tipo servicio
+  document.querySelector("#slcTipoServicio").addEventListener("change", function () {
+    const idServicio = this.value;  // Obtener el id del servicio seleccionado
+    const btnBuscarCoordenada = document.querySelector("#btnBuscarCoordenadas");
+    const sector = document.querySelector("#slcSector");
+
+    if (idServicio === "2") {  // Si el servicio seleccionado es 2
+      btnBuscarCoordenada.disabled = true;  // Deshabilitar el botón
+      sector.disabled = false;  // Habilitar el select de sector
+    } else {
+      btnBuscarCoordenada.disabled = false;  // Habilitar el botón
+      sector.disabled = true;  // Deshabilitar el select de sector
+    }
+  });
+
+  // Uso de las funciones genéricas
+  ListarPaquetes.cargarServiciosGenerico("#slcTipoServicio", () => ListarPaquetes.cargarSelectPaquetesGenerico("#slcTipoServicio", "#slcPaquetes"));
+  ListarPaquetes.cargarServiciosGenerico("#slcTipoServicioActualizar", () => ListarPaquetes.cargarSelectPaquetesGenerico("#slcTipoServicioActualizar", "#slcPaquetesActualizar"));
 });

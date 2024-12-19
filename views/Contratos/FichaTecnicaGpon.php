@@ -182,20 +182,20 @@ $idContrato = $_GET['idContrato'];
         <div class="card-body">
           <h6>Datos del servicio</h6>
 
-          <div class="row g-3 mb-2">
-            <div class="col md-6">
+          <div class="row g-2 mb-2">
+            <div class="col-12 col-md-4">
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtUsuario" placeholder="Usuario" disabled=true>
                 <label for="lblUsuario">Usuario</label>
               </div>
             </div>
-            <div class="col md-6">
+            <div class="col-12 col-md-4">
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtClaveAcceso" disabled=true placeholder="Clave de acceso">
                 <label for="lblClaveAcceso">Clave de Acceso</label>
               </div>
             </div>
-            <div class="col md-9">
+            <div class="col-12 col-md-4">
               <div class="form-floating">
                 <input type="text" class="form-control" disabled=true id="txtPlan" placeholder="Plan">
                 <label for="lblPlan">Plan</label>
@@ -204,24 +204,52 @@ $idContrato = $_GET['idContrato'];
           </div>
 
           <div class="row g-3 mb-2">
-            <div class="col md-3">
+            <div class="col-12 col-md-4">
               <div class="form-floating">
                 <input type="date" class="form-control" id="txtPeriodo" placeholder="Periodo">
-                <label for="txtPeriodo">Periodo Mínimo</label>
+                <label for="txtPeriodo">Periodo</label>
               </div>
             </div>
-            <div class="col md-3">
+            <div class="col-12 col-md-4">
               <div class="form-floating">
                 <input type="number" class="form-control" id="txtVlan" placeholder="Vlan" min="1" max="4094">
-                <label for="lblVlan">Vlan <span class="required-asterisk" style="color: red;">*</span></label>
+                <label for="lblVlan">VLAN <span class="required-asterisk" style="color: red;">*</span></label>
                 <div class="invalid-feedback">Por favor, ingrese un valor válido (1 a 4094).</div>
               </div>
             </div>
-            <div class="col md-3">
+            <div class="col-12 col-md-4">
               <div class="form-floating">
                 <input type="number" class="form-control" id="txtPotenciaFibra" placeholder="Potencia" min="-30" max="24">
                 <label for="lblPotenciaFibra">Potencia <span class="required-asterisk" style="color: red;">*</span></label>
                 <div class="invalid-feedback">Por favor, ingrese un valor válido (-30 a 24).</div>
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="row g-2">
+              <div class="col-12 col-md-4">
+                <div class="form-floating">
+                <input type="number" class="form-control" id="txtIdCaja" placeholder="Caja" disabled>
+                <label for="lblSerieCaja">Caja</label>
+                </div>
+              </div>
+              <div class="col-12 col-md-4">
+                <div class="form-floating">
+                <select class="form-select" id="slcFilaEntrada">
+                  <option value="1">Fila 1</option>
+                  <option value="2">Fila 2</option>
+                  <option value="(4 y 4)">Fila 2 (4 y 4)</option>
+                </select>
+                <label for="slcFilaEntrada">Fila Entrada <span class="required-asterisk" style="color: red;">*</span></label>
+                <div class="invalid-feedback">Por favor, seleccione una opción válida.</div>
+                </div>
+              </div>
+              <div class="col-12 col-md-4">
+                <div class="form-floating">
+                <input type="number" class="form-control" id="txtPuerto" placeholder="columnas" min="1" max="16">
+                <label for="txtPuerto">Puerto <span class="required-asterisk" style="color: red;">*</span></label>
+                <div class="invalid-feedback" id="columnaError">Por favor, ingrese un valor válido.</div>
+                </div>
+              </div>
               </div>
             </div>
           </div>
@@ -275,32 +303,32 @@ $idContrato = $_GET['idContrato'];
             </div>
           </div>
           <div class="row g-3 mb-2">
-            <div class="col md-2">
+            <div class="col-12 col-md-4">
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtSerie" placeholder="Serie">
                 <label for="lblSerie">Serie <span class="required-asterisk" style="color: red;">*</span></label>
                 <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
               </div>
             </div>
-            <div class="col md-6">
+            <div class="col-12 col-md-4">
               <div class="form-floating">
-                <select type="text" class="form-select" id="slcBanda" placeholder="Banda">
-                  <option value="2G">2G</option>
-                  <option value="5G" selected>5G</option>
-                  <option value="2G,5G">5G-2G</option>
-                </select>
-                <label for="">Banda <span class="required-asterisk" style="color: red;">*</span></label>
-                <div class="invalid-feedback">Por favor, seleccione una opción.</div>
+              <select type="text" class="form-select" id="slcBanda" placeholder="Banda">
+                <option value="2G">2G</option>
+                <option value="5G" selected>5G</option>
+                <option value="2G,5G">5G-2G</option>
+              </select>
+              <label for="slcBanda">Banda <span class="required-asterisk" style="color: red;">*</span></label>
+              <div class="invalid-feedback">Por favor, seleccione una opción.</div>
               </div>
             </div>
-            <div class="col md-9">
+            <div class="col-12 col-md-4">
               <div class="form-floating">
-                <input type="number" class="form-control" id="txtAntenas" placeholder="Antena#" min="2" max="10">
-                <label for="lblAntena">N°Antena <span class="required-asterisk" style="color: red;">*</span></label>
-                <div class="invalid-feedback">Por favor, ingrese un valor válido (2 a 10)</div>
+              <input type="number" class="form-control" id="txtAntenas" placeholder="Antena#" min="2" max="10">
+              <label for="txtAntenas">N°Antena <span class="required-asterisk" style="color: red;">*</span></label>
+              <div class="invalid-feedback">Por favor, ingrese un valor válido (2 a 10)</div>
               </div>
             </div>
-            <div class="col-md-3 form-check form-switch d-flex align-items-center mt-custom">
+            <div class="col-12 col-md-8 form-check form-switch d-flex align-items-center mt-custom">
               <input class="form-check-input" type="checkbox" id="chkCatv">
               <label class="form-check-label" for="chkCatv">CATV</label>
               <p class="card-status mt-3" id="statusText">Estado: No seleccionado</p>
@@ -404,7 +432,6 @@ $idContrato = $_GET['idContrato'];
               </div>
               <div class="form-floating">
                 <select class="form-select" id="slcSplitter" aria-label="Selecciona una opción">
-                  <option selected disabled>Elige una opción</option>
                   <option value="1x3">1x3</option>
                   <option value="1x5">1x5</option>
                   <option value="1x8">1x8</option>
