@@ -58,7 +58,7 @@ FROM
     tb_contratos c
     INNER JOIN tb_clientes cl ON c.id_cliente = cl.id_cliente
     LEFT JOIN tb_personas p ON cl.id_persona = p.id_persona
-    LEFT JOIN tb_empresas e ON cl.id_cliente = e.id_empresa
+    LEFT JOIN tb_empresas e ON cl.id_empresa = e.id_empresa
     INNER JOIN tb_paquetes t ON c.id_paquete = t.id_paquete
     INNER JOIN tb_servicios sv ON JSON_CONTAINS(
         t.id_servicio,
@@ -143,7 +143,7 @@ BEGIN
         tb_contratos c
         INNER JOIN tb_clientes cl ON c.id_cliente = cl.id_cliente
         LEFT JOIN tb_personas p ON cl.id_persona = p.id_persona
-        LEFT JOIN tb_empresas e ON cl.id_cliente = e.id_empresa
+        LEFT JOIN tb_empresas e ON cl.id_empresa = e.id_empresa
         INNER JOIN tb_paquetes t ON c.id_paquete = t.id_paquete
         LEFT JOIN tb_servicios sv ON JSON_CONTAINS(t.id_servicio, JSON_OBJECT('id_servicio', sv.id_servicio))
     WHERE c.id_contrato = p_id_contrato AND c.inactive_at IS NULL;

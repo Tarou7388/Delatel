@@ -233,3 +233,9 @@ export async function cargarPaquetesMultiplesActualizar(tipo, idPaqueteSeleccion
   const paqueteSeleccionado = paquetesFiltrados.find(p => p.id_paquete == idPaqueteSeleccionado);
   document.getElementById("txtPrecioActualizar").value = paqueteSeleccionado?.precio || '0';
 }
+
+// Agregar eventos para actualizar los selectores cuando se activan, desactivan, agregan o actualizan servicios
+document.addEventListener("servicioActivado", () => cargarServiciosGenerico("#slcTipoServicio", () => {}));
+document.addEventListener("servicioDesactivado", () => cargarServiciosGenerico("#slcTipoServicio", () => {}));
+document.addEventListener("servicioAgregado", () => cargarServiciosGenerico("#slcTipoServicio", () => {}));
+document.addEventListener("servicioActualizado", () => cargarServiciosGenerico("#slcTipoServicio", () => {}));

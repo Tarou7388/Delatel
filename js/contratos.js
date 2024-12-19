@@ -26,11 +26,6 @@ window.addEventListener("DOMContentLoaded", async () => {
   let tabla;
   let dataPaquetes = [];
 
-  document.addEventListener("servicioActivado", ListarPaquetes.fetchServicios);
-  document.addEventListener("servicioDesactivado", ListarPaquetes.fetchServicios);
-  document.addEventListener("servicioAgregado", ListarPaquetes.fetchServicios);
-  document.addEventListener("servicioActualizado", ListarPaquetes.fetchServicios);
-
   async function getQueryParams() {
     try {
       // Obtén los parámetros de la URL
@@ -85,6 +80,11 @@ window.addEventListener("DOMContentLoaded", async () => {
         const referencia = document.querySelector("#txtReferencia");
         referencia.value = params.referencia;
       }
+
+      if (params.NomComercial && document.querySelector("#txtNombreComercial")) {
+        const nombreComercial = document.querySelector("#txtNombreComercial");
+        nombreComercial.value = params.NomComercial;
+      }
     } catch (error) {
       console.error("Error al procesar los parámetros de la URL:", error);
     }
@@ -112,12 +112,12 @@ window.addEventListener("DOMContentLoaded", async () => {
           if (!data[0].id_empresa) {
             idPersona = data[0].id_persona;
             idEmpresa = "";
+            nombre.value = data[0].nombres + ", " + data[0].apellidos;
           } else if (!data[0].id_persona) {
             idPersona = "";
             idEmpresa = data[0].id_empresa;
+            nombre.value = data[0].razon_social; // Cargar la razón social
           }
-          nombre.value = data[0].nombres + ", " + data[0].apellidos;
-
         } else {
           const response = await fetch(
             `${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${nroDoc}`

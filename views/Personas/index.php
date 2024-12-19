@@ -123,7 +123,7 @@
 					<div class="col-md-6">
 						<div class="input-group">
 							<div class="form-floating">
-								<input type="text" class="form-control" id="txtCoordenadas" placeholder="Referencia" required>
+								<input type="text" class="form-control" id="txtCoordenadas" placeholder="Referencia" required disabled>
 								<label for="txtCoordenadas">Coordenadas</label>
 							</div>
 							<button class="btn btn-primary" type="button" id="btnBuscarCoordenadasEmpresa" data-toggle="modal" data-target="#ModalMapa"><i class="fa-solid fa-magnifying-glass"></i></button>
