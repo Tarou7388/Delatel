@@ -150,7 +150,7 @@
 
           <span class="text-end invisible" id="infoFecha">a</span>
 
-          <div class="col-md-4">
+          <div class="col-12 col-md-4 mb-2">
             <div class="input-group">
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtNumDoc" name="documento" placeholder="Número de Documento" required>
@@ -160,14 +160,14 @@
             </div>
           </div>
 
-          <div class="col-md-4">
+          <div class="col-12 col-md-4 mb-2">
             <div class="form-floating">
               <input type="text" class="form-control" id="txtNombre" name="nombre" placeholder="Nombre de Cliente" required disabled>
               <label for="txtNombre" class="form-label">Nombre de Cliente</label>
             </div>
           </div>
 
-          <div class="col-md-4">
+          <div class="col-12 col-md-4 mb-2">
             <div class="form-floating">
               <select class="form-select" id="slcTipoServicio" aria-label="Servicios">
                 <option value="0" disabled selected>Seleccione</option>
@@ -178,9 +178,9 @@
 
         </div>
 
-        <div class="row mt-2">
+        <div class="row">
 
-          <div class="col-md-4">
+          <div class="col-12 col-md-4 mb-2">
             <div class="form-floating">
               <select class="form-select select2me" id="slcPaquetes" aria-label=Servicios>
                 <option value="0" disabled selected>Seleccione</option>
@@ -189,14 +189,14 @@
             </div>
           </div>
 
-          <div class="col-md-4">
+          <div class="col-12 col-md-4 mb-2">
             <div class="form-floating">
               <input type="number" class="form-control" id="txtPrecio" value="0" placeholder="Precio" disabled>
               <label for="txtPrecio" class="form-label">Precio</label>
             </div>
           </div>
 
-          <div class="col-md-4">
+          <div class="col-12 col-md-4 mb-2">
             <div class="input-group">
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtCoordenadasMapa" placeholder="Referencia" required disabled>
@@ -210,9 +210,9 @@
 
         </div>
 
-        <div class="row mt-2">
+        <div class="row">
 
-          <div class="col-md-4">
+          <div class="col-12 col-md-4 mb-2">
             <div class="form-floating">
               <select class="form-select select2me" id="slcSector" aria-label=Sectores disabled>
                 <option value="0" disabled selected>Seleccione</option>
@@ -221,14 +221,14 @@
             </div>
           </div>
 
-          <div class="col-md-4">
+          <div class="col-12 col-md-4 mb-2">
             <div class="form-floating">
               <input type="text" class="form-control" id="txtDireccion" placeholder="Dirección de Servicio">
               <label for="txtDireccion" class="form-label">Dirección de Servicio</label>
             </div>
           </div>
 
-          <div class="col-md-4">
+          <div class="col-12 col-md-4 mb-2">
             <div class="form-floating">
               <input type="text" class="form-control" id="txtReferencia" placeholder="Referencia" name="referencia">
               <label for="referencia" class="form-label">Referencia</label>
@@ -237,7 +237,7 @@
 
         </div>
 
-        <div class="row mt-2">
+        <div class="row">
 
           <div class="col-md-12">
             <div class="form-floating">

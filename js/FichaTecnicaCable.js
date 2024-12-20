@@ -402,7 +402,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let maxColumnas = 16;
 
-    if (filaEntrada === "1" || filaEntrada === "(4 y 4)") {
+    if (filaEntrada === "1") {
       maxColumnas = 8;
     } else if (filaEntrada === "2") {
       maxColumnas = 16;

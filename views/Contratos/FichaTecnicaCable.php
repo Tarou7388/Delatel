@@ -129,7 +129,6 @@ $idContrato = $_GET['idContrato'];
                 <select class="form-select" id="slcFilaEntrada">
                   <option value="1">Fila 1</option>
                   <option value="2">Fila 2</option>
-                  <option value="(4 y 4)">Fila 2 (4 y 4)</option>
                 </select>
                 <label for="slcFilaEntrada">Fila Entrada <span class="required-asterisk" style="color: red;">*</span></label>
                 <div class="invalid-feedback">Por favor, seleccione una opción válida.</div>

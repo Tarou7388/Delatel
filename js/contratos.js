@@ -249,7 +249,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   async function eliminar(idContrato, idUsuario, idCaja) {
     if (accesos?.contratos?.eliminar) {
-      if (await ask("¿Desea eliminar este contrato?")) {
+      if (await ask("¿Desea Cancelar el Contrato?")) {
         const response = await fetch(
           `${config.HOST}app/controllers/Contrato.controllers.php`,
           {
@@ -381,13 +381,13 @@ window.addEventListener("DOMContentLoaded", async () => {
               <i class="fa-regular fa-pen-to-square icon-disabled"></i>
               </button>
               <button class="btn btn-sm btn-danger btnEliminar" data-idContrato="${row[0]}" title="Eliminar">
-              <i class="fa-regular fa-trash-can icon-disabled"></i>
+              <i class="fa-solid fa-file-circle-xmark icon-disabled"></i>
               </button>
               <button class="btn btn-sm btn-primary btnGenerar" data-tipoServicio="${row[6]}" data-idContrato="${row[0]}" title="Generar PDF">
               <i class="fa-solid fa-file-pdf icon-disabled"></i>
               </button>
-              <button class="btn btn-sm btn-success btnFicha" data-tipoServicio="${row[6]}" data-idContrato="${row[0]}" title="Ver Ficha">
-              Ficha
+              <button class="btn btn-sm btn-success btnFicha" data-tipoServicio="${row[6]}" data-idContrato="${row[0]}" title="Ficha Técnica">
+              <i class="fa-solid fa-file icon-disabled" id="iconFicha${row[0]}"></i>
               </button>
             `;
           }
@@ -405,6 +405,17 @@ window.addEventListener("DOMContentLoaded", async () => {
         const botonesEliminar = document.querySelectorAll(".btnEliminar");
         const botonesFicha = document.querySelectorAll(".btnFicha");
         const botonesEdit = document.querySelectorAll(".btn-edit");
+
+        // Verificar el estado del icono desde el almacenamiento local
+        botonesFicha.forEach((boton) => {
+          const idContrato = boton.getAttribute("data-idContrato");
+          const icono = document.getElementById(`iconFicha${idContrato}`);
+          const estadoIcono = localStorage.getItem(`iconFicha${idContrato}`);
+          if (estadoIcono === 'lleno') {
+            icono.classList.remove('fa-file');
+            icono.classList.add('fa-file-circle-check');
+          }
+        });
 
         //Event listeners para el botón de ficha técnica
         botonesFicha.forEach((boton) => {
@@ -425,6 +436,13 @@ window.addEventListener("DOMContentLoaded", async () => {
               const fichaInstalacion = JSON.parse(data[0].ficha_instalacion);
 
               if (fichaInstalacion && Object.keys(fichaInstalacion).length > 0) {
+                // Cambiar el icono del botón si la ficha está llena
+                const icono = document.getElementById(`iconFicha${idContrato}`);
+                icono.classList.remove('fa-file');
+                icono.classList.add('fa-file-circle-check');
+                // Guardar el estado del icono en el almacenamiento local
+                localStorage.setItem(`iconFicha${idContrato}`, 'lleno');
+
                 if (tipoServicio === "WISP") {
                   window.open(`${config.HOST}views/reports/Contrato_WISP/fichaInstalacion.php?id=${idContrato}`, '_blank');
                 } else if (tipoServicio === "FIBR,CABL" || tipoServicio === "CABL,FIBR") {
