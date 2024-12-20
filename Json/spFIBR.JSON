@@ -1,75 +1,77 @@
 {
-  "FIBR": {
+  "fibr": {
     "parametroscliente": {
-      "plan": "Plan Internet 110MB - 70",
-      "usuario": "PEVE GUERRA, OSWALDO EFRAIN",
-      "Nrodoc": "43210229"
+      "plan": "",
+      "usuario": "",
+      "Nrodoc": ""
     },
     "parametrosgpon": {
-      "pppoe": "OSWPEV28",
-      "clave": "@OSWPEV28",
-      "potencia": "20",
+      "pppoe": "",
+      "clave": "",
+      "potencia": "0",
+      "router": {
+        "ssid": "",
+        "seguridad": "",
+        "codigobarra": "",
+        "ip": "",
+        "marca": "",
+        "modelo": "",
+        "serie": "",
+        "banda": [""],
+        "numeroantena": 0,
+        "catv": false
+      },
       "catv": false,
-      "vlan": "1147",
-      "repetidor": [
+      "vlan": "",
+      "repetidores": [
         {
-          "numero": 1,
-          "ssid": "43210229",
-          "contrasenia": "43210229",
-          "codigoBarraRepetidor": "1234567890123",
-          "marca": "TP Link",
-          "modelo": "Router",
-          "precio": "150.00",
-          "serie": "43210229",
-          "ip": "192.168.432.102",
-          "condicion": "alquilado"
-        },
-        {
-          "numero": 2,
-          "ssid": "EsteNotiene000000000",
-          "contrasenia": "1234567890123",
-          "codigoBarraRepetidor": "1234567890123",
-          "marca": "TP Link",
-          "modelo": "Router",
-          "precio": "150.00",
-          "serie": "1234567890123",
-          "ip": "192.168.123.456",
-          "condicion": "venta"
+          "numero": 0,
+          "ssid": "",
+          "contrasenia": "",
+          "codigobarra": "",
+          "modelo": "",
+          "marca": "",
+          "precio": "0.00",
+          "serie": "",
+          "ip": "",
+          "condicion": ""
         }
       ]
     },
     "cambiosgpon": {
-      "pppoe": "OSWPEV28",
-      "clave": "@OSWPEV28",
-      "potencia": "-00",
+      "pppoe": "",
+      "clave": "",
+      "potencia": "0",
+      "router": {
+        "ssid": "",
+        "seguridad": "",
+        "codigobarra": "",
+        "ip": "",
+        "marca": "",
+        "modelo": "",
+        "serie": "",
+        "banda": [""],
+        "numeroantena": 0,
+        "catv": false
+      },
       "catv": false,
-      "vlan": "1147",
-      "repetidor": [
+      "vlan": "",
+      "repetidores": [
         {
-          "numero": 1,
-          "ssid": "43210229",
-          "contrasenia": "43210229",
-          "codigoBarraRepetidor": "1234567890123",
-          "marca": "TP Link",
-          "modelo": "Router",
-          "precio": "150.00",
-          "serie": "43210229",
-          "ip": "192.168.432.102",
-          "condicion": "alquilado"
-        },
-        {
-          "numero": 2,
-          "ssid": "00000000000",
-          "contrasenia": "00000000000",
-          "codigoBarraRepetidor": "1234567890123",
-          "marca": "TP Link",
-          "modelo": "Router",
-          "precio": "150.00",
-          "serie": "1234567890123",
-          "ip": "000.000.000.000",
-          "condicion": "venta"
+          "numero": 0,
+          "ssid": "",
+          "contrasenia": "",
+          "codigobarra": "",
+          "modelo": "",
+          "marca": "",
+          "precio": "0.00",
+          "serie": "",
+          "ip": "",
+          "condicion": ""
         }
       ]
     }
-  }
+  },
+  "idcaja": 0,
+  "tipoentrada": { "fila": [""], "puerto": 0 }
 }

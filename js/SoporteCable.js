@@ -1,5 +1,6 @@
 import config from "../env.js";
 import { FichaInstalacion, FichaSoporteporDocServCoordenada } from "./Herramientas.js";
+import * as mapa from "./Mapa.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const txtPotencia = document.getElementById("txtPotencia");
@@ -16,11 +17,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const txtPrecioConectorCambio = document.getElementById("txtPrecioConectorCambio");
 
   const txtPlan = document.getElementById("txtPlan");
-
+  const txtCliente = document.getElementById("txtCliente");
+  const txtNrodocumento = document.getElementById("txtNrodocumento");
 
   const form = document.getElementById("form-cable");
   const urlParams = new URLSearchParams(window.location.search);
-  const serv = urlParams.get("tiposervicio");
+  const serv = urlParams.get("tiposervicio").toLocaleLowerCase();
 
   let idSoporte = -1;
   let idCaja = -1;
@@ -45,6 +47,15 @@ document.addEventListener("DOMContentLoaded", () => {
       //Aqui puedes meterle mano
       //Aqui puedes meterle mano
     }
+
+    const cajas = await mapa.buscarCercanos(idCaja);
+    cajas.forEach(caja => {
+      const option = document.createElement('option');
+      option.value = caja.id_caja;
+      option.text = caja.nombre;
+      slcCaja.appendChild(option);
+    });
+    slcCaja.value = idCaja;
   })();
 
   async function rellenarDocNombre(doct) {
@@ -158,6 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       await CargardatosInstalacion(idSoporte);
     }
+
 
   }
 
@@ -290,7 +302,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * Crea un elemento de selección (select) y un botón, y los agrega al DOM.
-   * El select se llena con datos obtenidos de una API.
    * El botón se utiliza para guardar la ficha.
    * 
    * @async
@@ -360,50 +371,61 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const existeClave = Object.keys(soporte).includes(serv);
 
-    if (!existeClave) {
-      soporte[serv] = {
-        parametroscable: {
-          plan: document.getElementById("txtPlan").value,
-          potencia: parseInt(document.getElementById("txtPotencia").value) || 0,
-          sintonizador: parseInt(document.getElementById("txtSintonizador").value) || 0,
-          triplexor: document.getElementById("slcTriplexor").value === "2" ? "activo" :
-            (document.getElementById("slcTriplexor").value === "3" ? "pasivo" : "no lleva"),
-          splitter: [
-            { cantidad: parseInt(document.getElementById("txtNumSpliter").value) || 0, tipo: document.getElementById("slcSpliter").value }
-          ],
-          conector: {
-            numeroconector: parseInt(document.getElementById("txtConector").value) || 0,
-            precio: parseFloat(document.getElementById("txtPrecioConector").value) || 0
-          },
-          cable: {
-            metrosadicionales: parseInt(document.getElementById("txtCable").value) || 0,
-            preciometro: parseFloat(document.getElementById("txtPrecioCable").value) || 0
-          }
+    let cableData = {
+      parametroscliente: {
+        plan: txtPlan.value,
+        usuario: txtCliente.value,
+        Nrodoc: txtNrodocumento.value,
+      },
+      parametroscable: {
+        plan: document.getElementById("txtPlan").value,
+        potencia: parseInt(document.getElementById("txtPotencia").value) || 0,
+        sintonizador: parseInt(document.getElementById("txtSintonizador").value) || 0,
+        triplexor: document.getElementById("slcTriplexor").value === "2" ? "activo" :
+          (document.getElementById("slcTriplexor").value === "3" ? "pasivo" : "no lleva"),
+        splitter: [
+          { cantidad: parseInt(document.getElementById("txtNumSpliter").value) || 0, tipo: document.getElementById("slcSpliter").value }
+        ],
+        conector: {
+          numeroconector: parseInt(document.getElementById("txtConector").value) || 0,
+          precio: parseFloat(document.getElementById("txtPrecioConector").value) || 0
         },
-        cambioscable: {
-          plan: document.getElementById("txtPlan").value,
-          potencia: parseInt(document.getElementById("txtPotenciaCambio").value) || 0,
-          sintonizador: parseInt(document.getElementById("txtSintonizadorCambio").value) || 0,
-          triplexor: document.getElementById("slcTriplexorCambio").value === "2" ? "activo" :
-            (document.getElementById("slcTriplexorCambio").value === "3" ? "pasivo" : "no lleva"),
-          splitter: [
-            { cantidad: parseInt(document.getElementById("txtNumSpliterCambio").value) || 0, tipo: document.getElementById("slcSpliterCambio").value }
-          ],
-          conector: {
-            numeroconector: parseInt(document.getElementById("txtConectorCambio").value) || 0,
-            precio: parseFloat(document.getElementById("txtPrecioConectorCambio").value) || 0
-          },
-          cable: {
-            metrosadicionales: parseInt(document.getElementById("txtCableCambio").value) || 0,
-            preciometro: parseFloat(document.getElementById("txtPrecioCableCambio").value) || 0
-          }
+        cable: {
+          metrosadicionales: parseInt(document.getElementById("txtCable").value) || 0,
+          preciometro: parseFloat(document.getElementById("txtPrecioCable").value) || 0
+        }
+      },
+      cambioscable: {
+        plan: document.getElementById("txtPlan").value,
+        potencia: parseInt(document.getElementById("txtPotenciaCambio").value) || 0,
+        sintonizador: parseInt(document.getElementById("txtSintonizadorCambio").value) || 0,
+        triplexor: document.getElementById("slcTriplexorCambio").value === "2" ? "activo" :
+          (document.getElementById("slcTriplexorCambio").value === "3" ? "pasivo" : "no lleva"),
+        splitter: [
+          { cantidad: parseInt(document.getElementById("txtNumSpliterCambio").value) || 0, tipo: document.getElementById("slcSpliterCambio").value }
+        ],
+        conector: {
+          numeroconector: parseInt(document.getElementById("txtConectorCambio").value) || 0,
+          precio: parseFloat(document.getElementById("txtPrecioConectorCambio").value) || 0
         },
-        idcaja: idCaja,
-        tipoentrada: JSON.parse(dataCable[0].ficha_instalacion).tipoentrada,
+        cable: {
+          metrosadicionales: parseInt(document.getElementById("txtCableCambio").value) || 0,
+          preciometro: parseFloat(document.getElementById("txtPrecioCableCambio").value) || 0
+        }
       }
+    };
+
+    if (!existeClave) {
+      soporte[serv] = cableData;
     }
-    return soporte;
+
+    return {
+      idcaja: idCaja,
+      tipoentrada: JSON.parse(dataCable[0].ficha_instalacion).tipoentrada,
+      soporte
+    };
   }
+
 
   /**
    * Guarda la información del soporte técnico.

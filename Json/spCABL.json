@@ -1,44 +1,31 @@
 {
-  "CABL": {
+  "cabl": {
+    "parametroscliente": {
+      "plan": "",
+      "usuario": "",
+      "Nrodoc": ""
+    },
     "parametroscable": {
-      "plan": "JUN056 PLAN DUO + 01 TV = CATV 4 TV - BASICO + 1 APL",
-      "potencia": -21,
-      "sintonizador": 1,
-      "triplexor": "no lleva",
-      "splitter": [
-        {
-          "cantidad": 12,
-          "tipo": "1x3"
-        }
-      ],
-      "conector": {
-        "numeroconector": 12,
-        "precio": 18
-      },
-      "cable": {
-        "metrosadicionales": 2,
-        "preciometro": 2.6
-      }
+      "plan": "",
+      "potencia": 0,
+      "sintonizador": 0,
+      "triplexor": "",
+      "splitter": [{ "cantidad": 0, "tipo": "" }],
+      "conector": { "numeroconector": 0, "precio": 0 },
+      "cable": { "metrosadicionales": 0, "preciometro": 0 }
     },
     "cambioscable": {
-      "plan": "JUN056 PLAN DUO + 01 TV = CATV 4 TV - BASICO + 1 APL",
-      "potencia": -54,
-      "sintonizador": 1,
-      "triplexor": "no lleva",
-      "splitter": [
-        {
-          "cantidad": 12,
-          "tipo": "2"
-        }
-      ],
-      "conector": {
-        "numeroconector": 12,
-        "precio": 1.5
-      },
-      "cable": {
-        "metrosadicionales": 2,
-        "preciometro": 1.3
-      }
-    }
-  }
+      "plan": "",
+      "potencia": 0,
+      "sintonizador": 0,
+      "triplexor": "",
+      "splitter": [{ "cantidad": 0, "tipo": "" }],
+      "conector": { "numeroconector": 0, "precio": 0 },
+      "cable": { "metrosadicionales": 0, "preciometro": 0 }
+    },
+    "idcaja": 0,
+    "tipoentrada": { "fila": [""], "puerto": 0 }
+  },
+  "idcaja": 0,
+  "tipoentrada": { "fila": [""], "puerto": 0 }
 }

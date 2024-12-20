@@ -7,8 +7,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const urlParams = new URLSearchParams(window.location.search);
   const idContrato = urlParams.get("idContrato");
   const idReporte = urlParams.get("idReporte");
-  const serv = urlParams.get("tiposervicio");
-  const form = document.getElementById("frm-registro-gpon");
+
+  const serv = urlParams.get("tiposervicio").toLocaleLowerCase();
+  const form = document.getElementById("frm-registro-fibr");
 
   //Parametros tecnicos de la ficha
   const txtPlan = document.getElementById("txtPlan");
@@ -43,11 +44,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const txtCambiosIp = document.getElementById("txtCambiosIp");
   const chkCambiosCatv = document.getElementById("chkCambiosCatv");
   const txtCambiosPass = document.getElementById("txtCambiosPass");
-
   const txtCambiosIpRouter = document.getElementById("txtCambiosIpRouter");
   const txtCambiosIpRepetidor = document.getElementById("txtCambiosIpRepetidor");
 
-
+  //Área de solución
   const solutionTextarea = document.getElementById("txtaCambiosProceSolucion");
 
   let idSoporte = -1;
@@ -55,29 +55,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Función autoejecutable para inicializar datos
   (async function () {
-    try {
-      idSoporte = await obtenerReferencias();
-      if (idSoporte) {
-        await crearSelectYBoton();
-        await ObtenerValores();
-        await cargarProblema(idSoporte);
-      } else {
-        //Aqui puedes meterle mano
-        await listarReporte(idContrato, idReporte);
-        await cargarProblema(idReporte);
-      }
-      const cajas = await mapa.buscarCercanos(idCaja);
-      cajas.forEach(caja => {
-        const option = document.createElement('option');
-        option.value = caja.id_caja;
-        option.text = caja.nombre;
-        slcCaja.appendChild(option);
-      });
-      slcCaja.value = idCaja;
-
-    } catch (error) {
-      console.error("Error durante la inicialización:", error);
+    idSoporte = await obtenerReferencias();
+    if (idSoporte) {
+      await crearSelectYBoton();
+      await cargarDatosdelSoporte();
+      await cargarProblema(idSoporte);
+    } else {
+      //Aqui puedes meterle mano
+      await listarReporte(idContrato, idReporte);
+      await cargarProblema(idReporte);
     }
+
+    const cajas = await mapa.buscarCercanos(idCaja);
+    cajas.forEach(caja => {
+      const option = document.createElement('option');
+      option.value = caja.id_caja;
+      option.text = caja.nombre;
+      slcCaja.appendChild(option);
+    });
+    slcCaja.value = idCaja;
   })();
 
   async function listarReporte(idContrato, idSoporte) {
@@ -88,10 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const soporteEspecifico = data.find(soporte => soporte.id_soporte === parseInt(idSoporte));
 
     if (soporteEspecifico) {
-      console.log(soporteEspecifico);
-      // Convertir el soporte a un objeto JSON
       const soporte = JSON.parse(soporteEspecifico.soporte);
-      // Llenar los campos del formulario
       if (soporte && soporte.FIBR) {
         const fibr = soporte.FIBR;
         // Parámetros del cliente
@@ -146,10 +139,9 @@ document.addEventListener("DOMContentLoaded", () => {
     solutionTextarea.disabled = true;
   }
 
-  async function ObtenerValores() {
+  async function cargarDatosdelSoporte() {
     const urlParams = new URLSearchParams(window.location.search);
     const doc = urlParams.get("doc");
-    const idSoporte = urlParams.get("idsoporte");
     const tiposervicio = urlParams.get("tiposervicio");
     const coordenada = urlParams.get("coordenada");
     const respuesta = await FichaSoporteporDocServCoordenada(doc, tiposervicio, coordenada);
@@ -159,7 +151,6 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       await CargarDatosInstalacion(doc, idSoporte);
     }
-
   }
 
   async function cargarProblema(idSoporte) {
@@ -249,7 +240,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return urlParams.get("idsoporte");
   };
 
-  async function CargarDatosInstalacion(doct, idSoporte, tiposervicio) {
+  async function CargarDatosInstalacion(doct, idSoporte) {
     try {
       const respuesta = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${doct}`);
       const data = await respuesta.json();
@@ -375,38 +366,44 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const existeClave = Object.keys(soporte).includes(serv);
 
+    let fibraData = {
+      parametroscliente: {
+        plan: txtPlan.value,
+        usuario: txtCliente.value,
+        Nrodoc: txtNrodocumento.value,
+      },
+      parametrosgpon: {
+        pppoe: document.getElementById("txtPppoe").value,
+        clave: document.getElementById("txtClave").value,
+        potencia: document.getElementById("txtPotencia").value,
+        router: JSON.parse(JSON.stringify(fibrafiltrado.router)),
+        catv: document.getElementById("chkCatv").checked,
+        vlan: document.getElementById("txtVlan").value,
+        repetidores: JSON.parse(JSON.stringify(fibrafiltrado.repetidores))
+      },
+      cambiosgpon: {
+        pppoe: txtCambiosPppoe.value,
+        clave: txtCambiosClave.value,
+        potencia: txtCambiosPotencia.value,
+        router: await modificadoRouter(fibrafiltrado.router),
+        catv: chkCambiosCatv.checked,
+        vlan: txtCambiosVlan.value,
+        repetidores: await moficadoRepetidor(fibrafiltrado.repetidores)
+      }
+    };
+
+    // Mover `idcaja` y `tipoentrada` fuera de `soporte[serv]`
     if (!existeClave) {
-      soporte[serv] = {
-        parametroscliente: {
-          plan: txtPlan.value,
-          usuario: txtCliente.value,
-          Nrodoc: txtNrodocumento.value,
-        },
-        parametrosgpon: {
-          pppoe: document.getElementById("txtPppoe").value,
-          clave: document.getElementById("txtClave").value,
-          potencia: document.getElementById("txtPotencia").value,
-          router: JSON.parse(JSON.stringify(fibrafiltrado.router)),
-          catv: document.getElementById("chkCatv").checked,
-          vlan: document.getElementById("txtVlan").value,
-          repetidores: JSON.parse(JSON.stringify(fibrafiltrado.repetidores))
-        },
-        cambiosgpon: {
-          pppoe: txtCambiosPppoe.value,
-          clave: txtCambiosClave.value,
-          potencia: txtCambiosPotencia.value,
-          router: await modificadoRouter(fibrafiltrado.router),
-          catv: chkCambiosCatv.checked,
-          vlan: txtCambiosVlan.value,
-          repetidores: await moficadoRepetidor(fibrafiltrado.repetidores)
-        },
-        idcaja: idCaja,
-        tipoentrada: JSON.parse(dataFibra[0].ficha_instalacion).tipoentrada,
-      };
+      soporte[serv] = fibraData;
     }
 
-    return soporte;
+    return {
+      idcaja: idCaja,
+      tipoentrada: JSON.parse(dataFibra[0].ficha_instalacion).tipoentrada,
+      soporte
+    };
   }
+
 
   async function moficadoRepetidor(repetidores) {
     if (!repetidores) {
@@ -455,10 +452,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       const result = await response.json();
-      console.log(result.status);
-      if (result.status === "success") {
-        console.log("Soporte actualizado correctamente.");
-      }
+
     } catch (error) {
       console.error('Error en la solicitud:', error);
     }

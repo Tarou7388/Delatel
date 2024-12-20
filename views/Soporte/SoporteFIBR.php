@@ -10,7 +10,7 @@
       Complete los Datos
     </div>
     <div class="card-body">
-      <form action="" id="frm-registro-gpon" autocomplete="off">
+      <form action="" id="frm-registro-fibr" autocomplete="off">
 
         <!-- Primera Fila -->
         <h5>Datos del Usuario</h5>
