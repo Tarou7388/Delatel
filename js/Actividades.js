@@ -41,7 +41,7 @@ window.addEventListener("DOMContentLoaded", function () {
     contenido.innerHTML = `
     <div id="map" style="height: 700px;"></div>
     `;
-    const params = { cajas: true, mufas: true }
+    const params = { cajas: false, mufas: true }
     const id = "map"
     const renderizado = "pagina"
     await mapa.iniciarMapa(params, id, renderizado);

@@ -3,14 +3,17 @@
 require_once '../models/Caja.php';
 
 $caja = new Caja();
-$input = file_get_contents('php://input');
-$data = json_decode($input, true);
 
 if (isset($_GET['operacion'])) {
   $operacion = $_GET['operacion'];
   switch ($operacion) {
     case 'listarCajas':
       $respuesta = $caja->listarCajas();
+      echo json_encode($respuesta);
+      break;
+    case 'listarCajasSectorIdCaja':
+      $idCaja = $_GET['idCaja'];
+      $respuesta = $caja->listarCajasSectorIdCaja(['idCaja' => $idCaja]);
       echo json_encode($respuesta);
       break;
   }

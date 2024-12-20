@@ -309,8 +309,15 @@ function initMap() {
   });
 }
 
+export async function buscarCercanos(idCaja) {
+  const response = await fetch(`${config.HOST}app/controllers/Caja.controllers.php?operacion=listarCajasSectorIdCaja&idCaja=${idCaja}`);
+  const data = await response.json();
+  console.log(data);
+  return data;
+}
+
 // Asegúrate de que initMap se llame cuando la página se cargue
-window.onload = initMap;
+//window.onload = initMap;
 
 //Función que renderize la coordenada del contrato en el mapa
 export async function renderizarCoordenadaMapa(id) {

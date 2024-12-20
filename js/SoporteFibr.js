@@ -67,6 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error durante la inicialización:", error);
     }
   })();
+
   async function listarReporte(idContrato, idSoporte) {
     const respuesta = await fetch(`${config.HOST}app/controllers/Averias.controllers.php?operacion=buscarAveriaPorContrato&valor=${idContrato}`);
     const data = await respuesta.json();
@@ -120,6 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error('No se encontró el soporte con el id especificado.');
     }
   }
+
   async function deshabilitarCampos() {
     txtCambiosPppoe.disabled = true;
     txtCambiosClave.disabled = true;
@@ -138,9 +140,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const idSoporte = urlParams.get("idsoporte");
     const tiposervicio = urlParams.get("tiposervicio");
     const coordenada = urlParams.get("coordenada");
-
-    console.log(doc);
-
     const respuesta = await FichaSoporteporDocServCoordenada(doc, tiposervicio, coordenada);
 
     if (respuesta[0].soporte != "{}" && JSON.parse(respuesta[0].soporte).FIBR) {
@@ -297,7 +296,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-
   slcRpetidor.addEventListener("change", async () => {
     await cargarEnInputs();
   });
@@ -342,7 +340,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  //Funcion para cargar los datos del modem en caso no haya repetidor
   async function cargarDatosRouter(datoRouters) {
     console.log(datoRouters);
     txtIpRouter.value = datoRouters.router.ip;

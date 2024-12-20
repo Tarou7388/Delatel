@@ -93,24 +93,29 @@
       </div>
       <div class="modal-body">
         <form id="formAgregarCaja">
-          <div class="form-floating mb-3">
-            <input type="text" class="form-control" id="nombreCaja" name="nombre" placeholder="Nombre" required>
-            <label for="nombre">Nombre</label>
+          <div class="mb-3">
+            <div class="input-group">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="nombreCaja" name="nombre" placeholder="Nombre" required>
+                <label for="nombreCaja">Nombre</label>
+              </div>
+              <span class="input-group-text" id="codigoNombre">-08</span>
+            </div>
           </div>
           <div class="form-floating mb-3">
             <textarea class="form-control" id="descripcionCaja" name="descripcion" placeholder="Descripción" rows="3" required></textarea>
-            <label for="descripcion">Descripción</label>
+            <label for="descripcionCaja">Descripción</label>
           </div>
           <div class="form-floating mb-3">
             <select class="form-select" id="numEntradasCaja" name="numEntradas" required>
               <option value="8">8</option>
               <option value="16">16</option>
             </select>
-            <label for="numEntradas">Número de Entradas</label>
+            <label for="numEntradasCaja">Número de Entradas</label>
           </div>
           <div class="form-floating mb-3">
             <input type="text" class="form-control" id="direccionCaja" name="direccion" placeholder="Dirección" required>
-            <label for="direccion">Dirección</label>
+            <label for="direccionCaja">Dirección</label>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>

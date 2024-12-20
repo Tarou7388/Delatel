@@ -64,6 +64,13 @@ class Caja extends Conexion
     $params = $params['idContrato'];
     return $this->registrar($sql, [$params]);
   }
+
+  public function listarCajasSectorIdCaja($params = [])
+  {
+    $sql = "CALL spu_buscar_cajas_sector_idCaja(?)";
+    $array = [
+      $params['idCaja']
+    ];
+    return $this->datosPaginados($sql, $array);
+  }
 }
-
-

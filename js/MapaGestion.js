@@ -86,9 +86,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   async function agregarCaja() {
     const coordenadasEnviar = `${coordenadasCaja.lat},${coordenadasCaja.lng}`;
+    const nombreCajaEnviar = nombreCaja + document.querySelector("#codigoNombre").textContent;
+    console.log(nombreCajaEnviar);
     let paramsEnviar = new FormData();
     paramsEnviar.append("operacion", "registrarCaja");
-    paramsEnviar.append("nombre", nombreCaja);
+    paramsEnviar.append("nombre", nombreCajaEnviar);
     paramsEnviar.append("descripcion", descripcionCaja);
     paramsEnviar.append("numeroEntradas", numeroEntradasCaja);
     paramsEnviar.append("idSector", sectorCercano);
@@ -151,7 +153,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     numeroEntradasCaja = document.querySelector("#numEntradasCaja").value;
     direccionCaja = document.querySelector("#direccionCaja").value;
     coordenadasCaja = Coordenadas;
-
     const marcador = await buscarMarcadorCercano(datosSectores, coordenadasCaja);
     sectorCercano = marcador.marcador.id_sector;
     banderaCable = true;
@@ -175,6 +176,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     const modal = bootstrap.Modal.getInstance(document.getElementById('modalAgregarSector2'));
     modal.hide();
+  });
+
+  document.querySelector("#numEntradasCaja").addEventListener("change", (e) => {
+    if(document.querySelector("#numEntradasCaja").value == 8){
+      document.querySelector("#codigoNombre").textContent = "-08";
+    }else if(document.querySelector("#numEntradasCaja").value == 16){
+      document.querySelector("#codigoNombre").textContent = "-16";
+    }
   });
 
   async function eventocajas() {
@@ -206,6 +215,8 @@ document.addEventListener('DOMContentLoaded', async () => {
               linea.setMap(null);
             });
             eventoCables();
+            lineaCableGuardar = [];
+            coordenadasCajaGuardada = false;
             marcadorPrincipal.setMap(null);
           }
         }

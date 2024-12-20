@@ -35,10 +35,15 @@ CREATE PROCEDURE spu_cajas_registrar(
 BEGIN
   INSERT INTO tb_cajas(nombre, descripcion, numero_entradas, id_sector, coordenadas, iduser_create)
   VALUES(p_nombre, p_descripcion, p_numero_entradas, p_id_sector, p_coordenadas, p_iduser_create);
-  SELECT LAST_INSERT_ID() AS id_caja;
-END$$
-
-DROP PROCEDURE IF EXISTS spu_lineas_registrar$$
+  SELECT LAST_INSERT_ISELECT 
+    id_caja, 
+    nombre, 
+    descripcion, 
+    numero_entradas, 
+    id_sector, 
+    coordenadas 
+  FROM tb_cajas
+  WHERE id_caja = p_id_caja;XISTS spu_lineas_registrar$$
 
 CREATE PROCEDURE spu_lineas_registrar(
   IN p_id_mufa INT,
@@ -90,3 +95,16 @@ BEGIN
   INSERT INTO tb_mufas(nombre, descripcion, coordenadas, direccion, iduser_create)
   VALUES(p_nombre, p_descripcion, p_coordenadas, p_direccion, p_iduser_create);
 END$$
+
+DROP PROCEDURE IF EXISTS spu_buscar_cajas_sector_idCaja$$
+
+CREATE PROCEDURE spu_buscar_cajas_sector_idCaja(
+  IN p_id_caja INT
+)
+BEGIN
+  DECLARE idSector INT;
+  SELECT id_sector INTO idSector FROM tb_cajas WHERE id_caja = p_id_caja;
+  SELECT id_caja, nombre, numero_entradas coordenadas FROM tb_cajas WHERE id_sector = idSector AND numero_entradas > 0;
+END$$
+
+CALL `spu_buscar_cajas_sector_idCaja`(1);
