@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const serv = urlParams.get("tiposervicio");
 
   let idSoporte = -1;
-
+  let idCaja = -1;
   /**
    * Función para obtener las referencias del soporte
    * de las cuales se obtendrá para obtener el problema del soporte
@@ -39,9 +39,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const urlParams = new URLSearchParams(window.location.search);
       urlParams.get("idReporte");
       await reporte(urlParams.get("idReporte"));
-      //Aqui puedes meterle mano
-      //Aqui puedes meterle mano
-      //Aqui puedes meterle mano
       //Aqui puedes meterle mano
       //Aqui puedes meterle mano
       //Aqui puedes meterle mano
@@ -156,16 +153,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const respuesta = await FichaSoporteporDocServCoordenada(doc, tiposervicio, coordenada);
 
-    if (respuesta[0].soporte != "{}") {
-      if (JSON.parse(respuesta[0].soporte).CABL) {
-        await cargardatos(JSON.parse(respuesta[0].soporte).CABL.cambioscable);
-      }
-      else {
-        await llenadoDeDatos(doc, idSoporte);
-      }
-
+    if (respuesta[0].soporte != "{}" && JSON.parse(respuesta[0].soporte).CABL) {
+      await cargarSoporteAnterior(JSON.parse(respuesta[0].soporte).CABL.cambioscable);
     } else {
-      await llenadoDeDatos(doc, idSoporte);
+      await CargardatosInstalacion(idSoporte);
     }
 
   }
@@ -179,11 +170,11 @@ document.addEventListener("DOMContentLoaded", () => {
       $("#txtCliente").val(data[0].nombre);
       $("#txtNrodocumento").val(doct);
     } catch (error) {
-      console.error("Error en llenadoDeDatos:", error);
+      console.error("Error en CargardatosInstalacion:", error);
     }
   }
 
-  async function cargardatos(data) {
+  async function cargarSoporteAnterior(data) {
     console.log(data);
     txtPotencia.value = data.potencia;
     txtSintonizador.value = data.sintonizador;
@@ -229,26 +220,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * Función para llenar los datos del cliente y del soporte en la parte de parametros de la ficha de soporte
-   * @param {string} doct - Documento del cliente
    * @param {string} idSoporte - Id del soporte
-   * @param {string} tiposervicio - Tipo de servicio /-->/ Actualmente sin uso
    * @returns {Promise<void>}
    */
-  async function llenadoDeDatos(doct, idSoporte) {
+  async function CargardatosInstalacion(idSoporte) {
     try {
       const dataCable = await FichaInstalacion(idSoporte);
       const cableFiltrado = JSON.parse(dataCable[0].ficha_instalacion).cable;
 
-      console.log(cableFiltrado);
       txtPotencia.value = cableFiltrado.potencia;
 
       //Asignacion de los sintonizadores
-      console.log(cableFiltrado.sintonizadores);
       const sintonizadores = cableFiltrado.sintonizadores.length;
       txtSintonizador.value = sintonizadores;
 
       //Asignacion de los triplores
-      console.log(cableFiltrado.triplexor);
       // Parsea los valores de cargador y requerido del objeto triplexor
       const cargador = JSON.parse(cableFiltrado.triplexor.cargador);
       const requerido = JSON.parse(cableFiltrado.triplexor.requerido);
@@ -262,32 +248,30 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       //Asignacion de los spliter
-      console.log(cableFiltrado.splitter);
       txtNumSpliter.value = cableFiltrado.splitter[0].cantidad;
-      console.log(cableFiltrado.splitter[0].tipo);
       slcSpliter.value = cableFiltrado.splitter[0].tipo;
 
       //Asignacion del array de cables
-      console.log(cableFiltrado.cable);
       txtCable.value = cableFiltrado.cable.metrosadicionales;
       //Calculo para el total de metros * precio
-      txtPrecioCable.value = (cableFiltrado.cable.metrosadicionales * cableFiltrado.cable.preciometro).toFixed(2);
+      txtPrecioCable.value = (cableFiltrado.cable.metrosadicionales * parseFloat(cableFiltrado.cable.preciometro));
 
-      //Asignacion del array de conectores      
-      console.log(cableFiltrado.conector);
+      //Asignacion del array de conectores     
       txtConector.value = cableFiltrado.conector.numeroconector;
 
-      // Heredado de Parametros tecnicos
-      console.log(cableFiltrado.cable.preciometro);
-      txtPrecioCableCambio.value = (cableFiltrado.cable.preciometro).toFixed(2);
-      txtPrecioConectorCambio.value = (cableFiltrado.conector.precio).toFixed(2);
+      // Heredado de Parametros tecnico
+      txtPrecioCableCambio.value = (parseFloat(cableFiltrado.cable.preciometro));
+      txtPrecioConectorCambio.value = (cableFiltrado.conector.precio);
 
       //Calculo para el total de cantidad * precio
-      txtPrecioConector.value = (cableFiltrado.conector.numeroconector * cableFiltrado.conector.precio).toFixed(2);
+      txtPrecioConector.value = (cableFiltrado.conector.numeroconector * cableFiltrado.conector.precio);
 
       //Asignar el plan 
-
       txtPlan.value = cableFiltrado.plan
+
+      //Asignar datos de la caja
+      console.log(JSON.parse(dataCable[0].ficha_instalacion).idcaja);
+      idCaja = JSON.parse(dataCable[0].ficha_instalacion).idcaja;
 
     } catch (error) {
       console.error("Error en FichaInstalacion:", error);
@@ -370,6 +354,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const Response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
     const result = await Response.json();
 
+    const dataCable = await FichaInstalacion(idSoporte);
+
     let soporte = result[0].soporte ? JSON.parse(result[0].soporte) : {};
 
     const existeClave = Object.keys(soporte).includes(serv);
@@ -411,7 +397,9 @@ document.addEventListener("DOMContentLoaded", () => {
             metrosadicionales: parseInt(document.getElementById("txtCableCambio").value) || 0,
             preciometro: parseFloat(document.getElementById("txtPrecioCableCambio").value) || 0
           }
-        }
+        },
+        idcaja: idCaja,
+        tipoentrada: JSON.parse(dataCable[0].ficha_instalacion).tipoentrada,
       }
     }
     return soporte;
@@ -424,11 +412,6 @@ document.addEventListener("DOMContentLoaded", () => {
    * @returns {Promise<void>} - Una promesa que se resuelve cuando la solicitud se completa.
    * @throws {Error} - Lanza un error si la solicitud falla.
    *
-   * @example
-   * const data = { /* datos del soporte técnico * / };
-   * guardarSoporte(data)
-   *   .then(() => console.log('Soporte actualizado correctamente.'))
-   *   .catch(error => console.error('Error en la solicitud:', error));
    */
   async function guardarSoporte(data) {
     try {

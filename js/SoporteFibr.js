@@ -49,6 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const solutionTextarea = document.getElementById("txtaCambiosProceSolucion");
 
   let idSoporte = -1;
+  let idCaja = -1;
 
   // Función autoejecutable para inicializar datos
   (async function () {
@@ -262,6 +263,11 @@ document.addEventListener("DOMContentLoaded", () => {
       txtPotencia.value = fibraFiltrado.potencia;
       chkCatv.checked = fibraFiltrado.router.catv;
       txtVlan.value = fibraFiltrado.vlan;
+
+      //Asignar datos de la caja
+      console.log(JSON.parse(dataFibra[0].ficha_instalacion).idcaja);
+      idCaja = JSON.parse(dataFibra[0].ficha_instalacion).idcaja;
+
       await cargarDatosRouter(fibraFiltrado);
       if (fibraFiltrado.repetidores) {
         await cargarRepetidores(fibraFiltrado.repetidores);
@@ -382,7 +388,9 @@ document.addEventListener("DOMContentLoaded", () => {
           catv: chkCambiosCatv.checked,
           vlan: txtCambiosVlan.value,
           repetidores: await moficadoRepetidor(fibrafiltrado.repetidores)
-        }
+        },
+        idcaja: idCaja,
+        tipoentrada: JSON.parse(dataFibra[0].ficha_instalacion).tipoentrada,
       };
     }
 
