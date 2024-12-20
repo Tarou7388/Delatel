@@ -316,21 +316,16 @@ export async function buscarCercanos(idCaja) {
   return data;
 }
 
-// Asegúrate de que initMap se llame cuando la página se cargue
-//window.onload = initMap;
-
-//Función que renderize la coordenada del contrato en el mapa
 export async function renderizarCoordenadaMapa(id) {
   try {
     // Hacer la solicitud HTTP para obtener las coordenadas
     const response = await fetch(`http://localhost/Delatel/app/controllers/Contrato.controllers.php?operacion=obtenerCoordenadasbyId&id=${id}`);
     const data = await response.json();
 
-    // Verificar que la respuesta contiene las coordenadas
     if (data && data.length > 0 && data[0].coordenada) {
       const coordenada = data[0].coordenada.split(',');
-      const latitud = parseFloat(coordenada[0]);
-      const longitud = parseFloat(coordenada[1]);
+      const latitud = coordenada[0];
+      const longitud = coordenada[1];
 
       console.log('Coordenadas obtenidas:', latitud, longitud);
 
@@ -338,20 +333,21 @@ export async function renderizarCoordenadaMapa(id) {
       const posicion = new google.maps.LatLng(latitud, longitud);
       mapa.setCenter(posicion);
       mapa.setZoom(15);
-
       // Eliminar el marcador anterior, si existe
       if (marcador) {
         marcador.setMap(null);
       }
 
-      // Agregar un nuevo marcador en la nueva posición
+      const img = document.createElement('img');
+      img.src = `${config.HOST}image/contrato.png`;
+      
       marcador = new google.maps.Marker({
         position: posicion,
         map: mapa,
-        title: "Ubicación buscada"
+        title: "Ubicación buscada",
+        content: img
       });
 
-      // Mensaje de depuración para verificar la nueva posición
       console.log('Nueva posición del mapa:', posicion.lat(), posicion.lng());
     } else {
       console.error('No se encontraron coordenadas en la respuesta.');

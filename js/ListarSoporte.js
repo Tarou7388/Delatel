@@ -174,12 +174,13 @@ document.addEventListener("DOMContentLoaded", () => {
     //Extraer y almacenar el id_contrato
     const id_contrato = data[0].id_contrato;
     console.log('ID del contrato:', id_contrato);
-    await mapa.renderizarCoordenadaMapa(id_contrato);
 
-   /*  const params = { cajas: false, mufas: false }
+    const params = { cajas: false, mufas: false }
     const ip = "map"
     const renderizado = "modal"
-    mapa.iniciarMapa(params, ip, renderizado); */
+    mapa.iniciarMapa(params, ip, renderizado);
+
+    await mapa.renderizarCoordenadaMapa(id_contrato);
   });
 
   $('.card-body').on('click', '.btnCompleto', async function () {
@@ -197,6 +198,5 @@ document.addEventListener("DOMContentLoaded", () => {
     ruta = `${config.HOST}app/controllers/Soporte.controllers.php?operacion=FiltrarSoportePrioridad&prioridad=` + Prioridad.value;
     table.ajax.url(ruta).load();
   });
-
 
 });

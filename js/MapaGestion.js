@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   let numeroEntradasCaja = "";
   let direccionCaja = "";
   let coordenadasCaja = "";
-
+  let coordenadasCajaGuardada = false;
   let idMufaRegistro = "";
 
   let banderaCable = false;
@@ -40,9 +40,101 @@ document.addEventListener('DOMContentLoaded', async () => {
   const params = { cajas: true, mufas: true, cables: true, sectores: true };
 
   (async () => {
+    await initMap(params);
     cargarSelect();
   })();
 
+  async function buscarMarcadorCercano(datos, coordenadas) {
+    let menorDistancia = 1000000;
+    let marcadorCercano = null;
+    datos.forEach(marcador => {
+      const distancia = google.maps.geometry.spherical.computeDistanceBetween(
+        new google.maps.LatLng(marcador.latLng[0], marcador.latLng[1]),
+        new google.maps.LatLng(coordenadas.lat, coordenadas.lng)
+      )
+      if (distancia < menorDistancia) {
+        menorDistancia = distancia;
+        marcadorCercano = marcador;
+      }
+    });
+    const params = {
+      marcador: marcadorCercano,
+      distancia: menorDistancia
+    }
+    return params;
+  }
+
+  async function cargarSelect() {
+    const response = await fetch(`${config.HOST}app/controllers/Distritos.controllers.php?operacion=buscarDistrito&valor=1102`);
+    const data = await response.json();
+    const select = document.querySelector("#buscarDistrito");
+    data.forEach(item => {
+      const option = document.createElement("option");
+      option.value = item.id_distrito;
+      option.text = item.distrito;
+      select.appendChild(option);
+    });
+  }
+
+  async function blooquearbotones(caja, mufa, sector) {
+    document.querySelector("#modalAgregarCaja").disabled = caja;
+    document.querySelector("#modalAgregarMufa").disabled = mufa;
+    document.querySelector("#modalAgregarSector").disabled = sector;
+  }
+
+  async function updateMap() {
+    const params1 = {};
+    params1.cajas = document.querySelector("#chkCajas").checked;
+    params1.mufas = document.querySelector("#chkMufas").checked;
+    params1.cables = document.querySelector("#chkCables").checked;
+    params1.sectores = document.querySelector("#chkSectores").checked;
+
+    if (params1.cajas != params.cajas) {
+      if (params1.cajas) {
+        await eventocajas();
+      } else {
+        marcadoresCajas.forEach(marcador => {
+          marcador.forEach(item => {
+            item.setMap(null);
+          });
+        });
+      }
+    }
+    if (params1.mufas != params.mufas) {
+      if (params1.mufas) {
+        await eventomufas();
+      } else {
+        marcadoresMufas.forEach(marcador => {
+          marcador.setMap(null);
+        });
+      }
+    }
+    if (params1.cables != params.cables) {
+      if (params1.cables) {
+        await eventoCables();
+      } else {
+        lineasCables.forEach(linea => {
+          linea.setMap(null);
+        });
+      }
+    }
+    if (params1.sectores != params.sectores) {
+      if (params1.sectores) {
+        await eventoSectores();
+      } else {
+        marcadoresSectores.forEach(marcador => {
+          marcador.setMap(null);
+        });
+      }
+    }
+
+    params.cajas = params1.cajas;
+    params.mufas = params1.mufas;
+    params.cables = params1.cables;
+    params.sectores = params1.sectores;
+  }
+
+  /* Inicia mapa aqui */
   async function initMap(params) {
 
     ({ Map, Circle, Polyline } = await google.maps.importLibrary("maps"));
@@ -71,18 +163,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
   }
-
-  async function cargarSelect() {
-    const response = await fetch(`${config.HOST}app/controllers/Distritos.controllers.php?operacion=buscarDistrito&valor=1102`);
-    const data = await response.json();
-    const select = document.querySelector("#buscarDistrito");
-    data.forEach(item => {
-      const option = document.createElement("option");
-      option.value = item.id_distrito;
-      option.text = item.distrito;
-      select.appendChild(option);
-    });
-  }
+  /* Inicia mapa aqui */
 
   async function agregarCaja() {
     const coordenadasEnviar = `${coordenadasCaja.lat},${coordenadasCaja.lng}`;
@@ -126,65 +207,55 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  async function buscarMarcadorCercano(datos, coordenadas) {
-    let menorDistancia = 1000000;
-    let marcadorCercano = null;
-    datos.forEach(marcador => {
-      const distancia = google.maps.geometry.spherical.computeDistanceBetween(
-        new google.maps.LatLng(marcador.latLng[0], marcador.latLng[1]),
-        new google.maps.LatLng(coordenadas.lat, coordenadas.lng)
-      )
-      if (distancia < menorDistancia) {
-        menorDistancia = distancia;
-        marcadorCercano = marcador;
-      }
+  async function agregarSector() {
+    const coordenadasEnviar = `${Coordenadas.lat},${Coordenadas.lng}`;
+    const paramsEnviar = new FormData();
+    paramsEnviar.append("operacion", "registrarSector");
+    paramsEnviar.append("idDistrito", document.querySelector("#buscarDistrito").value);
+    paramsEnviar.append("sector", document.querySelector("#nombreSector").value);
+    paramsEnviar.append("descripcion", document.querySelector("#descripcionSector").value);
+    paramsEnviar.append("coordenadas", coordenadasEnviar);
+    paramsEnviar.append("idUsuario", user.idUsuario);
+    const response = await fetch(`${config.HOST}app/controllers/Sector.controllers.php`, {
+      method: "POST",
+      body: paramsEnviar
     });
-    const params = {
-      marcador: marcadorCercano,
-      distancia: menorDistancia
+    const data = await response.json();
+    if(data.error){
+      showToast(data.error.message, "ERROR");
+      console.log(data.error);
+    }else{
+      showToast("Registrado Correctamente", "SUCCESS");
+      marcadoresSectores.forEach(marcador => {
+        marcador.setMap(null);
+      });
+      eventoSectores();
     }
-    return params;
   }
 
-  document.querySelector("#formAgregarCaja").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    nombreCaja = document.querySelector("#nombreCaja").value;
-    descripcionCaja = document.querySelector("#descripcionCaja").value;
-    numeroEntradasCaja = document.querySelector("#numEntradasCaja").value;
-    direccionCaja = document.querySelector("#direccionCaja").value;
-    coordenadasCaja = Coordenadas;
-    const marcador = await buscarMarcadorCercano(datosSectores, coordenadasCaja);
-    sectorCercano = marcador.marcador.id_sector;
-    banderaCable = true;
-    const modal = bootstrap.Modal.getInstance(document.getElementById('modalAgregar'));
-    modal.hide();
-  });
-
-  document.querySelector("#formAgregarMufa").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const modal = bootstrap.Modal.getInstance(document.getElementById('modalAgregarMufa2'));
-    if(await ask("¿Desea guardar la mufa?")){
-      agregarMufa();
+  async function agregarMufa() {
+    const paramsEnviar = new FormData();
+    paramsEnviar.append("operacion", "registrarMufa");
+    paramsEnviar.append("nombre", document.querySelector("#nombreMufa").value);
+    paramsEnviar.append("descripcion", document.querySelector("#descripcionMufa").value);
+    paramsEnviar.append("coordenadas", Coordenadas);
+    paramsEnviar.append("direccion", document.querySelector("#direccionMufa").value);
+    paramsEnviar.append("id_usuario", user.idUsuario);
+    const response = await fetch(`${config.HOST}app/controllers/Mufas.controllers.php`, {
+      method: "POST",
+      body: paramsEnviar
+    });
+    const data = await response.json();
+    if(data.error){
+      showToast(data.error.message, "ERROR");
+    }else{
+      showToast("Registrado Correctamente", "SUCCESS");
+      marcadoresMufas.forEach(marcador => {
+        marcador.setMap(null);
+      });
+      eventomufas();
     }
-    modal.hide();
-  });
-
-  document.querySelector("#formAgregarSector").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    if(await ask("¿Desea guardar el sector?")){
-      agregarSector();
-    }
-    const modal = bootstrap.Modal.getInstance(document.getElementById('modalAgregarSector2'));
-    modal.hide();
-  });
-
-  document.querySelector("#numEntradasCaja").addEventListener("change", (e) => {
-    if(document.querySelector("#numEntradasCaja").value == 8){
-      document.querySelector("#codigoNombre").textContent = "-08";
-    }else if(document.querySelector("#numEntradasCaja").value == 16){
-      document.querySelector("#codigoNombre").textContent = "-16";
-    }
-  });
+  }
 
   async function eventocajas() {
     datosCajas = await obtenerDatosAnidado(`${config.HOST}app/controllers/Caja.controllers.php?operacion=listarCajas`);
@@ -243,62 +314,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       Coordenadas = `${e.latLng.lat()},${e.latLng.lng()}`;
       marcadorPrincipalEvento(e.latLng.toJSON());
     });
-  }
-
-  async function agregarSector() {
-    const coordenadasEnviar = `${Coordenadas.lat},${Coordenadas.lng}`;
-    const paramsEnviar = new FormData();
-    paramsEnviar.append("operacion", "registrarSector");
-    paramsEnviar.append("idDistrito", document.querySelector("#buscarDistrito").value);
-    paramsEnviar.append("sector", document.querySelector("#nombreSector").value);
-    paramsEnviar.append("descripcion", document.querySelector("#descripcionSector").value);
-    paramsEnviar.append("coordenadas", coordenadasEnviar);
-    paramsEnviar.append("idUsuario", user.idUsuario);
-    const response = await fetch(`${config.HOST}app/controllers/Sector.controllers.php`, {
-      method: "POST",
-      body: paramsEnviar
-    });
-    const data = await response.json();
-    if(data.error){
-      showToast(data.error.message, "ERROR");
-      console.log(data.error);
-    }else{
-      showToast("Registrado Correctamente", "SUCCESS");
-      marcadoresSectores.forEach(marcador => {
-        marcador.setMap(null);
-      });
-      eventoSectores();
-    }
-  }
-
-  async function agregarMufa() {
-    const paramsEnviar = new FormData();
-    paramsEnviar.append("operacion", "registrarMufa");
-    paramsEnviar.append("nombre", document.querySelector("#nombreMufa").value);
-    paramsEnviar.append("descripcion", document.querySelector("#descripcionMufa").value);
-    paramsEnviar.append("coordenadas", Coordenadas);
-    paramsEnviar.append("direccion", document.querySelector("#direccionMufa").value);
-    paramsEnviar.append("id_usuario", user.idUsuario);
-    const response = await fetch(`${config.HOST}app/controllers/Mufas.controllers.php`, {
-      method: "POST",
-      body: paramsEnviar
-    });
-    const data = await response.json();
-    if(data.error){
-      showToast(data.error.message, "ERROR");
-    }else{
-      showToast("Registrado Correctamente", "SUCCESS");
-      marcadoresMufas.forEach(marcador => {
-        marcador.setMap(null);
-      });
-      eventomufas();
-    }
-  }
-
-  async function blooquearbotones(caja, mufa, sector) {
-    document.querySelector("#modalAgregarCaja").disabled = caja;
-    document.querySelector("#modalAgregarMufa").disabled = mufa;
-    document.querySelector("#modalAgregarSector").disabled = sector;
   }
 
   async function eventoSectores() {
@@ -414,58 +429,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     return datos;
   }
 
-  async function updateMap() {
-    const params1 = {};
-    params1.cajas = document.querySelector("#chkCajas").checked;
-    params1.mufas = document.querySelector("#chkMufas").checked;
-    params1.cables = document.querySelector("#chkCables").checked;
-    params1.sectores = document.querySelector("#chkSectores").checked;
-
-    if (params1.cajas != params.cajas) {
-      if (params1.cajas) {
-        await eventocajas();
-      } else {
-        marcadoresCajas.forEach(marcador => {
-          marcador.forEach(item => {
-            item.setMap(null);
-          });
-        });
-      }
-    }
-    if (params1.mufas != params.mufas) {
-      if (params1.mufas) {
-        await eventomufas();
-      } else {
-        marcadoresMufas.forEach(marcador => {
-          marcador.setMap(null);
-        });
-      }
-    }
-    if (params1.cables != params.cables) {
-      if (params1.cables) {
-        await eventoCables();
-      } else {
-        lineasCables.forEach(linea => {
-          linea.setMap(null);
-        });
-      }
-    }
-    if (params1.sectores != params.sectores) {
-      if (params1.sectores) {
-        await eventoSectores();
-      } else {
-        marcadoresSectores.forEach(marcador => {
-          marcador.setMap(null);
-        });
-      }
-    }
-
-    params.cajas = params1.cajas;
-    params.mufas = params1.mufas;
-    params.cables = params1.cables;
-    params.sectores = params1.sectores;
-  }
-
   async function marcarLineaCable(json) {
     if (!coordenadasCajaGuardada) {
       lineaCableGuardar.push(coordenadasCaja);
@@ -500,13 +463,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  document.querySelector("#btnActualizar").addEventListener("click", () => {
-    updateMap();
-  })
-
-  await initMap(params);
-
-  let coordenadasCajaGuardada = false;
+  async function agregarLineasPrincipal() {
+    
+  }
 
   mapa.addListener('click', (event) => {
     const latLng = event.latLng.toJSON();
@@ -522,6 +481,50 @@ document.addEventListener('DOMContentLoaded', async () => {
       const json = { lat: latLng.lat, lng: latLng.lng };
       console.log(json);
       marcarLineaCable(json);
+    }
+  });
+
+  document.querySelector("#btnActualizar").addEventListener("click", () => {
+    updateMap();
+  })
+
+  document.querySelector("#formAgregarCaja").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    nombreCaja = document.querySelector("#nombreCaja").value;
+    descripcionCaja = document.querySelector("#descripcionCaja").value;
+    numeroEntradasCaja = document.querySelector("#numEntradasCaja").value;
+    direccionCaja = document.querySelector("#direccionCaja").value;
+    coordenadasCaja = Coordenadas;
+    const marcador = await buscarMarcadorCercano(datosSectores, coordenadasCaja);
+    sectorCercano = marcador.marcador.id_sector;
+    banderaCable = true;
+    const modal = bootstrap.Modal.getInstance(document.getElementById('modalAgregar'));
+    modal.hide();
+  });
+
+  document.querySelector("#formAgregarMufa").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const modal = bootstrap.Modal.getInstance(document.getElementById('modalAgregarMufa2'));
+    if(await ask("¿Desea guardar la mufa?")){
+      agregarMufa();
+    }
+    modal.hide();
+  });
+
+  document.querySelector("#formAgregarSector").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if(await ask("¿Desea guardar el sector?")){
+      agregarSector();
+    }
+    const modal = bootstrap.Modal.getInstance(document.getElementById('modalAgregarSector2'));
+    modal.hide();
+  });
+
+  document.querySelector("#numEntradasCaja").addEventListener("change", (e) => {
+    if(document.querySelector("#numEntradasCaja").value == 8){
+      document.querySelector("#codigoNombre").textContent = "-08";
+    }else if(document.querySelector("#numEntradasCaja").value == 16){
+      document.querySelector("#codigoNombre").textContent = "-16";
     }
   });
 

@@ -107,4 +107,25 @@ BEGIN
   SELECT id_caja, nombre, numero_entradas coordenadas FROM tb_cajas WHERE id_sector = idSector AND numero_entradas > 0;
 END$$
 
-CALL `spu_buscar_cajas_sector_idCaja`(1);
+DROP PROCEDURE IF EXISTS spu_actualizar_linea$$
+
+CREATE PROCEDURE spu_actualizar_linea(
+  IN p_id_caja INT,
+  IN p_coordenadas JSON,
+  IN p_id_user_create INT
+)
+BEGIN
+  IF (p_id_caja = 0) THEN
+    UPDATE tb_lineas
+    SET coordenadas = p_coordenadas,
+        update_at = NOW(),
+        iduser_create = p_id_user_create
+    WHERE id_linea = 1;
+  ELSE
+    UPDATE tb_lineas
+    SET coordenadas = p_coordenadas,
+        update_at = NOW(),
+        iduser_create = p_id_user_create
+    WHERE id_caja = p_id_caja;
+  END IF;
+END$$

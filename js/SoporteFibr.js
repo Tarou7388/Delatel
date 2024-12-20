@@ -1,5 +1,6 @@
 import config from "../env.js";
 import { FichaInstalacion, formatoIPinput, FichaSoporteporDocServCoordenada } from "./Herramientas.js";
+import * as mapa from "./Mapa.js";
 
 // Evento que se ejecuta cuando el DOM ha sido completamente cargado
 document.addEventListener("DOMContentLoaded", () => {
@@ -24,6 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const txtIp = document.getElementById("txtIp");
   const slcRpetidor = document.getElementById("slcRpetidor");
   const txtaEstadoInicial = document.getElementById("txtaEstadoInicial");
+  const slcCaja = document.getElementById("slcCaja");
 
   const txtIpRouter = document.getElementById("txtIpRouter");
   const txtIpRepetidor = document.getElementById("txtIpRepetidor");
@@ -64,6 +66,15 @@ document.addEventListener("DOMContentLoaded", () => {
         await listarReporte(idContrato, idReporte);
         await cargarProblema(idReporte);
       }
+      const cajas = await mapa.buscarCercanos(idCaja);
+      cajas.forEach(caja => {
+        const option = document.createElement('option');
+        option.value = caja.id_caja;
+        option.text = caja.nombre;
+        slcCaja.appendChild(option);
+      });
+      slcCaja.value = idCaja;
+
     } catch (error) {
       console.error("Error durante la inicialización:", error);
     }
