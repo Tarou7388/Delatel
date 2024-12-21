@@ -1,4 +1,5 @@
 <?php require_once '../../header.php'; ?>
+<link rel="stylesheet" href="../../css/contratos.css">
 
 <div class="modal fade" id="ModalMapa" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl" role="document">
@@ -264,27 +265,26 @@
     </div>
     <div class="card-body">
       <div class="table-responsive">
-        <table id="listarContratos" class="table table-striped">
+        <table id="listarContratos" class="table table-striped table-responsive-sm">
           <thead>
             <tr>
-              <th class="text-center">ID</th>
+              <th class="text-center d-none d-sm-table-cell">ID</th>
               <th class="text-center">Cliente</th>
-              <th class="text-center">Número de Doc</th>
-              <th class="text-center">Paquete</th>
-              <th class="text-center">Precio</th>
+              <th class="text-center d-none d-sm-table-cell">Número de Doc</th>
+              <th class="text-center d-none d-sm-table-cell">Paquete</th>
+              <th class="text-center d-none d-sm-table-cell">Precio</th>
               <th class="text-center">Servicio</th>
               <th class="text-center">Acciones</th>
             </tr>
           </thead>
           <tbody>
+            <!-- Contenido generado por JS -->
           </tbody>
         </table>
       </div>
     </div>
   </div>
 </div>
-
-
 
 <script type="module">
   const user = <?php echo json_encode($_SESSION['login']); ?>;

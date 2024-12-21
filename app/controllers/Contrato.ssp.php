@@ -23,31 +23,21 @@ $table = 'vw_contratos_listar';
 $primaryKey = 'id_contrato';
 
 $columns = array(
-    array('db' => 'id_contrato', 'dt' => 0),
-    array('db' => 'nombre_cliente', 'dt' => 1),
-    array('db' => 'num_identificacion', 'dt' => 2),
-    array('db' => 'direccion_servicio', 'dt' => 3),
-    array('db' => 'paquete', 'dt' => 4),
-    array('db' => 'precio', 'dt' => 5),
-    array('db' => 'tipos_servicio', 'dt' => 6),
-    array( 
-        'db'        => 'id_contrato',
-        'dt'        => 7,
-        'formatter' => function( $d, $row ) {
-            return '<button class="btn btn-warning btn-actualizar" data-id="'.$d.'">Actualizar</button>
-                    <button class="btn btn-danger btn-eliminar" data-id="'.$d.'">Eliminar</button>
-                    <button class="btn btn-info btn-ver" data-id="'.$d.'">PDF</button>
-                    <button class="btn btn-success btn-pagar" data-id="'.$d.'">Ficha</button>';
-        }
-    )
+  array('db' => 'id_contrato', 'dt' => 0),
+  array('db' => 'nombre_cliente', 'dt' => 1),
+  array('db' => 'num_identificacion', 'dt' => 2),
+  array('db' => 'direccion_servicio', 'dt' => 3),
+  array('db' => 'paquete', 'dt' => 4),
+  array('db' => 'precio', 'dt' => 5),
+  array('db' => 'tipos_servicio', 'dt' => 6),
 );
 
 $sql_details = array(
-    'user' => 'root',
-    'pass' => '',
-    'db'   => 'Delatel',
-    'host' => 'localhost',
-    'charset' => 'utf8'
+  'user' => 'root',
+  'pass' => '',
+  'db'   => 'Delatel',
+  'host' => 'localhost',
+  'charset' => 'utf8'
 );
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -58,5 +48,5 @@ $sql_details = array(
 require('../models/ssp.class.php');
 
 echo json_encode(
-    SSP::simple($_GET, $sql_details, $table, $primaryKey, $columns, null, null, 'ORDER BY id_contrato DESC')
+  SSP::simple($_GET, $sql_details, $table, $primaryKey, $columns, null, null, 'ORDER BY id_contrato DESC')
 );

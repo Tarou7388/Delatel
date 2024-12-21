@@ -335,7 +335,27 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 
   async function cargarDatos() {
-    //Cargar Sectores
+    // Función para mostrar/ocultar detalles solo en dispositivos móviles
+    function alternarDetalles(fila) {
+      if (window.innerWidth < 768) {
+        const siguienteFila = fila.nextElementSibling;
+        if (siguienteFila && siguienteFila.classList.contains('fila-detalles')) {
+          siguienteFila.remove();
+        } else {
+          const celdasOcultas = fila.querySelectorAll('.d-none.d-sm-table-cell');
+          let detallesHtml = '<tr class="fila-detalles"><td colspan="8"><table class="table table-striped">';
+          celdasOcultas.forEach(celda => {
+            detallesHtml += `<tr><td>${celda.innerHTML}</td></tr>`;
+          });
+
+          detallesHtml += '</table></td></tr>';
+          fila.insertAdjacentHTML('afterend', detallesHtml);
+        }
+      }
+    }
+
+
+    // Cargar Sectores
     const dataSectores = await fetchSectores();
     dataSectores.forEach((sector) => {
       const option = document.createElement("option");
@@ -347,7 +367,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       slcSectorActualizar.appendChild(option);
     });
 
-    //Inicializar tabla
+    // Inicializar tabla
     tabla = new DataTable("#listarContratos", {
       language: {
         url: `https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json`,
@@ -367,53 +387,63 @@ window.addEventListener("DOMContentLoaded", async () => {
         }
       },
       columns: [
-        { data: 0 }, // id_contrato
-        { data: 1 }, // nombre_cliente
-        { data: 2 }, // num_identificacion
-        { data: 4 }, // paquete
-        { data: 5 }, // precio
-        { data: 6 }, // tipos_servicio
+        { data: 0 },  // ID  
+        { data: 1 },  // Cliente
+        { data: 2 },  // Número de Documento
+        { data: 4 },  // Paquete
+        { data: 5 },  // Precio
+        { data: 6 },  // Servicio
         {
           data: null,
           render: function (data, type, row) {
             return `
-              <button class="btn btn-sm btn-warning btn-edit" data-idContrato="${row[0]}" title="Actualizar">
-              <i class="fa-regular fa-pen-to-square icon-disabled"></i>
-              </button>
-              <button class="btn btn-sm btn-danger btnEliminar" data-idContrato="${row[0]}" title="Eliminar">
-              <i class="fa-solid fa-file-circle-xmark icon-disabled"></i>
-              </button>
-              <button class="btn btn-sm btn-primary btnGenerar" data-tipoServicio="${row[6]}" data-idContrato="${row[0]}" title="Generar PDF">
-              <i class="fa-solid fa-file-pdf icon-disabled"></i>
-              </button>
-              <button class="btn btn-sm btn-success btnFicha" data-tipoServicio="${row[6]}" data-idContrato="${row[0]}" title="Ficha Técnica">
-              <i class="fa-solid fa-file icon-disabled" id="iconFicha${row[0]}"></i>
-              </button>
-            `;
+                      <div class="btn-group" role="group">
+                        <button class="btn btn-sm btn-warning btn-edit" data-idContrato="${row[0]}" title="Actualizar">
+                            <i class="fa-regular fa-pen-to-square icon-disabled"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger btnEliminar" data-idContrato="${row[0]}" title="Eliminar">
+                            <i class="fa-solid fa-file-circle-xmark icon-disabled"></i>
+                        </button>
+                        <button class="btn btn-sm btn-primary btnGenerar" data-tipoServicio="${row[6]}" data-idContrato="${row[0]}" title="Generar PDF">
+                            <i class="fa-solid fa-file-pdf icon-disabled"></i>
+                        </button>
+                        <button class="btn btn-sm btn-success btnFicha" data-tipoServicio="${row[6]}" data-idContrato="${row[0]}" title="Ficha Técnica">
+                            <i class="fa-solid fa-file-signature icon-disabled" id="iconFicha${row[0]}"></i>
+                        </button>
+                      </div>
+                  `;
           }
         }
       ],
       columnDefs: [
-        { className: 'text-center', targets: [0, 1, 2, 3, 4, 5, 6] },
-        { width: "200px", targets: [6] },
-        { targets: [0], visible: false }
+        { className: 'text-center', targets: '_all' },
+        { target: [0], visible: false },
+        { targets: [0, 2, 3, 4], className: 'd-none d-sm-table-cell' }
       ],
       order: [[0, 'desc']],
       drawCallback: function (settings) {
-        //Agregar event listerners para los botones despues de dibujar la tabla
+        // Agregar event listeners para las filas
+        const filas = document.querySelectorAll("#listarContratos tbody tr");
+
+        filas.forEach((fila) => {
+          fila.addEventListener("click", (event) => {
+            alternarDetalles(fila);
+          });
+        });
+
+        // Event listeners para los botones de editar, eliminar, generar PDF, etc.
         const botonesPdf = document.querySelectorAll(".btnGenerar");
         const botonesEliminar = document.querySelectorAll(".btnEliminar");
         const botonesFicha = document.querySelectorAll(".btnFicha");
         const botonesEdit = document.querySelectorAll(".btn-edit");
 
-        // Verificar el estado del icono desde el almacenamiento local
+        // Event listeners para el botón de ficha técnica
         botonesFicha.forEach((boton) => {
           const idContrato = boton.getAttribute("data-idContrato");
           const icono = document.getElementById(`iconFicha${idContrato}`);
           const estadoIcono = localStorage.getItem(`iconFicha${idContrato}`);
           if (estadoIcono === 'lleno') {
-            icono.classList.remove('fa-file');
-            icono.classList.add('fa-file-circle-check');
+            icono.classList.replace('fa-file-signature', 'fa-file-circle-check');
           }
         });
 
@@ -438,8 +468,7 @@ window.addEventListener("DOMContentLoaded", async () => {
               if (fichaInstalacion && Object.keys(fichaInstalacion).length > 0) {
                 // Cambiar el icono del botón si la ficha está llena
                 const icono = document.getElementById(`iconFicha${idContrato}`);
-                icono.classList.remove('fa-file');
-                icono.classList.add('fa-file-circle-check');
+                icono.classList.replace('fa-file', 'fa-file-circle-check');
                 // Guardar el estado del icono en el almacenamiento local
                 localStorage.setItem(`iconFicha${idContrato}`, 'lleno');
 
@@ -463,7 +492,7 @@ window.addEventListener("DOMContentLoaded", async () => {
           });
         });
 
-        //Event listeners para el botón de editar
+        // Event listeners para el botón de editar
         botonesEdit.forEach((boton) => {
           boton.addEventListener("click", (event) => {
             const idContrato = event.target.getAttribute("data-idContrato");
@@ -471,7 +500,7 @@ window.addEventListener("DOMContentLoaded", async () => {
           });
         });
 
-        //Event listeners para el botón de eliminar
+        // Event listeners para el botón de eliminar
         botonesEliminar.forEach((boton) => {
           boton.addEventListener("click", async (event) => {
             const idContrato = event.target.getAttribute("data-idContrato");
@@ -495,7 +524,7 @@ window.addEventListener("DOMContentLoaded", async () => {
           });
         });
 
-        //Event listeners para el botón de generar PDF
+        // Event listeners para el botón de generar PDF
         botonesPdf.forEach((boton) => {
           boton.addEventListener("click", () => {
             const idContrato = boton.getAttribute("data-idContrato");

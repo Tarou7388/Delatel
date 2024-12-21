@@ -1,0 +1,7 @@
+@media (max-width: 768px) {
+  .btn-group .btn {
+    margin-bottom: 10px; /* Aumentar el margen inferior */
+    margin-right: 10px; /* Aumentar el margen derecho */
+    padding: 10px 15px; /* Aumentar el tamaño del botón */
+  }
+}
