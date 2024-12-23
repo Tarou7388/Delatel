@@ -161,9 +161,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function cargarSoporteAnterior(data, idSoporte) {
-    const respuestaProblema = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
-    const dataProblema = await respuestaProblema.json();
-    $("#txtaEstadoInicial").val(dataProblema[0].descripcion_problema);
+    try {
+      const respuestaProblema = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
+      const dataProblema = await respuestaProblema.json();
+      $("#txtaEstadoInicial").val(dataProblema[0].descripcion_problema);
+    } catch (error) { 
+      console.error("Error en descripcion_problema:", error);
+    };
 
     console.log(data);
     txtPotencia.value = data.potencia;
@@ -203,12 +207,20 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const respuesta = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${doc}`);
       const data = await respuesta.json();
-      $("#txtCliente").val(data[0].nombre);
-      $("#txtNrodocumento").val(doc);
+      txtCliente.value = data[0].nombre;
+      txtNrodocumento.value = doc;
 
+    } catch (error) {
+      console.error("Error en CargarDatosInstalacion:", error);
+    }
+
+    try {
       const dataCable = await FichaInstalacion(idSoporte);
       const cableFiltrado = JSON.parse(dataCable[0].ficha_instalacion).cable;
-      const sintonizadores = cableFiltrado.sintonizadores.length;
+
+      // Validar si sintonizadores existe
+      const sintonizadores = cableFiltrado.sintonizadores ? cableFiltrado.sintonizadores.length : 0;
+
       const cargador = JSON.parse(cableFiltrado.triplexor.cargador);
       const requerido = JSON.parse(cableFiltrado.triplexor.requerido);
 
@@ -222,7 +234,7 @@ document.addEventListener("DOMContentLoaded", () => {
         slcTriplexor.selectedIndex = 2;
       } else {
         slcTriplexor.selectedIndex = 1;
-      };
+      }
 
       txtNumSpliter.value = cableFiltrado.splitter[0].cantidad;
       slcSpliter.value = cableFiltrado.splitter[0].tipo;
@@ -231,16 +243,16 @@ document.addEventListener("DOMContentLoaded", () => {
       txtPrecioCable.value = (cableFiltrado.cable.metrosadicionales * parseFloat(cableFiltrado.cable.preciometro));
 
       txtConector.value = cableFiltrado.conector.numeroconector;
-      txtPrecioCableCambio.value = (parseFloat(cableFiltrado.cable.preciometro));
+      txtPrecioCableCambio.value = parseFloat(cableFiltrado.cable.preciometro);
 
-      txtPrecioConectorCambio.value = (cableFiltrado.conector.precio);
-      txtPrecioConector.value = (cableFiltrado.conector.numeroconector * cableFiltrado.conector.precio);
+      txtPrecioConectorCambio.value = cableFiltrado.conector.precio;
+      txtPrecioConector.value = cableFiltrado.conector.numeroconector * cableFiltrado.conector.precio;
 
       idCaja = JSON.parse(dataCable[0].ficha_instalacion).idcaja;
-
     } catch (error) {
       console.error("Error en FichaInstalacion:", error);
-    };
+    }
+
 
     try {
       const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
