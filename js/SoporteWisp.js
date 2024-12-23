@@ -27,7 +27,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const txtBaseNuevo = document.getElementById("txtBaseNuevo");
   const txtIpNuevo = document.getElementById("txtIpNuevo");
   const txtSenialNuevo = document.getElementById("txtSenialNuevo");
-
+  
+  const txtAccesoNuevo = document.getElementById("txtAccesoNuevo");
   const txtRouterCambioSsid = document.getElementById("txtRouterCambioSsid");
   const txtRouterCambioSeguridad = document.getElementById("txtRouterCambioSeguridad");
   const txtRouterCambiopuertaEnlace = document.getElementById("txtRouterCambiopuertaEnlace");
@@ -36,7 +37,6 @@ document.addEventListener("DOMContentLoaded", () => {
   //Definicion de constantes
   const solutionTextarea = document.getElementById("txtaProceSolucion");
   const txtaEstadoInicial = document.getElementById("txtaEstadoInicial");
-
   let idSoporte = -1;
 
   (async function () {
@@ -103,6 +103,97 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
+  async function reporte(idReporte) {
+    try {
+      const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idReporte}`);
+      const data = await respuesta.json();
+      const soporte = JSON.parse(data[0].soporte);
+
+      await cargarRoutersReporte(data[0]);
+
+      txtNrodocumento.value = data[0].nro_doc;
+      txtCliente.value = soporte.WISP.parametroscliente.usuario;
+      txtPlan.value = soporte.WISP.parametroscliente.plan;
+      deshabilitar();
+    } catch (error) {
+      console.error("Error en reporte:", error);
+    }
+  }
+
+
+  async function cargarRoutersReporte(data) {
+    try {
+      // Parsear el campo "soporte" para obtener el objeto con los routers
+      const soporte = JSON.parse(data.soporte);
+
+      // Obtener la lista de routers desde "soporte"
+      const routers = soporte.WISP.parametros.routers;
+
+      // Limpiar el contenido del select
+      slcWireless.innerHTML = '';
+      slcWireless.innerHTML = '<option value="" disabled selected>Seleccione una opción</option>';
+
+      // Iterar sobre los routers y crear las opciones del select
+      routers.forEach(router => {
+        const option = document.createElement("option");
+        option.value = router.numero;
+        option.textContent = router.ssid;
+        slcWireless.appendChild(option);
+      });
+    } catch (error) {
+      console.error("Error al cargar los routers:", error);
+    }
+  }
+
+  async function cargarDatosEnInputs() {
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      urlParams.get("idReporte");
+      let idReporte = urlParams.get("idReporte");
+      const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idReporte}`);
+      const data = await respuesta.json();
+      console.log(data);
+
+      const datos = JSON.parse(data[0].soporte);
+      console.log(datos);
+      txtBase.value = datos.WISP.parametros.base;
+      txtIp.value = datos.WISP.parametros.routers[0].lan;
+      txtAcceso.value = datos.WISP.parametros.routers[0].acceso;
+      txtSenial.value = datos.WISP.parametros.signalstrength;
+      txtRouterSsid.value = datos.WISP.parametros.routers[0].ssid;
+      txtRouterSeguridad.value = datos.WISP.parametros.routers[0].seguridad;
+      txtRouterpuertaEnlace.value = datos.WISP.parametros.routers[0].puertaenlace;
+      txtRouterWan.value = datos.WISP.parametros.routers[0].wan;
+      txtaEstadoInicial.value = data[0].descripcion_problema;
+      solutionTextarea.value = data[0].descripcion_solucion;
+
+      txtBaseNuevo.value = datos.WISP.cambios.nuevabase;
+      txtIpNuevo.value = datos.WISP.cambios.routers[0].lan;
+      txtRouterCambioSsid.value = datos.WISP.cambios.routers[0].ssid;
+      txtAccesoNuevo.value = datos.WISP.cambios.routers[0].acceso;
+      txtRouterCambioSeguridad.value = datos.WISP.cambios.routers[0].seguridad;
+      txtRouterCambiopuertaEnlace.value = datos.WISP.cambios.routers[0].puertaEnlace;
+      txtRouterCambioWan.value = datos.WISP.cambios.routers[0].wan;
+      txtSenialNuevo.value = datos.WISP.cambios.signalstrength;
+      deshabilitar();
+
+    } catch (error) {
+      console.error("Error en cargarDatosEnInputs:", error);
+    }
+  }
+  async function deshabilitar() {
+    txtIpNuevo.disabled = true;
+    txtRouterCambioSsid.disabled = true;
+    txtRouterCambioSeguridad.disabled = true;
+    txtRouterCambiopuertaEnlace.disabled = true;
+    txtRouterCambioWan.disabled = true;
+    txtSenialNuevo.disabled = true;
+    txtRouterCambioSeguridad.disabled = true;
+    txtRouterCambiopuertaEnlace.disabled = true;
+    txtAccesoNuevo.disabled = true;
+    solutionTextarea.disabled = true;
+  }
+
   async function cargarRouters(routers) {
     slcWireless.innerHTML = '';
 
@@ -118,7 +209,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   slcWireless.addEventListener("change", async (event) => {
-    await cargarEnInputs();
+    const urlParams = new URLSearchParams(window.location.search);
+    let idReporte = urlParams.get("idReporte");
+    if(idReporte){
+      await cargarDatosEnInputs();
+    }else{
+      await cargarEnInputs();
+    }
   });
 
   async function cargarEnInputs() {
@@ -259,7 +356,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return routers.map(router => {
       if (router.numero === selectedValue) {
         router.ssid = txtRouterCambioSsid.value;
-        router.contrasenia = txtRouterCambioSeguridad.value;
+        router.seguridad = txtRouterCambioSeguridad.value;
         router.lan = txtIpNuevo.value;
         router.puertaEnlace = txtRouterCambiopuertaEnlace.value;
         router.wan = txtRouterCambioWan.value;
