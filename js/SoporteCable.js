@@ -1,5 +1,5 @@
 import config from "../env.js";
-import { FichaInstalacion, FichaSoporteporDocServCoordenada } from "./Herramientas.js";
+import { FichaInstalacion, FichaSoporteporDocServCoordenada, validarValorRango, CompletarSoporte } from "./Herramientas.js";
 import * as mapa from "./Mapa.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -13,41 +13,35 @@ document.addEventListener("DOMContentLoaded", () => {
   const txtPrecioConector = document.getElementById("txtPrecioConector");
   const txtaEstadoInicial = document.getElementById("txtaEstadoInicial")
 
+  const txtPotenciaCambio = document.getElementById("txtPotenciaCambio");
   const txtPrecioCableCambio = document.getElementById("txtPrecioCableCambio");
   const txtPrecioConectorCambio = document.getElementById("txtPrecioConectorCambio");
+  const txtSintonizadorCambio = document.getElementById("txtSintonizadorCambio");
 
   const txtPlan = document.getElementById("txtPlan");
   const txtCliente = document.getElementById("txtCliente");
   const txtNrodocumento = document.getElementById("txtNrodocumento");
 
   const form = document.getElementById("form-cable");
-  const urlParams = new URLSearchParams(window.location.search);
-  const serv = urlParams.get("tiposervicio").toLocaleLowerCase();
 
   let idSoporte = -1;
   let idCaja = -1;
-  /**
-   * Función para obtener las referencias del soporte
-   * de las cuales se obtendrá para obtener el problema del soporte
-   * y llenar los campos de la ficha de soporte
-   */
+
   (async function () {
     idSoporte = await obtenerReferencias();
     if (idSoporte) {
-      await obtenerProblema(idSoporte);
       crearSelectYBoton();
       await ObtenerValores();
+      await llamarCajas();
     } else {
       const urlParams = new URLSearchParams(window.location.search);
       urlParams.get("idReporte");
       await reporte(urlParams.get("idReporte"));
-      //Aqui puedes meterle mano
-      //Aqui puedes meterle mano
-      //Aqui puedes meterle mano
-      //Aqui puedes meterle mano
-      //Aqui puedes meterle mano
     }
 
+  })();
+
+  async function llamarCajas() {
     const cajas = await mapa.buscarCercanos(idCaja);
     cajas.forEach(caja => {
       const option = document.createElement('option');
@@ -56,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
       slcCaja.appendChild(option);
     });
     slcCaja.value = idCaja;
-  })();
+  }
 
   async function rellenarDocNombre(doct) {
     const respuesta = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${doct}`);
@@ -82,14 +76,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const soporteData = JSON.parse(data[0].soporte);
 
       // Extraer parámetros iniciales y cambios técnicos
-      const parametrosCable = soporteData.CABL.parametroscable;
-      const cambiosCable = soporteData.CABL.cambioscable;
+      const parametrosCable = soporteData.cabl.parametroscable;
+      const cambiosCable = soporteData.cabl.cambioscable;
 
       // Precios
-      const precioCable = 1.50;  // Precio del cable por unidad
-      const precioConector = 1.00;  // Precio del conector por unidad
+      const precioCable = 1.50;
+      const precioConector = 1.00;
 
-      // Función para rellenar y desactivar campos
       const setField = (id, value) => {
         const element = document.getElementById(id);
         if (element) {
@@ -140,7 +133,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Función auxiliar para convertir triplexor a valores válidos del select
   function triplexorValue(triplexor) {
     switch (triplexor?.toLowerCase()) {
       case 'no lleva': return '1';
@@ -158,35 +150,21 @@ document.addEventListener("DOMContentLoaded", () => {
     const tiposervicio = urlParams.get("tiposervicio");
     const coordenada = urlParams.get("coordenada");
 
-    await cabeceraFicha(doc);
-
-    console.log(doc);
-
     const respuesta = await FichaSoporteporDocServCoordenada(doc, tiposervicio, coordenada);
+    console.log(respuesta);
 
-    if (respuesta[0].soporte != "{}" && JSON.parse(respuesta[0].soporte).CABL) {
-      await cargarSoporteAnterior(JSON.parse(respuesta[0].soporte).CABL.cambioscable);
+    if (respuesta[0].soporte != "{}" && JSON.parse(respuesta[0].soporte).cabl) {
+      await cargarSoporteAnterior(JSON.parse(respuesta[0].soporte).cabl.cambioscable, idSoporte);
     } else {
-      await CargardatosInstalacion(idSoporte);
-    }
-
-
-  }
-
-  async function cabeceraFicha(doct) {
-    try {
-      const respuesta = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${doct}`);
-      const data = await respuesta.json();
-      console.log(doct);
-      console.log(data[0].nombre);
-      $("#txtCliente").val(data[0].nombre);
-      $("#txtNrodocumento").val(doct);
-    } catch (error) {
-      console.error("Error en CargardatosInstalacion:", error);
+      await CargardatosInstalacion(doc, idSoporte);
     }
   }
 
-  async function cargarSoporteAnterior(data) {
+  async function cargarSoporteAnterior(data, idSoporte) {
+    const respuestaProblema = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
+    const dataProblema = await respuestaProblema.json();
+    $("#txtaEstadoInicial").val(dataProblema[0].descripcion_problema);
+
     console.log(data);
     txtPotencia.value = data.potencia;
     txtSintonizador.value = data.sintonizador;
@@ -207,87 +185,62 @@ document.addEventListener("DOMContentLoaded", () => {
     txtPrecioConector.value = data.conector.precio * data.conector.numeroconector;
   }
 
-  /**
-   * Función para obtener el id del soporte, el nro de documento y 
-   * el tipo de servicio del contrato desde la URL
-   */
   async function obtenerReferencias() {
     const urlParams = new URLSearchParams(window.location.search);
     const idSoporte = urlParams.get("idsoporte");
-
     return idSoporte;
   }
 
-  /**
-   * Función para obtener el problema del soporte
-   * hace una consulta a la base de datos y llena el textarea con la descripción del problema
-   * @param {string} idSoporte - Id del soporte
-   * @returns {Promise<void>}
-   */
-  async function obtenerProblema(idSoporte) {
-    const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
-    const data = await respuesta.json();
-    $("#txtaEstadoInicial").val(data[0].descripcion_problema);
-  }
-
-  /**
-   * Función para llenar los datos del cliente y del soporte en la parte de parametros de la ficha de soporte
-   * @param {string} idSoporte - Id del soporte
-   * @returns {Promise<void>}
-   */
-  async function CargardatosInstalacion(idSoporte) {
+  async function CargardatosInstalacion(doc, idSoporte) {
     try {
+      const respuestaProblema = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
+      const dataProblema = await respuestaProblema.json();
+      $("#txtaEstadoInicial").val(dataProblema[0].descripcion_problema);
+    } catch (error) {
+      console.error("Error en descripcion_problema:", error);
+    };
+
+    try {
+      const respuesta = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${doc}`);
+      const data = await respuesta.json();
+      $("#txtCliente").val(data[0].nombre);
+      $("#txtNrodocumento").val(doc);
+
       const dataCable = await FichaInstalacion(idSoporte);
       const cableFiltrado = JSON.parse(dataCable[0].ficha_instalacion).cable;
-
-      txtPotencia.value = cableFiltrado.potencia;
-
-      //Asignacion de los sintonizadores
       const sintonizadores = cableFiltrado.sintonizadores.length;
-      txtSintonizador.value = sintonizadores;
-
-      //Asignacion de los triplores
-      // Parsea los valores de cargador y requerido del objeto triplexor
       const cargador = JSON.parse(cableFiltrado.triplexor.cargador);
       const requerido = JSON.parse(cableFiltrado.triplexor.requerido);
-      // Asigna el valor del select según los valores de cargador y requerido
+
+      txtPlan.value = cableFiltrado.plan;
+      txtPotencia.value = cableFiltrado.potencia;
+      txtSintonizador.value = sintonizadores;
+
       if (!cargador && requerido) {
         slcTriplexor.selectedIndex = 3;
       } else if (cargador && requerido) {
         slcTriplexor.selectedIndex = 2;
       } else {
         slcTriplexor.selectedIndex = 1;
-      }
+      };
 
-      //Asignacion de los spliter
       txtNumSpliter.value = cableFiltrado.splitter[0].cantidad;
       slcSpliter.value = cableFiltrado.splitter[0].tipo;
 
-      //Asignacion del array de cables
       txtCable.value = cableFiltrado.cable.metrosadicionales;
-      //Calculo para el total de metros * precio
       txtPrecioCable.value = (cableFiltrado.cable.metrosadicionales * parseFloat(cableFiltrado.cable.preciometro));
 
-      //Asignacion del array de conectores     
       txtConector.value = cableFiltrado.conector.numeroconector;
-
-      // Heredado de Parametros tecnico
       txtPrecioCableCambio.value = (parseFloat(cableFiltrado.cable.preciometro));
-      txtPrecioConectorCambio.value = (cableFiltrado.conector.precio);
 
-      //Calculo para el total de cantidad * precio
+      txtPrecioConectorCambio.value = (cableFiltrado.conector.precio);
       txtPrecioConector.value = (cableFiltrado.conector.numeroconector * cableFiltrado.conector.precio);
 
-      //Asignar el plan 
-      txtPlan.value = cableFiltrado.plan
-
-      //Asignar datos de la caja
-      console.log(JSON.parse(dataCable[0].ficha_instalacion).idcaja);
       idCaja = JSON.parse(dataCable[0].ficha_instalacion).idcaja;
 
     } catch (error) {
       console.error("Error en FichaInstalacion:", error);
-    }
+    };
 
     try {
       const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
@@ -300,13 +253,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   }
 
-  /**
-   * Crea un elemento de selección (select) y un botón, y los agrega al DOM.
-   * El botón se utiliza para guardar la ficha.
-   * 
-   * @async
-   * @function crearSelectYBoton
-   */
   function crearSelectYBoton() {
     const rowDiv = document.createElement("div");
     rowDiv.className = "row g-2 mb-2 mt-2";
@@ -354,28 +300,20 @@ document.addEventListener("DOMContentLoaded", () => {
     solutionTextarea.parentNode.parentNode.appendChild(rowDiv);
   }
 
-  /**
-   * ArmadoJsonCable - Recupera datos de soporte por ID de forma asíncrona, los analiza y construye un objeto JSON con parámetros y cambios del cable.
-   *
-   * @async
-   * @function ArmadoJsonCable
-   * @returns {Promise<Object>} Una promesa que se resuelve en un objeto que contiene los parámetros y cambios del cable.
-   */
   async function ArmadoJsonCable() {
-    const Response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
-    const result = await Response.json();
+    const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
+    const result = await response.json();
+
+    const soporte = result[0]?.soporte ? JSON.parse(result[0].soporte) : {};
+    const nuevoSoporte = { ...soporte };
 
     const dataCable = await FichaInstalacion(idSoporte);
 
-    let soporte = result[0].soporte ? JSON.parse(result[0].soporte) : {};
-
-    const existeClave = Object.keys(soporte).includes(serv);
-
-    let cableData = {
+    const cableData = {
       parametroscliente: {
         plan: txtPlan.value,
         usuario: txtCliente.value,
-        Nrodoc: txtNrodocumento.value,
+        nrodoc: txtNrodocumento.value,
       },
       parametroscable: {
         plan: document.getElementById("txtPlan").value,
@@ -384,15 +322,18 @@ document.addEventListener("DOMContentLoaded", () => {
         triplexor: document.getElementById("slcTriplexor").value === "2" ? "activo" :
           (document.getElementById("slcTriplexor").value === "3" ? "pasivo" : "no lleva"),
         splitter: [
-          { cantidad: parseInt(document.getElementById("txtNumSpliter").value) || 0, tipo: document.getElementById("slcSpliter").value }
+          {
+            cantidad: parseInt(document.getElementById("txtNumSpliter").value) || 0,
+            tipo: document.getElementById("slcSpliter").value,
+          }
         ],
         conector: {
           numeroconector: parseInt(document.getElementById("txtConector").value) || 0,
-          precio: parseFloat(document.getElementById("txtPrecioConector").value) || 0
+          precio: parseFloat(document.getElementById("txtPrecioConector").value) || 0,
         },
         cable: {
           metrosadicionales: parseInt(document.getElementById("txtCable").value) || 0,
-          preciometro: parseFloat(document.getElementById("txtPrecioCable").value) || 0
+          preciometro: parseFloat(document.getElementById("txtPrecioCable").value) || 0,
         }
       },
       cambioscable: {
@@ -402,39 +343,46 @@ document.addEventListener("DOMContentLoaded", () => {
         triplexor: document.getElementById("slcTriplexorCambio").value === "2" ? "activo" :
           (document.getElementById("slcTriplexorCambio").value === "3" ? "pasivo" : "no lleva"),
         splitter: [
-          { cantidad: parseInt(document.getElementById("txtNumSpliterCambio").value) || 0, tipo: document.getElementById("slcSpliterCambio").value }
+          {
+            cantidad: parseInt(document.getElementById("txtNumSpliterCambio").value) || 0,
+            tipo: document.getElementById("slcSpliterCambio").value,
+          }
         ],
         conector: {
           numeroconector: parseInt(document.getElementById("txtConectorCambio").value) || 0,
-          precio: parseFloat(document.getElementById("txtPrecioConectorCambio").value) || 0
+          precio: parseFloat(document.getElementById("txtPrecioConectorCambio").value) || 0,
         },
         cable: {
           metrosadicionales: parseInt(document.getElementById("txtCableCambio").value) || 0,
-          preciometro: parseFloat(document.getElementById("txtPrecioCableCambio").value) || 0
+          preciometro: parseFloat(document.getElementById("txtPrecioCableCambio").value) || 0,
         }
       }
     };
 
-    if (!existeClave) {
-      soporte[serv] = cableData;
-    }
+    nuevoSoporte.cabl = cableData;
+    nuevoSoporte.idcaja = idCaja;
+    nuevoSoporte.tipoentrada = JSON.parse(dataCable[0].ficha_instalacion).tipoentrada;
 
-    return {
-      idcaja: idCaja,
-      tipoentrada: JSON.parse(dataCable[0].ficha_instalacion).tipoentrada,
-      soporte
-    };
+    console.log(nuevoSoporte);
+
+    return nuevoSoporte;
+  }
+
+  async function CompletarSoporteSiestaTodo(idSoporte, JSONsoporte) {
+    const ServiciosTotales = await FichaInstalacion(idSoporte);
+    const tiposServicio = (ServiciosTotales[0].tipos_servicio).toLowerCase().split(",");
+
+
+    const todosValidos = tiposServicio.every(servicio =>
+      JSONsoporte?.[servicio] && Object.keys(JSONsoporte[servicio]).length > 0
+    );
+
+    if (todosValidos) {
+      await CompletarSoporte(idSoporte);
+    }
   }
 
 
-  /**
-   * Guarda la información del soporte técnico.
-   *
-   * @param {Object} data - Los datos del soporte técnico a actualizar.
-   * @returns {Promise<void>} - Una promesa que se resuelve cuando la solicitud se completa.
-   * @throws {Error} - Lanza un error si la solicitud falla.
-   *
-   */
   async function guardarSoporte(data) {
     try {
       const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php`, {
@@ -454,30 +402,24 @@ document.addEventListener("DOMContentLoaded", () => {
           },
         }),
       });
-
       const result = await response.json();
-      console.log(result.status);
-      if (result.status === "success") {
-        // Lógica para éxito
-        console.log("Soporte actualizado correctamente.");
-      }
+
+      await CompletarSoporteSiestaTodo(idSoporte, data);
+
     } catch (error) {
       console.error('Error en la solicitud:', error);
     }
-
   }
 
-  /**
-   * Llama a la función ArmadoJsonCable para recuperar datos.
-   * 
-   * @returns {Promise<Object>} Los datos devueltos por la función ArmadoJsonCable.
-   */
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const data = await ArmadoJsonCable();
     if (await ask("¿Desea guardar la ficha?")) {
       await guardarSoporte(data);
-      window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
+      //window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
     }
   });
+
+  txtPotencia, txtPotenciaCambio, txtSintonizadorCambio.addEventListener("input", validarValorRango);
+
 });

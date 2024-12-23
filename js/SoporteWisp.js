@@ -314,28 +314,4 @@ document.addEventListener("DOMContentLoaded", () => {
     formatoIPinput(event);
   });
 
-  //FUNCION PARA USARSE EN CABLE-FIBRA -GPON sirve para verificar si estan completos los parametros
-  /***
-   *function verificarServicioEnSoporte(soporteJson, tipoServicio) {
-  if (soporteJson?.[tipoServicio] && Object.keys(soporteJson[tipoServicio]).length > 0) {
-    return true;
-  }
-  console.warn(`El servicio '${tipoServicio}' no existe o está vacío.`);
-  return false;
-}
-
-async function verificarWISPEnSoporte(idSoporte) {
-  try {
-    const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
-    const result = await response.json();
-    const soporteJson = result[0]?.soporte ? JSON.parse(result[0].soporte) : {};
-
-    return verificarServicioEnSoporte(soporteJson, "WISP") ? soporteJson.WISP : null;
-  } catch (error) {
-    console.error("Error al verificar el servicio en la ficha soporte:", error);
-    return null;
-  }
-}
-
-   */
 });

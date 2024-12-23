@@ -1,5 +1,5 @@
 import config from "../env.js";
-import { FichaInstalacion, formatoIPinput, FichaSoporteporDocServCoordenada } from "./Herramientas.js";
+import { FichaInstalacion, formatoIPinput, FichaSoporteporDocServCoordenada, CompletarSoporte } from "./Herramientas.js";
 import * as mapa from "./Mapa.js";
 
 // Evento que se ejecuta cuando el DOM ha sido completamente cargado
@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const idContrato = urlParams.get("idContrato");
   const idReporte = urlParams.get("idReporte");
 
-  const serv = urlParams.get("tiposervicio").toLocaleLowerCase();
   const form = document.getElementById("frm-registro-fibr");
 
   //Parametros tecnicos de la ficha
@@ -60,12 +59,17 @@ document.addEventListener("DOMContentLoaded", () => {
       await crearSelectYBoton();
       await cargarDatosdelSoporte();
       await cargarProblema(idSoporte);
+      await llamarCajas();
     } else {
       //Aqui puedes meterle mano
       await listarReporte(idContrato, idReporte);
       await cargarProblema(idReporte);
     }
 
+
+  })();
+
+  async function llamarCajas() {
     const cajas = await mapa.buscarCercanos(idCaja);
     cajas.forEach(caja => {
       const option = document.createElement('option');
@@ -74,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
       slcCaja.appendChild(option);
     });
     slcCaja.value = idCaja;
-  })();
+  }
 
   async function listarReporte(idContrato, idSoporte) {
     const respuesta = await fetch(`${config.HOST}app/controllers/Averias.controllers.php?operacion=buscarAveriaPorContrato&valor=${idContrato}`);
@@ -85,8 +89,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (soporteEspecifico) {
       const soporte = JSON.parse(soporteEspecifico.soporte);
-      if (soporte && soporte.FIBR) {
-        const fibr = soporte.FIBR;
+      if (soporte && soporte.fibr) {
+        const fibr = soporte.fibr;
         // Parámetros del cliente
         txtPlan.value = fibr.parametroscliente.plan || "";
         txtCliente.value = fibr.parametroscliente.usuario || "";
@@ -146,8 +150,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const coordenada = urlParams.get("coordenada");
     const respuesta = await FichaSoporteporDocServCoordenada(doc, tiposervicio, coordenada);
 
-    if (respuesta[0].soporte != "{}" && JSON.parse(respuesta[0].soporte).FIBR) {
-      await cargarSoporteAnterior(JSON.parse(respuesta[0].soporte).FIBR)
+    console.log(JSON.parse(respuesta[0].soporte));
+
+    if (respuesta[0].soporte != "{}" && JSON.parse(respuesta[0].soporte).fibr) {
+      await cargarSoporteAnterior(JSON.parse(respuesta[0].soporte).fibr)
     } else {
       await CargarDatosInstalacion(doc, idSoporte);
     }
@@ -312,20 +318,21 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const selectedValue = parseInt(slcRpetidor.value);
       const coordenada = urlParams.get("coordenada");
+      const Tiposervicios = urlParams.get("tiposervicio").toLocaleLowerCase();
       const respuesta = await FichaInstalacion(idSoporte);
-      const respuesta2 = await FichaSoporteporDocServCoordenada(txtNrodocumento.value, serv, coordenada);
+      const respuesta2 = await FichaSoporteporDocServCoordenada(txtNrodocumento.value, Tiposervicios, coordenada);
 
       let fibraFiltrado = null;
       let datosgenerales = null;
-      if (!respuesta2[0]?.soporte || respuesta2[0]?.soporte === "{}" || !JSON.parse(respuesta2[0].soporte)?.FIBR) {
+      if (!respuesta2[0]?.soporte || respuesta2[0]?.soporte === "{}" || !JSON.parse(respuesta2[0].soporte)?.fibr) {
         const fichaInstalacion = JSON.parse(respuesta[0]?.ficha_instalacion || "{}");
 
         fibraFiltrado = fichaInstalacion?.fibraoptica?.repetidores || null;
         datosgenerales = fichaInstalacion?.fibraoptica || null;
       } else {
         const soporte = JSON.parse(respuesta2[0]?.soporte || "{}");
-        fibraFiltrado = soporte?.FIBR?.cambiosgpon?.repetidores || null;
-        datosgenerales = soporte?.FIBR?.cambiosgpon || null;
+        fibraFiltrado = soporte?.fibr?.cambiosgpon?.repetidores || null;
+        datosgenerales = soporte?.fibr?.cambiosgpon || null;
       }
       if (!fibraFiltrado) {
         console.log(datosgenerales);
@@ -362,11 +369,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const dataFibra = await FichaInstalacion(idSoporte);
     const fibrafiltrado = JSON.parse(dataFibra[0].ficha_instalacion).fibraoptica;
 
-    let soporte = result[0].soporte ? JSON.parse(result[0].soporte) : {};
+    const soporte = result[0]?.soporte ? JSON.parse(result[0].soporte) : {};
+    const nuevoSoporte = { ...soporte };
 
-    const existeClave = Object.keys(soporte).includes(serv);
-
-    let fibraData = {
+    const fibraData = {
       parametroscliente: {
         plan: txtPlan.value,
         usuario: txtCliente.value,
@@ -379,7 +385,7 @@ document.addEventListener("DOMContentLoaded", () => {
         router: JSON.parse(JSON.stringify(fibrafiltrado.router)),
         catv: document.getElementById("chkCatv").checked,
         vlan: document.getElementById("txtVlan").value,
-        repetidores: JSON.parse(JSON.stringify(fibrafiltrado.repetidores))
+        repetidores: JSON.parse(JSON.stringify(fibrafiltrado.repetidores)),
       },
       cambiosgpon: {
         pppoe: txtCambiosPppoe.value,
@@ -388,22 +394,16 @@ document.addEventListener("DOMContentLoaded", () => {
         router: await modificadoRouter(fibrafiltrado.router),
         catv: chkCambiosCatv.checked,
         vlan: txtCambiosVlan.value,
-        repetidores: await moficadoRepetidor(fibrafiltrado.repetidores)
-      }
+        repetidores: await moficadoRepetidor(fibrafiltrado.repetidores),
+      },
     };
 
-    // Mover `idcaja` y `tipoentrada` fuera de `soporte[serv]`
-    if (!existeClave) {
-      soporte[serv] = fibraData;
-    }
+    nuevoSoporte.fibr = fibraData;
+    nuevoSoporte.idcaja = idCaja;
+    nuevoSoporte.tipoentrada = JSON.parse(dataFibra[0].ficha_instalacion).tipoentrada;
 
-    return {
-      idcaja: idCaja,
-      tipoentrada: JSON.parse(dataFibra[0].ficha_instalacion).tipoentrada,
-      soporte
-    };
+    return nuevoSoporte;
   }
-
 
   async function moficadoRepetidor(repetidores) {
     if (!repetidores) {
@@ -427,6 +427,20 @@ document.addEventListener("DOMContentLoaded", () => {
     router.ip = txtCambiosIpRouter.value;
     console.log(router);
     return router;
+  }
+
+  async function verificarServicioEnSoporte(idSoporte, JSONsoporte) {
+    const ServiciosTotales = await FichaInstalacion(idSoporte);
+    const tiposServicio = (ServiciosTotales[0].tipos_servicio).toLowerCase().split(",");
+
+
+    const todosValidos = tiposServicio.every(servicio =>
+      JSONsoporte?.[servicio] && Object.keys(JSONsoporte[servicio]).length > 0
+    );
+
+    if (todosValidos) {
+      await CompletarSoporte(idSoporte);
+    }
   }
 
   async function guardarSoporte(data) {
@@ -453,6 +467,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const result = await response.json();
 
+      await verificarServicioEnSoporte(idSoporte, data);
     } catch (error) {
       console.error('Error en la solicitud:', error);
     }

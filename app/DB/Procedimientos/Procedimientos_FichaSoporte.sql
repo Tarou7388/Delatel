@@ -179,14 +179,24 @@ CREATE PROCEDURE spu_instalacion_ficha_IdSoporte(
 BEGIN
     SELECT 
         ct.ficha_instalacion,
-        ct.id_contrato
+        ct.id_contrato,
+        GROUP_CONCAT(srv.tipo_servicio) AS tipos_servicio,
+        GROUP_CONCAT(srv.servicio) AS servicios
     FROM tb_soporte s
     INNER JOIN tb_contratos ct ON s.id_contrato = ct.id_contrato
     INNER JOIN tb_clientes cl ON ct.id_cliente = cl.id_cliente
-    LEFT JOIN tb_personas p ON cl.id_persona = p.id_persona
-    LEFT JOIN tb_empresas e ON cl.id_empresa = e.id_empresa
+    INNER JOIN tb_paquetes p ON ct.id_paquete = p.id_paquete
+    INNER JOIN tb_servicios srv ON JSON_CONTAINS(
+        p.id_servicio,
+        CONCAT(
+        '{"id_servicio":',
+        srv.id_servicio,
+        '}'
+        )
+    )
     WHERE 
-        s.id_soporte = p_idsoporte;
+        s.id_soporte = p_idsoporte
+    GROUP BY ct.id_contrato, ct.create_at;
 END $$
 
 DROP VIEW IF EXISTS vw_soporte_fichadatos$$

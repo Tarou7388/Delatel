@@ -32,7 +32,7 @@ export async function FichaSoporteporDocServCoordenada(nrodoc, tipoServicio, coo
     body: JSON.stringify({
       operacion: 'buscarUltimoSoportebyDNI',
       nrodoc: nrodoc,
-      tipoServicio: tipoServicio,
+      tipoServicio: tipoServicio.toUpperCase(),
       coordenada: coordenada
     })
   });
@@ -100,7 +100,7 @@ export async function validarValorRango(event) {
 }
 
 
-export async  function CompletarSoporte(idSoporte) {
+export async function CompletarSoporte(idSoporte) {
   try {
     const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php`, {
       method: 'PUT',
