@@ -1,5 +1,6 @@
 <?php require_once '../../header.php'; ?>
 
+<link rel="stylesheet" href="../../css/contratos.css">
 
 <!-- Modal Structure -->
 <div class="modal fade" id="soporteModal" tabindex="-1" aria-labelledby="soporteModalLabel" aria-hidden="true">
@@ -85,12 +86,12 @@
         <table id="tblSoporteIncompleto" class="table table-striped table-bordered display nowrap">
           <thead>
             <tr>
-              <th class="text-center">Prioridad</th>
-              <th class="text-center">Tipo Soporte</th>
-              <th class="text-center">Servicios</th>
+              <th class="text-center d-none d-sm-table-cell">Prioridad</th>
+              <th class="text-center d-none d-sm-table-cell">Tipo Soporte</th>
+              <th class="text-center d-none d-sm-table-cell">Servicios</th>
               <th class="text-center">Nombre Cliente</th>
-              <th class="text-center">Dirección</th>
-              <th class="text-center">Hora de solicitud</th>
+              <th class="text-center d-none d-sm-table-cell">Dirección</th>
+              <th class="text-center d-none d-sm-table-cell">Hora de solicitud</th>
               <th class="text-center">Acciones</th>
             </tr>
           </thead>

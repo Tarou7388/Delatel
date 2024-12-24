@@ -80,12 +80,12 @@ document.addEventListener("DOMContentLoaded", () => {
       {
         data: "prioridad",
         title: "Prioridad",
-        className: "text-center user-select-none"
+        className: "text-center user-select-none d-none d-sm-table-cell"
       },
       {
         data: "tipo_soporte",
         title: "Tipo de Soporte",
-        className: "text-center user-select-none",
+        className: "text-center user-select-none d-none d-sm-table-cell",
         render: function (data, type, row) {
           return data ? data : '<i>No asignado</i>';
         }
@@ -93,7 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
       {
         data: "tipos_servicio",
         title: "Servicios",
-        className: "text-center user-select-none",
+        className: "text-center user-select-none d-none d-sm-table-cell",
         render: function (data, type, row) {
           return data ? data : '<i>No asignado</i>';
         }
@@ -106,12 +106,12 @@ document.addEventListener("DOMContentLoaded", () => {
       {
         data: "direccion_servicio",
         title: "Dirección",
-        className: "text-start user-select-none"
+        className: "text-start user-select-none d-none d-sm-table-cell"
       },
       {
         data: "fecha_hora_solicitud",
         title: "Hora de solicitud",
-        className: "text-end user-select-none",
+        className: "text-end user-select-none d-none d-sm-table-cell",
         render: function (data, type, row) {
           return data ? data : '<i>No asignado</i>';
         }
@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
       {
         data: "nombre_tecnico",
         title: "Técnico a Cargo",
-        className: "text-center user-select-none",
+        className: "text-center user-select-none d-none d-sm-table-cell",
         render: function (data, type, row) {
           return data ? data : '<i>No asignado</i>';
         }
@@ -147,9 +147,50 @@ document.addEventListener("DOMContentLoaded", () => {
       { width: "10%", targets: 5 },
       { width: "10%", targets: 6 },
       { width: "10%", targets: 7 }
-    ]
+    ],
+    {
+      columnDefs: [
+        { className: 'text-center', targets: '_all' },
+        { targets: [0], visible: false },
+        { targets: [0, 1, 2, 4, 5, 6], className: 'd-none d-sm-table-cell' } // Ocultar "Prioridad", "Tipo de Soporte", "Servicios", "Dirección", "Hora de solicitud" y "Técnico a Cargo" en vista móvil
+      ]
+    }
   );
 
+  // Función para mostrar/ocultar detalles solo en dispositivos móviles
+  function alternarDetalles(fila) {
+    if (window.innerWidth < 768) {
+      const siguienteFila = fila.nextElementSibling;
+      if (siguienteFila && siguienteFila.classList.contains('fila-detalles')) {
+        siguienteFila.remove();
+      } else {
+        const celdasOcultas = fila.querySelectorAll('.d-none.d-sm-table-cell');
+        let detallesHtml = '<tr class="fila-detalles" style="height: auto;"><td colspan="12"><table class="table table-striped">';
+        celdasOcultas.forEach((celda) => {
+          detallesHtml += `<tr><td><div class="d-flex justify-content-between"><span class="text-center">${celda.innerHTML}</span></div></td></tr>`;
+        });
+
+        detallesHtml += '</table></td></tr>';
+        fila.insertAdjacentHTML('afterend', detallesHtml);
+      }
+    }
+  }
+
+  // Función para agregar event listeners a las filas
+  function agregarEventListenersFilas() {
+    const filas = document.querySelectorAll("#tblSoporteIncompleto tbody tr");
+
+    filas.forEach((fila) => {
+      fila.addEventListener("click", (event) => {
+        alternarDetalles(fila);
+      });
+    });
+  }
+
+  // Llama a la función para agregar event listeners después de inicializar la tabla
+  table.on('draw', function () {
+    agregarEventListenersFilas();
+  });
 
   $('.card-body').on('click', '.btnActualizar', async function () {
     let id_soporte = $(this).data('id');
