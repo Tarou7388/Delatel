@@ -115,7 +115,7 @@ CREATE PROCEDURE spu_actualizar_linea(
   IN p_id_user_create INT
 )
 BEGIN
-  IF (p_id_caja = 0) THEN
+  IF (p_id_caja = -1) THEN
     UPDATE tb_lineas
     SET coordenadas = p_coordenadas,
         update_at = NOW(),

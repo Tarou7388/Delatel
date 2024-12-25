@@ -301,14 +301,6 @@ async function buscarCoordenadas(latitud, longitud) {
   }
 }
 
-function initMap() {
-  // Inicializar el mapa
-  mapa = new google.maps.Map(document.getElementById('map'), {
-    center: { lat: -34.397, lng: 150.644 },
-    zoom: 8
-  });
-}
-
 export async function buscarCercanos(idCaja) {
   const response = await fetch(`${config.HOST}app/controllers/Caja.controllers.php?operacion=listarCajasSectorIdCaja&idCaja=${idCaja}`);
   const data = await response.json();

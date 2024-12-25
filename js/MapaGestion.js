@@ -7,40 +7,34 @@ document.addEventListener('DOMContentLoaded', async () => {
   const accesos = await Herramientas.permisos();
 
   let marcadorPrincipal = null;
-
   let Coordenadas = null;
-
   let CablePrincipal = null;
-
+  let sectorCercano = null;
+  let line = null;
   let datosCajas = [];
   let datosSectores = [];
-
-
-  let sectorCercano = null;
-
   let marcadoresMufas = [];
   let marcadoresSectores = [];
   let marcadoresCajas = [];
   let lineasCables = [];
-
-  let idCajaRegistro = "";
+  let lineaPrincipal = [];
   let lineaCableGuardar = [];
+  let idCajaRegistro = "";
   let nombreCaja = "";
   let descripcionCaja = "";
   let numeroEntradasCaja = "";
   let direccionCaja = "";
   let coordenadasCaja = "";
-  let coordenadasCajaGuardada = false;
   let idMufaRegistro = "";
-
+  let CablePrincipalGuardar = "";
+  let coordenadasCajaGuardada = false;
   let banderaCable = false;
-
-  let line = null;
-
+  let cablePrincipalInicio = true;
   const params = { cajas: true, mufas: true, cables: true, sectores: true };
 
+  await initMap(params);
+
   (async () => {
-    await initMap(params);
     cargarSelect();
   })();
 
@@ -221,10 +215,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       body: paramsEnviar
     });
     const data = await response.json();
-    if(data.error){
+    if (data.error) {
       showToast(data.error.message, "ERROR");
       console.log(data.error);
-    }else{
+    } else {
       showToast("Registrado Correctamente", "SUCCESS");
       marcadoresSectores.forEach(marcador => {
         marcador.setMap(null);
@@ -246,9 +240,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       body: paramsEnviar
     });
     const data = await response.json();
-    if(data.error){
+    if (data.error) {
       showToast(data.error.message, "ERROR");
-    }else{
+    } else {
       showToast("Registrado Correctamente", "SUCCESS");
       marcadoresMufas.forEach(marcador => {
         marcador.setMap(null);
@@ -308,11 +302,38 @@ document.addEventListener('DOMContentLoaded', async () => {
       lineasCables.push(line);
       line.setMap(mapa);
     });
+    data[0].coordenadas.forEach(item => {
+      lineaPrincipal.push({ lat: item.lat, lng: item.lng });
+    });
     CablePrincipal = lineasCables[0];
     CablePrincipal.addListener('click', async (e) => {
       blooquearbotones(true, false, true);
       Coordenadas = `${e.latLng.lat()},${e.latLng.lng()}`;
       marcadorPrincipalEvento(e.latLng.toJSON());
+    });
+    const puntos = [
+      { lat: CablePrincipal.getPath().getArray()[0].lat(), lng: CablePrincipal.getPath().getArray()[0].lng(), condicion: "inicio" },
+      { lat: CablePrincipal.getPath().getArray()[CablePrincipal.getPath().getArray().length - 1].lat(), lng: CablePrincipal.getPath().getArray()[CablePrincipal.getPath().getArray().length - 1].lng(), condicion: "fin" }
+    ];
+    puntos.forEach(async (punto, index) => {
+      const img = document.createElement('img');
+      img.src = `${config.HOST}image/cable.png`;
+      const marcador = new AdvancedMarkerElement({
+        position: { lat: punto.lat, lng: punto.lng },
+        map: mapa,
+        title: "Principal",
+        content: img,
+      });
+      marcador.addListener('click', () => {
+        if (cablePrincipalInicio) {
+          CablePrincipalGuardar = punto.condicion;
+          const { condicion, ...puntoSinCondicion } = punto;
+          lineaCableGuardar.push(puntoSinCondicion);
+          cablePrincipalInicio = false;
+          showToast("Agregando linea principal", "INFO");
+          coordenadasCajaGuardada = true;
+        }
+      });
     });
   }
 
@@ -436,7 +457,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     lineaCableGuardar.push(json);
-    console.log(lineaCableGuardar);
 
     if (line) {
       line.setMap(null);
@@ -463,8 +483,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  async function agregarLineasPrincipal() {
-    
+  async function agregarLineasPrincipal(coordenadas) {
+    const paramsEnviar = new FormData();
+    paramsEnviar.append("operacion", "actualizarLineas");
+    paramsEnviar.append("idCable", -1);
+    paramsEnviar.append("coordenadas", coordenadas);
+    paramsEnviar.append("idUsuario", user.idUsuario);
+    console.log(paramsEnviar);
+    const response = await fetch(`${config.HOST}app/controllers/Lineas.controllers.php`, {
+      method: "POST",
+      body: paramsEnviar
+    });
+    const data = await response.json();
+    console.log(data);
   }
 
   mapa.addListener('click', (event) => {
@@ -480,6 +511,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (banderaCable) {
       const json = { lat: latLng.lat, lng: latLng.lng };
       console.log(json);
+      marcarLineaCable(json);
+    }
+    if (CablePrincipalGuardar != "") {
+      const json = { lat: latLng.lat, lng: latLng.lng };
       marcarLineaCable(json);
     }
   });
@@ -505,7 +540,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.querySelector("#formAgregarMufa").addEventListener("submit", async (e) => {
     e.preventDefault();
     const modal = bootstrap.Modal.getInstance(document.getElementById('modalAgregarMufa2'));
-    if(await ask("¿Desea guardar la mufa?")){
+    if (await ask("¿Desea guardar la mufa?")) {
       agregarMufa();
     }
     modal.hide();
@@ -513,7 +548,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   document.querySelector("#formAgregarSector").addEventListener("submit", async (e) => {
     e.preventDefault();
-    if(await ask("¿Desea guardar el sector?")){
+    if (await ask("¿Desea guardar el sector?")) {
       agregarSector();
     }
     const modal = bootstrap.Modal.getInstance(document.getElementById('modalAgregarSector2'));
@@ -521,11 +556,36 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   document.querySelector("#numEntradasCaja").addEventListener("change", (e) => {
-    if(document.querySelector("#numEntradasCaja").value == 8){
+    if (document.querySelector("#numEntradasCaja").value == 8) {
       document.querySelector("#codigoNombre").textContent = "-08";
-    }else if(document.querySelector("#numEntradasCaja").value == 16){
+    } else if (document.querySelector("#numEntradasCaja").value == 16) {
       document.querySelector("#codigoNombre").textContent = "-16";
     }
+  });
+
+  document.querySelector("#btnActualizarPrincipal").addEventListener("click", async () => {
+    if (await ask("¿Desea guardar la linea principal?")) {
+      const coordenadasEnviar = [];
+      if (CablePrincipalGuardar == "inicio") {
+        lineaCableGuardar.forEach(item => {
+          coordenadasEnviar.push(item);
+        });
+        lineaPrincipal.forEach(item => {
+          coordenadasEnviar.push(item);
+        });
+      } else if (CablePrincipalGuardar == "fin") {
+        console.log(lineaPrincipal);
+        lineaPrincipal.forEach(item => {
+          coordenadasEnviar.push(item);
+        });
+        lineaCableGuardar.forEach(item => {
+          coordenadasEnviar.push(item);
+        });
+      }
+      console.log(coordenadasEnviar);
+      //await agregarLineasPrincipal(coordenadasEnviar);
+      showToast("Linea principal guardada", "SUCCESS");
+    };
   });
 
 });

@@ -17,5 +17,15 @@ class Lineas extends Conexion{
       $respuesta[$key]['coordenadas'] = json_decode($value['coordenadas'], true);
     }
     return $respuesta;
-  } 
+  }
+
+  public function actualizarLineas($params = []){
+    $sql = "CALL spu_actualizar_linea(?,?,?)";
+    $array = [
+      'id' => $params['id'],
+      'coordenadas' => json_encode($params['coordenadas']),
+      'idUsuario' => $params['idUsuario']
+    ];
+    return $this->registrar($sql, $array);
+  }
 }

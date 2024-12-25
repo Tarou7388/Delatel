@@ -72,6 +72,19 @@
           <button class="btn btn-success w-100 mb-2" data-bs-toggle="modal" id="modalAgregarSector" data-bs-target="#modalAgregarSector2" disabled>
             <i class="fas fa-plus"></i> Sector
           </button>
+          <hr>
+          <button class="btn btn-primary w-100 mb-2" id="btnActualizarCajas">
+            <i class="fas fa-sync-alt"></i> Cajas
+          </button>
+          <button class="btn btn-primary w-100 mb-2" id="btnActualizarMufas">
+            <i class="fas fa-sync-alt"></i> Mufas
+          </button>
+          <button class="btn btn-primary w-100 mb-2" id="btnActualizarSectores">
+            <i class="fas fa-sync-alt"></i> Sectores
+          </button>
+          <button class="btn btn-primary w-100 mb-2" id="btnActualizarPrincipal">
+            <i class="fas fa-sync-alt"></i> Principal
+          </button>
         </div>
       </div>
     </div>
