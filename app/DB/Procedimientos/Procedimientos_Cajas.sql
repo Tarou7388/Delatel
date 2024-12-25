@@ -33,9 +33,15 @@ CREATE PROCEDURE spu_cajas_registrar(
   IN p_iduser_create INT
 )
 BEGIN
+  -- Inserta los datos en la tabla tb_cajas
   INSERT INTO tb_cajas(nombre, descripcion, numero_entradas, id_sector, coordenadas, iduser_create)
   VALUES(p_nombre, p_descripcion, p_numero_entradas, p_id_sector, p_coordenadas, p_iduser_create);
-  SELECT LAST_INSERT_ISELECT 
+
+  -- Recupera el ID de la última fila insertada
+  SET @last_id := LAST_INSERT_ID();
+
+  -- Devuelve los datos de la fila recién insertada
+  SELECT 
     id_caja, 
     nombre, 
     descripcion, 
@@ -43,7 +49,9 @@ BEGIN
     id_sector, 
     coordenadas 
   FROM tb_cajas
-  WHERE id_caja = p_id_caja;XISTS spu_lineas_registrar$$
+  WHERE id_caja = @last_id;
+END$$
+DROP PROCEDURE IF EXISTS spu_lineas_registrar$$
 
 CREATE PROCEDURE spu_lineas_registrar(
   IN p_id_mufa INT,
