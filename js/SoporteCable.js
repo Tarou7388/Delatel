@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const txtPlan = document.getElementById("txtPlan");
   const txtCliente = document.getElementById("txtCliente");
   const txtNrodocumento = document.getElementById("txtNrodocumento");
+  const slcCaja = document.getElementById("slcCaja");
 
   const form = document.getElementById("form-cable");
 
@@ -64,10 +65,12 @@ document.addEventListener("DOMContentLoaded", () => {
       // Obtener datos del soporte
       const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idReporte}`);
       const data = await respuesta.json();
+
       const dataCable = await FichaInstalacion(idReporte);
+
       const cableFiltrado = JSON.parse(dataCable[0].ficha_instalacion).cable;
-      const plan = document.getElementById("txtPlan")
-      plan.value = cableFiltrado.plan
+      const plan = document.getElementById("txtPlan");
+      plan.value = cableFiltrado.plan;
 
       // Llamada necesaria para rellenar el número de documento
       await rellenarDocNombre(data[0].nro_doc);
@@ -99,12 +102,12 @@ document.addEventListener("DOMContentLoaded", () => {
       };
 
       // Cálculo para parámetros iniciales
-      const preciosIniciales = calcularPrecio(parametrosCable.cable, parametrosCable.conectores);
+      const preciosIniciales = calcularPrecio(parametrosCable.cable.metrosadicionales, parametrosCable.conector.numeroconector);
       setField('txtPrecioCable', preciosIniciales.totalCable.toFixed(2));  // Precio del cable inicial
       setField('txtPrecioConector', preciosIniciales.totalConectores.toFixed(2));  // Precio de conectores iniciales
 
       // Cálculo para cambios técnicos
-      const preciosCambios = calcularPrecio(cambiosCable.cable, cambiosCable.conectores);
+      const preciosCambios = calcularPrecio(cambiosCable.cable.metrosadicionales, cambiosCable.conector.numeroconector);
       setField('txtPrecioCableCambio', preciosCambios.totalCable.toFixed(2));  // Precio del cable en cambios
       setField('txtPrecioConectorCambio', preciosCambios.totalConectores.toFixed(2));  // Precio de conectores en cambios
 
@@ -114,8 +117,8 @@ document.addEventListener("DOMContentLoaded", () => {
       setField('slcTriplexor', triplexorValue(parametrosCable.triplexor));
       setField('txtNumSpliter', parametrosCable.splitter[0]?.cantidad);
       setField('slcSpliter', parametrosCable.splitter[0]?.tipo);
-      setField('txtCable', parametrosCable.cable);
-      setField('txtConector', parametrosCable.conectores);
+      setField('txtCable', parametrosCable.cable.metrosadicionales);
+      setField('txtConector', parametrosCable.conector.numeroconector);
       setField('txtaEstadoInicial', data[0].descripcion_problema);
 
       // Rellenar campos con datos de cambios técnicos
@@ -124,9 +127,18 @@ document.addEventListener("DOMContentLoaded", () => {
       setField('slcTriplexorCambio', triplexorValue(cambiosCable.triplexor));
       setField('txtNumSpliterCambio', cambiosCable.splitter[0]?.cantidad);
       setField('slcSpliterCambio', cambiosCable.splitter[0]?.tipo);
-      setField('txtCableCambio', cambiosCable.cable);
-      setField('txtConectorCambio', cambiosCable.conectores);
+      setField('txtCableCambio', cambiosCable.cable.metrosadicionales);
+      setField('txtConectorCambio', cambiosCable.conector.numeroconector);
       setField('txtaEstadoFinal', data[0].descripcion_solucion);
+
+      // Cargar Caja en el select
+      const slcCaja = document.getElementById('slcCaja');
+      slcCaja.innerHTML = ''; 
+      const option = document.createElement('option');
+      option.value = soporteData.idcaja;
+      option.text = `Caja ${soporteData.idcaja}`;
+      slcCaja.appendChild(option);
+      slcCaja.value = soporteData.idcaja;
 
     } catch (error) {
       console.error("Error en la función reporte:", error);
@@ -165,7 +177,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const respuestaProblema = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
       const dataProblema = await respuestaProblema.json();
       $("#txtaEstadoInicial").val(dataProblema[0].descripcion_problema);
-    } catch (error) { 
+    } catch (error) {
       console.error("Error en descripcion_problema:", error);
     };
 
@@ -248,7 +260,10 @@ document.addEventListener("DOMContentLoaded", () => {
       txtPrecioConectorCambio.value = cableFiltrado.conector.precio;
       txtPrecioConector.value = cableFiltrado.conector.numeroconector * cableFiltrado.conector.precio;
 
-      idCaja = JSON.parse(dataCable[0].ficha_instalacion).idcaja;
+      //Asignar datos de la caja
+      console.log(cableFiltrado.idcaja);
+      idCaja = cableFiltrado.idcaja;
+
     } catch (error) {
       console.error("Error en FichaInstalacion:", error);
     }
@@ -294,6 +309,8 @@ document.addEventListener("DOMContentLoaded", () => {
         );
         selectSoporte.append(option);
       });
+      // Inicializar Select2 después de cargar las opciones
+      $(selectSoporte).select2();
     })();
 
     const buttonDiv = document.createElement("div");
@@ -394,7 +411,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-
   async function guardarSoporte(data) {
     try {
       const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php`, {
@@ -428,7 +444,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const data = await ArmadoJsonCable();
     if (await ask("¿Desea guardar la ficha?")) {
       await guardarSoporte(data);
-      //window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
+      window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
     }
   });
 
