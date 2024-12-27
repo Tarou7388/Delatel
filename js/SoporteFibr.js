@@ -559,6 +559,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  document.getElementById("btnReporte").addEventListener("click", async () => {
+    const idsoporte = await obtenerReferencias();
+    console.log(idsoporte);
+    if (idsoporte) {
+      window.open(`${config.HOST}views/reports/Averia_Fibra/soporte.php?idSoporte=${idsoporte}`, '_blank');
+    } else {
+      console.error("No se pudo obtener el idSoporte.");
+    }
+  });
+
   txtIpRouter, txtIpRepetidor, txtCambiosIpRouter, txtCambiosIpRepetidor.addEventListener("input", formatoIPinput);
 
 });

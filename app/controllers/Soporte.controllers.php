@@ -29,6 +29,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     case 'obtenerfichaInstalacionporIdSoporte':
       echo json_encode($soporte->obtenerfichaInstalacionporIdSoporte(["idSoporte" => $_GET['idSoporte']]));
       break;
+    case 'obtenerPDFSoporte':
+      echo json_encode($soporte->obtenerPDFSoporte(["idSoporte" => $_GET['idSoporte']]));
+      break;
   }
 }
 

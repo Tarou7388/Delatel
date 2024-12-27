@@ -149,4 +149,18 @@ class Soporte extends Conexion
     ];
     return $this->consultaParametros($sql, $values);
   }
+
+  /**
+   * Obtiene el PDF de soporte basado en el ID proporcionado.
+   *
+   * @param array $params Arreglo asociativo que contiene el ID del soporte.
+   *                      Ejemplo: ['idSoporte' => 123]
+   * @return mixed Resultado de la consulta que contiene el PDF del soporte.
+   */
+  public function obtenerPDFSoporte($params = [])
+  {
+    $sql = "CALL spu_soporte_pdf(?)";
+    $values = array($params['idSoporte']);
+    return $this->consultaParametros($sql, $values);
+  }
 }
