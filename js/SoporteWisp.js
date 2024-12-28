@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const txtBaseNuevo = document.getElementById("txtBaseNuevo");
   const txtIpNuevo = document.getElementById("txtIpNuevo");
   const txtSenialNuevo = document.getElementById("txtSenialNuevo");
-  
+
   const txtAccesoNuevo = document.getElementById("txtAccesoNuevo");
   const txtRouterCambioSsid = document.getElementById("txtRouterCambioSsid");
   const txtRouterCambioSeguridad = document.getElementById("txtRouterCambioSeguridad");
@@ -211,9 +211,9 @@ document.addEventListener("DOMContentLoaded", () => {
   slcWireless.addEventListener("change", async (event) => {
     const urlParams = new URLSearchParams(window.location.search);
     let idReporte = urlParams.get("idReporte");
-    if(idReporte){
+    if (idReporte) {
       await cargarDatosEnInputs();
-    }else{
+    } else {
       await cargarEnInputs();
     }
   });
@@ -409,6 +409,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   txtIp, txtIpNuevo.addEventListener("input", (event) => {
     formatoIPinput(event);
+  });
+
+  document.getElementById("btnReporte").addEventListener("click", async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const idReporte = urlParams.get("idReporte");
+    if (idReporte) {
+      window.open(`${config.HOST}views/reports/Averia_WISP/soporte.php?idSoporte=${idReporte}`, '_blank');
+    } else {
+      console.error("No se pudo obtener el idReporte.");
+    }
   });
 
 });

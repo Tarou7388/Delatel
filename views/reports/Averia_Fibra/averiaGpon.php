@@ -1,7 +1,3 @@
-<?php
-$HOST = "http://localhost/Delatel";
-?>
-
 <h3 class="text-center">CONTROL DE AVERÍAS SERVICIO FITH - DELAFIBER</h3>
 
 <div class="container">
@@ -30,9 +26,9 @@ $HOST = "http://localhost/Delatel";
       </tr>
       <tr>
         <td><strong>ZONA:</strong></td>
-        <td colspan="2">N/A</td>
+        <td colspan="2"><?= $resultado[0]['SectorCliente'] ?? 'N/A'; ?></td>
         <td><strong>CONEXIÓN:</strong></td>
-        <td colspan="2"><?= $resultado[0]['ficha_instalacion']['idcaja'] ?? 'N/A'; ?></td>
+        <td colspan="2"><?= $resultado[0]['FichaAveria']['idcaja'] ?? 'N/A'; ?></td>
       </tr>
       <tr>
         <td><strong>PLAN:</strong></td>

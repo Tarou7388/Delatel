@@ -40,22 +40,22 @@ if (isset($_SESSION['login']) && $_SESSION['login']['estado']) {
 							<div class="card shadow-lg border-0 rounded-lg custom-margin">
 								<div class="card-body">
 									<div class="text-center mb-4">
-										<img src="./image/Logotipo.png" class="Logo" alt="Logo">
-										<h3 class="mt-3 fw-normal">Iniciar sesión</h3>
+										<img src="./image/Logo_Empresa_Delatel.svg" class="Logo" alt="Logo">
+										<h3 class="mt-3 fw-normal" id="tituloLogin">Iniciar sesión</h3>
 									</div>
 									<form id="frmLogin">
 										<div class="form-floating mb-3">
-											<input type="text" class="form-control" id="txtNomUser" placeholder="Nombre Usuario">
+											<input type="text" class="form-control" id="txtNomUser" placeholder="Nombre Usuario" required>
 											<label for="lblNomUser"><i class="bi bi-person"></i> Nombre de Usuario</label>
 										</div>
 										<div class="form-floating mb-3 position-relative">
-											<input type="password" class="form-control" id="txtPassUser" placeholder="Clave de Acceso">
+											<input type="password" class="form-control" id="txtPassUser" placeholder="Clave de Acceso" required>
 											<label for="lblPassUser"><i class="bi bi-lock"></i> Clave de Acceso</label>
-											<button type="button" class="btn position-absolute end-0 top-0 mt-2 me-3" id="mostrarPassword">
+											<button type="button" class="btn position-absolute" id="mostrarPassword">
 												<i class="bi bi-eye" id="eyeIcon"></i>
 											</button>
 										</div>
-										<button class="btn btn-custom w-100 py-2" id="btnIniciar" type="submit">Iniciar Sesión</button>
+										<button class="btn btn-custom" id="btnIniciar" type="submit">Iniciar Sesión</button>
 									</form>
 								</div>
 							</div>

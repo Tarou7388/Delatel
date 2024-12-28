@@ -44,6 +44,7 @@ BEGIN
         IFNULL(p.email, e.email) AS Correo,
         IFNULL(p.telefono, e.telefono) AS Telefono,
         cl.direccion AS DireccionPersona,
+        se.sector AS SectorCliente, 
         s.id_tipo_soporte,
         s.id_tecnico,
         CONCAT(pt.nombres, ' ', pt.apellidos) AS NombreTecnico,
@@ -69,6 +70,8 @@ BEGIN
         tb_personas pt ON r.id_usuario = pt.id_persona
     LEFT JOIN 
         tb_paquetes pa ON co.id_paquete = pa.id_paquete
+    LEFT JOIN 
+        tb_sectores se ON co.id_sector = se.id_sector 
     WHERE 
         s.id_soporte = p_id_soporte;
 END$$
