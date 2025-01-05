@@ -2,9 +2,7 @@
 
 use App\Controllers\Herramientas;
 
-session_start();
-
-require_once "../models/Sticket.php";
+require_once "../models/sticket.php";
 require_once "./Herramientas.php";
 
 $sticket = new Sticket();
@@ -21,6 +19,14 @@ if (isset($_GET["operacion"])) {
       break;
     case "contarContratosPendientes":
       $resultado = $sticket->contarContratosPendientes();
+      echo json_encode($resultado);
+      break;
+    case "listarAveriasPendientes":
+      $resultado = $sticket->listarAveriasPendientes();
+      echo json_encode($resultado);
+      break;
+    case "contarAveriasPendientes":
+      $resultado = $sticket->contarAveriasPendientes();
       echo json_encode($resultado);
       break;
   }

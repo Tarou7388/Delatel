@@ -75,3 +75,33 @@ FROM tb_contratos c
 WHERE
     c.ficha_instalacion IS NOT NULL
     AND c.inactive_at IS NULL;
+
+DROP VIEW IF EXISTS vw_averias_listar_ficha_null;
+
+CREATE VIEW vw_averias_listar_ficha_null AS
+SELECT
+    s.id_soporte,
+    s.id_contrato,
+    CONCAT(p.nombres, ' ', p.apellidos) AS nombre_cliente,
+    s.descripcion_problema,
+    s.create_at AS fecha_creacion,
+    sec.sector AS sector_cliente
+FROM
+    tb_soporte s
+    JOIN tb_contratos c ON s.id_contrato = c.id_contrato
+    JOIN tb_clientes cl ON c.id_cliente = cl.id_cliente
+    LEFT JOIN tb_personas p ON cl.id_persona = p.id_persona
+    LEFT JOIN tb_empresas e ON cl.id_empresa = e.id_empresa
+    JOIN tb_sectores sec ON c.id_sector = sec.id_sector
+WHERE
+    s.estaCompleto = 0
+    AND s.inactive_at IS NULL;
+
+DROP VIEW IF EXISTS vw_averias_contar_ficha_vacia;
+
+CREATE VIEW vw_averias_contar_ficha_vacia AS
+SELECT COUNT(*) AS total_averias_ficha_vacia
+FROM tb_soporte
+WHERE
+    estaCompleto = 0
+    AND inactive_at IS NULL;

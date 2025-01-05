@@ -30,7 +30,7 @@ function obtenerAccesosFiltrados($permissions)
 		["ruta" => "Contratos", "texto" => "Contratos", "icono" => "fa-solid fa-file-contract", "rutasAnexas" => ["FichaTecnicaCable", "FichaTecnicaGpon", "FichaTecnicaWisp", "FichaTecnicaFibra"]],
 		["ruta" => "Inventariado", "texto" => "Inventariado", "icono" => "fa-solid fa-warehouse", "Desplegable" => true, "rutasAnexas" => ["Kardex", "Productos"], "IconoAnexo" => ["fa-solid fa-warehouse", "fa-solid fa-boxes-stacked"]],
 		["ruta" => "Personas", "texto" => "Personas", "icono" => "fa-solid fa-user"],
-		["ruta" => "Tablas", "texto" => "Tablas", "icono" => "fa-solid fa-tasks"],
+		["ruta" => "Ticket", "texto" => "Ticket", "icono" => "fa-solid fa-tasks", "rutasAnexas" => ["listarAverias"]],
 		["ruta" => "Roles", "texto" => "Roles", "icono" => "fa-regular fa-address-card"],
 		["ruta" => "Soporte", "texto" => "Soporte", "icono" => "fa-solid fa-wrench", "rutasAnexas" => ["registroSoporte", "SoporteEscritorio", "listarSoporte", "SoporteCABL", "SoporteFIBR", "SoporteWISP"]],
 		["ruta" => 'Usuarios', "texto" => "Usuarios", "icono" => "fa-solid fa-users", "rutasAnexas" => ["registrar"]],

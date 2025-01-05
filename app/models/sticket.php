@@ -46,5 +46,31 @@ class Sticket extends Conexion {
     $sql = "SELECT * FROM vw_contratos_contar_ficha_vacia";
     return $this->listarDatos($sql);
   }
+
+  /**
+   * Listar las averías pendientes.
+   *
+   * Este método ejecuta una consulta SQL para obtener todas las averías pendientes
+   * desde la vista `vw_averias_listar_ficha_null`.
+   *
+   * @return array Un array de resultados de la consulta SQL.
+   */
+  public function listarAveriasPendientes(){
+    $sql = "SELECT * FROM vw_averias_listar_ficha_null";
+    return $this->listarDatos($sql);
+  }
+
+  /**
+   * Cuenta el número de averías pendientes.
+   *
+   * Este método ejecuta una consulta SQL para contar las averías pendientes
+   * utilizando la vista `vw_averias_contar_ficha_vacia`.
+   *
+   * @return array Un arreglo con los datos de las averías pendientes.
+   */
+  public function contarAveriasPendientes(){
+    $sql = "SELECT * FROM vw_averias_contar_ficha_vacia";
+    return $this->listarDatos($sql);
+  }
 }
 ?>
