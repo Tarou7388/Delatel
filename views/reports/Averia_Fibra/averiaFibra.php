@@ -126,6 +126,72 @@
   </table>
 </div>
 
+<!-- Repetidores -->
+
+<?php if (!empty($resultado[0]['FichaAveria']['fibr']['parametrosgpon']['repetidores'])): ?>
+  <div style="margin-top: 150px;">
+    <table class="tabla2">
+      <thead>
+        <tr>
+          <td colspan="6" class="text-center thead-cabecera"><strong>REPETIDOR ACTUAL</strong></td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>SSID:</strong></td>
+          <td colspan="2"><?= $resultado[0]['FichaAveria']['fibr']['parametrosgpon']['repetidores'][0]['ssid'] ?? 'N/A'; ?></td>
+          <td><strong>CONTRASEÑA:</strong></td>
+          <td colspan="2"><?= $resultado[0]['FichaAveria']['fibr']['parametrosgpon']['repetidores'][0]['contrasenia'] ?? 'N/A'; ?></td>
+        </tr>
+        <tr>
+          <td><strong>MARCA:</strong></td>
+          <td colspan="2"><?= $resultado[0]['FichaAveria']['fibr']['parametrosgpon']['repetidores'][0]['marca'] ?? 'N/A'; ?></td>
+          <td><strong>MODELO:</strong></td>
+          <td colspan="2"><?= $resultado[0]['FichaAveria']['fibr']['parametrosgpon']['repetidores'][0]['modelo'] ?? 'N/A'; ?></td>
+        </tr>
+        <tr>
+          <td><strong>SERIE:</strong></td>
+          <td colspan="2"><?= $resultado[0]['FichaAveria']['fibr']['parametrosgpon']['repetidores'][0]['serie'] ?? 'N/A'; ?></td>
+          <td><strong>IP:</strong></td>
+          <td colspan="2"><?= $resultado[0]['FichaAveria']['fibr']['parametrosgpon']['repetidores'][0]['ip'] ?? 'N/A'; ?></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+<?php endif; ?>
+
+<?php if (!empty($resultado[0]['FichaAveria']['fibr']['cambiosgpon']['repetidores'])): ?>
+  <div>
+    <table class="tabla2">
+      <thead>
+        <tr>
+          <td colspan="6" class="text-center thead-cabecera"><strong>REPETIDOR CAMBIADO</strong></td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>SSID:</strong></td>
+          <td colspan="2"><?= $resultado[0]['FichaAveria']['fibr']['cambiosgpon']['repetidores'][0]['ssid'] ?? 'N/A'; ?></td>
+          <td><strong>CONTRASEÑA:</strong></td>
+          <td colspan="2"><?= $resultado[0]['FichaAveria']['fibr']['cambiosgpon']['repetidores'][0]['contrasenia'] ?? 'N/A'; ?></td>
+        </tr>
+        <tr>
+          <td><strong>MARCA:</strong></td>
+          <td colspan="2"><?= $resultado[0]['FichaAveria']['fibr']['cambiosgpon']['repetidores'][0]['marca'] ?? 'N/A'; ?></td>
+          <td><strong>MODELO:</strong></td>
+          <td colspan="2"><?= $resultado[0]['FichaAveria']['fibr']['cambiosgpon']['repetidores'][0]['modelo'] ?? 'N/A'; ?></td>
+        </tr>
+        <tr>
+          <td><strong>SERIE:</strong></td>
+          <td colspan="2"><?= $resultado[0]['FichaAveria']['fibr']['cambiosgpon']['repetidores'][0]['serie'] ?? 'N/A'; ?></td>
+          <td><strong>IP:</strong></td>
+          <td colspan="2"><?= $resultado[0]['FichaAveria']['fibr']['cambiosgpon']['repetidores'][0]['ip'] ?? 'N/A'; ?></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+<?php endif; ?>
+
 <div>
   <table style="margin-top:50px; width: 100%;">
     <tbody>

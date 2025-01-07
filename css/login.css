@@ -162,12 +162,9 @@
   font-size: 2rem;
   font-weight: 600;
   margin-bottom: 2rem;
-  text-align: left;
-  /* Alinea el título a la izquierda */
   width: 100%;
-  /* Ajusta el ancho del título */
-  margin-left: 0;
-  /* Alinea el título a la izquierda */
+  text-align: left;
+  margin-left: 50px; 
 }
 
 /* Botón de inicio de sesión */
