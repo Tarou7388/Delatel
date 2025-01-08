@@ -101,7 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (error) {
       console.error("Error en data de WISP:", error);
     }
-  };
+  }
 
   async function reporte(idReporte) {
     try {
@@ -286,6 +286,9 @@ document.addEventListener("DOMContentLoaded", () => {
         );
         selectSoporte.append(option);
       });
+
+      // Inicializar Select2 después de cargar las opciones
+      $(selectSoporte).select2();
     })();
 
     const buttonDiv = document.createElement("div");

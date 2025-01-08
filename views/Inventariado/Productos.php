@@ -1,5 +1,7 @@
 <?php require_once "../../header.php" ?>
 
+<link rel="stylesheet" href="../../css/diseñoGlobal.css" />
+
 <!-- Modal de Actualización -->
 <div class="modal fade" id="modalEditarProducto" tabindex="-1" aria-labelledby="modalEditarProductoLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl">
