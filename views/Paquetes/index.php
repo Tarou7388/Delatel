@@ -1,5 +1,7 @@
 <?php require_once '../../header.php'; ?>
 
+<link rel="stylesheet" href="../../css/diseñoGlobal.css" />
+
 <!-- Modal Para Agregar -->
 <div class="modal fade" id="modalAgregarPaquete" tabindex="-1" aria-labelledby="modalAgregarPaqueteLabel" aria-hidden="true">
   <div class="modal-dialog">

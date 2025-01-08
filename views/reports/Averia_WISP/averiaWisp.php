@@ -58,7 +58,7 @@
         <td colspan="6" class="text-center thead-cabecera-2"><strong>ESTADO INICIAL</strong></td>
       </tr>
       <tr>
-        <td rowspan="20" colspan="6"><?= $resultado[0]['descripcion_problema'] ?? 'N/A'; ?></td>
+        <td colspan="6"><?= $resultado[0]['descripcion_problema'] ?? 'N/A'; ?></td>
       </tr>
     </tbody>
   </table>
@@ -84,7 +84,7 @@
         <td colspan="6" class="text-center thead-cabecera"><strong>PROCEDIMIENTO DE SOLUCIÓN</strong></td>
       </tr>
       <tr>
-        <td rowspan="20" colspan="6"><?= $resultado[0]['descripcion_solucion'] ?? 'N/A'; ?></td>
+        <td colspan="6"><?= $resultado[0]['descripcion_solucion'] ?? 'N/A'; ?></td>
       </tr>
     </tbody>
   </table>

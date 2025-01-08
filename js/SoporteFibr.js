@@ -288,6 +288,9 @@ document.addEventListener("DOMContentLoaded", () => {
         );
         selectSoporte.append(option);
       });
+
+      // Inicializar Select2 después de cargar las opciones
+      $(selectSoporte).select2();
     })();
 
     const buttonDiv = document.createElement("div");

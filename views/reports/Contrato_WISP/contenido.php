@@ -157,7 +157,7 @@ $HOST = "http://localhost/Delatel";
   </table>
 </div>
 
-<div>
+<div style="margin-top: 20px;"></div>
   <table class="tabla2">
     <?php if (isset($fichaTecnica['alquilado'])): ?>
       <thead>

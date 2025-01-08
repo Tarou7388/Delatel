@@ -1,5 +1,7 @@
 <?php require_once '../../header.php'; ?>
 
+<link rel="stylesheet" href="../../css/diseñoGlobal.css" />
+
 <div class="container-fluid px-4">
   <h1 class="mt-4">Control de Averías Fibra</h1>
 
