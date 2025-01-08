@@ -21,5 +21,20 @@ if (isset($_GET['operacion'])) {
         ]);
       }
       break;
+    case 'listarLimites':
+      $valor = Herramientas::sanitizarEntrada($_GET['valor']);
+      if (!empty($valor)) {
+        $resultados = $distritos->listarLimites(['idDistrito' => $valor]);
+        foreach ($resultados as $key => $value) {
+          $resultados[$key]['limites'] = json_decode($value['limites']);
+        }
+        echo json_encode($resultados);
+      } else {
+        echo json_encode([
+          "estado" => "error",
+          "mensaje" => "El ID del distrito es inválido."
+        ]);
+      }
+      break;
   }
 }

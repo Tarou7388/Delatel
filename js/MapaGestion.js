@@ -133,14 +133,34 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     ({ Map, Circle, Polyline } = await google.maps.importLibrary("maps"));
     ({ AdvancedMarkerElement } = await google.maps.importLibrary("marker"));
-    // The location of the center of the map
+
     const posicionInicial = { lat: -13.417077, lng: -76.136585 };
 
-    // The map, centered at the specified location
     mapa = new Map(document.getElementById('map'), {
       zoom: 13,
       center: posicionInicial,
       mapId: "DEMO_MAP_ID",
+    });
+
+    const responseLimites = await fetch(`${config.HOST}app/controllers/Distritos.controllers.php?operacion=listarLimites&valor=1102`);
+    const dataLimites = await responseLimites.json();
+
+    dataLimites.forEach(item => {
+      const limites = item.limites.map(punto => ({ lat: punto.lat, lng: punto.lng }));
+
+      // Generar colores aleatorios
+      const strokeColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+      const fillColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+
+      const poligono = new google.maps.Polygon({
+        paths: limites,
+        strokeColor: strokeColor,
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: fillColor,
+        fillOpacity: 0.35,
+      });
+      poligono.setMap(mapa);
     });
 
     if (params.cajas) {

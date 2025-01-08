@@ -14,5 +14,12 @@ class Distritos extends Conexion{
             $params['idProvincia']
         );
         return $this->consultaParametros($sql,$values);
-    }   
+    } 
+    public function listarLimites($params=[]){
+        $sql = "CALL spu_buscar_distrito(?)";
+        $values = array(
+            $params['idDistrito']
+        );
+        return $this->consultaParametros($sql,$values);
+    }
 }

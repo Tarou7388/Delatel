@@ -7,7 +7,8 @@ CREATE PROCEDURE spu_buscar_distrito(IN p_id_provincia INT)
 BEGIN
     SELECT 
         id_distrito, 
-        distrito 
+        distrito,
+        limites
     FROM 
         tb_distritos
     WHERE 
