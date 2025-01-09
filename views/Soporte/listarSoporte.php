@@ -1,6 +1,7 @@
 <?php require_once '../../header.php'; ?>
 
 <link rel="stylesheet" href="../../css/contratos.css">
+<link rel="stylesheet" href="../../css/diseñoGlobal.css" />
 
 <!-- Modal Structure -->
 <div class="modal fade" id="soporteModal" tabindex="-1" aria-labelledby="soporteModalLabel" aria-hidden="true">

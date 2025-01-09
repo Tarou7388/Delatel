@@ -9,6 +9,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const idReporte = urlParams.get("idReporte");
 
   const form = document.getElementById("frm-registro-fibr");
+  const btnReporte = document.getElementById("btnReporte");
+
+  if(!idReporte) {
+    btnReporte.style.display = "none";
+  }
 
   //Parametros tecnicos de la ficha
   const txtPlan = document.getElementById("txtPlan");
@@ -298,11 +303,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const guardarBtn = document.createElement("button");
     guardarBtn.id = "btnGuardarFicha";
-    guardarBtn.className = "btn btn-primary";
+    guardarBtn.className = "btn btn-success me-2";
     guardarBtn.type = "submit";
     guardarBtn.textContent = "Guardar Ficha";
 
+    const cancelarBtn = document.createElement("button");
+    cancelarBtn.id = "btnCancelarFicha";
+    cancelarBtn.className = "btn btn-secondary";
+    cancelarBtn.type = "button";
+    cancelarBtn.textContent = "Cancelar";
+    cancelarBtn.addEventListener("click", () => {
+      window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
+    });
+
     buttonDiv.appendChild(guardarBtn);
+    buttonDiv.appendChild(cancelarBtn);
     rowDiv.appendChild(buttonDiv);
 
     solutionTextarea.parentNode.parentNode.appendChild(rowDiv);

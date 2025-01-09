@@ -17,7 +17,7 @@
 
 			<form id="registerForm" action="" method="POST">
 				<div class="row mb-3">
-					<div class="col-md-4">
+					<div class="col-md-4 mt-2">
 						<div class="input-group">
 							<div class="form-floating flex-fill">
 								<input type="text" id="txtNumDocumentoPersona" class="form-control" placeholder="Número de documento">
@@ -28,7 +28,7 @@
 							</button>
 						</div>
 					</div>
-					<div class="col-md-4">
+					<div class="col-md-4 mt-2">
 						<div class="form-floating">
 							<select id="slcNacionalidad" name="nacionalidad" class="form-select" disabled>
 								<option value="" disabled selected>Seleccione Nacionalidad</option>
@@ -36,7 +36,7 @@
 							<label for="slcNacionalidad">Nacionalidad</label>
 						</div>
 					</div>
-					<div class="col-md-4">
+					<div class="col-md-4 mt-2">
 						<div class="form-floating">
 							<select id="slcDocumento" name="documento" class="form-select" disabled>
 								<option value="" disabled selected>Seleccione Documento</option>
@@ -50,19 +50,19 @@
 				</div>
 
 				<div class="row mb-3">
-					<div class="col-md-4">
+					<div class="col-md-4 mt-2">
 						<div class="form-floating">
 							<input type="text" id="txtNombre" name="nombres" class="form-control" placeholder="Nombres" disabled>
 							<label for="txtNombre">Nombres</label>
 						</div>
 					</div>
-					<div class="col-md-4">
+					<div class="col-md-4 mt-2">
 						<div class="form-floating">
 							<input type="text" id="txtApe" name="apellidos" class="form-control" placeholder="Apellidos" disabled>
 							<label for="txtApe">Apellidos</label>
 						</div>
 					</div>
-					<div class="col-md-4">
+					<div class="col-md-4 mt-2">
 						<div class="form-floating">
 							<input type="text" id="txtTelefono" name="txtTelefono" placeholder="Teléfono" class="form-control" maxlength="9" minlength="9" required disabled>
 							<label for="txtTelefono">Teléfono</label>
@@ -113,7 +113,7 @@
 
 				<div class="text-end">
 					<button type="submit" class="btn btn-success">Registrar</button>
-					<a href="index.php" class="btn btn-secondary">Cancelar</a>
+					<a href="<?= $host ?>views/Usuarios/" class="btn btn-secondary">Cancelar</a>
 				</div>
 			</form>
 

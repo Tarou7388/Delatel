@@ -193,7 +193,7 @@
 <?php endif; ?>
 
 <div>
-  <table style="margin-top:50px; width: 100%;">
+  <table style="margin-top:150px; width: 100%;">
     <tbody>
       <tr>
         <td class="no-border">

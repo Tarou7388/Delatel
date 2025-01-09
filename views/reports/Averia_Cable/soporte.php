@@ -26,7 +26,7 @@ if (isset($resultado[0]['FichaAveria'])) {
 }
 
 ob_start();
-include 'averiaFibra.php';
+include 'averiaCable.php';
 include 'estilos.html';
 $content = ob_get_clean();
 

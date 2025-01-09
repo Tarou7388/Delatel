@@ -1,5 +1,7 @@
 <?php require_once '../../header.php'; ?>
 
+<link rel="stylesheet" href="../../css/diseñoGlobal.css" />
+
 <div class="container-fluid px-4">
   <h1 class="mt-4">Control de Averías WISP</h1>
 
@@ -196,9 +198,11 @@
         </div> <!-- Fin de la Tercera Fila -->
 
         <!-- Botón de Reporte -->
-        <div class="row g-3 mb-3">
-          <div class="col-md-12 text-center">
-            <button type="button" id="btnReporte" class="btn btn-primary">Generar Reporte</button>
+        <div class="row g-3 mb-3 mt-2">
+          <div class="col-md-12 text-end ">
+            <button type="submit" id="btnReporte" class="btn btn-primary">
+              <i class="fas fa-file-alt"></i> Generar Reporte
+            </button>
           </div>
         </div>
 

@@ -24,6 +24,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const slcCaja = document.getElementById("slcCaja");
 
   const form = document.getElementById("form-cable");
+  const btnReporte = document.getElementById("btnReporte");
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const idReporte = urlParams.get("idReporte");
+
+  if (!idReporte) {
+    btnReporte.style.display = "none";
+  }
 
   let idSoporte = -1;
   let idCaja = -1;
@@ -35,9 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
       await ObtenerValores();
       await llamarCajas();
     } else {
-      const urlParams = new URLSearchParams(window.location.search);
-      urlParams.get("idReporte");
-      await reporte(urlParams.get("idReporte"));
+      await reporte(idReporte);
     }
 
   })();
@@ -133,7 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Cargar Caja en el select
       const slcCaja = document.getElementById('slcCaja');
-      slcCaja.innerHTML = ''; 
+      slcCaja.innerHTML = '';
       const option = document.createElement('option');
       option.value = soporteData.idcaja;
       option.text = `Caja ${soporteData.idcaja}`;
@@ -318,11 +324,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const guardarBtn = document.createElement("button");
     guardarBtn.id = "btnGuardarFicha";
-    guardarBtn.className = "btn btn-primary";
+    guardarBtn.className = "btn btn-success me-2";
     guardarBtn.type = "submit";
     guardarBtn.textContent = "Guardar Ficha";
 
+    const cancelarBtn = document.createElement("button");
+    cancelarBtn.id = "btnCancelarFicha";
+    cancelarBtn.className = "btn btn-secondary";
+    cancelarBtn.type = "button";
+    cancelarBtn.textContent = "Cancelar";
+    cancelarBtn.addEventListener("click", () => {
+      window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
+    });
+
     buttonDiv.appendChild(guardarBtn);
+    buttonDiv.appendChild(cancelarBtn);
     rowDiv.appendChild(buttonDiv);
 
     const solutionTextarea = document.getElementById("txtaEstadoFinal");
@@ -445,6 +461,14 @@ document.addEventListener("DOMContentLoaded", () => {
     if (await ask("¿Desea guardar la ficha?")) {
       await guardarSoporte(data);
       window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
+    }
+  });
+
+  document.getElementById("btnReporte").addEventListener("click", async () => {
+    if (idReporte) {
+      window.open(`${config.HOST}views/reports/Averia_Cable/soporte.php?idSoporte=${idReporte}`, '_blank');
+    } else {
+      console.error("No se ha encontrado el id del reporte");
     }
   });
 

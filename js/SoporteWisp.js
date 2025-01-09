@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("frmRegistroWisp");
   const urlParams = new URLSearchParams(window.location.search);
   const serv = urlParams.get("tiposervicio");
+  const idReporte = urlParams.get("idReporte");
 
   // Datos del Cliente
   const txtNrodocumento = document.getElementById("txtNrodocumento");
@@ -38,6 +39,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const solutionTextarea = document.getElementById("txtaProceSolucion");
   const txtaEstadoInicial = document.getElementById("txtaEstadoInicial");
   let idSoporte = -1;
+
+  const btnReporte = document.getElementById("btnReporte");
+
+  if (!idReporte) {
+    btnReporte.style.display = "none";
+  }
 
   (async function () {
     const urlParams = new URLSearchParams(window.location.search);
@@ -181,6 +188,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error en cargarDatosEnInputs:", error);
     }
   }
+
   async function deshabilitar() {
     txtIpNuevo.disabled = true;
     txtRouterCambioSsid.disabled = true;
@@ -296,11 +304,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const guardarBtn = document.createElement("button");
     guardarBtn.id = "btnGuardarFicha";
-    guardarBtn.className = "btn btn-primary";
+    guardarBtn.className = "btn btn-success me-2";
     guardarBtn.type = "submit";
     guardarBtn.textContent = "Guardar Ficha";
 
+    const cancelarBtn = document.createElement("button");
+    cancelarBtn.id = "btnCancelarFicha";
+    cancelarBtn.className = "btn btn-secondary";
+    cancelarBtn.type = "button";
+    cancelarBtn.textContent = "Cancelar";
+    cancelarBtn.addEventListener("click", () => {
+      window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
+    });
+
     buttonDiv.appendChild(guardarBtn);
+    buttonDiv.appendChild(cancelarBtn);
     rowDiv.appendChild(buttonDiv);
 
     solutionTextarea.parentNode.parentNode.appendChild(rowDiv);
@@ -410,8 +428,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   txtSenial, txtSenialNuevo.addEventListener("input", validarValorRango);
 
-  txtIp, txtIpNuevo.addEventListener("input", (event) => {
-    formatoIPinput(event);
+  [txtIp, txtRouterCambiopuertaEnlace, txtRouterCambioWan, txtIpNuevo].forEach(element => {
+    element.addEventListener("input", (event) => {
+      formatoIPinput(event);
+    });
   });
 
   document.getElementById("btnReporte").addEventListener("click", async () => {

@@ -1,6 +1,8 @@
 <?php require_once '../../header.php'; ?>
 <?php $host = $_ENV['HOST']; ?>
 
+<link rel="stylesheet" href="../../css/diseñoGlobal.css" />
+
 <div class="container-fluid px-4">
   <h2 class="mt-4">Registro de Incidencias</h2>
 
@@ -158,7 +160,7 @@
 
         <!-- Botones de Acción -->
         <div class="text-end">
-          <button type="submit" class="btn btn-primary">Registrar</button>
+          <button type="submit" class="btn btn-success">Registrar</button>
           <a href="<?= $host; ?>views/Soporte/listarSoporte" class="btn btn-primary">
             Listar Soporte <i class="fa-solid fa-arrow-right"></i>
           </a>

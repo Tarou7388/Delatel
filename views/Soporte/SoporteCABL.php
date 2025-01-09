@@ -1,5 +1,7 @@
 <?php require_once '../../header.php'; ?>
 
+<link rel="stylesheet" href="../../css/diseñoGlobal.css" />
+
 <div class="container-fluid px-4">
   <h1 class="mt-4">Soporte de Cable</h1>
   <div class="card mb-4">
@@ -216,6 +218,15 @@
             <div class="form-floating">
               <textarea class="form-control" id="txtaEstadoFinal" style="height: 100px" required></textarea>
               <label for="txtaEstadoFinal">Estado Final</label>
+            </div>
+          </div>
+
+          <!-- Botón de Reporte -->
+          <div class="row g-3 mb-3">
+            <div class="col-md-12 text-end">
+              <button type="submit" id="btnReporte" class="btn btn-primary">
+                <i class="fas fa-file-alt"></i> Generar Reporte
+              </button>
             </div>
           </div>
         </section>

@@ -45,7 +45,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       searching: true,
       ordering: true,
       info: true,
-      autoWidth: false
+      autoWidth: false,
+      language: {
+        url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json",
+      }
     });
 
     // Agrega evento para cada botón de averías
@@ -74,9 +77,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (contrato) {
           if (contrato.tipos_servicio === "WISP") {
-            window.open(`${config.HOST}views/reports/Contrato_WISP/soporte.php?id=${idContrato}`, "_blank");
+            window.open(`${config.HOST}views/reports/Contrato_servicio_WISP/soporte.php?id=${idContrato}`, "_blank");
           } else {
-            window.open(`${config.HOST}views/reports/Contrato/soporte.php?id=${idContrato}`, "_blank");
+            window.open(`${config.HOST}views/reports/Contrato_servicio/soporte.php?id=${idContrato}`, "_blank");
           }
         } else {
           showToast("Contrato no encontrado.");

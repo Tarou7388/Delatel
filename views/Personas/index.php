@@ -1,5 +1,7 @@
 <?php require_once '../../header.php'; ?>
 
+<link rel="stylesheet" href="../../css/diseñoGlobal.css">
+
 <div class="modal fade" id="ModalMapa" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
@@ -46,7 +48,7 @@
 			<p class="mb-4"><strong>Complete los Datos</strong></p>
 			<form class="form-control" id="frmEmpresas">
 				<div class="row mb-3">
-					<div class="col-md-4">
+					<div class="col-md-4 mt-3">
 						<div class="input-group">
 							<div class="form-floating flex-fill">
 								<input type="number" id="txtRuc" class="form-control" placeholder="R.U.C" require maxlength="11" required>
@@ -55,13 +57,13 @@
 							<button class="btn btn-primary" type="button" id="btnBuscarEmpresa"><i class="fa-solid fa-magnifying-glass"></i></button>
 						</div>
 					</div>
-					<div class="col-md-4">
+					<div class="col-md-4 mt-3">
 						<div class="form-floating">
 							<input type="text" class="form-control" id="txtRepresentanteLegal" name="representante_legal" placeholder="Representante Legal" required>
 							<label for="txtRepresentanteLegal">Representante Legal</label>
 						</div>
 					</div>
-					<div class="col-md-4">
+					<div class="col-md-4 mt-3">
 						<div class="form-floating">
 							<input type="text" class="form-control" id="txtRazonSocial" name="razon_social" placeholder="Razón Social" required disabled>
 							<label for="txtRazonSocial">Razón Social</label>
@@ -69,13 +71,13 @@
 					</div>
 				</div>
 				<div class="row mb-3">
-					<div class="col-md-4">
+					<div class="col-md-4 mt-1">
 						<div class="form-floating">
 							<input type="text" class="form-control" id="txtNombreComercial" name="nombre_comercial" placeholder="Nombre Comercial" required>
 							<label for="txtNombreComercial">Nombre Comercial</label>
 						</div>
 					</div>
-					<div class="col-md-4">
+					<div class="col-md-4 mt-1">
 						<div class="form-floating">
 							<select class="form-select" id="slcTipoServicioEmpresa" aria-label="Servicios" required>
 								<option value="0" disabled selected>Seleccione</option>
@@ -83,7 +85,7 @@
 							<label for="slcTipoServicioEmpresa">Servicios</label>
 						</div>
 					</div>
-					<div class="col-md-4">
+					<div class="col-md-4 mt-1">
 						<div class="form-floating">
 							<select class="form-select select2 select2me" id="slcPaqueteEmpresa" aria-label="Paquetes" required>
 								<option value="0" disabled selected>Seleccione</option>
@@ -93,19 +95,19 @@
 					</div>
 				</div>
 				<div class="row mb-3">
-					<div class="col-md-3">
+					<div class="col-md-4 mt-1">
 						<div class="form-floating">
 							<input type="text" class="form-control" id="txtTelefono" name="telefono" maxlength="9" placeholder="Teléfono" required>
 							<label for="txtTelefono">Teléfono</label>
 						</div>
 					</div>
-					<div class="col-md-3">
+					<div class="col-md-4 mt-1">
 						<div class="form-floating">
 							<input type="email" class="form-control" id="txtEmail" name="email" placeholder="Email">
 							<label for="txtEmail">Email</label>
 						</div>
 					</div>
-					<div class="col-md-6">
+					<div class="col-md-4 mt-1">
 						<div class="form-floating">
 							<input type="text" class="form-control" id="txtDireccion" name="direccion" placeholder="Dirección" required disabled>
 							<label for="txtDireccion">Dirección</label>
@@ -148,7 +150,7 @@
 			<p class="mb-4"><strong>Complete los Datos</strong></p>
 			<form class="form-control" id="frmPersonas">
 				<div class="row mb-3">
-					<div class="col-md-4">
+					<div class="col-md-4 mt-3">
 						<div class="form-floating">
 							<select class="form-select" id="slcTipoDocumento" aria-label="Tipo de Documento" disabled>
 								<option value="" disabled selected>Seleccione</option>
@@ -158,7 +160,7 @@
 							<label for="slcTipoDocumento">Tipo de Documento</label>
 						</div>
 					</div>
-					<div class="col-md-4">
+					<div class="col-md-4 mt-3">
 						<div class="input-group">
 							<div class="form-floating flex-fill">
 								<input type="tel" id="txtNumDocumentoPersona" class="form-control" placeholder="Número de documento" required maxlength="10">
@@ -167,7 +169,7 @@
 							<button class="btn btn-primary" type="button" id="btnBuscar" disabled><i class="fa-solid fa-magnifying-glass"></i></button>
 						</div>
 					</div>
-					<div class="col-md-4">
+					<div class="col-md-4 mt-3">
 						<div class="form-floating">
 							<input type="text" class="form-control" id="txtTelefonoPersona" maxlength="9" placeholder="Teléfono" required>
 							<label for="txtTelefonoPersona">Teléfono</label>
@@ -176,19 +178,19 @@
 				</div>
 
 				<div class="row mb-3">
-					<div class="col-md-4">
+					<div class="col-md-4 mt-1">
 						<div class="form-floating">
 							<input type="text" class="form-control" id="txtNombresPersona" placeholder="Nombres" disabled required>
 							<label for="txtNombresPersona">Nombres</label>
 						</div>
 					</div>
-					<div class="col-md-4">
+					<div class="col-md-4 mt-1">
 						<div class="form-floating">
 							<input type="text" class="form-control" id="txtApellidosPersona" placeholder="Apellidos" disabled required>
 							<label for="txtApellidosPersona">Apellidos</label>
 						</div>
 					</div>
-					<div class="col-md-4">
+					<div class="col-md-4 mt-1">
 						<div class="form-floating">
 							<input type="email" class="form-control" id="txtEmailPersona" placeholder="Email">
 							<label for="txtEmailPersona">Email</label>
@@ -197,19 +199,19 @@
 				</div>
 
 				<div class="row mb-3">
-					<div class="col-md-4">
+					<div class="col-md-4 mt-1">
 						<div class="form-floating">
 							<input type="text" class="form-control" id="txtDireccionPersona" placeholder="Dirección" required>
 							<label for="txtDireccionPersona">Dirección</label>
 						</div>
 					</div>
-					<div class="col-md-4">
+					<div class="col-md-4 mt-1">
 						<div class="form-floating">
 							<input type="text" class="form-control" id="txtReferenciaPersona" placeholder="Referencia" required>
 							<label for="txtReferenciaPersona">Referencia</label>
 						</div>
 					</div>
-					<div class="col-md-4">
+					<div class="col-md-4 mt-1">
 						<div class="input-group">
 							<div class="form-floating">
 								<input type="text" class="form-control" id="txtCoordenadasPersona" placeholder="Referencia" required disabled>
@@ -220,7 +222,7 @@
 					</div>
 				</div>
 				<div class="row mb-3">
-					<div class="col-md-4">
+					<div class="col-md-4 mt-1">
 						<div class="form-floating">
 							<select class="form-select" id="slcNacionalidad" aria-label="Nacionalidad">
 								<option value="" disabled selected>Seleccione</option>
@@ -232,7 +234,7 @@
 						</div>
 					</div>
 
-					<div class="col-md-4">
+					<div class="col-md-4 mt-1">
 						<div class="form-floating">
 							<select class="form-select" id="slcTipoServicio" aria-label="Servicios">
 								<option value="0" disabled selected>Seleccione</option>
@@ -241,7 +243,7 @@
 						</div>
 					</div>
 
-					<div class="col-md-4">
+					<div class="col-md-4 mt-1">
 						<div class="form-floating">
 							<select class="form-select select2 select2me" id="slcPaquetes" aria-label="Paquetes">
 								<option value="0" disabled selected>Seleccione</option>

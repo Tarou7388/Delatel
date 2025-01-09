@@ -1,6 +1,8 @@
 <?php require_once '../../header.php'; ?>
 <?php $host = $_ENV['HOST']; ?>
 
+<link rel="stylesheet" href="../../css/diseñoGlobal.css" />
+
 <div class="modal fade" id="detalleAveria" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">

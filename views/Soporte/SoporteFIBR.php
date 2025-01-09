@@ -267,8 +267,10 @@
 
             <!-- Botón de Reporte -->
             <div class="row g-3 mb-3">
-              <div class="col-md-12 text-center">
-                <button type="button" id="btnReporte" class="btn btn-primary">Generar Reporte</button>
+              <div class="col-md-12 text-end">
+                <button type="submit" id="btnReporte" class="btn btn-primary">
+                  <i class="fas fa-file-alt"></i> Generar Reporte
+                </button>
               </div>
             </div>
           </div>

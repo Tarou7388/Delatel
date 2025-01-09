@@ -1,7 +1,7 @@
 <?php require_once '../../header.php'; ?>
 <?php $host = $_ENV['HOST']; ?>
 
-
+<link rel="stylesheet" href="../../css/diseñoGlobal.css" />
 
 <div class="container-fluid px-4">
   <div class="form-container mt-4">
