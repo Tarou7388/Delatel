@@ -179,7 +179,7 @@ document.addEventListener("DOMContentLoaded", () => {
       txtRouterCambioSsid.value = datos.WISP.cambios.routers[0].ssid;
       txtAccesoNuevo.value = datos.WISP.cambios.routers[0].acceso;
       txtRouterCambioSeguridad.value = datos.WISP.cambios.routers[0].seguridad;
-      txtRouterCambiopuertaEnlace.value = datos.WISP.cambios.routers[0].puertaEnlace;
+      txtRouterCambiopuertaEnlace.value = datos.WISP.cambios.routers[0].puertaenlace;
       txtRouterCambioWan.value = datos.WISP.cambios.routers[0].wan;
       txtSenialNuevo.value = datos.WISP.cambios.signalstrength;
       deshabilitar();
@@ -226,7 +226,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  async function cargarEnInputs() {
+  async function cargarEnInputs(data) {
     try {
       const selectedValue = parseInt(slcWireless.value);
       const coordenada = urlParams.get("coordenada");
@@ -237,8 +237,12 @@ document.addEventListener("DOMContentLoaded", () => {
       let datosgenerales = null;
       if (!respuesta2[0]?.soporte || respuesta2[0]?.soporte === "{}" || !JSON.parse(respuesta2[0].soporte)?.WISP) {
         const fichaInstalacion = JSON.parse(respuesta[0]?.ficha_instalacion || "{}");
-        wispFiltrado = fichaInstalacion?.parametros?.routers || null;
+        wispFiltrado = fichaInstalacion?.parametros?.routers || [];
         datosgenerales = fichaInstalacion?.parametros || null;
+      } else {
+        const soporte = JSON.parse(respuesta2[0].soporte);
+        wispFiltrado = soporte.WISP.cambios.routers || [];
+        datosgenerales = soporte.WISP.parametros || null;
       }
 
       const routerseleccionado = wispFiltrado.find(
@@ -253,6 +257,12 @@ document.addEventListener("DOMContentLoaded", () => {
         txtRouterpuertaEnlace.value = routerseleccionado.puertaenlace;
         txtRouterWan.value = routerseleccionado.wan;
         txtAcceso.value = routerseleccionado.acceso;
+
+        // Mostrar los parámetros iniciales en los campos de cambios
+        const cambiosRouter = datosgenerales.routers.find(
+          (router) => router.numero === selectedValue
+        );
+
       } else {
         console.warn("No se encontró un repetidor con el valor seleccionado.");
       }
@@ -263,6 +273,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function cargarSoporteAnterior(data) {
     console.log(data);
+
+    // Datos del cliente
+    txtCliente.value = data.parametroscliente.usuario;
+    txtNrodocumento.value = data.parametroscliente.nrodoc;
+    txtPlan.value = data.parametroscliente.plan;
+
+    // Cambios realizados (mostrar en los campos principales)
+    txtBase.value = data.parametros.base;
+    txtBaseNuevo.value = data.cambios.nuevabase;
+    txtSenial.value = data.cambios.signalstrength;
+
+    // Cargar routers en el select
+    await cargarRouters(data.cambios.routers);
   }
 
   async function crearSelectYBoton() {
@@ -376,10 +399,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const selectedValue = parseInt(slcWireless.value);
     return routers.map(router => {
       if (router.numero === selectedValue) {
+        router.acceso = txtAccesoNuevo.value;
         router.ssid = txtRouterCambioSsid.value;
         router.seguridad = txtRouterCambioSeguridad.value;
         router.lan = txtIpNuevo.value;
-        router.puertaEnlace = txtRouterCambiopuertaEnlace.value;
+        router.puertaenlace = txtRouterCambiopuertaEnlace.value;
         router.wan = txtRouterCambioWan.value;
         console.log(router);
       }

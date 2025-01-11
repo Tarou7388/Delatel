@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("frm-registro-fibr");
   const btnReporte = document.getElementById("btnReporte");
 
-  if(!idReporte) {
+  if (!idReporte) {
     btnReporte.style.display = "none";
   }
 
@@ -79,13 +79,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function llamarCajas() {
     const cajas = await mapa.buscarCercanos(idCaja);
-    cajas.forEach(caja => {
+    const slcCaja = document.getElementById('slcCaja');
+
+    // Limpiar opciones anteriores
+    slcCaja.innerHTML = '';
+
+    // Agregar la opción de idCaja actual
+    if (idCaja !== undefined) {
       const option = document.createElement('option');
-      option.value = caja.id_caja;
-      option.text = caja.nombre;
+      option.value = idCaja;
+      option.text = `Caja ${idCaja}`;
       slcCaja.appendChild(option);
+      slcCaja.value = idCaja;
+    }
+
+    // Agregar otras opciones de cajas cercanas
+    cajas.forEach(caja => {
+      // Verificar si la opción ya existe
+      if (caja.id_caja !== idCaja) {
+        const option = document.createElement('option');
+        option.value = caja.id_caja;
+        option.text = caja.nombre;
+        slcCaja.appendChild(option);
+      }
     });
-    slcCaja.value = idCaja;
   }
 
   async function listarReporte(idContrato, idSoporte) {
@@ -110,7 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
       slcCaja.innerHTML = ''; // Limpiar opciones anteriores
       const option = document.createElement('option');
       option.value = soporte.idcaja;
-      option.text = `Caja ${soporte.idcaja}`;
+      option.text = soporte.idcaja;
       slcCaja.appendChild(option);
       slcCaja.value = soporte.idcaja;
 
@@ -219,12 +236,25 @@ document.addEventListener("DOMContentLoaded", () => {
     const coordenada = urlParams.get("coordenada");
     const respuesta = await FichaSoporteporDocServCoordenada(doc, tiposervicio, coordenada);
 
-    console.log(JSON.parse(respuesta[0].soporte));
+    try {
+      const soporte = JSON.parse(respuesta[0].soporte);
+      console.log("Datos del soporte:", soporte);
 
-    if (respuesta[0].soporte != "{}" && JSON.parse(respuesta[0].soporte).fibr) {
-      await cargarSoporteAnterior(JSON.parse(respuesta[0].soporte).fibr)
-    } else {
-      await CargarDatosInstalacion(doc, idSoporte);
+      if (soporte != "{}" && soporte.fibr) {
+        await cargarSoporteAnterior(soporte);
+      } else {
+        await CargarDatosInstalacion(doc, idSoporte);
+      }
+
+      // Asignar idCaja
+      idCaja = soporte.idcaja;
+      console.log("Asignando idCaja en cargarDatosdelSoporte:", idCaja);
+
+      if (idCaja === undefined) {
+        console.error("Error: idCaja es undefined");
+      }
+    } catch (error) {
+      console.error("Error al parsear la respuesta del soporte:", error);
     }
   }
 
@@ -240,26 +270,37 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function cargarSoporteAnterior(data) {
-    console.log(data);
-    txtCliente.value = data.parametroscliente.usuario;
-    txtNrodocumento.value = data.parametroscliente.Nrodoc;
-    txtPlan.value = data.parametroscliente.plan;
+    console.log("Datos del soporte anterior:", data);
 
-    txtPppoe.value = data.cambiosgpon.pppoe;
-    txtClave.value = data.cambiosgpon.clave;
-    txtPotencia.value = data.cambiosgpon.potencia;
-    chkCatv.checked = data.cambiosgpon.catv;
-    txtVlan.value = data.cambiosgpon.vlan;
+    const fibr = data.fibr;
 
-    txtCambiosPppoe.value = data.cambiosgpon.pppoe;
-    txtCambiosClave.value = data.cambiosgpon.clave;
-    txtCambiosVlan.value = data.cambiosgpon.vlan;
+    txtCliente.value = fibr.parametroscliente.usuario;
+    txtNrodocumento.value = fibr.parametroscliente.Nrodoc;
+    txtPlan.value = fibr.parametroscliente.plan;
 
+    txtPppoe.value = fibr.cambiosgpon.pppoe;
+    txtClave.value = fibr.cambiosgpon.clave;
+    txtPotencia.value = fibr.cambiosgpon.potencia;
+    chkCatv.checked = fibr.cambiosgpon.catv;
+    txtVlan.value = fibr.cambiosgpon.vlan;
 
-    console.log(data.cambiosgpon.repetidores);
-    await cargarDatosRouter(data.cambiosgpon);
-    if (data.cambiosgpon.repetidores) {
-      await cargarRepetidores(data.cambiosgpon.repetidores);
+    txtCambiosPppoe.value = fibr.cambiosgpon.pppoe;
+    txtCambiosClave.value = fibr.cambiosgpon.clave;
+    txtCambiosVlan.value = fibr.cambiosgpon.vlan;
+
+    // Asignar idCaja
+    idCaja = data.idcaja;
+    console.log("Asignando idCaja en cargarSoporteAnterior:", idCaja);
+
+    if (idCaja === undefined) {
+      console.error("Error: idCaja es undefined");
+      return;
+    }
+
+    console.log(fibr.cambiosgpon.repetidores);
+    await cargarDatosRouter(fibr.cambiosgpon);
+    if (fibr.cambiosgpon.repetidores) {
+      await cargarRepetidores(fibr.cambiosgpon.repetidores);
       return;
     }
   }
@@ -585,6 +626,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  txtIpRouter, txtIpRepetidor, txtCambiosIpRouter, txtCambiosIpRepetidor.addEventListener("input", formatoIPinput);
+  [txtIpRouter, txtIpRepetidor, txtCambiosIpRouter, txtCambiosIpRepetidor].forEach(element => {
+    element.addEventListener("input", (event) => {
+      formatoIPinput(event);
+    });
+  });
 
 });
