@@ -233,3 +233,14 @@ BEGIN
 END$$
 
 DELIMITER ;
+
+
+DROP VIEW IF EXISTS vw_clientes_contar_con_ficha_llena;
+
+CREATE VIEW vw_clientes_contar_con_ficha_llena AS
+SELECT
+    COUNT(DISTINCT c.id_cliente) AS total_clientes_con_ficha_llena
+FROM tb_contratos c
+WHERE
+    c.ficha_instalacion IS NOT NULL
+    AND c.inactive_at IS NULL;

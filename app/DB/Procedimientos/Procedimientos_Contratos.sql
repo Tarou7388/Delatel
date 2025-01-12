@@ -382,3 +382,49 @@ BEGIN
         c.id_contrato = p_id_contrato;
 END$$
 
+
+DROP VIEW IF EXISTS vw_contratos_listar_ficha_null$$
+
+CREATE VIEW vw_contratos_listar_ficha_null AS
+SELECT
+    c.id_contrato,
+    CONCAT(p.apellidos, ' ', p.nombres) AS nombre_cliente,
+    p2.paquete AS nombre_paquete,
+    s.sector AS nombre_sector,
+    CONCAT(rp.apellidos, ' ', rp.nombres) AS nombre_tecnico_registro,
+    c.direccion_servicio,
+    c.referencia,
+    c.ficha_instalacion,
+    c.coordenada,
+    c.fecha_inicio,
+    c.fecha_registro,
+    c.fecha_fin,
+    c.nota,
+    c.create_at,
+    c.update_at,
+    c.inactive_at,
+    c.iduser_update,
+    c.iduser_inactive
+FROM
+    tb_contratos c
+    JOIN tb_clientes cl ON c.id_cliente = cl.id_cliente
+    JOIN tb_personas p ON cl.id_persona = p.id_persona
+    JOIN tb_paquetes p2 ON c.id_paquete = p2.id_paquete
+    JOIN tb_sectores s ON c.id_sector = s.id_sector
+    JOIN tb_responsables r ON c.id_usuario_registro = r.id_responsable
+    JOIN tb_usuarios u ON r.id_usuario = u.id_usuario
+    JOIN tb_personas rp ON u.id_persona = rp.id_persona
+WHERE
+    c.ficha_instalacion IS NULL
+    AND c.inactive_at IS NULL
+ORDER BY c.id_contrato DESC$$
+
+
+DROP VIEW IF EXISTS vw_contratos_contar_ficha_vacia$$
+
+CREATE VIEW vw_contratos_contar_ficha_vacia AS
+SELECT COUNT(*) AS total_contratos_ficha_vacia
+FROM tb_contratos
+WHERE
+    ficha_instalacion IS NULL
+    AND inactive_at IS NULL$$
