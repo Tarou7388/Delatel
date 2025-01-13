@@ -13,8 +13,14 @@ document.addEventListener("DOMContentLoaded", () => {
     type: "GET",
     success: function (response) {
       const totalClientes = JSON.parse(response)[0].total_clientes_con_ficha_llena;
-      document.querySelector("#clientes-online").textContent = totalClientes;
-      document.querySelector("#total-registrados").textContent = `Total Registrados: ${totalClientes}`;
+      const clientesOnlineElement = document.querySelector("#clientes-online");
+      const totalRegistradosElement = document.querySelector("#total-registrados");
+      if (clientesOnlineElement) {
+        clientesOnlineElement.textContent = totalClientes;
+      }
+      if (totalRegistradosElement) {
+        totalRegistradosElement.textContent = `Total Registrados: ${totalClientes}`;
+      }
     },
     error: function (xhr, error, thrown) {
       console.error('Error al obtener el número de clientes:', error, thrown);
@@ -28,8 +34,14 @@ document.addEventListener("DOMContentLoaded", () => {
     type: "GET",
     success: function (response) {
       const totalContratos = JSON.parse(response)[0].total_contratos_ficha_vacia;
-      document.querySelector("#contratos-pendientes").textContent = totalContratos;
-      document.querySelector("#total-soportes").textContent = `Total Contratos: ${totalContratos}`;
+      const contratosPendientesElement = document.querySelector("#contratos-pendientes");
+      const totalSoportesElement = document.querySelector("#total-soportes");
+      if (contratosPendientesElement) {
+        contratosPendientesElement.textContent = totalContratos;
+      }
+      if (totalSoportesElement) {
+        totalSoportesElement.textContent = `Total Contratos: ${totalContratos}`;
+      }
     },
     error: function (xhr, error, thrown) {
       console.error('Error al obtener el número de contratos:', error, thrown);
@@ -37,14 +49,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  //Solicitud AJAX para obtener los Soportes Pendientes. 
+  // Solicitud AJAX para obtener los Soportes Pendientes
   $.ajax({
     url: rutaContarAverias,
     type: "GET",
     success: function (response) {
       const totalAverias = JSON.parse(response)[0].total_averias_ficha_vacia;
-      document.querySelector("#soportes-pendientes").textContent = totalAverias;
-      document.querySelector("#total-soportes").textContent = `Total Soportes: ${totalAverias}`;
+      const soportesPendientesElement = document.querySelector("#soportes-pendientes");
+      const totalSoportesElement = document.querySelector("#total-soportes");
+      if (soportesPendientesElement) {
+        soportesPendientesElement.textContent = totalAverias;
+      }
+      if (totalSoportesElement) {
+        totalSoportesElement.textContent = `Total Soportes: ${totalAverias}`;
+      }
     },
     error: function (xhr, error, thrown) {
       console.error('Error al obtener el número de soportes:', error, thrown);
@@ -111,8 +129,8 @@ document.addEventListener("DOMContentLoaded", () => {
           console.error('Error en la carga de datos:', error, thrown);
           alert('Error al cargar los datos. Por favor, revisa la consola para más detalles.');
         }
-            },
-            columns: [
+      },
+      columns: [
         { data: "id_soporte", className: "text-center" },
         {
           data: "soporte", className: "text-center",

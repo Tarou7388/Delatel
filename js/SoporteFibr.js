@@ -240,15 +240,15 @@ document.addEventListener("DOMContentLoaded", () => {
       const soporte = JSON.parse(respuesta[0].soporte);
       console.log("Datos del soporte:", soporte);
 
-      if (soporte != "{}" && soporte.fibr) {
+      if (soporte && soporte.fibr) {
         await cargarSoporteAnterior(soporte);
       } else {
         await CargarDatosInstalacion(doc, idSoporte);
       }
 
-      // Asignar idCaja
+     /*  // Asignar idCaja
       idCaja = soporte.idcaja;
-      console.log("Asignando idCaja en cargarDatosdelSoporte:", idCaja);
+      console.log("Asignando idCaja en cargarDatosdelSoporte:", idCaja); */
 
       if (idCaja === undefined) {
         console.error("Error: idCaja es undefined");
@@ -375,14 +375,14 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await respuesta.json();
       txtCliente.value = data[0].nombre;
       txtNrodocumento.value = doct;
-
     } catch (error) {
       console.error("Error en CargarDatosInstalacion:", error);
     }
 
     try {
       const dataFibra = await FichaInstalacion(idSoporte);
-      const fibraFiltrado = JSON.parse(dataFibra[0].ficha_instalacion).fibraoptica;
+      const fichaInstalacion = JSON.parse(dataFibra[0].ficha_instalacion);
+      const fibraFiltrado = fichaInstalacion.fibraoptica;
       console.log(dataFibra[0]);
 
       txtPlan.value = fibraFiltrado.plan;
@@ -395,20 +395,19 @@ document.addEventListener("DOMContentLoaded", () => {
       chkCatv.checked = fibraFiltrado.router.catv;
       txtVlan.value = fibraFiltrado.vlan;
 
-      //Asignar datos de la caja
-      console.log(JSON.parse(dataFibra[0].ficha_instalacion).idcaja);
-      idCaja = JSON.parse(dataFibra[0].ficha_instalacion).idcaja;
+      // Asignar datos de la caja
+      console.log(fichaInstalacion.idcaja);
+      idCaja = fichaInstalacion.idcaja;
 
       await cargarDatosRouter(fibraFiltrado);
       if (fibraFiltrado.repetidores) {
         await cargarRepetidores(fibraFiltrado.repetidores);
         return;
       }
-
     } catch (error) {
       console.error("Error en data de Fibra:", error);
     }
-  };
+  }
 
   async function cargarRepetidores(repetidorJson) {
     const slcRpetidor = document.getElementById('slcRpetidor');
