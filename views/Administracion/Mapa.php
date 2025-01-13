@@ -63,6 +63,9 @@
           Agregar Nueva Entrada
         </div>
         <div class="card-body">
+          <button class="btn btn-success w-100 mb-2" id="btnActualizarPrincipal" disabled>
+            <i class="fas fa-plus"></i> Principal
+          </button>
           <button class="btn btn-success w-100 mb-2" data-bs-toggle="modal" id="modalAgregarCaja" data-bs-target="#modalAgregar" disabled>
             <i class="fas fa-plus"></i> Caja
           </button>
@@ -71,19 +74,6 @@
           </button>
           <button class="btn btn-success w-100 mb-2" data-bs-toggle="modal" id="modalAgregarSector" data-bs-target="#modalAgregarSector2" disabled>
             <i class="fas fa-plus"></i> Sector
-          </button>
-          <hr>
-          <button class="btn btn-primary w-100 mb-2" id="btnActualizarCajas">
-            <i class="fas fa-sync-alt"></i> Cajas
-          </button>
-          <button class="btn btn-primary w-100 mb-2" id="btnActualizarMufas">
-            <i class="fas fa-sync-alt"></i> Mufas
-          </button>
-          <button class="btn btn-primary w-100 mb-2" id="btnActualizarSectores">
-            <i class="fas fa-sync-alt"></i> Sectores
-          </button>
-          <button class="btn btn-primary w-100 mb-2" id="btnActualizarPrincipal">
-            <i class="fas fa-sync-alt"></i> Principal
           </button>
         </div>
       </div>
@@ -187,12 +177,6 @@
           <div class="form-floating mb-3">
             <textarea class="form-control" id="descripcionSector" name="descripcion" placeholder="Descripción" rows="3" required></textarea>
             <label for="descripcion">Descripción</label>
-          </div>
-          <div class="form-floating mb-3">
-            <select class="form-select" name="" id="buscarDistrito">
-              <option value="" disabled>Selecciona un Distrito</option>
-            </select>
-            <label for="distritos">Distritos</label>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>

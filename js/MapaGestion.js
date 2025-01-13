@@ -19,6 +19,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   let lineasCables = [];
   let lineaPrincipal = [];
   let lineaCableGuardar = [];
+  let datosLimitesDistritos = [];
+  let limitesDistritos = [];
+  let idDistrito = "";
   let idCajaRegistro = "";
   let nombreCaja = "";
   let descripcionCaja = "";
@@ -28,14 +31,36 @@ document.addEventListener('DOMContentLoaded', async () => {
   let idMufaRegistro = "";
   let CablePrincipalGuardar = "";
   let coordenadasCajaGuardada = false;
+  let lineaPrincipalAgregando = true;
   let banderaCable = false;
   let cablePrincipalInicio = true;
   const params = { cajas: true, mufas: true, cables: true, sectores: true };
 
-  await initMap(params);
 
   (async () => {
-    cargarSelect();
+    await initMap(params);
+    limitesDistritos.forEach(item => {
+      item.addListener('click', async (event) => {
+        const latLng = event.latLng.toJSON();
+        Coordenadas = { lat: latLng.lat, lng: latLng.lng };
+        idDistrito = item.idDistrito;
+        console.log(lineaPrincipalAgregando)
+        if(lineaPrincipalAgregando){
+          blooquearbotones(false, true, false, true);
+        }
+        marcadorPrincipalEvento(latLng)
+
+        if (banderaCable) {
+          const json = { lat: latLng.lat, lng: latLng.lng };
+          console.log(json);
+          marcarLineaCable(json);
+        }
+        if (CablePrincipalGuardar != "") {
+          const json = { lat: latLng.lat, lng: latLng.lng };
+          marcarLineaCable(json);
+        }
+      });
+    });
   })();
 
   async function buscarMarcadorCercano(datos, coordenadas) {
@@ -58,22 +83,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     return params;
   }
 
-  async function cargarSelect() {
-    const response = await fetch(`${config.HOST}app/controllers/Distritos.controllers.php?operacion=buscarDistrito&valor=1102`);
-    const data = await response.json();
-    const select = document.querySelector("#buscarDistrito");
-    data.forEach(item => {
-      const option = document.createElement("option");
-      option.value = item.id_distrito;
-      option.text = item.distrito;
-      select.appendChild(option);
-    });
-  }
-
-  async function blooquearbotones(caja, mufa, sector) {
+  async function blooquearbotones(caja, mufa, sector, principal) {
     document.querySelector("#modalAgregarCaja").disabled = caja;
     document.querySelector("#modalAgregarMufa").disabled = mufa;
     document.querySelector("#modalAgregarSector").disabled = sector;
+    document.querySelector("#btnActualizarPrincipal").disabled = principal;
   }
 
   async function updateMap() {
@@ -144,11 +158,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const responseLimites = await fetch(`${config.HOST}app/controllers/Distritos.controllers.php?operacion=listarLimites&valor=1102`);
     const dataLimites = await responseLimites.json();
+    datosLimitesDistritos = dataLimites;
 
     dataLimites.forEach(item => {
       const limites = item.limites.map(punto => ({ lat: punto.lat, lng: punto.lng }));
 
-      // Generar colores aleatorios
       const strokeColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
       const fillColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
 
@@ -159,9 +173,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         strokeWeight: 2,
         fillColor: fillColor,
         fillOpacity: 0.35,
+        idDistrito: item.id_distrito
       });
       poligono.setMap(mapa);
+      limitesDistritos.push(poligono);
     });
+    console.log(limitesDistritos);
 
     if (params.cajas) {
       await eventocajas();
@@ -225,7 +242,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const coordenadasEnviar = `${Coordenadas.lat},${Coordenadas.lng}`;
     const paramsEnviar = new FormData();
     paramsEnviar.append("operacion", "registrarSector");
-    paramsEnviar.append("idDistrito", document.querySelector("#buscarDistrito").value);
+    paramsEnviar.append("idDistrito", idDistrito);
     paramsEnviar.append("sector", document.querySelector("#nombreSector").value);
     paramsEnviar.append("descripcion", document.querySelector("#descripcionSector").value);
     paramsEnviar.append("coordenadas", coordenadasEnviar);
@@ -327,7 +344,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
     CablePrincipal = lineasCables[0];
     CablePrincipal.addListener('click', async (e) => {
-      blooquearbotones(true, false, true);
+      if(lineaPrincipalAgregando){
+        blooquearbotones(true, false, true, true);
+      }
       Coordenadas = `${e.latLng.lat()},${e.latLng.lng()}`;
       marcadorPrincipalEvento(e.latLng.toJSON());
     });
@@ -351,7 +370,9 @@ document.addEventListener('DOMContentLoaded', async () => {
           lineaCableGuardar.push(puntoSinCondicion);
           cablePrincipalInicio = false;
           showToast("Agregando linea principal", "INFO");
+          lineaPrincipalAgregando = false;
           coordenadasCajaGuardada = true;
+          blooquearbotones(true, true, true, false);
         }
       });
     });
@@ -506,10 +527,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   async function agregarLineasPrincipal(coordenadas) {
     const paramsEnviar = new FormData();
     paramsEnviar.append("operacion", "actualizarLineas");
-    paramsEnviar.append("idCable", -1);
-    paramsEnviar.append("coordenadas", coordenadas);
+    paramsEnviar.append("id", -1);
+    paramsEnviar.append("coordenadas", JSON.stringify(coordenadas));
     paramsEnviar.append("idUsuario", user.idUsuario);
-    console.log(paramsEnviar);
     const response = await fetch(`${config.HOST}app/controllers/Lineas.controllers.php`, {
       method: "POST",
       body: paramsEnviar
@@ -517,27 +537,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const data = await response.json();
     console.log(data);
   }
-
-  mapa.addListener('click', (event) => {
-    const latLng = event.latLng.toJSON();
-    Coordenadas = { lat: latLng.lat, lng: latLng.lng };
-
-    blooquearbotones(false, true, false);
-    marcadorPrincipalEvento(latLng)
-
-    if (Coordenadas != null) {
-      document.querySelector("#modalAgregarCaja").disabled = false;
-    }
-    if (banderaCable) {
-      const json = { lat: latLng.lat, lng: latLng.lng };
-      console.log(json);
-      marcarLineaCable(json);
-    }
-    if (CablePrincipalGuardar != "") {
-      const json = { lat: latLng.lat, lng: latLng.lng };
-      marcarLineaCable(json);
-    }
-  });
 
   document.querySelector("#btnActualizar").addEventListener("click", () => {
     updateMap();
@@ -603,8 +602,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
       }
       console.log(coordenadasEnviar);
-      //await agregarLineasPrincipal(coordenadasEnviar);
+      await agregarLineasPrincipal(coordenadasEnviar);
       showToast("Linea principal guardada", "SUCCESS");
+      lineaPrincipalAgregando = false;
     };
   });
 

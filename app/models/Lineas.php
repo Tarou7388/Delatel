@@ -22,9 +22,9 @@ class Lineas extends Conexion{
   public function actualizarLineas($params = []){
     $sql = "CALL spu_actualizar_linea(?,?,?)";
     $array = [
-      'id' => $params['id'],
-      'coordenadas' => json_encode($params['coordenadas']),
-      'idUsuario' => $params['idUsuario']
+      $params['id'],
+      $params['coordenadas'],
+      $params['idUsuario']
     ];
     return $this->registrar($sql, $array);
   }

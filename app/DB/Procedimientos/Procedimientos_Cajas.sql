@@ -137,3 +137,5 @@ BEGIN
     WHERE id_caja = p_id_caja;
   END IF;
 END$$
+
+DROP PROCEDURE IF EXISTS spu_actualizar_caja$$

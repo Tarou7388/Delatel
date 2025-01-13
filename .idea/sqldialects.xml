@@ -16,13 +16,12 @@
     <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimientos_Clientes.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimientos_Contratos.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimientos_Empresas.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimientos_FichaSoporte.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimientos_Inventario.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimientos_Personas.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimientos_Roles.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimientos_Soporte.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimientos_Usuarios.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Procedimientos_kardex.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/app/DB/Procedimientos/Views.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/app/DB/Registro_DepartamentoPronvinciaDistrito.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/app/DB/Registros.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/app/DB/registro-distrito-chincha.sql" dialect="MySQL" />
