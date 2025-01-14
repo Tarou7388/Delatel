@@ -11,16 +11,19 @@ $idContrato = $_GET['idContrato'];
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="exampleModalLabel">
-          <i class="fas fa-plus-circle"></i> Añadir Sintotizador
+          <i class="fas fa-plus-circle"></i> Añadir Sintonizador
         </h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" id="mdlSintotizadorBody">
         <div class="mb-2">
-          <div class="form-floating">
-            <input type="text" class="form-control" id="txtCodigoBarraSintonizador" placeholder="Código Barra">
-            <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
-            <label for="txtCodigoBarraSintonizador">Código de Barra <span class="required-asterisk" style="color: red;">*</span></label>
+          <div class="input-group">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="txtCodigoBarraSintonizador" placeholder="Código Barra">
+              <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
+              <label for="txtCodigoBarraSintonizador">Código de Barra <span class="required-asterisk" style="color: red;">*</span></label>
+            </div>
+            <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
           </div>
         </div>
         <div class="mb-2">
@@ -144,7 +147,7 @@ $idContrato = $_GET['idContrato'];
           <b> Cantidad de implementos</b>
           <div class="mb-3">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mdlSintotizador">
-              <i class="fas fa-plus-circle"></i> Añadir Sintotizador
+              <i class="fas fa-plus-circle"></i> Añadir Sintonizador
             </button>
           </div>
           <div class="row g-3 mb-3">
@@ -225,7 +228,7 @@ $idContrato = $_GET['idContrato'];
           <div class="col-md">
             <div class="form-floating">
               <input type="text" class="form-control" value=0 id="txtCantSintotizador" placeholder="Cantidad Sintotizador" disabled>
-              <label for="txtCantSintotizador">Cantidad de Sintotizador</label>
+              <label for="txtCantSintotizador">Cantidad de Sintonizador</label>
             </div>
           </div>
           <div class="col-md">

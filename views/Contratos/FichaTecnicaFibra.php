@@ -60,10 +60,13 @@ $idContrato = $_GET['idContrato'];
             </div>
           </div>
           <div class="col-12 col-md-6">
-            <div class="form-floating">
-              <input type="text" class="form-control" id="txtCodigoBarrasRepetidor" placeholder="Codigo de barras">
-              <label for="lblCodigoBarrasRepetidor">Codigo de barras <span class="required-asterisk" style="color: red;">*</span></label>
-              <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
+            <div class="input-group">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="txtCodigoBarrasRepetidor" placeholder="Codigo de barras">
+                <label for="lblCodigoBarrasRepetidor">Codigo de barras <span class="required-asterisk" style="color: red;">*</span></label>
+                <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
+              </div>
+              <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
             </div>
           </div>
         </div>
@@ -210,10 +213,13 @@ $idContrato = $_GET['idContrato'];
                 </div>
               </div>
               <div class="col-12 col-md-4">
-                <div class="form-floating">
-                  <input type="text" class="form-control" id="txtCodigoBarra" placeholder="Codigo de barra">
-                  <label for="lblCodigoBarra">Código de Barras <span class="required-asterisk" style="color: red;">*</span></label>
-                  <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
+                <div class="input-group">
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="txtCodigoBarra" placeholder="Codigo de barra">
+                    <label for="lblCodigoBarra">Código de Barras <span class="required-asterisk" style="color: red;">*</span></label>
+                    <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
+                  </div>
+                  <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
                 </div>
               </div>
             </div>

@@ -10,16 +10,19 @@ $idContrato = $_GET['idContrato'];
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="exampleModalLabel">
-          <i class="fas fa-plus-circle"></i> Añadir Sintotizador
+          <i class="fas fa-plus-circle"></i> Añadir Sintonizador
         </h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" id="mdlSintotizadorBody">
         <div class="mb-2">
-          <div class="form-floating">
-            <input type="text" class="form-control" id="txtCodigoBarraSintonizador" placeholder="Código Barra">
-            <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
-            <label for="txtCodigoBarraSintonizador">Código de Barra <span class="required-asterisk" style="color: red;">*</span></label>
+          <div class="input-group">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="txtCodigoBarraSintonizador" placeholder="Código Barra">
+              <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
+              <label for="txtCodigoBarraSintonizador">Código de Barra <span class="required-asterisk" style="color: red;">*</span></label>
+            </div>
+            <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
           </div>
         </div>
         <div class="mb-2">
@@ -116,10 +119,13 @@ $idContrato = $_GET['idContrato'];
             </div>
           </div>
           <div class="col-12 col-md-6">
-            <div class="form-floating">
-              <input type="text" class="form-control" id="txtCodigoBarrasRepetidor" placeholder="Codigo de barras">
-              <label for="lblCodigoBarrasRepetidor">Código de barras <span class="required-asterisk" style="color: red;">*</span></label>
-              <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
+            <div class="input-group">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="txtCodigoBarrasRepetidor" placeholder="Codigo de barras">
+                <label for="lblCodigoBarrasRepetidor">Código de barras <span class="required-asterisk" style="color: red;">*</span></label>
+                <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
+              </div>
+              <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
             </div>
           </div>
         </div>
@@ -226,29 +232,29 @@ $idContrato = $_GET['idContrato'];
             </div>
             <div class="col-12 col-md-6">
               <div class="row g-2">
-              <div class="col-12 col-md-4">
-                <div class="form-floating">
-                <input type="number" class="form-control" id="txtIdCaja" placeholder="Caja" disabled>
-                <label for="lblSerieCaja">Caja</label>
+                <div class="col-12 col-md-4">
+                  <div class="form-floating">
+                    <input type="number" class="form-control" id="txtIdCaja" placeholder="Caja" disabled>
+                    <label for="lblSerieCaja">Caja</label>
+                  </div>
                 </div>
-              </div>
-              <div class="col-12 col-md-4">
-                <div class="form-floating">
-                <select class="form-select" id="slcFilaEntrada">
-                  <option value="1">Fila 1</option>
-                  <option value="2">Fila 2</option>
-                </select>
-                <label for="slcFilaEntrada">Fila Entrada <span class="required-asterisk" style="color: red;">*</span></label>
-                <div class="invalid-feedback">Por favor, seleccione una opción válida.</div>
+                <div class="col-12 col-md-4">
+                  <div class="form-floating">
+                    <select class="form-select" id="slcFilaEntrada">
+                      <option value="1">Fila 1</option>
+                      <option value="2">Fila 2</option>
+                    </select>
+                    <label for="slcFilaEntrada">Fila Entrada <span class="required-asterisk" style="color: red;">*</span></label>
+                    <div class="invalid-feedback">Por favor, seleccione una opción válida.</div>
+                  </div>
                 </div>
-              </div>
-              <div class="col-12 col-md-4">
-                <div class="form-floating">
-                <input type="number" class="form-control" id="txtPuerto" placeholder="columnas" min="1" max="16">
-                <label for="txtPuerto">Puerto <span class="required-asterisk" style="color: red;">*</span></label>
-                <div class="invalid-feedback" id="columnaError">Por favor, ingrese un valor válido.</div>
+                <div class="col-12 col-md-4">
+                  <div class="form-floating">
+                    <input type="number" class="form-control" id="txtPuerto" placeholder="columnas" min="1" max="16">
+                    <label for="txtPuerto">Puerto <span class="required-asterisk" style="color: red;">*</span></label>
+                    <div class="invalid-feedback" id="columnaError">Por favor, ingrese un valor válido.</div>
+                  </div>
                 </div>
-              </div>
               </div>
             </div>
           </div>
@@ -271,10 +277,13 @@ $idContrato = $_GET['idContrato'];
               </div>
             </div>
             <div class="col-12 col-md-4">
-              <div class="form-floating">
-                <input type="text" class="form-control" id="txtCodigoBarra" placeholder="Codigo de barra">
-                <label for="lblCodigoBarra">Código de barras <span class="required-asterisk" style="color: red;">*</span></label>
-                <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
+              <div class="input-group">
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="txtCodigoBarra" placeholder="Codigo de barra">
+                  <label for="lblCodigoBarra">Código de barras <span class="required-asterisk" style="color: red;">*</span></label>
+                  <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
+                </div>
+                <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
               </div>
             </div>
           </div>
@@ -311,20 +320,20 @@ $idContrato = $_GET['idContrato'];
             </div>
             <div class="col-12 col-md-4">
               <div class="form-floating">
-              <select type="text" class="form-select" id="slcBanda" placeholder="Banda">
-                <option value="2G">2G</option>
-                <option value="5G" selected>5G</option>
-                <option value="2G,5G">5G-2G</option>
-              </select>
-              <label for="slcBanda">Banda <span class="required-asterisk" style="color: red;">*</span></label>
-              <div class="invalid-feedback">Por favor, seleccione una opción.</div>
+                <select type="text" class="form-select" id="slcBanda" placeholder="Banda">
+                  <option value="2G">2G</option>
+                  <option value="5G" selected>5G</option>
+                  <option value="2G,5G">5G-2G</option>
+                </select>
+                <label for="slcBanda">Banda <span class="required-asterisk" style="color: red;">*</span></label>
+                <div class="invalid-feedback">Por favor, seleccione una opción.</div>
               </div>
             </div>
             <div class="col-12 col-md-4">
               <div class="form-floating">
-              <input type="number" class="form-control" id="txtAntenas" placeholder="Antena#" min="2" max="10">
-              <label for="txtAntenas">N°Antena <span class="required-asterisk" style="color: red;">*</span></label>
-              <div class="invalid-feedback">Por favor, ingrese un valor válido (2 a 10)</div>
+                <input type="number" class="form-control" id="txtAntenas" placeholder="Antena#" min="2" max="10">
+                <label for="txtAntenas">N°Antena <span class="required-asterisk" style="color: red;">*</span></label>
+                <div class="invalid-feedback">Por favor, ingrese un valor válido (2 a 10)</div>
               </div>
             </div>
             <div class="col-12 col-md-8 form-check form-switch d-flex align-items-center mt-custom">
