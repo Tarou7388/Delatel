@@ -11,7 +11,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const txtConector = document.getElementById("txtConector");
   const txtPrecioCable = document.getElementById("txtPrecioCable");
   const txtPrecioConector = document.getElementById("txtPrecioConector");
-  const txtaEstadoInicial = document.getElementById("txtaEstadoInicial")
+  const txtaEstadoInicial = document.getElementById("txtaEstadoInicial");
+  const slcSpliter = document.getElementById("slcSpliter");
+  const lblTriplexor = document.getElementById("lblTriplexor");
+  const lblSpliter = document.getElementById("lblSpliter");
+  const lblNumSpliter = document.getElementById("lblNumSpliter");
+  const lblCable = document.getElementById("lblCable");
+  const lblPrecioCable = document.getElementById("lblPrecioCable");
+  const lblConector = document.getElementById("lblConector");
+  const lblPrecioConector = document.getElementById("lblPrecioConector");
+  const lblEstadoInicial = document.getElementById("lblEstadoInicial");
 
   const txtPotenciaCambio = document.getElementById("txtPotenciaCambio");
   const txtPrecioCableCambio = document.getElementById("txtPrecioCableCambio");
@@ -32,20 +41,21 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!idReporte) {
     btnReporte.style.display = "none";
   }
-
+  let sintonizadores = [];
   let idSoporte = -1;
   let idCaja = -1;
 
   (async function () {
     idSoporte = await obtenerReferencias();
     if (idSoporte) {
-      crearSelectYBoton();
+      crearBotones();
+      configurarVerMas();
       await ObtenerValores();
       await llamarCajas();
     } else {
+      configurarVerMas();
       await reporte(idReporte);
     }
-
   })();
 
   async function llamarCajas() {
@@ -151,6 +161,41 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  function configurarVerMas() {
+    const elementosOcultar = [
+      slcTriplexor, slcSpliter, txtNumSpliter, txtCable, txtConector, txtPrecioCable,
+      txtPrecioConector, txtaEstadoInicial, lblTriplexor, lblSpliter,
+      lblNumSpliter, lblCable, lblPrecioCable, lblConector, lblPrecioConector, lblEstadoInicial,
+    ];
+    elementosOcultar.forEach(elemento => {
+      if (elemento) {
+        elemento.style.display = "none";
+      }
+    });
+    const verMasBtn = document.createElement("button");
+    verMasBtn.textContent = "Ver más";
+    verMasBtn.className = "btn btn-link mt-2 mb-2";
+    verMasBtn.type = "button";
+    let mostrando = false;
+    verMasBtn.addEventListener("click", () => {
+      mostrando = !mostrando;
+      elementosOcultar.forEach(elemento => {
+        if (elemento) {
+          elemento.style.display = mostrando ? "block" : "none";
+        }
+      });
+      verMasBtn.textContent = mostrando ? "Ver menos" : "Ver más";
+    });
+
+    const form = document.getElementById("form-cable");
+    const hrElements = form.querySelectorAll("hr");
+    if (hrElements.length > 1) {
+      hrElements[1].insertAdjacentElement("afterend", verMasBtn); 
+    } else {
+      form.appendChild(verMasBtn);
+    }
+  }
+
   function triplexorValue(triplexor) {
     switch (triplexor?.toLowerCase()) {
       case 'no lleva': return '1';
@@ -161,7 +206,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function ObtenerValores() {
-
     const urlParams = new URLSearchParams(window.location.search);
     const doc = urlParams.get("doc");
     const idSoporte = urlParams.get("idsoporte");
@@ -169,7 +213,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const coordenada = urlParams.get("coordenada");
 
     const respuesta = await FichaSoporteporDocServCoordenada(doc, tiposervicio, coordenada);
-    console.log(respuesta);
 
     if (respuesta[0].soporte != "{}" && JSON.parse(respuesta[0].soporte).cabl) {
       await cargarSoporteAnterior(JSON.parse(respuesta[0].soporte).cabl.cambioscable, idSoporte);
@@ -227,7 +270,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await respuesta.json();
       txtCliente.value = data[0].nombre;
       txtNrodocumento.value = doc;
-
     } catch (error) {
       console.error("Error en CargarDatosInstalacion:", error);
     }
@@ -266,15 +308,11 @@ document.addEventListener("DOMContentLoaded", () => {
       txtPrecioConectorCambio.value = cableFiltrado.conector.precio;
       txtPrecioConector.value = cableFiltrado.conector.numeroconector * cableFiltrado.conector.precio;
 
-      //Asignar datos de la caja
-      console.log(cableFiltrado.idcaja);
       idCaja = cableFiltrado.idcaja;
 
     } catch (error) {
       console.error("Error en FichaInstalacion:", error);
     }
-
-
     try {
       const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
       const data = await respuesta.json();
@@ -283,66 +321,6 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (error) {
       console.error("Error en obtener el problema:", error);
     }
-
-  }
-
-  function crearSelectYBoton() {
-    const rowDiv = document.createElement("div");
-    rowDiv.className = "row g-2 mb-2 mt-2";
-
-    const selectDiv = document.createElement("div");
-    selectDiv.className = "col-md ";
-
-    const labelSelect = document.createElement("label");
-    labelSelect.innerText = "Tipo de Soporte";
-    selectDiv.appendChild(labelSelect);
-
-    const selectSoporte = document.createElement("select");
-    selectSoporte.id = "slcTipoSoporte";
-    selectSoporte.className = "form-floating form-select";
-    selectSoporte.required = true;
-    selectDiv.appendChild(selectSoporte);
-    rowDiv.appendChild(selectDiv);
-
-    (async () => {
-      const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=listarTipoSoporte`);
-      const datos = await respuesta.json();
-      selectSoporte.innerHTML = "";
-      datos.forEach((element) => {
-        const option = new Option(
-          `${element.tipo_soporte}`,
-          element.id_tipo_soporte
-        );
-        selectSoporte.append(option);
-      });
-      // Inicializar Select2 después de cargar las opciones
-      $(selectSoporte).select2();
-    })();
-
-    const buttonDiv = document.createElement("div");
-    buttonDiv.className = "col-md d-flex align-items-end";
-
-    const guardarBtn = document.createElement("button");
-    guardarBtn.id = "btnGuardarFicha";
-    guardarBtn.className = "btn btn-success me-2";
-    guardarBtn.type = "submit";
-    guardarBtn.textContent = "Guardar Ficha";
-
-    const cancelarBtn = document.createElement("button");
-    cancelarBtn.id = "btnCancelarFicha";
-    cancelarBtn.className = "btn btn-secondary";
-    cancelarBtn.type = "button";
-    cancelarBtn.textContent = "Cancelar";
-    cancelarBtn.addEventListener("click", () => {
-      window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
-    });
-
-    buttonDiv.appendChild(guardarBtn);
-    buttonDiv.appendChild(cancelarBtn);
-    rowDiv.appendChild(buttonDiv);
-
-    const solutionTextarea = document.getElementById("txtaEstadoFinal");
-    solutionTextarea.parentNode.parentNode.appendChild(rowDiv);
   }
 
   async function ArmadoJsonCable() {
@@ -416,8 +394,6 @@ document.addEventListener("DOMContentLoaded", () => {
   async function CompletarSoporteSiestaTodo(idSoporte, JSONsoporte) {
     const ServiciosTotales = await FichaInstalacion(idSoporte);
     const tiposServicio = (ServiciosTotales[0].tipos_servicio).toLowerCase().split(",");
-
-
     const todosValidos = tiposServicio.every(servicio =>
       JSONsoporte?.[servicio] && Object.keys(JSONsoporte[servicio]).length > 0
     );
@@ -425,6 +401,36 @@ document.addEventListener("DOMContentLoaded", () => {
     if (todosValidos) {
       await CompletarSoporte(idSoporte);
     }
+  }
+
+  function crearBotones() {
+    const rowDiv = document.createElement("div");
+    rowDiv.className = "row g-2 mb-2 mt-2";
+
+    const buttonDiv = document.createElement("div");
+    buttonDiv.className = "col-md d-flex align-items-end";
+
+    const guardarBtn = document.createElement("button");
+    guardarBtn.id = "btnGuardarFicha";
+    guardarBtn.className = "btn btn-success me-2";
+    guardarBtn.type = "submit";
+    guardarBtn.textContent = "Guardar Ficha";
+
+    const cancelarBtn = document.createElement("button");
+    cancelarBtn.id = "btnCancelarFicha";
+    cancelarBtn.className = "btn btn-secondary";
+    cancelarBtn.type = "button";
+    cancelarBtn.textContent = "Cancelar";
+    cancelarBtn.addEventListener("click", () => {
+      window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
+    });
+
+    buttonDiv.appendChild(guardarBtn);
+    buttonDiv.appendChild(cancelarBtn);
+    rowDiv.appendChild(buttonDiv);
+
+    const solutionTextarea = document.getElementById("txtaEstadoFinal");
+    solutionTextarea.parentNode.parentNode.appendChild(rowDiv);
   }
 
   async function guardarSoporte(data) {
@@ -454,6 +460,27 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error('Error en la solicitud:', error);
     }
   }
+  document.getElementById("btnGuardarSintonizador").addEventListener("click", () => {
+    const codigoBarra = document.getElementById("txtCodigoBarra").value;
+    const marca = document.getElementById("txtMarca").value;
+    const modelo = document.getElementById("txtModelo").value;
+    const precio = document.getElementById("txtPrecio").value;
+    const serie = document.getElementById("txtSerie").value;
+  
+    if (codigoBarra && marca && modelo && precio && serie) {
+      // Agregar el sintonizador al array
+      sintonizadores.push({ codigoBarra, marca, modelo, precio, serie });
+  
+      // Limpiar formulario y cerrar modal
+      document.getElementById("formAñadirSintonizador").reset();
+      const modal = bootstrap.Modal.getInstance(document.getElementById("modalAñadirSintonizador"));
+      modal.hide();
+  
+      alert("Sintonizador añadido exitosamente.");
+    } else {
+      alert("Por favor, complete todos los campos.");
+    }
+  });
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -471,7 +498,5 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("No se ha encontrado el id del reporte");
     }
   });
-
   txtPotencia, txtPotenciaCambio, txtSintonizadorCambio.addEventListener("input", validarValorRango);
-
 });
