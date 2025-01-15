@@ -12,26 +12,29 @@
       <div class="modal-body">
         <form id="formSintonizador">
           <div class="mb-3">
-            <div class="form-floating">
-              <input type="text" class="form-control" id="txtCodigoBarraSintonizador" placeholder="Ingrese el código de barra">
-              <label for="txtCodigoBarra" class="form-label">Código de Barra</label>
+            <div class="input-group">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="txtCodigoBarraSintonizador" placeholder="Ingrese el código de barra">
+                <label for="txtCodigoBarra" class="form-label">Código de Barra</label>
+              </div>
+              <button class="btn btn-primary" id="btnBuscarSintonizador" type="button">Buscar</button>
             </div>
           </div>
           <div class="mb-3">
             <div class="form-floating">
-              <input type="text" class="form-control" id="txtMarcaSintonizador" placeholder="Ingrese la marca">
+              <input type="text" class="form-control" id="txtMarcaSintonizador" placeholder="Ingrese la marca" disabled>
               <label for="txtMarca" class="form-label">Marca</label>
             </div>
           </div>
           <div class="mb-3">
             <div class="form-floating">
-              <input type="text" class="form-control" id="txtModeloSintonizador" placeholder="Ingrese el modelo">
+              <input type="text" class="form-control" id="txtModeloSintonizador" placeholder="Ingrese el modelo" disabled>
               <label for="txtModelo" class="form-label">Modelo</label>
             </div>
           </div>
           <div class="mb-3">
             <div class="form-floating">
-              <input type="number" class="form-control" id="txtPrecioSintonizador" placeholder="Ingrese el precio">
+              <input type="number" class="form-control" id="txtPrecioSintonizador" placeholder="Ingrese el precio" disabled>
               <label for="txtPrecio" class="form-label">Precio</label>
             </div>
           </div>
@@ -42,14 +45,17 @@
             </div>
           </div>
         </form>
+
+        <div id="divSintonizadores" class="mt-3"></div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary">Guardar</button>
+        <button type="button" class="btn btn-primary" id="btnAgregarSintonizador">Añadir</button>
       </div>
     </div>
   </div>
 </div>
+
 
 <!-- modal listar -->
 <div class="modal fade" id="modalListarSintonizadores" tabindex="-1" aria-labelledby="modalListarSintonizadoresLabel" aria-hidden="true">
@@ -130,7 +136,7 @@
                   <input type="text" class="form-control" id="txtSintonizador" placeholder="Sintonizador" disabled required>
                   <label for="txtSintonizador" id="lblSintonizador">Sintonizador</label>
                 </div>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalListarSintonizadores">Listar</button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalListarSintonizadores">Listar</button>
               </div>
             </div>
           </div>
@@ -223,8 +229,8 @@
                   <div class="invalid-feedback">Sintonizador debe estar entre 0 y 999.</div>
                   <label for="txtSintonizadorCambio">Sintonizador</label>
                 </div>
-                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalSintonizador">Añadir</button>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalListarSintonizadores">Listar</button>
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalSintonizador">Añadir</button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalListarSintonizadores">Listar</button>
               </div>
             </div>
           </div>

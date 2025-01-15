@@ -41,6 +41,8 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!idReporte) {
     btnReporte.style.display = "none";
   }
+  let numeroSintotizadores = 0;
+  let jsonSintonizador = [];
   let sintonizadores = [];
   let idSoporte = -1;
   let idCaja = -1;
@@ -52,9 +54,6 @@ document.addEventListener("DOMContentLoaded", () => {
       configurarVerMas();
       await ObtenerValores();
       await llamarCajas();
-    } else {
-      configurarVerMas();
-      await reporte(idReporte);
     }
   })();
 
@@ -67,98 +66,6 @@ document.addEventListener("DOMContentLoaded", () => {
       slcCaja.appendChild(option);
     });
     slcCaja.value = idCaja;
-  }
-
-  async function rellenarDocNombre(doct) {
-    const respuesta = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${doct}`);
-    const data = await respuesta.json();
-    $("#txtCliente").val(data[0].nombre);
-    $("#txtNrodocumento").val(doct);
-  }
-
-  async function reporte(idReporte) {
-    try {
-      // Obtener datos del soporte
-      const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idReporte}`);
-      const data = await respuesta.json();
-
-      const dataCable = await FichaInstalacion(idReporte);
-
-      const cableFiltrado = JSON.parse(dataCable[0].ficha_instalacion).cable;
-      const plan = document.getElementById("txtPlan");
-      plan.value = cableFiltrado.plan;
-
-      // Llamada necesaria para rellenar el número de documento
-      await rellenarDocNombre(data[0].nro_doc);
-
-      // Parsear el campo `soporte`
-      const soporteData = JSON.parse(data[0].soporte);
-
-      // Extraer parámetros iniciales y cambios técnicos
-      const parametrosCable = soporteData.cabl.parametroscable;
-      const cambiosCable = soporteData.cabl.cambioscable;
-
-      // Precios
-      const precioCable = 1.50;
-      const precioConector = 1.00;
-
-      const setField = (id, value) => {
-        const element = document.getElementById(id);
-        if (element) {
-          element.value = value || '';
-          element.setAttribute('disabled', 'true');
-        }
-      };
-
-      // Calcular precios
-      const calcularPrecio = (cantidadCable, cantidadConectores) => {
-        const totalCable = cantidadCable * precioCable;
-        const totalConectores = cantidadConectores * precioConector;
-        return { totalCable, totalConectores };
-      };
-
-      // Cálculo para parámetros iniciales
-      const preciosIniciales = calcularPrecio(parametrosCable.cable.metrosadicionales, parametrosCable.conector.numeroconector);
-      setField('txtPrecioCable', preciosIniciales.totalCable.toFixed(2));  // Precio del cable inicial
-      setField('txtPrecioConector', preciosIniciales.totalConectores.toFixed(2));  // Precio de conectores iniciales
-
-      // Cálculo para cambios técnicos
-      const preciosCambios = calcularPrecio(cambiosCable.cable.metrosadicionales, cambiosCable.conector.numeroconector);
-      setField('txtPrecioCableCambio', preciosCambios.totalCable.toFixed(2));  // Precio del cable en cambios
-      setField('txtPrecioConectorCambio', preciosCambios.totalConectores.toFixed(2));  // Precio de conectores en cambios
-
-      // Rellenar campos con datos iniciales
-      setField('txtPotencia', parametrosCable.potencia);
-      setField('txtSintonizador', parametrosCable.sintonizador);
-      setField('slcTriplexor', triplexorValue(parametrosCable.triplexor));
-      setField('txtNumSpliter', parametrosCable.splitter[0]?.cantidad);
-      setField('slcSpliter', parametrosCable.splitter[0]?.tipo);
-      setField('txtCable', parametrosCable.cable.metrosadicionales);
-      setField('txtConector', parametrosCable.conector.numeroconector);
-      setField('txtaEstadoInicial', data[0].descripcion_problema);
-
-      // Rellenar campos con datos de cambios técnicos
-      setField('txtPotenciaCambio', cambiosCable.potencia);
-      setField('txtSintonizadorCambio', cambiosCable.sintonizador);
-      setField('slcTriplexorCambio', triplexorValue(cambiosCable.triplexor));
-      setField('txtNumSpliterCambio', cambiosCable.splitter[0]?.cantidad);
-      setField('slcSpliterCambio', cambiosCable.splitter[0]?.tipo);
-      setField('txtCableCambio', cambiosCable.cable.metrosadicionales);
-      setField('txtConectorCambio', cambiosCable.conector.numeroconector);
-      setField('txtaEstadoFinal', data[0].descripcion_solucion);
-
-      // Cargar Caja en el select
-      const slcCaja = document.getElementById('slcCaja');
-      slcCaja.innerHTML = '';
-      const option = document.createElement('option');
-      option.value = soporteData.idcaja;
-      option.text = `Caja ${soporteData.idcaja}`;
-      slcCaja.appendChild(option);
-      slcCaja.value = soporteData.idcaja;
-
-    } catch (error) {
-      console.error("Error en la función reporte:", error);
-    }
   }
 
   function configurarVerMas() {
@@ -190,18 +97,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("form-cable");
     const hrElements = form.querySelectorAll("hr");
     if (hrElements.length > 1) {
-      hrElements[1].insertAdjacentElement("afterend", verMasBtn); 
+      hrElements[1].insertAdjacentElement("afterend", verMasBtn);
     } else {
       form.appendChild(verMasBtn);
-    }
-  }
-
-  function triplexorValue(triplexor) {
-    switch (triplexor?.toLowerCase()) {
-      case 'no lleva': return '1';
-      case 'activo': return '2';
-      case 'pasivo': return '3';
-      default: return '';
     }
   }
 
@@ -321,6 +219,55 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (error) {
       console.error("Error en obtener el problema:", error);
     }
+  }
+  function actualizarContadorSintonizadores() {
+    txtSintonizadorCambio.value = numeroSintotizadores;
+  }
+
+  async function AgregarSintotizador() {
+    const txtCodigoBarraSintonizador = document.getElementById("txtCodigoBarraSintonizador").value;
+    const txtMarcaSintonizador = document.getElementById("txtMarcaSintonizador").value;
+    const txtModeloSintonizador = document.getElementById("txtModeloSintonizador").value;
+    const txtSerieSintonizador = document.getElementById("txtSerieSintonizador").value;
+    const txtPrecioSintonizador = document.getElementById("txtPrecioSintonizador").value;
+
+    numeroSintotizadores++;
+
+    const nuevoSintonizador = {
+      codigoBarra: txtCodigoBarraSintonizador,
+      marca: txtMarcaSintonizador,
+      modelo: txtModeloSintonizador,
+      serie: txtSerieSintonizador,
+      precio: txtPrecioSintonizador
+    };
+
+    jsonSintonizador.push(nuevoSintonizador);
+
+    const card = document.createElement("div");
+    card.className = "card mt-2";
+    card.innerHTML = `
+      <div class="card-body">
+        <h5 class="card-title">Sintonizador #${numeroSintotizadores}</h5>
+        <p class="card-text"><strong>Código de Barra:</strong> ${txtCodigoBarraSintonizador}</p>
+        <p class="card-text"><strong>Marca:</strong> ${txtMarcaSintonizador}</p>
+        <p class="card-text"><strong>Modelo:</strong> ${txtModeloSintonizador}</p>
+        <p class="card-text"><strong>Precio:</strong> ${txtPrecioSintonizador}</p>
+        <p class="card-text"><strong>Serie:</strong> ${txtSerieSintonizador}</p>
+        <button class="btn btn-danger btn-sm mt-2" id="btnEliminar">
+          <i class="fas fa-times"></i> Eliminar
+        </button>
+      </div>
+    `;
+    actualizarContadorSintonizadores();
+
+    document.getElementById("divSintonizadores").appendChild(card);
+    const btnEliminar = card.querySelector("#btnEliminar");
+    btnEliminar.addEventListener("click", async function () {
+      card.remove();
+      numeroSintotizadores--;
+      jsonSintonizador.pop();
+      actualizarContadorSintonizadores();
+    });
   }
 
   async function ArmadoJsonCable() {
@@ -460,25 +407,35 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error('Error en la solicitud:', error);
     }
   }
-  document.getElementById("btnGuardarSintonizador").addEventListener("click", () => {
-    const codigoBarra = document.getElementById("txtCodigoBarra").value;
-    const marca = document.getElementById("txtMarca").value;
-    const modelo = document.getElementById("txtModelo").value;
-    const precio = document.getElementById("txtPrecio").value;
-    const serie = document.getElementById("txtSerie").value;
-  
-    if (codigoBarra && marca && modelo && precio && serie) {
-      // Agregar el sintonizador al array
-      sintonizadores.push({ codigoBarra, marca, modelo, precio, serie });
-  
-      // Limpiar formulario y cerrar modal
-      document.getElementById("formAñadirSintonizador").reset();
-      const modal = bootstrap.Modal.getInstance(document.getElementById("modalAñadirSintonizador"));
-      modal.hide();
-  
-      alert("Sintonizador añadido exitosamente.");
-    } else {
-      alert("Por favor, complete todos los campos.");
+  document.getElementById("btnAgregarSintonizador").addEventListener("click", async function () {
+    await AgregarSintotizador();
+  });
+  document.getElementById("btnBuscarSintonizador").addEventListener("click", async function () {
+    const codigoBarra = document.getElementById("txtCodigoBarraSintonizador").value.trim();
+    if (codigoBarra === "") {
+      return;
+    }
+    try {
+      const respuesta = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarra&codigoBarra=${encodeURIComponent(codigoBarra)}`);
+      const resultado = await respuesta.json();
+      console.log(resultado);
+
+      if (Array.isArray(resultado) && resultado.length > 0) {
+        const producto = resultado[0];
+        if (producto?.marca && producto?.modelo && producto?.precio_actual) {
+          document.getElementById("txtMarcaSintonizador").value = producto.marca;
+          document.getElementById("txtModeloSintonizador").value = producto.modelo;
+          document.getElementById("txtPrecioSintonizador").value = producto.precio_actual;
+          showToast(`Producto encontrado: ${producto.marca} - ${producto.modelo} - Precio: ${producto.precio_actual}`, "SUCCESS");
+        } else {
+          showToast("Producto no encontrado o datos incompletos", "INFO");
+        }
+      } else {
+        showToast("Producto no encontrado", "INFO");
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      showToast("Hubo un error al escanear el código de barras.", "ERROR");
     }
   });
 
