@@ -164,31 +164,32 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error al asignar valores al formulario:", error);
     }
   }
+
   function mostrarSintonizadoresEnModal() {
-    // const container = document.getElementById("sintonizadoresContainer");
-    // container.innerHTML = "";
+    const container = document.getElementById("sintonizadoresContainer");
+    container.innerHTML = "";
 
-    // if (sintonizadoresData.length == 0) {
-    //   container.innerHTML = "<p class='text-center'>No hay sintonizadores disponibles.</p>";
-    //   return;
-    // }
+    if (sintonizadoresData.length == 0) {
+      container.innerHTML = "<p class='text-center'>No hay sintonizadores disponibles.</p>";
+      return;
+    }
 
-    // sintonizadoresData.forEach((sintonizador, index) => {
-    //   const card = document.createElement("div");
-    //   card.className = "col-md-4";
-    //   card.innerHTML = `
-    //     <div class="card">
-    //       <div class="card-body">
-    //         <h5 class="card-title">Sintonizador ${index + 1}</h5>
-    //         <p class="card-text">Código de Barra: ${sintonizador.codigoBarra || "N/A"}</p>
-    //         <p class="card-text">Marca: ${sintonizador.marca || "N/A"}</p>
-    //         <p class="card-text">Modelo: ${sintonizador.modelo || "N/A"}</p>
-    //         <p class="card-text">Precio: ${sintonizador.precio || "N/A"}</p>
-    //         <p class="card-text">Serie: ${sintonizador.serie || "N/A"}</p>
-    //     </div>
-    //   `;
-    //   container.appendChild(card);
-    // });
+    sintonizadoresData.forEach((sintonizador, index) => {
+      const card = document.createElement("div");
+      card.className = "col-md-4";
+      card.innerHTML = `
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Sintonizador ${index + 1}</h5>
+            <p class="card-text">Código de Barra: ${sintonizador.codigoBarra || "N/A"}</p>
+            <p class="card-text">Marca: ${sintonizador.marca || "N/A"}</p>
+            <p class="card-text">Modelo: ${sintonizador.modelo || "N/A"}</p>
+            <p class="card-text">Precio: ${sintonizador.precio || "N/A"}</p>
+            <p class="card-text">Serie: ${sintonizador.serie || "N/A"}</p>
+        </div>
+      `;
+      container.appendChild(card);
+    });
   }
 
   async function obtenerReferencias() {
@@ -489,10 +490,8 @@ document.addEventListener("DOMContentLoaded", () => {
       window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
     }
   });
-  document.getElementById("btnListarModalSintonizador").addEventListener("click", async function () {
+  document.getElementById("btnlistar").addEventListener("click", () => {
     mostrarSintonizadoresEnModal();
-    const modal = new bootstrap.Modal(document.getElementById("modalListarSintonizadores"));
-    modal.show();
   });
 
   document.getElementById("btnReporte").addEventListener("click", async () => {

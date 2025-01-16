@@ -2,7 +2,7 @@
 
 <link rel="stylesheet" href="../../css/diseñoGlobal.css" />
 <!-- Modal añadir -->
-<div class="modal fade" id="modalSintonizador" tabindex="-1" aria-labelledby="modalSintonizadorLabel" aria-hidden="true">
+<div class="modal fade" id="modalSintonizador" tabindex="-1" aria-labelledby="modalSintonizadorLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" >
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -58,7 +58,7 @@
 
 
 <!-- modal listar -->
-<div class="modal fade" id="modalListarSintonizadores" tabindex="-1" aria-labelledby="modalListarSintonizadoresLabel" aria-hidden="true">
+<div class="modal fade" id="modalListarSintonizadores" tabindex="-1" aria-labelledby="modalListarSintonizadoresLabel" data-bs-backdrop="static" data-bs-keyboard="false"  aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
@@ -136,7 +136,7 @@
                   <input type="text" class="form-control" id="txtSintonizador" placeholder="Sintonizador" disabled required>
                   <label for="txtSintonizador" id="lblSintonizador">Sintonizador</label>
                 </div>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalListarSintonizadores" id="btnListarModalSintonizador">Listar</button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalListarSintonizadores" id="btnlistar">Listar</button>
               </div>
             </div>
           </div>
@@ -230,7 +230,6 @@
                   <label for="txtSintonizadorCambio">Sintonizador</label>
                 </div>
                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalSintonizador">Añadir</button>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalListarSintonizadores" id="btnListarSintonizadoresNuevos">Listar</button>
               </div>
             </div>
           </div>
