@@ -78,7 +78,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
       $values = [
         'idSoporte'            => Herramientas::sanitizarEntrada($datos['data']['idSoporte']),
         'idTecnico'            => Herramientas::sanitizarEntrada($datos['data']['idTecnico']),
-        'idTipoSoporte'        => Herramientas::sanitizarEntrada($datos['data']['idTipoSoporte']),
         'fechaHoraAsistencia'  => date("Y-m-d H:i:s"),
         'soporte'              => $datos['data']['soporte'],
         'idUserUpdate'         => Herramientas::sanitizarEntrada($datos['data']['idUserUpdate']),

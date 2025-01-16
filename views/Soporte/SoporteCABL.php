@@ -136,7 +136,7 @@
                   <input type="text" class="form-control" id="txtSintonizador" placeholder="Sintonizador" disabled required>
                   <label for="txtSintonizador" id="lblSintonizador">Sintonizador</label>
                 </div>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalListarSintonizadores">Listar</button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalListarSintonizadores" id="btnListarModalSintonizador">Listar</button>
               </div>
             </div>
           </div>
@@ -230,7 +230,7 @@
                   <label for="txtSintonizadorCambio">Sintonizador</label>
                 </div>
                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalSintonizador">Añadir</button>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalListarSintonizadores">Listar</button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalListarSintonizadores" id="btnListarSintonizadoresNuevos">Listar</button>
               </div>
             </div>
           </div>

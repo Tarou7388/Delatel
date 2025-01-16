@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   let numeroSintotizadores = 0;
   let jsonSintonizador = [];
-  let sintonizadores = [];
+  let sintonizadoresData = [];
   let idSoporte = -1;
   let idCaja = -1;
 
@@ -121,31 +121,74 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function cargarSoporteAnterior(data, idSoporte) {
     try {
-      const respuestaProblema = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
+      const respuestaProblema = await fetch(
+        `${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`
+      );
       const dataProblema = await respuestaProblema.json();
-      $("#txtaEstadoInicial").val(dataProblema[0].descripcion_problema);
+      const nombreCliente = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${dataProblema[0].nro_doc}`);
+      const dataCliente = await nombreCliente.json();
+      txtCliente.value = dataCliente[0].nombre;
+      txtNrodocumento.value = dataProblema[0].nro_doc;
+
+      if (dataProblema.length > 0 && dataProblema[0].descripcion_problema) {
+        $("#txtaEstadoInicial").val(dataProblema[0].descripcion_problema);
+      } else {
+        console.warn("No se encontró descripción del problema.");
+      }
     } catch (error) {
       console.error("Error en descripcion_problema:", error);
-    };
-
-    console.log(data);
-    txtPotencia.value = data.potencia;
-    txtSintonizador.value = data.sintonizador;
-
-    for (let i = 0; i < slcTriplexor.options.length; i++) {
-      if (slcTriplexor.options[i].text.trim().toLowerCase() === data.triplexor.trim().toLowerCase()) {
-        slcTriplexor.selectedIndex = i;
-        break;
-      }
     }
-    console.log(data);
-    txtNumSpliter.value = data.splitter[0].cantidad;
-    slcSpliter.selectedIndex = data.splitter[0].tipo;
-    txtPlan.value = data.plan;
-    txtCable.value = data.cable.metrosadicionales;
-    txtPrecioCable.value = data.cable.metrosadicionales * data.cable.preciometro;
-    txtConector.value = data.conector.numeroconector;
-    txtPrecioConector.value = data.conector.precio * data.conector.numeroconector;
+    try {
+      txtPotencia.value = data.potencia || "";
+      sintonizadoresData = data.sintonizadores || [];
+      txtSintonizador.value = data.sintonizadores.length || 0;
+      console.log(sintonizadoresData);
+      for (let i = 0; i < slcTriplexor.options.length; i++) {
+        if (
+          slcTriplexor.options[i].text.trim().toLowerCase() ===
+          data.triplexor?.trim().toLowerCase()
+        ) {
+          slcTriplexor.selectedIndex = i;
+          break;
+        }
+      }
+
+      txtNumSpliter.value = data.splitter?.[0]?.cantidad || "";
+      slcSpliter.selectedIndex = data.splitter?.[0]?.tipo || 0;
+      txtPlan.value = data.plan || "";
+      txtCable.value = data.cable?.metrosadicionales || 0;
+      txtPrecioCable.value = (data.cable?.metrosadicionales || 0) * (data.cable?.preciometro || 0);
+      txtConector.value = data.conector?.numeroconector || 0;
+      txtPrecioConector.value = (data.conector?.precio || 0) * (data.conector?.numeroconector || 0);
+    } catch (error) {
+      console.error("Error al asignar valores al formulario:", error);
+    }
+  }
+  function mostrarSintonizadoresEnModal() {
+    // const container = document.getElementById("sintonizadoresContainer");
+    // container.innerHTML = "";
+
+    // if (sintonizadoresData.length == 0) {
+    //   container.innerHTML = "<p class='text-center'>No hay sintonizadores disponibles.</p>";
+    //   return;
+    // }
+
+    // sintonizadoresData.forEach((sintonizador, index) => {
+    //   const card = document.createElement("div");
+    //   card.className = "col-md-4";
+    //   card.innerHTML = `
+    //     <div class="card">
+    //       <div class="card-body">
+    //         <h5 class="card-title">Sintonizador ${index + 1}</h5>
+    //         <p class="card-text">Código de Barra: ${sintonizador.codigoBarra || "N/A"}</p>
+    //         <p class="card-text">Marca: ${sintonizador.marca || "N/A"}</p>
+    //         <p class="card-text">Modelo: ${sintonizador.modelo || "N/A"}</p>
+    //         <p class="card-text">Precio: ${sintonizador.precio || "N/A"}</p>
+    //         <p class="card-text">Serie: ${sintonizador.serie || "N/A"}</p>
+    //     </div>
+    //   `;
+    //   container.appendChild(card);
+    // });
   }
 
   async function obtenerReferencias() {
@@ -220,6 +263,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error en obtener el problema:", error);
     }
   }
+
   function actualizarContadorSintonizadores() {
     txtSintonizadorCambio.value = numeroSintotizadores;
   }
@@ -229,7 +273,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const txtMarcaSintonizador = document.getElementById("txtMarcaSintonizador").value;
     const txtModeloSintonizador = document.getElementById("txtModeloSintonizador").value;
     const txtSerieSintonizador = document.getElementById("txtSerieSintonizador").value;
-    const txtPrecioSintonizador = document.getElementById("txtPrecioSintonizador").value;
+    const txtPrecioSintonizador = parseFloat(document.getElementById("txtPrecioSintonizador").value) || 0;
 
     numeroSintotizadores++;
 
@@ -238,9 +282,8 @@ document.addEventListener("DOMContentLoaded", () => {
       marca: txtMarcaSintonizador,
       modelo: txtModeloSintonizador,
       serie: txtSerieSintonizador,
-      precio: txtPrecioSintonizador
+      precio: txtPrecioSintonizador,
     };
-
     jsonSintonizador.push(nuevoSintonizador);
 
     const card = document.createElement("div");
@@ -258,16 +301,16 @@ document.addEventListener("DOMContentLoaded", () => {
         </button>
       </div>
     `;
-    actualizarContadorSintonizadores();
-
     document.getElementById("divSintonizadores").appendChild(card);
+
     const btnEliminar = card.querySelector("#btnEliminar");
-    btnEliminar.addEventListener("click", async function () {
+    btnEliminar.addEventListener("click", function () {
       card.remove();
       numeroSintotizadores--;
-      jsonSintonizador.pop();
+      cableData.parametroscable.sintonizadores.pop(); // Elimina el último sintonizador agregado
       actualizarContadorSintonizadores();
     });
+    actualizarContadorSintonizadores();
   }
 
   async function ArmadoJsonCable() {
@@ -309,7 +352,7 @@ document.addEventListener("DOMContentLoaded", () => {
       cambioscable: {
         plan: document.getElementById("txtPlan").value,
         potencia: parseInt(document.getElementById("txtPotenciaCambio").value) || 0,
-        sintonizador: parseInt(document.getElementById("txtSintonizadorCambio").value) || 0,
+        sintonizadores: jsonSintonizador,
         triplexor: document.getElementById("slcTriplexorCambio").value === "2" ? "activo" :
           (document.getElementById("slcTriplexorCambio").value === "3" ? "pasivo" : "no lleva"),
         splitter: [
@@ -331,7 +374,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     nuevoSoporte.cabl = cableData;
     nuevoSoporte.idcaja = idCaja;
-    nuevoSoporte.tipoentrada = JSON.parse(dataCable[0].ficha_instalacion).tipoentrada;
 
     console.log(nuevoSoporte);
 
@@ -381,6 +423,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function guardarSoporte(data) {
+    console.log(data);
     try {
       const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php`, {
         method: 'PUT',
@@ -392,14 +435,12 @@ document.addEventListener("DOMContentLoaded", () => {
           data: {
             idSoporte: idSoporte,
             idTecnico: user['idUsuario'],
-            idTipoSoporte: document.getElementById("slcTipoSoporte").value,
             soporte: data,
             idUserUpdate: user['idUsuario'],
             descripcion_solucion: document.getElementById("txtaEstadoFinal").value,
           },
         }),
       });
-      const result = await response.json();
 
       await CompletarSoporteSiestaTodo(idSoporte, data);
 
@@ -444,8 +485,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const data = await ArmadoJsonCable();
     if (await ask("¿Desea guardar la ficha?")) {
       await guardarSoporte(data);
+      showToast("Ficha guardada correctamente", "SUCCESS");
       window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
     }
+  });
+  document.getElementById("btnListarModalSintonizador").addEventListener("click", async function () {
+    mostrarSintonizadoresEnModal();
+    const modal = new bootstrap.Modal(document.getElementById("modalListarSintonizadores"));
+    modal.show();
   });
 
   document.getElementById("btnReporte").addEventListener("click", async () => {

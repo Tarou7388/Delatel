@@ -118,7 +118,6 @@ DROP PROCEDURE IF EXISTS spu_soporte_actualizar;
 CREATE PROCEDURE spu_soporte_actualizar(
     IN p_id_soporte INT,
     IN p_id_tecnico INT,
-    IN p_id_tipo_soporte INT,
     IN p_fecha_hora_asistencia DATETIME,
     IN p_soporte JSON,
     IN p_iduser_update INT,
@@ -129,7 +128,6 @@ BEGIN
     SET
         id_tecnico = p_id_tecnico,
         fecha_hora_asistencia = p_fecha_hora_asistencia,
-        id_tipo_soporte = p_id_tipo_soporte,
         soporte = p_soporte,
         update_at = NOW(),
         iduser_update = p_iduser_update,

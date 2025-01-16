@@ -95,12 +95,11 @@ class Soporte extends Conexion
 
   public function actualizarSoporte($params = [])
   {
-    $sql = "CALL spu_soporte_actualizar(?, ?, ?, ?, ?, ?, ?)";
+    $sql = "CALL spu_soporte_actualizar(?, ?, ?, ?, ?, ?)";
 
     $values = [
       $params['idSoporte'],
       $params['idTecnico'],
-      $params['idTipoSoporte'],
       $params['fechaHoraAsistencia'],
       json_encode($params['soporte']),
       $params['idUserUpdate'],
