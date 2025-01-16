@@ -150,6 +150,7 @@ document.addEventListener("DOMContentLoaded", () => {
         { data: "descripcion_problema", className: "text-center" },
         { data: "fecha_creacion", className: "text-center" },
         { data: "sector_cliente", className: "text-center" },
+        { data: "tipo_servicio", className: "text-center" }, // Nueva columna para tipo_servicio
         {
           data: "estado",
           className: "text-center",
@@ -187,79 +188,27 @@ document.addEventListener("DOMContentLoaded", () => {
       FIBR: "FichaTecnicaFibra",
     };
 
-    try {
-      const response = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerFichaInstalacion&id=${idContrato}`);
-      const data = await response.json();
-      console.log("Respuesta del servidor:", data);
-      const fichaInstalacion = JSON.parse(data[0].ficha_instalacion);
-
-      if (fichaInstalacion && Object.keys(fichaInstalacion).length > 0) {
-        if (tipoServicio === "WISP") {
-          window.open(`${config.HOST}views/reports/Contrato_WISP/fichaInstalacion.php?id=${idContrato}`, '_blank');
-        } else if (tipoServicio === "FIBR,CABL" || tipoServicio === "CABL,FIBR") {
-          window.open(`${config.HOST}views/reports/Contrato_GPON/fichaInstalacion.php?id=${idContrato}`, '_blank');
-        } else if (tipoServicio === "CABL") {
-          window.open(`${config.HOST}views/reports/Contrato_CABLE/fichaInstalacion.php?id=${idContrato}`, '_blank');
-        } else if (tipoServicio === "FIBR") {
-          window.open(`${config.HOST}views/reports/Contrato_FIBRA/fichaInstalacion.php?id=${idContrato}`, '_blank');
-        }
-      } else {
-        window.location.href = `${config.HOST}views/Contratos/${tipoFicha[tipoServicio]}?idContrato=${idContrato}`;
-      }
-    } catch (error) {
-      console.error("Error al obtener el JSON de la ficha de instalación:", error);
-    }
+    // Redirigir al usuario a la página correspondiente según el tipo de servicio
+    window.location.href = `${config.HOST}views/Contratos/${tipoFicha[tipoServicio]}?idContrato=${idContrato}`;
   });
 
+  //Evento de Atender Avería
   $("#tblSticketsAverias tbody").on("click", ".atender-averia", async function () {
     const data = $("#tblSticketsAverias").DataTable().row($(this).parents("tr")).data();
     console.log("Datos de la avería:", data);
 
     const idSoporte = data.id_soporte;
     const coordenada = data.coordenada;
+    const nrodocumento = data.nrodocumento;
+    const tipoServicio = data.tipo_servicio;
 
-    try {
-      const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=obtenerServiciosId&idservicio=${idSoporte}`);
-      const servicios = await response.json();
-      await recorrerIdServicio(servicios, coordenada, idSoporte);
-    } catch (error) {
-      console.error("Error al obtener el JSON de la ficha de avería:", error);
-    }
+    // Llamamos directamente a la función para mostrar la ficha del servicio
+    mostrarFichaServicio(tipoServicio, idSoporte, nrodocumento, coordenada);
   });
 
-  // Función para recorrer los ID de los servicios
-  async function recorrerIdServicio(data, coordenada, idSoporte) {
-    console.log(data);
-
-    // Asegurarnos de que 'data' contiene al menos un objeto y que tiene la propiedad 'id_servicio'
-    if (Array.isArray(data) && data.length > 0 && data[0].id_servicio) {
-      const id_servicio = data[0].id_servicio; // Obtenemos el id_servicio del primer objeto
-      console.log("ID del servicio:", id_servicio);
-
-      // Realizamos la llamada a la API para obtener los detalles del servicio
-      try {
-        const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=obtenerServiciosId&idservicio=${id_servicio}`);
-        const nombres = await respuesta.json();
-        console.log(nombres);
-
-        // Verificamos si la respuesta contiene la propiedad 'tipo_servicio'
-        if (nombres && nombres.length > 0 && nombres[0].tipo_servicio) {
-          // Si la respuesta es válida, mostramos la ficha del servicio
-          mostrarFichaServicio(nombres[0].tipo_servicio, idSoporte, coordenada);
-        } else {
-          console.error("La respuesta de los servicios no contiene 'tipo_servicio'.");
-        }
-      } catch (error) {
-        console.error("Error al obtener los detalles del servicio:", error);
-      }
-    } else {
-      console.error("No se encontraron servicios válidos en los datos.");
-    }
-  }
-
-  function mostrarFichaServicio(tipoServicio, id_soporte, nro_doc, coordenada) {
+  function mostrarFichaServicio(tipoServicio, id_soporte, nrodocumento, coordenada) {
     // Redirigir al usuario a la página correspondiente
-    window.location.href = `${config.HOST}views/Soporte/Soporte${tipoServicio}?idsoporte=${id_soporte}&doc=${nro_doc}&tiposervicio=${tipoServicio}&coordenada=${coordenada}`;
+    window.location.href = `${config.HOST}views/Soporte/Soporte${tipoServicio}?idsoporte=${id_soporte}&doc=${nrodocumento}&tiposervicio=${tipoServicio}&coordenada=${coordenada}`;
   }
 
 });

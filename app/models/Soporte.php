@@ -162,4 +162,17 @@ class Soporte extends Conexion
     $values = array($params['idSoporte']);
     return $this->consultaParametros($sql, $values);
   }
+
+  /**
+   * Obtiene el historial de soporte basado en el documento del cliente.
+   *
+   * @param string $docCliente El documento del cliente.
+   * @return mixed El historial de soporte del cliente.
+   */
+  public function obtenerHistorialSoporte($params = [])
+  {
+    $sql = "CALL ObtenerHistorialSoporte(?)";
+    $values = array($params['docCliente']);
+    return $this->consultaParametros($sql, $values);
+  }
 }

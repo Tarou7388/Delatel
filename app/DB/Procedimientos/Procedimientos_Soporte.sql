@@ -322,3 +322,52 @@ FROM tb_soporte
 WHERE
     estaCompleto = 0
     AND inactive_at IS NULL$$
+
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS ObtenerHistorialSoporte$$
+
+CREATE PROCEDURE ObtenerHistorialSoporte(IN docCliente VARCHAR(20))
+BEGIN
+    SELECT 
+        s.id_soporte,
+        s.id_contrato,
+        s.fecha_hora_solicitud,
+        s.fecha_hora_asistencia,
+        s.prioridad,
+        s.soporte,
+        s.descripcion_problema,
+        s.descripcion_solucion,
+        s.create_at,
+        s.update_at,
+        s.inactive_at,
+        s.iduser_create,
+        s.iduser_update,
+        s.iduser_inactive,
+        c.coordenada,
+        c.id_sector,
+        sct.sector,
+        c.direccion_servicio,
+        r.id_usuario AS id_tecnico,
+        p_tecnico.nombres AS tecnico_nombres,
+        p_tecnico.apellidos AS tecnico_apellidos,
+        pk.id_paquete,
+        pk.id_servicio,
+        COALESCE(p_cliente.nro_doc, emp.ruc) AS nro_doc,
+        c.id_cliente
+    FROM 
+        tb_soporte s
+        LEFT JOIN tb_contratos c ON s.id_contrato = c.id_contrato
+        INNER JOIN tb_sectores sct ON c.id_sector = sct.id_sector
+        LEFT JOIN tb_responsables r ON s.id_tecnico = r.id_responsable
+        LEFT JOIN tb_usuarios u ON r.id_usuario = u.id_usuario
+        LEFT JOIN tb_personas p_tecnico ON u.id_persona = p_tecnico.id_persona
+        LEFT JOIN tb_paquetes pk ON c.id_paquete = pk.id_paquete
+        LEFT JOIN tb_clientes cl ON c.id_cliente = cl.id_cliente
+        LEFT JOIN tb_empresas emp ON cl.id_empresa = emp.id_empresa
+        LEFT JOIN tb_personas p_cliente ON cl.id_persona = p_cliente.id_persona
+    WHERE 
+        COALESCE(p_cliente.nro_doc, emp.ruc) = docCliente;
+END$$
+
+DELIMITER;

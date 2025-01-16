@@ -32,6 +32,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     case 'obtenerPDFSoporte':
       echo json_encode($soporte->obtenerPDFSoporte(["idSoporte" => $_GET['idSoporte']]));
       break;
+    case 'obtenerHistorialSoporte':
+      echo json_encode($soporte->obtenerHistorialSoporte(["docCliente" => $_GET['docCliente']]));
+      break;
   }
 }
 

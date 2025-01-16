@@ -539,6 +539,18 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("Datos del router:", datoRouters.router);
   }
 
+  async function verificarHistorialSoporte(docCliente) {
+    try {
+      const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=obtenerHistorialSoporte&docCliente=${docCliente}`);
+      const historial = await response.json();
+      console.log("Historial de soporte:", historial); // Log the data
+      return historial.length > 0;
+    } catch (error) {
+      console.error("Error al verificar el historial de soporte:", error);
+      return false;
+    }
+  }
+
   async function armadoJsonFibra() {
     const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
     const result = await response.json();
@@ -550,7 +562,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const nuevoSoporte = { ...soporte };
 
     // Verificar si el cliente ya ha tenido un soporte registrado
-    const yaTieneSoporte = soporte.fibr && Object.keys(soporte.fibr).length > 0;
+    const yaTieneSoporte = await verificarHistorialSoporte(txtNrodocumento.value);
+    console.log("Ya tiene soporte:", yaTieneSoporte);
 
     // Actualizar repetidores existentes
     const repetidoresActualizados = await moficadoRepetidor(fibrafiltrado.repetidores || []);
@@ -674,7 +687,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const data = await armadoJsonFibra();
     if (await ask("¿Desea guardar la ficha?")) {
       await guardarSoporte(data);
-      window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
+      //window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
     }
   });
 

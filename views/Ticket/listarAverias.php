@@ -47,6 +47,7 @@
               <th class="text-center">Problema</th>
               <th class="text-center">Fecha de Creación</th>
               <th class="text-center">Sector</th>
+              <th class="text-center">Servicio</th>
               <th class="text-center">Estado</th>
               <th class="text-center">Acciones</th>
             </tr>
