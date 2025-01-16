@@ -31,6 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const txtCliente = document.getElementById("txtCliente");
   const txtNrodocumento = document.getElementById("txtNrodocumento");
   const slcCaja = document.getElementById("slcCaja");
+  const checkConfirmacion = document.getElementById("chkConfirmacion");
 
   const form = document.getElementById("form-cable");
   const btnReporte = document.getElementById("btnReporte");
@@ -59,13 +60,81 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function llamarCajas() {
     const cajas = await mapa.buscarCercanos(idCaja);
+    const slcCaja = document.getElementById('slcCaja');
+
+    // Limpiar opciones anteriores
+    slcCaja.innerHTML = '';
+
+    // Agregar la opción de idCaja actual
+    if (idCaja !== undefined) {
+      const cajaActual = cajas.find(caja => caja.id_caja === idCaja);
+      if (cajaActual) {
+        const option = document.createElement('option');
+        option.value = idCaja;
+        option.text = cajaActual.nombre;
+        slcCaja.appendChild(option);
+        slcCaja.value = idCaja;
+      }
+    }
+
+    // Agregar otras opciones de cajas cercanas
     cajas.forEach(caja => {
-      const option = document.createElement('option');
-      option.value = caja.id_caja;
-      option.text = caja.nombre;
-      slcCaja.appendChild(option);
+      // Verificar si la opción ya existe
+      if (caja.id_caja !== idCaja) {
+        const option = document.createElement('option');
+        option.value = caja.id_caja;
+        option.text = caja.nombre;
+        slcCaja.appendChild(option);
+      }
     });
-    slcCaja.value = idCaja;
+  }
+
+  // Función para completar los campos de cambio con los valores de los parámetros técnicos
+  async function completarCamposDeCambio() {
+    const parametrosTecnicos = {
+      txtPotenciaCambio: txtPotencia.value,
+      txtSintonizadorCambio: txtSintonizador.value,
+      slcTriplexorCambio: slcTriplexor.value,
+      txtNumSpliterCambio: txtNumSpliter.value,
+      slcSpliterCambio: slcSpliter.value,
+      txtCableCambio: txtCable.value,
+      txtPrecioCableCambio: txtPrecioCable.value,
+      txtConectorCambio: txtConector.value,
+      txtPrecioConectorCambio: txtPrecioConector.value
+    };
+  
+    for (const [id, value] of Object.entries(parametrosTecnicos)) {
+      const input = document.getElementById(id);
+      if (input && !input.value) {
+        input.value = value;
+      }
+    }
+  }
+  
+  // Función para borrar los valores de los campos de cambio
+  async function borrarCamposDeCambio() {
+    const camposCambio = [
+      'txtPotenciaCambio',
+      'txtSintonizadorCambio',
+      'slcTriplexorCambio',
+      'txtNumSpliterCambio',
+      'slcSpliterCambio',
+      'txtCableCambio',
+      'txtPrecioCableCambio',
+      'txtConectorCambio',
+      'txtPrecioConectorCambio'
+    ];
+  
+    camposCambio.forEach(id => {
+      const input = document.getElementById(id);
+      if (input) {
+        if (input.tagName === "SELECT") {
+          input.selectedIndex = 0; // Reiniciar a la primera opción si es un select
+        } else {
+          input.value = ''; // Vaciar si es un input
+        }
+      }
+    });
   }
 
   function configurarVerMas() {
@@ -121,12 +190,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function cargarSoporteAnterior(data, idSoporte) {
     try {
-      const respuestaProblema = await fetch(
-        `${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`
-      );
+      const respuestaProblema = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
       const dataProblema = await respuestaProblema.json();
       const nombreCliente = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${dataProblema[0].nro_doc}`);
       const dataCliente = await nombreCliente.json();
+      await llamarCajas();
       txtCliente.value = dataCliente[0].nombre;
       txtNrodocumento.value = dataProblema[0].nro_doc;
 
@@ -139,10 +207,12 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error en descripcion_problema:", error);
     }
     try {
+      const dataCable = await FichaInstalacion(idSoporte);
+      const cableFiltrado = JSON.parse(dataCable[0].ficha_instalacion).cable;
+
       txtPotencia.value = data.potencia || "";
       sintonizadoresData = data.sintonizadores || [];
       txtSintonizador.value = data.sintonizadores.length || 0;
-      console.log(sintonizadoresData);
       for (let i = 0; i < slcTriplexor.options.length; i++) {
         if (
           slcTriplexor.options[i].text.trim().toLowerCase() ===
@@ -152,14 +222,25 @@ document.addEventListener("DOMContentLoaded", () => {
           break;
         }
       }
-
       txtNumSpliter.value = data.splitter?.[0]?.cantidad || "";
-      slcSpliter.selectedIndex = data.splitter?.[0]?.tipo || 0;
+
+      const tipoSpliter = data.splitter?.[0]?.tipo || 0;
+      const opcionesSpliter = slcSpliter.options;
+
+      for (let i = 0; i < opcionesSpliter.length; i++) {
+        if (opcionesSpliter[i].value == tipoSpliter) {
+          slcSpliter.selectedIndex = i;
+          break;
+        }
+      }
       txtPlan.value = data.plan || "";
       txtCable.value = data.cable?.metrosadicionales || 0;
-      txtPrecioCable.value = (data.cable?.metrosadicionales || 0) * (data.cable?.preciometro || 0);
+      txtPrecioCable.value = (data.cable?.metrosadicionales || 0) * (parseFloat(cableFiltrado.cable.preciometro) || 0);
       txtConector.value = data.conector?.numeroconector || 0;
-      txtPrecioConector.value = (data.conector?.precio || 0) * (data.conector?.numeroconector || 0);
+      txtPrecioConector.value = (data.conector?.numeroconector || 0) * (parseFloat(cableFiltrado.conector.precio) || 0);
+      //también para cambios 
+      txtPrecioCableCambio.value = parseFloat(cableFiltrado.cable.preciometro) || 0;
+      txtPrecioConectorCambio.value = parseFloat(cableFiltrado.conector.precio) || 0;
     } catch (error) {
       console.error("Error al asignar valores al formulario:", error);
     }
@@ -322,6 +403,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const nuevoSoporte = { ...soporte };
 
     const dataCable = await FichaInstalacion(idSoporte);
+    const cableFiltrado = JSON.parse(dataCable[0].ficha_instalacion).cable;
 
     const cableData = {
       parametroscliente: {
@@ -364,11 +446,11 @@ document.addEventListener("DOMContentLoaded", () => {
         ],
         conector: {
           numeroconector: parseInt(document.getElementById("txtConectorCambio").value) || 0,
-          precio: parseFloat(document.getElementById("txtPrecioConectorCambio").value) || 0,
+          precio: parseFloat(document.getElementById("txtPrecioConectorCambio").value) * parseInt(document.getElementById("txtConectorCambio").value) || 0,
         },
         cable: {
           metrosadicionales: parseInt(document.getElementById("txtCableCambio").value) || 0,
-          preciometro: parseFloat(document.getElementById("txtPrecioCableCambio").value) || 0,
+          preciometro: parseFloat(document.getElementById("txtPrecioCableCambio").value) * parseInt(document.getElementById("txtCableCambio").value) || 0,
         }
       }
     };
@@ -396,33 +478,67 @@ document.addEventListener("DOMContentLoaded", () => {
   function crearBotones() {
     const rowDiv = document.createElement("div");
     rowDiv.className = "row g-2 mb-2 mt-2";
-
+  
     const buttonDiv = document.createElement("div");
     buttonDiv.className = "col-md d-flex align-items-end";
-
+  
+    // Botón Guardar
     const guardarBtn = document.createElement("button");
     guardarBtn.id = "btnGuardarFicha";
     guardarBtn.className = "btn btn-success me-2";
     guardarBtn.type = "submit";
     guardarBtn.textContent = "Guardar Ficha";
-
+  
+    // Botón Cancelar
     const cancelarBtn = document.createElement("button");
     cancelarBtn.id = "btnCancelarFicha";
-    cancelarBtn.className = "btn btn-secondary";
+    cancelarBtn.className = "btn btn-secondary me-2";
     cancelarBtn.type = "button";
     cancelarBtn.textContent = "Cancelar";
     cancelarBtn.addEventListener("click", () => {
       window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
     });
-
+  
+    // Checkbox Confirmación
+    const checkboxDiv = document.createElement("div");
+    checkboxDiv.className = "form-check d-flex align-items-center me-2";
+  
+    const chkConfirmacion = document.createElement("input");
+    chkConfirmacion.type = "checkbox";
+    chkConfirmacion.id = "chkConfirmacion";
+    chkConfirmacion.className = "form-check-input me-2";
+    chkConfirmacion.name = "chkConfirmacion";
+    chkConfirmacion.required = true;
+  
+    const chkLabel = document.createElement("label");
+    chkLabel.htmlFor = "chkConfirmacion";
+    chkLabel.className = "form-check-label";
+    chkLabel.textContent = "Rellenar Campos";
+  
+    checkboxDiv.appendChild(chkConfirmacion);
+    checkboxDiv.appendChild(chkLabel);
+  
+    // Añadir elementos al contenedor
     buttonDiv.appendChild(guardarBtn);
     buttonDiv.appendChild(cancelarBtn);
+    buttonDiv.appendChild(checkboxDiv); // Agregar el checkbox al contenedor
+  
     rowDiv.appendChild(buttonDiv);
-
+  
+    // Insertar el rowDiv en el DOM
     const solutionTextarea = document.getElementById("txtaEstadoFinal");
     solutionTextarea.parentNode.parentNode.appendChild(rowDiv);
+  
+    // Lógica para el checkbox (después de agregarlo al DOM)
+    chkConfirmacion.addEventListener("change", async () => {
+      if (chkConfirmacion.checked) {
+        await completarCamposDeCambio();
+      } else {
+        await borrarCamposDeCambio();
+      }
+    });
   }
-
+  
   async function guardarSoporte(data) {
     console.log(data);
     try {
