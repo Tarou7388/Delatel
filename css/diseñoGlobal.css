@@ -7,11 +7,11 @@
   }
 
   /* Contenedor de las tarjetas */
-  .row {
+ /*  .row {
     display: flex;
     flex-wrap: wrap;
     margin: -10px;
-  }
+  } */
 
   /* Estilos de las tarjetas */
   .col-md-6 {

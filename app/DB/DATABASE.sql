@@ -24,7 +24,7 @@ CREATE TABLE tb_distritos (
     CONSTRAINT distr_fk_id_departamento FOREIGN KEY (id_departamento) REFERENCES tb_departamentos(id_departamento)
 ) ENGINE=InnoDB;
 
-CREATE TABLE tb_tipo_soporte (
+/* CREATE TABLE tb_tipo_soporte (
     id_tipo_soporte INT AUTO_INCREMENT PRIMARY KEY,
     tipo_soporte VARCHAR(50) NOT NULL,
     create_at DATETIME DEFAULT NOW(),
@@ -34,7 +34,7 @@ CREATE TABLE tb_tipo_soporte (
     iduser_update INT NULL,
     iduser_inactive INT NULL,
     CONSTRAINT tiposopor_uk_tipo_soporte UNIQUE (tipo_soporte)
-) ENGINE = InnoDB;
+) ENGINE = InnoDB; */
 
 CREATE TABLE tb_roles (
     id_rol INT AUTO_INCREMENT PRIMARY KEY,
@@ -275,7 +275,6 @@ CREATE TABLE tb_contactabilidad (
 CREATE TABLE tb_soporte (
     id_soporte INT PRIMARY KEY AUTO_INCREMENT,
     id_contrato INT NOT NULL,
-    id_tipo_soporte INT NULL,
     id_tecnico INT NULL,
     fecha_hora_solicitud DATETIME NOT NULL,
     fecha_hora_asistencia DATETIME NULL,
@@ -291,7 +290,6 @@ CREATE TABLE tb_soporte (
     iduser_update INT NULL,
     iduser_inactive INT NULL,
     CONSTRAINT sopor_fk_id_contrato FOREIGN KEY (id_contrato) REFERENCES tb_contratos (id_contrato),
-    CONSTRAINT sopor_fk_id_tipo_soporte FOREIGN KEY (id_tipo_soporte) REFERENCES tb_tipo_soporte (id_tipo_soporte),
     CONSTRAINT sopor_fk_id_tecnico FOREIGN KEY (id_tecnico) REFERENCES tb_responsables (id_responsable)
 ) ENGINE = InnoDB;
 
