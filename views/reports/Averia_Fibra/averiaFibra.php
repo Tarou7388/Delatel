@@ -127,7 +127,6 @@
 </div>
 
 <!-- Repetidores -->
-
 <?php
 // Función para comparar repetidores
 function repetidoresIguales($repetidor1, $repetidor2)
@@ -145,7 +144,9 @@ $repetidoresParametros = $resultado[0]['FichaAveria']['fibr']['parametrosgpon'][
 $repetidoresCambios = $resultado[0]['FichaAveria']['fibr']['cambiosgpon']['repetidores'] ?? [];
 $repetidoresCambiados = [];
 $repetidoresAgregados = [];
+$repetidoresEliminados = [];
 
+// Identificar cambios, agregados y eliminados
 foreach ($repetidoresCambios as $repetidorCambio) {
   $encontrado = false;
   foreach ($repetidoresParametros as $repetidorParametro) {
@@ -161,82 +162,81 @@ foreach ($repetidoresCambios as $repetidorCambio) {
     $repetidoresAgregados[] = $repetidorCambio;
   }
 }
+
+foreach ($repetidoresParametros as $repetidorParametro) {
+  $encontrado = false;
+  foreach ($repetidoresCambios as $repetidorCambio) {
+    if ($repetidorCambio['numero'] == $repetidorParametro['numero']) {
+      $encontrado = true;
+      break;
+    }
+  }
+  if (!$encontrado) {
+    $repetidoresEliminados[] = $repetidorParametro;
+  }
+}
 ?>
 
-<?php if (!empty($repetidoresParametros)): ?>
-  <div style="margin-top: 50px;">
-    <table class="tabla2">
-      <thead>
-        <tr>
-          <td colspan="6" class="text-center thead-cabecera"><strong>REPETIDOR ACTUAL</strong></td>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>SSID:</strong></td>
-          <td colspan="2"><?= $repetidoresParametros[0]['ssid'] ?? 'N/A'; ?></td>
-          <td><strong>CONTRASEÑA:</strong></td>
-          <td colspan="2"><?= $repetidoresParametros[0]['contrasenia'] ?? 'N/A'; ?></td>
-        </tr>
-        <tr>
-          <td><strong>MARCA:</strong></td>
-          <td colspan="2"><?= $repetidoresParametros[0]['marca'] ?? 'N/A'; ?></td>
-          <td><strong>MODELO:</strong></td>
-          <td colspan="2"><?= $repetidoresParametros[0]['modelo'] ?? 'N/A'; ?></td>
-        </tr>
-        <tr>
-          <td><strong>SERIE:</strong></td>
-          <td colspan="2"><?= $repetidoresParametros[0]['serie'] ?? 'N/A'; ?></td>
-          <td><strong>IP:</strong></td>
-          <td colspan="2"><?= $repetidoresParametros[0]['ip'] ?? 'N/A'; ?></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-<?php endif; ?>
-
 <?php if (!empty($repetidoresCambiados)): ?>
-  <div style="margin-top: 20px;">
+  <div style="margin-top: 80px;">
     <table class="tabla2">
       <thead>
         <tr>
-          <td colspan="6" class="text-center thead-cabecera"><strong>REPETIDOR CAMBIADO</strong></td>
+          <td colspan="6" class="text-center thead-cabecera"><strong>REPETIDORES CAMBIADOS</strong></td>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td><strong>SSID:</strong></td>
-          <td colspan="2"><?= $repetidoresCambiados[0]['ssid'] ?? 'N/A'; ?></td>
-          <td><strong>CONTRASEÑA:</strong></td>
-          <td colspan="2"><?= $repetidoresCambiados[0]['contrasenia'] ?? 'N/A'; ?></td>
-        </tr>
-        <tr>
-          <td><strong>MARCA:</strong></td>
-          <td colspan="2"><?= $repetidoresCambiados[0]['marca'] ?? 'N/A'; ?></td>
-          <td><strong>MODELO:</strong></td>
-          <td colspan="2"><?= $repetidoresCambiados[0]['modelo'] ?? 'N/A'; ?></td>
-        </tr>
-        <tr>
-          <td><strong>SERIE:</strong></td>
-          <td colspan="2"><?= $repetidoresCambiados[0]['serie'] ?? 'N/A'; ?></td>
-          <td><strong>IP:</strong></td>
-          <td colspan="2"><?= $repetidoresCambiados[0]['ip'] ?? 'N/A'; ?></td>
-        </tr>
+        <?php foreach ($repetidoresCambiados as $repetidorCambio): ?>
+          <?php
+          // Encontrar el repetidor correspondiente en los parámetros
+          $repetidorOriginal = null;
+          foreach ($repetidoresParametros as $repetidorParametro) {
+            if ($repetidorParametro['numero'] === $repetidorCambio['numero']) {
+              $repetidorOriginal = $repetidorParametro;
+              break;
+            }
+          }
+          ?>
+          <?php if ($repetidorOriginal): ?>
+            <tr>
+              <td colspan="6" class="text-center thead-subcabecera">
+                <strong>Repetidor Número: <?= $repetidorCambio['numero'] ?? 'N/A'; ?></strong>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Campos</strong></td>
+              <td colspan="2" class="text-center"><strong>Antes del cambio</strong></td>
+              <td colspan="3" class="text-center"><strong>Después del cambio</strong></td>
+            </tr>
+            <?php
+            $campos = ['ssid', 'contrasenia', 'marca', 'modelo', 'serie', 'ip'];
+            foreach ($campos as $campo):
+              if (($repetidorOriginal[$campo] ?? null) !== ($repetidorCambio[$campo] ?? null)):
+            ?>
+                <tr>
+                  <td><strong><?= strtoupper($campo); ?>:</strong></td>
+                  <td colspan="2"><?= $repetidorOriginal[$campo] ?? 'N/A'; ?></td>
+                  <td colspan="3"><?= $repetidorCambio[$campo] ?? 'N/A'; ?></td>
+                </tr>
+            <?php endif;
+            endforeach; ?>
+          <?php endif; ?>
+        <?php endforeach; ?>
       </tbody>
     </table>
   </div>
 <?php endif; ?>
 
 <?php if (!empty($repetidoresAgregados)): ?>
-  <div style="margin-top: 100px;">
+  <div style="margin-top: 80px;">
     <table class="tabla2">
-      <thead>
-        <tr>
-          <td colspan="6" class="text-center thead-cabecera"><strong>REPETIDORES AGREGADOS</strong></td>
-        </tr>
-      </thead>
-      <tbody>
-        <?php foreach ($repetidoresAgregados as $repetidorAgregado): ?>
+      <?php foreach ($repetidoresAgregados as $repetidorAgregado): ?>
+        <thead>
+          <tr>
+            <td colspan="6" class="text-center thead-cabecera"><strong>REPETIDORES AGREGADOS</strong></td>
+          </tr>
+        </thead>
+        <tbody>
           <tr>
             <td><strong>SSID:</strong></td>
             <td colspan="2"><?= $repetidorAgregado['ssid'] ?? 'N/A'; ?></td>
@@ -256,7 +256,41 @@ foreach ($repetidoresCambios as $repetidorCambio) {
             <td colspan="2"><?= $repetidorAgregado['ip'] ?? 'N/A'; ?></td>
           </tr>
         <?php endforeach; ?>
-      </tbody>
+        </tbody>
+    </table>
+  </div>
+<?php endif; ?>
+
+<?php if (!empty($repetidoresEliminados)): ?>
+  <div style="margin-top: 80px;">
+    <table class="tabla2">
+      <?php foreach ($repetidoresEliminados as $repetidorEliminado): ?>
+        <thead>
+          <tr>
+            <td colspan="6" class="text-center thead-cabecera"><strong>REPETIDORES ELIMINADOS</strong></td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>SSID:</strong></td>
+            <td colspan="2"><?= $repetidorEliminado['ssid'] ?? 'N/A'; ?></td>
+            <td><strong>CONTRASEÑA:</strong></td>
+            <td colspan="2"><?= $repetidorEliminado['contrasenia'] ?? 'N/A'; ?></td>
+          </tr>
+          <tr>
+            <td><strong>MARCA:</strong></td>
+            <td colspan="2"><?= $repetidorEliminado['marca'] ?? 'N/A'; ?></td>
+            <td><strong>MODELO:</strong></td>
+            <td colspan="2"><?= $repetidorEliminado['modelo'] ?? 'N/A'; ?></td>
+          </tr>
+          <tr>
+            <td><strong>SERIE:</strong></td>
+            <td colspan="2"><?= $repetidorEliminado['serie'] ?? 'N/A'; ?></td>
+            <td><strong>IP:</strong></td>
+            <td colspan="2"><?= $repetidorEliminado['ip'] ?? 'N/A'; ?></td>
+          </tr>
+        <?php endforeach; ?>
+        </tbody>
     </table>
   </div>
 <?php endif; ?>
