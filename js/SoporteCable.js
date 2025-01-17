@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
       txtConectorCambio: txtConector.value,
       txtPrecioConectorCambio: txtPrecioConector.value
     };
-  
+
     for (const [id, value] of Object.entries(parametrosTecnicos)) {
       const input = document.getElementById(id);
       if (input && !input.value) {
@@ -110,7 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   }
-  
+
   // Función para borrar los valores de los campos de cambio
   async function borrarCamposDeCambio() {
     const camposCambio = [
@@ -124,7 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
       'txtConectorCambio',
       'txtPrecioConectorCambio'
     ];
-  
+
     camposCambio.forEach(id => {
       const input = document.getElementById(id);
       if (input) {
@@ -194,7 +194,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const dataProblema = await respuestaProblema.json();
       const nombreCliente = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${dataProblema[0].nro_doc}`);
       const dataCliente = await nombreCliente.json();
-      await llamarCajas();
+      const dataCable = await FichaInstalacion(idSoporte);
+      const cableFiltrado = JSON.parse(dataCable[0].ficha_instalacion).cable;
+      idCaja = cableFiltrado.idcaja;
       txtCliente.value = dataCliente[0].nombre;
       txtNrodocumento.value = dataProblema[0].nro_doc;
 
@@ -301,7 +303,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const dataCable = await FichaInstalacion(idSoporte);
       const cableFiltrado = JSON.parse(dataCable[0].ficha_instalacion).cable;
 
-      // Validar si sintonizadores existe
       const sintonizadores = cableFiltrado.sintonizadores ? cableFiltrado.sintonizadores.length : 0;
 
       const cargador = JSON.parse(cableFiltrado.triplexor.cargador);
@@ -333,6 +334,43 @@ document.addEventListener("DOMContentLoaded", () => {
 
       idCaja = cableFiltrado.idcaja;
 
+      document.getElementById('btnlistar').addEventListener('click', async () => {
+        try {
+          // Verifica si los sintonizadores tienen datos
+          const dataCable = await FichaInstalacion(idSoporte);
+          const cableFiltrado = JSON.parse(dataCable[0].ficha_instalacion).cable;
+
+          const sintonizadores = cableFiltrado.sintonizadores || [];
+          const container = document.getElementById('sintonizadoresContainer');
+          container.innerHTML = ''; // Limpia el contenido previo
+
+          // Genera dinámicamente los cards para cada sintonizador
+          sintonizadores.forEach((sintonizador, index) => {
+            const card = document.createElement('div');
+            card.className = 'col-12 col-md-6 col-lg-4';
+
+            card.innerHTML = `
+              <div class="card border-primary">
+                <div class="card-body">
+                  <h5 class="card-title">Sintonizador ${index + 1}</h5>
+                  <p class="card-text">
+                    <strong>Código de barra:</strong> ${sintonizador.codigobarra}<br>
+                    <strong>Marca:</strong> ${sintonizador.marca}<br>
+                    <strong>Modelo:</strong> ${sintonizador.modelo}<br>
+                    <strong>Precio:</strong> ${sintonizador.precio}<br>
+                    <strong>Serie:</strong> ${sintonizador.serie}
+                  </p>
+                </div>
+              </div>
+            `;
+
+            container.appendChild(card);
+          });
+        } catch (error) {
+          console.error("Error al listar los sintonizadores:", error);
+        }
+      });
+
     } catch (error) {
       console.error("Error en FichaInstalacion:", error);
     }
@@ -344,6 +382,7 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (error) {
       console.error("Error en obtener el problema:", error);
     }
+
   }
 
   function actualizarContadorSintonizadores() {
@@ -478,17 +517,17 @@ document.addEventListener("DOMContentLoaded", () => {
   function crearBotones() {
     const rowDiv = document.createElement("div");
     rowDiv.className = "row g-2 mb-2 mt-2";
-  
+
     const buttonDiv = document.createElement("div");
     buttonDiv.className = "col-md d-flex align-items-end";
-  
+
     // Botón Guardar
     const guardarBtn = document.createElement("button");
     guardarBtn.id = "btnGuardarFicha";
     guardarBtn.className = "btn btn-success me-2";
     guardarBtn.type = "submit";
     guardarBtn.textContent = "Guardar Ficha";
-  
+
     // Botón Cancelar
     const cancelarBtn = document.createElement("button");
     cancelarBtn.id = "btnCancelarFicha";
@@ -498,37 +537,37 @@ document.addEventListener("DOMContentLoaded", () => {
     cancelarBtn.addEventListener("click", () => {
       window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
     });
-  
+
     // Checkbox Confirmación
     const checkboxDiv = document.createElement("div");
     checkboxDiv.className = "form-check d-flex align-items-center me-2";
-  
+
     const chkConfirmacion = document.createElement("input");
     chkConfirmacion.type = "checkbox";
     chkConfirmacion.id = "chkConfirmacion";
     chkConfirmacion.className = "form-check-input me-2";
     chkConfirmacion.name = "chkConfirmacion";
     chkConfirmacion.required = true;
-  
+
     const chkLabel = document.createElement("label");
     chkLabel.htmlFor = "chkConfirmacion";
     chkLabel.className = "form-check-label";
     chkLabel.textContent = "Rellenar Campos";
-  
+
     checkboxDiv.appendChild(chkConfirmacion);
     checkboxDiv.appendChild(chkLabel);
-  
+
     // Añadir elementos al contenedor
     buttonDiv.appendChild(guardarBtn);
     buttonDiv.appendChild(cancelarBtn);
     buttonDiv.appendChild(checkboxDiv); // Agregar el checkbox al contenedor
-  
+
     rowDiv.appendChild(buttonDiv);
-  
+
     // Insertar el rowDiv en el DOM
     const solutionTextarea = document.getElementById("txtaEstadoFinal");
     solutionTextarea.parentNode.parentNode.appendChild(rowDiv);
-  
+
     // Lógica para el checkbox (después de agregarlo al DOM)
     chkConfirmacion.addEventListener("change", async () => {
       if (chkConfirmacion.checked) {
@@ -538,7 +577,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
-  
+
   async function guardarSoporte(data) {
     console.log(data);
     try {
@@ -565,9 +604,11 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error('Error en la solicitud:', error);
     }
   }
+
   document.getElementById("btnAgregarSintonizador").addEventListener("click", async function () {
     await AgregarSintotizador();
   });
+
   document.getElementById("btnBuscarSintonizador").addEventListener("click", async function () {
     const codigoBarra = document.getElementById("txtCodigoBarraSintonizador").value.trim();
     if (codigoBarra === "") {
@@ -606,6 +647,7 @@ document.addEventListener("DOMContentLoaded", () => {
       window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
     }
   });
+
   document.getElementById("btnlistar").addEventListener("click", () => {
     mostrarSintonizadoresEnModal();
   });
@@ -617,5 +659,6 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("No se ha encontrado el id del reporte");
     }
   });
+
   txtPotencia, txtPotenciaCambio, txtSintonizadorCambio.addEventListener("input", validarValorRango);
 });
