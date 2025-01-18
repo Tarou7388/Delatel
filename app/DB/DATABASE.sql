@@ -65,7 +65,7 @@ CREATE TABLE tb_servicios (
 CREATE TABLE tb_sectores (
     id_sector INT PRIMARY KEY AUTO_INCREMENT,
     id_distrito INT NOT NULL,
-    sector VARCHAR(60) NOT NULL,
+    sector VARCHAR(60) NOT NULL UNIQUE,
     descripcion VARCHAR(100) NOT NULL,
     direccion VARCHAR(200) NULL,
     coordenadas VARCHAR(50) NOT NULL,
@@ -81,7 +81,7 @@ CREATE TABLE tb_sectores (
 
 CREATE TABLE tb_mufas(
     id_mufa INT PRIMARY KEY AUTO_INCREMENT,
-    nombre VARCHAR(60) NOT NULL,
+    nombre VARCHAR(60) NOT NULL UNIQUE,
     descripcion VARCHAR(100) NOT NULL,
     coordenadas VARCHAR(50) NOT NULL,
     direccion VARCHAR(200) NOT NULL,
@@ -96,7 +96,7 @@ CREATE TABLE tb_mufas(
 
 CREATE TABLE tb_cajas(
     id_caja INT PRIMARY KEY AUTO_INCREMENT,
-    nombre VARCHAR(30) NOT NULL,
+    nombre VARCHAR(30) NOT NULL UNIQUE,
     descripcion VARCHAR(100) NOT NULL,
     numero_entradas TINYINT NOT NULL,
     id_sector INT NOT NULL,

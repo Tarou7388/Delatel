@@ -1,6 +1,7 @@
 USE Delatel;
 
 DROP PROCEDURE IF EXISTS spu_cajas_listar;
+
 DELIMITER $$
 
 CREATE PROCEDURE spu_cajas_listar()
@@ -51,6 +52,7 @@ BEGIN
   FROM tb_cajas
   WHERE id_caja = @last_id;
 END$$
+
 DROP PROCEDURE IF EXISTS spu_lineas_registrar$$
 
 CREATE PROCEDURE spu_lineas_registrar(
@@ -65,6 +67,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS spu_descontar_espacio_caja$$
+
 CREATE PROCEDURE spu_descontar_espacio_caja (
   IN p_id_caja INT
 )
@@ -80,6 +83,7 @@ BEGIN
 END $$
 
 DROP PROCEDURE IF EXISTS spu_recontar_espacio_caja$$
+
 CREATE PROCEDURE spu_recontar_espacio_caja (
   IN p_id_caja INT
 )
@@ -138,4 +142,27 @@ BEGIN
   END IF;
 END$$
 
-DROP PROCEDURE IF EXISTS spu_actualizar_caja$$
+DROP PROCEDURE IF EXISTS spu_caja_uso$$
+
+CREATE PROCEDURE spu_caja_uso(
+  IN p_id_caja INT
+)
+BEGIN
+  SELECT 
+    CASE 
+      WHEN COUNT(*) > 0 THEN 'true'
+      ELSE 'false'
+    END as existe 
+  FROM tb_lineas 
+  WHERE id_caja = p_id_caja;
+END$$
+
+DROP PROCEDURE IF EXISTS spu_caja_eliminar$$
+
+CREATE PROCEDURE spu_caja_eliminar(
+  IN p_id_caja INT
+)
+BEGIN
+  UPDATE tb_lineas SET inactive_at = NOW() WHERE id_linea = p_id_caja;
+  UPDATE tb_cajas SET inactive_at = NOW() WHERE id_caja = p_id_caja;
+END$$

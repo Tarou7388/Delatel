@@ -45,8 +45,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         Coordenadas = { lat: latLng.lat, lng: latLng.lng };
         idDistrito = item.idDistrito;
         console.log(lineaPrincipalAgregando)
-        if(lineaPrincipalAgregando){
-          blooquearbotones(false, true, false, true);
+        if (lineaPrincipalAgregando) {
+          blooquearbotones(false, true, false, true, true, true, true);
         }
         marcadorPrincipalEvento(latLng)
 
@@ -83,11 +83,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     return params;
   }
 
-  async function blooquearbotones(caja, mufa, sector, principal) {
+  async function blooquearbotones(caja, mufa, sector, principal, eliminarCaja, eliminarmufa, eliminarsector) {
     document.querySelector("#modalAgregarCaja").disabled = caja;
     document.querySelector("#modalAgregarMufa").disabled = mufa;
     document.querySelector("#modalAgregarSector").disabled = sector;
     document.querySelector("#btnActualizarPrincipal").disabled = principal;
+    document.querySelector("#btnEliminarCaja").disabled = eliminarCaja;
+    document.querySelector("#btnEliminarMufa").disabled = eliminarmufa;
+    document.querySelector("#btnEliminarSector").disabled = eliminarsector;
   }
 
   async function updateMap() {
@@ -199,7 +202,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   async function agregarCaja() {
     const coordenadasEnviar = `${coordenadasCaja.lat},${coordenadasCaja.lng}`;
     const nombreCajaEnviar = nombreCaja + document.querySelector("#codigoNombre").textContent;
-    console.log(nombreCajaEnviar);
     let paramsEnviar = new FormData();
     paramsEnviar.append("operacion", "registrarCaja");
     paramsEnviar.append("nombre", nombreCajaEnviar);
@@ -214,7 +216,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       body: paramsEnviar
     });
     const data = await response.json();
-    idCajaRegistro = data[0].id_caja;
+    if (data.error) {
+      showToast(data.error.message, "ERROR");
+      console.log(idCajaRegistro);
+    } else {
+      idCajaRegistro = data[0].id_caja;
+    }
   }
 
   async function agregarCable() {
@@ -291,6 +298,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   async function eventocajas() {
     datosCajas = await obtenerDatosAnidado(`${config.HOST}app/controllers/Caja.controllers.php?operacion=listarCajas`);
     marcadoresCajas = await marcadoresAnidado(datosCajas, "rojo");
+    console.log(marcadoresCajas);
+    marcadoresCajas.forEach(marcador => {
+      marcador.forEach(item => {
+        item.addListener('click', async () => {
+          blooquearbotones(true, true, true, true, false, true, true);
+        });
+      });
+    });
   }
 
   async function eventomufas() {
@@ -306,7 +321,11 @@ document.addEventListener('DOMContentLoaded', async () => {
           banderaCable = false;
           if (await ask("¿Desea guardar la caja?")) {
             await agregarCaja();
-            await agregarCable();
+            if (idCajaRegistro != "") {
+              await agregarCable();
+            }
+            line.setMap(null);
+            idCajaRegistro = "";
             marcadoresCajas.forEach(marcador => {
               marcador.forEach(item => {
                 item.setMap(null);
@@ -344,8 +363,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
     CablePrincipal = lineasCables[0];
     CablePrincipal.addListener('click', async (e) => {
-      if(lineaPrincipalAgregando){
-        blooquearbotones(true, false, true, true);
+      if (lineaPrincipalAgregando) {
+        blooquearbotones(true, false, true, true, true, true, true);
       }
       Coordenadas = `${e.latLng.lat()},${e.latLng.lng()}`;
       marcadorPrincipalEvento(e.latLng.toJSON());
@@ -372,7 +391,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           showToast("Agregando linea principal", "INFO");
           lineaPrincipalAgregando = false;
           coordenadasCajaGuardada = true;
-          blooquearbotones(true, true, true, false);
+          blooquearbotones(true, true, true, false, true, true, true);
         }
       });
     });
@@ -607,6 +626,30 @@ document.addEventListener('DOMContentLoaded', async () => {
       lineaPrincipalAgregando = false;
     };
   });
+
+  document.querySelector("#btnEliminarCaja").addEventListener("click", async () => {
+    if (await ask("¿Desea eliminar la caja?")) {
+      const paramsEnviar = new FormData();
+      paramsEnviar.append("operacion", "eliminarCaja");
+      paramsEnviar.append("id", idCajaRegistro);
+      const response = await fetch(`${config.HOST}app/controllers/Caja.controllers.php`, {
+        method: "POST",
+        body: paramsEnviar
+      });
+      const data = await response.json();
+      if (data.error) {
+        showToast(data.error.message, "ERROR");
+      } else {
+        showToast("Eliminado Correctamente", "SUCCESS");
+        marcadoresCajas.forEach(marcador => {
+          marcador.forEach(item => {
+            item.setMap(null);
+          });
+        });
+        eventocajas();
+      }
+    }
+  }
 
 });
 

@@ -3,81 +3,63 @@
 
 <div class="container-fluid px-4">
   <h1 class="mt-4">Actividades</h1>
-
   <ol class="breadcrumb mb-4">
     <li class="breadcrumb-item active">Gestion de mapa</li>
   </ol>
-
   <div class="row">
     <div class="col-md-10">
       <div class="card mt-3">
         <div class="card-header">
-          <i class="fas fa-table me-1"></i>
-          Registro de datos
+          <i class="fas fa-table me-1"></i> Registro de datos
         </div>
-
         <div class="card-body" id="contenido">
           <div id="map" style="height: 700px;"></div>
         </div>
       </div>
     </div>
-
     <div class="col-md-2">
-      <div class="card mt-3">
-        <div class="card-header">
-          <i class="fas fa-list me-1"></i>
-          Opciones de visualización
-        </div>
-
-        <div class="card-body">
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="chkSectores" checked>
-            <label class="form-check-label" for="chkSectores">
-              Sectores
-            </label>
-          </div>
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="chkMufas" checked>
-            <label class="form-check-label" for="chkMufas">
-              Mufas
-            </label>
-          </div>
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="chkCajas" checked>
-            <label class="form-check-label" for="chkCajas">
-              Cajas
-            </label>
-          </div>
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="chkCables" checked>
-            <label class="form-check-label" for="chkCables">
-              Cables
-            </label>
-          </div>
-          <button class="btn btn-primary mt-3 w-100" id="btnActualizar">Actualizar</button>
-        </div>
+  <div class="card mb-3">
+    <div class="card-header">Opciones</div>
+    <div class="card-body">
+      <div class="form-check mb-2">
+        <input class="form-check-input" type="checkbox" id="chkSectores" checked>
+        <label class="form-check-label" for="chkSectores">Sectores</label>
       </div>
-      <div class="card mt-3">
-        <div class="card-header">
-          <i class="fas fa-plus me-1"></i>
-          Agregar Nueva Entrada
-        </div>
-        <div class="card-body">
-          <button class="btn btn-success w-100 mb-2" id="btnActualizarPrincipal" disabled>
-            <i class="fas fa-plus"></i> Principal
-          </button>
-          <button class="btn btn-success w-100 mb-2" data-bs-toggle="modal" id="modalAgregarCaja" data-bs-target="#modalAgregar" disabled>
-            <i class="fas fa-plus"></i> Caja
-          </button>
-          <button class="btn btn-success w-100 mb-2" data-bs-toggle="modal" id="modalAgregarMufa" data-bs-target="#modalAgregarMufa2" disabled>
-            <i class="fas fa-plus"></i> Mufa
-          </button>
-          <button class="btn btn-success w-100 mb-2" data-bs-toggle="modal" id="modalAgregarSector" data-bs-target="#modalAgregarSector2" disabled>
-            <i class="fas fa-plus"></i> Sector
-          </button>
-        </div>
+      <div class="form-check mb-2">
+        <input class="form-check-input" type="checkbox" id="chkMufas" checked>
+        <label class="form-check-label" for="chkMufas">Mufas</label>
       </div>
+      <div class="form-check mb-2">
+        <input class="form-check-input" type="checkbox" id="chkCajas" checked>
+        <label class="form-check-label" for="chkCajas">Cajas</label>
+      </div>
+      <div class="form-check mb-2">
+        <input class="form-check-input" type="checkbox" id="chkCables" checked>
+        <label class="form-check-label" for="chkCables">Cables</label>
+      </div>
+      <button class="btn btn-primary w-100" id="btnActualizar">Actualizar</button>
     </div>
+  </div>
+
+  <div class="card mb-3">
+    <div class="card-header">Agregar</div>
+    <div class="card-body">
+      <button class="btn btn-success w-100 mb-2" id="btnActualizarPrincipal" disabled>Principal</button>
+      <button class="btn btn-success w-100 mb-2" id="modalAgregarCaja" data-bs-toggle="modal" data-bs-target="#modalAgregar" disabled>Caja</button>
+      <button class="btn btn-success w-100 mb-2" id="modalAgregarMufa" data-bs-toggle="modal" data-bs-target="#modalAgregarMufa2" disabled>Mufa</button>
+      <button class="btn btn-success w-100 mb-2" id="modalAgregarSector" data-bs-toggle="modal" data-bs-target="#modalAgregarSector2" disabled>Sector</button>
+    </div>
+  </div>
+
+    <div class="card mb-3">
+      <div class="card-header">Eliminar</div>
+      <div class="card-body">
+        <button class="btn btn-danger w-100 mb-2" id="btnEliminarCaja" disabled>Caja</button>
+        <button class="btn btn-danger w-100 mb-2" id="btnEliminarMufa" disabled>Mufa</button>
+        <button class="btn btn-danger w-100 mb-2" id="btnEliminarSector" disabled>Sector</button>
+      </div>
+  </div>
+</div>
   </div>
 </div>
 

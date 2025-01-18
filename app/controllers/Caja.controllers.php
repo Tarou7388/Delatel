@@ -16,6 +16,11 @@ if (isset($_GET['operacion'])) {
       $respuesta = $caja->listarCajasSectorIdCaja(['idCaja' => $idCaja]);
       echo json_encode($respuesta);
       break;
+    case 'cajaUso':
+      $idCaja = $_GET['idCaja'];
+      $respuesta = $caja->cajaUso(['idCaja' => $idCaja]);
+      echo json_encode($respuesta);
+      break;
   }
 }
 
@@ -65,6 +70,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
       case 'recontarCaja':
         $idContrato = $datos['idContrato'];
         $respuesta = $caja->recontarEspacioCaja(['idContrato' => $idContrato]);
+        echo json_encode($respuesta);
+        break;
+      case 'eliminarCaja':
+        $idCaja = $datos['idCaja'];
+        $respuesta = $caja->eliminarCaja(['idCaja' => $idCaja]);
         echo json_encode($respuesta);
         break;
     }
