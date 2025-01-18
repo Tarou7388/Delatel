@@ -74,6 +74,66 @@
   </table>
 </div>
 
+<?php if (!empty($resultado[0]['FichaAveria']['cabl']['parametroscable']['sintonizadores'])): ?>
+  <div>
+    <table class="tabla2">
+      <thead>
+        <tr>
+          <td colspan="5" class="text-center"><strong>DETALLES DE SINTONIZADORES</strong></td>
+        </tr>
+        <tr>
+          <td><strong>CÓDIGO DE BARRA</strong></td>
+          <td><strong>MARCA</strong></td>
+          <td><strong>MODELO</strong></td>
+          <td><strong>PRECIO</strong></td>
+          <td><strong>SERIE</strong></td>
+        </tr>
+      </thead>
+      <tbody>
+        <?php foreach ($resultado[0]['FichaAveria']['cabl']['parametroscable']['sintonizadores'] as $sintonizador): ?>
+          <tr>
+            <td><?= $sintonizador['codigoBarra'] ?? 'N/A'; ?></td>
+            <td><?= $sintonizador['marca'] ?? 'N/A'; ?></td>
+            <td><?= $sintonizador['modelo'] ?? 'N/A'; ?></td>
+            <td><?= $sintonizador['precio'] ?? 'N/A'; ?></td>
+            <td><?= $sintonizador['serie'] ?? 'N/A'; ?></td>
+          </tr>
+        <?php endforeach; ?>
+      </tbody>
+    </table>
+  </div>
+<?php endif; ?>
+
+<?php if (!empty($resultado[0]['FichaAveria']['cabl']['cambioscable']['sintonizadores'])): ?>
+  <div>
+    <table class="tabla2" style="margin-top: 20px;">
+      <thead>
+        <tr>
+          <td colspan="5" class="text-center"><strong>CAMBIOS DE SINTONIZADORES</strong></td>
+        </tr>
+        <tr>
+          <td><strong>CÓDIGO DE BARRA</strong></td>
+          <td><strong>MARCA</strong></td>
+          <td><strong>MODELO</strong></td>
+          <td><strong>PRECIO</strong></td>
+          <td><strong>SERIE</strong></td>
+        </tr>
+      </thead>
+      <tbody>
+        <?php foreach ($resultado[0]['FichaAveria']['cabl']['cambioscable']['sintonizadores'] as $cambio): ?>
+          <tr>
+            <td><?= $cambio['codigoBarra'] ?? 'N/A'; ?></td>
+            <td><?= $cambio['marca'] ?? 'N/A'; ?></td>
+            <td><?= $cambio['modelo'] ?? 'N/A'; ?></td>
+            <td><?= $cambio['precio'] ?? 'N/A'; ?></td>
+            <td><?= $cambio['serie'] ?? 'N/A'; ?></td>
+          </tr>
+        <?php endforeach; ?>
+      </tbody>
+    </table>
+  </div>
+<?php endif; ?>
+
 <div>
   <table class="tabla2">
     <thead>
@@ -86,7 +146,7 @@
         <td><strong>POTENCIA:</strong></td>
         <td colspan="2"><?= $resultado[0]['FichaAveria']['cabl']['cambioscable']['potencia'] ?? 'N/A'; ?></td>
         <td><strong>SINTONIZADOR:</strong></td>
-        <td colspan="2"><?= $resultado[0]['FichaAveria']['cabl']['cambioscable']['sintonizador'] ?? 'N/A'; ?></td>
+        <td colspan="2"><?= !empty($resultado[0]['FichaAveria']['cabl']['cambioscable']['sintonizadores']) ? count($resultado[0]['FichaAveria']['cabl']['cambioscable']['sintonizadores']) . ' sintonizadores' : 'N/A'; ?></td>
       </tr>
       <tr>
         <td><strong>TRIPLEXOR:</strong></td>

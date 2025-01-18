@@ -395,9 +395,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const txtModeloSintonizador = document.getElementById("txtModeloSintonizador").value;
     const txtSerieSintonizador = document.getElementById("txtSerieSintonizador").value;
     const txtPrecioSintonizador = parseFloat(document.getElementById("txtPrecioSintonizador").value) || 0;
-
+  
     numeroSintotizadores++;
-
+  
     const nuevoSintonizador = {
       codigoBarra: txtCodigoBarraSintonizador,
       marca: txtMarcaSintonizador,
@@ -405,8 +405,9 @@ document.addEventListener("DOMContentLoaded", () => {
       serie: txtSerieSintonizador,
       precio: txtPrecioSintonizador,
     };
-    jsonSintonizador.push(nuevoSintonizador);
-
+  
+    jsonSintonizador.push(nuevoSintonizador); // Agrega el nuevo sintonizador al array
+  
     const card = document.createElement("div");
     card.className = "card mt-2";
     card.innerHTML = `
@@ -422,25 +423,33 @@ document.addEventListener("DOMContentLoaded", () => {
         </button>
       </div>
     `;
+  
     document.getElementById("divSintonizadores").appendChild(card);
-
+  
     const btnEliminar = card.querySelector("#btnEliminar");
     btnEliminar.addEventListener("click", function () {
+      const index = jsonSintonizador.findIndex(
+        sintonizador => sintonizador.codigoBarra === txtCodigoBarraSintonizador
+      );
+      if (index !== -1) {
+        jsonSintonizador.splice(index, 1); // Elimina el sintonizador del array
+      }
       card.remove();
       numeroSintotizadores--;
-      cableData.parametroscable.sintonizadores.pop(); // Elimina el último sintonizador agregado
       actualizarContadorSintonizadores();
     });
+  
     actualizarContadorSintonizadores();
-  }
+  }  
 
   async function ArmadoJsonCable() {
     const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
     const result = await response.json();
-
+  
     const soporte = result[0]?.soporte ? JSON.parse(result[0].soporte) : {};
     const nuevoSoporte = { ...soporte };
-
+  
+    console.log("Contenido de jsonSintonizador:", jsonSintonizador);
     const dataCable = await FichaInstalacion(idSoporte);
     const cableFiltrado = JSON.parse(dataCable[0].ficha_instalacion).cable;
 
@@ -453,7 +462,7 @@ document.addEventListener("DOMContentLoaded", () => {
       parametroscable: {
         plan: document.getElementById("txtPlan").value,
         potencia: parseInt(document.getElementById("txtPotencia").value) || 0,
-        sintonizador: parseInt(document.getElementById("txtSintonizador").value) || 0,
+        sintonizadores: jsonSintonizador, 
         triplexor: document.getElementById("slcTriplexor").value === "2" ? "activo" :
           (document.getElementById("slcTriplexor").value === "3" ? "pasivo" : "no lleva"),
         splitter: [
@@ -474,7 +483,7 @@ document.addEventListener("DOMContentLoaded", () => {
       cambioscable: {
         plan: document.getElementById("txtPlan").value,
         potencia: parseInt(document.getElementById("txtPotenciaCambio").value) || 0,
-        sintonizadores: jsonSintonizador,
+        sintonizadores: jsonSintonizador, // También aquí si es necesario
         triplexor: document.getElementById("slcTriplexorCambio").value === "2" ? "activo" :
           (document.getElementById("slcTriplexorCambio").value === "3" ? "pasivo" : "no lleva"),
         splitter: [
@@ -493,14 +502,15 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
     };
-
+  
     nuevoSoporte.cabl = cableData;
     nuevoSoporte.idcaja = idCaja;
-
-    console.log(nuevoSoporte);
-
+  
+    console.log(JSON.stringify(nuevoSoporte, null, 2)); // Verifica el JSON generado
+  
     return nuevoSoporte;
   }
+  
 
   async function CompletarSoporteSiestaTodo(idSoporte, JSONsoporte) {
     const ServiciosTotales = await FichaInstalacion(idSoporte);
@@ -644,7 +654,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (await ask("¿Desea guardar la ficha?")) {
       await guardarSoporte(data);
       showToast("Ficha guardada correctamente", "SUCCESS");
-      window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
+      //window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
     }
   });
 
