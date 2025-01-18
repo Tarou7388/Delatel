@@ -2,9 +2,38 @@
 
 <link rel="stylesheet" href="../../css/contratos.css">
 <link rel="stylesheet" href="../../css/diseñoGlobal.css" />
+<style>
+  #inputGroupCoordenada {
+    /* Aumenta el ancho máximo según tus necesidades */
+    max-width: 500px;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  #CoordenadaModel {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    border-right: none;
+  }
+
+  #buscarBtn {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-left: none;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+
+  #buscarBtn:hover {
+    background-color: #0056b3;
+  }
+</style>
 
 <!-- Modal Structure -->
-<div class="modal fade" id="soporteModal" tabindex="-1" aria-labelledby="soporteModalLabel" aria-hidden="true">
+<div class="modal fade" id="soporteModal" tabindex="-1" aria-labelledby="soporteModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
@@ -23,8 +52,8 @@
 </div>
 
 <!-- Modal Mapa -->
-<div class="modal fade" id="ModalMapa" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl" role="document">
+<div class="modal fade" id="ModalMapa" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-lg" role="document"> <!-- Cambiado a modal-lg -->
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="myModalLabel">Mapa de Cobertura</h5>
@@ -32,23 +61,22 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="input-group mb-3">
+      <div class="input-group mb-3" id="inputGroupCoordenada">
         <input type="text" id="CoordenadaModel" class="form-control" placeholder="Coordenada" aria-label="Coordenada">
         <button class="btn btn-outline-secondary" type="button" id="buscarBtn">Buscar</button>
       </div>
-      <div class="modal-body">
-        <div id="map" style="height: 700px;">
 
+      <div class="modal-body">
+        <div id="map" style="height: 600px;"> <!-- Ajustar el alto del mapa si es necesario -->
+          <!-- Contenido del mapa -->
         </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary" id="btnGuardarModalMapa" data-dismiss="modal" disabled>Guardar cambios</button>
       </div>
     </div>
   </div>
 </div>
-
 
 <div class="container-fluid px-4">
   <h1 class="mt-4">Fichas a Completar</h1>

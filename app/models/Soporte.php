@@ -95,12 +95,11 @@ class Soporte extends Conexion
 
   public function actualizarSoporte($params = [])
   {
-    $sql = "CALL spu_soporte_actualizar(?, ?, ?, ?, ?, ?, ?)";
+    $sql = "CALL spu_soporte_actualizar(?, ?, ?, ?, ?, ?)";
 
     $values = [
       $params['idSoporte'],
       $params['idTecnico'],
-      $params['idTipoSoporte'],
       $params['fechaHoraAsistencia'],
       json_encode($params['soporte']),
       $params['idUserUpdate'],
@@ -161,6 +160,19 @@ class Soporte extends Conexion
   {
     $sql = "CALL spu_soporte_pdf(?)";
     $values = array($params['idSoporte']);
+    return $this->consultaParametros($sql, $values);
+  }
+
+  /**
+   * Obtiene el historial de soporte basado en el documento del cliente.
+   *
+   * @param string $docCliente El documento del cliente.
+   * @return mixed El historial de soporte del cliente.
+   */
+  public function obtenerHistorialSoporte($params = [])
+  {
+    $sql = "CALL ObtenerHistorialSoporte(?)";
+    $values = array($params['docCliente']);
     return $this->consultaParametros($sql, $values);
   }
 }

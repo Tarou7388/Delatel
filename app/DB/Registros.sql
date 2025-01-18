@@ -1,6 +1,6 @@
 USE Delatel;
 
-INSERT INTO tb_tipo_soporte (tipo_soporte, iduser_create) VALUES
+/* INSERT INTO tb_tipo_soporte (tipo_soporte, iduser_create) VALUES
 ('Instalación de servicio', 1),
 ('Mantenimiento preventivo', 1),
 ('Problema de conexión', 1),
@@ -20,7 +20,7 @@ INSERT INTO tb_tipo_soporte (tipo_soporte, iduser_create) VALUES
 ('Cambio de dirección de servicio', 1),
 ('Aumento de velocidad', 1),
 ('Sugerencias y quejas', 1),
-('Desbloqueo de cuenta', 1);
+('Desbloqueo de cuenta', 1); */
 
 INSERT INTO tb_servicios (tipo_servicio, servicio, iduser_create) VALUES
   ('CABL','Cable', 1),

@@ -8,7 +8,6 @@ CREATE PROCEDURE spu_averias_contratos_listar(IN p_id_contrato INT)
 BEGIN
     SELECT 
         s.id_soporte,
-        ts.tipo_soporte,
         CONCAT(p.nombres, ' ', p.apellidos) AS nombre_tecnico,
         s.soporte,
         s.descripcion_solucion,
@@ -22,8 +21,6 @@ BEGIN
         tb_usuarios u ON r.id_usuario = u.id_usuario
     JOIN 
         tb_personas p ON u.id_persona = p.id_persona
-    JOIN 
-        tb_tipo_soporte ts ON s.id_tipo_soporte = ts.id_tipo_soporte
     WHERE 
         s.id_contrato = p_id_contrato;
 END$$
@@ -45,7 +42,6 @@ BEGIN
         IFNULL(p.telefono, e.telefono) AS Telefono,
         cl.direccion AS DireccionPersona,
         se.sector AS SectorCliente, 
-        s.id_tipo_soporte,
         s.id_tecnico,
         CONCAT(pt.nombres, ' ', pt.apellidos) AS NombreTecnico,
         s.descripcion_problema,

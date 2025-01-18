@@ -177,10 +177,13 @@ $idContrato = $_GET['idContrato'];
 
           <div class="row g-2 mb-2">
             <div class="col-md">
-              <div class="form-floating">
-                <input type="text" id="txtCodigoBarraRouter" class="form-control" value="" placeholder="Código de Barra" required>
-                <label for="txtCodigoBarraRouter">Código de Barra <span class="required-asterisk" style="color: red;">*</span></label>
-                <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
+              <div class="input-group">
+                <div class="form-floating">
+                  <input type="text" id="txtCodigoBarraRouter" class="form-control" value="" placeholder="Código de Barra" required>
+                  <label for="txtCodigoBarraRouter">Código de Barra <span class="required-asterisk" style="color: red;">*</span></label>
+                  <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
+                </div>
+                <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
               </div>
             </div>
             <div class="col-md">
@@ -326,10 +329,13 @@ $idContrato = $_GET['idContrato'];
               <!-- Columna de Antena -->
               <div class="col-12 col-md-4 mt-2">
                 <div class="antena-header p-3 text-center border py-3">Antena</div>
-                <div class="form-floating mt-2">
-                  <input type="text" class="form-control" id="txtMacVentaAntena" placeholder="MAC">
-                  <label for="txtMacVentaAntena">MAC <span class="required-asterisk" style="color: red;">*</span></label>
-                  <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
+                <div class="input-group mt-2">
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="txtMacVentaAntena" placeholder="MAC">
+                    <label for="txtMacVentaAntena">MAC <span class="required-asterisk" style="color: red;">*</span></label>
+                    <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
+                  </div>
+                  <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
                 </div>
                 <div class="form-floating mt-2">
                   <input type="text" id="txtMarcaVentaAntena" class="form-control" placeholder="Marca" disabled>
@@ -354,10 +360,13 @@ $idContrato = $_GET['idContrato'];
               <!-- Columna de Router -->
               <div class="col-12 col-md-4 mt-2">
                 <div class="router-header p-3 text-center border py-3">Router</div>
-                <div class="form-floating mt-2">
-                  <input type="text" class="form-control" id="txtMacVentaRouter" placeholder="MAC">
-                  <label for="txtMacVentaRouter">MAC <span class="required-asterisk" style="color: red;">*</span></label>
-                  <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
+                <div class="input-group mt-2">
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="txtMacVentaRouter" placeholder="MAC">
+                    <label for="txtMacVentaRouter">MAC <span class="required-asterisk" style="color: red;">*</span></label>
+                    <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
+                  </div>
+                  <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
                 </div>
                 <div class="form-floating mt-2">
                   <input type="text" id="txtMarcaVentaRouter" class="form-control" placeholder="Marca" disabled>
@@ -448,10 +457,13 @@ $idContrato = $_GET['idContrato'];
               <!-- Columna de Antena -->
               <div class="col-12 col-md-4 mt-2">
                 <div class="antena-header p-3 text-center border py-3">Antena</div>
-                <div class="form-floating mt-2">
-                  <input type="text" class="form-control" id="txtMacAntenaAlquilados" placeholder="MAC">
-                  <label for="txtMacAntenaAlquilados">MAC <span class="required-asterisk" style="color: red;">*</span></label>
-                  <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
+                <div class="input-group mt-2">
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="txtMacAntenaAlquilados" placeholder="MAC">
+                    <label for="txtMacAntenaAlquilados">MAC <span class="required-asterisk" style="color: red;">*</span></label>
+                    <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
+                  </div>
+                  <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
                 </div>
                 <div class="form-floating mt-2">
                   <input type="text" id="txtMarcaAntenaAlquilados" class="form-control" placeholder="Marca" disabled>
@@ -476,10 +488,13 @@ $idContrato = $_GET['idContrato'];
               <!-- Columna de Router -->
               <div class="col-12 col-md-4 mt-2">
                 <div class="router-header p-3 text-center border py-3">Router</div>
-                <div class="form-floating mt-2">
-                  <input type="text" class="form-control" id="txtMacRouterAlquilados" placeholder="MAC">
-                  <label for="txtMacRouterAlquilados">MAC <span class="required-asterisk" style="color: red;">*</span></label>
-                  <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
+                <div class="input-group mt-2">
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="txtMacRouterAlquilados" placeholder="MAC">
+                    <label for="txtMacRouterAlquilados">MAC <span class="required-asterisk" style="color: red;">*</span></label>
+                    <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
+                  </div>
+                  <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
                 </div>
                 <div class="form-floating mt-2">
                   <input type="text" id="txtMarcaRouterAlquilados" class="form-control" placeholder="Marca" disabled>

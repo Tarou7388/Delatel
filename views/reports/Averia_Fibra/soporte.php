@@ -37,6 +37,6 @@ $dompdf->render();
 $canvas = $dompdf->getCanvas();
 
 // Añadir numeración de páginas en la esquina inferior derecha
-$canvas->page_text($canvas->get_width() - 80, $canvas->get_height() - 30, "Página {PAGE_NUM} de {PAGE_COUNT}", null, 9, array(0, 0, 0));
+$canvas->page_text($canvas->get_width() - 120, $canvas->get_height() - 40, "Página {PAGE_NUM} de {PAGE_COUNT}", null, 12, array(0, 0, 0));
 
 $dompdf->stream($nombreArchivo, array('Attachment' => 0));

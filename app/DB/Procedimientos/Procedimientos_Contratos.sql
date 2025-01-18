@@ -303,7 +303,9 @@ BEGIN
 END$$
 
 DELIMITER $$
+
 DROP PROCEDURE IF EXISTS spu_contratos_pdf$$
+
 CREATE PROCEDURE spu_contratos_pdf(IN p_id_contrato INT)
 BEGIN
     SELECT 
@@ -355,6 +357,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS spu_contratos_JsonFichabyId$$
+
 CREATE PROCEDURE spu_contratos_JsonFichabyId(IN p_id_contrato INT)
 BEGIN
     SELECT 
@@ -365,9 +368,11 @@ BEGIN
         id_contrato = p_id_contrato;
 END$$
 
- -- Función buscar coordenada por el idContrato
+-- Función buscar coordenada por el idContrato
 DELIMITER $$
+
 DROP PROCEDURE IF EXISTS spu_contrato_buscar_coordenada$$
+
 CREATE PROCEDURE spu_contrato_buscar_coordenada(
     IN p_id_contrato INT
 )
@@ -382,13 +387,15 @@ BEGIN
         c.id_contrato = p_id_contrato;
 END$$
 
-
 DROP VIEW IF EXISTS vw_contratos_listar_ficha_null$$
 
 CREATE VIEW vw_contratos_listar_ficha_null AS
 SELECT
     c.id_contrato,
-    CONCAT(p.apellidos, ' ', p.nombres) AS nombre_cliente,
+    CASE
+        WHEN cl.id_persona IS NOT NULL THEN CONCAT(p.apellidos, ' ', p.nombres)
+        ELSE e.razon_social
+    END AS nombre_cliente,
     p2.paquete AS nombre_paquete,
     s.sector AS nombre_sector,
     CONCAT(rp.apellidos, ' ', rp.nombres) AS nombre_tecnico_registro,
@@ -404,21 +411,45 @@ SELECT
     c.update_at,
     c.inactive_at,
     c.iduser_update,
-    c.iduser_inactive
+    c.iduser_inactive,
+    GROUP_CONCAT(sv.tipo_servicio SEPARATOR ', ') AS tipos_servicio
 FROM
     tb_contratos c
-    JOIN tb_clientes cl ON c.id_cliente = cl.id_cliente
-    JOIN tb_personas p ON cl.id_persona = p.id_persona
-    JOIN tb_paquetes p2 ON c.id_paquete = p2.id_paquete
-    JOIN tb_sectores s ON c.id_sector = s.id_sector
-    JOIN tb_responsables r ON c.id_usuario_registro = r.id_responsable
-    JOIN tb_usuarios u ON r.id_usuario = u.id_usuario
-    JOIN tb_personas rp ON u.id_persona = rp.id_persona
+    INNER JOIN tb_clientes cl ON c.id_cliente = cl.id_cliente
+    LEFT JOIN tb_personas p ON cl.id_persona = p.id_persona
+    LEFT JOIN tb_empresas e ON cl.id_cliente = e.id_empresa
+    INNER JOIN tb_paquetes p2 ON c.id_paquete = p2.id_paquete
+    INNER JOIN tb_sectores s ON c.id_sector = s.id_sector
+    INNER JOIN tb_responsables r ON c.id_usuario_registro = r.id_responsable
+    INNER JOIN tb_usuarios u ON r.id_usuario = u.id_usuario
+    INNER JOIN tb_personas rp ON u.id_persona = rp.id_persona
+    LEFT JOIN tb_servicios sv ON JSON_CONTAINS(
+        p2.id_servicio,
+        JSON_OBJECT('id_servicio', sv.id_servicio)
+    )
 WHERE
     c.ficha_instalacion IS NULL
     AND c.inactive_at IS NULL
+GROUP BY
+    c.id_contrato,
+    nombre_cliente,
+    p2.paquete,
+    s.sector,
+    nombre_tecnico_registro,
+    c.direccion_servicio,
+    c.referencia,
+    c.ficha_instalacion,
+    c.coordenada,
+    c.fecha_inicio,
+    c.fecha_registro,
+    c.fecha_fin,
+    c.nota,
+    c.create_at,
+    c.update_at,
+    c.inactive_at,
+    c.iduser_update,
+    c.iduser_inactive
 ORDER BY c.id_contrato DESC$$
-
 
 DROP VIEW IF EXISTS vw_contratos_contar_ficha_vacia$$
 

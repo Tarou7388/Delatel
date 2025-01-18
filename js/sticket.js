@@ -79,6 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
         url: rutaContratos,
         type: "GET",
         dataSrc: function (json) {
+          console.log('Datos obtenidos para contratos:', json);
           json.forEach(item => {
             item.estado = 'PENDIENTE';
           });
@@ -93,6 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
         { data: "id_contrato", className: "text-center" },
         { data: "nombre_cliente", className: "text-center" },
         { data: "nombre_paquete", className: "text-center" },
+        { data: "tipos_servicio", className: "text-center" },
         { data: "nombre_sector", className: "text-center" },
         { data: "fecha_inicio", className: "text-center" },
         { data: "nombre_tecnico_registro", className: "text-center" },
@@ -102,6 +104,13 @@ document.addEventListener("DOMContentLoaded", () => {
           render: function (data, type, row) {
             return '<span class="badge bg-danger">PENDIENTE</span>';
           }
+        },
+        {
+          data: null,
+          className: "text-center",
+          render: function (data, type, row) {
+            return '<button type="button" class="btn btn-primary btn-sm atender-contrato">Atender</button>';
+          }
         }
       ],
       paging: true,
@@ -109,9 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
       info: true,
       lengthChange: false,
     });
-  });
 
-  $(document).ready(function () {
     $("#tblSticketsAverias").DataTable({
       language: {
         url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json",
@@ -120,6 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
         url: rutaAveria,
         type: "GET",
         dataSrc: function (json) {
+          console.log('Datos obtenidos para soporte:', json);
           json.forEach(item => {
             item.estado = 'PENDIENTE';
           });
@@ -142,11 +150,19 @@ document.addEventListener("DOMContentLoaded", () => {
         { data: "descripcion_problema", className: "text-center" },
         { data: "fecha_creacion", className: "text-center" },
         { data: "sector_cliente", className: "text-center" },
+        { data: "tipo_servicio", className: "text-center" }, // Nueva columna para tipo_servicio
         {
           data: "estado",
           className: "text-center",
           render: function (data, type, row) {
             return '<span class="badge bg-danger">PENDIENTE</span>';
+          }
+        },
+        {
+          data: null,
+          className: "text-center",
+          render: function (data, type, row) {
+            return '<button type="button" class="btn btn-primary btn-sm atender-averia">Atender</button>';
           }
         }
       ],
@@ -156,5 +172,43 @@ document.addEventListener("DOMContentLoaded", () => {
       lengthChange: false,
     });
   });
+
+  // Evento de Atender Contrato
+  $("#tblStickets tbody").on("click", ".atender-contrato", async function () {
+    var data = $("#tblStickets").DataTable().row($(this).parents("tr")).data();
+    console.log("Datos del contrato:", data);
+
+    const idContrato = data.id_contrato;
+    const tipoServicio = data.tipos_servicio;
+    const tipoFicha = {
+      "FIBR, CABL": "FichaTecnicaGpon",
+      "CABL, FIBR": "FichaTecnicaGpon",
+      WISP: "FichaTecnicaWisp",
+      CABL: "FichaTecnicaCable",
+      FIBR: "FichaTecnicaFibra",
+    };
+
+    // Redirigir al usuario a la página correspondiente según el tipo de servicio
+    window.location.href = `${config.HOST}views/Contratos/${tipoFicha[tipoServicio]}?idContrato=${idContrato}`;
+  });
+
+  //Evento de Atender Avería
+  $("#tblSticketsAverias tbody").on("click", ".atender-averia", async function () {
+    const data = $("#tblSticketsAverias").DataTable().row($(this).parents("tr")).data();
+    console.log("Datos de la avería:", data);
+
+    const idSoporte = data.id_soporte;
+    const coordenada = data.coordenada;
+    const nrodocumento = data.nrodocumento;
+    const tipoServicio = data.tipo_servicio;
+
+    // Llamamos directamente a la función para mostrar la ficha del servicio
+    mostrarFichaServicio(tipoServicio, idSoporte, nrodocumento, coordenada);
+  });
+
+  function mostrarFichaServicio(tipoServicio, id_soporte, nrodocumento, coordenada) {
+    // Redirigir al usuario a la página correspondiente
+    window.location.href = `${config.HOST}views/Soporte/Soporte${tipoServicio}?idsoporte=${id_soporte}&doc=${nrodocumento}&tiposervicio=${tipoServicio}&coordenada=${coordenada}`;
+  }
 
 });

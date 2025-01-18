@@ -90,19 +90,19 @@ function actualizarModal(idSoporte, tipoServicio, idContrato) {
 
       switch (servicio) {
         case "CABL":
-          vistaURL = `${config.HOST}views/Soporte/SoporteCABL?idReporte=${idSoporte}&idContrato=${idContrato}`;
+          vistaURL = `${config.HOST}views/reports/Averia_Cable/soporte.php?idSoporte=${idSoporte}`;
           break;
         case "WISP":
-          vistaURL = `${config.HOST}views/Soporte/SoporteWISP?idReporte=${idSoporte}&idContrato=${idContrato}`;
+          vistaURL = `${config.HOST}views/reports/Averia_WISP/soporte.php?idSoporte=${idSoporte}`;
           break;
         case "FIBR":
-          vistaURL = `${config.HOST}views/Soporte/SoporteFIBR?idReporte=${idSoporte}&idContrato=${idContrato}`;
+          vistaURL = `${config.HOST}views/reports/Averia_Fibra/soporte.php?idSoporte=${idSoporte}`;
           break;
         default:
           showToast("Tipo de servicio no reconocido", "ERROR");
           return;
       }
-      window.location.href = vistaURL;
+      window.open(vistaURL, '_blank');
     });
 
     modalBody.appendChild(div);
