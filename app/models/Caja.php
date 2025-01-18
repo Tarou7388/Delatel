@@ -78,13 +78,16 @@ class Caja extends Conexion
   {
     $sql = "CALL spu_caja_uso(?)";
     $idCaja = $params['idCaja'];
-    return $this->listarDatos($sql, [$idCaja]);
+    return $this->consultaParametros($sql, [$idCaja]);
   }
-  
+
   public function eliminarCaja($params = [])
   {
-    $sql = "CALL spu_caja_eliminar(?)";
-    $idCaja = $params['idCaja'];
-    return $this->registrar($sql, [$idCaja]);
+    $sql = "CALL spu_caja_eliminar(?, ?)";
+    $datos = [
+      $params['idCaja'],
+      $params['idUsuario']
+    ];
+    return $this->registrar($sql, $datos);
   }
 }

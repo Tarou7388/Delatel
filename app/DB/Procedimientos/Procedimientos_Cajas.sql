@@ -13,14 +13,14 @@ BEGIN
     numero_entradas, 
     id_sector, 
     coordenadas 
-  FROM tb_cajas;
+  FROM tb_cajas WHERE inactive_at IS NULL;
 END$$
 
 DROP PROCEDURE IF EXISTS spu_mufas_listar$$
 
 CREATE PROCEDURE spu_mufas_listar()
 BEGIN
-  SELECT id_mufa, nombre, descripcion, coordenadas FROM tb_mufas;
+  SELECT id_mufa, nombre, descripcion, coordenadas FROM tb_mufas WHERE inactive_at IS NULL;
 END$$
 
 DROP PROCEDURE IF EXISTS spu_cajas_registrar$$
@@ -152,17 +152,18 @@ BEGIN
     CASE 
       WHEN COUNT(*) > 0 THEN 'true'
       ELSE 'false'
-    END as existe 
-  FROM tb_lineas 
-  WHERE id_caja = p_id_caja;
+    END as uso 
+  FROM tb_contratos 
+WHERE JSON_EXTRACT(ficha_instalacion, '$.idcaja') = p_id_caja;
 END$$
 
 DROP PROCEDURE IF EXISTS spu_caja_eliminar$$
 
 CREATE PROCEDURE spu_caja_eliminar(
-  IN p_id_caja INT
+  IN p_id_caja INT,
+  IN p_id_user INT
 )
 BEGIN
-  UPDATE tb_lineas SET inactive_at = NOW() WHERE id_linea = p_id_caja;
-  UPDATE tb_cajas SET inactive_at = NOW() WHERE id_caja = p_id_caja;
+  UPDATE tb_lineas SET inactive_at = NOW(), iduser_update = p_id_user WHERE id_caja = p_id_caja;
+  UPDATE tb_cajas SET inactive_at = NOW(), iduser_update = p_id_user WHERE id_caja = p_id_caja;
 END$$

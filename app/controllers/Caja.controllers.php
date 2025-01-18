@@ -74,7 +74,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
         break;
       case 'eliminarCaja':
         $idCaja = $datos['idCaja'];
-        $respuesta = $caja->eliminarCaja(['idCaja' => $idCaja]);
+        $datos = [
+          'idCaja' => $idCaja,
+          'idUsuario' => $datos['idUsuario']
+        ];
+        $respuesta = $caja->eliminarCaja($datos);
         echo json_encode($respuesta);
         break;
     }

@@ -298,11 +298,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   async function eventocajas() {
     datosCajas = await obtenerDatosAnidado(`${config.HOST}app/controllers/Caja.controllers.php?operacion=listarCajas`);
     marcadoresCajas = await marcadoresAnidado(datosCajas, "rojo");
-    console.log(marcadoresCajas);
-    marcadoresCajas.forEach(marcador => {
-      marcador.forEach(item => {
+    marcadoresCajas.forEach((marcador, index1) => {
+      marcador.forEach((item, index2) => {
         item.addListener('click', async () => {
           blooquearbotones(true, true, true, true, false, true, true);
+          console.log(datosCajas[index1][index2]);
+          idCajaRegistro = datosCajas[index1][index2].id_caja;
         });
       });
     });
@@ -569,10 +570,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     direccionCaja = document.querySelector("#direccionCaja").value;
     coordenadasCaja = Coordenadas;
     const marcador = await buscarMarcadorCercano(datosSectores, coordenadasCaja);
-    sectorCercano = marcador.marcador.id_sector;
-    banderaCable = true;
-    const modal = bootstrap.Modal.getInstance(document.getElementById('modalAgregar'));
-    modal.hide();
+    if(marcador.marcador == null){
+      showToast("No se encontro sector cercano", "ERROR");
+      return;
+    }else if(marcador.distancia > 1000){
+      showToast("El sector esta muy lejos", "INFO");
+    }else{
+      showToast("Dibuje el cableado", "INFO");
+      sectorCercano = marcador.marcador.id_sector;
+      banderaCable = true;
+      const modal = bootstrap.Modal.getInstance(document.getElementById('modalAgregar'));
+      modal.hide();
+      document.querySelector("#formAgregarCaja").reset();
+    }
   });
 
   document.querySelector("#formAgregarMufa").addEventListener("submit", async (e) => {
@@ -581,6 +591,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (await ask("¿Desea guardar la mufa?")) {
       agregarMufa();
     }
+    document.querySelector("#formAgregarMufa").reset();
     modal.hide();
   });
 
@@ -590,6 +601,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       agregarSector();
     }
     const modal = bootstrap.Modal.getInstance(document.getElementById('modalAgregarSector2'));
+    document.querySelector("#formAgregarSector").reset();
     modal.hide();
   });
 
@@ -628,28 +640,43 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   document.querySelector("#btnEliminarCaja").addEventListener("click", async () => {
-    if (await ask("¿Desea eliminar la caja?")) {
-      const paramsEnviar = new FormData();
-      paramsEnviar.append("operacion", "eliminarCaja");
-      paramsEnviar.append("id", idCajaRegistro);
-      const response = await fetch(`${config.HOST}app/controllers/Caja.controllers.php`, {
-        method: "POST",
-        body: paramsEnviar
-      });
-      const data = await response.json();
-      if (data.error) {
-        showToast(data.error.message, "ERROR");
-      } else {
-        showToast("Eliminado Correctamente", "SUCCESS");
-        marcadoresCajas.forEach(marcador => {
-          marcador.forEach(item => {
-            item.setMap(null);
-          });
+    const response = await fetch(`${config.HOST}app/controllers/Caja.controllers.php?operacion=cajaUso&idCaja=${idCajaRegistro}`);
+    const data = await response.json();
+    console.log(data[0].uso);
+    if(data[0].uso && data[0].uso == true){
+      showToast("La caja esta en uso", "ERROR");
+    }
+    else{
+      if (await ask("¿Desea eliminar la caja?")) {
+        const datos = JSON.stringify({
+          idCaja: idCajaRegistro,
+          idUsuario: user.idUsuario,
+          operacion: "eliminarCaja"
+         });
+        const response = await fetch(`${config.HOST}app/controllers/Caja.controllers.php`, {
+          method: "PUT",
+          body: datos
         });
-        eventocajas();
+        const data2 = await response.json();
+        console.log(data2);
+        if (data2.error) {
+          showToast(data2.error.message, "ERROR");
+        } else {
+          showToast("Eliminado Correctamente", "SUCCESS");
+          marcadoresCajas.forEach(marcador => {
+            marcador.forEach(item => {
+              item.setMap(null);
+            });
+          });
+          eventocajas();
+          lineasCables.forEach(linea => {
+            linea.setMap(null);
+          });
+          eventoCables();
+        }
       }
     }
-  }
+  });
 
 });
 

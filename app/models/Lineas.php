@@ -11,7 +11,7 @@ class Lineas extends Conexion{
   }
 
   public function getLineas(){
-    $sql = "SELECT * FROM tb_lineas";
+    $sql = "SELECT * FROM tb_lineas WHERE inactive_at IS NULL";
     $respuesta = $this->listarDatos($sql);
     foreach($respuesta as $key => $value){
       $respuesta[$key]['coordenadas'] = json_decode($value['coordenadas'], true);
