@@ -94,17 +94,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Función para completar los campos de cambio con los valores de los parámetros técnicos
   async function completarCamposDeCambio() {
+    console.log();
     const parametrosTecnicos = {
       txtPotenciaCambio: txtPotencia.value,
-      txtSintonizadorCambio: txtSintonizador.value,
+      txtSintonizadorCambio: parseInt(infoSintonizadores.length),
       slcTriplexorCambio: slcTriplexor.value,
       txtNumSpliterCambio: txtNumSpliter.value,
       slcSpliterCambio: slcSpliter.value,
       txtCableCambio: txtCable.value,
       txtPrecioCableCambio: txtPrecioCable.value,
       txtConectorCambio: txtConector.value,
-      txtPrecioConectorCambio: txtPrecioConector.value,
-      formulario: infoSintonizadores
+      txtPrecioConectorCambio: txtPrecioConector.value
     };
 
     for (const [id, value] of Object.entries(parametrosTecnicos)) {
@@ -113,7 +113,10 @@ document.addEventListener("DOMContentLoaded", () => {
         input.value = value;
       }
     }
-    pintarSintonizador(infoSintonizadores);
+
+    jsonSintonizador.push(infoSintonizadores[0]);
+    
+    await pintarSintonizador(infoSintonizadores);
   }
 
   // Función para borrar los valores de los campos de cambio
@@ -140,6 +143,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
     });
+
+    jsonSintonizador = [];
   }
 
   function configurarVerMas() {
@@ -218,16 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const cableFiltrado = JSON.parse(dataCable[0].ficha_instalacion).cable;
 
       txtPotencia.value = data.potencia || "";
-      sintonizadoresData = data.sintonizadores || [];
-      let uniqueSintonizadores = [];
-
-      sintonizadoresData.forEach(element => {
-        if (!uniqueSintonizadores.some(existing => existing.numero_serie === element.numero_serie)) {
-          uniqueSintonizadores.push(element);
-        }
-      });
-
-      sintonizadoresData = uniqueSintonizadores;
+      sintonizadoresData = await contabilizarSintonizadores(data.sintonizadores);
 
       txtSintonizador.value = data.sintonizadores.length || 0;
       for (let i = 0; i < slcTriplexor.options.length; i++) {
@@ -294,7 +290,22 @@ document.addEventListener("DOMContentLoaded", () => {
     const urlParams = new URLSearchParams(window.location.search);
     const idSoporte = urlParams.get("idsoporte");
     return idSoporte;
+  };
+
+  async function contabilizarSintonizadores(cableFiltrado) {
+    let sintonizadorContador = [];
+  
+    cableFiltrado.sintonizadores.forEach((sintonizador, index) => {
+      console.log(`Iteración ${index + 1}:`, sintonizador);
+  
+      if (!sintonizadorContador.some(existing => existing.numero_serie === sintonizador.numero_serie)) {
+        sintonizadorContador.push(sintonizador);
+      }
+    });
+  
+    return [sintonizadorContador];
   }
+  
 
   async function CargardatosInstalacion(doc, idSoporte) {
     try {
@@ -318,9 +329,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const dataCable = await FichaInstalacion(idSoporte);
       const cableFiltrado = JSON.parse(dataCable[0].ficha_instalacion).cable;
 
-      const sintonizadores = cableFiltrado.sintonizadores ? cableFiltrado.sintonizadores.length : 0;
-      infoSintonizadores = cableFiltrado.sintonizadores || [];
-      console.log("Sintonizadores:", infoSintonizadores);
+      const sintonizadores = cableFiltrado.sintonizadores.length;
+
+      infoSintonizadores = await contabilizarSintonizadores(cableFiltrado);
 
       const cargador = JSON.parse(cableFiltrado.triplexor.cargador);
       const requerido = JSON.parse(cableFiltrado.triplexor.requerido);
@@ -399,16 +410,17 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (error) {
       console.error("Error en obtener el problema:", error);
     }
-
   }
 
-  function actualizarContadorSintonizadores() {
-    txtSintonizadorCambio.value = numeroSintotizadores;
+  async function actualizarContadorSintonizadores() {
+    txtSintonizadorCambio.value = parseInt(infoSintonizadores.length);
   }
 
   async function pintarSintonizador(sintonizadores) {
     const divSintonizadores = document.getElementById("divSintonizadores");
     divSintonizadores.innerHTML = ""; // Limpia el 
+
+    console.log("Contenido de sintonizadores:", sintonizadores);
 
     let numeroSintonizadores = 0;
 
@@ -420,11 +432,11 @@ document.addEventListener("DOMContentLoaded", () => {
       card.innerHTML = `
         <div class="card-body">
           <h5 class="card-title">Sintonizador #${numeroSintonizadores}</h5>
-          <p class="card-text"><strong>Código de Barra:</strong> ${element.codigobarra}</p>
-          <p class="card-text"><strong>Marca:</strong> ${element.marca}</p>
-          <p class="card-text"><strong>Modelo:</strong> ${element.modelo}</p>
-          <p class="card-text"><strong>Precio:</strong> ${element.precio}</p>
-          <p class="card-text"><strong>Serie:</strong> ${element.serie}</p>
+          <p class="card-text"><strong>Código de Barra:</strong> ${element[index].codigobarra}</p>
+          <p class="card-text"><strong>Marca:</strong> ${element[index].marca}</p>
+          <p class="card-text"><strong>Modelo:</strong> ${element[index].modelo}</p>
+          <p class="card-text"><strong>Precio:</strong> ${element[index].precio}</p>
+          <p class="card-text"><strong>Serie:</strong> ${element[index].serie}</p>
           <button class="btn btn-danger btn-sm mt-2 btnEliminar">
             <i class="fas fa-times"></i> Eliminar
           </button>
@@ -433,7 +445,7 @@ document.addEventListener("DOMContentLoaded", () => {
       divSintonizadores.appendChild(card);
 
       const btnEliminar = card.querySelector(".btnEliminar");
-      btnEliminar.addEventListener("click", function () {
+      btnEliminar.addEventListener("click", async function () {
         const index = sintonizadores.findIndex(
           sintonizador => sintonizador.codigobarra === element.codigobarra
         );
@@ -442,10 +454,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         card.remove();
         numeroSintonizadores--;
-        actualizarContadorSintonizadores();
+        await actualizarContadorSintonizadores();
       });
     });
-    actualizarContadorSintonizadores(numeroSintonizadores); // Actualiza el contador visual
+    await actualizarContadorSintonizadores();
   }
 
   async function AgregarSintotizador() {
@@ -455,8 +467,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const txtSerieSintonizador = document.getElementById("txtSerieSintonizador").value;
     const txtPrecioSintonizador = parseFloat(document.getElementById("txtPrecioSintonizador").value) || 0;
 
-    numeroSintotizadores++;
-
     const nuevoSintonizador = {
       codigoBarra: txtCodigoBarraSintonizador,
       marca: txtMarcaSintonizador,
@@ -465,13 +475,17 @@ document.addEventListener("DOMContentLoaded", () => {
       precio: txtPrecioSintonizador,
     };
 
-    jsonSintonizador.push(nuevoSintonizador); // Agrega el nuevo sintonizador al array
+    infoSintonizadores.length ++;
+
+    jsonSintonizador.push(nuevoSintonizador); 
+
+    console.log("Contenido de jsonSintonizador:", nuevoSintonizador);
 
     const card = document.createElement("div");
     card.className = "card mt-2";
     card.innerHTML = `
     <div class="card-body">
-      <h5 class="card-title">Sintonizador #${numeroSintotizadores}</h5>
+      <h5 class="card-title">Sintonizador #${infoSintonizadores.length}</h5>
       <p class="card-text"><strong>Código de Barra:</strong> ${txtCodigoBarraSintonizador}</p>
       <p class="card-text"><strong>Marca:</strong> ${txtMarcaSintonizador}</p>
       <p class="card-text"><strong>Modelo:</strong> ${txtModeloSintonizador}</p>
@@ -494,12 +508,11 @@ document.addEventListener("DOMContentLoaded", () => {
         jsonSintonizador.splice(index, 1); // Elimina el sintonizador del array
       }
       card.remove();
-      numeroSintotizadores--;
+      infoSintonizadores.length--;
       actualizarContadorSintonizadores();
     });
     actualizarContadorSintonizadores();
   }
-
 
   async function ArmadoJsonCable() {
     const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
