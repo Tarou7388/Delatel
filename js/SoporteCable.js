@@ -295,9 +295,7 @@ document.addEventListener("DOMContentLoaded", () => {
   async function contabilizarSintonizadores(cableFiltrado) {
     let sintonizadorContador = [];
   
-    cableFiltrado.sintonizadores.forEach((sintonizador, index) => {
-      console.log(`Iteración ${index + 1}:`, sintonizador);
-  
+    cableFiltrado.sintonizadores.forEach((sintonizador) => {
       if (!sintonizadorContador.some(existing => existing.numero_serie === sintonizador.numero_serie)) {
         sintonizadorContador.push(sintonizador);
       }
