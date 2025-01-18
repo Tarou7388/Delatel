@@ -38,6 +38,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const urlParams = new URLSearchParams(window.location.search);
   const idReporte = urlParams.get("idReporte");
+  const formulario = document.getElementById("form-sintonizador");
+
+  let infoSintonizadores = [];
 
   if (!idReporte) {
     btnReporte.style.display = "none";
@@ -100,7 +103,8 @@ document.addEventListener("DOMContentLoaded", () => {
       txtCableCambio: txtCable.value,
       txtPrecioCableCambio: txtPrecioCable.value,
       txtConectorCambio: txtConector.value,
-      txtPrecioConectorCambio: txtPrecioConector.value
+      txtPrecioConectorCambio: txtPrecioConector.value,
+      formulario: infoSintonizadores
     };
 
     for (const [id, value] of Object.entries(parametrosTecnicos)) {
@@ -109,6 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
         input.value = value;
       }
     }
+    pintarSintonizador(infoSintonizadores);
   }
 
   // Función para borrar los valores de los campos de cambio
@@ -214,6 +219,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
       txtPotencia.value = data.potencia || "";
       sintonizadoresData = data.sintonizadores || [];
+      let uniqueSintonizadores = [];
+
+      sintonizadoresData.forEach(element => {
+        if (!uniqueSintonizadores.some(existing => existing.numero_serie === element.numero_serie)) {
+          uniqueSintonizadores.push(element);
+        }
+      });
+
+      sintonizadoresData = uniqueSintonizadores;
+
       txtSintonizador.value = data.sintonizadores.length || 0;
       for (let i = 0; i < slcTriplexor.options.length; i++) {
         if (
@@ -304,6 +319,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const cableFiltrado = JSON.parse(dataCable[0].ficha_instalacion).cable;
 
       const sintonizadores = cableFiltrado.sintonizadores ? cableFiltrado.sintonizadores.length : 0;
+      infoSintonizadores = cableFiltrado.sintonizadores || [];
+      console.log("Sintonizadores:", infoSintonizadores);
 
       const cargador = JSON.parse(cableFiltrado.triplexor.cargador);
       const requerido = JSON.parse(cableFiltrado.triplexor.requerido);
@@ -389,15 +406,57 @@ document.addEventListener("DOMContentLoaded", () => {
     txtSintonizadorCambio.value = numeroSintotizadores;
   }
 
+  async function pintarSintonizador(sintonizadores) {
+    const divSintonizadores = document.getElementById("divSintonizadores");
+    divSintonizadores.innerHTML = ""; // Limpia el 
+
+    let numeroSintonizadores = 0;
+
+    sintonizadores.forEach((element, index) => {
+      numeroSintonizadores++; // 
+
+      const card = document.createElement("div");
+      card.className = "card mt-2";
+      card.innerHTML = `
+        <div class="card-body">
+          <h5 class="card-title">Sintonizador #${numeroSintonizadores}</h5>
+          <p class="card-text"><strong>Código de Barra:</strong> ${element.codigobarra}</p>
+          <p class="card-text"><strong>Marca:</strong> ${element.marca}</p>
+          <p class="card-text"><strong>Modelo:</strong> ${element.modelo}</p>
+          <p class="card-text"><strong>Precio:</strong> ${element.precio}</p>
+          <p class="card-text"><strong>Serie:</strong> ${element.serie}</p>
+          <button class="btn btn-danger btn-sm mt-2 btnEliminar">
+            <i class="fas fa-times"></i> Eliminar
+          </button>
+        </div>
+      `;
+      divSintonizadores.appendChild(card);
+
+      const btnEliminar = card.querySelector(".btnEliminar");
+      btnEliminar.addEventListener("click", function () {
+        const index = sintonizadores.findIndex(
+          sintonizador => sintonizador.codigobarra === element.codigobarra
+        );
+        if (index !== -1) {
+          sintonizadores.splice(index, 1); // Elimina el sintonizador del array
+        }
+        card.remove();
+        numeroSintonizadores--;
+        actualizarContadorSintonizadores();
+      });
+    });
+    actualizarContadorSintonizadores(numeroSintonizadores); // Actualiza el contador visual
+  }
+
   async function AgregarSintotizador() {
     const txtCodigoBarraSintonizador = document.getElementById("txtCodigoBarraSintonizador").value;
     const txtMarcaSintonizador = document.getElementById("txtMarcaSintonizador").value;
     const txtModeloSintonizador = document.getElementById("txtModeloSintonizador").value;
     const txtSerieSintonizador = document.getElementById("txtSerieSintonizador").value;
     const txtPrecioSintonizador = parseFloat(document.getElementById("txtPrecioSintonizador").value) || 0;
-  
+
     numeroSintotizadores++;
-  
+
     const nuevoSintonizador = {
       codigoBarra: txtCodigoBarraSintonizador,
       marca: txtMarcaSintonizador,
@@ -405,27 +464,27 @@ document.addEventListener("DOMContentLoaded", () => {
       serie: txtSerieSintonizador,
       precio: txtPrecioSintonizador,
     };
-  
+
     jsonSintonizador.push(nuevoSintonizador); // Agrega el nuevo sintonizador al array
-  
+
     const card = document.createElement("div");
     card.className = "card mt-2";
     card.innerHTML = `
-      <div class="card-body">
-        <h5 class="card-title">Sintonizador #${numeroSintotizadores}</h5>
-        <p class="card-text"><strong>Código de Barra:</strong> ${txtCodigoBarraSintonizador}</p>
-        <p class="card-text"><strong>Marca:</strong> ${txtMarcaSintonizador}</p>
-        <p class="card-text"><strong>Modelo:</strong> ${txtModeloSintonizador}</p>
-        <p class="card-text"><strong>Precio:</strong> ${txtPrecioSintonizador}</p>
-        <p class="card-text"><strong>Serie:</strong> ${txtSerieSintonizador}</p>
-        <button class="btn btn-danger btn-sm mt-2" id="btnEliminar">
-          <i class="fas fa-times"></i> Eliminar
-        </button>
-      </div>
-    `;
-  
+    <div class="card-body">
+      <h5 class="card-title">Sintonizador #${numeroSintotizadores}</h5>
+      <p class="card-text"><strong>Código de Barra:</strong> ${txtCodigoBarraSintonizador}</p>
+      <p class="card-text"><strong>Marca:</strong> ${txtMarcaSintonizador}</p>
+      <p class="card-text"><strong>Modelo:</strong> ${txtModeloSintonizador}</p>
+      <p class="card-text"><strong>Precio:</strong> ${txtPrecioSintonizador}</p>
+      <p class="card-text"><strong>Serie:</strong> ${txtSerieSintonizador}</p>
+      <button class="btn btn-danger btn-sm mt-2" id="btnEliminar">
+        <i class="fas fa-times"></i> Eliminar
+      </button>
+    </div>
+  `;
+
     document.getElementById("divSintonizadores").appendChild(card);
-  
+
     const btnEliminar = card.querySelector("#btnEliminar");
     btnEliminar.addEventListener("click", function () {
       const index = jsonSintonizador.findIndex(
@@ -438,17 +497,17 @@ document.addEventListener("DOMContentLoaded", () => {
       numeroSintotizadores--;
       actualizarContadorSintonizadores();
     });
-  
     actualizarContadorSintonizadores();
-  }  
+  }
+
 
   async function ArmadoJsonCable() {
     const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
     const result = await response.json();
-  
+
     const soporte = result[0]?.soporte ? JSON.parse(result[0].soporte) : {};
     const nuevoSoporte = { ...soporte };
-  
+
     console.log("Contenido de jsonSintonizador:", jsonSintonizador);
     const dataCable = await FichaInstalacion(idSoporte);
     const cableFiltrado = JSON.parse(dataCable[0].ficha_instalacion).cable;
@@ -462,7 +521,7 @@ document.addEventListener("DOMContentLoaded", () => {
       parametroscable: {
         plan: document.getElementById("txtPlan").value,
         potencia: parseInt(document.getElementById("txtPotencia").value) || 0,
-        sintonizadores: jsonSintonizador, 
+        sintonizadores: jsonSintonizador,
         triplexor: document.getElementById("slcTriplexor").value === "2" ? "activo" :
           (document.getElementById("slcTriplexor").value === "3" ? "pasivo" : "no lleva"),
         splitter: [
@@ -502,15 +561,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
     };
-  
+
     nuevoSoporte.cabl = cableData;
     nuevoSoporte.idcaja = idCaja;
-  
+
     console.log(JSON.stringify(nuevoSoporte, null, 2)); // Verifica el JSON generado
-  
+
     return nuevoSoporte;
   }
-  
 
   async function CompletarSoporteSiestaTodo(idSoporte, JSONsoporte) {
     const ServiciosTotales = await FichaInstalacion(idSoporte);
