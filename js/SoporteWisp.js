@@ -44,13 +44,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Agregar estas constantes al inicio del DOMContentLoaded
   const btnVerMas = document.getElementById("btnInformacion");
+  btnVerMas.type = "button";
   const formularioCambiosRouter = document.getElementById("formularioCambiosRouter");
   const formularioCambiosRepetidor = document.getElementById("formularioCambiosRepetidor");
+  const formularioCambiosAntena = document.getElementById("formularioCambiosAntena");
+
   const cardParametros = document.getElementById("cardParametros");
   const cardParametrosRepetidor = document.getElementById("cardParametrosRepetidor");
+  const cardParametrosAntena = document.getElementById("cardParametrosAntena");
+
+  const chkConfirmacion = document.getElementById("chkConfirmacion");
 
   // Desactivar el botón inicialmente
   btnVerMas.disabled = true;
+  chkConfirmacion.checked = false;
+  chkConfirmacion.disabled = true;
 
   // Función para verificar si hay una opción seleccionada
   function verificarSeleccion() {
@@ -61,22 +69,98 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Agregar estos event listeners dentro del DOMContentLoaded
+  // Función para verificar si todos los campos de un formulario están llenos
+  function verificarCamposLlenos(formulario) {
+    const inputs = formulario.querySelectorAll("input, select, textarea");
+    for (const input of inputs) {
+      if (input.value.trim() === "" && !input.disabled) {
+        chkConfirmacion.checked = false;
+        return;
+      }
+    }
+    chkConfirmacion.checked = true;
+  }
+
+  // Agregar event listeners a los campos de los formularios para verificar si están llenos
+  function agregarEventListenersFormulario(formulario) {
+    const inputs = formulario.querySelectorAll("input, select, textarea");
+    for (const input of inputs) {
+      input.addEventListener("input", () => verificarCamposLlenos(formulario));
+    }
+  }
+
   slcWireless.addEventListener("change", async function () {
     verificarSeleccion();
     const selectedOption = this.options[this.selectedIndex];
     const tipoDispositivo = selectedOption.getAttribute("data-modelo");
     console.log(tipoDispositivo);
+
+    // Ocultar todas las tarjetas
+    cardParametros.style.display = "none";
+    cardParametrosRepetidor.style.display = "none";
+    cardParametrosAntena.style.display = "none";
+    btnVerMas.textContent = "Ver más"; // Resetear el texto del botón
+
     if (tipoDispositivo === "router") {
       formularioCambiosRouter.style.display = "block";
+      formularioCambiosRepetidor.style.display = "none";
+      formularioCambiosAntena.style.display = "none";
+      chkConfirmacion.disabled = false;
+      agregarEventListenersFormulario(formularioCambiosRouter);
       await cargarEnInputs();
-    } else {
+    } else if (tipoDispositivo === "repetidor") {
       formularioCambiosRouter.style.display = "none";
+      formularioCambiosRepetidor.style.display = "block";
+      formularioCambiosAntena.style.display = "none";
+      chkConfirmacion.disabled = false;
+      agregarEventListenersFormulario(formularioCambiosRepetidor);
+      await cargarEnInputs();
+    } else if (tipoDispositivo === "antena") {
+      formularioCambiosRouter.style.display = "none";
+      formularioCambiosRepetidor.style.display = "none";
+      formularioCambiosAntena.style.display = "block";
+      chkConfirmacion.disabled = false;
+      agregarEventListenersFormulario(formularioCambiosAntena);
+      await cargarEnInputs();
+    } else if (tipoDispositivo === "ninguno") {
+      // Restablecer todo a la normalidad
+      formularioCambiosRouter.style.display = "none";
+      formularioCambiosRepetidor.style.display = "none";
+      formularioCambiosAntena.style.display = "none";
+      btnVerMas.disabled = true;
+      chkConfirmacion.disabled = true;
+      txtIp.value = "";
+      txtAcceso.value = "";
+      txtRouterSsid.value = "";
+      txtRouterSeguridad.value = "";
+      txtRouterpuertaEnlace.value = "";
+      txtRouterWan.value = "";
+      txtRouterCodigoBarra.value = "";
+      txtRouterMarca.value = "";
+      txtRouterModelo.value = "";
+      txtRepetidorSsid.value = "";
+      txtRepetidorIp.value = "";
+      txtRepetidorAcceso.value = "";
+      slcRepetidorCondicion.value = "";
+      txtRepetidorMarca.value = "";
+      txtRepetidorModelo.value = "";
+      txtRepetidorSerie.value = "";
+      txtRepetidorPrecio.value = "";
+      txtAntenaMarca.value = "";
+      txtAntenaModelo.value = "";
+      txtAntenaMac.value = "";
+      txtAntenaSerial.value = "";
+      txtAntenaDescripcion.value = "";
+      slcFrecuenciaAntena.value = "";
     }
+    verificarCamposLlenos(formularioCambiosRouter);
+    verificarCamposLlenos(formularioCambiosRepetidor);
+    verificarCamposLlenos(formularioCambiosAntena);
   });
 
   // Modificación del event listener para el botón Ver más
-  btnVerMas.addEventListener("click", function () {
+  btnVerMas.addEventListener("click", function (event) {
+    event.stopPropagation();
     console.log("Botón Ver más presionado");
     const selectedOption = slcWireless.options[slcWireless.selectedIndex];
     const tipoDispositivo = selectedOption.getAttribute("data-modelo");
@@ -99,6 +183,15 @@ document.addEventListener("DOMContentLoaded", () => {
         cardParametrosRepetidor.style.display = "none";
         btnVerMas.textContent = "Ver más";
       }
+    } else if (tipoDispositivo === "antena") {
+      if (cardParametrosAntena.style.display === "none") {
+        cardParametrosAntena.style.display = "block";
+        cargarDatosParametrosAntena();
+        btnVerMas.textContent = "Ocultar";
+      } else {
+        cardParametrosAntena.style.display = "none";
+        btnVerMas.textContent = "Ver más";
+      }
     }
   });
 
@@ -112,20 +205,32 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("paramRouterSeguridad").textContent = txtRouterSeguridad.value;
     document.getElementById("paramRouterpuertaEnlace").textContent = txtRouterpuertaEnlace.value;
     document.getElementById("paramRouterWan").textContent = txtRouterWan.value;
+    document.getElementById("paramRouterCodigoBarra").textContent = txtRouterCodigoBarra.value;
+    document.getElementById("paramRouterMarca").textContent = txtRouterMarca.value;
+    document.getElementById("paramRouterModelo").textContent = txtRouterModelo.value;
   }
 
   function cargarDatosParametrosRepetidor() {
-    document.getElementById("paramRepetidorSsid").textContent = txtRepetidorCambioSsid.value;
-    document.getElementById("paramRepetidorIp").textContent = txtRepetidorCambioIp.value;
-    document.getElementById("paramRepetidorAcceso").textContent = txtRepetidorCambioAcceso.value;
-    document.getElementById("paramRepetidorCondicion").textContent = slcRepetidorCambioCondicion.value;
-    document.getElementById("paramRepetidorMarca").textContent = txtRepetidorCambioMarca.value;
-    document.getElementById("paramRepetidorModelo").textContent = txtRepetidorCambioModelo.value;
-    document.getElementById("paramRepetidorSerie").textContent = txtRepetidorCambioSerie.value;
-    document.getElementById("paramRepetidorPrecio").textContent = txtRepetidorCambioPrecio.value;
+    document.getElementById("paramRepetidorSsid").textContent = txtRepetidorSsid.value;
+    document.getElementById("paramRepetidorIp").textContent = txtRepetidorIp.value;
+    document.getElementById("paramRepetidorAcceso").textContent = txtRepetidorAcceso.value;
+    document.getElementById("paramRepetidorCondicion").textContent = slcRepetidorCondicion.value;
+    document.getElementById("paramRepetidorCodigoBarra").textContent = txtRepetidorCodigoBarra.value;
+    document.getElementById("paramRepetidorMarca").textContent = txtRepetidorMarca.value;
+    document.getElementById("paramRepetidorModelo").textContent = txtRepetidorModelo.value;
+    document.getElementById("paramRepetidorSerie").textContent = txtRepetidorSerie.value;
+    document.getElementById("paramRepetidorPrecio").textContent = txtRepetidorPrecio.value;
   }
 
-  const chkConfirmacion = document.getElementById("chkConfirmacion");
+  function cargarDatosParametrosAntena() {
+    document.getElementById("paramAntenaMarca").textContent = txtAntenaMarca.value;
+    document.getElementById("paramAntenaModelo").textContent = txtAntenaModelo.value;
+    document.getElementById("paramAntenaMac").textContent = txtAntenaMac.value;
+    document.getElementById("paramAntenaSerial").textContent = txtAntenaSerial.value;
+    document.getElementById("paramAntenaDescripcion").textContent = txtAntenaDescripcion.value;
+    document.getElementById("paramAntenaFrecuencia").textContent = slcFrecuenciaAntena.value;
+  }
+
 
 
   chkConfirmacion.addEventListener("change", async () => {
@@ -137,43 +242,128 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   async function completarCamposVacios() {
-    const parametros = {
-      txtBaseNuevo: txtBase.value,
-      txtIpNuevo: txtIp.value,
-      txtAccesoNuevo: txtAcceso.value,
-      txtSenialNuevo: txtSenial.value,
-      txtRouterCambioSsid: txtRouterSsid.value,
-      txtRouterCambioSeguridad: txtRouterSeguridad.value,
-      txtRouterCambiopuertaEnlace: txtRouterpuertaEnlace.value,
-      txtRouterCambioWan: txtRouterWan.value,
-    };
+    const selectedOption = slcWireless.options[slcWireless.selectedIndex];
+    const tipoDispositivo = selectedOption.getAttribute("data-modelo");
 
-    for (const [id, value] of Object.entries(parametros)) {
-      const input = document.getElementById(id);
-      if (input && !input.value) {
-        input.value = value;
+    if (tipoDispositivo === "router") {
+      const parametrosRouter = {
+        txtBaseNuevo: txtBase.value,
+        txtIpNuevo: txtIp.value,
+        txtAccesoNuevo: txtAcceso.value,
+        txtSenialNuevo: txtSenial.value,
+        txtRouterCambioSsid: txtRouterSsid.value,
+        txtRouterCambioSeguridad: txtRouterSeguridad.value,
+        txtRouterCambiopuertaEnlace: txtRouterpuertaEnlace.value,
+        txtRouterCambioWan: txtRouterWan.value,
+        txtRouterCambioCodigoBarra: txtRouterCodigoBarra.value,
+        txtRouterCambioMarca: txtRouterMarca.value,
+        txtRouterCambioModelo: txtRouterModelo.value,
+      };
+
+      for (const [id, value] of Object.entries(parametrosRouter)) {
+        const input = document.getElementById(id);
+        if (input && !input.value) {
+          input.value = value;
+        }
+      }
+    } else if (tipoDispositivo === "repetidor") {
+      const parametrosRepetidor = {
+        txtRepetidorCambioSsid: txtRepetidorSsid.value,
+        txtRepetidorCambioIp: txtRepetidorIp.value,
+        txtRepetidorCambioAcceso: txtRepetidorAcceso.value,
+        slcRepetidorCambioCondicion: slcRepetidorCondicion.value,
+        txtRepetidorCambioCodigoBarra: txtRepetidorCodigoBarra.value,
+        txtRepetidorCambioMarca: txtRepetidorMarca.value,
+        txtRepetidorCambioModelo: txtRepetidorModelo.value,
+        txtRepetidorCambioSerie: txtRepetidorSerie.value,
+        txtRepetidorCambioPrecio: txtRepetidorPrecio.value,
+      };
+
+      for (const [id, value] of Object.entries(parametrosRepetidor)) {
+        const input = document.getElementById(id);
+        if (input && !input.value) {
+          input.value = value;
+        }
+      }
+    } else if (tipoDispositivo === "antena") {
+      const parametrosRepetidor = {
+        txtAntenaMacCambios: txtAntenaMac.value,
+        txtAntenaMarcaCambios: txtAntenaMarca.value,
+        txtAntenaModeloCambios: txtAntenaModelo.value,
+        txtAntenaSerialCambios: txtAntenaSerial.value,
+        slcFrecuenciaAntenaCambios: slcFrecuenciaAntena.value,
+        txtAntenaDescripcionCambios: txtAntenaDescripcion.value,
+      };
+
+      for (const [id, value] of Object.entries(parametrosRepetidor)) {
+        const input = document.getElementById(id);
+        if (input && !input.value) {
+          input.value = value;
+        }
       }
     }
   }
 
   async function borrarCamposVacios() {
-    const campos = [
-      'txtBaseNuevo',
-      'txtIpNuevo',
-      'txtAccesoNuevo',
-      'txtSenialNuevo',
-      'txtRouterCambioSsid',
-      'txtRouterCambioSeguridad',
-      'txtRouterCambiopuertaEnlace',
-      'txtRouterCambioWan'
-    ];
+    const selectedOption = slcWireless.options[slcWireless.selectedIndex];
+    const tipoDispositivo = selectedOption.getAttribute("data-modelo");
 
-    campos.forEach(id => {
-      const input = document.getElementById(id);
-      if (input) {
-        input.value = '';
-      }
-    });
+    if (tipoDispositivo === "router") {
+      const camposRouter = [
+        'txtBaseNuevo',
+        'txtIpNuevo',
+        'txtAccesoNuevo',
+        'txtSenialNuevo',
+        'txtRouterCambioSsid',
+        'txtRouterCambioSeguridad',
+        'txtRouterCambiopuertaEnlace',
+        'txtRouterCambioWan',
+        'txtRouterCambioCodigoBarra',
+        'txtRouterCambioMarca',
+        'txtRouterCambioModelo'
+      ];
+
+      camposRouter.forEach(id => {
+        const input = document.getElementById(id);
+        if (input) {
+          input.value = '';
+        }
+      });
+    } else if (tipoDispositivo === "repetidor") {
+      const camposRepetidor = [
+        'txtRepetidorCambioSsid',
+        'txtRepetidorCambioIp',
+        'txtRepetidorCambioAcceso',
+        'slcRepetidorCambioCondicion',
+        'txtRepetidorCambioCodigoBarra',
+        'txtRepetidorCambioMarca',
+        'txtRepetidorCambioModelo',
+        'txtRepetidorCambioSerie',
+        'txtRepetidorCambioPrecio'
+      ];
+
+      camposRepetidor.forEach(id => {
+        const input = document.getElementById(id);
+        if (input) {
+          input.value = '';
+        }
+      });
+    } else if (tipoDispositivo === "antena") {
+      const camposRepetidor = [
+        'txtAntenaMacCambios',
+        'txtAntenaMarcaCambios',
+        'txtAntenaModeloCambios',
+        'txtAntenaSerialCambios',
+        'txtAntenaDescripcionCambios'
+      ];
+
+      camposRepetidor.forEach(id => {
+        const input = document.getElementById(id);
+        if (input) {
+          input.value = '';
+        }
+      });
+    }
   }
 
   (async function () {
@@ -206,6 +396,8 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       await traerDatosInstalacion(doc, idSoporte);
     }
+
+    mostrarRepetidoresEnModal();
   }
 
   async function traerDatosInstalacion(doct, idSoporte, tiposervicio) {
@@ -223,20 +415,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       const datawisp = await FichaInstalacion(idSoporte);
-      const wispFiltrado = JSON.parse(datawisp[0].ficha_instalacion).parametros;
+      const wispFiltrado = JSON.parse(datawisp[0].ficha_instalacion);
 
       console.log(wispFiltrado);
-      txtPlan.value = wispFiltrado.plan;
+      txtPlan.value = wispFiltrado.parametros.plan;
 
-      console.log(wispFiltrado.base);
-      txtBase.value = wispFiltrado.base[0].nombre;
-      txtBaseNuevo.value = wispFiltrado.base[0].nombre;
+      console.log(wispFiltrado.parametros.base);
+      txtBase.value = wispFiltrado.parametros.base[0].nombre;
+      txtBaseNuevo.value = wispFiltrado.parametros.base[0].nombre;
 
-      console.log(wispFiltrado.subbase[0].nombre);
+      console.log(wispFiltrado.parametros.subbase[0].nombre);
 
-      txtSenial.value = wispFiltrado.signalstrength;
+      txtSenial.value = wispFiltrado.parametros.signalstrength;
 
-      await cargarRouters(wispFiltrado.routers)
+      await cargarRouters(wispFiltrado.parametros.routers);
+      await cargarAntena(wispFiltrado.venta?.antena || wispFiltrado.alquilado?.antena);
     } catch (error) {
       console.error("Error en data de WISP:", error);
     }
@@ -258,7 +451,6 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error en reporte:", error);
     }
   }
-
 
   async function cargarRoutersReporte(data) {
     try {
@@ -297,17 +489,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function cargarDatosParametros() {
-    document.getElementById("paramBase").textContent = txtBase.value;
-    document.getElementById("paramIp").textContent = txtIp.value;
-    document.getElementById("paramAcceso").textContent = txtAcceso.value;
-    document.getElementById("paramSenial").textContent = txtSenial.value;
-    document.getElementById("paramRouterSsid").textContent = txtRouterSsid.value;
-    document.getElementById("paramRouterSeguridad").textContent = txtRouterSeguridad.value;
-    document.getElementById("paramRouterpuertaEnlace").textContent = txtRouterpuertaEnlace.value;
-    document.getElementById("paramRouterWan").textContent = txtRouterWan.value;
-  }
-
   async function deshabilitar() {
     txtIpNuevo.disabled = true;
     txtRouterCambioSsid.disabled = true;
@@ -326,10 +507,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     slcWireless.innerHTML = '<option value="" disabled selected>Seleccione una opción</option>';
 
+    // Agregar la opción "ninguno"
+    const optionNinguno = document.createElement("option");
+    optionNinguno.value = "ninguno";
+    optionNinguno.textContent = "Restablecer Selección";
+    optionNinguno.setAttribute("data-modelo", "ninguno");
+    slcWireless.appendChild(optionNinguno);
+
     routers.forEach(router => {
       const option = document.createElement("option");
       option.value = router.numero; // Usar "numero" como valor del option
-      option.textContent = router.ssid; // Usar "ssid" como texto visible del option
+      option.textContent = `${router.ssid} (${router.modelo})`; // Usar "ssid" y "modelo" como texto visible del option
       option.setAttribute("data-modelo", "router"); // Agregar el atributo data-modelo
       slcWireless.appendChild(option);
     });
@@ -338,13 +526,32 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function cargarRepetidores(repetidores) {
+    console.log("Cargando repetidores:", repetidores); // Verificar los repetidores que se están cargando
+    jsonRepetidores = repetidores;
+
     repetidores.forEach(repetidor => {
       const option = document.createElement("option");
       option.value = repetidor.numero; // Usar "numero" como valor del option
-      option.textContent = repetidor.ssid; // Usar "ssid" como texto visible del option
+      option.textContent = `${repetidor.ssid} (${repetidor.modelo})`; // Usar "ssid" como texto visible del option
       option.setAttribute("data-modelo", "repetidor"); // Agregar el atributo data-modelo
       slcWireless.appendChild(option);
     });
+  }
+
+  async function cargarAntena(antena) {
+    if (!antena) {
+      console.warn("Antena no encontrada.");
+      return;
+    }
+
+    console.log(antena);
+    const option = document.createElement("option");
+    option.value = "antena"; // Usar un valor fijo ya que solo hay una antena
+    option.textContent = `${antena.marca} (${antena.modelo})`;
+    option.setAttribute("data-modelo", "antena");
+    slcWireless.appendChild(option);
+
+    window.antenaDatos = antena;
   }
 
   slcWireless.addEventListener("change", async (event) => {
@@ -360,20 +567,30 @@ document.addEventListener("DOMContentLoaded", () => {
   async function cargarEnInputs() {
     try {
       const selectedValue = parseInt(slcWireless.value);
+      console.log("Selected Value:", selectedValue);
       const coordenada = urlParams.get("coordenada");
       const respuesta = await FichaInstalacion(idSoporte);
       const respuesta2 = await FichaSoporteporDocServCoordenada(txtNrodocumento.value, serv, coordenada);
 
       let wispFiltrado = null;
       let datosgenerales = null;
+      let datosVenta = null;
+      let datosAlquilado = null;
+      let cambios = null;
+
       if (!respuesta2[0]?.soporte || respuesta2[0]?.soporte === "{}" || !JSON.parse(respuesta2[0].soporte)?.WISP) {
         const fichaInstalacion = JSON.parse(respuesta[0]?.ficha_instalacion || "{}");
         wispFiltrado = fichaInstalacion?.parametros?.routers || [];
         datosgenerales = fichaInstalacion?.parametros || null;
+        datosVenta = fichaInstalacion?.venta || null;
+        datosAlquilado = fichaInstalacion?.alquilado || null;
       } else {
         const soporte = JSON.parse(respuesta2[0].soporte);
         wispFiltrado = soporte.WISP.cambios.routers || [];
         datosgenerales = soporte.WISP.parametros || null;
+        datosVenta = soporte.WISP.venta || null;
+        datosAlquilado = soporte.WISP.alquilado || null;
+        cambios = soporte.WISP.cambios || null;
       }
 
       const selectedOption = slcWireless.options[slcWireless.selectedIndex];
@@ -392,42 +609,73 @@ document.addEventListener("DOMContentLoaded", () => {
           txtRouterpuertaEnlace.value = routerseleccionado.puertaenlace;
           txtRouterWan.value = routerseleccionado.wan;
           txtAcceso.value = routerseleccionado.acceso;
+          txtRouterCodigoBarra.value = routerseleccionado.codigobarra;
+          txtRouterMarca.value = routerseleccionado.marca;
+          txtRouterModelo.value = routerseleccionado.modelo;
 
-          // Mostrar los parámetros iniciales en los campos de cambios
-        /*   txtIpNuevo.value = routerseleccionado.lan;
-          txtRouterCambioSsid.value = routerseleccionado.ssid;
-          txtRouterCambioSeguridad.value = routerseleccionado.seguridad;
-          txtRouterCambiopuertaEnlace.value = routerseleccionado.puertaenlace;
-          txtRouterCambioWan.value = routerseleccionado.wan;
-          txtAccesoNuevo.value = routerseleccionado.acceso; */
-
-          // Mostrar el formulario de cambios de router
-          formularioCambiosRouter.style.display = "block";
-          formularioCambiosRepetidor.style.display = "none";
+          if (formularioCambiosRouter) formularioCambiosRouter.style.display = "block";
+          if (formularioCambiosRepetidor) formularioCambiosRepetidor.style.display = "none";
         } else {
           console.warn("No se encontró un router con el valor seleccionado.");
         }
       } else if (tipoDispositivo === "repetidor") {
+        console.log("jsonRepetidores:", jsonRepetidores);
         const repetidorseleccionado = jsonRepetidores.find(
           (repetidor) => repetidor.numero === selectedValue
         );
 
         if (repetidorseleccionado) {
           console.log(repetidorseleccionado);
-          txtRepetidorCambioIp.value = repetidorseleccionado.ip;
-          txtRepetidorCambioSsid.value = repetidorseleccionado.ssid;
-          txtRepetidorCambioAcceso.value = repetidorseleccionado.contrasenia;
-          slcRepetidorCambioCondicion.value = repetidorseleccionado.condicion;
-          txtRepetidorCambioMarca.value = repetidorseleccionado.marca;
-          txtRepetidorCambioModelo.value = repetidorseleccionado.modelo;
-          txtRepetidorCambioSerie.value = repetidorseleccionado.serie;
-          txtRepetidorCambioPrecio.value = repetidorseleccionado.precio;
+          txtRepetidorSsid.value = repetidorseleccionado.ssid;
+          txtRepetidorIp.value = repetidorseleccionado.ip;
+          txtRepetidorAcceso.value = repetidorseleccionado.contrasenia;
+          slcRepetidorCondicion.value = repetidorseleccionado.condicion;
+          txtRepetidorCodigoBarra.value = repetidorseleccionado.codigobarrarepetidor;
+          txtRepetidorMarca.value = repetidorseleccionado.marca;
+          txtRepetidorModelo.value = repetidorseleccionado.modelo;
+          txtRepetidorSerie.value = repetidorseleccionado.serie;
+          txtRepetidorPrecio.value = repetidorseleccionado.precio;
 
-          // Mostrar el formulario de cambios de repetidor
-          formularioCambiosRouter.style.display = "none";
-          formularioCambiosRepetidor.style.display = "block";
+          if (formularioCambiosRouter) formularioCambiosRouter.style.display = "none";
+          if (formularioCambiosRepetidor) formularioCambiosRepetidor.style.display = "block";
         } else {
           console.warn("No se encontró un repetidor con el valor seleccionado.");
+        }
+      } else if (tipoDispositivo === "antena") {
+        let antenaSeleccionada = null;
+
+        if (cambios && cambios.antena) {
+          antenaSeleccionada = cambios.antena;
+        } else if (datosVenta && datosVenta.antena) {
+          antenaSeleccionada = datosVenta.antena;
+        } else if (datosAlquilado && datosAlquilado.antena) {
+          antenaSeleccionada = datosAlquilado.antena;
+        }
+
+        if (antenaSeleccionada) {
+          console.log(antenaSeleccionada);
+          txtAntenaMarca.value = antenaSeleccionada.marca;
+          txtAntenaModelo.value = antenaSeleccionada.modelo;
+          txtAntenaMac.value = antenaSeleccionada.mac;
+          txtAntenaSerial.value = antenaSeleccionada.serial;
+          txtAntenaDescripcion.value = antenaSeleccionada.descripcion;
+
+          // Cargar la frecuencia
+          console.log("Datos generales:", datosgenerales);
+          if (datosgenerales && datosgenerales.frecuencia) {
+            const frecuencia = datosgenerales.frecuencia[0]; // Asumiendo que solo hay una frecuencia
+            console.log(frecuencia);
+            const slcFrecuenciaAntena = document.getElementById("slcFrecuenciaAntena");
+            if (slcFrecuenciaAntena) {
+              slcFrecuenciaAntena.value = frecuencia;
+            }
+          }
+
+          if (formularioCambiosRouter) formularioCambiosRouter.style.display = "none";
+          if (formularioCambiosRepetidor) formularioCambiosRepetidor.style.display = "none";
+          if (formularioCambiosAntena) formularioCambiosAntena.style.display = "block";
+        } else {
+          console.warn("No se encontró una antena con el valor seleccionado.");
         }
       }
     } catch (error) {
@@ -451,6 +699,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Cargar routers en el select
     await cargarRouters(data.cambios.routers);
     await cargarRepetidores(data.cambios.repetidores);
+    await cargarAntena(data.cambios.antena);
   }
 
   async function crearSelectYBoton() {
@@ -493,65 +742,154 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  async function ArmadoJsonWisp() {
-    const Response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
-    const result = await Response.json();
-
-    let soporte = result[0].soporte ? JSON.parse(result[0].soporte) : {};
-
-    const datawisp = await FichaInstalacion(idSoporte);
-    const wispFiltrado = JSON.parse(datawisp[0].ficha_instalacion).parametros;
-
-    const existeClave = Object.keys(soporte).includes(serv);
-
-    if (!existeClave) {
-      soporte[serv] = {
-        parametroscliente: {
-          plan: txtPlan.value,
-          usuario: txtCliente.value,
-          nrodoc: txtNrodocumento.value,
-        },
-        parametros: {
-          base: txtBase.value,
-          routers: JSON.parse(JSON.stringify(wispFiltrado.routers)),
-          signalstrength: txtSenial.value,
-          repetidores: jsonRepetidores,
-          antenas: jsonAntenas
-        },
-        cambios: {
-          nuevabase: txtBaseNuevo.value,
-          signalstrength: txtSenialNuevo.value,
-          routers: await moficadoRuter(wispFiltrado.routers),
-          repetidores: jsonRepetidores,
-          antenas: jsonAntenas
-        },
-      };
-    } else {
-      soporte[serv].parametros.repetidores = jsonRepetidores;
-      soporte[serv].parametros.antenas = jsonAntenas;
-      soporte[serv].cambios.repetidores = jsonRepetidores;
-      soporte[serv].cambios.antenas = jsonAntenas;
-    }
-
-    console.log(soporte);
-    return soporte;
+  function obtenerRutaSoporte(idSoporte) {
+    return `${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`;
   }
 
-  async function moficadoRuter(routers) {
-    console.log(routers);
+  async function ArmadoJsonWisp() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const doc = urlParams.get("doc");
+    const tipoServicio = urlParams.get("tiposervicio");
+    const coordenada = urlParams.get("coordenada");
+
+    const respuesta = await FichaSoporteporDocServCoordenada(doc, tipoServicio, coordenada);
+    const soporteAnterior = respuesta[0]?.soporte ? JSON.parse(respuesta[0].soporte) : null;
+    const idSoporteAnterior = respuesta[0]?.idSoporte;
+
+    const rutaSoporte = obtenerRutaSoporte(idSoporteAnterior);
+    const response = await fetch(rutaSoporte);
+    const result = await response.json();
+    console.log("result:", result);
+
+    const dataWisp = await FichaInstalacion(idSoporte);
+    const wispFiltrado = JSON.parse(dataWisp[0].ficha_instalacion).parametros;
+
+    const soporte = result[0]?.soporte ? JSON.parse(result[0].soporte) : {};
+    console.log("Soporte:", soporte);
+    const nuevoSoporte = { ...soporte };
+
+    // Verificar si el cliente ya ha tenido un soporte registrado
+    const yaTieneSoporte = soporteAnterior && soporteAnterior.WISP && Object.keys(soporteAnterior.WISP).length > 0;
+    console.log("Ya tiene soporte:", yaTieneSoporte);
+
+    // Actualizar repetidores existentes
+    const repetidoresActualizados = await modificadoRepetidor(wispFiltrado.repetidores || []);
+
+    // Filtrar los nuevos repetidores para excluir los que ya existen en la lista de repetidores actualizados
+    const nuevosRepetidoresFiltrados = jsonRepetidores.filter(nuevoRepetidor =>
+      !repetidoresActualizados.some(repetidorActualizado => repetidorActualizado.numero === nuevoRepetidor.numero)
+    );
+
+    // Combinar repetidores actualizados con los nuevos repetidores filtrados
+    const repetidoresCombinados = [...repetidoresActualizados, ...nuevosRepetidoresFiltrados];
+
+    // Actualizar antena
+    const antenaActualizada = await modificadoAntena();
+
+    // Actualizar routers existentes
+    const routersActualizados = await modificadoRouter(soporteAnterior?.WISP?.cambios?.routers || wispFiltrado.routers);
+
+    const wispData = {
+      parametroscliente: {
+        plan: yaTieneSoporte ? (txtPlan.value || soporteAnterior.WISP?.parametroscliente?.plan) : wispFiltrado.plan,
+        usuario: yaTieneSoporte ? (txtCliente.value || soporteAnterior.WISP?.parametroscliente?.usuario) : wispFiltrado.usuario,
+        nrodoc: yaTieneSoporte ? (txtNrodocumento.value || soporteAnterior.WISP?.parametroscliente?.nrodoc) : txtNrodocumento.value,
+      },
+      parametros: {
+        base: yaTieneSoporte ? (txtBase.value || soporteAnterior.WISP?.parametros?.base) : wispFiltrado.base,
+        routers: yaTieneSoporte ? (soporteAnterior.WISP?.parametros?.routers || JSON.parse(JSON.stringify(wispFiltrado.routers))) : JSON.parse(JSON.stringify(wispFiltrado.routers)),
+        signalstrength: yaTieneSoporte ? (txtSenial.value || soporteAnterior.WISP?.parametros?.signalstrength) : wispFiltrado.signalstrength,
+        repetidores: yaTieneSoporte ? (soporteAnterior.WISP?.cambios?.repetidores || repetidoresCombinados) : repetidoresCombinados,
+        frecuencia: yaTieneSoporte ? (soporteAnterior.WISP?.parametros?.frecuencia || wispFiltrado.frecuencia) : wispFiltrado.frecuencia,
+        antena: yaTieneSoporte ? (soporteAnterior.WISP?.cambios?.antena || antenaActualizada) : antenaActualizada,
+      },
+      cambios: {
+        nuevabase: txtBaseNuevo.value || soporteAnterior.WISP?.cambios?.nuevabase,
+        signalstrength: txtSenialNuevo.value || soporteAnterior.WISP?.cambios?.signalstrength,
+        routers: routersActualizados,
+        repetidores: repetidoresCombinados,
+        antena: antenaActualizada
+      },
+    };
+
+    nuevoSoporte.WISP = wispData;
+
+    console.log(nuevoSoporte);
+    return nuevoSoporte;
+  }
+  async function modificadoRouter(routers) {
+    console.log("Routers antes de modificar:", routers);
     const selectedValue = parseInt(slcWireless.value);
+    const selectedOption = slcWireless.options[slcWireless.selectedIndex];
+    const tipoDispositivo = selectedOption.getAttribute("data-modelo");
+
+    if (tipoDispositivo !== "router") {
+      return routers;
+    }
+
     return routers.map(router => {
       if (router.numero === selectedValue) {
-        router.acceso = txtAccesoNuevo.value;
-        router.ssid = txtRouterCambioSsid.value;
-        router.seguridad = txtRouterCambioSeguridad.value;
-        router.lan = txtIpNuevo.value;
-        router.puertaenlace = txtRouterCambiopuertaEnlace.value;
-        router.wan = txtRouterCambioWan.value;
-        console.log(router);
+        console.log("Router antes de actualizar:", router);
+        router.acceso = txtAccesoNuevo.value || router.acceso;
+        router.ssid = txtRouterCambioSsid.value || router.ssid;
+        router.seguridad = txtRouterCambioSeguridad.value || router.seguridad;
+        router.lan = txtIpNuevo.value || router.lan;
+        router.puertaenlace = txtRouterCambiopuertaEnlace.value || router.puertaenlace;
+        router.wan = txtRouterCambioWan.value || router.wan;
+        router.codigobarra = txtRouterCambioCodigoBarra.value || router.codigobarra;
+        router.marca = txtRouterCambioMarca.value || router.marca;
+        router.modelo = txtRouterCambioModelo.value || router.modelo;
+        console.log("Router después de actualizar:", router);
       }
       return router;
     });
+  }
+
+  async function modificadoRepetidor() {
+    if (!jsonRepetidores) {
+      return [];
+    }
+
+    console.log(jsonRepetidores);
+
+    const selectedValue = parseInt(slcWireless.value);
+    const selectedOption = slcWireless.options[slcWireless.selectedIndex];
+    const tipoDispositivo = selectedOption.getAttribute("data-modelo");
+
+    if (tipoDispositivo !== "repetidor") {
+      return jsonRepetidores;
+    }
+
+    return jsonRepetidores.map(repetidor => {
+      if (repetidor.numero === selectedValue) {
+        console.log("Repetidor antes de actualizar:", repetidor);
+        repetidor.ssid = txtRepetidorCambioSsid.value || repetidor.ssid;
+        repetidor.ip = txtRepetidorCambioIp.value || repetidor.ip;
+        repetidor.contrasenia = txtRepetidorCambioAcceso.value || repetidor.contrasenia;
+        repetidor.condicion = slcRepetidorCambioCondicion.value || repetidor.condicion;
+        repetidor.codigobarrarepetidor = txtRepetidorCambioCodigoBarra.value || repetidor.codigobarrarepetidor;
+        repetidor.marca = txtRepetidorCambioMarca.value || repetidor.marca;
+        repetidor.modelo = txtRepetidorCambioModelo.value || repetidor.modelo;
+        repetidor.serie = txtRepetidorCambioSerie.value || repetidor.serie;
+        repetidor.precio = txtRepetidorCambioPrecio.value || repetidor.precio;
+        console.log("Repetidor después de actualizar:", repetidor);
+      }
+      return repetidor;
+    });
+  }
+
+  async function modificadoAntena() {
+    const selectedValue = slcWireless.value;
+    let antenaSeleccionada = {
+      marca: txtAntenaMarcaCambios.value || (window.antenaDatos ? window.antenaDatos.marca : ""),
+      modelo: txtAntenaModeloCambios.value || (window.antenaDatos ? window.antenaDatos.modelo : ""),
+      mac: txtAntenaMacCambios.value || (window.antenaDatos ? window.antenaDatos.mac : ""),
+      serial: txtAntenaSerialCambios.value || (window.antenaDatos ? window.antenaDatos.serial : ""),
+      descripcion: txtAntenaDescripcionCambios.value || (window.antenaDatos ? window.antenaDatos.descripcion : ""),
+      frecuencia: slcFrecuenciaAntenaCambios.value || (window.antenaDatos ? window.antenaDatos.frecuencia : "")
+    };
+
+    return antenaSeleccionada;
   }
 
   async function guardarSoporte(data) {
@@ -587,7 +925,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (await ask("¿Desea guardar la ficha?")) {
       await guardarSoporte(data)
       if (await CompletarSoporte(idSoporte)) {
-        //window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
+        window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
       }
     }
   });
@@ -631,8 +969,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  //Evento de escaneo de código de barras Antena
-  document.getElementById('txtCodigoBarrasAntena').addEventListener("input", async function () {
+  //Evento de escaneo de código de barras antena
+  document.getElementById('txtAntenaMacCambios').addEventListener('input', async function () {
     const codigoBarra = this.value.trim();
 
     if (codigoBarra === "") {
@@ -646,8 +984,8 @@ document.addEventListener("DOMContentLoaded", () => {
       if (Array.isArray(resultado) && resultado.length > 0) {
         const producto = resultado[0];
         if (producto?.marca && producto?.modelo) {
-          document.getElementById('txtMarcaAntena').value = producto.marca;
-          document.getElementById('txtModeloAntena').value = producto.modelo;
+          document.getElementById('txtAntenaMarcaCambios').value = producto.marca;
+          document.getElementById('txtAntenaModeloCambios').value = producto.modelo;
           showToast(`Producto encontrado: ${producto.marca} - ${producto.modelo}`, "SUCCESS");
         } else {
           showToast("Producto no encontrado o datos incompletos.", "INFO");
@@ -659,6 +997,68 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error('Error:', error);
       showToast("Hubo un error al buscar el producto.", "ERROR");
     }
+  });
+
+  //Evento de escaneo de código de barras repetidor
+  document.getElementById('txtRepetidorCambioCodigoBarra').addEventListener('input', async function () {
+    const codigoBarra = this.value.trim();
+
+    if (codigoBarra === "") {
+      return;
+    }
+
+    try {
+      const respuesta = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarra&codigoBarra=${encodeURIComponent(codigoBarra)}`);
+      const resultado = await respuesta.json();
+
+      if (Array.isArray(resultado) && resultado.length > 0) {
+        const producto = resultado[0];
+        if (producto?.marca && producto?.modelo) {
+          document.getElementById('txtRepetidorCambioMarca').value = producto.marca;
+          document.getElementById('txtRepetidorCambioModelo').value = producto.modelo;
+          document.getElementById('txtRepetidorCambioPrecio').value = producto.precio_actual;
+          showToast(`Producto encontrado: ${producto.marca} - ${producto.modelo}`, "SUCCESS");
+        } else {
+          showToast("Producto no encontrado o datos incompletos.", "INFO");
+        }
+      } else {
+        showToast("Producto no encontrado", "INFO");
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      showToast("Hubo un error al buscar el producto.", "ERROR");
+    }
+
+  });
+
+  document.getElementById('txtRouterCambioCodigoBarra').addEventListener('input', async function () {
+    const codigoBarra = this.value.trim();
+
+    if (codigoBarra === "") {
+      return;
+    }
+
+    try {
+      const respuesta = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarra&codigoBarra=${encodeURIComponent(codigoBarra)}`);
+      const resultado = await respuesta.json();
+
+      if (Array.isArray(resultado) && resultado.length > 0) {
+        const producto = resultado[0];
+        if (producto?.marca && producto?.modelo) {
+          document.getElementById('txtRouterCambioMarca').value = producto.marca;
+          document.getElementById('txtRouterCambioModelo').value = producto.modelo;
+          showToast(`Producto encontrado: ${producto.marca} - ${producto.modelo}`, "SUCCESS");
+        } else {
+          showToast("Producto no encontrado o datos incompletos.", "INFO");
+        }
+      } else {
+        showToast("Producto no encontrado", "INFO");
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      showToast("Hubo un error al buscar el producto.", "ERROR");
+    }
+
   });
 
   // Función para cargar repetidores existentes en el modal
@@ -747,6 +1147,8 @@ document.addEventListener("DOMContentLoaded", () => {
       card.querySelector(".btnEliminar").addEventListener("click", function () {
         card.remove();
         jsonRepetidores = jsonRepetidores.filter(rep => rep.numero !== repetidor.numero);
+
+        console.log("respetidores restantes:", jsonRepetidores);
       });
     });
   }
@@ -817,147 +1219,4 @@ document.addEventListener("DOMContentLoaded", () => {
     await AgregarRepetidor();
   });
 
-  // Función para cargar antenas existentes en el modal
-  function mostrarAntenasEnModal() {
-    // Limpia el contenedor antes de agregar las nuevas tarjetas
-    const modalBody = document.getElementById('mdlAntenaBody');
-
-    // Seleccionar solo las tarjetas dinámicas y no el formulario
-    const tarjetasDinamicas = modalBody.querySelectorAll('.card');
-    tarjetasDinamicas.forEach(tarjeta => tarjeta.remove());
-
-    jsonAntenas.forEach(antena => {
-      const card = document.createElement('div');
-      card.className = 'card mt-2';
-      card.innerHTML = `
-      <div class="card-body">
-        <h5 class="card-title"><i class="fa-solid fa-signal" style="color: #0459ad;"></i> ${antena.marca} - ${antena.modelo}</h5>
-        <br>
-        <div class="row">
-          <div class="col-12 mb-2">
-            <p class="card-text" style="color: gray;">
-              Código de Barra:
-              <span style="background-color: #d3d3d3; border-radius: 10px; padding: 2px 5px; color: black;">
-                ${antena.mac}
-              </span>
-            </p>
-          </div>
-          <div class="col-6 mb-2">
-            <p class="card-text" style="color: gray;">
-              Marca:
-              <span style="background-color: #d3d3d3; border-radius: 10px; padding: 2px 5px; color: black;">
-              ${antena.marca}
-              </span>
-            </p>
-          </div>
-          <div class="col-6 mb-2">
-            <p class="card-text" style="color: gray;">
-              Modelo:
-              <span style="background-color: #d3d3d3; border-radius: 10px; padding: 2px 5px; color: black;">
-              ${antena.modelo}
-              </span>
-            </p>
-          </div>
-          <div class="col-6 mb-2">
-            <p class="card-text" style="color: gray;">
-              Serie:
-              <span style="background-color: #d3d3d3; border-radius: 10px; padding: 2px 5px; color: black;">
-                ${antena.serial}
-              </span>
-            </p>
-          </div>
-          <div class="col-6 mb-2">
-            <p class="card-text" style="color: gray;">
-              Frecuencia:
-              <span style="background-color: #d3d3d3; border-radius: 10px; padding: 2px 5px; color: black;">
-                ${antena.frecuencia}
-              </span>
-            </p>
-          </div>
-          <div class="col-12 mb-2">
-            <p class="card-text" style="color: gray;">
-              Descripción:
-              <span style="background-color: #d3d3d3; border-radius: 10px; padding: 2px 5px; color: black;">
-                ${antena.descripcion}
-              </span>
-            </p>
-          </div>
-        </div>
-        <button class="btn btn-danger btn-sm mt-2 btnEliminar">
-          <i class="fas fa-times"></i> Eliminar
-        </button>
-      </div>
-    `;
-
-      modalBody.appendChild(card);
-
-      // Evento para eliminar la antena
-      card.querySelector(".btnEliminar").addEventListener("click", function () {
-        card.remove();
-        jsonAntenas = jsonAntenas.filter(ant => ant.numero !== antena.numero);
-      });
-    });
-  }
-
-  // Función para agregar antenas
-  async function AgregarAntena() {
-    try {
-      const codigoBarra = document.getElementById('txtCodigoBarrasAntena')?.value;
-      const marca = document.getElementById('txtMarcaAntena')?.value;
-      const modelo = document.getElementById('txtModeloAntena')?.value;
-      const serie = document.getElementById('txtSerieAntena')?.value;
-      const frencuencia = document.getElementById('slcFrecuenciaAntena')?.value;
-      const descripcion = document.getElementById('txtDescripcionAntena')?.value;
-
-      if (!codigoBarra || !marca || !modelo || !serie || !frencuencia) {
-        showToast("Por favor, complete todos los campos de la antena.", "WARNING");
-        return;
-      }
-
-      // Verificar si la antena ya existe
-      const antenaExistente = jsonAntenas.find(ant => ant.codigobarraantena === codigoBarra);
-
-      if (antenaExistente) {
-        showToast("La antena con este código de barras ya existe.", "WARNING");
-        return;
-      }
-
-      // Asegurar que el número sea único
-      const antenasExistentes = jsonAntenas.map(ant => ant.numero);
-      const maxNumero = Math.max(0, ...antenasExistentes);
-      const numeroAntenas = maxNumero + 1;
-
-      const antena = {
-        numero: numeroAntenas,
-        marca: marca,
-        modelo: modelo,
-        mac: codigoBarra,
-        serial: serie,
-        frecuencia: frencuencia,
-        descripcion: descripcion
-      };
-
-      jsonAntenas.push(antena);
-      console.log("Nueva antena agregada:", antena);
-
-      // Actualizar la interfaz de usuario
-      mostrarAntenasEnModal();
-
-      // Limpiar el formulario del modal
-      document.getElementById('txtCodigoBarrasAntena').value = '';
-      document.getElementById('txtMarcaAntena').value = '';
-      document.getElementById('txtModeloAntena').value = '';
-      document.getElementById('txtSerieAntena').value = '';
-      document.getElementById('slcFrecuenciaAntena').value = '';
-      document.getElementById('txtDescripcionAntena').value = '';
-    } catch (error) {
-      console.error('Error al agregar antena:', error);
-      showToast("Hubo un error al agregar la antena.", "ERROR");
-    }
-  }
-
-  // Añadir Nueva Antena
-  document.getElementById('btnAñadirAntena').addEventListener('click', async function () {
-    await AgregarAntena();
-  });
 });

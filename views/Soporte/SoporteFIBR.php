@@ -152,27 +152,20 @@
         <!-- Segunda Fila -->
         <h4 class="mb-4">Parámetros Técnicos de Fibra</h4>
 
-        <div class="row g-3 mb-3 align-items-center">
-          <div class="col-mb-4">
+        <div class="">
+          <div class="col-md">
             <div class="form-floating">
-              <select id="slcRpetidor" class="form-select">
+              <select id="slcCaja" class="form-select">
                 <option value="" disabled selected>Seleccione una opción</option>
               </select>
-              <label for="slcRpetidor">Repetidor</label>
+              <label for="slcCaja">Caja</label>
             </div>
           </div>
-        </div>
 
-        <div id="parametrosContainer" style="display: none;">
+          <div id="parametrosContainer" style="display: none;">
 
-          <div class="">
-            <div class="col-md">
-              <div class="form-floating">
-                <select id="slcCaja" class="form-select">
-                  <option value="" disabled selected>Seleccione una opción</option>
-                </select>
-                <label for="slcCaja">Caja</label>
-              </div>
+            <div class="mt-3 mb-3">
+              <h5> Datos del router </h5>
             </div>
 
             <!-- Primera Fila -->
@@ -210,9 +203,6 @@
             </div>
 
             <!-- Segunda Fila -->
-            <div class="mt-3 mb-3">
-              <h5> Datos del router </h5>
-            </div>
             <div class="row g-3 mb-3 align-items-center">
               <div class="col-md-4">
                 <div class="form-floating">
@@ -238,6 +228,18 @@
               <div class="mt-3 mb-3">
                 <h5> Datos del repetidor </h5>
               </div>
+
+              <div class="row g-3 mb-3 align-items-center">
+                <div class="col-mb-4">
+                  <div class="form-floating">
+                    <select id="slcRpetidor" class="form-select">
+                      <option value="" disabled selected>Seleccione una opción</option>
+                    </select>
+                    <label for="slcRpetidor">Repetidor</label>
+                  </div>
+                </div>
+              </div>
+
               <div class="row g-3 mb-3">
                 <div class="col-md-4">
                   <div class="form-floating">
