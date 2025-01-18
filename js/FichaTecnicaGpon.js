@@ -22,24 +22,20 @@ document.addEventListener("DOMContentLoaded", () => {
   let tipoServicio = "";
   let numeroSintotizadores = 0;
   let numeroRepetidores = 0;
-  let jsonCosto = {};
   let jsonData = {};
   let jsonCable = {};
   let jsonRepetidor = [];
   let jsonSintotizador = [];
-  let flagFichaInstalacion = false;
 
   const requiredFields = document.querySelectorAll(".form-control");
 
-  // Validar campos requeridos en tiempo real
   requiredFields.forEach(field => {
     field.addEventListener("input", function () {
       const formGroup = field.closest('.form-floating');
-      const label = formGroup ? formGroup.querySelector('label') : null; // Encontrar el label
-      const asterisk = label ? label.querySelector('.required-asterisk') : null; // Encontrar el asterisco
-      const invalidFeedback = formGroup ? formGroup.querySelector('.invalid-feedback') : null; // El mensaje de error
+      const label = formGroup ? formGroup.querySelector('label') : null;
+      const asterisk = label ? label.querySelector('.required-asterisk') : null;
+      const invalidFeedback = formGroup ? formGroup.querySelector('.invalid-feedback') : null;
 
-      // Comprobar si encontramos el asterisco
       if (asterisk) {
         if (field.value.trim() !== "") {
           asterisk.style.display = "none";
@@ -60,7 +56,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Validar valores negativos en tiempo real para campos positivos
   function validarValorNegativoPositivo(event) {
     const elemento = event.target;
     const min = 0;
@@ -77,7 +72,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Validar valores en tiempo real para campos con rango
   function validarValorRango(event) {
     const elemento = event.target;
     const min = parseFloat(elemento.min);
@@ -99,7 +93,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Asignar eventos de validación en tiempo real
   txtPagoAdelantado.addEventListener("input", validarValorRango);
   txtDescuento.addEventListener("input", validarValorRango);
   document.getElementById("txtPotenciaFibra").addEventListener("input", validarValorRango);
@@ -150,7 +143,6 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("txtPlanCable").value = data[0].paquete;
       document.getElementById("txtIdCaja").value = idCaja;
 
-      // Verificar si existe ficha_instalacion
       if (ficha.ficha_instalacion) {
         const installationData = JSON.parse(ficha.ficha_instalacion);
 
@@ -183,6 +175,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const txtAntenas = document.querySelector("#txtAntenas").value;
     const chkCatv = document.querySelector("#chkCatv").checked;
     const txtDetallesRouter = document.querySelector("#txtDetalleRouter").value;
+    const txtUsuarioRouter = document.querySelector("#txtUsuarioRouter").value;
+    const txtSeguridadRouter = document.querySelector("#txtSeguridadRouter").value;
 
     jsonData = {
       fibraoptica: {
@@ -203,6 +197,8 @@ document.addEventListener("DOMContentLoaded", () => {
           banda: slcBanda.split(","),
           numeroantena: parseInt(txtAntenas),
           catv: chkCatv,
+          ingresouserrouter: txtUsuarioRouter,
+          ingresopass: txtSeguridadRouter
         },
         detalles: txtDetallesRouter,
       },
@@ -503,12 +499,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     await ActualizarCantidadSintotizador();
   }
-  //Evento de escaneo de código de barras fibra óptica
   document.getElementById('txtCodigoBarra').addEventListener('input', async function () {
     const codigoBarra = this.value.trim();
 
     if (codigoBarra === "") {
-      return; // Si está vacío, no hacemos nada
+      return;
     }
 
     try {
@@ -535,12 +530,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  //Evento de escaneo de código de barras repetidor
   document.getElementById('txtCodigoBarrasRepetidor').addEventListener('input', async function () {
     const codigoBarra = this.value.trim();
 
     if (codigoBarra === "") {
-      return; // No hacer nada si el campo está vacío
+      return;
     }
 
     try {
@@ -620,7 +614,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function validarCampos() {
-    // Campos a validar
     const campos = [
       "txtVlan",
       "txtPeriodo",
@@ -646,11 +639,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let esValido = true;
 
-    // Recorrer cada campo y validar
     for (const campo of campos) {
       const elemento = document.getElementById(campo);
 
-      // Validar si el campo está vacío
       if (elemento.value.trim() === "") {
         elemento.classList.add("is-invalid");
         esValido = false;
@@ -658,18 +649,15 @@ document.addEventListener("DOMContentLoaded", () => {
         elemento.classList.remove("is-invalid");
       }
 
-      // Obtener el valor numérico del campo
       const valor = parseFloat(elemento.value);
-      const min = parseFloat(elemento.min);  // Obtener valor mínimo del atributo min
-      const max = parseFloat(elemento.max);  // Obtener valor máximo del atributo max
+      const min = parseFloat(elemento.min);
+      const max = parseFloat(elemento.max);
 
-      // Validar valores negativos (solo si el campo permite negativos)
       if (valor < 0 && elemento.hasAttribute('min') && valor < min) {
         elemento.classList.add("is-invalid");
         esValido = false;
       }
 
-      // Validar valores fuera de rango (solo si el campo tiene min y max definidos)
       if (valor < min || valor > max) {
         elemento.classList.add("is-invalid");
         esValido = false;
@@ -739,7 +727,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     AgregarSintotizador();
 
-    // Limpiar los campos después de agregar un sintonizador
     document.getElementById("txtCodigoBarraSintonizador").value = "";
     document.getElementById("txtMarcaSintonizador").value = "";
     document.getElementById("txtModeloSintonizador").value = "";
@@ -845,7 +832,6 @@ document.addEventListener("DOMContentLoaded", () => {
     statusText.textContent = this.checked ? 'Sí' : 'No';
   });
 
-  //Función para dar formato a la IP
   $(document).ready(function () {
     $('#txtIp, #txtIpRepetidor').mask('0ZZ.0ZZ.0ZZ.0ZZ', {
       translation: {
@@ -856,7 +842,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  //Evento de escaneo de código de barras fibra óptica
   document.getElementById('txtCodigoBarraSintonizador').addEventListener('input', async function () {
     const codigoBarra = this.value.trim();
 

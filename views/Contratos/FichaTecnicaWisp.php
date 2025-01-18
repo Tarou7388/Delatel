@@ -70,8 +70,8 @@ $idContrato = $_GET['idContrato'];
           <div class="col-md">
             <div class="form-floating">
               <select id="slcFrecuenciaParametros" class="form-select" required>
-                <option value="0" selected disabled>Seleccione</option>
-                <option value="2.4GHZ">2.4GHZ</option>
+                <option value="0" disabled>Seleccione</option>
+                <option selected value="2.4GHZ">2.4GHZ</option>
                 <option value="5GHZ">5GHZ</option>
               </select>
               <label for="slcFrecuenciaParametros">Frecuencia <span class="required-asterisk" style="color: red;">*</span></label>
@@ -102,7 +102,7 @@ $idContrato = $_GET['idContrato'];
           <div class="col-md input-group">
             <div class="form-floating">
               <input type="number" id="txtSignalStrengthParametros" class="form-control"
-                placeholder="Signal Strength" required min="-90" max="-20">
+                placeholder="Signal Strength" required min="-90" max="-20" value="-20">
               <div class="invalid-feedback">Por favor, ingrese su valor válido (-90 a -20).</div>
               <label for="txtSignalStrengthParametros">Signal Strength <span class="required-asterisk" style="color: red;">*</span></label>
             </div>
@@ -111,7 +111,7 @@ $idContrato = $_GET['idContrato'];
           <div class="col-md input-group">
             <div class="form-floating">
               <input type="number" id="txtNoiseFloorParametros" class="form-control"
-                placeholder="Noise Floor" required min="-100" max="-30">
+                placeholder="Noise Floor" required min="-100" max="-30" value="-90">
               <div class="invalid-feedback">Por favor, ingrese su valor válido (-100 a -30).</div>
               <label for="txtNoiseFloorParametros">Noise Floor <span class="required-asterisk" style="color: red;">*</span></label>
             </div>
@@ -120,7 +120,7 @@ $idContrato = $_GET['idContrato'];
           <div class="col-md input-group">
             <div class="form-floating">
               <input type="number" id="txtTransmiTccqParametros" class="form-control"
-                placeholder="Transmit CCQ" required min="40" max="100">
+                placeholder="Transmit CCQ" required min="40" max="100" value="40">
               <div class="invalid-feedback">Por favor, ingrese su valor válido (40 a 100).</div>
               <label for="txtTransmiTccqParametros">Transmit CCQ <span class="required-asterisk" style="color: red;">*</span></label>
             </div>
@@ -132,7 +132,7 @@ $idContrato = $_GET['idContrato'];
           <div class="col-md">
             <div class="form-floating">
               <input type="number" id="txtTxRateParametros" class="form-control" placeholder="TX Rate"
-                required min="20.00" max="90.00" step="0.01">
+                required min="20.00" max="90.00" step="0.01" value="20.00">
               <div class="invalid-feedback">Por favor, ingrese su valor válido (20.00 a 90.00).</div>
               <label for="txtTxRateParametros">TX Rate <span class="required-asterisk" style="color: red;">*</span></label>
             </div>
@@ -140,7 +140,7 @@ $idContrato = $_GET['idContrato'];
           <div class="col-md">
             <div class="form-floating">
               <input type="number" id="txtRxRateParametros" class="form-control" placeholder="RX Rate"
-                required min="20.00" max="90.00" step="0.01">
+                required min="20.00" max="90.00" step="0.01" value="20.00">
               <div class="invalid-feedback">Por favor, ingrese su valor válido (20.00 a 90.00).</div>
               <label for="txtRxRateParametros">RX Rate <span class="required-asterisk" style="color: red;">*</span></label>
             </div>

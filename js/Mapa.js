@@ -332,7 +332,7 @@ export async function renderizarCoordenadaMapa(id) {
 
       const img = document.createElement('img');
       img.src = `${config.HOST}image/contrato.png`;
-      
+
       marcador = new google.maps.Marker({
         position: posicion,
         map: mapa,
@@ -347,4 +347,43 @@ export async function renderizarCoordenadaMapa(id) {
   } catch (error) {
     console.error('Error al obtener las coordenadas:', error);
   }
+}
+
+export async function buscarCoordenadassinMapa(latitud, longitud) {
+  const datos = await obtenerDatosAnidado(`${config.HOST}app/controllers/Caja.controllers.php?operacion=listarCajas`);
+  datosCajas = datos;
+
+  const posicionBuscada = new google.maps.LatLng(latitud, longitud);
+  let posicionDentroDeCirculo = false;
+  let idSectorEncontrado = null;
+
+  datosCajas.forEach(subArray => {
+    subArray.forEach(caja => {
+      if (caja.latLng && caja.latLng.length === 2) {
+        const posicionCaja = new google.maps.LatLng(caja.latLng[0], caja.latLng[1]);
+        const circulo = new google.maps.Circle({
+          center: posicionCaja,
+          radius: 1000,
+          map: mapa,
+          strokeColor: "transparent",
+          strokeOpacity: 0,
+          strokeWeight: 0,
+          fillColor: "transparent",
+          fillOpacity: 0
+        });
+        
+        const distancia = google.maps.geometry.spherical.computeDistanceBetween(posicionBuscada, circulo.getCenter());
+        if (distancia <= circulo.getRadius()) {
+          posicionDentroDeCirculo = true;
+          idSectorEncontrado = caja.id_sector;
+        }
+      }
+    });
+  });
+
+  if (!posicionDentroDeCirculo) {
+    console.log("La posición no está dentro de ningún círculo.");
+  }
+
+  return idSectorEncontrado; 
 }

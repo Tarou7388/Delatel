@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById("txtFecha").value = new Date().toISOString().split('T')[0];
 
-  //Adelantar 6 meses al periodo por defecto 
   const txtPeriodo = document.getElementById("txtPeriodo");
   const periodoDate = new Date();
   periodoDate.setMonth(periodoDate.getMonth() + 6);
@@ -16,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const camposRequeridos = document.querySelectorAll(".form-control");
 
-  // Validar campos requeridos en tiempo real
+
   camposRequeridos.forEach(campo => {
     campo.addEventListener("input", () => {
       const grupoFormulario = campo.closest('.form-floating');
@@ -44,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Validar valores en tiempo real para campos con rango
+
   function validarValorRango(event) {
     const elemento = event.target;
     const min = parseFloat(elemento.min);
@@ -66,10 +65,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  //Cargar Datos de la Ficha de Instalación
+
   (async () => {
     try {
-      //Obtener el idCaja
+
       const urlParams = new URLSearchParams(window.location.search);
       const idCaja = urlParams.get('idCaja') || localStorage.getItem('idCaja');
       console.log("idCaja:", idCaja);
@@ -101,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById("txtPlan").value = data[0].paquete;
       document.getElementById("txtIdCaja").value = idCaja;
 
-      // Cargar datos de la ficha de instalación
+
       const fichaInstalacion = JSON.parse(data[0].ficha_instalacion);
       if (!fichaInstalacion || !fichaInstalacion.fibraoptica) {
         showToast('No se encontraron datos de fibra óptica', "INFO");
@@ -116,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   })();
 
-  //Datos de Fibra Optica
+
   async function fibraOptica() {
     const txtIdCaja = document.querySelector("#txtIdCaja").value;
     const slcFilaEntrada = document.querySelector("#slcFilaEntrada").value;
@@ -138,6 +137,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const txtAntenas = document.querySelector("#txtAntenas").value;
     const chkCatv = document.querySelector("#chkCatv").checked;
     const txtDetalles = document.querySelector("#txtDetalles").value;
+    const txtUsuarioRouter = document.querySelector("#txtUsuarioRouter").value;
+    const txtSeguridadRouter = document.querySelector("#txtSeguridadRouter").value;
 
     jsonData = {
       fibraoptica: {
@@ -158,6 +159,8 @@ document.addEventListener('DOMContentLoaded', () => {
           banda: slcBanda.split(","),
           numeroantena: parseInt(txtAntenas),
           catv: chkCatv,
+          ingresouserrouter: txtUsuarioRouter,
+          ingresopass: txtSeguridadRouter
         },
         detalles: txtDetalles,
         repetidores: jsonRepetidor
@@ -170,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  //Datos de Repetidor
+
   async function AgregarRepetidor() {
     const cardContainer = document.getElementById("cardContainer");
     const contenidoCarta = document.getElementById("cardsRow");
@@ -285,7 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
     $("#mdlRepetidor").modal("hide");
   }
 
-  //Evento de escaneo de código de barras fibra óptica
+
   document.getElementById('txtCodigoBarra').addEventListener('input', async function () {
     const codigoBarra = this.value.trim();
 
@@ -350,7 +353,7 @@ document.addEventListener('DOMContentLoaded', () => {
     validarPuerto();
   });
 
-  //Validar campos de la ficha de instalación
+
   function validarCampos() {
     const campos = [
       "txtUsuario",
@@ -374,7 +377,7 @@ document.addEventListener('DOMContentLoaded', () => {
     for (const campo of campos) {
       const elemento = document.getElementById(campo);
 
-      // Validar si el campo está vacío
+
       if (!elemento || elemento.value.trim() === "") {
         if (elemento) {
           elemento.classList.add("is-invalid");
@@ -385,19 +388,19 @@ document.addEventListener('DOMContentLoaded', () => {
         elemento.classList.remove("is-invalid");
       }
 
-      // Validar solo si el campo es numérico
+
       if (!isNaN(elemento.value)) {
         const valor = parseFloat(elemento.value);
         const minimo = elemento.hasAttribute('min') ? parseFloat(elemento.min) : null;
         const maximo = elemento.hasAttribute('max') ? parseFloat(elemento.max) : null;
 
-        // Validar valores negativos (solo si el campo permite negativos)
+
         if (minimo !== null && valor < minimo) {
           elemento.classList.add("is-invalid");
           todosValidos = false;
         }
 
-        // Validar valores fuera de rango (solo si el campo tiene min y max definidos)
+
         if (maximo !== null && valor > maximo) {
           elemento.classList.add("is-invalid");
           todosValidos = false;
@@ -405,13 +408,11 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // Validar Puertos
     validarPuerto();
 
     return todosValidos;
   }
 
-  //Validación de Puerto
   function validarPuerto() {
     const filaEntrada = document.getElementById("slcFilaEntrada").value;
     const columnaEntrada = document.getElementById("txtPuerto").value;
@@ -441,7 +442,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  //Función para guardar la ficha de instalación
   async function Guardar() {
     if (!validarCampos()) {
       showToast("Por favor, llene todos los campos requeridos.", "WARNING");
@@ -482,7 +482,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  //Añadir repetidor
   document.getElementById("btnAñadirRepetidor").addEventListener("click", async function () {
     const codigoBarra = document.getElementById("txtCodigoBarrasRepetidor").value.trim();
     const ssid = document.getElementById("txtSsidRepetidor").value.trim();
@@ -536,17 +535,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  //Boton guardar Ficha de Instalación
   document.getElementById("btnGuardar").addEventListener("click", async () => {
     await Guardar();
   });
 
-  //Cancelar registros de la ficha de instalación
   document.getElementById("btnCancelar").addEventListener("click", () => {
     window.location.href = `${config.HOST}views/Contratos/`;
   });
 
-  //Función para dar formato a la IP
   $(document).ready(function () {
     $('#txtIp, #txtIpRepetidor').mask('0ZZ.0ZZ.0ZZ.0ZZ', {
       translation: {
@@ -557,13 +553,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  //Función para el Catv
   document.getElementById('chkCatv').addEventListener('change', function () {
     var statusText = document.getElementById('statusText');
     statusText.textContent = this.checked ? 'Sí' : 'No';
   });
 
-  // Asignar eventos de validación en tiempo real
   document.getElementById("txtPotenciaFibra").addEventListener("input", validarValorRango);
   document.getElementById("txtVlan").addEventListener("input", validarValorRango);
   document.getElementById("txtAntenas").addEventListener("input", validarValorRango);

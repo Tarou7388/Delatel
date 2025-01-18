@@ -28,35 +28,35 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   async function getQueryParams() {
     try {
-      // Obtén los parámetros de la URL
+
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
       const params = Object.fromEntries(urlParams.entries());
 
-      // Seleccionar el servicio y cargar paquetes
+
       if (params.Servicio) {
         const slcTipoServicio = document.querySelector("#slcTipoServicio");
         if (slcTipoServicio) {
           const optionToSelect = document.querySelector(`#slcTipoServicio option[value="${params.Servicio}"]`);
           if (optionToSelect) {
-            // Selecciona el servicio
-            optionToSelect.selected = true;
-            slcTipoServicio.dispatchEvent(new Event("change")); // Simula el cambio
 
-            // Esperar a que los paquetes se carguen
+            optionToSelect.selected = true;
+            slcTipoServicio.dispatchEvent(new Event("change"));
+
+
             await ListarPaquetes.cargarPaquetesGenerico(params.Servicio, "#slcPaquetes");
 
-            // Seleccionar el paquete específico si está en los parámetros
+
             if (params.Paquete) {
-              const slcPaquetes = document.querySelector("#slcPaquetes");
-              if (slcPaquetes) {
-                const optionToSelectPaquete = document.querySelector(`#slcPaquetes option[value="${params.Paquete}"]`);
-                if (optionToSelectPaquete) {
-                  optionToSelectPaquete.selected = true;
-                  slcPaquetes.dispatchEvent(new Event("change"));
+              const slcPaquetes = $("#slcPaquetes");
+              const waitForOptions = setInterval(() => {
+                if (slcPaquetes.find(`option[value="${params.Paquete}"]`).length) {
+                  slcPaquetes.val(params.Paquete).trigger("change");
+                  clearInterval(waitForOptions);
                 }
-              }
+              }, 100);
             }
+
           }
         }
       }
@@ -69,6 +69,17 @@ window.addEventListener("DOMContentLoaded", async () => {
         const coordenada = document.querySelector("#txtCoordenadasMapa");
         coordenada.value = params.coordenadas;
         coordenada.dispatchEvent(new Event("change", { bubbles: true }));
+        if (params.coordenadas) {
+          const [latitud, longitud] = params.coordenadas.split(',').map(coord => parseFloat(coord.trim()));
+          const idSector = await mapa.buscarCoordenadassinMapa(latitud, longitud);
+          const slcSector = document.querySelector("#slcSector");
+        
+          if (idSector !== null) {
+            slcSector.value = idSector;
+            slcSector.dispatchEvent(new Event('change')); // Dispara el evento change
+          }
+        }
+
       }
 
       if (params.direccion && document.querySelector("#txtDireccion")) {
@@ -116,7 +127,7 @@ window.addEventListener("DOMContentLoaded", async () => {
           } else if (!data[0].id_persona) {
             idPersona = "";
             idEmpresa = data[0].id_empresa;
-            nombre.value = data[0].razon_social; // Cargar la razón social
+            nombre.value = data[0].razon_social;
           }
         } else {
           const response = await fetch(
@@ -166,7 +177,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 
   async function registrarContrato() {
-    console.log(mapa.idCaja) //-------Id de la caja, guardar json
+    console.log(mapa.idCaja)
     if (accesos?.contratos?.crear) {
       const fechaRegistro = new Date().toISOString().split("T")[0];
       const nota = txtNota.value;
@@ -219,7 +230,7 @@ window.addEventListener("DOMContentLoaded", async () => {
               method: "PUT",
               body: JSON.stringify({
                 operacion: "descontarCaja",
-                idCaja: mapa.idCaja, // Correcta estructura
+                idCaja: mapa.idCaja,
               }),
               headers: {
                 "Content-Type": "application/json",
@@ -231,7 +242,7 @@ window.addEventListener("DOMContentLoaded", async () => {
             showToast("¡Contrato registrado correctamente!", "SUCCESS", 1500);
             resetUI();
             tabla.ajax.reload();
-            // Guardar el idCaja en el almacenamiento local
+
             localStorage.setItem('idCaja', mapa.idCaja);
           } catch (error) {
             console.log(error);
@@ -335,7 +346,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 
   async function cargarDatos() {
-    // Función para mostrar/ocultar detalles solo en dispositivos móviles
+
     function alternarDetalles(fila) {
       if (window.innerWidth < 768) {
         const siguienteFila = fila.nextElementSibling;
@@ -355,7 +366,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
 
 
-    // Cargar Sectores
+
     const dataSectores = await fetchSectores();
     dataSectores.forEach((sector) => {
       const option = document.createElement("option");
@@ -367,7 +378,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       slcSectorActualizar.appendChild(option);
     });
 
-    // Inicializar tabla
+
     tabla = new DataTable("#listarContratos", {
       language: {
         url: `https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json`,
@@ -387,12 +398,12 @@ window.addEventListener("DOMContentLoaded", async () => {
         }
       },
       columns: [
-        { data: 0 },  // ID  
-        { data: 1 },  // Cliente
-        { data: 2 },  // Número de Documento
-        { data: 4 },  // Paquete
-        { data: 5 },  // Precio
-        { data: 6 },  // Servicio
+        { data: 0 },
+        { data: 1 },
+        { data: 2 },
+        { data: 4 },
+        { data: 5 },
+        { data: 6 },
         {
           data: null,
           render: function (data, type, row) {
@@ -422,7 +433,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       ],
       order: [[0, 'desc']],
       drawCallback: function (settings) {
-        // Agregar event listeners para las filas
+
         const filas = document.querySelectorAll("#listarContratos tbody tr");
 
         filas.forEach((fila) => {
@@ -431,13 +442,13 @@ window.addEventListener("DOMContentLoaded", async () => {
           });
         });
 
-        // Event listeners para los botones de editar, eliminar, generar PDF, etc.
+
         const botonesPdf = document.querySelectorAll(".btnGenerar");
         const botonesEliminar = document.querySelectorAll(".btnEliminar");
         const botonesFicha = document.querySelectorAll(".btnFicha");
         const botonesEdit = document.querySelectorAll(".btn-edit");
 
-        // Event listeners para el botón de ficha técnica
+
         botonesFicha.forEach((boton) => {
           const idContrato = boton.getAttribute("data-idContrato");
           const icono = document.getElementById(`iconFicha${idContrato}`);
@@ -447,7 +458,7 @@ window.addEventListener("DOMContentLoaded", async () => {
           }
         });
 
-        //Event listeners para el botón de ficha técnica
+
         botonesFicha.forEach((boton) => {
           boton.addEventListener("click", async (event) => {
             const idContrato = event.target.getAttribute("data-idContrato");
@@ -466,10 +477,10 @@ window.addEventListener("DOMContentLoaded", async () => {
               const fichaInstalacion = JSON.parse(data[0].ficha_instalacion);
 
               if (fichaInstalacion && Object.keys(fichaInstalacion).length > 0) {
-                // Cambiar el icono del botón si la ficha está llena
+
                 const icono = document.getElementById(`iconFicha${idContrato}`);
                 icono.classList.replace('fa-file', 'fa-file-circle-check');
-                // Guardar el estado del icono en el almacenamiento local
+
                 localStorage.setItem(`iconFicha${idContrato}`, 'lleno');
 
                 if (tipoServicio === "WISP") {
@@ -486,13 +497,13 @@ window.addEventListener("DOMContentLoaded", async () => {
               }
             } catch (error) {
               console.error("Error al obtener el JSON de la ficha de instalación:", error);
-              // Redirigir a la ruta original en caso de error
+
               window.location.href = `${config.HOST}views/Contratos/${tipoFicha[tipoServicio]}?idContrato=${idContrato}`;
             }
           });
         });
 
-        // Event listeners para el botón de editar
+
         botonesEdit.forEach((boton) => {
           boton.addEventListener("click", (event) => {
             const idContrato = event.target.getAttribute("data-idContrato");
@@ -500,7 +511,7 @@ window.addEventListener("DOMContentLoaded", async () => {
           });
         });
 
-        // Event listeners para el botón de eliminar
+
         botonesEliminar.forEach((boton) => {
           boton.addEventListener("click", async (event) => {
             const idContrato = event.target.getAttribute("data-idContrato");
@@ -524,7 +535,7 @@ window.addEventListener("DOMContentLoaded", async () => {
           });
         });
 
-        // Event listeners para el botón de generar PDF
+
         botonesPdf.forEach((boton) => {
           boton.addEventListener("click", () => {
             const idContrato = boton.getAttribute("data-idContrato");
@@ -665,11 +676,11 @@ window.addEventListener("DOMContentLoaded", async () => {
   });
 
   coordenada.addEventListener("change", async function () {
-    //console.log(coordenada.value);
+
     idSector = mapa.idSector;
     idCaja = mapa.idCaja;
     const optionToSelect = document.querySelector(`#slcSector option[value="${idSector}"]`);
-    //console.log(optionToSelect);
+
     if (optionToSelect) {
       optionToSelect.selected = true;
       const selectElement = document.querySelector("#slcSector");
@@ -713,22 +724,22 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  // Agregar el eventListener al select de tipo servicio
+
   document.querySelector("#slcTipoServicio").addEventListener("change", function () {
-    const idServicio = this.value;  // Obtener el id del servicio seleccionado
+    const idServicio = this.value;
     const btnBuscarCoordenada = document.querySelector("#btnBuscarCoordenadas");
     const sector = document.querySelector("#slcSector");
 
-    if (idServicio === "2") {  // Si el servicio seleccionado es 2
-      btnBuscarCoordenada.disabled = true;  // Deshabilitar el botón
-      sector.disabled = false;  // Habilitar el select de sector
+    if (idServicio === "2") {
+      btnBuscarCoordenada.disabled = true;
+      sector.disabled = false;
     } else {
-      btnBuscarCoordenada.disabled = false;  // Habilitar el botón
-      sector.disabled = true;  // Deshabilitar el select de sector
+      btnBuscarCoordenada.disabled = false;
+      sector.disabled = true;
     }
   });
 
-  // Uso de las funciones genéricas
+
   ListarPaquetes.cargarServiciosGenerico("#slcTipoServicio", () => ListarPaquetes.cargarSelectPaquetesGenerico("#slcTipoServicio", "#slcPaquetes"));
   ListarPaquetes.cargarServiciosGenerico("#slcTipoServicioActualizar", () => ListarPaquetes.cargarSelectPaquetesGenerico("#slcTipoServicioActualizar", "#slcPaquetesActualizar"));
 });
