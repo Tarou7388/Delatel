@@ -115,6 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     jsonSintonizador.push(infoSintonizadores[0]);
+    console.log("Contenido de jsonSintonizador:", infoSintonizadores);
     
     await pintarSintonizador(infoSintonizadores);
   }
@@ -294,14 +295,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function contabilizarSintonizadores(cableFiltrado) {
     let sintonizadorContador = [];
+    console.log("Contenido de cableFiltrado:", cableFiltrado);
   
     cableFiltrado.sintonizadores.forEach((sintonizador) => {
-      if (!sintonizadorContador.some(existing => existing.numero_serie === sintonizador.numero_serie)) {
+      if (!sintonizadorContador.some(existing => existing.serie === sintonizador.serie)) {
         sintonizadorContador.push(sintonizador);
       }
     });
   
-    return [sintonizadorContador];
+    return sintonizadorContador;
   }
   
 
@@ -424,17 +426,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
     sintonizadores.forEach((element, index) => {
       numeroSintonizadores++; // 
+      console.log(element)
 
       const card = document.createElement("div");
       card.className = "card mt-2";
       card.innerHTML = `
         <div class="card-body">
           <h5 class="card-title">Sintonizador #${numeroSintonizadores}</h5>
-          <p class="card-text"><strong>Código de Barra:</strong> ${element[index].codigobarra}</p>
-          <p class="card-text"><strong>Marca:</strong> ${element[index].marca}</p>
-          <p class="card-text"><strong>Modelo:</strong> ${element[index].modelo}</p>
-          <p class="card-text"><strong>Precio:</strong> ${element[index].precio}</p>
-          <p class="card-text"><strong>Serie:</strong> ${element[index].serie}</p>
+          <p class="card-text"><strong>Código de Barra:</strong> ${element.codigobarra}</p>
+          <p class="card-text"><strong>Marca:</strong> ${element.marca}</p>
+          <p class="card-text"><strong>Modelo:</strong> ${element.modelo}</p>
+          <p class="card-text"><strong>Precio:</strong> ${element.precio}</p>
+          <p class="card-text"><strong>Serie:</strong> ${element.serie}</p>
           <button class="btn btn-danger btn-sm mt-2 btnEliminar">
             <i class="fas fa-times"></i> Eliminar
           </button>
