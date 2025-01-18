@@ -41,6 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const formulario = document.getElementById("form-sintonizador");
 
   let infoSintonizadores = [];
+  let jsonSintonizadorOriginal = [];
 
   if (!idReporte) {
     btnReporte.style.display = "none";
@@ -94,7 +95,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Función para completar los campos de cambio con los valores de los parámetros técnicos
   async function completarCamposDeCambio() {
-    console.log();
     const parametrosTecnicos = {
       txtPotenciaCambio: txtPotencia.value,
       txtSintonizadorCambio: parseInt(infoSintonizadores.length),
@@ -114,9 +114,13 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    jsonSintonizador.push(infoSintonizadores[0]);
-    console.log("Contenido de jsonSintonizador:", infoSintonizadores);
-    
+    infoSintonizadores.forEach((sintonizador) => {
+      jsonSintonizador.push(sintonizador);
+      console.log(jsonSintonizador);
+    });
+
+    jsonSintonizadorOriginal = JSON.parse(JSON.stringify(jsonSintonizador));
+
     await pintarSintonizador(infoSintonizadores);
   }
 
@@ -146,6 +150,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     jsonSintonizador = [];
+
   }
 
   function configurarVerMas() {
@@ -201,64 +206,76 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function cargarSoporteAnterior(data, idSoporte) {
     try {
+      // Obtener los datos del soporte por ID
       const respuestaProblema = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
       const dataProblema = await respuestaProblema.json();
+  
+      // Obtener los datos del cliente
       const nombreCliente = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${dataProblema[0].nro_doc}`);
       const dataCliente = await nombreCliente.json();
+  
+      // Obtener la ficha de instalación
       const dataCable = await FichaInstalacion(idSoporte);
       const cableFiltrado = JSON.parse(dataCable[0].ficha_instalacion).cable;
+  
+      // Asignar los valores al formulario
       idCaja = cableFiltrado.idcaja;
       txtCliente.value = dataCliente[0].nombre;
       txtNrodocumento.value = dataProblema[0].nro_doc;
-
+  
       if (dataProblema.length > 0 && dataProblema[0].descripcion_problema) {
         $("#txtaEstadoInicial").val(dataProblema[0].descripcion_problema);
       } else {
         console.warn("No se encontró descripción del problema.");
       }
-    } catch (error) {
-      console.error("Error en descripcion_problema:", error);
-    }
-    try {
-      const dataCable = await FichaInstalacion(idSoporte);
-      const cableFiltrado = JSON.parse(dataCable[0].ficha_instalacion).cable;
-
+  
+      // Asignar más valores específicos
       txtPotencia.value = data.potencia || "";
-      sintonizadoresData = await contabilizarSintonizadores(data.sintonizadores);
-
-      txtSintonizador.value = data.sintonizadores.length || 0;
+      console.log("Contenido de sintonizadores:", data.sintonizadores);
+      
+      infoSintonizadores = await contabilizarSintonizadores(data.sintonizadores);
+      sintonizadoresData = infoSintonizadores;
+      txtSintonizador.value = infoSintonizadores.length;
+  
+      // Asignar el valor seleccionado de Triplexor
       for (let i = 0; i < slcTriplexor.options.length; i++) {
-        if (
-          slcTriplexor.options[i].text.trim().toLowerCase() ===
-          data.triplexor?.trim().toLowerCase()
-        ) {
+        if (slcTriplexor.options[i].text.trim().toLowerCase() === data.triplexor?.trim().toLowerCase()) {
           slcTriplexor.selectedIndex = i;
           break;
         }
       }
+  
+      // Asignar el valor seleccionado de Splitter
       txtNumSpliter.value = data.splitter?.[0]?.cantidad || "";
-
       const tipoSpliter = data.splitter?.[0]?.tipo || 0;
       const opcionesSpliter = slcSpliter.options;
-
+  
       for (let i = 0; i < opcionesSpliter.length; i++) {
         if (opcionesSpliter[i].value == tipoSpliter) {
           slcSpliter.selectedIndex = i;
           break;
         }
       }
+  
+      // Asignar valores al plan y cable
       txtPlan.value = data.plan || "";
       txtCable.value = data.cable?.metrosadicionales || 0;
+  
+      // Calcular y asignar el precio del cable
       txtPrecioCable.value = (data.cable?.metrosadicionales || 0) * (parseFloat(cableFiltrado.cable.preciometro) || 0);
       txtConector.value = data.conector?.numeroconector || 0;
       txtPrecioConector.value = (data.conector?.numeroconector || 0) * (parseFloat(cableFiltrado.conector.precio) || 0);
-      //también para cambios 
+  
+      // Asignar precios de cambio para cable y conector
       txtPrecioCableCambio.value = parseFloat(cableFiltrado.cable.preciometro) || 0;
       txtPrecioConectorCambio.value = parseFloat(cableFiltrado.conector.precio) || 0;
+
+  
     } catch (error) {
-      console.error("Error al asignar valores al formulario:", error);
+      console.error("Error al cargar los datos del soporte:", error);
     }
   }
+  
 
   function mostrarSintonizadoresEnModal() {
     const container = document.getElementById("sintonizadoresContainer");
@@ -276,7 +293,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Sintonizador ${index + 1}</h5>
-            <p class="card-text">Código de Barra: ${sintonizador.codigoBarra || "N/A"}</p>
+            <p class="card-text">Código de Barra: ${sintonizador.codigobarra || "N/A"}</p>
             <p class="card-text">Marca: ${sintonizador.marca || "N/A"}</p>
             <p class="card-text">Modelo: ${sintonizador.modelo || "N/A"}</p>
             <p class="card-text">Precio: ${sintonizador.precio || "N/A"}</p>
@@ -293,11 +310,17 @@ document.addEventListener("DOMContentLoaded", () => {
     return idSoporte;
   };
 
-  async function contabilizarSintonizadores(cableFiltrado) {
+  async function contabilizarSintonizadores(sintonizadores) {
     let sintonizadorContador = [];
-    console.log("Contenido de cableFiltrado:", cableFiltrado);
+    console.log("Contenido de sintonizadores:", sintonizadores);
   
-    cableFiltrado.sintonizadores.forEach((sintonizador) => {
+    // Si no es un arreglo, lo convierte en un arreglo
+    if (!Array.isArray(sintonizadores)) {
+      sintonizadores = [sintonizadores];
+    }
+  
+    // Ahora, sintonizadores es siempre un arreglo
+    sintonizadores.forEach((sintonizador) => {
       if (!sintonizadorContador.some(existing => existing.serie === sintonizador.serie)) {
         sintonizadorContador.push(sintonizador);
       }
@@ -305,7 +328,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
     return sintonizadorContador;
   }
-  
+
 
   async function CargardatosInstalacion(doc, idSoporte) {
     try {
@@ -413,21 +436,21 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function actualizarContadorSintonizadores() {
-    txtSintonizadorCambio.value = parseInt(infoSintonizadores.length);
+    txtSintonizadorCambio.value = parseInt(jsonSintonizador.length);
   }
 
   async function pintarSintonizador(sintonizadores) {
     const divSintonizadores = document.getElementById("divSintonizadores");
-    divSintonizadores.innerHTML = ""; // Limpia el 
-
+    divSintonizadores.innerHTML = "";
+  
     console.log("Contenido de sintonizadores:", sintonizadores);
-
+  
     let numeroSintonizadores = 0;
-
+  
     sintonizadores.forEach((element, index) => {
-      numeroSintonizadores++; // 
-      console.log(element)
-
+      numeroSintonizadores++;
+      console.log(element);
+  
       const card = document.createElement("div");
       card.className = "card mt-2";
       card.innerHTML = `
@@ -443,23 +466,30 @@ document.addEventListener("DOMContentLoaded", () => {
           </button>
         </div>
       `;
+  
+      // Agregar la tarjeta al contenedor
       divSintonizadores.appendChild(card);
-
+  
+      // Asignar el evento de eliminación al botón
       const btnEliminar = card.querySelector(".btnEliminar");
-      btnEliminar.addEventListener("click", async function () {
-        const index = sintonizadores.findIndex(
-          sintonizador => sintonizador.codigobarra === element.codigobarra
+      btnEliminar.addEventListener("click", function () {
+        const index = jsonSintonizador.findIndex(
+          (sintonizador) => sintonizador.serie === element.serie
         );
         if (index !== -1) {
-          sintonizadores.splice(index, 1); // Elimina el sintonizador del array
+          jsonSintonizador.splice(index, 1);
+          console.log("Sintonizador eliminado:", jsonSintonizador.length);
         }
+  
         card.remove();
-        numeroSintonizadores--;
-        await actualizarContadorSintonizadores();
+  
+        actualizarContadorSintonizadores();
       });
     });
+  
     await actualizarContadorSintonizadores();
   }
+  
 
   async function AgregarSintotizador() {
     const txtCodigoBarraSintonizador = document.getElementById("txtCodigoBarraSintonizador").value;
@@ -468,52 +498,54 @@ document.addEventListener("DOMContentLoaded", () => {
     const txtSerieSintonizador = document.getElementById("txtSerieSintonizador").value;
     const txtPrecioSintonizador = parseFloat(document.getElementById("txtPrecioSintonizador").value) || 0;
 
+    // Crear el nuevo sintonizador
     const nuevoSintonizador = {
-      codigoBarra: txtCodigoBarraSintonizador,
+      numero: jsonSintonizador.length + 1,  // El número se incrementa con la longitud del arreglo
+      codigobarra: txtCodigoBarraSintonizador,
       marca: txtMarcaSintonizador,
       modelo: txtModeloSintonizador,
       serie: txtSerieSintonizador,
       precio: txtPrecioSintonizador,
     };
 
-    infoSintonizadores.length ++;
+    // Agregar el nuevo sintonizador al arreglo
+    jsonSintonizador.push(nuevoSintonizador);
 
-    jsonSintonizador.push(nuevoSintonizador); 
-
-    console.log("Contenido de jsonSintonizador:", nuevoSintonizador);
-
+    // Crear la tarjeta visual del sintonizador
     const card = document.createElement("div");
-    card.className = "card mt-2";
+    card.className = "card mt-3 shadow-sm border-light rounded";  // Se agregaron estilos para sombra y borde
     card.innerHTML = `
-    <div class="card-body">
-      <h5 class="card-title">Sintonizador #${infoSintonizadores.length}</h5>
-      <p class="card-text"><strong>Código de Barra:</strong> ${txtCodigoBarraSintonizador}</p>
-      <p class="card-text"><strong>Marca:</strong> ${txtMarcaSintonizador}</p>
-      <p class="card-text"><strong>Modelo:</strong> ${txtModeloSintonizador}</p>
-      <p class="card-text"><strong>Precio:</strong> ${txtPrecioSintonizador}</p>
-      <p class="card-text"><strong>Serie:</strong> ${txtSerieSintonizador}</p>
-      <button class="btn btn-danger btn-sm mt-2" id="btnEliminar">
-        <i class="fas fa-times"></i> Eliminar
-      </button>
-    </div>
-  `;
+      <div class="card-body p-4">
+        <h5 class="card-title text-primary">Sintonizador #${nuevoSintonizador.numero}</h5>
+        <p class="card-text"><strong>Código de Barra:</strong> ${txtCodigoBarraSintonizador}</p>
+        <p class="card-text"><strong>Marca:</strong> ${txtMarcaSintonizador}</p>
+        <p class="card-text"><strong>Modelo:</strong> ${txtModeloSintonizador}</p>
+        <p class="card-text"><strong>Precio:</strong> $${txtPrecioSintonizador.toFixed(2)}</p>  <!-- Mejor formato para el precio -->
+        <p class="card-text"><strong>Serie:</strong> ${txtSerieSintonizador}</p>
+        <button class="btn btn-danger btn-sm mt-3 btnEliminar">
+          <i class="fas fa-times"></i> Eliminar
+        </button>
+      </div>
+    `;    
 
     document.getElementById("divSintonizadores").appendChild(card);
 
-    const btnEliminar = card.querySelector("#btnEliminar");
+    const btnEliminar = card.querySelector(".btnEliminar");
     btnEliminar.addEventListener("click", function () {
       const index = jsonSintonizador.findIndex(
-        sintonizador => sintonizador.codigoBarra === txtCodigoBarraSintonizador
+        (sintonizador) => sintonizador.serie === txtSerieSintonizador
       );
       if (index !== -1) {
-        jsonSintonizador.splice(index, 1); // Elimina el sintonizador del array
+        // Eliminar el sintonizador del arreglo
+        jsonSintonizador.splice(index, 1);
+        console.log("Sintonizador eliminado:", jsonSintonizador);
       }
       card.remove();
-      infoSintonizadores.length--;
       actualizarContadorSintonizadores();
     });
     actualizarContadorSintonizadores();
   }
+
 
   async function ArmadoJsonCable() {
     const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
@@ -535,7 +567,7 @@ document.addEventListener("DOMContentLoaded", () => {
       parametroscable: {
         plan: document.getElementById("txtPlan").value,
         potencia: parseInt(document.getElementById("txtPotencia").value) || 0,
-        sintonizadores: jsonSintonizador,
+        sintonizadores: jsonSintonizadorOriginal,
         triplexor: document.getElementById("slcTriplexor").value === "2" ? "activo" :
           (document.getElementById("slcTriplexor").value === "3" ? "pasivo" : "no lleva"),
         splitter: [
@@ -556,7 +588,7 @@ document.addEventListener("DOMContentLoaded", () => {
       cambioscable: {
         plan: document.getElementById("txtPlan").value,
         potencia: parseInt(document.getElementById("txtPotenciaCambio").value) || 0,
-        sintonizadores: jsonSintonizador, // También aquí si es necesario
+        sintonizadores: jsonSintonizador,
         triplexor: document.getElementById("slcTriplexorCambio").value === "2" ? "activo" :
           (document.getElementById("slcTriplexorCambio").value === "3" ? "pasivo" : "no lleva"),
         splitter: [
@@ -575,6 +607,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
     };
+
+    console.log(cableData);
 
     nuevoSoporte.cabl = cableData;
     nuevoSoporte.idcaja = idCaja;
