@@ -154,7 +154,7 @@
             </select>
           </div>
           <div class="col-md-2 d-flex align-items-end">
-            <button id="btnInformacion" class="btn btn-primary">Ver más</button>
+            <button id="btnInformacion" class="btn btn-dark">Ver más</button>
           </div>
         </div>
 
@@ -384,20 +384,19 @@
           <div class="card mt-4">
             <div class="card-body">
               <h5 class="card-title">Parámetros del Router</h5>
-              <p class="card-text">
-                <!-- Aquí se mostrarán los datos de los parámetros -->
-                <strong>Base:</strong> <span id="paramBase"></span><br>
-                <strong>IP:</strong> <span id="paramIp"></span><br>
-                <strong>Acceso:</strong> <span id="paramAcceso"></span><br>
-                <strong>Señal:</strong> <span id="paramSenial"></span><br>
-                <strong>Router SSID:</strong> <span id="paramRouterSsid"></span><br>
-                <strong>Seguridad:</strong> <span id="paramRouterSeguridad"></span><br>
-                <strong>Puerta de Enlace:</strong> <span id="paramRouterpuertaEnlace"></span><br>
-                <strong>WAN:</strong> <span id="paramRouterWan"></span><br>
-                <strong>Código de Barra:</strong><span id="paramRouterCodigoBarra"></span><br>
-                <strong>Marca:</strong> <span id="paramRouterMarca"></span><br>
-                <strong>Modelo</strong> <span id="paramRouterModelo"></span><br>
-              </p>
+              <div class="row">
+                <div class="col-6"><strong>Base:</strong> <span id="paramBase"></span></div>
+                <div class="col-6"><strong>IP:</strong> <span id="paramIp"></span></div>
+                <div class="col-6"><strong>Acceso:</strong> <span id="paramAcceso"></span></div>
+                <div class="col-6"><strong>Señal:</strong> <span id="paramSenial"></span></div>
+                <div class="col-6"><strong>Router SSID:</strong> <span id="paramRouterSsid"></span></div>
+                <div class="col-6"><strong>Seguridad:</strong> <span id="paramRouterSeguridad"></span></div>
+                <div class="col-6"><strong>Puerta de Enlace:</strong> <span id="paramRouterpuertaEnlace"></span></div>
+                <div class="col-6"><strong>WAN:</strong> <span id="paramRouterWan"></span></div>
+                <div class="col-6"><strong>Código de Barra:</strong> <span id="paramRouterCodigoBarra"></span></div>
+                <div class="col-6"><strong>Marca:</strong> <span id="paramRouterMarca"></span></div>
+                <div class="col-6"><strong>Modelo:</strong> <span id="paramRouterModelo"></span></div>
+              </div>
             </div>
           </div>
         </div>
@@ -407,18 +406,17 @@
           <div class="card mt-4">
             <div class="card-body">
               <h5 class="card-title">Parámetros del Repetidor</h5>
-              <p class="card-text">
-                <!-- Aquí se mostrarán los datos de los parámetros del repetidor -->
-                <strong>SSID:</strong> <span id="paramRepetidorSsid"></span><br>
-                <strong>IP:</strong> <span id="paramRepetidorIp"></span><br>
-                <strong>Acceso:</strong> <span id="paramRepetidorAcceso"></span><br>
-                <strong>Condición:</strong> <span id="paramRepetidorCondicion"></span><br>
-                <strong>Código de Barra:</strong> <span id="paramRepetidorCodigoBarra"></span><br>
-                <strong>Marca:</strong> <span id="paramRepetidorMarca"></span><br>
-                <strong>Modelo:</strong> <span id="paramRepetidorModelo"></span><br>
-                <strong>Serie:</strong> <span id="paramRepetidorSerie"></span><br>
-                <strong>Precio:</strong> <span id="paramRepetidorPrecio"></span><br>
-              </p>
+              <div class="row">
+                <div class="col-6"><strong>SSID:</strong> <span id="paramRepetidorSsid"></span></div>
+                <div class="col-6"><strong>IP:</strong> <span id="paramRepetidorIp"></span></div>
+                <div class="col-6"><strong>Acceso:</strong> <span id="paramRepetidorAcceso"></span></div>
+                <div class="col-6"><strong>Condición:</strong> <span id="paramRepetidorCondicion"></span></div>
+                <div class="col-6"><strong>Código de Barra:</strong> <span id="paramRepetidorCodigoBarra"></span></div>
+                <div class="col-6"><strong>Marca:</strong> <span id="paramRepetidorMarca"></span></div>
+                <div class="col-6"><strong>Modelo:</strong> <span id="paramRepetidorModelo"></span></div>
+                <div class="col-6"><strong>Serie:</strong> <span id="paramRepetidorSerie"></span></div>
+                <div class="col-6"><strong>Precio:</strong> <span id="paramRepetidorPrecio"></span></div>
+              </div>
             </div>
           </div>
         </div>
@@ -428,14 +426,14 @@
           <div class="card mt-4">
             <div class="card-body">
               <h5 class="card-title">Parámetros de la Antena</h5>
-              <p class="card-text">
-                <strong>Mac:</strong> <span id="paramAntenaMac"></span><br>
-                <strong>Marca:</strong> <span id="paramAntenaMarca"></span><br>
-                <strong>Modelo:</strong> <span id="paramAntenaModelo"></span><br>
-                <strong>Serie:</strong> <span id="paramAntenaSerial"></span><br>
-                <strong>Frecuencia:</strong> <span id="paramAntenaFrecuencia"></span><br>
-                <strong>Descripción:</strong> <span id="paramAntenaDescripcion"></span><br>
-              </p>
+              <div class="row">
+                <div class="col-6"><strong>Mac:</strong> <span id="paramAntenaMac"></span></div>
+                <div class="col-6"><strong>Marca:</strong> <span id="paramAntenaMarca"></span></div>
+                <div class="col-6"><strong>Modelo:</strong> <span id="paramAntenaModelo"></span></div>
+                <div class="col-6"><strong>Serie:</strong> <span id="paramAntenaSerial"></span></div>
+                <div class="col-6"><strong>Frecuencia:</strong> <span id="paramAntenaFrecuencia"></span></div>
+                <div class="col-6"><strong>Descripción:</strong> <span id="paramAntenaDescripcion"></span></div>
+              </div>
             </div>
           </div>
         </div>
@@ -458,22 +456,24 @@
           <div class="row g-2 mb-2">
             <div class="col-md">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtBaseNuevo" placeholder="Fecha" disabled>
+                <input type="text" class="form-control" id="txtBaseNuevo" placeholder="Base" disabled>
                 <label>Base</label>
               </div>
             </div>
 
             <div class="col-md">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtIpNuevo" placeholder="Fecha">
-                <label>IP (Lan)</label>
+                <input type="text" class="form-control" id="txtIpNuevo" placeholder="IP (Lan)">
+                <label>IP (Lan) <span class="required-asterisk" style="color: red;">*</span></label>
+                <div class="invalid-feedback">Por favor, complete el campo.</div>
               </div>
             </div>
 
             <div class="col-md">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtAccesoNuevo" placeholder="Fecha">
-                <label>Acceso (Lan)</label>
+                <input type="text" class="form-control" id="txtAccesoNuevo" placeholder="Acceso (Lan)">
+                <label>Acceso (Lan) <span class="required-asterisk" style="color: red;">*</span></label>
+                <div class="invalid-feedback">Por favor, complete el campo.</div>
               </div>
             </div>
           </div>
@@ -481,23 +481,25 @@
           <div class="row g-2 mb-2">
             <div class="col-md">
               <div class="form-floating">
-                <input type="number" class="form-control" id="txtSenialNuevo" placeholder="Fecha" min="-90" max="-20">
+                <input type="number" class="form-control" id="txtSenialNuevo" placeholder="Señal (ST)" min="-90" max="-20">
                 <div class="invalid-feedback">Por favor, ingrese su valor válido (-90 a -20).</div>
-                <label>Señal (ST)</label>
+                <label>Señal (ST) <span class="required-asterisk" style="color: red;">*</span></label>
               </div>
             </div>
 
             <div class="col-md">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtRouterCambioSsid" placeholder="Base">
-                <label>Router SSID (Nombre)</label>
+                <input type="text" class="form-control" id="txtRouterCambioSsid" placeholder="SSID">
+                <label>Router SSID (Nombre) <span class="required-asterisk" style="color: red;">*</span></label>
+                <div class="invalid-feedback">Por favor, complete el campo.</div>
               </div>
             </div>
 
             <div class="col-md">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtRouterCambioSeguridad" placeholder="IP">
-                <label>Seguridad (Clave)</label>
+                <input type="text" class="form-control" id="txtRouterCambioSeguridad" placeholder="SEguridad">
+                <label>Seguridad (Clave) <span class="required-asterisk" style="color: red;">*</span></label>
+                <div class="invalid-feedback">Por favor, complete el campo.</div>
               </div>
             </div>
           </div>
@@ -505,15 +507,17 @@
           <div class="row g-2 mb-2">
             <div class="col-md">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtRouterCambiopuertaEnlace" placeholder="Señal">
-                <label>Puerta de Enlace</label>
+                <input type="text" class="form-control" id="txtRouterCambiopuertaEnlace" placeholder="Puerta de Enlace">
+                <label>Puerta de Enlace <span class="required-asterisk" style="color: red;">*</span></label>
+                <div class="invalid-feedback">Por favor, complete la Puerta de Enlace.</div>
               </div>
             </div>
 
             <div class="col-md">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtRouterCambioWan" placeholder="Señal">
-                <label>WAN</label>
+                <input type="text" class="form-control" id="txtRouterCambioWan" placeholder="Wan">
+                <label>WAN <span class="required-asterisk" style="color: red;">*</span></label>
+                <div class="invalid-feedback">Por favor, complete el campo.</div>
               </div>
             </div>
 
@@ -521,7 +525,8 @@
               <div class="input-group">
                 <div class="form-floating">
                   <input type="text" class="form-control" id="txtRouterCambioCodigoBarra" placeholder="Código de Barra">
-                  <label>Código de Barra</label>
+                  <label>Código de Barra <span class="required-asterisk" style="color: red;">*</span></label>
+                  <div class="invalid-feedback">Por favor, complete el campo.</div>
                 </div>
                 <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
               </div>
@@ -553,21 +558,24 @@
             <div class="col-md-4">
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtRepetidorCambioSsid" placeholder="SSID">
-                <label>Repetidor SSID (Nombre)</label>
+                <label>Repetidor SSID (Nombre) <span class="required-asterisk" style="color: red;">*</span></label>
+                <div class="invalid-feedback">Por favor, complete el campo.</div>
               </div>
             </div>
 
             <div class="col-md-4">
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtRepetidorCambioIp" placeholder="IP">
-                <label>IP (Lan)</label>
+                <label>IP (Lan) <span class="required-asterisk" style="color: red;">*</span></label>
+                <div class="invalid-feedback">Por favor, complete el campo.</div>
               </div>
             </div>
 
             <div class="col-md-4">
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtRepetidorCambioAcceso" placeholder="Acceso">
-                <label>Acceso (Lan)</label>
+                <label>Acceso (Lan) <span class="required-asterisk" style="color: red;">*</span></label>
+                <div class="invalid-feedback">Por favor, complete el campo.</div>
               </div>
             </div>
           </div>
@@ -580,7 +588,7 @@
                   <option value="venta">Venta</option>
                   <option value="alquilado">Alquilado</option>
                 </select>
-                <label>Condición</label>
+                <label>Condición <span class="required-asterisk" style="color: red;">*</span></label>
               </div>
             </div>
 
@@ -588,7 +596,8 @@
               <div class="input-group">
                 <div class="form-floating">
                   <input type="text" class="form-control" id="txtRepetidorCambioCodigoBarra" placeholder="Código de Barra">
-                  <label>Código de Barra</label>
+                  <label>Código de Barra <span class="required-asterisk" style="color: red;">*</span></label>
+                  <div class="invalid-feedback">Por favor, complete el campo.</div>
                 </div>
                 <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
               </div>
@@ -596,8 +605,9 @@
 
             <div class="col-md-4">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtRepetidorCambioSerie" placeholder="Serie" disabled>
-                <label>Serie</label>
+                <input type="text" class="form-control" id="txtRepetidorCambioSerie" placeholder="Serie">
+                <label>Serie <span class="required-asterisk" style="color: red;">*</span></label>
+                <div class="invalid-feedback">Por favor, complete el campo.</div>
               </div>
             </div>
           </div>
@@ -681,7 +691,7 @@
             <div class="col-12">
               <div class="form-floating">
                 <textarea class="form-control" id="txtAntenaDescripcionCambios" placeholder="Descripción" style="height: 100px"></textarea>
-                <label for="txtDescripcionAntena">Descripción</label>
+                <label for="txtDescripcionAntena">Descripción <span class="required-asterisk" style="color: red;">*</span></label>
                 <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
               </div>
             </div>
@@ -703,7 +713,8 @@
           <div class="col-md">
             <div class="form-floating">
               <textarea type="text" class="form-control" id="txtaProceSolucion" style="height: 100px" placeholder="Fecha" required></textarea>
-              <label>Procedimiento de Solución</label>
+              <label>Procedimiento de Solución <span class="required-asterisk" style="color: red;">*</span></label>
+              <div class="invalid-feedback">Por favor, complete el campo.</div>
             </div>
           </div>
         </div> <!-- Fin de la Tercera Fila -->

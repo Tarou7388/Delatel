@@ -34,26 +34,29 @@ document.addEventListener("DOMContentLoaded", () => {
   const txtRouterCambiopuertaEnlace = document.getElementById("txtRouterCambiopuertaEnlace");
   const txtRouterCambioWan = document.getElementById("txtRouterCambioWan");
 
-  //Definicion de constantes
-  const solutionTextarea = document.getElementById("txtaProceSolucion");
-  const txtaEstadoInicial = document.getElementById("txtaEstadoInicial");
-
-  let idSoporte = -1;
-  let jsonRepetidores = [];
-  let jsonAntenas = [];
-
-  // Agregar estas constantes al inicio del DOMContentLoaded
-  const btnVerMas = document.getElementById("btnInformacion");
-  btnVerMas.type = "button";
   const formularioCambiosRouter = document.getElementById("formularioCambiosRouter");
   const formularioCambiosRepetidor = document.getElementById("formularioCambiosRepetidor");
   const formularioCambiosAntena = document.getElementById("formularioCambiosAntena");
 
+  //Definicion de constantes
+  const solutionTextarea = document.getElementById("txtaProceSolucion");
+  const txtaEstadoInicial = document.getElementById("txtaEstadoInicial");
+
+  //Card
   const cardParametros = document.getElementById("cardParametros");
   const cardParametrosRepetidor = document.getElementById("cardParametrosRepetidor");
   const cardParametrosAntena = document.getElementById("cardParametrosAntena");
 
+  // Agregar estas constantes al inicio del DOMContentLoaded
+  const btnVerMas = document.getElementById("btnInformacion");
+  btnVerMas.type = "button";
+
   const chkConfirmacion = document.getElementById("chkConfirmacion");
+  const camposRequeridos = document.querySelectorAll(".form-control");
+
+  let idSoporte = -1;
+  let jsonRepetidores = [];
+  let jsonAntenas = [];
 
   // Desactivar el botón inicialmente
   btnVerMas.disabled = true;
@@ -93,7 +96,6 @@ document.addEventListener("DOMContentLoaded", () => {
     verificarSeleccion();
     const selectedOption = this.options[this.selectedIndex];
     const tipoDispositivo = selectedOption.getAttribute("data-modelo");
-    console.log(tipoDispositivo);
 
     // Ocultar todas las tarjetas
     cardParametros.style.display = "none";
@@ -138,7 +140,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // Modificación del event listener para el botón Ver más
   btnVerMas.addEventListener("click", function (event) {
     event.stopPropagation();
-    console.log("Botón Ver más presionado");
     const selectedOption = slcWireless.options[slcWireless.selectedIndex];
     const tipoDispositivo = selectedOption.getAttribute("data-modelo");
 
@@ -207,8 +208,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("paramAntenaDescripcion").textContent = txtAntenaDescripcion.value;
     document.getElementById("paramAntenaFrecuencia").textContent = slcFrecuenciaAntena.value;
   }
-
-
 
   chkConfirmacion.addEventListener("change", async () => {
     if (chkConfirmacion.checked) {
@@ -342,6 +341,34 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // Validar campos requeridos en tiempo real
+  camposRequeridos.forEach(campo => {
+    campo.addEventListener("input", () => {
+      const grupoFormulario = campo.closest('.form-floating');
+      const etiqueta = grupoFormulario?.querySelector('label');
+      const asterisco = etiqueta?.querySelector('.required-asterisk');
+      const mensajeError = grupoFormulario?.querySelector('.invalid-feedback');
+
+      if (asterisco) {
+        if (campo.value.trim() !== "") {
+          asterisco.style.display = "none";
+          campo.classList.remove("is-invalid");
+          if (mensajeError) {
+            mensajeError.style.display = "none";
+          }
+        } else {
+          asterisco.style.display = "inline";
+          campo.classList.add("is-invalid");
+          if (mensajeError) {
+            mensajeError.style.display = "block";
+          }
+        }
+      } else {
+        console.warn("Asterisco no encontrado para el campo:", campo);
+      }
+    });
+  });
+
   (async function () {
     const urlParams = new URLSearchParams(window.location.search);
     idSoporte = urlParams.get("idsoporte");
@@ -349,10 +376,6 @@ document.addEventListener("DOMContentLoaded", () => {
       await cargarProblema(idSoporte);
       await crearSelectYBoton();
       await ObtenerValores();
-    } else {
-      const urlParams = new URLSearchParams(window.location.search);
-      urlParams.get("idReporte");
-      await reporte(urlParams.get("idReporte"));
     }
   })();
 
@@ -392,16 +415,9 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const datawisp = await FichaInstalacion(idSoporte);
       const wispFiltrado = JSON.parse(datawisp[0].ficha_instalacion);
-
-      console.log(wispFiltrado);
       txtPlan.value = wispFiltrado.parametros.plan;
-
-      console.log(wispFiltrado.parametros.base);
       txtBase.value = wispFiltrado.parametros.base[0].nombre;
       txtBaseNuevo.value = wispFiltrado.parametros.base[0].nombre;
-
-      console.log(wispFiltrado.parametros.subbase[0].nombre);
-
       txtSenial.value = wispFiltrado.parametros.signalstrength;
 
       await cargarRouters(wispFiltrado.parametros.routers);
@@ -409,73 +425,6 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (error) {
       console.error("Error en data de WISP:", error);
     }
-  }
-
-  async function reporte(idReporte) {
-    try {
-      const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idReporte}`);
-      const data = await respuesta.json();
-      const soporte = JSON.parse(data[0].soporte);
-
-      await cargarRoutersReporte(data[0]);
-
-      txtNrodocumento.value = data[0].nro_doc;
-      txtCliente.value = soporte.WISP.parametroscliente.usuario;
-      txtPlan.value = soporte.WISP.parametroscliente.plan;
-      deshabilitar();
-    } catch (error) {
-      console.error("Error en reporte:", error);
-    }
-  }
-
-  async function cargarRoutersReporte(data) {
-    try {
-      // Parsear el campo "soporte" para obtener el objeto con los routers y repetidores
-      const soporte = JSON.parse(data.soporte);
-
-      // Obtener la lista de routers y repetidores desde "soporte"
-      const routers = soporte.WISP.parametros.routers;
-      const repetidores = soporte.WISP.parametros.repetidores;
-
-      // Limpiar el contenido del select
-      slcWireless.innerHTML = '';
-      slcWireless.innerHTML = '<option value="" disabled selected>Seleccione una opción</option>';
-
-      // Iterar sobre los routers y crear las opciones del select
-      routers.forEach(router => {
-        const option = document.createElement("option");
-        option.value = router.numero;
-        option.textContent = router.ssid;
-        option.setAttribute("data-modelo", "router"); // Agregar el atributo data-modelo
-        slcWireless.appendChild(option);
-      });
-
-      // Iterar sobre los repetidores y crear las opciones del select
-      repetidores.forEach(repetidor => {
-        const option = document.createElement("option");
-        option.value = repetidor.numero;
-        option.textContent = repetidor.ssid;
-        option.setAttribute("data-modelo", "repetidor"); // Agregar el atributo data-modelo
-        slcWireless.appendChild(option);
-      });
-
-      verificarSeleccion();
-    } catch (error) {
-      console.error("Error al cargar los routers y repetidores:", error);
-    }
-  }
-
-  async function deshabilitar() {
-    txtIpNuevo.disabled = true;
-    txtRouterCambioSsid.disabled = true;
-    txtRouterCambioSeguridad.disabled = true;
-    txtRouterCambiopuertaEnlace.disabled = true;
-    txtRouterCambioWan.disabled = true;
-    txtSenialNuevo.disabled = true;
-    txtRouterCambioSeguridad.disabled = true;
-    txtRouterCambiopuertaEnlace.disabled = true;
-    txtAccesoNuevo.disabled = true;
-    solutionTextarea.disabled = true;
   }
 
   async function cargarRouters(routers) {
@@ -502,14 +451,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function cargarRepetidores(repetidores) {
-    console.log("Cargando repetidores:", repetidores); // Verificar los repetidores que se están cargando
     jsonRepetidores = repetidores;
 
     repetidores.forEach(repetidor => {
       const option = document.createElement("option");
-      option.value = repetidor.numero; // Usar "numero" como valor del option
-      option.textContent = `${repetidor.ssid} (${repetidor.modelo})`; // Usar "ssid" como texto visible del option
-      option.setAttribute("data-modelo", "repetidor"); // Agregar el atributo data-modelo
+      option.value = repetidor.numero;
+      option.textContent = `${repetidor.ssid} (${repetidor.modelo})`;
+      option.setAttribute("data-modelo", "repetidor");
       slcWireless.appendChild(option);
     });
   }
@@ -519,10 +467,8 @@ document.addEventListener("DOMContentLoaded", () => {
       console.warn("Antena no encontrada.");
       return;
     }
-
-    console.log(antena);
     const option = document.createElement("option");
-    option.value = "antena"; // Usar un valor fijo ya que solo hay una antena
+    option.value = "antena";
     option.textContent = `${antena.marca} (${antena.modelo})`;
     option.setAttribute("data-modelo", "antena");
     slcWireless.appendChild(option);
@@ -543,7 +489,6 @@ document.addEventListener("DOMContentLoaded", () => {
   async function cargarEnInputs() {
     try {
       const selectedValue = parseInt(slcWireless.value);
-      console.log("Selected Value:", selectedValue);
       const coordenada = urlParams.get("coordenada");
       const respuesta = await FichaInstalacion(idSoporte);
       const respuesta2 = await FichaSoporteporDocServCoordenada(txtNrodocumento.value, serv, coordenada);
@@ -578,7 +523,6 @@ document.addEventListener("DOMContentLoaded", () => {
         );
 
         if (routerseleccionado) {
-          console.log(routerseleccionado);
           txtIp.value = routerseleccionado.lan;
           txtRouterSsid.value = routerseleccionado.ssid;
           txtRouterSeguridad.value = routerseleccionado.seguridad;
@@ -592,13 +536,11 @@ document.addEventListener("DOMContentLoaded", () => {
           console.warn("No se encontró un router con el valor seleccionado.");
         }
       } else if (tipoDispositivo === "repetidor") {
-        console.log("jsonRepetidores:", jsonRepetidores);
         const repetidorseleccionado = jsonRepetidores.find(
           (repetidor) => repetidor.numero === selectedValue
         );
 
         if (repetidorseleccionado) {
-          console.log(repetidorseleccionado);
           txtRepetidorSsid.value = repetidorseleccionado.ssid;
           txtRepetidorIp.value = repetidorseleccionado.ip;
           txtRepetidorAcceso.value = repetidorseleccionado.contrasenia;
@@ -623,17 +565,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (antenaSeleccionada) {
-          console.log(antenaSeleccionada);
           txtAntenaMarca.value = antenaSeleccionada.marca;
           txtAntenaModelo.value = antenaSeleccionada.modelo;
           txtAntenaMac.value = antenaSeleccionada.mac;
           txtAntenaSerial.value = antenaSeleccionada.serial;
           txtAntenaDescripcion.value = antenaSeleccionada.descripcion;
 
-          // Cargar la frecuencia
-          console.log("Datos generales:", datosgenerales);
           if (datosgenerales && datosgenerales.frecuencia) {
-            const frecuencia = datosgenerales.frecuencia[0]; // Asumiendo que solo hay una frecuencia
+            const frecuencia = datosgenerales.frecuencia[0];
             console.log(frecuencia);
             const slcFrecuenciaAntena = document.getElementById("slcFrecuenciaAntena");
             if (slcFrecuenciaAntena) {
@@ -650,8 +589,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function cargarSoporteAnterior(data) {
-    console.log(data);
-
     // Datos del cliente
     txtCliente.value = data.parametroscliente.usuario;
     txtNrodocumento.value = data.parametroscliente.nrodoc;
@@ -720,27 +657,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const respuesta = await FichaSoporteporDocServCoordenada(doc, tipoServicio, coordenada);
     const soporteAnterior = respuesta[0]?.soporte ? JSON.parse(respuesta[0].soporte) : {};
-    console.log("Soporte anterior:", soporteAnterior);
     const idSoporteAnterior = respuesta[0]?.idSoporte;
 
     const rutaSoporte = obtenerRutaSoporte(idSoporteAnterior);
     const response = await fetch(rutaSoporte);
     const result = await response.json();
-    console.log("result:", result);
 
     const dataWisp = await FichaInstalacion(idSoporte);
     const wispFiltrado = JSON.parse(dataWisp[0].ficha_instalacion).parametros;
     const antenaVenta = JSON.parse(dataWisp[0].ficha_instalacion).venta?.antena || {};
-    console.log("WISP filtrado:", wispFiltrado);
-    console.log("Antena de venta:", antenaVenta);
 
     const soporte = result[0]?.soporte ? JSON.parse(result[0].soporte) : {};
-    console.log("Soporte:", soporte);
     const nuevoSoporte = { ...soporte };
 
     // Verificar si el cliente ya ha tenido un soporte registrado
     const yaTieneSoporte = soporteAnterior.WISP && Object.keys(soporteAnterior.WISP).length > 0;
-    console.log("Ya tiene soporte:", yaTieneSoporte);
 
     // Actualizar repetidores existentes
     const repetidoresActualizados = await modificadoRepetidor(yaTieneSoporte ? soporteAnterior.WISP.parametros.repetidores : wispFiltrado.repetidores, soporteAnterior);
@@ -778,14 +709,11 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     nuevoSoporte.WISP = wispData;
-
-    console.log(nuevoSoporte);
+    console.log("Nuevo soporte:", nuevoSoporte);
     return nuevoSoporte;
   }
 
   async function modificadoRouter(routers, soporteAnterior) {
-    console.log("Routers antes de modificar:", routers);
-
     return routers.map(router => {
       const ultimoSoporteRouter = soporteAnterior?.WISP?.cambios?.routers?.find(r => r.numero === router.numero) || {};
       router.acceso = txtAccesoNuevo?.value || ultimoSoporteRouter.acceso || router.acceso;
@@ -797,7 +725,6 @@ document.addEventListener("DOMContentLoaded", () => {
       router.codigobarra = txtRouterCambioCodigoBarra?.value || ultimoSoporteRouter.codigobarra || router.codigobarra;
       router.marca = txtRouterCambioMarca?.value || ultimoSoporteRouter.marca || router.marca;
       router.modelo = txtRouterCambioModelo?.value || ultimoSoporteRouter.modelo || router.modelo;
-      console.log("Router después de actualizar:", router);
       return router;
     });
   }
@@ -807,10 +734,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return [];
     }
 
-    console.log(jsonRepetidores);
-
     return jsonRepetidores.map(repetidor => {
-      console.log("Repetidor antes de actualizar:", repetidor);
       repetidor.ssid = txtRepetidorCambioSsid.value || repetidor.ssid;
       repetidor.ip = txtRepetidorCambioIp.value || repetidor.ip;
       repetidor.contrasenia = txtRepetidorCambioAcceso.value || repetidor.contrasenia;
@@ -820,12 +744,12 @@ document.addEventListener("DOMContentLoaded", () => {
       repetidor.modelo = txtRepetidorCambioModelo.value || repetidor.modelo;
       repetidor.serie = txtRepetidorCambioSerie.value || repetidor.serie;
       repetidor.precio = txtRepetidorCambioPrecio.value || repetidor.precio;
-      console.log("Repetidor después de actualizar:", repetidor);
       return repetidor;
     });
   }
 
   async function modificadoAntena() {
+    console.log("Antes de los cambios:", window.antenaDatos);
     const selectedValue = slcWireless.value;
     let antenaSeleccionada = {
       marca: txtAntenaMarcaCambios.value || (window.antenaDatos ? window.antenaDatos.marca : ""),
@@ -835,7 +759,7 @@ document.addEventListener("DOMContentLoaded", () => {
       descripcion: txtAntenaDescripcionCambios.value || (window.antenaDatos ? window.antenaDatos.descripcion : ""),
       frecuencia: slcFrecuenciaAntenaCambios.value || (window.antenaDatos ? window.antenaDatos.frecuencia : "")
     };
-
+    console.log("Después de los cambios:", antenaSeleccionada);
     return antenaSeleccionada;
   }
 
@@ -872,14 +796,14 @@ document.addEventListener("DOMContentLoaded", () => {
     if (await ask("¿Desea guardar la ficha?")) {
       await guardarSoporte(data)
       if (await CompletarSoporte(idSoporte)) {
-        //window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
+        window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
       }
     }
   });
 
   txtSenial, txtSenialNuevo.addEventListener("input", validarValorRango);
 
-  [txtIp, txtRouterCambiopuertaEnlace, txtRouterCambioWan, txtIpNuevo].forEach(element => {
+  [txtIp, txtRouterCambiopuertaEnlace, txtRouterCambioWan, txtIpNuevo, txtRepetidorCambioIp, txtIpRepetidorModal].forEach(element => {
     element.addEventListener("input", (event) => {
       formatoIPinput(event);
     });
@@ -1094,8 +1018,6 @@ document.addEventListener("DOMContentLoaded", () => {
       card.querySelector(".btnEliminar").addEventListener("click", function () {
         card.remove();
         jsonRepetidores = jsonRepetidores.filter(rep => rep.numero !== repetidor.numero);
-
-        console.log("respetidores restantes:", jsonRepetidores);
       });
     });
   }
@@ -1144,7 +1066,6 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     jsonRepetidores.push(repetidor);
-    console.log("Nuevo repetidor agregado:", repetidor);
 
     // Actualizar la interfaz de usuario
     mostrarRepetidoresEnModal();
