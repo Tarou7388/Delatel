@@ -468,7 +468,8 @@ document.addEventListener("DOMContentLoaded", () => {
         transmitccq: txtTransmiTccq,
         txrate: txtTxRate,
         rxrate: txtRxRate,
-        routers: jsonRouter
+        routers: jsonRouter,
+        repetidores: [],
       },
     }
     jsonData.parametros = jsonParametros.parametros;

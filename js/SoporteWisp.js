@@ -129,29 +129,6 @@ document.addEventListener("DOMContentLoaded", () => {
       formularioCambiosAntena.style.display = "none";
       btnVerMas.disabled = true;
       chkConfirmacion.disabled = true;
-      txtIp.value = "";
-      txtAcceso.value = "";
-      txtRouterSsid.value = "";
-      txtRouterSeguridad.value = "";
-      txtRouterpuertaEnlace.value = "";
-      txtRouterWan.value = "";
-      txtRouterCodigoBarra.value = "";
-      txtRouterMarca.value = "";
-      txtRouterModelo.value = "";
-      txtRepetidorSsid.value = "";
-      txtRepetidorIp.value = "";
-      txtRepetidorAcceso.value = "";
-      slcRepetidorCondicion.value = "";
-      txtRepetidorMarca.value = "";
-      txtRepetidorModelo.value = "";
-      txtRepetidorSerie.value = "";
-      txtRepetidorPrecio.value = "";
-      txtAntenaMarca.value = "";
-      txtAntenaModelo.value = "";
-      txtAntenaMac.value = "";
-      txtAntenaSerial.value = "";
-      txtAntenaDescripcion.value = "";
-      slcFrecuenciaAntena.value = "";
     }
     verificarCamposLlenos(formularioCambiosRouter);
     verificarCamposLlenos(formularioCambiosRepetidor);
@@ -310,7 +287,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (tipoDispositivo === "router") {
       const camposRouter = [
-        'txtBaseNuevo',
         'txtIpNuevo',
         'txtAccesoNuevo',
         'txtSenialNuevo',
@@ -612,9 +588,6 @@ document.addEventListener("DOMContentLoaded", () => {
           txtRouterCodigoBarra.value = routerseleccionado.codigobarra;
           txtRouterMarca.value = routerseleccionado.marca;
           txtRouterModelo.value = routerseleccionado.modelo;
-
-          if (formularioCambiosRouter) formularioCambiosRouter.style.display = "block";
-          if (formularioCambiosRepetidor) formularioCambiosRepetidor.style.display = "none";
         } else {
           console.warn("No se encontró un router con el valor seleccionado.");
         }
@@ -635,9 +608,6 @@ document.addEventListener("DOMContentLoaded", () => {
           txtRepetidorModelo.value = repetidorseleccionado.modelo;
           txtRepetidorSerie.value = repetidorseleccionado.serie;
           txtRepetidorPrecio.value = repetidorseleccionado.precio;
-
-          if (formularioCambiosRouter) formularioCambiosRouter.style.display = "none";
-          if (formularioCambiosRepetidor) formularioCambiosRepetidor.style.display = "block";
         } else {
           console.warn("No se encontró un repetidor con el valor seleccionado.");
         }
@@ -670,10 +640,6 @@ document.addEventListener("DOMContentLoaded", () => {
               slcFrecuenciaAntena.value = frecuencia;
             }
           }
-
-          if (formularioCambiosRouter) formularioCambiosRouter.style.display = "none";
-          if (formularioCambiosRepetidor) formularioCambiosRepetidor.style.display = "none";
-          if (formularioCambiosAntena) formularioCambiosAntena.style.display = "block";
         } else {
           console.warn("No se encontró una antena con el valor seleccionado.");
         }
@@ -753,7 +719,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const coordenada = urlParams.get("coordenada");
 
     const respuesta = await FichaSoporteporDocServCoordenada(doc, tipoServicio, coordenada);
-    const soporteAnterior = respuesta[0]?.soporte ? JSON.parse(respuesta[0].soporte) : null;
+    const soporteAnterior = respuesta[0]?.soporte ? JSON.parse(respuesta[0].soporte) : {};
+    console.log("Soporte anterior:", soporteAnterior);
     const idSoporteAnterior = respuesta[0]?.idSoporte;
 
     const rutaSoporte = obtenerRutaSoporte(idSoporteAnterior);
@@ -763,17 +730,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const dataWisp = await FichaInstalacion(idSoporte);
     const wispFiltrado = JSON.parse(dataWisp[0].ficha_instalacion).parametros;
+    const antenaVenta = JSON.parse(dataWisp[0].ficha_instalacion).venta?.antena || {};
+    console.log("WISP filtrado:", wispFiltrado);
+    console.log("Antena de venta:", antenaVenta);
 
     const soporte = result[0]?.soporte ? JSON.parse(result[0].soporte) : {};
     console.log("Soporte:", soporte);
     const nuevoSoporte = { ...soporte };
 
     // Verificar si el cliente ya ha tenido un soporte registrado
-    const yaTieneSoporte = soporteAnterior && soporteAnterior.WISP && Object.keys(soporteAnterior.WISP).length > 0;
+    const yaTieneSoporte = soporteAnterior.WISP && Object.keys(soporteAnterior.WISP).length > 0;
     console.log("Ya tiene soporte:", yaTieneSoporte);
 
     // Actualizar repetidores existentes
-    const repetidoresActualizados = await modificadoRepetidor(wispFiltrado.repetidores || []);
+    const repetidoresActualizados = await modificadoRepetidor(yaTieneSoporte ? soporteAnterior.WISP.parametros.repetidores : wispFiltrado.repetidores, soporteAnterior);
 
     // Filtrar los nuevos repetidores para excluir los que ya existen en la lista de repetidores actualizados
     const nuevosRepetidoresFiltrados = jsonRepetidores.filter(nuevoRepetidor =>
@@ -783,32 +753,27 @@ document.addEventListener("DOMContentLoaded", () => {
     // Combinar repetidores actualizados con los nuevos repetidores filtrados
     const repetidoresCombinados = [...repetidoresActualizados, ...nuevosRepetidoresFiltrados];
 
-    // Actualizar antena
-    const antenaActualizada = await modificadoAntena();
-
-    // Actualizar routers existentes
-    const routersActualizados = await modificadoRouter(soporteAnterior?.WISP?.cambios?.routers || wispFiltrado.routers);
-
     const wispData = {
       parametroscliente: {
-        plan: yaTieneSoporte ? (txtPlan.value || soporteAnterior.WISP?.parametroscliente?.plan) : wispFiltrado.plan,
-        usuario: yaTieneSoporte ? (txtCliente.value || soporteAnterior.WISP?.parametroscliente?.usuario) : wispFiltrado.usuario,
-        nrodoc: yaTieneSoporte ? (txtNrodocumento.value || soporteAnterior.WISP?.parametroscliente?.nrodoc) : txtNrodocumento.value,
+        plan: txtPlan.value,
+        usuario: txtCliente.value,
+        nrodoc: txtNrodocumento.value,
       },
       parametros: {
-        base: yaTieneSoporte ? (txtBase.value || soporteAnterior.WISP?.parametros?.base) : wispFiltrado.base,
-        routers: yaTieneSoporte ? (soporteAnterior.WISP?.parametros?.routers || JSON.parse(JSON.stringify(wispFiltrado.routers))) : JSON.parse(JSON.stringify(wispFiltrado.routers)),
-        signalstrength: yaTieneSoporte ? (txtSenial.value || soporteAnterior.WISP?.parametros?.signalstrength) : wispFiltrado.signalstrength,
-        repetidores: yaTieneSoporte ? (soporteAnterior.WISP?.cambios?.repetidores || repetidoresCombinados) : repetidoresCombinados,
-        frecuencia: yaTieneSoporte ? (soporteAnterior.WISP?.parametros?.frecuencia || wispFiltrado.frecuencia) : wispFiltrado.frecuencia,
-        antena: yaTieneSoporte ? (soporteAnterior.WISP?.cambios?.antena || antenaActualizada) : antenaActualizada,
+        base: txtBase.value,
+        routers: yaTieneSoporte ? (soporteAnterior.WISP?.cambios?.routers || JSON.parse(JSON.stringify(wispFiltrado.routers))) : JSON.parse(JSON.stringify(wispFiltrado.routers)),
+        signalstrength: yaTieneSoporte ? (txtSenial.value || soporteAnterior.WISP?.cambios?.signalstrength) : wispFiltrado.signalstrength,
+        repetidores: yaTieneSoporte ? (soporteAnterior.WISP?.cambios?.repetidores || JSON.parse(JSON.stringify(wispFiltrado.repetidores))) : JSON.parse(JSON.stringify(wispFiltrado.repetidores)),
+        frecuencia: yaTieneSoporte ? (soporteAnterior.WISP?.cambios?.frecuencia || wispFiltrado.frecuencia) : wispFiltrado.frecuencia,
+        antena: yaTieneSoporte ? (soporteAnterior.WISP?.cambios?.antena || JSON.parse(JSON.stringify(wispFiltrado.antena || antenaVenta))) : JSON.parse(JSON.stringify(wispFiltrado.antena || antenaVenta)),
       },
       cambios: {
-        nuevabase: txtBaseNuevo.value || soporteAnterior.WISP?.cambios?.nuevabase,
-        signalstrength: txtSenialNuevo.value || soporteAnterior.WISP?.cambios?.signalstrength,
-        routers: routersActualizados,
+        nuevabase: txtBaseNuevo.value,
+        signalstrength: yaTieneSoporte ? (txtSenialNuevo.value || soporteAnterior.WISP?.parametros?.signalstrength) : txtSenialNuevo.value,
+        routers: await modificadoRouter(yaTieneSoporte ? soporteAnterior.WISP.parametros.routers : wispFiltrado.routers, soporteAnterior),
         repetidores: repetidoresCombinados,
-        antena: antenaActualizada
+        frecuencia: yaTieneSoporte ? (slcFrecuenciaAntena.value || (soporteAnterior.WISP?.parametros?.frecuencia || wispFiltrado.frecuencia)) : wispFiltrado.frecuencia,
+        antena: await modificadoAntena(yaTieneSoporte ? soporteAnterior.WISP.parametros.antena : wispFiltrado.antena || soporteAnterior.WISP?.cambios?.antena || antenaVenta),
       },
     };
 
@@ -817,63 +782,45 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log(nuevoSoporte);
     return nuevoSoporte;
   }
-  async function modificadoRouter(routers) {
-    console.log("Routers antes de modificar:", routers);
-    const selectedValue = parseInt(slcWireless.value);
-    const selectedOption = slcWireless.options[slcWireless.selectedIndex];
-    const tipoDispositivo = selectedOption.getAttribute("data-modelo");
 
-    if (tipoDispositivo !== "router") {
-      return routers;
-    }
+  async function modificadoRouter(routers, soporteAnterior) {
+    console.log("Routers antes de modificar:", routers);
 
     return routers.map(router => {
-      if (router.numero === selectedValue) {
-        console.log("Router antes de actualizar:", router);
-        router.acceso = txtAccesoNuevo.value || router.acceso;
-        router.ssid = txtRouterCambioSsid.value || router.ssid;
-        router.seguridad = txtRouterCambioSeguridad.value || router.seguridad;
-        router.lan = txtIpNuevo.value || router.lan;
-        router.puertaenlace = txtRouterCambiopuertaEnlace.value || router.puertaenlace;
-        router.wan = txtRouterCambioWan.value || router.wan;
-        router.codigobarra = txtRouterCambioCodigoBarra.value || router.codigobarra;
-        router.marca = txtRouterCambioMarca.value || router.marca;
-        router.modelo = txtRouterCambioModelo.value || router.modelo;
-        console.log("Router después de actualizar:", router);
-      }
+      const ultimoSoporteRouter = soporteAnterior?.WISP?.cambios?.routers?.find(r => r.numero === router.numero) || {};
+      router.acceso = txtAccesoNuevo?.value || ultimoSoporteRouter.acceso || router.acceso;
+      router.ssid = txtRouterCambioSsid?.value || ultimoSoporteRouter.ssid || router.ssid;
+      router.seguridad = txtRouterCambioSeguridad?.value || ultimoSoporteRouter.seguridad || router.seguridad;
+      router.lan = txtIpNuevo?.value || ultimoSoporteRouter.lan || router.lan;
+      router.puertaenlace = txtRouterCambiopuertaEnlace?.value || ultimoSoporteRouter.puertaenlace || router.puertaenlace;
+      router.wan = txtRouterCambioWan?.value || ultimoSoporteRouter.wan || router.wan;
+      router.codigobarra = txtRouterCambioCodigoBarra?.value || ultimoSoporteRouter.codigobarra || router.codigobarra;
+      router.marca = txtRouterCambioMarca?.value || ultimoSoporteRouter.marca || router.marca;
+      router.modelo = txtRouterCambioModelo?.value || ultimoSoporteRouter.modelo || router.modelo;
+      console.log("Router después de actualizar:", router);
       return router;
     });
   }
 
-  async function modificadoRepetidor() {
+  async function modificadoRepetidor(repetidor) {
     if (!jsonRepetidores) {
       return [];
     }
 
     console.log(jsonRepetidores);
 
-    const selectedValue = parseInt(slcWireless.value);
-    const selectedOption = slcWireless.options[slcWireless.selectedIndex];
-    const tipoDispositivo = selectedOption.getAttribute("data-modelo");
-
-    if (tipoDispositivo !== "repetidor") {
-      return jsonRepetidores;
-    }
-
     return jsonRepetidores.map(repetidor => {
-      if (repetidor.numero === selectedValue) {
-        console.log("Repetidor antes de actualizar:", repetidor);
-        repetidor.ssid = txtRepetidorCambioSsid.value || repetidor.ssid;
-        repetidor.ip = txtRepetidorCambioIp.value || repetidor.ip;
-        repetidor.contrasenia = txtRepetidorCambioAcceso.value || repetidor.contrasenia;
-        repetidor.condicion = slcRepetidorCambioCondicion.value || repetidor.condicion;
-        repetidor.codigobarrarepetidor = txtRepetidorCambioCodigoBarra.value || repetidor.codigobarrarepetidor;
-        repetidor.marca = txtRepetidorCambioMarca.value || repetidor.marca;
-        repetidor.modelo = txtRepetidorCambioModelo.value || repetidor.modelo;
-        repetidor.serie = txtRepetidorCambioSerie.value || repetidor.serie;
-        repetidor.precio = txtRepetidorCambioPrecio.value || repetidor.precio;
-        console.log("Repetidor después de actualizar:", repetidor);
-      }
+      console.log("Repetidor antes de actualizar:", repetidor);
+      repetidor.ssid = txtRepetidorCambioSsid.value || repetidor.ssid;
+      repetidor.ip = txtRepetidorCambioIp.value || repetidor.ip;
+      repetidor.contrasenia = txtRepetidorCambioAcceso.value || repetidor.contrasenia;
+      repetidor.condicion = slcRepetidorCambioCondicion.value || repetidor.condicion;
+      repetidor.codigobarrarepetidor = txtRepetidorCambioCodigoBarra.value || repetidor.codigobarrarepetidor;
+      repetidor.marca = txtRepetidorCambioMarca.value || repetidor.marca;
+      repetidor.modelo = txtRepetidorCambioModelo.value || repetidor.modelo;
+      repetidor.serie = txtRepetidorCambioSerie.value || repetidor.serie;
+      repetidor.precio = txtRepetidorCambioPrecio.value || repetidor.precio;
+      console.log("Repetidor después de actualizar:", repetidor);
       return repetidor;
     });
   }
@@ -925,7 +872,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (await ask("¿Desea guardar la ficha?")) {
       await guardarSoporte(data)
       if (await CompletarSoporte(idSoporte)) {
-        window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
+        //window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
       }
     }
   });

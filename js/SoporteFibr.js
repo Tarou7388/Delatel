@@ -538,77 +538,6 @@ document.addEventListener("DOMContentLoaded", () => {
     txtPass.value = datoRouters.router.seguridad || "";
   }
 
-  /* async function verificarHistorialSoporte(docCliente) {
-    try {
-      const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=obtenerHistorialSoporte&docCliente=${docCliente}`);
-      const historial = await response.json();
-      console.log("Historial de soporte:", historial); // Log the data
-      return historial.length > 0 ? historial[0] : null; // Return the latest support if exists
-    } catch (error) {
-      console.error("Error al verificar el historial de soporte:", error);
-      return null;
-    }
-  }
-
-  async function armadoJsonFibra() {
-    const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
-    const result = await response.json();
-
-    const dataFibra = await FichaInstalacion(idSoporte);
-    const fibrafiltrado = JSON.parse(dataFibra[0].ficha_instalacion).fibraoptica;
-
-    const soporte = result[0]?.soporte ? JSON.parse(result[0].soporte) : {};
-    const nuevoSoporte = { ...soporte };
-
-    // Verificar si el cliente ya ha tenido un soporte registrado
-    const ultimoSoporte = await verificarHistorialSoporte(txtNrodocumento.value);
-    const yaTieneSoporte = !!ultimoSoporte;
-    console.log("Ya tiene soporte:", yaTieneSoporte);
-
-    // Actualizar repetidores existentes
-    const repetidoresActualizados = await moficadoRepetidor(fibrafiltrado.repetidores || []);
-
-    // Filtrar los nuevos repetidores para excluir los que ya existen en la lista de repetidores actualizados
-    const nuevosRepetidoresFiltrados = jsonRepetidores.filter(nuevoRepetidor =>
-      !repetidoresActualizados.some(repetidorActualizado => repetidorActualizado.numero === nuevoRepetidor.numero)
-    );
-
-    // Combinar repetidores actualizados con los nuevos repetidores filtrados
-    const repetidoresCombinados = [...repetidoresActualizados, ...nuevosRepetidoresFiltrados];
-
-    const fibraData = {
-      parametroscliente: {
-        plan: yaTieneSoporte ? (txtPlan.value || ultimoSoporte.fibr?.parametroscliente?.plan) : fibrafiltrado.plan,
-        usuario: yaTieneSoporte ? (txtCliente.value || ultimoSoporte.fibr?.parametroscliente?.usuario) : fibrafiltrado.usuario,
-        Nrodoc: yaTieneSoporte ? (txtNrodocumento.value || ultimoSoporte.fibr?.parametroscliente?.Nrodoc) : txtNrodocumento.value,
-      },
-      parametrosgpon: {
-        pppoe: yaTieneSoporte ? (document.getElementById("txtPppoe").value || ultimoSoporte.fibr?.cambiosgpon?.pppoe) : fibrafiltrado.usuario,
-        clave: yaTieneSoporte ? (document.getElementById("txtClave").value || ultimoSoporte.fibr?.cambiosgpon?.clave) : fibrafiltrado.claveacceso,
-        potencia: yaTieneSoporte ? (document.getElementById("txtPotencia").value || ultimoSoporte.fibr?.cambiosgpon?.potencia) : fibrafiltrado.potencia,
-        router: yaTieneSoporte ? (ultimoSoporte.fibr?.cambiosgpon?.router || JSON.parse(JSON.stringify(fibrafiltrado.router))) : JSON.parse(JSON.stringify(fibrafiltrado.router)),
-        catv: yaTieneSoporte ? (ultimoSoporte.fibr?.cambiosgpon?.catv || document.getElementById("chkCatv").checked) : fibrafiltrado.router.catv,
-        vlan: yaTieneSoporte ? (document.getElementById("txtVlan").value || ultimoSoporte.fibr?.cambiosgpon?.vlan) : fibrafiltrado.vlan,
-        repetidores: yaTieneSoporte ? (ultimoSoporte.fibr?.cambiosgpon?.repetidores || repetidoresCombinados) : repetidoresCombinados,
-      },
-      cambiosgpon: {
-        pppoe: txtCambiosPppoe.value || ultimoSoporte.fibr?.cambiosgpon?.pppoe,
-        clave: txtCambiosClave.value || ultimoSoporte.fibr?.cambiosgpon?.clave,
-        potencia: txtCambiosPotencia.value || ultimoSoporte.fibr?.cambiosgpon?.potencia,
-        router: await modificadoRouter(fibrafiltrado.router) || ultimoSoporte.fibr?.cambiosgpon?.router,
-        catv: chkCambiosCatv.checked || ultimoSoporte.fibr?.cambiosgpon?.catv,
-        vlan: txtCambiosVlan.value || ultimoSoporte.fibr?.cambiosgpon?.vlan,
-        repetidores: repetidoresCombinados,
-      },
-    };
-
-    nuevoSoporte.fibr = fibraData;
-    nuevoSoporte.idcaja = idCaja;
-    nuevoSoporte.tipoentrada = JSON.parse(dataFibra[0].ficha_instalacion).tipoentrada;
-
-    return nuevoSoporte;
-  } */
-
   function obtenerRutaSoporte(idSoporte) {
     return `${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`;
   }
@@ -663,7 +592,7 @@ document.addEventListener("DOMContentLoaded", () => {
         router: yaTieneSoporte ? (soporteAnterior.fibr?.cambiosgpon?.router || JSON.parse(JSON.stringify(fibrafiltrado.router))) : JSON.parse(JSON.stringify(fibrafiltrado.router)),
         catv: yaTieneSoporte ? (soporteAnterior.fibr?.cambiosgpon?.catv || document.getElementById("chkCatv").checked) : fibrafiltrado.router.catv,
         vlan: yaTieneSoporte ? (document.getElementById("txtVlan").value || soporteAnterior.fibr?.cambiosgpon?.vlan) : fibrafiltrado.vlan,
-        repetidores: yaTieneSoporte ? (soporteAnterior.fibr?.cambiosgpon?.repetidores || repetidoresCombinados) : repetidoresCombinados,
+        repetidores: yaTieneSoporte ? (soporteAnterior.fibr?.cambiosgpon?.repetidores || JSON.parse(JSON.stringify(fibrafiltrado.repetidores))) : JSON.parse(JSON.stringify(fibrafiltrado.repetidores)),
       },
       cambiosgpon: {
         pppoe: txtCambiosPppoe.value || soporteAnterior.fibr?.cambiosgpon?.pppoe,
@@ -762,7 +691,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (await ask("¿Desea guardar la ficha?")) {
       await guardarSoporte(data);
       console.log("Ficha guardada:", data);
-      window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
+      /* window.location.href = `${config.HOST}views/Soporte/listarSoporte`; */
     }
   });
 
