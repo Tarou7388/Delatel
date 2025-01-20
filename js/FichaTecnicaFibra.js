@@ -69,6 +69,8 @@ document.addEventListener('DOMContentLoaded', () => {
   (async () => {
     try {
 
+
+      // AQUI ESTA EL ERROR (TERMINAR)
       const urlParams = new URLSearchParams(window.location.search);
       const idCaja = urlParams.get('idCaja') || localStorage.getItem('idCaja');
       console.log("idCaja:", idCaja);
