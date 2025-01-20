@@ -73,7 +73,7 @@ window.addEventListener("DOMContentLoaded", async () => {
           const [latitud, longitud] = params.coordenadas.split(',').map(coord => parseFloat(coord.trim()));
           const idSector = await mapa.buscarCoordenadassinMapa(latitud, longitud);
           const slcSector = document.querySelector("#slcSector");
-        
+
           if (idSector !== null) {
             slcSector.value = idSector;
             slcSector.dispatchEvent(new Event('change')); // Dispara el evento change
@@ -194,6 +194,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       }
 
       try {
+        console.log(mapa.idCaja)
         const datosEnvio = {
           operacion: "registrarContrato",
           parametros: {
@@ -206,9 +207,11 @@ window.addEventListener("DOMContentLoaded", async () => {
             fechaInicio: new Date().toISOString().split("T")[0],
             fechaRegistro: fechaRegistro,
             nota: nota,
+            fichainstalacion: JSON.stringify({ idcaja: mapa.idCaja }),
             idUsuario: user.idUsuario,
           },
         };
+        console.log(datosEnvio);
 
         const response = await fetch(
           `${config.HOST}app/controllers/Contrato.controllers.php`,
@@ -243,7 +246,6 @@ window.addEventListener("DOMContentLoaded", async () => {
             resetUI();
             tabla.ajax.reload();
 
-            localStorage.setItem('idCaja', mapa.idCaja);
           } catch (error) {
             console.log(error);
             showToast("Ocurrió un error en las cajas.", "ERROR");
@@ -475,8 +477,9 @@ window.addEventListener("DOMContentLoaded", async () => {
               const response = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerFichaInstalacion&id=${idContrato}`);
               const data = await response.json();
               const fichaInstalacion = JSON.parse(data[0].ficha_instalacion);
+              console.log(fichaInstalacion);
 
-              if (fichaInstalacion && Object.keys(fichaInstalacion).length > 0) {
+              if (fichaInstalacion && Object.keys(fichaInstalacion).length > 1) {
 
                 const icono = document.getElementById(`iconFicha${idContrato}`);
                 icono.classList.replace('fa-file', 'fa-file-circle-check');
@@ -514,8 +517,10 @@ window.addEventListener("DOMContentLoaded", async () => {
 
         botonesEliminar.forEach((boton) => {
           boton.addEventListener("click", async (event) => {
+            console.log("Eliminar contrato");
             const idContrato = event.target.getAttribute("data-idContrato");
-            const tipoServicio = boton.closest('tr').querySelector('td:nth-child(6)').textContent.trim();
+            const tipoServicio = boton.closest('tr').querySelector('td:nth-child(5)').textContent.trim();
+            console.log(tipoServicio);
             let idCaja = -1;
             if (tipoServicio === "FIBR,CABL" || tipoServicio === "FIBR" || tipoServicio === "CABL") {
               try {
@@ -523,12 +528,12 @@ window.addEventListener("DOMContentLoaded", async () => {
                   `${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerJsonFichabyId&id=${idContrato}`
                 );
                 const data = await response.json();
-                idCaja = JSON.parse(data[0].ficha_instalacion).idCaja;
+                console.log(data);
+                idCaja = JSON.parse(data[0].ficha_instalacion).idcaja;
               } catch (error) {
                 console.error("Error al obtener el JSON de la ficha de instalación:", error);
                 idCaja = -1;
               }
-
             }
 
             eliminar(idContrato, 1, idCaja);

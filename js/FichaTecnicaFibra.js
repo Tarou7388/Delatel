@@ -69,12 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
   (async () => {
     try {
 
-
-      // AQUI ESTA EL ERROR (TERMINAR)
-      const urlParams = new URLSearchParams(window.location.search);
-      const idCaja = urlParams.get('idCaja') || localStorage.getItem('idCaja');
-      console.log("idCaja:", idCaja);
-
       const response = await fetch(
         `${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerFichaInstalacion&id=${idContrato}`
       );
@@ -85,6 +79,10 @@ document.addEventListener('DOMContentLoaded', () => {
         console.warn('No se encontraron datos');
         return;
       }
+
+      const fichaInstalacion = JSON.parse(data[0].ficha_instalacion);
+
+      const idCaja = fichaInstalacion.idcaja;
 
       document.getElementById("txtNumFicha").value = data[0].id_contrato;
 
@@ -103,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById("txtIdCaja").value = idCaja;
 
 
-      const fichaInstalacion = JSON.parse(data[0].ficha_instalacion);
+
       if (!fichaInstalacion || !fichaInstalacion.fibraoptica) {
         showToast('No se encontraron datos de fibra óptica', "INFO");
         return;

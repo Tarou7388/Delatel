@@ -33,7 +33,7 @@ class Contrato extends Conexion
      */
     public function registrarContrato($params = [])
     {
-        $sql = "CALL spu_contratos_registrar(?,?,?,?,?,?,?,?,?,?)";
+        $sql = "CALL spu_contratos_registrar(?,?,?,?,?,?,?,?,?,?,?)";
         $values = array(
             $params['idCliente'],
             $params['idPaquete'],
@@ -44,6 +44,7 @@ class Contrato extends Conexion
             $params['fechaInicio'],
             $params['fechaRegistro'],
             $params['nota'],
+            $params['fichainstalacion'],
             $params['idUsuario']
         );
         return $this->registrar($sql, $values);

@@ -89,6 +89,7 @@ CREATE PROCEDURE spu_contratos_registrar(
     IN p_fecha_inicio DATE,
     IN p_fecha_registro DATE,
     IN p_nota TEXT,
+    IN p_ficha_instalacion JSON,
     IN p_iduser_create INT
 )
 BEGIN
@@ -102,6 +103,7 @@ BEGIN
         fecha_inicio,
         fecha_registro,
         nota,
+        ficha_instalacion,
         id_usuario_registro
     ) VALUES (
         p_id_cliente,
@@ -113,6 +115,7 @@ BEGIN
         p_fecha_inicio,
         p_fecha_registro,
         p_nota,
+        p_ficha_instalacion,
         p_iduser_create
     );
 END$$

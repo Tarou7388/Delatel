@@ -94,14 +94,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Cargar Datos de Ficha del Cliente y la Ficha Tecnica
   (async () => {
     try {
-      //Obtener idCaja
-      const urlParams = new URLSearchParams(window.location.search);
-      const idCaja = urlParams.get('idCaja') || localStorage.getItem('idCaja');
-      console.log("idCaja:", idCaja);
-
       const response = await fetch(
         `${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerFichaInstalacion&id=${idContrato}`
       );
@@ -113,6 +107,10 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       const fichaInstalacion = JSON.parse(data[0].ficha_instalacion);
+
+
+      const idCaja = fichaInstalacion.idcaja;
+
 
       document.getElementById("txtUsuario").value = data[0].nombre_cliente;
       document.getElementById("txtPaquete").value = data[0].paquete;

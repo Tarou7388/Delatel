@@ -109,15 +109,14 @@ document.addEventListener("DOMContentLoaded", () => {
   txtCatvCasa.addEventListener("input", validarValorRango);
 
   (async () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const idCaja = urlParams.get('idCaja') || localStorage.getItem('idCaja');
-    console.log("idCaja:", idCaja);
-
+    
     try {
       const response = await fetch(
         `${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerFichaInstalacion&id=${idContrato}`
       );
       const data = await response.json();
+
+      const idCaja = JSON.parse(data[0].ficha_instalacion).idcaja;
 
       if (!Array.isArray(data) || data.length === 0) {
         console.warn("No hay datos en ficha_instalacion.");

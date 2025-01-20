@@ -60,6 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         "fechaInicio"         => Herramientas::sanitizarEntrada($datos['parametros']['fechaInicio']),
         "fechaRegistro"       => Herramientas::sanitizarEntrada($datos['parametros']['fechaRegistro']),
         "nota"                => Herramientas::sanitizarEntrada($datos['parametros']['nota']),
+        "fichainstalacion"    => $datos['parametros']['fichainstalacion'],
         "idUsuario"           => Herramientas::sanitizarEntrada($datos['parametros']['idUsuario'])
       ];
       $resultado = $contrato->registrarContrato($datosEnviar);
