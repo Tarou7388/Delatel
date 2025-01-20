@@ -297,7 +297,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   async function eventocajas() {
     datosCajas = await obtenerDatosAnidado(`${config.HOST}app/controllers/Caja.controllers.php?operacion=listarCajas`);
-    marcadoresCajas = await marcadoresAnidado(datosCajas, "rojo");
+    marcadoresCajas = await marcadoresAnidado(datosCajas, "cajaNAP");
     marcadoresCajas.forEach((marcador, index1) => {
       marcador.forEach((item, index2) => {
         item.addListener('click', async () => {
@@ -311,7 +311,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   async function eventomufas() {
     const datos = await obtenerDatosPlano(`${config.HOST}app/controllers/Mufas.controllers.php?operacion=listarMufas`);
-    marcadoresMufas = await marcadoresPlano(datos, "verde");
+    marcadoresMufas = await marcadoresPlano(datos, "mufa");
 
     for (let i = 0; i < marcadoresMufas.length; i++) {
       marcadoresMufas[i].addListener('click', async (e) => {
