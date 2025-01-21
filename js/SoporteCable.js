@@ -351,8 +351,12 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const dataCable = await FichaInstalacion(idSoporte);
       const cableFiltrado = JSON.parse(dataCable[0].ficha_instalacion).cable;
-
-      const sintonizadores = cableFiltrado.sintonizadores.length || 0;
+      let sintonizadores = null;
+      if(cableFiltrado.sintonizadores){
+        sintonizadores = cableFiltrado.sintonizadores.length;
+      }else{
+        sintonizadores = 0;
+      }
 
       infoSintonizadores = await contabilizarSintonizadores(cableFiltrado);
 
