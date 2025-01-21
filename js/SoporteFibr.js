@@ -445,11 +445,17 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log(fichaInstalacion.idcaja);
       idCaja = fichaInstalacion.idcaja;
 
-      await cargarDatosRouter(fibraFiltrado);
-      if (fibraFiltrado.repetidores) {
+      const repetidorContainers = $('.repetidor-container');
+      if (Array.isArray(fibraFiltrado.repetidores) && fibraFiltrado.repetidores.length > 0) {
+        repetidorContainers.show();
+        jsonRepetidores = fibraFiltrado.repetidores;
         await cargarRepetidores(fibraFiltrado.repetidores);
-        return;
+        mostrarRepetidoresEnModal();
+      } else {
+        repetidorContainers.hide();
       }
+
+      await cargarDatosRouter(fibraFiltrado);
     } catch (error) {
       console.error("Error en data de Fibra:", error);
     }
@@ -691,7 +697,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (await ask("¿Desea guardar la ficha?")) {
       await guardarSoporte(data);
       console.log("Ficha guardada:", data);
-      /* window.location.href = `${config.HOST}views/Soporte/listarSoporte`; */
+      window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
     }
   });
 
@@ -892,6 +898,20 @@ document.addEventListener("DOMContentLoaded", () => {
   // Añadir Nuevo Repetidor
   document.getElementById('btnAñadirRepetidor').addEventListener('click', async function () {
     await AgregarRepetidor();
+  });
+
+  //Evento para completar soporte
+  document.getElementById('btnCompletar').addEventListener('click', async function () {
+    const idSoporte = await obtenerReferencias();
+    if (await ask("¿Está seguro de completar este soporte? Ya no aparecerá en la tabla.")) {
+      const result = await CompletarSoporte(idSoporte);
+      if (result) {
+        showToast("Soporte completado exitosamente.", "SUCCESS");
+        window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
+      } else {
+        showToast("Hubo un error al completar el soporte.", "ERROR");
+      }
+    }
   });
 
   // Cargar datos del soporte y mostrar repetidores existentes en el modal

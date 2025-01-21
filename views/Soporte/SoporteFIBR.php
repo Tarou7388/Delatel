@@ -387,6 +387,11 @@
                 Completar Campos
               </label>
             </div>
+
+            <!-- Botón para completar soporte -->
+            <button type="button" class="btn btn-success btn-sm mt-2" id="btnCompletar">
+              <i class="fas fa-check"></i> Completar
+            </button>
           </div>
 
       </form>
