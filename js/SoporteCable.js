@@ -352,7 +352,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const dataCable = await FichaInstalacion(idSoporte);
       const cableFiltrado = JSON.parse(dataCable[0].ficha_instalacion).cable;
 
-      const sintonizadores = cableFiltrado.sintonizadores.length;
+      const sintonizadores = cableFiltrado.sintonizadores.length || 0;
 
       infoSintonizadores = await contabilizarSintonizadores(cableFiltrado);
 
@@ -637,14 +637,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const buttonDiv = document.createElement("div");
     buttonDiv.className = "col-md d-flex align-items-end";
 
-    // Botón Guardar
     const guardarBtn = document.createElement("button");
     guardarBtn.id = "btnGuardarFicha";
     guardarBtn.className = "btn btn-success me-2";
     guardarBtn.type = "submit";
     guardarBtn.textContent = "Guardar Ficha";
 
-    // Botón Cancelar
     const cancelarBtn = document.createElement("button");
     cancelarBtn.id = "btnCancelarFicha";
     cancelarBtn.className = "btn btn-secondary me-2";
@@ -654,7 +652,6 @@ document.addEventListener("DOMContentLoaded", () => {
       window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
     });
 
-    // Checkbox Confirmación
     const checkboxDiv = document.createElement("div");
     checkboxDiv.className = "form-check d-flex align-items-center me-2";
 
@@ -760,7 +757,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (await ask("¿Desea guardar la ficha?")) {
       await guardarSoporte(data);
       showToast("Ficha guardada correctamente", "SUCCESS");
-      //window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
+      window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
     }
   });
 
