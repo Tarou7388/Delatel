@@ -51,7 +51,7 @@ class Sector extends Conexion
 
   public function listarSectoresMapa()
   {
-    $sql = "SELECT id_sector, sector as 'nombre', descripcion, coordenadas, direccion  FROM vw_sectores_obtener";
+    $sql = "SELECT id_sector, sector as 'nombre', descripcion, coordenadas, direccion  FROM vw_sectores_obtener WHERE inactive_at IS NULL";
     return $this->listarDatos($sql);
   }
 
@@ -59,6 +59,16 @@ class Sector extends Conexion
   {
     $sql = "SELECT * FROM vw_sectores_listar WHERE id_distrito = ?";
     return $this->listarDatos($sql, [$idDistrito]);
+  }
+
+  public function desactivarSector($params = [])
+  {
+    $sql = "CALL spu_sector_desactivar(?,?)";
+    $values = array(
+      $params['idSector'],
+      $params['idUsuario']
+    );
+    return $this->registrar($sql, $values);
   }
 
 }

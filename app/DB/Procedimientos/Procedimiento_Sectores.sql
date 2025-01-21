@@ -43,6 +43,21 @@ BEGIN
     VALUES (p_id_distrito, p_sector,p_descripcion,p_coordenadas, p_iduser_create);
 END $$
 
+DROP PROCEDURE IF EXISTS spu_sector_desactivar$$
+
+CREATE PROCEDURE spu_sector_desactivar(
+    IN p_id_sector INT,
+    IN p_iduser_inactive INT
+)
+BEGIN
+    UPDATE tb_sectores
+    SET
+        inactive_at = NOW(),
+        iduser_inactive = p_iduser_inactive
+    WHERE
+        id_sector = p_id_sector;
+END $$
+
 DROP PROCEDURE IF EXISTS spu_sectores_actualizar_id$$
 CREATE PROCEDURE spu_sectores_actualizar_id(
     IN p_id_sector INT,

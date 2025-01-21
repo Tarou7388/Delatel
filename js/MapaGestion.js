@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   let lineaPrincipalAgregando = true;
   let banderaCable = false;
   let cablePrincipalInicio = true;
+  let idSector = "";
   const params = { cajas: true, mufas: true, cables: true, sectores: true };
 
 
@@ -44,7 +45,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         const latLng = event.latLng.toJSON();
         Coordenadas = { lat: latLng.lat, lng: latLng.lng };
         idDistrito = item.idDistrito;
-        console.log(lineaPrincipalAgregando)
         if (lineaPrincipalAgregando) {
           blooquearbotones(false, true, false, true, true, true, true);
         }
@@ -52,7 +52,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (banderaCable) {
           const json = { lat: latLng.lat, lng: latLng.lng };
-          console.log(json);
           marcarLineaCable(json);
         }
         if (CablePrincipalGuardar != "") {
@@ -181,8 +180,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       poligono.setMap(mapa);
       limitesDistritos.push(poligono);
     });
-    console.log(limitesDistritos);
-
     if (params.cajas) {
       await eventocajas();
     };
@@ -218,7 +215,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const data = await response.json();
     if (data.error) {
       showToast(data.error.message, "ERROR");
-      console.log(idCajaRegistro);
     } else {
       idCajaRegistro = data[0].id_caja;
     }
@@ -237,7 +233,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       body: paramsEnviar
     });
     const data = await response.json();
-    console.log(data);
     if (data.error) {
       showToast(data.error.message, "ERROR");
     } else {
@@ -261,7 +256,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const data = await response.json();
     if (data.error) {
       showToast(data.error.message, "ERROR");
-      console.log(data.error);
     } else {
       showToast("Registrado Correctamente", "SUCCESS");
       marcadoresSectores.forEach(marcador => {
@@ -302,7 +296,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       marcador.forEach((item, index2) => {
         item.addListener('click', async () => {
           blooquearbotones(true, true, true, true, false, true, true);
-          console.log(datosCajas[index1][index2]);
           idCajaRegistro = datosCajas[index1][index2].id_caja;
         });
       });
@@ -341,6 +334,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             coordenadasCajaGuardada = false;
             marcadorPrincipal.setMap(null);
           }
+        }else{
+          idMufaRegistro = datos[i].id_mufa;
+          blooquearbotones(true, true, true, true, true, false, true);
         }
       });
     }
@@ -401,6 +397,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   async function eventoSectores() {
     datosSectores = await obtenerDatosPlano(`${config.HOST}app/controllers/Sector.controllers.php?operacion=listarSectoresMapa`);
     marcadoresSectores = await marcadoresPlano(datosSectores, "azul");
+    marcadoresSectores.forEach((marcador, index) => {
+      marcador.addListener('click', async (e) => {
+        idSector = datosSectores[index].id_sector;
+        blooquearbotones(true, true, true, true, true, true, false);
+      });
+    });
   }
 
   async function marcadoresPlano(datos, img2) {
@@ -555,7 +557,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       body: paramsEnviar
     });
     const data = await response.json();
-    console.log(data);
   }
 
   document.querySelector("#btnActualizar").addEventListener("click", () => {
@@ -624,7 +625,6 @@ document.addEventListener('DOMContentLoaded', async () => {
           coordenadasEnviar.push(item);
         });
       } else if (CablePrincipalGuardar == "fin") {
-        console.log(lineaPrincipal);
         lineaPrincipal.forEach(item => {
           coordenadasEnviar.push(item);
         });
@@ -632,7 +632,6 @@ document.addEventListener('DOMContentLoaded', async () => {
           coordenadasEnviar.push(item);
         });
       }
-      console.log(coordenadasEnviar);
       await agregarLineasPrincipal(coordenadasEnviar);
       showToast("Linea principal guardada", "SUCCESS");
       lineaPrincipalAgregando = false;
@@ -642,7 +641,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.querySelector("#btnEliminarCaja").addEventListener("click", async () => {
     const response = await fetch(`${config.HOST}app/controllers/Caja.controllers.php?operacion=cajaUso&idCaja=${idCajaRegistro}`);
     const data = await response.json();
-    console.log(data[0].uso);
     if(data[0].uso && data[0].uso == true){
       showToast("La caja esta en uso", "ERROR");
     }
@@ -658,7 +656,6 @@ document.addEventListener('DOMContentLoaded', async () => {
           body: datos
         });
         const data2 = await response.json();
-        console.log(data2);
         if (data2.error) {
           showToast(data2.error.message, "ERROR");
         } else {
@@ -674,6 +671,62 @@ document.addEventListener('DOMContentLoaded', async () => {
           });
           eventoCables();
         }
+      }
+    }
+  });
+
+  document.querySelector("#btnEliminarMufa").addEventListener("click", async () => {
+    const response = await fetch(`${config.HOST}app/controllers/Mufas.controllers.php?operacion=mufaUso&idMufa=${idMufaRegistro}`);
+    const data = await response.json();
+    if(data[0].uso && data[0].uso == true){
+      showToast("La mufa esta en uso", "ERROR");
+    }
+    else{
+      if (await ask("¿Desea eliminar la mufa?")) {
+        const datos = JSON.stringify({
+          idMufa: idMufaRegistro,
+          idUsuario: user.idUsuario,
+          operacion: "eliminarMufa"
+         });
+        const response = await fetch(`${config.HOST}app/controllers/Mufas.controllers.php`, {
+          method: "PUT",
+          body: datos
+        });
+        const data2 = await response.json();
+        if (data2.error) {
+          showToast(data2.error.message, "ERROR");
+        } else {
+          showToast("Eliminado Correctamente", "SUCCESS");
+          marcadoresMufas.forEach(marcador => {
+            marcador.setMap(null);
+          });
+          eventomufas();
+        }
+      }
+    }
+  });
+  
+  document.querySelector("#btnEliminarSector").addEventListener("click", async () => {
+    if (await ask("¿Desea desactivar el sector?")) {
+      const datos = JSON.stringify({
+        idSector: idSector,
+        idUsuario: user.idUsuario,
+        operacion: "desactivarSector"
+       });
+      const response = await fetch(`${config.HOST}app/controllers/Sector.controllers.php`, {
+        method: "PUT",
+        body: datos
+      });
+      const data = await response.json();
+      console.log(data);
+      if (data.error) {
+        showToast(data.error.message, "ERROR");
+      } else {
+        showToast("Desactivado Correctamente", "SUCCESS");
+        marcadoresSectores.forEach(marcador => {
+          marcador.setMap(null);
+        });
+        eventoSectores();
       }
     }
   });

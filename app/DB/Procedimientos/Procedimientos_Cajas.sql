@@ -150,11 +150,36 @@ CREATE PROCEDURE spu_caja_uso(
 BEGIN
   SELECT 
     CASE 
-      WHEN COUNT(*) > 0 THEN 'true'
-      ELSE 'false'
+      WHEN COUNT(*) > 0 THEN TRUE
+      ELSE FALSE
     END as uso 
   FROM tb_contratos 
-WHERE JSON_EXTRACT(ficha_instalacion, '$.idcaja') = p_id_caja;
+  WHERE JSON_EXTRACT(ficha_instalacion, '$.idcaja') = p_id_caja;
+END$$
+
+DROP PROCEDURE IF EXISTS spu_mufa_uso$$
+
+CREATE PROCEDURE spu_mufa_uso(
+  IN p_id_mufa INT
+)
+BEGIN
+  SELECT
+    CASE
+      WHEN COUNT(*) > 0 THEN TRUE
+      ELSE FALSE
+    END as uso
+  FROM tb_lineas
+  WHERE id_mufa = p_id_mufa;
+END$$
+
+DROP PROCEDURE IF EXISTS spu_sector_desactivar$$
+
+CREATE PROCEDURE spu_sector_desactivar(
+  IN p_id_sector INT,
+  IN p_id_user INT
+)
+BEGIN
+  UPDATE tb_cajas SET inactive_at = NOW(), iduser_update = p_id_user WHERE id_sector = p_id_sector;
 END$$
 
 DROP PROCEDURE IF EXISTS spu_caja_eliminar$$
@@ -166,4 +191,14 @@ CREATE PROCEDURE spu_caja_eliminar(
 BEGIN
   UPDATE tb_lineas SET inactive_at = NOW(), iduser_update = p_id_user WHERE id_caja = p_id_caja;
   UPDATE tb_cajas SET inactive_at = NOW(), iduser_update = p_id_user WHERE id_caja = p_id_caja;
+END$$
+
+DROP PROCEDURE IF EXISTS spu_mufa_eliminar$$
+
+CREATE PROCEDURE spu_mufa_eliminar(
+  IN p_id_mufa INT,
+  IN p_id_user INT
+)
+BEGIN
+  UPDATE tb_mufas SET inactive_at = NOW(), iduser_update = p_id_user WHERE id_mufa = p_id_mufa;
 END$$

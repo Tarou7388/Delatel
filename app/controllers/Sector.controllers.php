@@ -41,3 +41,18 @@ if (isset($_GET["operacion"])) {
 			break;
 	}
 }
+
+if ($_SERVER["REQUEST_METHOD"] === "PUT") {
+	$json = file_get_contents("php://input");
+	$datos = json_decode($json, true);
+	switch ($datos["operacion"]) {
+		case "desactivarSector":
+			$datos = [
+				"idSector" => Herramientas::sanitizarEntrada($datos["idSector"]),
+				"idUsuario" => Herramientas::sanitizarEntrada($datos["idUsuario"]),
+			];
+			$resultado = $sectores->desactivarSector($datos);
+			echo json_encode($resultado);
+			break;
+	}
+}

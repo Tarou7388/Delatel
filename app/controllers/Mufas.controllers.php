@@ -10,6 +10,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
       $mufas = $mufa->listarMufas();
       echo json_encode($mufas);
       break;
+    case 'mufaUso':
+      $array = [
+        'idMufa' => $_GET['idMufa']
+      ];
+      $respuesta = $mufa->mufaUso($array);
+      echo json_encode($respuesta);
+      break;
   }
 }
 
@@ -24,6 +31,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'id_usuario' => $_POST['id_usuario']
       ];
       $respuesta = $mufa->registrarMufa($array);
+      echo json_encode($respuesta);
+      break;
+  }
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+  $json = file_get_contents('php://input');
+  $datos = json_decode($json, true);
+  switch ($datos['operacion']) {
+    case 'eliminarMufa':
+      $array = [
+        'idMufa' => $datos['idMufa'],
+        'idUsuario' => $datos['idUsuario']
+      ];
+      $respuesta = $mufa->eliminarMufa($array);
       echo json_encode($respuesta);
       break;
   }

@@ -29,4 +29,24 @@ class Mufa extends Conexion
     ];
     return $this->registrar($sql, $array);
   }
+
+  public function mufaUso($params = [])
+  {
+    $sql = "CALL spu_mufa_uso(?)";
+    $array = [
+      $params['idMufa']
+    ];
+    return $this->consultaParametros($sql, $array);
+  }
+
+  public function eliminarMufa($params = [])
+  {
+    $sql = "CALL spu_mufa_eliminar(?, ?)";
+    $array = [
+      $params['idMufa'],
+      $params['idUsuario']
+    ];
+    return $this->registrar($sql, $array);
+  }
+
 }
