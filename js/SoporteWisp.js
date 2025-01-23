@@ -6,12 +6,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const urlParams = new URLSearchParams(window.location.search);
   const serv = urlParams.get("tiposervicio");
 
-  // Datos del Cliente
   const txtNrodocumento = document.getElementById("txtNrodocumento");
   const txtCliente = document.getElementById("txtCliente");
   const txtPlan = document.getElementById("txtPlan");
 
-  // Parámetros Wireless
   const slcWireless = document.getElementById("slcWireless");
   const txtBase = document.getElementById("txtBase");
   const txtIp = document.getElementById("txtIp");
@@ -23,7 +21,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const txtRouterWan = document.getElementById("txtRouterWan");
   const txtAcceso = document.getElementById("txtAcceso");
 
-  // Cambios Wireless
   const txtBaseNuevo = document.getElementById("txtBaseNuevo");
   const txtIpNuevo = document.getElementById("txtIpNuevo");
   const txtSenialNuevo = document.getElementById("txtSenialNuevo");
@@ -38,16 +35,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const formularioCambiosRepetidor = document.getElementById("formularioCambiosRepetidor");
   const formularioCambiosAntena = document.getElementById("formularioCambiosAntena");
 
-  //Definicion de constantes
   const solutionTextarea = document.getElementById("txtaProceSolucion");
   const txtaEstadoInicial = document.getElementById("txtaEstadoInicial");
 
-  //Card
   const cardParametros = document.getElementById("cardParametros");
   const cardParametrosRepetidor = document.getElementById("cardParametrosRepetidor");
   const cardParametrosAntena = document.getElementById("cardParametrosAntena");
 
-  // Agregar estas constantes al inicio del DOMContentLoaded
   const btnVerMas = document.getElementById("btnInformacion");
   btnVerMas.type = "button";
 
@@ -58,12 +52,10 @@ document.addEventListener("DOMContentLoaded", () => {
   let jsonRepetidores = [];
   let jsonAntenas = [];
 
-  // Desactivar el botón inicialmente
   btnVerMas.disabled = true;
   chkConfirmacion.checked = false;
   chkConfirmacion.disabled = true;
 
-  // Función para verificar si hay una opción seleccionada
   function verificarSeleccion() {
     if (slcWireless.value) {
       btnVerMas.disabled = false;
@@ -72,7 +64,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Función para verificar si todos los campos de un formulario están llenos
   function verificarCamposLlenos(formulario) {
     const inputs = formulario.querySelectorAll("input, select, textarea");
     for (const input of inputs) {
@@ -84,7 +75,6 @@ document.addEventListener("DOMContentLoaded", () => {
     chkConfirmacion.checked = true;
   }
 
-  // Agregar event listeners a los campos de los formularios para verificar si están llenos
   function agregarEventListenersFormulario(formulario) {
     const inputs = formulario.querySelectorAll("input, select, textarea");
     for (const input of inputs) {
@@ -97,11 +87,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const selectedOption = this.options[this.selectedIndex];
     const tipoDispositivo = selectedOption.getAttribute("data-modelo");
 
-    // Ocultar todas las tarjetas
     cardParametros.style.display = "none";
     cardParametrosRepetidor.style.display = "none";
     cardParametrosAntena.style.display = "none";
-    btnVerMas.textContent = "Ver más"; // Resetear el texto del botón
+    btnVerMas.textContent = "Ver más"; 
 
     if (tipoDispositivo === "router") {
       formularioCambiosRouter.style.display = "block";
@@ -125,7 +114,6 @@ document.addEventListener("DOMContentLoaded", () => {
       agregarEventListenersFormulario(formularioCambiosAntena);
       await cargarEnInputs();
     } else if (tipoDispositivo === "ninguno") {
-      // Restablecer todo a la normalidad
       formularioCambiosRouter.style.display = "none";
       formularioCambiosRepetidor.style.display = "none";
       formularioCambiosAntena.style.display = "none";
@@ -137,7 +125,6 @@ document.addEventListener("DOMContentLoaded", () => {
     verificarCamposLlenos(formularioCambiosAntena);
   });
 
-  // Modificación del event listener para el botón Ver más
   btnVerMas.addEventListener("click", function (event) {
     event.stopPropagation();
     const selectedOption = slcWireless.options[slcWireless.selectedIndex];
@@ -173,7 +160,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Agregar esta función para cargar los datos de los parámetros en la card
   function cargarDatosParametros() {
     document.getElementById("paramBase").textContent = txtBase.value;
     document.getElementById("paramIp").textContent = txtIp.value;
@@ -341,7 +327,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Validar campos requeridos en tiempo real
   camposRequeridos.forEach(campo => {
     campo.addEventListener("input", () => {
       const grupoFormulario = campo.closest('.form-floating');
@@ -403,9 +388,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const respuesta = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${doct}`);
       const data = await respuesta.json();
-      //Asignacion del Nombre del cliente
       txtCliente.value = data[0].nombre;
-      //Asignacion del Documento del cliente
       txtNrodocumento.value = doct;
 
     } catch (error) {
@@ -432,7 +415,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     slcWireless.innerHTML = '<option value="" disabled selected>Seleccione una opción</option>';
 
-    // Agregar la opción "ninguno"
     const optionNinguno = document.createElement("option");
     optionNinguno.value = "ninguno";
     optionNinguno.textContent = "Restablecer Selección";
@@ -441,9 +423,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     routers.forEach(router => {
       const option = document.createElement("option");
-      option.value = router.numero; // Usar "numero" como valor del option
-      option.textContent = `${router.ssid} (${router.modelo})`; // Usar "ssid" y "modelo" como texto visible del option
-      option.setAttribute("data-modelo", "router"); // Agregar el atributo data-modelo
+      option.value = router.numero; 
+      option.textContent = `${router.ssid} (${router.modelo})`; 
+      option.setAttribute("data-modelo", "router"); 
       slcWireless.appendChild(option);
     });
 
@@ -589,17 +571,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function cargarSoporteAnterior(data) {
-    // Datos del cliente
     txtCliente.value = data.parametroscliente.usuario;
     txtNrodocumento.value = data.parametroscliente.nrodoc;
     txtPlan.value = data.parametroscliente.plan;
-
-    // Cambios realizados (mostrar en los campos principales)
     txtBase.value = data.parametros.base;
     txtBaseNuevo.value = data.cambios.nuevabase;
     txtSenial.value = data.cambios.signalstrength;
 
-    // Cargar routers en el select
     await cargarRouters(data.cambios.routers);
     await cargarRepetidores(data.cambios.repetidores);
     await cargarAntena(data.cambios.antena);
@@ -670,18 +648,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const soporte = result[0]?.soporte ? JSON.parse(result[0].soporte) : {};
     const nuevoSoporte = { ...soporte };
 
-    // Verificar si el cliente ya ha tenido un soporte registrado
     const yaTieneSoporte = soporteAnterior.WISP && Object.keys(soporteAnterior.WISP).length > 0;
 
-    // Actualizar repetidores existentes
     const repetidoresActualizados = await modificadoRepetidor(yaTieneSoporte ? soporteAnterior.WISP.parametros.repetidores : wispFiltrado.repetidores, soporteAnterior);
 
-    // Filtrar los nuevos repetidores para excluir los que ya existen en la lista de repetidores actualizados
     const nuevosRepetidoresFiltrados = jsonRepetidores.filter(nuevoRepetidor =>
       !repetidoresActualizados.some(repetidorActualizado => repetidorActualizado.numero === nuevoRepetidor.numero)
     );
 
-    // Combinar repetidores actualizados con los nuevos repetidores filtrados
     const repetidoresCombinados = [...repetidoresActualizados, ...nuevosRepetidoresFiltrados];
 
     const wispData = {
@@ -809,7 +783,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  //Evento de escaneo de código de barras fibra óptica
   document.getElementById('txtCodigoBarrasRepetidorModal').addEventListener('input', async function () {
     const codigoBarra = this.value.trim();
 
@@ -840,7 +813,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  //Evento de escaneo de código de barras antena
   document.getElementById('txtAntenaMacCambios').addEventListener('input', async function () {
     const codigoBarra = this.value.trim();
 
@@ -870,7 +842,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  //Evento de escaneo de código de barras repetidor
   document.getElementById('txtRepetidorCambioCodigoBarra').addEventListener('input', async function () {
     const codigoBarra = this.value.trim();
 
@@ -932,12 +903,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   });
 
-  // Función para cargar repetidores existentes en el modal
   function mostrarRepetidoresEnModal() {
-    // Limpia el contenedor antes de agregar las nuevas tarjetas
     const modalBody = document.getElementById('mdlRepetidorBody');
-
-    // Seleccionar solo las tarjetas dinámicas y no el formulario
     const tarjetasDinamicas = modalBody.querySelectorAll('.card');
     tarjetasDinamicas.forEach(tarjeta => tarjeta.remove());
 
@@ -1013,8 +980,6 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
 
       modalBody.appendChild(card);
-
-      // Evento para eliminar el repetidor
       card.querySelector(".btnEliminar").addEventListener("click", function () {
         card.remove();
         jsonRepetidores = jsonRepetidores.filter(rep => rep.numero !== repetidor.numero);
@@ -1022,7 +987,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Función para agregar repetidores
   async function AgregarRepetidor() {
     const ssid = document.getElementById('txtSsidRepetidorModal')?.value;
     const contrasenia = document.getElementById('txtContraseniaRepetidorModal')?.value;
@@ -1039,7 +1003,6 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Verificar si el repetidor ya existe
     const repetidorExistente = jsonRepetidores.find(rep => rep.codigobarrarepetidor === codigoBarra);
 
     if (repetidorExistente) {
@@ -1047,7 +1010,6 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Asegurar que el número sea único
     const repetidoresExistentes = jsonRepetidores.map(rep => rep.numero);
     const maxNumero = Math.max(0, ...repetidoresExistentes);
     const numeroRepetidores = maxNumero + 1;
@@ -1067,10 +1029,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     jsonRepetidores.push(repetidor);
 
-    // Actualizar la interfaz de usuario
     mostrarRepetidoresEnModal();
 
-    // Limpiar el formulario del modal
     document.getElementById('txtSsidRepetidorModal').value = '';
     document.getElementById('txtContraseniaRepetidorModal').value = '';
     document.getElementById('txtSerieRepetidorModal').value = '';
@@ -1082,7 +1042,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('txtPrecioRepetidorModal').value = '';
   }
 
-  // Añadir Nuevo Repetidor
   document.getElementById('btnAñadirRepetidor').addEventListener('click', async function () {
     await AgregarRepetidor();
   });

@@ -2,7 +2,6 @@ import config from "../env.js";
 import { FichaInstalacion, formatoIPinput, FichaSoporteporDocServCoordenada, CompletarSoporte } from "./Herramientas.js";
 import * as mapa from "./Mapa.js";
 
-// Evento que se ejecuta cuando el DOM ha sido completamente cargado
 document.addEventListener("DOMContentLoaded", () => {
   const urlParams = new URLSearchParams(window.location.search);
   const idContrato = urlParams.get("idContrato");
@@ -21,9 +20,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   const form = document.getElementById("frm-registro-fibr");
-
-
-  //Parametros tecnicos de la ficha
   const txtPlan = document.getElementById("txtPlan");
   const txtCliente = document.getElementById("txtCliente");
   const txtNrodocumento = document.getElementById("txtNrodocumento");
@@ -47,7 +43,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const txtSSIDRepetidor = document.getElementById("txtSSIDRepetidor");
   const txtPassRepetidor = document.getElementById("txtPassRepetidor");
 
-  //Cambios de la ficha
   const txtCambiosPppoe = document.getElementById("txtCambiosPppoe");
   const txtCambiosClave = document.getElementById("txtCambiosClave");
   const txtCambiosVlan = document.getElementById("txtCambiosVlan");
@@ -64,7 +59,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const txtCambiosPassRepetidor = document.getElementById("txtCambiosPassRepetidor");
   const txtCambiosSsidRepetidor = document.getElementById("txtCambiosSsidRepetidor");
 
-  //Área de solución
   const solutionTextarea = document.getElementById("txtaCambiosProceSolucion");
 
   const camposRequeridos = document.querySelectorAll(".form-control");
@@ -74,19 +68,14 @@ document.addEventListener("DOMContentLoaded", () => {
   let jsonRepetidores = [];
   let numeroRepetidores = 0;
 
-  // Función autoejecutable para inicializar datos
   (async function () {
     idSoporte = await obtenerReferencias();
     if (idSoporte) {
-      await crearSelectYBoton();
+      crearSelectYBoton();
       await cargarDatosdelSoporte();
       await cargarProblema(idSoporte);
       await llamarCajas();
-    } else {
-      //Aqui puedes meterle mano
-      await listarReporte(idContrato, idReporte);
-      await cargarProblema(idReporte);
-    }
+    } 
   })();
 
   if (slcRpetidor) {
@@ -157,7 +146,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Validar campos requeridos en tiempo real
   camposRequeridos.forEach(campo => {
     campo.addEventListener("input", () => {
       const grupoFormulario = campo.closest('.form-floating');
@@ -188,11 +176,8 @@ document.addEventListener("DOMContentLoaded", () => {
   async function llamarCajas() {
     const cajas = await mapa.buscarCercanos(idCaja);
     const slcCaja = document.getElementById('slcCaja');
-
-    // Limpiar opciones anteriores
     slcCaja.innerHTML = '';
 
-    // Agregar la opción de idCaja actual
     if (idCaja !== undefined) {
       const cajaActual = cajas.find(caja => caja.id_caja === idCaja);
       if (cajaActual) {
@@ -204,9 +189,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    // Agregar otras opciones de cajas cercanas
     cajas.forEach(caja => {
-      // Verificar si la opción ya existe
       if (caja.id_caja !== idCaja) {
         const option = document.createElement('option');
         option.value = caja.id_caja;
@@ -269,7 +252,6 @@ document.addEventListener("DOMContentLoaded", () => {
     txtCambiosClave.value = fibr.cambiosgpon.clave;
     txtCambiosVlan.value = fibr.cambiosgpon.vlan;
 
-    // Asignar idCaja
     idCaja = data.idcaja;
 
     if (idCaja === undefined) {
@@ -287,16 +269,11 @@ document.addEventListener("DOMContentLoaded", () => {
       repetidorContainers.hide();
     }
 
-    // Cargar siempre los datos del router
     await cargarDatosRouter(fibr.cambiosgpon);
   }
 
-  // Función para cargar repetidores existentes en el modal
   function mostrarRepetidoresEnModal() {
-    // Limpia el contenedor antes de agregar las nuevas tarjetas
     const modalBody = document.getElementById('mdlRepetidorBody');
-
-    // Seleccionar solo las tarjetas dinámicas y no el formulario
     const tarjetasDinamicas = modalBody.querySelectorAll('.card');
     tarjetasDinamicas.forEach(tarjeta => tarjeta.remove());
 
@@ -372,8 +349,6 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
 
       modalBody.appendChild(card);
-
-      // Evento para eliminar el repetidor
       card.querySelector(".btnEliminar").addEventListener("click", function () {
         card.remove();
         jsonRepetidores = jsonRepetidores.filter(rep => rep.numero !== repetidor.numero);
@@ -440,8 +415,6 @@ document.addEventListener("DOMContentLoaded", () => {
       txtPotencia.value = fibraFiltrado.potencia;
       chkCatv.checked = fibraFiltrado.router.catv;
       txtVlan.value = fibraFiltrado.vlan;
-
-      // Asignar datos de la caja
       console.log(fichaInstalacion.idcaja);
       idCaja = fichaInstalacion.idcaja;
 
@@ -569,20 +542,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const soporte = result[0]?.soporte ? JSON.parse(result[0].soporte) : {};
     console.log("Soporte:", soporte);
     const nuevoSoporte = { ...soporte };
-
-    // Verificar si el cliente ya ha tenido un soporte registrado
     const yaTieneSoporte = soporteAnterior && soporteAnterior.fibr && Object.keys(soporteAnterior.fibr).length > 0;
     console.log("Ya tiene soporte:", yaTieneSoporte);
 
-    // Actualizar repetidores existentes
     const repetidoresActualizados = await moficadoRepetidor(fibrafiltrado.repetidores || []);
 
-    // Filtrar los nuevos repetidores para excluir los que ya existen en la lista de repetidores actualizados
     const nuevosRepetidoresFiltrados = jsonRepetidores.filter(nuevoRepetidor =>
       !repetidoresActualizados.some(repetidorActualizado => repetidorActualizado.numero === nuevoRepetidor.numero)
     );
 
-    // Combinar repetidores actualizados con los nuevos repetidores filtrados
     const repetidoresCombinados = [...repetidoresActualizados, ...nuevosRepetidoresFiltrados];
 
     const fibraData = {
@@ -674,7 +642,6 @@ document.addEventListener("DOMContentLoaded", () => {
           data: {
             idSoporte: idSoporte,
             idTecnico: user['idUsuario'],
-            //idTipoSoporte: document.getElementById("slcTipoSoporte").value,
             soporte: soporteData,
             idUserUpdate: user['idUsuario'],
             descripcion_solucion: solutionTextarea.value,
@@ -707,7 +674,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  //Evento de escaneo de código de barras fibra óptica
   document.getElementById('txtCodigoBarrasRepetidorModal').addEventListener('input', async function () {
     const codigoBarra = this.value.trim();
 
@@ -738,7 +704,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Función para agregar repetidores
   async function AgregarRepetidor() {
     const ssid = document.getElementById('txtSsidRepetidorModal')?.value;
     const contrasenia = document.getElementById('txtContraseniaRepetidorModal')?.value;
@@ -755,7 +720,6 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Verificar si el repetidor ya existe
     const repetidorExistente = jsonRepetidores.find(rep => rep.codigobarrarepetidor === codigoBarra);
 
     if (repetidorExistente) {
@@ -763,7 +727,6 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Asegurar que el número sea único
     const repetidoresExistentes = jsonRepetidores.map(rep => rep.numero);
     const maxNumero = Math.max(0, ...repetidoresExistentes);
     const numeroRepetidores = maxNumero + 1;
@@ -784,10 +747,8 @@ document.addEventListener("DOMContentLoaded", () => {
     jsonRepetidores.push(repetidor);
     console.log("Nuevo repetidor agregado:", repetidor);
 
-    // Actualizar la interfaz de usuario
     mostrarRepetidoresEnModal();
 
-    // Limpiar el formulario del modal
     document.getElementById('txtSsidRepetidorModal').value = '';
     document.getElementById('txtContraseniaRepetidorModal').value = '';
     document.getElementById('txtSerieRepetidorModal').value = '';
@@ -799,12 +760,8 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('txtPrecioRepetidorModal').value = '';
   }
 
-  // Función para cargar repetidores existentes en el modal
   function mostrarRepetidoresEnModal() {
-    // Limpia el contenedor antes de agregar las nuevas tarjetas
     const modalBody = document.getElementById('mdlRepetidorBody');
-
-    // Seleccionar solo las tarjetas dinámicas y no el formulario
     const tarjetasDinamicas = modalBody.querySelectorAll('.card');
     tarjetasDinamicas.forEach(tarjeta => tarjeta.remove());
 
@@ -880,27 +837,17 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
 
       modalBody.appendChild(card);
-
-      // Evento para eliminar el repetidor
       card.querySelector(".btnEliminar").addEventListener("click", function () {
-        // Eliminar la tarjeta del DOM
         card.remove();
-
-        // Filtrar el repetidor del array jsonRepetidores
         jsonRepetidores = jsonRepetidores.filter(rep => rep.numero !== repetidor.numero);
-
-        // Verificar si el repetidor fue eliminado correctamente
         console.log("Repetidores restantes:", jsonRepetidores);
       });
     });
   }
-
-  // Añadir Nuevo Repetidor
   document.getElementById('btnAñadirRepetidor').addEventListener('click', async function () {
     await AgregarRepetidor();
   });
 
-  //Evento para completar soporte
   document.getElementById('btnCompletar').addEventListener('click', async function () {
     const idSoporte = await obtenerReferencias();
     if (await ask("¿Está seguro de completar este soporte? Ya no aparecerá en la tabla.")) {
@@ -914,6 +861,5 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Cargar datos del soporte y mostrar repetidores existentes en el modal
   cargarDatosdelSoporte();
 });
