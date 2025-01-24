@@ -323,6 +323,8 @@ document.addEventListener("DOMContentLoaded", () => {
       if (idCaja === undefined) {
         console.error("Error: idCaja es undefined");
       }
+
+      mostrarRepetidoresEnModal();
     } catch (error) {
       console.error("Error al parsear la respuesta del soporte:", error);
     }

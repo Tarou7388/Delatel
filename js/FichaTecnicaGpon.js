@@ -199,6 +199,7 @@ document.addEventListener("DOMContentLoaded", () => {
           ingresopass: txtSeguridadRouter
         },
         detalles: txtDetallesRouter,
+        repetidores: jsonRepetidor
       },
       tipoentrada: {
         fila: slcFilaEntrada.split(","),
@@ -574,6 +575,13 @@ document.addEventListener("DOMContentLoaded", () => {
     await fibraOptica();
     await cable();
     const jsonCosto = await costos();
+
+    // Inicializar sintonizadores como un array vacío
+    jsonCable.sintonizadores = [];
+
+    if (numeroSintotizadores > 0) {
+      jsonCable.sintonizadores = jsonSintotizador;
+    }
 
     if (numeroRepetidores > 0) {
       jsonData.fibraoptica.repetidores = jsonRepetidor;

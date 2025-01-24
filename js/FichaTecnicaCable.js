@@ -17,17 +17,17 @@ document.addEventListener("DOMContentLoaded", () => {
   let jsonData = {};
   let jsonCable = {};
 
-  
+
   document.getElementById("txtFecha").value = new Date().toISOString().split('T')[0];
 
-  
+
   const periodoDate = new Date();
   periodoDate.setMonth(periodoDate.getMonth() + 6);
   txtPeriodo.value = txtPeriodo.min = periodoDate.toISOString().split("T")[0];
 
   const camposRequeridos = document.querySelectorAll(".form-control");
 
-  
+
   camposRequeridos.forEach(campo => {
     campo.addEventListener("input", () => {
       const grupoFormulario = campo.closest('.form-floating');
@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  
+
   function validarValorNegativoPositivo(event) {
     const elemento = event.target;
     const min = 0;
@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  
+
   function validarValorRango(event) {
     const elemento = event.target;
     const min = parseFloat(elemento.min);
@@ -125,7 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   })();
 
-  
+
   async function cable() {
     const txtIdCaja = document.querySelector("#txtIdCaja").value;
     const slcFilaEntrada = document.querySelector("#slcFilaEntrada").value;
@@ -184,12 +184,13 @@ document.addEventListener("DOMContentLoaded", () => {
         tipoEntrada: {
           fila: slcFilaEntrada.split(","),
           puerto: parseInt(txtPuerto)
-        }
+        },
+        idcaja: parseInt(txtIdCaja),
       };
     }
   }
 
-  
+
   async function costos() {
     const txtCantSintotizador = document.querySelector("#txtCantSintotizador").value;
     const txtCostoAlquiler = document.querySelector("#txtCostoAlquiler").value;
@@ -233,9 +234,9 @@ document.addEventListener("DOMContentLoaded", () => {
     return jsonCosto;
   }
 
-  
+
   function calcularCostos() {
-    
+
     const cantCable = parseFloat(txtCantCable.value) || 0;
     const precioCable = parseFloat(txtPrecioCable.value) || 0;
     const costoCable = cantCable * precioCable;
@@ -247,13 +248,13 @@ document.addEventListener("DOMContentLoaded", () => {
     txtCostoConector.value = costoConector.toFixed(2);
   }
 
-  
+
   async function ActualizarCantidadSintotizador() {
     document.getElementById("txtCantSintotizador").value = numeroSintotizadores;
     document.getElementById("txtCostoAlquiler").value = numeroSintotizadores * 40;
   }
 
-  
+
   async function AgregarSintotizador() {
     const txtCodigoBarraSintonizador = document.getElementById("txtCodigoBarraSintonizador").value;
     const txtMarcaSintonizador = document.getElementById("txtMarcaSintonizador").value;
@@ -327,7 +328,7 @@ document.addEventListener("DOMContentLoaded", () => {
     validarPuerto();
   });
 
-  
+
   function validarCampos() {
     const campos = [
       "txtUsuario",
@@ -354,11 +355,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let esValido = true;
 
-    
+
     for (const campo of campos) {
       const elemento = document.getElementById(campo);
 
-      
+
       if (elemento.value.trim() === "") {
         elemento.classList.add("is-invalid");
         esValido = false;
@@ -366,31 +367,31 @@ document.addEventListener("DOMContentLoaded", () => {
         elemento.classList.remove("is-invalid");
       }
 
-      
-      const valor = parseFloat(elemento.value);
-      const min = parseFloat(elemento.min);  
-      const max = parseFloat(elemento.max);  
 
-      
+      const valor = parseFloat(elemento.value);
+      const min = parseFloat(elemento.min);
+      const max = parseFloat(elemento.max);
+
+
       if (valor < 0 && elemento.hasAttribute('min') && valor < min) {
         elemento.classList.add("is-invalid");
         esValido = false;
       }
 
-      
+
       if (valor < min || valor > max) {
         elemento.classList.add("is-invalid");
         esValido = false;
       }
     }
 
-    
+
     validarPuerto();
 
     return esValido;
   }
 
-  
+
   function validarPuerto() {
     const filaEntrada = document.getElementById("slcFilaEntrada").value;
     const columnaEntrada = document.getElementById("txtPuerto").value;
@@ -420,7 +421,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  
+
   async function guardar() {
     if (!validarCampos()) {
       showToast("Todos los campos son obligatorios.", "WARNING");
@@ -430,11 +431,14 @@ document.addEventListener("DOMContentLoaded", () => {
     await cable();
     jsonCosto = await costos();
 
+    jsonCable.sintonizadores = [];
+
     if (numeroSintotizadores > 0) {
       jsonCable.sintonizadores = jsonSintotizador;
     }
     jsonData.cable = jsonCable;
     jsonData.costo = jsonCosto;
+    const txtIdCaja = document.querySelector("#txtIdCaja").value;
     jsonData.idcaja = parseInt(txtIdCaja);
 
     console.log("jsonData:", jsonData);
@@ -463,7 +467,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 2500);
   }
 
-  
+
   document.getElementById("btnAñadirSintotizador").addEventListener("click", function () {
     const codigoBarra = document.getElementById("txtCodigoBarraSintonizador").value.trim();
     const serie = document.getElementById("txtSerieSintonizador").value.trim();
@@ -491,7 +495,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     AgregarSintotizador();
 
-    
+
     campos.forEach(campo => {
       document.getElementById(campo.id).value = "";
     });
@@ -499,17 +503,17 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("txtModeloSintonizador").value = "";
   });
 
-  
+
   document.getElementById("btnGuardar").addEventListener("click", async () => {
     await guardar();
   });
 
-  
+
   document.getElementById("btnCancelar").addEventListener("click", () => {
     window.location.href = `${config.HOST}views/Contratos/`;
   });
 
-  
+
   document.getElementById('txtCodigoBarraSintonizador').addEventListener('input', async function () {
     const codigoBarra = this.value.trim();
 
@@ -543,7 +547,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   txtCantCable.addEventListener("input", calcularCostos);
   txtCantConector.addEventListener("input", calcularCostos);
-  
+
   txtCantConector.addEventListener("input", validarValorNegativoPositivo);
   txtCantCable.addEventListener("input", validarValorNegativoPositivo);
   txtSplitter.addEventListener("input", validarValorNegativoPositivo);

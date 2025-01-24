@@ -1,7 +1,7 @@
 <h3 class="text-center">CONTROL DE AVERÍAS SERVICIO CABLE - DELAFIBER</h3>
 
 <div class="container">
-  <div style="text-align: right; font-family: Arial, sans-serif; font-size: 12px; margin-right: 35px;">
+  <div style="text-align: right; font-family: Arial, sans-serif; font-size: 15px; margin-right: 70px;">
     <p><strong>N°:</strong> <?= $resultado[0]['id_contrato'] ?? 'N/A'; ?> &nbsp; <strong>Fecha:</strong> <?= $fechaActual; ?></p>
   </div>
 </div>
@@ -38,7 +38,7 @@
   </table>
 </div>
 
-<div>
+<div style="margin-top: 20px;">
   <table class="tabla2">
     <thead>
       <tr>
@@ -50,7 +50,7 @@
         <td><strong>POTENCIA:</strong></td>
         <td colspan="2"><?= $resultado[0]['FichaAveria']['cabl']['parametroscable']['potencia'] ?? 'N/A'; ?></td>
         <td><strong>SINTONIZADOR:</strong></td>
-        <td colspan="2"><?= $resultado[0]['FichaAveria']['cabl']['parametroscable']['sintonizador'] ?? 'N/A'; ?></td>
+        <td colspan="2"><?= !empty($resultado[0]['FichaAveria']['cabl']['parametroscable']['sintonizadores']) ? count($resultado[0]['FichaAveria']['cabl']['parametroscable']['sintonizadores']) . ' sintonizadores' : 'N/A'; ?></td>
       </tr>
       <tr>
         <td><strong>TRIPLEXOR:</strong></td>
@@ -74,7 +74,7 @@
   </table>
 </div>
 
-<div>
+<div style="margin-top: 20px;">
   <table class="tabla2">
     <thead>
       <tr>
@@ -115,7 +115,7 @@
 </div>
 
 <?php if (!empty($resultado[0]['FichaAveria']['cabl']['parametroscable']['sintonizadores'])): ?>
-  <div>
+  <div style="margin-top: 170px;">
     <table class="tabla2">
       <thead>
         <tr>
@@ -132,7 +132,7 @@
       <tbody>
         <?php foreach ($resultado[0]['FichaAveria']['cabl']['parametroscable']['sintonizadores'] as $sintonizador): ?>
           <tr>
-            <td><?= $sintonizador['codigoBarra'] ?? 'N/A'; ?></td>
+            <td><?= $sintonizador['codigobarra'] ?? 'N/A'; ?></td>
             <td><?= $sintonizador['marca'] ?? 'N/A'; ?></td>
             <td><?= $sintonizador['modelo'] ?? 'N/A'; ?></td>
             <td><?= $sintonizador['precio'] ?? 'N/A'; ?></td>
@@ -145,7 +145,7 @@
 <?php endif; ?>
 
 <?php if (!empty($resultado[0]['FichaAveria']['cabl']['cambioscable']['sintonizadores'])): ?>
-  <div>
+  <div style="margin-top: 20px;">
     <table class="tabla2" style="margin-top: 20px;">
       <thead>
         <tr>
@@ -162,7 +162,7 @@
       <tbody>
         <?php foreach ($resultado[0]['FichaAveria']['cabl']['cambioscable']['sintonizadores'] as $cambio): ?>
           <tr>
-            <td><?= $cambio['codigoBarra'] ?? 'N/A'; ?></td>
+            <td><?= $cambio['codigobarra'] ?? 'N/A'; ?></td>
             <td><?= $cambio['marca'] ?? 'N/A'; ?></td>
             <td><?= $cambio['modelo'] ?? 'N/A'; ?></td>
             <td><?= $cambio['precio'] ?? 'N/A'; ?></td>
