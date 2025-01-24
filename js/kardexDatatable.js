@@ -41,8 +41,8 @@ window.tablaKardex = $('#TbKardex').DataTable({
     url: ruta,
     type: "GET",
     dataSrc: function (json) {
-      console.log(json); // Verifica la respuesta del servidor
-      return json.data; // Devuelve el array de datos
+      console.log(json);
+      return json.data;
     },
     error: function (xhr, error, thrown) {
       console.error('Error en la carga de datos:', error, thrown);

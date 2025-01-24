@@ -99,7 +99,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       };
     } catch (error) {
       showToast("No se pudo encontrar a la persona con el API.", "ERROR");
-      //console.error("Error en BuscarPersonaAPI:", error);
+
       return null;
     }
   };
@@ -155,10 +155,10 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
       );
       const data = await respuesta.json();
-      //console.log(data.id_usuario);
+
       if (data) {
         showToast("Usuario registrado con éxito", "SUCCESS");
-        //console.log(data[0].id_usuario);
+
         return data[0].id_usuario;
       }
       else { showToast("Usuario ya registrado", "ERROR"); }
@@ -194,10 +194,9 @@ document.addEventListener("DOMContentLoaded", async function () {
   $("registerForm").addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    // Verifica si los requisitos de contraseña se cumplen
     if (!verificarReqs()) {
       showToast("La contraseña no cumple con los requisitos necesarios.", "ERROR");
-      return; // Cancela el registro si no se cumplen
+      return; 
     }
 
     const NombreUser = await VerificarUserN();
@@ -325,9 +324,5 @@ document.addEventListener("DOMContentLoaded", async function () {
   $("txtContrasenia").addEventListener("focus", () => { $("ulRequisitos").hidden = false; verificarReqs() });
   $("txtContrasenia").addEventListener("input", verificarReqs);
   $("txtContrasenia").addEventListener("blur", () => $("ulRequisitos").hidden = true);
-
-
-
-  //txtUsuario --> Esto sera usado para luego hacer saltar alerta para el problema
 
 });

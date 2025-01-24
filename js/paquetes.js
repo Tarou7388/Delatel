@@ -53,33 +53,27 @@ document.addEventListener("DOMContentLoaded", async () => {
       lengthChange: false,
     });
 
-    // Evento para el botón de eliminar
     $("#tablaPaquetes tbody").on("click", ".btn-delete", function () {
       const idPaquete = $(this).data("id");
       eliminarPaquete(idPaquete, userid);
     });
 
-    // Evento para el botón de registrar
     $("#btnRegistrar").on("click", function () {
       registrarPaquete(userid);
     });
 
-    // Evento para el botón de Actualizar
     $("#btnActualizar").on("click", function () {
       const idPaquete = $("#txtIdPaquete").val();
       actualizarPaquete(idPaquete);
     });
 
-    // Cargar datos de servicios en los selectores
     cargarServicios();
 
-    // Validar números positivos en los campos de entrada
     $("#txtPrecio, #txtPrecioActualizar").on("input", function () {
       validarNumerosPositivos(this);
     });
   });
 
-  // Escuchar el evento personalizado
   document.addEventListener("servicioActivado", (event) => {
     const { idServicio, userid } = event.detail;
     cargarServicios();
@@ -100,7 +94,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     cargarServicios();
   });
 
-  // Limpiar campos de texto
   function limpiarModal() {
     $("#txtPaquete").val("");
     $("#txtPrecio").val("");
@@ -111,7 +104,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     $("#serviciosContainer").empty();
   }
 
-  // Evento para abrir el modal de actualización
   $("#tablaPaquetes tbody").on("click", ".btn-edit", async function () {
     const idPaquete = $(this).data("id");
 
@@ -153,7 +145,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  // Validar Campos
   async function validarCampos(contexto) {
     let paquete, precio, tipoServicio;
 
@@ -179,7 +170,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     return true;
   }
 
-  // Función para Registrar
   async function registrarPaquete() {
     if (accesos?.paquetes?.crear) {
       if (!(await validarCampos("registro"))) {
@@ -196,7 +186,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
       }
 
-      // Construir el objeto de velocidad
       let velocidad = {};
       if (selectedServices.includes("3")) {
         velocidad = {
@@ -259,7 +248,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // Función Actualizar
   async function actualizarPaquete(idPaquete) {
     if (accesos?.paquetes?.actualizar) {
       if (!(await validarCampos("actualizacion"))) {
@@ -333,7 +321,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // Función eliminar
   async function eliminarPaquete(idPaquete, idUsuario) {
     if (accesos?.paquetes?.eliminar) {
       try {

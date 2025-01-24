@@ -66,10 +66,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const cajas = await mapa.buscarCercanos(idCaja);
     const slcCaja = document.getElementById('slcCaja');
 
-    // Limpiar opciones anteriores
+    
     slcCaja.innerHTML = '';
 
-    // Agregar la opción de idCaja actual
+    
     if (idCaja !== undefined) {
       const cajaActual = cajas.find(caja => caja.id_caja === idCaja);
       if (cajaActual) {
@@ -81,9 +81,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    // Agregar otras opciones de cajas cercanas
+    
     cajas.forEach(caja => {
-      // Verificar si la opción ya existe
+      
       if (caja.id_caja !== idCaja) {
         const option = document.createElement('option');
         option.value = caja.id_caja;
@@ -93,7 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Función para completar los campos de cambio con los valores de los parámetros técnicos
+  
   async function completarCamposDeCambio() {
     const parametrosTecnicos = {
       txtPotenciaCambio: txtPotencia.value,
@@ -124,7 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
     await pintarSintonizador(infoSintonizadores);
   }
 
-  // Función para borrar los valores de los campos de cambio
+  
   async function borrarCamposDeCambio() {
     const camposCambio = [
       'txtPotenciaCambio',
@@ -142,9 +142,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const input = document.getElementById(id);
       if (input) {
         if (input.tagName === "SELECT") {
-          input.selectedIndex = 0; // Reiniciar a la primera opción si es un select
+          input.selectedIndex = 0; 
         } else {
-          input.value = ''; // Vaciar si es un input
+          input.value = ''; 
         }
       }
     });
@@ -206,19 +206,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function cargarSoporteAnterior(data, idSoporte) {
     try {
-      // Obtener los datos del soporte por ID
+      
       const respuestaProblema = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
       const dataProblema = await respuestaProblema.json();
   
-      // Obtener los datos del cliente
+      
       const nombreCliente = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${dataProblema[0].nro_doc}`);
       const dataCliente = await nombreCliente.json();
   
-      // Obtener la ficha de instalación
+      
       const dataCable = await FichaInstalacion(idSoporte);
       const cableFiltrado = JSON.parse(dataCable[0].ficha_instalacion).cable;
   
-      // Asignar los valores al formulario
       idCaja = cableFiltrado.idcaja;
       txtCliente.value = dataCliente[0].nombre;
       txtNrodocumento.value = dataProblema[0].nro_doc;
@@ -229,7 +228,6 @@ document.addEventListener("DOMContentLoaded", () => {
         console.warn("No se encontró descripción del problema.");
       }
   
-      // Asignar más valores específicos
       txtPotencia.value = data.potencia || "";
       console.log("Contenido de sintonizadores:", data.sintonizadores);
       
@@ -237,7 +235,6 @@ document.addEventListener("DOMContentLoaded", () => {
       sintonizadoresData = infoSintonizadores;
       txtSintonizador.value = infoSintonizadores.length;
   
-      // Asignar el valor seleccionado de Triplexor
       for (let i = 0; i < slcTriplexor.options.length; i++) {
         if (slcTriplexor.options[i].text.trim().toLowerCase() === data.triplexor?.trim().toLowerCase()) {
           slcTriplexor.selectedIndex = i;
@@ -245,7 +242,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
   
-      // Asignar el valor seleccionado de Splitter
       txtNumSpliter.value = data.splitter?.[0]?.cantidad || "";
       const tipoSpliter = data.splitter?.[0]?.tipo || 0;
       const opcionesSpliter = slcSpliter.options;
@@ -257,16 +253,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
   
-      // Asignar valores al plan y cable
       txtPlan.value = data.plan || "";
       txtCable.value = data.cable?.metrosadicionales || 0;
   
-      // Calcular y asignar el precio del cable
       txtPrecioCable.value = (data.cable?.metrosadicionales || 0) * (parseFloat(cableFiltrado.cable.preciometro) || 0);
       txtConector.value = data.conector?.numeroconector || 0;
       txtPrecioConector.value = (data.conector?.numeroconector || 0) * (parseFloat(cableFiltrado.conector.precio) || 0);
   
-      // Asignar precios de cambio para cable y conector
       txtPrecioCableCambio.value = parseFloat(cableFiltrado.cable.preciometro) || 0;
       txtPrecioConectorCambio.value = parseFloat(cableFiltrado.conector.precio) || 0;
 
@@ -314,12 +307,12 @@ document.addEventListener("DOMContentLoaded", () => {
     let sintonizadorContador = [];
     console.log("Contenido de sintonizadores:", sintonizadores);
   
-    // Si no es un arreglo, lo convierte en un arreglo
+    
     if (!Array.isArray(sintonizadores)) {
       sintonizadores = [sintonizadores];
     }
   
-    // Ahora, sintonizadores es siempre un arreglo
+    
     sintonizadores.forEach((sintonizador) => {
       if (!sintonizadorContador.some(existing => existing.serie === sintonizador.serie)) {
         sintonizadorContador.push(sintonizador);
@@ -391,15 +384,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
       document.getElementById('btnlistar').addEventListener('click', async () => {
         try {
-          // Verifica si los sintonizadores tienen datos
+          
           const dataCable = await FichaInstalacion(idSoporte);
           const cableFiltrado = JSON.parse(dataCable[0].ficha_instalacion).cable;
 
           const sintonizadores = cableFiltrado.sintonizadores || [];
           const container = document.getElementById('sintonizadoresContainer');
-          container.innerHTML = ''; // Limpia el contenido previo
+          container.innerHTML = ''; 
 
-          // Genera dinámicamente los cards para cada sintonizador
+          
           sintonizadores.forEach((sintonizador, index) => {
             const card = document.createElement('div');
             card.className = 'col-12 col-md-6 col-lg-4';
@@ -471,10 +464,10 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
       `;
   
-      // Agregar la tarjeta al contenedor
+      
       divSintonizadores.appendChild(card);
   
-      // Asignar el evento de eliminación al botón
+      
       const btnEliminar = card.querySelector(".btnEliminar");
       btnEliminar.addEventListener("click", function () {
         const index = jsonSintonizador.findIndex(
@@ -502,9 +495,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const txtSerieSintonizador = document.getElementById("txtSerieSintonizador").value;
     const txtPrecioSintonizador = parseFloat(document.getElementById("txtPrecioSintonizador").value) || 0;
 
-    // Crear el nuevo sintonizador
+    
     const nuevoSintonizador = {
-      numero: jsonSintonizador.length + 1,  // El número se incrementa con la longitud del arreglo
+      numero: jsonSintonizador.length + 1,  
       codigobarra: txtCodigoBarraSintonizador,
       marca: txtMarcaSintonizador,
       modelo: txtModeloSintonizador,
@@ -512,12 +505,12 @@ document.addEventListener("DOMContentLoaded", () => {
       precio: txtPrecioSintonizador,
     };
 
-    // Agregar el nuevo sintonizador al arreglo
+    
     jsonSintonizador.push(nuevoSintonizador);
 
-    // Crear la tarjeta visual del sintonizador
+    
     const card = document.createElement("div");
-    card.className = "card mt-3 shadow-sm border-light rounded";  // Se agregaron estilos para sombra y borde
+    card.className = "card mt-3 shadow-sm border-light rounded";  
     card.innerHTML = `
       <div class="card-body p-4">
         <h5 class="card-title text-primary">Sintonizador #${nuevoSintonizador.numero}</h5>
@@ -540,7 +533,7 @@ document.addEventListener("DOMContentLoaded", () => {
         (sintonizador) => sintonizador.serie === txtSerieSintonizador
       );
       if (index !== -1) {
-        // Eliminar el sintonizador del arreglo
+        
         jsonSintonizador.splice(index, 1);
         console.log("Sintonizador eliminado:", jsonSintonizador);
       }
@@ -617,7 +610,7 @@ document.addEventListener("DOMContentLoaded", () => {
     nuevoSoporte.cabl = cableData;
     nuevoSoporte.idcaja = idCaja;
 
-    console.log(JSON.stringify(nuevoSoporte, null, 2)); // Verifica el JSON generado
+    console.log(JSON.stringify(nuevoSoporte, null, 2)); 
 
     return nuevoSoporte;
   }
@@ -674,18 +667,18 @@ document.addEventListener("DOMContentLoaded", () => {
     checkboxDiv.appendChild(chkConfirmacion);
     checkboxDiv.appendChild(chkLabel);
 
-    // Añadir elementos al contenedor
+    
     buttonDiv.appendChild(guardarBtn);
     buttonDiv.appendChild(cancelarBtn);
-    buttonDiv.appendChild(checkboxDiv); // Agregar el checkbox al contenedor
+    buttonDiv.appendChild(checkboxDiv); 
 
     rowDiv.appendChild(buttonDiv);
 
-    // Insertar el rowDiv en el DOM
+    
     const solutionTextarea = document.getElementById("txtaEstadoFinal");
     solutionTextarea.parentNode.parentNode.appendChild(rowDiv);
 
-    // Lógica para el checkbox (después de agregarlo al DOM)
+    
     chkConfirmacion.addEventListener("change", async () => {
       if (chkConfirmacion.checked) {
         await completarCamposDeCambio();

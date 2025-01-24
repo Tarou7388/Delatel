@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const rutaContarAverias = `${config.HOST}app/controllers/Sticket.controllers.php?operacion=contarAveriasPendientes`;
   const rutaContarContratos = `${config.HOST}app/controllers/Sticket.controllers.php?operacion=contarContratosPendientes`;
 
-  // Solicitud AJAX para obtener el número de clientes
+  // 
   $.ajax({
     url: rutaContarClientes,
     type: "GET",
@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Solicitud AJAX para obtener los contratos pendientes
+  
   $.ajax({
     url: rutaContarContratos,
     type: "GET",
@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Solicitud AJAX para obtener los Soportes Pendientes
+  
   $.ajax({
     url: rutaContarAverias,
     type: "GET",
@@ -150,7 +150,7 @@ document.addEventListener("DOMContentLoaded", () => {
         { data: "descripcion_problema", className: "text-center" },
         { data: "fecha_creacion", className: "text-center" },
         { data: "sector_cliente", className: "text-center" },
-        { data: "tipo_servicio", className: "text-center" }, // Nueva columna para tipo_servicio
+        { data: "tipo_servicio", className: "text-center" }, 
         {
           data: "estado",
           className: "text-center",
@@ -173,7 +173,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Evento de Atender Contrato
+  //
   $("#tblStickets tbody").on("click", ".atender-contrato", async function () {
     var data = $("#tblStickets").DataTable().row($(this).parents("tr")).data();
     console.log("Datos del contrato:", data);
@@ -188,11 +188,11 @@ document.addEventListener("DOMContentLoaded", () => {
       FIBR: "FichaTecnicaFibra",
     };
 
-    // Redirigir al usuario a la página correspondiente según el tipo de servicio
+    
     window.location.href = `${config.HOST}views/Contratos/${tipoFicha[tipoServicio]}?idContrato=${idContrato}`;
   });
 
-  //Evento de Atender Avería
+  
   $("#tblSticketsAverias tbody").on("click", ".atender-averia", async function () {
     const data = $("#tblSticketsAverias").DataTable().row($(this).parents("tr")).data();
     console.log("Datos de la avería:", data);
@@ -202,12 +202,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const nrodocumento = data.nrodocumento;
     const tipoServicio = data.tipo_servicio;
 
-    // Llamamos directamente a la función para mostrar la ficha del servicio
+    
     mostrarFichaServicio(tipoServicio, idSoporte, nrodocumento, coordenada);
   });
 
   function mostrarFichaServicio(tipoServicio, id_soporte, nrodocumento, coordenada) {
-    // Redirigir al usuario a la página correspondiente
+    
     window.location.href = `${config.HOST}views/Soporte/Soporte${tipoServicio}?idsoporte=${id_soporte}&doc=${nrodocumento}&tiposervicio=${tipoServicio}&coordenada=${coordenada}`;
   }
 

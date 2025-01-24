@@ -11,7 +11,7 @@ window.addEventListener("DOMContentLoaded", async function() {
   const slcNacionalidad = document.querySelector("#slcTipoDoc");
   const accesos = await Herramientas.permisos()
 
-  //Listar Planes con sus Precios
+
   const fetchPlanes = async () => {
     const respuesta = await fetch(
       `${config.HOST}app/controllers/Paquete.controllers.php?operacion=listarPaquetes`
@@ -19,7 +19,6 @@ window.addEventListener("DOMContentLoaded", async function() {
     return await respuesta.json();
   };
 
-  // Listar Personas de Contactabilidad
   const fetchPersonas = async () => {
     const response = await fetch(
       `${config.HOST}app/controllers/Contactabilidad.controllers.php?operacion=obtenerContactos`
@@ -27,7 +26,6 @@ window.addEventListener("DOMContentLoaded", async function() {
     return await response.json();
   };
 
-  //Cargar Planes
   const cargarPlanes = async () => {
     const dataPlanes = await fetchPlanes();
     dataPlanes.forEach((paquete) => {
@@ -39,7 +37,6 @@ window.addEventListener("DOMContentLoaded", async function() {
     });
   };
 
-  //Cargar Personas
   const cargarPersonas = async () => {
     const dataPersonas = await fetchPersonas();
     const tbody = document.querySelector(
@@ -164,7 +161,6 @@ window.addEventListener("DOMContentLoaded", async function() {
       } else {
         slcTipoDoc.disabled = false;
 
-        // Cambiar el tipo de documento según la longitud
         if (length === 12) {
           slcTipoDoc.value = "PAS";
         } else if (length === 10) {

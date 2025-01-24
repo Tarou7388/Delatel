@@ -3,7 +3,6 @@ import * as Herramientas from "../js/Herramientas.js";
 
 document.addEventListener("DOMContentLoaded", async function () {
 
-  // Asegúrate de que `user` esté definido de alguna manera. Puede ser un objeto global o se pasa como parte del contexto.
   const userid = user["idUsuario"];
   const tipoMovimientoSelect = document.getElementById("slcTipomovimiento");
   const slcMotivo = document.getElementById("slcMotivo");
@@ -14,7 +13,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   const fecha = document.querySelector("#txtfecha");
   const Almacen = document.querySelector("#slcAlmacen");
 
-  // Verificar permisos
   const accesos = await Herramientas.permisos();
   fecha.value = new Date().toISOString().split("T")[0];
 
@@ -83,7 +81,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     const response = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=listarProductos`);
     const data = await response.json();
 
-    // Asegúrate de que data contenga los productos.
     if (Array.isArray(data)) {
       data.forEach(producto => {
         const tagOption = document.createElement("option");

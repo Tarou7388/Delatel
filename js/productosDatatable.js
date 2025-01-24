@@ -5,7 +5,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const ruta = `${config.HOST}app/controllers/Producto.ssp.php`;
   let idProducto = -1;
 
-  // 2. Inicialización de la tabla de productos
   window.tablaProductos = $("#tblProductos").DataTable({
     dom: `
       <"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6 text-end"f>>
@@ -91,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     ],
     columnDefs: [
-      { targets: 0, visible: false }  // Ocultamos la columna id_producto
+      { targets: 0, visible: false } 
     ],
     paging: true,
     searching: true,
@@ -103,7 +102,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const slcUnidadEditarMedida = document.querySelector("#slcUnidadEditarMedida");
   const slcEditarTipoProducto = document.querySelector("#slcEditarTipoProducto");
 
-  // 3. Evento para editar un producto
   $("#tblProductos tbody").on("click", ".btn-edit", async function () {
     idProducto = $(this).data("id");
 
@@ -126,7 +124,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // 4. Evento para enviar el formulario de edición
   $("#form-editar-producto").on("submit", async function (e) {
     e.preventDefault();
 
@@ -256,7 +253,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   };
 
-  //Funcion para aplicarse al momento de retomar algun producto
   async function rehabilitarProducto(id) {
     const datosProducto = {
       operacion: "ReactivarProducto",

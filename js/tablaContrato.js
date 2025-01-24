@@ -1,6 +1,6 @@
 import config from "../env.js";
 document.addEventListener("DOMContentLoaded", async () => {
-  // Obtén el id_cliente de la URL
+  
   const urlParams = new URLSearchParams(window.location.search);
   const idCliente = urlParams.get("id");
   const nombreCliente = urlParams.get("nombre");
@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     contratos.forEach(contrato => {
       const row = document.createElement("tr");
 
-      // Añade las columnas correspondientes y el botón para ver el PDF
+      
       row.innerHTML = `
         <td>${contrato.tipos_servicio}</td>
         <td>${contrato.paquete}</td>
@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       tbody.appendChild(row);
     });
 
-    // Activa el DataTable
+    
     $('#listarContratos').DataTable({
       paging: true,
       lengthChange: false,
@@ -51,12 +51,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     });
 
-    // Agrega evento para cada botón de averías
+    
     document.querySelectorAll(".btn-averias").forEach(button => {
       button.addEventListener("click", async (event) => {
         const idContrato = event.target.getAttribute("data-id");
 
-        // Hacer fetch al controlador para obtener las averías del contrato
+        
         const respuesta = await fetch(`${config.HOST}app/controllers/Averias.controllers.php?operacion=buscarAveriaPorContrato&valor=${idContrato}`);
         const data = await respuesta.json();
         console.log(data);
@@ -68,11 +68,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
     });
 
-    // Agrega evento para cada botón "Ver PDF"
+    
     document.querySelectorAll(".btn-pdf").forEach(boton => {
       boton.addEventListener("click", () => {
         const idContrato = boton.getAttribute("data-idContrato");
-        // Busca el contrato correspondiente en el array
+        
         const contrato = contratos.find(c => c.id_contrato == idContrato);
 
         if (contrato) {

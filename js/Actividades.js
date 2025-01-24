@@ -89,7 +89,7 @@ window.addEventListener("DOMContentLoaded", function () {
     });
     $('#tablaSoporte').DataTable({
       columnDefs: [
-        { targets: [], visible: true } // Asegurarse de que todas las columnas sean visibles
+        { targets: [], visible: true }
       ],
       language: {
         url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json",
@@ -140,7 +140,6 @@ window.addEventListener("DOMContentLoaded", function () {
   }
 
   async function cargarKardex() {
-    // Crear la tabla en el DOM
     contenido.innerHTML = `
     <table class="table table-striped" id="tablaKardex">
       <thead>
@@ -157,10 +156,8 @@ window.addEventListener("DOMContentLoaded", function () {
       <tbody id="tbodyKardex"></tbody>
     </table>
     `
-    // Variable global
     let tablaKardex = null;
 
-    // Renderizar la tabla
     function renderDataTable() {
       tablaKardex = new DataTable("#tablaKardex", {
         order: [[0, 'desc']],
@@ -172,7 +169,6 @@ window.addEventListener("DOMContentLoaded", function () {
     const response = await fetch(`${config.HOST}app/controllers/Kardex.controllers.php?operacion=listarKardex`);
     const data = await response.json();
 
-    // Reiniciando contenido
     const tbody = document.querySelector("#tablaKardex tbody");
     tbody.innerHTML = data.map(element => `
       <tr>
@@ -189,14 +185,12 @@ window.addEventListener("DOMContentLoaded", function () {
 
     renderDataTable();
 
-    // Agregar eventos a los botones
     document.querySelectorAll('.btn-detalle').forEach(button => {
       button.addEventListener('click', (event) => {
         const id = event.currentTarget.getAttribute('data-id');
         const kardex = data.find(element => element.id_kardex == id);
-        console.log(kardex); // Verifica los detalles del kardex
+        console.log(kardex);
 
-        // Llenar el modal con los detalles del kardex
         document.getElementById('detalleIdKardex').innerText = kardex.id_kardex;
         document.getElementById('detalleUsuario').innerText = kardex.creado_por;
         document.getElementById('detalleFecha').innerText = kardex.fecha;
@@ -206,7 +200,6 @@ window.addEventListener("DOMContentLoaded", function () {
         document.getElementById('detalleTipoMovimiento').innerText = kardex.tipo_movimiento;
         document.getElementById('detalleMotivo').innerText = kardex.tipo_operacion;
 
-        // Mostrar el modal
         new bootstrap.Modal(document.getElementById('detalleModalKardex')).show();
       });
     });
@@ -259,7 +252,7 @@ window.addEventListener("DOMContentLoaded", function () {
   }
 
   async function cargarContactos() {
-    // Crear la tabla en el DOM
+
     contenido.innerHTML = `
       <table class="table table-striped" id="tablaContactos">
         <thead>
@@ -276,14 +269,13 @@ window.addEventListener("DOMContentLoaded", function () {
       </table>
     `;
   
-    // Inicializar DataTable con procesamiento en el servidor
     $('#tablaContactos').DataTable({
       processing: true,
       serverSide: true,
       ajax: {
         url: '../app/controllers/Contactos.ssp.php',
         dataSrc: function(json) {
-          // Verifica la estructura de la respuesta JSON
+
           console.log(json);
           return json.data;
         },
@@ -293,11 +285,11 @@ window.addEventListener("DOMContentLoaded", function () {
         }
       },
       columns: [
-        { data: 0, className: 'text-center' },           // ID de contacto, será oculto
-        { data: 1, className: 'text-center' },           // Nombre y apellido
-        { data: 2, className: 'text-center' },           // Teléfono
-        { data: 8, className: 'text-center' },           // Dirección
-        { data: 4, className: 'text-center' },           // Nota
+        { data: 0, className: 'text-center' },          
+        { data: 1, className: 'text-center' },          
+        { data: 2, className: 'text-center' },          
+        { data: 8, className: 'text-center' },          
+        { data: 4, className: 'text-center' },          
         {
           data: null,
           orderable: false,
@@ -311,7 +303,7 @@ window.addEventListener("DOMContentLoaded", function () {
         }
       ],
       columnDefs: [
-        { targets: 0, visible: false }  // Ocultamos la columna id_contactabilidad
+        { targets: 0, visible: false } 
       ],
       language: {
         url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
@@ -319,16 +311,14 @@ window.addEventListener("DOMContentLoaded", function () {
       order: [[0, 'desc']]
     });
   
-    // Agregar eventos a los botones después de que la tabla se haya renderizado
+   
     $('#tablaContactos').on('draw.dt', function() {
-      // Agregar eventos a los botones de detalle
       document.querySelectorAll('.btn-detalle').forEach(button => {
         button.addEventListener('click', (event) => {
           const id = event.currentTarget.getAttribute('data-id');
           const contacto = $('#tablaContactos').DataTable().data().toArray().find(element => element[0] == id);
     
           if (contacto) {
-            // Llenar el modal con los detalles del contacto
             document.getElementById('detalleId').innerText = contacto[0];
             document.getElementById('detalleNombre').innerText = contacto[1];
             document.getElementById('detalleEmail').innerText = contacto[3];
@@ -340,7 +330,6 @@ window.addEventListener("DOMContentLoaded", function () {
             document.getElementById('detalleNota').innerText = contacto[4];
             document.getElementById('detalleUsuarioCreador').innerText = contacto[11];
     
-            // Mostrar el modal
             new bootstrap.Modal(document.getElementById('detalleModalContactos')).show();
           } else {
             console.error('Contacto no encontrado');
@@ -348,7 +337,6 @@ window.addEventListener("DOMContentLoaded", function () {
         });
       });
     
-      // Agregar eventos a los botones de WhatsApp
       document.querySelectorAll('.btn-whatsapp').forEach(button => {
         button.addEventListener('click', (event) => {
           const telefono = event.currentTarget.getAttribute('data-telefono');
@@ -358,7 +346,6 @@ window.addEventListener("DOMContentLoaded", function () {
       });
     });
     
-    // Define la nueva función whatsapp
     window.whatsapp = function (telefono, nombre) {
       if (typeof telefono === 'string') {
         const telefonoFormateado = `51${telefono.replace(/\D/g, '')}`;

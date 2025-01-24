@@ -152,12 +152,12 @@ document.addEventListener("DOMContentLoaded", () => {
       columnDefs: [
         { className: 'text-center', targets: '_all' },
         { targets: [0], visible: false },
-        { targets: [0, 1, 2, 4, 5, 6], className: 'd-none d-sm-table-cell' } // Ocultar "Prioridad", "Tipo de Soporte", "Servicios", "Dirección", "Hora de solicitud" y "Técnico a Cargo" en vista móvil
+        { targets: [0, 1, 2, 4, 5, 6], className: 'd-none d-sm-table-cell' } 
       ]
     }
   );
 
-  // Función para mostrar/ocultar detalles solo en dispositivos móviles
+  
   function alternarDetalles(fila) {
     if (window.innerWidth < 768) {
       const siguienteFila = fila.nextElementSibling;
@@ -176,7 +176,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Función para agregar event listeners a las filas
+  
   function agregarEventListenersFilas() {
     const filas = document.querySelectorAll("#tblSoporteIncompleto tbody tr");
 
@@ -187,7 +187,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Llama a la función para agregar event listeners después de inicializar la tabla
+  
   table.on('draw', function () {
     agregarEventListenersFilas();
   });
@@ -206,13 +206,13 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   $('.card-body').on('click', '.btnMapa', async function () {
-    //asignar la funcion del boton del mapa para que me obtenga el id del contrato la funcion esta en Herramientas.js
+    
     let id_soporte = $(this).data('id');
     const data = await FichaInstalacion(id_soporte);
     console.log('id del soporte:', id_soporte);
     console.log('Datos del contrato:', data);
 
-    //Extraer y almacenar el id_contrato
+    
     const id_contrato = data[0].id_contrato;
     console.log('ID del contrato:', id_contrato);
 

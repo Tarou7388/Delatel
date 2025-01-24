@@ -310,7 +310,6 @@ export async function buscarCercanos(idCaja) {
 
 export async function renderizarCoordenadaMapa(id) {
   try {
-    // Hacer la solicitud HTTP para obtener las coordenadas
     const response = await fetch(`http://localhost/Delatel/app/controllers/Contrato.controllers.php?operacion=obtenerCoordenadasbyId&id=${id}`);
     const data = await response.json();
 
@@ -321,11 +320,10 @@ export async function renderizarCoordenadaMapa(id) {
 
       console.log('Coordenadas obtenidas:', latitud, longitud);
 
-      // Crear una nueva posición y centrar el mapa
       const posicion = new google.maps.LatLng(latitud, longitud);
       mapa.setCenter(posicion);
       mapa.setZoom(15);
-      // Eliminar el marcador anterior, si existe
+      
       if (marcador) {
         marcador.setMap(null);
       }

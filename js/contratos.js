@@ -76,7 +76,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
           if (idSector !== null) {
             slcSector.value = idSector;
-            slcSector.dispatchEvent(new Event('change')); // Dispara el evento change
+            slcSector.dispatchEvent(new Event('change'));
           }
         }
 

@@ -4,7 +4,7 @@ window.idContratoSeleccionado = null;
 let tecnicoid = 0;
 
 window.addEventListener('DOMContentLoaded', () => {
-  // Referencias a los elementos del DOM
+
   const botonBuscar = document.querySelector('#btnNrodocumento');
   const txtContratoObservacion = document.querySelector('#txtContratoObservacion');
   const formIncidencia = document.querySelector("#form-Incidencia");
@@ -18,10 +18,8 @@ window.addEventListener('DOMContentLoaded', () => {
   const btnModal = document.getElementById('ModeloAbrir');
   const myModal = new bootstrap.Modal(document.getElementById('exampleModal'));
 
-  // Configurar la fecha actual en el input
   document.getElementById('txtFecha').value = new Date().toISOString().split('T')[0];
 
-  // Función: Búsqueda avanzada
   async function busquedaAvanzada(nombre, apellido) {
     if (!nombre.trim()) {
       showToast("Por favor complete los campos de búsqueda avanzada", "INFO");
@@ -76,7 +74,6 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Función: Obtener contratos de cliente
   async function obtenerContratosCliente(clienteId) {
     if (!clienteId) {
       console.error("ID de cliente no válido");
@@ -133,7 +130,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
 
-  // Función: Buscar contrato por documento
   async function BuscarcontratoNDoc(numdocumento) {
     if (!numdocumento) {
       showToast("El número de documento es obligatorio", "INFO");
@@ -157,7 +153,6 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Función: Cambiar prioridad
   function PrioridadAcciones(val) {
     if (val === "Incidencia") {
       txtSolucion.setAttribute("required", "true");
@@ -173,7 +168,6 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Función: Registrar incidencia
   async function registrarIncidencia() {
     const datos = {
       operacion: "registrarSoporte",
@@ -209,7 +203,6 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Eventos
   botonBuscar.addEventListener("click", async () => {
     const dni = document.getElementById('txtNrodocumento').value;
     await BuscarcontratoNDoc(dni);

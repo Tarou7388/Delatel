@@ -67,7 +67,6 @@ window.addEventListener("DOMContentLoaded", async () => {
 
       const tdAcciones = document.createElement("td");
 
-      // Botón Actualizar
       const botonActualizar = document.createElement("button");
       botonActualizar.setAttribute("class", "btnActualizar btn btn-warning me-2");
       botonActualizar.setAttribute("data-idRol", element.id_rol);
@@ -78,7 +77,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
       botonActualizar.appendChild(iconoLapiz);
 
-      // Botón Eliminar
+      
       const botonInhabilitar = document.createElement("button");
       botonInhabilitar.setAttribute("class", "btnInhabilitar btn btn-danger me-2");
       botonInhabilitar.setAttribute("data-idRol", element.id_rol);
@@ -89,7 +88,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
       botonInhabilitar.appendChild(iconoEliminar);
 
-      // Botón Activar
+      
       const botonActivar = document.createElement("button");
       botonActivar.setAttribute("class", "btnActivar btn btn-success");
       botonActivar.setAttribute("data-idRol", element.id_rol);
@@ -100,13 +99,13 @@ window.addEventListener("DOMContentLoaded", async () => {
 
       botonActivar.appendChild(iconoActivar);
 
-      // Agregar botones a la columna de acciones
+      
       tdAcciones.appendChild(botonActualizar);
       tdAcciones.appendChild(botonInhabilitar);
       tdAcciones.appendChild(botonActivar);
       tr.appendChild(tdAcciones);
 
-      // Deshabilitar otros botones si el registro está deshabilitado
+      
       if (element.inactive_at !== null) {
         boton.disabled = true;
         botonActualizar.disabled = true;
@@ -160,7 +159,6 @@ window.addEventListener("DOMContentLoaded", async () => {
         return;
       }
 
-      // Verificar si el rol ya existe
       const rolesExistentes = await fetch(`${config.HOST}app/controllers/Rol.controllers.php?operacion=listarRoles`);
       const roles = await rolesExistentes.json();
       if (roles.some(r => r.rol.toLowerCase() === rol.value.trim().toLowerCase())) {
@@ -212,7 +210,6 @@ window.addEventListener("DOMContentLoaded", async () => {
         return;
       }
 
-      // Verificar si el rol ya existe
       const rolesExistentes = await fetch(`${config.HOST}app/controllers/Rol.controllers.php?operacion=listarRoles`);
       const roles = await rolesExistentes.json();
       if (roles.some(r => r.rol.toLowerCase() === rol.value.trim().toLowerCase() && r.id_rol !== idRolActual)) {
@@ -376,7 +373,6 @@ window.addEventListener("DOMContentLoaded", async () => {
     const tbodyModal = document.getElementById("cardBodyTabla");
     tbodyModal.innerHTML = "";
 
-    // Insertar el select antes de la tabla
     contenido.insertBefore(selectActividad, contenido.querySelector(".table"));
 
     let isFirstModule = true;
@@ -496,7 +492,6 @@ window.addEventListener("DOMContentLoaded", async () => {
     const checkboxesActualizar = document.querySelectorAll(".actualizar");
     const checkboxesEliminar = document.querySelectorAll(".eliminar");
 
-    // Habilitar o deshabilitar checkboxes de crear, actualizar y eliminar
     checkboxesLeer.forEach((checkboxLeer, index) => {
       checkboxLeer.addEventListener("change", () => {
         const isChecked = checkboxLeer.checked;
@@ -586,7 +581,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     idRolActual = -1;
     form.reset();
     actualizarBotones();
-    btnCancelarActualizacion.style.display = "none"; // Ocultar botón de cancelar
+    btnCancelarActualizacion.style.display = "none"; 
   });
 
 

@@ -11,12 +11,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   if (idContrato) {
-    // Fetch para obtener el contrato y el tipo de servicio
+
     const contratoRespuesta = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=buscarContratoId&id=${idContrato}`);
     const contrato = await contratoRespuesta.json();
-    tipoServicio = contrato[0].tipos_servicio; // Guardamos el tipo de servicio
+    tipoServicio = contrato[0].tipos_servicio; 
 
-    // Fetch para obtener las averías del contrato
     const respuesta = await fetch(`${config.HOST}app/controllers/Averias.controllers.php?operacion=buscarAveriaPorContrato&valor=${idContrato}`);
     const averias = await respuesta.json();
     console.log(averias);
@@ -51,40 +50,33 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     });
 
-    // Evento click en cada botón "Ver Soporte"
     document.querySelectorAll(".btn-ver-soporte").forEach(button => {
       button.addEventListener("click", (e) => {
         const idSoporte = e.target.getAttribute("data-id-soporte");
         const tipoServicio = e.target.getAttribute("data-tipo-servicio");
         const idContrato = e.target.getAttribute("data-id-contrato");
 
-        // Llama a la función para actualizar el modal con la información correspondiente
         actualizarModal(idSoporte, tipoServicio, idContrato);
       });
     });
   }
 });
 
-// Función para actualizar y mostrar el modal
 function actualizarModal(idSoporte, tipoServicio, idContrato) {
   const modalTitle = document.querySelector("#nombrePersona");
   const modalBody = document.querySelector(".modal-body");
 
-  // Actualizar el título del modal
   modalTitle.textContent = `Soporte ID: ${idSoporte}`;
 
-  // Simular los tipos de servicio como opciones dinámicas
-  const servicios = tipoServicio.split(","); // Supongamos que los servicios vienen separados por comas
+  const servicios = tipoServicio.split(",");
 
-  // Limpiar el contenido del modal y generar los `divs`
   modalBody.innerHTML = "";
   servicios.forEach(servicio => {
     const div = document.createElement("div");
     div.className = "option-div border p-3 mb-2";
     div.textContent = `Tipo de Servicio: ${servicio}`;
-    div.dataset.servicio = servicio; // Asignamos el tipo de servicio como atributo
+    div.dataset.servicio = servicio; 
 
-    // Agregar un evento click para seleccionar el div
     div.addEventListener("click", () => {
       let vistaURL = "";
 

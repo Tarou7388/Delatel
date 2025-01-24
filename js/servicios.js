@@ -79,7 +79,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
 
-  // Añadir estilos para servicios deshabilitados y el botón activar
   const style = document.createElement("style");
   style.innerHTML = `
     .disabled-service td:nth-child(1),
@@ -90,7 +89,6 @@ document.addEventListener("DOMContentLoaded", () => {
   `;
   document.head.appendChild(style);
 
-  //Función registrar Servicio
   async function registrarServicio(idServicio) {
     const servicio = document.querySelector("#txtNombreServicio");
     const tipoServicio = document.querySelector("#txtTipoServicio");
@@ -142,7 +140,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  //Función eliminar Servicio
   async function eliminarServicio(idServicio, userid) {
     try {
       if (await ask("¿Desea Eliminar este Servicio?")) {
@@ -169,7 +166,6 @@ document.addEventListener("DOMContentLoaded", () => {
           showToast("¡Servicio eliminado correctamente!", "SUCCESS", 1500);
           obtenerServicios();
 
-          // Emitir evento personalizado
           const event = new CustomEvent("servicioDesactivado", {
             detail: { idServicio, userid },
           });
@@ -184,7 +180,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  //Función editar Servicio
   function editarServicio(servicio) {
     const servicioInput = document.querySelector("#txtNombreServicio");
     const tipoServicioInput = document.querySelector("#txtTipoServicio");
@@ -199,7 +194,6 @@ document.addEventListener("DOMContentLoaded", () => {
     btnRegistrarServicio.textContent = "Actualizar";
   }
 
-  //Función actualizar Servicio
   async function actualizarServicio(idServicio) {
     const servicioInput = document.querySelector("#txtNombreServicio");
     const tipoServicioInput = document.querySelector("#txtTipoServicio");
@@ -257,7 +251,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  //Función para limpiar el formulario y restablecer el estado
   function limpiarFormulario() {
     document.querySelector("#txtNombreServicio").value = "";
     document.querySelector("#txtTipoServicio").value = "";
@@ -269,7 +262,6 @@ document.addEventListener("DOMContentLoaded", () => {
     btnRegistrarServicio.textContent = "Registrar";
   }
 
-  //Función para activar Registro
   async function activarServicio(idServicio, userid) {
     try {
       if (await ask("¿Desea Activar este Servicio?")) {
@@ -296,7 +288,6 @@ document.addEventListener("DOMContentLoaded", () => {
           showToast("¡Servicio activado correctamente!", "SUCCESS", 1500);
           obtenerServicios();
 
-          // Emitir evento personalizado
           const event = new CustomEvent("servicioActivado", {
             detail: { idServicio, userid },
           });
@@ -321,7 +312,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-  // Limpiar el formulario cuando se cierra el modal
   document
     .getElementById("modalServicio")
     .addEventListener("hidden.bs.modal", limpiarFormulario);

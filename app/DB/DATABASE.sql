@@ -403,3 +403,20 @@ CREATE TABLE tb_subbase (
     iduser_inactive INT NULL,
     CONSTRAINT fk_id_base FOREIGN KEY (id_base) REFERENCES tb_base (id_base)
 ) ENGINE = INNODB;
+
+CREATE TABLE tb_antenas(
+    id_antena   INT PRIMARY KEY AUTO_INCREMENT,
+    id_sector   INT NOT NULL,
+    nombre      VARCHAR(60) NOT NULL UNIQUE,
+    descripcion VARCHAR(100) NOT NULL,
+    coordenadas VARCHAR(50) NOT NULL,
+    direccion   VARCHAR(200) NOT NULL,
+    create_at   DATETIME NOT NULL DEFAULT NOW(),
+    update_at   DATETIME NULL,
+    inactive_at DATETIME NULL,
+    iduser_create INT NOT NULL,
+    iduser_update INT NULL,
+    iduser_inactive INT NULL,
+    CONSTRAINT anten_uk_antena UNIQUE (nombre),
+    CONSTRAINT fk_sector_antena FOREIGN KEY (id_sector) REFERENCES tb_sectores (id_sector)
+) ENGINE = InnoDB;
