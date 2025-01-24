@@ -74,6 +74,46 @@
   </table>
 </div>
 
+<div>
+  <table class="tabla2">
+    <thead>
+      <tr>
+        <td colspan="6" class="text-center"><strong>CAMBIOS CABLE</strong></td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>POTENCIA:</strong></td>
+        <td colspan="2"><?= $resultado[0]['FichaAveria']['cabl']['cambioscable']['potencia'] ?? 'N/A'; ?></td>
+        <td><strong>SINTONIZADOR:</strong></td>
+        <td colspan="2"><?= !empty($resultado[0]['FichaAveria']['cabl']['cambioscable']['sintonizadores']) ? count($resultado[0]['FichaAveria']['cabl']['cambioscable']['sintonizadores']) . ' sintonizadores' : 'N/A'; ?></td>
+      </tr>
+      <tr>
+        <td><strong>TRIPLEXOR:</strong></td>
+        <td colspan="2"><?= $resultado[0]['FichaAveria']['cabl']['cambioscable']['triplexor'] ?? 'N/A'; ?></td>
+        <td><strong>SPLITTER:</strong></td>
+        <td colspan="2"><?= $resultado[0]['FichaAveria']['cabl']['cambioscable']['splitter'][0]['cantidad'] ?? 'N/A'; ?> x <?= $resultado[0]['FichaAveria']['cabl']['cambioscable']['splitter'][0]['tipo'] ?? 'N/A'; ?></td>
+      </tr>
+      <tr>
+        <td><strong>CONECTOR:</strong></td>
+        <td colspan="2"><?= $resultado[0]['FichaAveria']['cabl']['cambioscable']['conector']['numeroconector'] ?? 'N/A'; ?> x <?= $resultado[0]['FichaAveria']['cabl']['cambioscable']['conector']['precio'] ?? 'N/A'; ?></td>
+        <td><strong>CABLE:</strong></td>
+        <td colspan="2"><?= $resultado[0]['FichaAveria']['cabl']['cambioscable']['cable']['metrosadicionales'] ?? 'N/A'; ?> m x <?= $resultado[0]['FichaAveria']['cabl']['cambioscable']['cable']['preciometro'] ?? 'N/A'; ?></td>
+      </tr>
+      <tr>
+        <td colspan="6" class="text-center"><strong>PROCEDIMIENTO DE SOLUCIÓN</strong></td>
+      </tr>
+      <tr>
+        <td colspan="6"><?= $resultado[0]['descripcion_solucion'] ?? 'N/A'; ?></td>
+      </tr>
+      <tr>
+        <td><strong>TÉCNICO:</strong></td>
+        <td colspan="5"><?= $resultado[0]['NombreTecnico'] ?? 'N/A'; ?></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 <?php if (!empty($resultado[0]['FichaAveria']['cabl']['parametroscable']['sintonizadores'])): ?>
   <div>
     <table class="tabla2">
@@ -133,46 +173,6 @@
     </table>
   </div>
 <?php endif; ?>
-
-<div>
-  <table class="tabla2">
-    <thead>
-      <tr>
-        <td colspan="6" class="text-center"><strong>CAMBIOS CABLE</strong></td>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong>POTENCIA:</strong></td>
-        <td colspan="2"><?= $resultado[0]['FichaAveria']['cabl']['cambioscable']['potencia'] ?? 'N/A'; ?></td>
-        <td><strong>SINTONIZADOR:</strong></td>
-        <td colspan="2"><?= !empty($resultado[0]['FichaAveria']['cabl']['cambioscable']['sintonizadores']) ? count($resultado[0]['FichaAveria']['cabl']['cambioscable']['sintonizadores']) . ' sintonizadores' : 'N/A'; ?></td>
-      </tr>
-      <tr>
-        <td><strong>TRIPLEXOR:</strong></td>
-        <td colspan="2"><?= $resultado[0]['FichaAveria']['cabl']['cambioscable']['triplexor'] ?? 'N/A'; ?></td>
-        <td><strong>SPLITTER:</strong></td>
-        <td colspan="2"><?= $resultado[0]['FichaAveria']['cabl']['cambioscable']['splitter'][0]['cantidad'] ?? 'N/A'; ?> x <?= $resultado[0]['FichaAveria']['cabl']['cambioscable']['splitter'][0]['tipo'] ?? 'N/A'; ?></td>
-      </tr>
-      <tr>
-        <td><strong>CONECTOR:</strong></td>
-        <td colspan="2"><?= $resultado[0]['FichaAveria']['cabl']['cambioscable']['conector']['numeroconector'] ?? 'N/A'; ?> x <?= $resultado[0]['FichaAveria']['cabl']['cambioscable']['conector']['precio'] ?? 'N/A'; ?></td>
-        <td><strong>CABLE:</strong></td>
-        <td colspan="2"><?= $resultado[0]['FichaAveria']['cabl']['cambioscable']['cable']['metrosadicionales'] ?? 'N/A'; ?> m x <?= $resultado[0]['FichaAveria']['cabl']['cambioscable']['cable']['preciometro'] ?? 'N/A'; ?></td>
-      </tr>
-      <tr>
-        <td colspan="6" class="text-center"><strong>PROCEDIMIENTO DE SOLUCIÓN</strong></td>
-      </tr>
-      <tr>
-        <td colspan="6"><?= $resultado[0]['descripcion_solucion'] ?? 'N/A'; ?></td>
-      </tr>
-      <tr>
-        <td><strong>TÉCNICO:</strong></td>
-        <td colspan="5"><?= $resultado[0]['NombreTecnico'] ?? 'N/A'; ?></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
 
 <div>
   <table style="margin-top:150px; width: 100%;">

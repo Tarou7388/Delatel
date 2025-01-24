@@ -168,9 +168,9 @@ document.addEventListener('DOMContentLoaded', () => {
       tipoentrada: {
         fila: slcFilaEntrada.split(","),
         puerto: parseInt(txtPuerto)
-      }
-    },
-      idcaja = parseInt(txtIdCaja);
+      },
+      idcaja: parseInt(txtIdCaja)
+    };
   }
 
 
