@@ -181,7 +181,6 @@ document.addEventListener("DOMContentLoaded", () => {
           metrosadicionales: parseInt(txtCantCable),
           preciometro: txtPrecioCable,
         },
-        idcaja: parseInt(txtIdCaja),
         tipoEntrada: {
           fila: slcFilaEntrada.split(","),
           puerto: parseInt(txtPuerto)
@@ -436,6 +435,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     jsonData.cable = jsonCable;
     jsonData.costo = jsonCosto;
+    jsonData.idcaja = parseInt(txtIdCaja);
 
     console.log("jsonData:", jsonData);
 

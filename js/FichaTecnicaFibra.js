@@ -165,12 +165,12 @@ document.addEventListener('DOMContentLoaded', () => {
         detalles: txtDetalles,
         repetidores: jsonRepetidor
       },
-      idcaja: parseInt(txtIdCaja),
       tipoentrada: {
         fila: slcFilaEntrada.split(","),
         puerto: parseInt(txtPuerto)
       }
-    }
+    },
+      idcaja = parseInt(txtIdCaja);
   }
 
 

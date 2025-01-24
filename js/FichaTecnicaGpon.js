@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
   txtCatvCasa.addEventListener("input", validarValorRango);
 
   (async () => {
-    
+
     try {
       const response = await fetch(
         `${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerFichaInstalacion&id=${idContrato}`
@@ -200,11 +200,11 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         detalles: txtDetallesRouter,
       },
-      idcaja: parseInt(txtIdCaja),
       tipoentrada: {
         fila: slcFilaEntrada.split(","),
         puerto: parseInt(txtPuerto)
-      }
+      },
+      idcaja: parseInt(txtIdCaja)
     };
   }
 
