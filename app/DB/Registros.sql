@@ -1,26 +1,5 @@
 USE Delatel;
 
-/* INSERT INTO tb_tipo_soporte (tipo_soporte, iduser_create) VALUES
-('Instalación de servicio', 1),
-('Mantenimiento preventivo', 1),
-('Problema de conexión', 1),
-('Soporte técnico', 1),
-('Consulta de facturación', 1),
-('Cambio de plan', 1),
-('Reinstalación de equipos', 1),
-('Consulta de saldo', 1),
-('Reportar caída de servicio', 1),
-('Activación de servicio', 1),
-('Desactivación de servicio', 1),
-('Actualización de datos', 1),
-('Asistencia en instalación de router', 1),
-('Problema con el router', 1),
-('Configuración de red', 1),
-('Consulta sobre promociones', 1),
-('Cambio de dirección de servicio', 1),
-('Aumento de velocidad', 1),
-('Sugerencias y quejas', 1),
-('Desbloqueo de cuenta', 1); */
 
 INSERT INTO tb_servicios (tipo_servicio, servicio, iduser_create) VALUES
   ('CABL','Cable', 1),
@@ -310,23 +289,6 @@ INSERT INTO tb_roles (rol, permisos, iduser_create) VALUES
 ('Tecnico Campo', '{"actividad":"Fichas", "administracion":{},"soporte":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"contratos":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"inventariado":false,"personas":false,"roles":false,"usuarios":false,"paquetes":false, "ticket":false}', 1),
 ('Almacen - Tecnico', '{"actividad":"Kardex", "administracion":{},"soporte":false,"contratos":false,"inventariado":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"personas":false,"roles":false,"usuarios":false,"paquetes":false, "ticket":false}', 1);
 
-/* INSERT INTO tb_mufas (nombre, descripcion, coordenadas, direccion, create_at, iduser_create) VALUES
-('Mufa 1', 'Cerca del estadio', '-13.41287751332741, -76.15387988372802', 'Av 123', NOW(), 1),
-('Mufa 2', 'Plaza san Isidro', '-13.429027241634715, -76.14961981773376', 'Av 123456', NOW(), 1),
-('Mufa 3', 'Cerca de la Plaza', '-13.404169746696624, -76.12736834665132', 'Av 123', NOW(), 1),
-('Mufa 4', 'San Nicolas', '-13.42830253845429, -76.12306531088652', 'Av 123456', NOW(), 1);
-
-INSERT INTO tb_cajas(nombre, descripcion, numero_entradas, id_sector, coordenadas, iduser_create) VALUES
-('Caja 1', 'Cerca del estadio', 16, 11, '-13.390019838079903, -76.14898062581466', 1),
-('Caja 2', 'Plaza san Isidro', 8, 11, '-13.396082705347906, -76.13534364004165', 1),
-('Caja 3', 'Cerca de la Plaza', 8, 19, '-13.4277387660967, -76.16422117136221', 1),
-('Caja 4', 'San Nicolas', 16, 19, '-13.432393655576314, -76.1627322889994', 1),
-('Caja 5', 'Prolongacion Cañete', 16, 11, '-13.393627228237747, -76.14441531745013', 1),
-('Caja 6', 'Tecnologico Chincha', 8, 6, '-13.404627155707574, -76.13712932116213', 1),
-('Caja 7', 'Los Bancarios', 8, 6, '-13.42826126892918, -76.135733419194', 1),
-('Caja 8', 'Plaza Chincha', 16, 6, '-13.41819520203595, -76.13222851544388', 1),
-('Caja 9', 'Parque Toledo', 8, 19, '-13.417732015444551, -76.11985007949754', 1),
-('Caja 10', 'Plaza de pueblo nuevo', 16, 19, '-13.404169746696624, -76.12736834665132', 1); */
 
 INSERT INTO tb_lineas(coordenadas, iduser_create) VALUES 
 ('[

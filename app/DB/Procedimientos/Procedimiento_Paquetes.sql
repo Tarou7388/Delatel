@@ -2,7 +2,6 @@ USE Delatel;
 
 DELIMITER $$
 
-/* Procedimiento buscar por servicio */
 DROP PROCEDURE IF EXISTS spu_paquetes_buscar_servicio$$
 
 CREATE PROCEDURE spu_paquetes_buscar_servicio(IN p_id_servicio JSON)
@@ -33,7 +32,6 @@ BEGIN
         p.id_paquete;
 END $$
 
-/* Procedimiento Listar */
 DROP VIEW IF EXISTS vw_paquetes_listar;
 
 CREATE VIEW vw_paquetes_listar AS
@@ -59,7 +57,6 @@ FROM tb_paquetes p
 GROUP BY
     p.id_paquete;
 
-/* Procedimiento Registrar */
 DROP PROCEDURE IF EXISTS spu_paquete_registrar$$
 
 CREATE PROCEDURE spu_paquete_registrar(
@@ -74,7 +71,6 @@ BEGIN
     VALUES (p_id_servicio, p_paquete, p_precio, p_velocidad, p_iduser_create);
 END $$
 
-/* Procedimiento Actualizar */
 DROP PROCEDURE IF EXISTS spu_paquete_actualizar$$
 
 CREATE PROCEDURE spu_paquete_actualizar(
@@ -98,7 +94,6 @@ BEGIN
 		id_paquete = p_id_paquete;
 END $$
 
-/* Procedimiento Eliminar */
 DROP PROCEDURE IF EXISTS spu_paquete_eliminar$$
 
 CREATE PROCEDURE spu_paquete_eliminar(
@@ -114,7 +109,6 @@ BEGIN
 		id_paquete = p_id_paquete;
 END $$
 
-/* Procedimiento Buscar por paquete */
 DROP PROCEDURE IF EXISTS spu_paquete_buscar_id$$
 
 CREATE PROCEDURE spu_paquete_buscar_id(
@@ -147,7 +141,6 @@ BEGIN
         p.id_paquete;
 END $$
 
-/* Procedimiento buscar por Servicio  */
 DROP PROCEDURE IF EXISTS spu_paquete_buscar_idServicio$$
 CREATE PROCEDURE spu_paquete_buscar_idServicio(IN p_id_servicio JSON)
 BEGIN 

@@ -517,14 +517,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     AgregarRepetidor();
 
-    // Limpiar los campos
     campos.forEach(campo => {
       document.getElementById(campo.id).value = "";
     });
     document.getElementById("txtPrecioRepetidor").value = "";
   });
 
-  //Eliminar repetidor
   document.querySelector("#eliminarRepetidor").addEventListener("click", () => {
     const card = document.querySelector(`#carta${numeroRepetidores}`);
     card.remove();

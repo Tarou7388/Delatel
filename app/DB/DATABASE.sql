@@ -24,17 +24,7 @@ CREATE TABLE tb_distritos (
     CONSTRAINT distr_fk_id_departamento FOREIGN KEY (id_departamento) REFERENCES tb_departamentos(id_departamento)
 ) ENGINE=InnoDB;
 
-/* CREATE TABLE tb_tipo_soporte (
-    id_tipo_soporte INT AUTO_INCREMENT PRIMARY KEY,
-    tipo_soporte VARCHAR(50) NOT NULL,
-    create_at DATETIME DEFAULT NOW(),
-    update_at DATETIME NULL,
-    inactive_at DATETIME NULL,
-    iduser_create INT NOT NULL,
-    iduser_update INT NULL,
-    iduser_inactive INT NULL,
-    CONSTRAINT tiposopor_uk_tipo_soporte UNIQUE (tipo_soporte)
-) ENGINE = InnoDB; */
+
 
 CREATE TABLE tb_roles (
     id_rol INT AUTO_INCREMENT PRIMARY KEY,

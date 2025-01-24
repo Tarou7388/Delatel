@@ -10,7 +10,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const txtPrecioConector = document.getElementById("txtPrecioConector");
   const txtCostoConector = document.getElementById("txtCostoConector");
 
-  //Periodo por ficha tecnica 
   const periodoDate = new Date();
   periodoDate.setMonth(periodoDate.getMonth() + 6);
   const DateFormateado = periodoDate.toISOString().split("T")[0];
@@ -572,7 +571,6 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // El resto de la función sigue igual
     await fibraOptica();
     await cable();
     const jsonCosto = await costos();
@@ -668,7 +666,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return esValido;
   }
 
-  //Validación de Puerto
   function validarPuerto() {
     const filaEntrada = document.getElementById("slcFilaEntrada").value;
     const columnaEntrada = document.getElementById("txtPuerto").value;
@@ -788,7 +785,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("txtSerieRepetidor").classList.remove("is-invalid");
     AgregarRepetidor();
 
-    //Limpiar los campos 
     document.getElementById("txtCodigoBarrasRepetidor").value = "";
     document.getElementById("txtSsidRepetidor").value = "";
     document.getElementById("txtContraseniaRepetidor").value = "";

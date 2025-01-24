@@ -17,17 +17,17 @@ document.addEventListener("DOMContentLoaded", () => {
   let jsonData = {};
   let jsonCable = {};
 
-  //Fecha
+  
   document.getElementById("txtFecha").value = new Date().toISOString().split('T')[0];
 
-  //Adelantar 6 meses la fecha de periodo
+  
   const periodoDate = new Date();
   periodoDate.setMonth(periodoDate.getMonth() + 6);
   txtPeriodo.value = txtPeriodo.min = periodoDate.toISOString().split("T")[0];
 
   const camposRequeridos = document.querySelectorAll(".form-control");
 
-  //Validar Campos Requeridos en tiempo Real
+  
   camposRequeridos.forEach(campo => {
     campo.addEventListener("input", () => {
       const grupoFormulario = campo.closest('.form-floating');
@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Validar valores negativos en tiempo real para campos positivos
+  
   function validarValorNegativoPositivo(event) {
     const elemento = event.target;
     const min = 0;
@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Validar valores en tiempo real para campos con rango
+  
   function validarValorRango(event) {
     const elemento = event.target;
     const min = parseFloat(elemento.min);
@@ -125,7 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   })();
 
-  //Datos de Cable
+  
   async function cable() {
     const txtIdCaja = document.querySelector("#txtIdCaja").value;
     const slcFilaEntrada = document.querySelector("#slcFilaEntrada").value;
@@ -190,7 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  //Datos de Costos
+  
   async function costos() {
     const txtCantSintotizador = document.querySelector("#txtCantSintotizador").value;
     const txtCostoAlquiler = document.querySelector("#txtCostoAlquiler").value;
@@ -234,9 +234,9 @@ document.addEventListener("DOMContentLoaded", () => {
     return jsonCosto;
   }
 
-  //Calcular Costos
+  
   function calcularCostos() {
-    // Cálculo del costo del cable
+    
     const cantCable = parseFloat(txtCantCable.value) || 0;
     const precioCable = parseFloat(txtPrecioCable.value) || 0;
     const costoCable = cantCable * precioCable;
@@ -248,13 +248,13 @@ document.addEventListener("DOMContentLoaded", () => {
     txtCostoConector.value = costoConector.toFixed(2);
   }
 
-  //Función para actualizar la cantidad de sintonizadores
+  
   async function ActualizarCantidadSintotizador() {
     document.getElementById("txtCantSintotizador").value = numeroSintotizadores;
     document.getElementById("txtCostoAlquiler").value = numeroSintotizadores * 40;
   }
 
-  //Función para agregar un sintonizador
+  
   async function AgregarSintotizador() {
     const txtCodigoBarraSintonizador = document.getElementById("txtCodigoBarraSintonizador").value;
     const txtMarcaSintonizador = document.getElementById("txtMarcaSintonizador").value;
@@ -328,7 +328,7 @@ document.addEventListener("DOMContentLoaded", () => {
     validarPuerto();
   });
 
-  //Validación de campos
+  
   function validarCampos() {
     const campos = [
       "txtUsuario",
@@ -355,11 +355,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let esValido = true;
 
-    // Recorrer cada campo y validar
+    
     for (const campo of campos) {
       const elemento = document.getElementById(campo);
 
-      // Validar si el campo está vacío
+      
       if (elemento.value.trim() === "") {
         elemento.classList.add("is-invalid");
         esValido = false;
@@ -367,31 +367,31 @@ document.addEventListener("DOMContentLoaded", () => {
         elemento.classList.remove("is-invalid");
       }
 
-      // Obtener el valor numérico del campo
+      
       const valor = parseFloat(elemento.value);
-      const min = parseFloat(elemento.min);  // Obtener valor mínimo del atributo min
-      const max = parseFloat(elemento.max);  // Obtener valor máximo del atributo max
+      const min = parseFloat(elemento.min);  
+      const max = parseFloat(elemento.max);  
 
-      // Validar valores negativos (solo si el campo permite negativos)
+      
       if (valor < 0 && elemento.hasAttribute('min') && valor < min) {
         elemento.classList.add("is-invalid");
         esValido = false;
       }
 
-      // Validar valores fuera de rango (solo si el campo tiene min y max definidos)
+      
       if (valor < min || valor > max) {
         elemento.classList.add("is-invalid");
         esValido = false;
       }
     }
 
-    //Validar Puertos
+    
     validarPuerto();
 
     return esValido;
   }
 
-  //Validación de Puertos
+  
   function validarPuerto() {
     const filaEntrada = document.getElementById("slcFilaEntrada").value;
     const columnaEntrada = document.getElementById("txtPuerto").value;
@@ -421,7 +421,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  //Función para Guardar la Ficha de Instalación
+  
   async function guardar() {
     if (!validarCampos()) {
       showToast("Todos los campos son obligatorios.", "WARNING");
@@ -463,7 +463,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 2500);
   }
 
-  //Añadir Nuevo Sintonizador
+  
   document.getElementById("btnAñadirSintotizador").addEventListener("click", function () {
     const codigoBarra = document.getElementById("txtCodigoBarraSintonizador").value.trim();
     const serie = document.getElementById("txtSerieSintonizador").value.trim();
@@ -491,7 +491,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     AgregarSintotizador();
 
-    // Limpiar los campos después de agregar un sintonizador
+    
     campos.forEach(campo => {
       document.getElementById(campo.id).value = "";
     });
@@ -499,17 +499,17 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("txtModeloSintonizador").value = "";
   });
 
-  //Boton Guardar
+  
   document.getElementById("btnGuardar").addEventListener("click", async () => {
     await guardar();
   });
 
-  //Boton Cancelar
+  
   document.getElementById("btnCancelar").addEventListener("click", () => {
     window.location.href = `${config.HOST}views/Contratos/`;
   });
 
-  //Evento de escaneo de código de barras fibra óptica
+  
   document.getElementById('txtCodigoBarraSintonizador').addEventListener('input', async function () {
     const codigoBarra = this.value.trim();
 
@@ -543,7 +543,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   txtCantCable.addEventListener("input", calcularCostos);
   txtCantConector.addEventListener("input", calcularCostos);
-  // Asignar eventos de validación en tiempo real
+  
   txtCantConector.addEventListener("input", validarValorNegativoPositivo);
   txtCantCable.addEventListener("input", validarValorNegativoPositivo);
   txtSplitter.addEventListener("input", validarValorNegativoPositivo);

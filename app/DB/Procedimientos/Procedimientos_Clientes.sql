@@ -50,12 +50,10 @@ CREATE PROCEDURE spu_cliente_buscar_NombreApp(
 )
 BEGIN
     IF p_apellido = '' THEN
-        -- Si solo se proporciona el nombre
         SELECT codigo_cliente, nombre_cliente, telefono_cliente
         FROM vw_clientes_obtener
         WHERE nombre_cliente LIKE CONCAT('%', p_nombre, '%');
     ELSE
-        -- Si se proporciona tanto nombre como apellido
         SELECT codigo_cliente, nombre_cliente, telefono_cliente
         FROM vw_clientes_obtener
         WHERE nombre_cliente LIKE CONCAT('%', p_nombre, '%')

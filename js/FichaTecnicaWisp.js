@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const routersContainer = document.getElementById("routersContainer");
   const saveButton = document.getElementById("saveButton");
   const slcBase = document.getElementById("slcBaseParametros");
-  // Check de Adelantado o cumpliendo el mes 
+
   const chkAdelantadoVenta = document.getElementById('chkAdelantadoVenta');
   const chkCumpliendoMesVenta = document.getElementById('chkCumpliendoMesVenta');
   const chkAdelantadoAlquilado = document.getElementById('chkAdelantadoAlquilados');
@@ -25,7 +25,6 @@ document.addEventListener("DOMContentLoaded", () => {
   let jsonDeuda = {};
   let jsonData = {};
 
-  //Adelantar 6 meses al periodo por defecto 
   const txtPeriodo = document.getElementById("txtPeriodo");
   const periodoDate = new Date();
   periodoDate.setMonth(periodoDate.getMonth() + 6);
@@ -33,7 +32,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const camposRequeridos = document.querySelectorAll(".form-control");
 
-  // Validar campos requeridos en tiempo real
   camposRequeridos.forEach(campo => {
     campo.addEventListener("input", () => {
       const grupoFormulario = campo.closest('.form-floating');
@@ -61,7 +59,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Validar valores dentro del rango para campos con rango
   function validarValorRango(event) {
     const elemento = event.target;
     const min = parseFloat(elemento.min);
@@ -79,7 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  //Cargar datos del router
+
   const valoresRouter = {
     codigoBarra: '',
     modelo: '',
@@ -112,33 +109,27 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('txtOtrosWireless').value = valoresRouter.otrosWireless;
   });
 
-  // Función para verificar si el formulario está lleno
   function formularioLleno(formulario) {
     const campos = formulario.querySelectorAll('input, textarea, select');
-    // Verificar si hay algún campo con valor
     for (const campo of campos) {
       if (campo.value.trim() !== "") {
-        return true; // Si algún campo tiene valor, el formulario está lleno
+        return true;
       }
     }
-    return false; // Si todos los campos están vacíos, el formulario no está lleno
+    return false;
   }
 
-  // Código para manejar la selección de operación (Venta o Alquiler)
   document.getElementById('slcOperacion').addEventListener('change', function () {
     const tipoOperacion = this.value;
     const formularioVenta = document.getElementById('frmVenta');
     const formularioAlquiler = document.getElementById('frmAlquiler');
 
-    // Ocultar ambos formularios
     formularioVenta.classList.add('hidden');
     formularioAlquiler.classList.add('hidden');
 
-    // Limpiar ambos formularios (opcional, si deseas limpiar los campos al cambiar de operación)
     limpiarFormulario(formularioVenta);
     limpiarFormulario(formularioAlquiler);
 
-    // Mostrar el formulario correspondiente según el tipo de operación
     if (tipoOperacion === 'venta') {
       formularioVenta.classList.remove('hidden');
     } else if (tipoOperacion === 'alquiler') {
@@ -146,15 +137,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Función para limpiar los formularios (si es necesario)
   function limpiarFormulario(form) {
     const inputs = form.querySelectorAll('input, textarea, select');
     inputs.forEach(input => {
-      input.value = ''; // Limpiar el valor de cada campo
+      input.value = ''; 
     });
   }
 
-  // Función para cargar las provincias
   (async () => {
     try {
       const response = await fetch(`${config.HOST}app/controllers/Base.controllers.php?operacion=listarBase`);
@@ -176,7 +165,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   })();
 
-  // Función para cargar las subBases
   async function cargarSubBases(baseId) {
     if (!baseId || baseId === "0") {
       console.warn("No hay provincia seleccionada para cargar sub-bases.");
@@ -205,7 +193,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  //Cargar Datos
   (async () => {
     try {
       const response = await fetch(
@@ -230,7 +217,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   })();
 
-  // Función para agregar un nuevo router
   async function agregarRouter() {
     routerConfigModal.show();
 
@@ -274,7 +260,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       });
 
-      // Validar que los campos contengan al menos 3 puntos
       const camposTresPuntos = [
         { id: 'txtWanRouter', valor: wan },
         { id: 'txtLanWireless', valor: lan },
@@ -299,7 +284,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       const router = {
-        numero: ++numeroRouter, // Incrementar el contador antes de asignarlo
+        numero: ++numeroRouter,
         codigobarra: codigoBarra,
         modelo: modelo,
         marca: marca,
@@ -416,24 +401,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Actualizar los números de los routers
   function actualizarNumeros() {
     const routerCards = routersContainer.querySelectorAll(".card");
     routerCards.forEach((card, index) => {
       const cardHeader = card.querySelector(".card-header span");
       cardHeader.textContent = `Router N° ${index + 1}`;
 
-      // Actualizar el número del router en el array jsonRouter
       const routerId = card.id.replace('carta', '');
       const routerIndex = jsonRouter.findIndex(router => router.numero == routerId);
       if (routerIndex !== -1) {
         jsonRouter[routerIndex].numero = index + 1;
       }
     });
-    numeroRouter = routerCards.length; // Actualizar el contador de routers
+    numeroRouter = routerCards.length; 
   }
 
-  //Json Parametros 
   async function parametros() {
     const txtPeriodo = document.getElementById('txtPeriodo').value;
     const txtPaquete = document.getElementById('txtPaquete').value;
@@ -475,7 +457,6 @@ document.addEventListener("DOMContentLoaded", () => {
     jsonData.parametros = jsonParametros.parametros;
   }
 
-  //Json Venta
   async function venta() {
     const txtCostoAntenaVenta = parseFloat(document.getElementById('txtCostoAntenaVenta').value);
     const txtCostoRouterVenta = parseFloat(document.getElementById('txtCostoRouterVenta').value);
@@ -528,7 +509,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return true;
   }
 
-  //Json Alquilado
   async function alquilado_prestado() {
     const slcCondicionAlquilado = document.getElementById('slcCondicionAlquilados').value;
     const txtPeriodoAlquilado = document.getElementById('txtPeriodoAlquilados').value;
@@ -578,7 +558,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return true;
   }
 
-  //Json Pago
   async function deuda() {
     const txtPagoServicio = document.getElementById('txtPagoServicio').value;
     const txtAdelantoEquipo = document.getElementById('txtAdelantoEquipo').value;
@@ -601,7 +580,6 @@ document.addEventListener("DOMContentLoaded", () => {
     jsonData.deuda = jsonDeuda.deuda;
   }
 
-  //Formato Dns
   function formatDns(input) {
     let value = input.value.replace(/\D/g, '');
     if (value.length > 4) {
@@ -619,7 +597,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  //Validacion de datos para ip
   $(document).ready(function () {
     $('#txtLanWireless, #txtWanRouter, #txtMascaraRouter, #txtPuertaEnlaceRouter').mask('0ZZ.0ZZ.0ZZ.0ZZ', {
       translation: {
@@ -631,7 +608,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  //Chechbox
   function toggleCheckbox(checkbox1, checkbox2) {
     checkbox1.addEventListener('change', function () {
       if (checkbox1.checked) {
@@ -732,17 +708,15 @@ document.addEventListener("DOMContentLoaded", () => {
         const frmVenta = document.getElementById('frmVenta');
         const frmAlquiler = document.getElementById('frmAlquiler');
 
-        // Volver a comprobar si el formulario está lleno o vacío
         if (formularioLleno(frmVenta) || formularioLleno(frmAlquiler)) {
-          slcOperacion.disabled = true; // Deshabilitar si el formulario está lleno
+          slcOperacion.disabled = true; 
         } else {
-          slcOperacion.disabled = false; // Habilitar si los formularios están vacíos
+          slcOperacion.disabled = false; 
         }
       });
     });
   }
 
-  //Validar Campos
   function validarCampos() {
     const camposComunes = [
       "txtPeriodo",
@@ -776,7 +750,7 @@ document.addEventListener("DOMContentLoaded", () => {
     for (const campo of campos) {
       const elemento = document.getElementById(campo);
 
-      // Validar si el campo está vacío
+
       if (!elemento || elemento.value.trim() === "" || elemento.value === "0") {
         if (elemento) {
           elemento.classList.add("is-invalid");
@@ -787,19 +761,16 @@ document.addEventListener("DOMContentLoaded", () => {
         elemento.classList.remove("is-invalid");
       }
 
-      // Validar solo si el campo es numérico
       if (!isNaN(elemento.value)) {
         const valor = parseFloat(elemento.value);
         const min = elemento.hasAttribute('min') ? parseFloat(elemento.min) : null;
         const max = elemento.hasAttribute('max') ? parseFloat(elemento.max) : null;
 
-        // Validar valores negativos (solo si el campo permite negativos)
         if (min !== null && valor < min) {
           elemento.classList.add("is-invalid");
           allValid = false;
         }
 
-        // Validar valores fuera de rango (solo si el campo tiene min y max definidos)
         if (max !== null && valor > max) {
           elemento.classList.add("is-invalid");
           allValid = false;
@@ -810,7 +781,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return allValid;
   }
 
-  //Función Registrar Ficha Wisp
   async function registrarFichaWisp() {
     if (!validarCampos()) {
       showToast("Por favor, llene todos los campos requeridos.", "WARNING", 1500);
@@ -824,18 +794,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     await parametros();
 
-    // Limpiar cualquier dato previo de venta y alquilado
     jsonData.venta = null;
     jsonData.alquilado = null;
 
-    // Obtener el tipo de operación seleccionado (venta o alquilado)
     const tipoOperacion = document.getElementById('slcOperacion').value;
 
-    // Si es venta, llamamos a la función venta(), y si es alquilado, llamamos a la función alquilado_prestado()
     if (tipoOperacion === 'venta') {
-      await venta(); // Asigna jsonData.venta
+      await venta(); 
     } else if (tipoOperacion === 'alquiler') {
-      await alquilado_prestado(); // Asigna jsonData.alquilado
+      await alquilado_prestado();
     } else {
       showToast("Debe seleccionar una operación válida (Venta o Alquiler).", "WARNING", 1500);
       return;
@@ -902,7 +869,6 @@ document.addEventListener("DOMContentLoaded", () => {
         cargarSubBases(baseId);
       } else {
         console.warn("No hay Bases seleccionada para cargar sub-bases.");
-        // Limpia las sub-bases si no hay provincia seleccionada
         $('#slcSubBaseParametros').html('<option value="0" selected disabled>Seleccione</option>');
       }
     });
@@ -917,7 +883,6 @@ document.addEventListener("DOMContentLoaded", () => {
   $(".select2me").parent("div").children("span").children("span").children("span").children("span").css("margin-top", "18px");
   $(".select2me").parent("div").find("label").css("z-index", "1");
 
-  // Asignar eventos de validación en tiempo real a los campos
   document.getElementById("txtSignalStrengthParametros").addEventListener("input", validarValorRango);
   document.getElementById("txtNoiseFloorParametros").addEventListener("input", validarValorRango);
   document.getElementById("txtTransmiTccqParametros").addEventListener("input", validarValorRango);

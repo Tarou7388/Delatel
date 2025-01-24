@@ -48,7 +48,6 @@ BEGIN
     VALUES (p_rol, p_permisos, p_iduser_create);
 END $$
 
--- Eliminar procedimiento si existe
 DROP PROCEDURE IF EXISTS spu_roles_actualizar$$
 CREATE PROCEDURE spu_roles_actualizar(
     p_id_rol INT,
@@ -65,7 +64,6 @@ BEGIN
         id_rol = p_id_rol;
 END $$
 
--- Eliminar procedimiento si existe
 DROP PROCEDURE IF EXISTS spu_roles_eliminar$$
 CREATE PROCEDURE spu_roles_eliminar(
     p_id_rol INT,

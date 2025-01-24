@@ -371,7 +371,6 @@ BEGIN
         id_contrato = p_id_contrato;
 END$$
 
--- Función buscar coordenada por el idContrato
 DELIMITER $$
 
 DROP PROCEDURE IF EXISTS spu_contrato_buscar_coordenada$$
