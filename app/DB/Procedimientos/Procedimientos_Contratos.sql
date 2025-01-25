@@ -288,7 +288,6 @@ CREATE PROCEDURE spu_contratos_actualizar(
     IN p_id_paquete INT,
     IN p_direccion_servicio VARCHAR(200),
     IN p_referencia VARCHAR(200),
-    IN p_coordenada VARCHAR(25),
     IN p_nota TEXT,
     IN p_iduser_update INT
 )
@@ -298,7 +297,6 @@ BEGIN
         id_paquete = p_id_paquete,
         direccion_servicio = p_direccion_servicio,
         referencia = p_referencia,
-        coordenada = p_coordenada,
         nota = p_nota,
         iduser_update = p_iduser_update,
         update_at = NOW()
@@ -430,7 +428,8 @@ FROM
         JSON_OBJECT('id_servicio', sv.id_servicio)
     )
 WHERE
-    c.ficha_instalacion IS NULL
+    JSON_UNQUOTE(JSON_EXTRACT(c.ficha_instalacion, '$.id_ficha')) IS NULL
+    AND JSON_LENGTH(c.ficha_instalacion) = 1
     AND c.inactive_at IS NULL
 GROUP BY
     c.id_contrato,
@@ -451,7 +450,7 @@ GROUP BY
     c.inactive_at,
     c.iduser_update,
     c.iduser_inactive
-ORDER BY c.id_contrato DESC$$
+ORDER BY c.id_contrato ASC$$
 
 DROP VIEW IF EXISTS vw_contratos_contar_ficha_vacia$$
 
@@ -459,5 +458,6 @@ CREATE VIEW vw_contratos_contar_ficha_vacia AS
 SELECT COUNT(*) AS total_contratos_ficha_vacia
 FROM tb_contratos
 WHERE
-    ficha_instalacion IS NULL
+    JSON_UNQUOTE(JSON_EXTRACT(ficha_instalacion, '$.id_ficha')) IS NULL
+    AND JSON_LENGTH(ficha_instalacion) = 1
     AND inactive_at IS NULL$$

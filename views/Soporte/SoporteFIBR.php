@@ -581,13 +581,6 @@
                 </div>
               </div>
             </div>
-
-            <!-- Botón para completar soporte -->
-            <div class="text-end">
-              <button type="button" class="btn btn-success btn-sm mt-2" id="btnCompletar">
-                <i class="fas fa-check"></i> Completar
-              </button>
-            </div>
           </div>
         </div>
 

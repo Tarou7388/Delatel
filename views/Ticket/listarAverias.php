@@ -23,7 +23,7 @@
         <div class="card-header">Ticket Contratos</div>
         <div class="card-body">
           <h2 id="contratos-pendientes" class="card-title"></h2>
-          <p id="total-soportes" class="card-text"></p>
+          <p id="total-contratos" class="card-text"></p>
           <a href="<?= $host ?>views/Ticket/" class="btn btn-primary">Ver Contratos</a>
           <i class="fas fa-ticket-alt card-icon"></i>
         </div>

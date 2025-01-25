@@ -2,35 +2,6 @@
 
 <link rel="stylesheet" href="../../css/contratos.css">
 <link rel="stylesheet" href="../../css/diseñoGlobal.css" />
-<style>
-  #inputGroupCoordenada {
-    /* Aumenta el ancho máximo según tus necesidades */
-    max-width: 500px;
-    margin-top: 20px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  #CoordenadaModel {
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
-    border-right: none;
-  }
-
-  #buscarBtn {
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
-    border-left: none;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-
-  #buscarBtn:hover {
-    background-color: #0056b3;
-  }
-</style>
 
 <!-- Modal Structure -->
 <div class="modal fade" id="soporteModal" tabindex="-1" aria-labelledby="soporteModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">

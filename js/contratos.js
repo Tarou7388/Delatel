@@ -374,7 +374,6 @@ window.addEventListener("DOMContentLoaded", async () => {
     if (accesos?.contratos?.actualizar) {
       const direccionServicio = document.querySelector("#txtDireccionActualizar").value;
       const referencia = document.querySelector("#txtReferenciaActualizar").value;
-      const coordenada = document.querySelector("#txtCoordenadaActualizar").value;
       const nota = document.querySelector("#txtNotaActualizar").value;
       const datosEnvio = {
         operacion: "actualizarContrato",
@@ -383,7 +382,6 @@ window.addEventListener("DOMContentLoaded", async () => {
           idPaquete: idPaquete,
           direccionServicio: direccionServicio,
           referencia: referencia,
-          coordenada: coordenada,
           nota: nota,
           idUsuarioUpdate: idUsuario,
         },
@@ -401,6 +399,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       );
 
       const data = await response.json();
+      console.log(data);
 
       if (data.actualizado) {
         showToast("¡Contrato actualizado correctamente!", "SUCCESS", 1500);
@@ -661,6 +660,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     try {
       const response = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=buscarContratoId&id=${idContrato}`);
       const data = await response.json();
+      console.log(data);
       document.getElementById("txtIdContratoActualizar").value = data[0].id_contrato;
       document.getElementById("txtNombreActualizar").value = data[0].nombre_cliente;
       document.getElementById("txtFechaInicioActualizar").value = data[0].fecha_inicio;

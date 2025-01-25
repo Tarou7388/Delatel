@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     success: function (response) {
       const totalContratos = JSON.parse(response)[0].total_contratos_ficha_vacia;
       const contratosPendientesElement = document.querySelector("#contratos-pendientes");
-      const totalSoportesElement = document.querySelector("#total-soportes");
+      const totalSoportesElement = document.querySelector("#total-contratos");
       if (contratosPendientesElement) {
         contratosPendientesElement.textContent = totalContratos;
       }
