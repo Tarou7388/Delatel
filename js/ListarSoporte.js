@@ -1,6 +1,7 @@
 import config from "../env.js";
 import * as mapa from "./Mapa.js";
 import { inicializarDataTable, FichaInstalacion, CompletarSoporte } from "./Herramientas.js";
+import * as Herramientas from "../js/Herramientas.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   let login = await Herramientas.obtenerLogin();
@@ -13,16 +14,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     const modal = new bootstrap.Modal(document.getElementById('soporteModal'));
     const modalBody = document.querySelector('#soporteModal .modal-body');
     modalBody.innerHTML = '';
-
-    console.log(nrodoc);
-    console.log(data);
     const servicios = JSON.parse(data[0].id_servicio).id_servicio;
 
     if (servicios.length > 1) {
       servicios.forEach(async (id, index) => {
         const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=obtenerServiciosId&idservicio=${id}`);
         const nombres = await respuesta.json();
-        console.log(nombres);
         const div = document.createElement('div');
         div.classList.add('my-2', 'p-2', 'border', 'rounded');
         div.textContent = `Servicio ${index + 1}: ${nombres[0].tipo_servicio}`;
@@ -49,7 +46,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function obtenerDataSoporte(idsoport) {
     const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idsoport}`);
     const data = await respuesta.json();
-    console.log(data);
     await recorrerIdServicio(data, data[0].nro_doc, data[0].coordenada);
   }
 
@@ -195,7 +191,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   $('.card-body').on('click', '.btnActualizar', async function () {
     let id_soporte = $(this).data('id');
-    console.log("Se ha hecho clic en Editar con ID de soporte:", id_soporte);
     await obtenerDataSoporte(id_soporte);
   });
 
@@ -210,12 +205,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     
     let id_soporte = $(this).data('id');
     const data = await FichaInstalacion(id_soporte);
-    console.log('id del soporte:', id_soporte);
-    console.log('Datos del contrato:', data);
 
     
     const id_contrato = data[0].id_contrato;
-    console.log('ID del contrato:', id_contrato);
 
     const params = { cajas: false, mufas: false }
     const ip = "map"

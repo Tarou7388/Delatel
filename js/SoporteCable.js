@@ -118,7 +118,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     infoSintonizadores.forEach((sintonizador) => {
       jsonSintonizador.push(sintonizador);
-      console.log(jsonSintonizador);
     });
 
     jsonSintonizadorOriginal = JSON.parse(JSON.stringify(jsonSintonizador));
@@ -219,7 +218,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       const dataCable = await FichaInstalacion(idSoporte);
       const cableFiltrado = JSON.parse(dataCable[0].ficha_instalacion).cable;
-      console.log(cableFiltrado);
 
       idCaja = cableFiltrado.idcaja;
       txtCliente.value = dataCliente[0].nombre;
@@ -232,7 +230,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
 
       txtPotencia.value = data.potencia || "";
-      console.log("Contenido de sintonizadores:", data.sintonizadores);
 
       infoSintonizadores = await contabilizarSintonizadores(data.sintonizadores);
       sintonizadoresData = infoSintonizadores;
@@ -308,7 +305,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   async function contabilizarSintonizadores(sintonizadores) {
     let sintonizadorContador = [];
-    console.log("Contenido de sintonizadores:", sintonizadores);
 
 
     if (!Array.isArray(sintonizadores)) {
@@ -347,7 +343,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     try {
       const dataCable = await FichaInstalacion(idSoporte);
       const fichaInstalacion = JSON.parse(dataCable[0].ficha_instalacion);
-      console.log(fichaInstalacion);
       const cableFiltrado = fichaInstalacion.cable;
       let sintonizadores = null;
       if (cableFiltrado.sintonizadores) {
@@ -386,7 +381,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       txtPrecioConector.value = cableFiltrado.conector.numeroconector * cableFiltrado.conector.precio;
 
       idCaja = fichaInstalacion.idcaja;
-      console.log(idCaja);
 
       document.getElementById('btnlistar').addEventListener('click', async () => {
         try {
@@ -446,13 +440,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const divSintonizadores = document.getElementById("divSintonizadores");
     divSintonizadores.innerHTML = "";
 
-    console.log("Contenido de sintonizadores:", sintonizadores);
-
     let numeroSintonizadores = 0;
 
     sintonizadores.forEach((element, index) => {
       numeroSintonizadores++;
-      console.log(element);
 
       const card = document.createElement("div");
       card.className = "card mt-2";
@@ -481,7 +472,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         );
         if (index !== -1) {
           jsonSintonizador.splice(index, 1);
-          console.log("Sintonizador eliminado:", jsonSintonizador.length);
         }
 
         card.remove();
@@ -549,7 +539,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (index !== -1) {
 
         jsonSintonizador.splice(index, 1);
-        console.log("Sintonizador eliminado:", jsonSintonizador);
       }
       card.remove();
       actualizarContadorSintonizadores();
@@ -564,8 +553,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const soporte = result[0]?.soporte ? JSON.parse(result[0].soporte) : {};
     const nuevoSoporte = { ...soporte };
-
-    console.log("Contenido de jsonSintonizador:", jsonSintonizador);
     const dataCable = await FichaInstalacion(idSoporte);
     const cableFiltrado = JSON.parse(dataCable[0].ficha_instalacion).cable;
 
@@ -619,12 +606,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     };
 
-    console.log(cableData);
-
     nuevoSoporte.cabl = cableData;
     nuevoSoporte.idcaja = idCaja;
-
-    console.log(JSON.stringify(nuevoSoporte, null, 2));
 
     return nuevoSoporte;
   }
@@ -703,7 +686,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   async function guardarSoporte(data) {
-    console.log(data);
     try {
       const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php`, {
         method: 'PUT',
@@ -741,7 +723,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     try {
       const respuesta = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarra&codigoBarra=${encodeURIComponent(codigoBarra)}`);
       const resultado = await respuesta.json();
-      console.log(resultado);
 
       if (Array.isArray(resultado) && resultado.length > 0) {
         const producto = resultado[0];

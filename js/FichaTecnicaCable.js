@@ -1,5 +1,5 @@
 import config from "../env.js";
-
+import * as Herramientas from "./Herramientas.js";
 document.addEventListener("DOMContentLoaded", async () => {
   let login = await Herramientas.obtenerLogin();
   const userid = login.idUsuario;

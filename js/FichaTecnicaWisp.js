@@ -1,5 +1,5 @@
 import config from "../env.js";
-
+import * as Herramientas from "./Herramientas.js";
 document.addEventListener("DOMContentLoaded", async () => {
   let login = await Herramientas.obtenerLogin();
   const userid = login.idUsuario;
@@ -210,8 +210,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         showToast("No hay datos en Ficha de Instalación", "INFO");
         return;
       }
-
-      tipoPaquete = data[0].tipo_servicio;
 
     } catch (error) {
       console.error("Error al obtener los datos de la ficha de instalación:", error);

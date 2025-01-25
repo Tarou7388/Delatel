@@ -1,4 +1,5 @@
 import config from '../env.js';
+import * as Herramientas from "../js/Herramientas.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   let login = await Herramientas.obtenerLogin();

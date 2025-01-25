@@ -557,7 +557,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
           if (datosgenerales && datosgenerales.frecuencia) {
             const frecuencia = datosgenerales.frecuencia[0];
-            console.log(frecuencia);
             const slcFrecuenciaAntena = document.getElementById("slcFrecuenciaAntena");
             if (slcFrecuenciaAntena) {
               slcFrecuenciaAntena.value = frecuencia;
@@ -685,7 +684,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
 
     nuevoSoporte.WISP = wispData;
-    console.log("Nuevo soporte:", nuevoSoporte);
     return nuevoSoporte;
   }
 
@@ -725,7 +723,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   async function modificadoAntena() {
-    console.log("Antes de los cambios:", window.antenaDatos);
     const selectedValue = slcWireless.value;
     let antenaSeleccionada = {
       marca: txtAntenaMarcaCambios.value || (window.antenaDatos ? window.antenaDatos.marca : ""),
@@ -735,7 +732,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       descripcion: txtAntenaDescripcionCambios.value || (window.antenaDatos ? window.antenaDatos.descripcion : ""),
       frecuencia: slcFrecuenciaAntenaCambios.value || (window.antenaDatos ? window.antenaDatos.frecuencia : "")
     };
-    console.log("Después de los cambios:", antenaSeleccionada);
     return antenaSeleccionada;
   }
 
@@ -759,7 +755,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
 
       const result = await response.json();
-      console.log(result.status);
     } catch (error) {
       console.error('Error en la solicitud:', error);
     }

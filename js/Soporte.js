@@ -29,10 +29,8 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
-      console.log("Iniciando búsqueda avanzada...");
       const response = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarPorNombreApellido&nombres=${encodeURIComponent(nombre)}&apellidos=${encodeURIComponent(apellido)}`);
       const data = await response.json();
-      console.log("Resultado de búsqueda avanzada:", data);
 
       if (data.length > 1) {
         mostrarSelectorResultados(data);
@@ -70,7 +68,6 @@ window.addEventListener('DOMContentLoaded', async () => {
     select.addEventListener('change', async () => {
       const selectedDni = select.value;
       document.getElementById('txtNrodocumento').value = selectedDni;
-      console.log("Cliente seleccionado:", selectedDni);
       await BuscarcontratoNDoc(selectedDni);
       myModal.hide();
     });
@@ -141,7 +138,6 @@ window.addEventListener('DOMContentLoaded', async () => {
     try {
       const respuesta = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${numdocumento}`);
       const data = await respuesta.json();
-      console.log("Cliente encontrado:", data);
 
       if (data[0]) {
         document.getElementById('txtCliente').value = data[0].nombre;
@@ -160,13 +156,11 @@ window.addEventListener('DOMContentLoaded', async () => {
       txtSolucion.setAttribute("required", "true");
       txtSolucion.removeAttribute("disabled");
       tecnicoid = login.idUsuario;
-      console.log("Campo Solución habilitado");
     } else {
       txtSolucion.removeAttribute("required");
       txtSolucion.setAttribute("disabled", "true");
       txtSolucion.value = "";
       tecnicoid = 0;
-      console.log("Campo Solución deshabilitado");
     }
   }
 
@@ -181,8 +175,6 @@ window.addEventListener('DOMContentLoaded', async () => {
       idUsuario: login.idUsuario
     };
 
-    console.log("Datos a enviar:", datos);
-
     try {
       const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php`, {
         method: "POST",
@@ -191,8 +183,6 @@ window.addEventListener('DOMContentLoaded', async () => {
       });
 
       const data = await respuesta.json();
-      console.log("Respuesta al registrar incidencia:", data);
-
       if (data.status === "success") {
         showToast("Registrado Correctamente", "SUCCESS");
         formIncidencia.reset();

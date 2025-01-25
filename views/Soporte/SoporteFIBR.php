@@ -192,7 +192,7 @@
               </div>
               <div class="col-md d-flex align-items-center">
                 <div class="form-check form-switch">
-                  <input class="form-check-input" type="checkbox" id="chkCatv" disabled>
+                  <input class="form-check-input" type="checkbox" id="chkCatv" checked disabled>
                   <label class="form-check-label ms-2" for="chkCatv">CATV</label>
                 </div>
               </div>
@@ -403,7 +403,7 @@
             </div>
             <div class="col-md d-flex align-items-center">
               <div class="form-check form-switch tgl-default">
-                <input class="form-check-input" type="checkbox" id="chkCambiosCatv">
+                <input class="form-check-input" type="checkbox" id="chkCambiosCatv" checked >
                 <label class="form-check-label ms-2" for="chkCambiosCatv">CATV</label>
               </div>
             </div>
