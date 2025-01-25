@@ -93,7 +93,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
         "idPaquete"          => Herramientas::sanitizarEntrada($datos['parametros']['idPaquete']),
         "direccionServicio"  => Herramientas::sanitizarEntrada($datos['parametros']['direccionServicio']),
         "referencia"         => Herramientas::sanitizarEntrada($datos['parametros']['referencia']),
-        "coordenada"         => $datos['parametros']['coordenada'],
         "nota"               => Herramientas::sanitizarEntrada($datos['parametros']['nota']),
         "idUsuarioUpdate"    => Herramientas::sanitizarEntrada($datos['parametros']['idUsuarioUpdate'])
       ];

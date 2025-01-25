@@ -1103,21 +1103,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
     });
   }
+
   document.getElementById('btnAñadirRepetidor').addEventListener('click', async function () {
     await AgregarRepetidor();
-  });
-
-  document.getElementById('btnCompletar').addEventListener('click', async function () {
-    const idSoporte = await obtenerReferencias();
-    if (await ask("¿Está seguro de completar este soporte? Ya no aparecerá en la tabla.")) {
-      const result = await CompletarSoporte(idSoporte);
-      if (result) {
-        showToast("Soporte completado exitosamente.", "SUCCESS");
-        window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
-      } else {
-        showToast("Hubo un error al completar el soporte.", "ERROR");
-      }
-    }
   });
 
   cargarDatosdelSoporte();

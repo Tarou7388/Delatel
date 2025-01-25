@@ -130,7 +130,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           const isDisabled = prioridad === "incidencia" ? "disabled" : "";
           return `<button class="btnActualizar btn btn-primary" data-id="${row.id_soporte}" ${isDisabled}>Atender</button>
                   <button class="btnEliminar btn btn-danger" data-id="${row.id_soporte}" ><i class="fa-solid fa-trash"></i></button>
-                 <button class="btnMapa btn btn-dark" data-id="${row.id_soporte}" data-bs-toggle="modal" data-bs-target="#ModalMapa"><i class="fa-solid fa-location-dot"></i></button>
+                  <button class="btnMapa btn btn-dark" data-id="${row.id_soporte}" data-bs-toggle="modal" data-bs-target="#ModalMapa"><i class="fa-solid fa-location-dot"></i></button>
                   <button class="btnCompleto btn btn-success" data-id="${row.id_soporte}" ><i class="fa-solid fa-check"></i></button>`;
         }
       }

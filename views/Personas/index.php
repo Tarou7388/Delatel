@@ -2,30 +2,30 @@
 
 <link rel="stylesheet" href="../../css/diseñoGlobal.css">
 
-<div class="modal fade" id="ModalMapa" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="myModalLabel">Mapa de Cobertura</h5>
-        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="input-group mb-3">
-        <input type="text" id="CoordenadaModel" class="form-control" placeholder="Coordenada" aria-label="Coordenada">
-        <button class="btn btn-outline-secondary" type="button" id="buscarBtn">Buscar</button>
-      </div>
-      <div class="modal-body">
-        <div id="map" style="height: 700px;">
+<div class="modal fade" id="ModalMapa" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-bs-backdrop="static">
+	<div class="modal-dialog modal-xl" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="myModalLabel">Mapa de Cobertura</h5>
+				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="input-group mb-3" id="inputGroupCoordenada">
+				<input type="text" id="CoordenadaModel" class="form-control" placeholder="Coordenada" aria-label="Coordenada">
+				<button class="btn btn-outline-secondary" type="button" id="buscarBtn">Buscar</button>
+			</div>
+			<div class="modal-body">
+				<div id="map" style="height: 600px;">
 
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary" id="btnGuardarModalMapa" data-dismiss="modal" disabled>Guardar cambios</button>
-      </div>
-    </div>
-  </div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+				<button type="button" class="btn btn-primary" id="btnGuardarModalMapa" data-bs-dismiss="modal" disabled>Guardar cambios</button>
+			</div>
+		</div>
+	</div>
 </div>
 
 <div class="container-fluid px-4">
@@ -115,7 +115,7 @@
 					</div>
 				</div>
 				<div class="row mb-3">
-					
+
 					<div class="col-md-6">
 						<div class="form-floating">
 							<input type="text" class="form-control" id="txtReferencia" name="referencia" placeholder="Referencia" required>
@@ -128,7 +128,7 @@
 								<input type="text" class="form-control" id="txtCoordenadas" placeholder="Referencia" required disabled>
 								<label for="txtCoordenadas">Coordenadas</label>
 							</div>
-							<button class="btn btn-primary" type="button" id="btnBuscarCoordenadasEmpresa" data-toggle="modal" data-target="#ModalMapa"><i class="fa-solid fa-magnifying-glass"></i></button>
+							<button class="btn btn-primary" type="button" id="btnBuscarCoordenadasEmpresa" data-bs-toggle="modal" data-bs-target="#ModalMapa"><i class="fa-solid fa-magnifying-glass"></i></button>
 						</div>
 					</div>
 				</div>
@@ -217,7 +217,7 @@
 								<input type="text" class="form-control" id="txtCoordenadasPersona" placeholder="Referencia" required disabled>
 								<label for="txtCoordenadasPersona">Coordenadas</label>
 							</div>
-							<button class="btn btn-primary" type="button" id="btnBuscarCoordenadas" data-toggle="modal" data-target="#ModalMapa"><i class="fa-solid fa-magnifying-glass"></i></button>
+							<button class="btn btn-primary" type="button" id="btnBuscarCoordenadas" data-bs-toggle="modal" data-bs-target="#ModalMapa"><i class="fa-solid fa-magnifying-glass"></i></button>
 						</div>
 					</div>
 				</div>

@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="../../css/contratos.css">
 <link rel="stylesheet" href="../../css/diseñoGlobal.css" />
 
-<div class="modal fade" id="ModalMapa" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="ModalMapa" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-bs-backdrop="static">
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -11,12 +11,12 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="input-group mb-3">
+      <div class="input-group mb-3" id="inputGroupCoordenada">
         <input type="text" id="CoordenadaModel" class="form-control" placeholder="Coordenada" aria-label="Coordenada">
         <button class="btn btn-outline-secondary" type="button" id="buscarBtn">Buscar</button>
       </div>
       <div class="modal-body">
-        <div id="map" style="height: 700px;">
+        <div id="map" style="height: 600px;">
 
         </div>
       </div>

@@ -7,7 +7,7 @@
   }
 
   /* Contenedor de las tarjetas */
- /*  .row {
+  /*  .row {
     display: flex;
     flex-wrap: wrap;
     margin: -10px;
@@ -83,4 +83,32 @@
     right: 20px;
     font-size: 48px;
     color: #6c757d;
+  }
+
+  #inputGroupCoordenada {
+    /* Aumenta el ancho máximo según tus necesidades */
+    max-width: 500px;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  #CoordenadaModel {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    border-right: none;
+  }
+
+  #buscarBtn {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-left: none;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+
+  #buscarBtn:hover {
+    background-color: #0056b3;
   }
