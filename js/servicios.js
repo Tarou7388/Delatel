@@ -1,7 +1,8 @@
 import config from "../env.js";
+import * as Herramientas from "../js/Herramientas.js";
 
-document.addEventListener("DOMContentLoaded", () => {
-  const userid = user["idUsuario"];
+document.addEventListener("DOMContentLoaded", async () => {
+  const userid = await Herramientas.obtenerLogin();
   let servicioEnEdicion = null;
 
   const obtenerServicios = async () => {

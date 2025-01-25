@@ -1,6 +1,7 @@
 import config from '../env.js';
 
 document.addEventListener("DOMContentLoaded", async () => {
+  let login = await Herramientas.obtenerLogin();
   const urlParams = new URLSearchParams(window.location.search);
   const idContrato = urlParams.get("idContrato");
   const nombreCliente = urlParams.get("nombreCliente");
@@ -14,7 +15,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const contratoRespuesta = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=buscarContratoId&id=${idContrato}`);
     const contrato = await contratoRespuesta.json();
-    tipoServicio = contrato[0].tipos_servicio; 
+    tipoServicio = contrato[0].tipos_servicio;
 
     const respuesta = await fetch(`${config.HOST}app/controllers/Averias.controllers.php?operacion=buscarAveriaPorContrato&valor=${idContrato}`);
     const averias = await respuesta.json();
@@ -75,7 +76,7 @@ function actualizarModal(idSoporte, tipoServicio, idContrato) {
     const div = document.createElement("div");
     div.className = "option-div border p-3 mb-2";
     div.textContent = `Tipo de Servicio: ${servicio}`;
-    div.dataset.servicio = servicio; 
+    div.dataset.servicio = servicio;
 
     div.addEventListener("click", () => {
       let vistaURL = "";

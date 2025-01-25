@@ -4,7 +4,7 @@ import * as Herramientas from "../js/Herramientas.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   const accesos = await Herramientas.permisos()
-  const userid = JSON.stringify(user['idUsuario']);
+  const userid = login.idUsuario;
   let idUserTabla = -1;
   let idresponsable = -1;
 

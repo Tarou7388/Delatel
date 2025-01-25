@@ -1,9 +1,10 @@
 import config from '../env.js';
+import * as Herramientas from "../js/Herramientas.js";
 
 window.idContratoSeleccionado = null;
 let tecnicoid = 0;
 
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', async () => {
 
   const botonBuscar = document.querySelector('#btnNrodocumento');
   const txtContratoObservacion = document.querySelector('#txtContratoObservacion');
@@ -17,6 +18,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const btnBusquedaAvanzada = document.querySelector("#btnBusquedaAvanzada");
   const btnModal = document.getElementById('ModeloAbrir');
   const myModal = new bootstrap.Modal(document.getElementById('exampleModal'));
+  let login = await Herramientas.obtenerLogin();
 
   document.getElementById('txtFecha').value = new Date().toISOString().split('T')[0];
 
@@ -157,7 +159,7 @@ window.addEventListener('DOMContentLoaded', () => {
     if (val === "Incidencia") {
       txtSolucion.setAttribute("required", "true");
       txtSolucion.removeAttribute("disabled");
-      tecnicoid = user["idUsuario"];
+      tecnicoid = login.idUsuario;
       console.log("Campo Solución habilitado");
     } else {
       txtSolucion.removeAttribute("required");
@@ -176,7 +178,7 @@ window.addEventListener('DOMContentLoaded', () => {
       descripcionProblema: txtDescripcion.value,
       descripcionSolucion: txtSolucion.value,
       prioridad: slcPrioridad.value,
-      idUsuario: user["idUsuario"]
+      idUsuario: login.idUsuario
     };
 
     console.log("Datos a enviar:", datos);

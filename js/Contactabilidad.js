@@ -1,7 +1,8 @@
 import config from "../env.js";
 import * as Herramientas from "../js/Herramientas.js";
 
-window.addEventListener("DOMContentLoaded", async function() {
+window.addEventListener("DOMContentLoaded", async function () {
+  let login = await Herramientas.obtenerLogin();
   const slcPlanes = document.querySelector("#slcPlanes");
   const txtPrecio = document.querySelector("#txtPrecioContactabilidad");
   const dni = document.querySelector("#txtDniContactabilidad");
@@ -97,8 +98,7 @@ window.addEventListener("DOMContentLoaded", async function() {
 
   function ObtenerDataDNI(operacion, dni) {
     fetch(
-      `${
-        config.HOST
+      `${config.HOST
       }app/controllers/Persona.controllers.php?operacion=${operacion}&dni=${encodeURIComponent(
         dni
       )}`
@@ -112,15 +112,14 @@ window.addEventListener("DOMContentLoaded", async function() {
       .then((data) => {
         if (data && data.nombres && data.apellidoPaterno) {
           txtNombres.value = data.nombres;
-          txtApellidos.value = `${data.apellidoPaterno} ${
-            data.apellidoMaterno || ""
-          }`.trim();
+          txtApellidos.value = `${data.apellidoPaterno} ${data.apellidoMaterno || ""
+            }`.trim();
         } else {
-          showToast("No se encontraron datos para el DNI proporcionado","WARNING");
+          showToast("No se encontraron datos para el DNI proporcionado", "WARNING");
         }
       })
       .catch((error) => {
-        showToast("Error al obtener la información de la persona: ","ERROR");
+        showToast("Error al obtener la información de la persona: ", "ERROR");
         console.log(error.message)
       });
   }

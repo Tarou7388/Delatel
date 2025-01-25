@@ -5,8 +5,8 @@ import * as ListarPaquetes from "../js/ListarPaquetes.js";
 
 document.addEventListener("DOMContentLoaded", async function () {
   const accesos = await Herramientas.permisos()
-
-  const userid = JSON.stringify(user['idUsuario']);
+  let login = await Herramientas.obtenerLogin();
+  const userid = login.idUsuario;
 
   const divEmpresaCard = document.getElementById("divEmpresaCard");
   const frmEmpresas = document.getElementById("frmEmpresas");

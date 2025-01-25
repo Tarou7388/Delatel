@@ -3,6 +3,7 @@ import * as Herramientas from "../js/Herramientas.js";
 import * as ListarPaquetes from "../js/ListarPaquetes.js";
 import * as mapa from "./Mapa.js";
 window.addEventListener("DOMContentLoaded", async () => {
+  let login = await Herramientas.obtenerLogin();
   const nroDoc = document.querySelector("#txtNumDoc");
   const nombre = document.querySelector("#txtNombre");
   const precio = document.querySelector("#txtPrecio");
@@ -162,7 +163,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     params.append("idEmpresa", idEmpresa);
     params.append("direccion", direccion.value);
     params.append("referencia", referencia.value);
-    params.append("idUsuario", user.idUsuario);
+    params.append("idUsuario", login.idUsuario);
     params.append("coordenadas", coordenada.value);
 
     const response = await fetch(
@@ -208,7 +209,7 @@ window.addEventListener("DOMContentLoaded", async () => {
             fechaRegistro: fechaRegistro,
             nota: nota,
             fichainstalacion: JSON.stringify({ idcaja: mapa.idCaja }),
-            idUsuario: user.idUsuario,
+            idUsuario: login.idUsuario,
           },
         };
         console.log(datosEnvio);
@@ -675,7 +676,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   document.querySelector("#btnActualizar").addEventListener("click", async (event) => {
     event.preventDefault();
     const idContrato = document.querySelector("#txtIdContratoActualizar").value;
-    const idUsuario = user.idUsuario;
+    const idUsuario = login.idUsuario;
     const idPaquete = document.getElementById("slcPaquetesActualizar").value;
     await actualizarContrato(idContrato, idUsuario, idPaquete);
   });

@@ -1,7 +1,8 @@
 import config from "../env.js";
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("DOMContentLoaded", async () => {
+  let login = await Herramientas.obtenerLogin();
   const ruta = `${config.HOST}app/controllers/Cliente.controllers.php?operacion=listarClientes`;
-  const userid = user["idUsuario"];
+  const userid = login.idUsuario;
 
   function actualizar(idcliente) {
     const data = {

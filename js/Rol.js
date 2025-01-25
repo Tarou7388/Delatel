@@ -2,8 +2,9 @@ import config from "../env.js";
 import * as Herramientas from "../js/Herramientas.js";
 
 window.addEventListener("DOMContentLoaded", async () => {
+  let login = await Herramientas.obtenerLogin();
   let idRolActual = -1;
-  const userid = user["idUsuario"];
+  const userid = login.idUsuario;
   const rol = document.getElementById("txtRol");
   const form = document.getElementById("frmRol");
   const tbody = document.querySelector("#mostrar");

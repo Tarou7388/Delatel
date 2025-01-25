@@ -1,13 +1,15 @@
 import config from "../env.js";
 import { FichaInstalacion, formatoIPinput, FichaSoporteporDocServCoordenada, CompletarSoporte } from "./Herramientas.js";
 import * as mapa from "./Mapa.js";
+import * as Herramientas from "../js/Herramientas.js";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const idContrato = urlParams.get("idContrato");
   const btnInformacion = document.getElementById('btnInformacion');
   const cardContainer = document.getElementById('cardContainer');
   btnInformacion.disabled = true;
+  let login = await Herramientas.obtenerLogin();
 
   btnInformacion.addEventListener('click', function () {
     if (cardContainer.style.display === 'none' || cardContainer.style.display === '') {
@@ -835,9 +837,9 @@ document.addEventListener("DOMContentLoaded", () => {
           operacion: 'actualizarSoporte',
           data: {
             idSoporte: idSoporte,
-            idTecnico: user['idUsuario'],
+            idTecnico: login.idUsuario,
             soporte: soporteData,
-            idUserUpdate: user['idUsuario'],
+            idUserUpdate: login.idUsuario,
             descripcion_solucion: solutionTextarea.value,
           },
         }),

@@ -1,6 +1,6 @@
 import config from "../env.js";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   const rutaContratos = `${config.HOST}app/controllers/Sticket.controllers.php?operacion=listarContratosPendientes`;
   const rutaAveria = `${config.HOST}app/controllers/Sticket.controllers.php?operacion=listarAveriasPendientes`;
   const rutaContarClientes = `${config.HOST}app/controllers/Sticket.controllers.php?operacion=contarClientes`;

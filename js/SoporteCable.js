@@ -1,8 +1,9 @@
 import config from "../env.js";
 import { FichaInstalacion, FichaSoporteporDocServCoordenada, validarValorRango, CompletarSoporte } from "./Herramientas.js";
 import * as mapa from "./Mapa.js";
+import * as Herramientas from "../js/Herramientas.js";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   const txtPotencia = document.getElementById("txtPotencia");
   const txtSintonizador = document.getElementById("txtSintonizador");
   const slcTriplexor = document.getElementById("slcTriplexor");
@@ -42,6 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let infoSintonizadores = [];
   let jsonSintonizadorOriginal = [];
+  let login = await Herramientas.obtenerLogin();
 
   if (!idReporte) {
     btnReporte.style.display = "none";
@@ -712,9 +714,9 @@ document.addEventListener("DOMContentLoaded", () => {
           operacion: 'actualizarSoporte',
           data: {
             idSoporte: idSoporte,
-            idTecnico: user['idUsuario'],
+            idTecnico: login.idUsuario,
             soporte: data,
-            idUserUpdate: user['idUsuario'],
+            idUserUpdate: login.idUsuario,
             descripcion_solucion: document.getElementById("txtaEstadoFinal").value,
           },
         }),

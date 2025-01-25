@@ -4,8 +4,9 @@ import * as ListarPaquetes from "./ListarPaquetes.js";
 import * as Herramientas from "../js/Herramientas.js";
 
 document.addEventListener("DOMContentLoaded", async function () {
+  let login = await Herramientas.obtenerLogin();
   const accesos = await Herramientas.permisos()
-  const userid = JSON.stringify(user["idUsuario"]);
+  const userid = login.idUsuario;
   const slcPaquetes = document.getElementById("slcPaquetes");
   const slcTipoServicio = document.getElementById("slcTipoServicio");
   const slcChangeRegistro = document.getElementById("slcChangeRegistro");

@@ -1,6 +1,8 @@
 import config from '../env.js';
-document.addEventListener('DOMContentLoaded', () => {
-  const userid = user["idUsuario"];
+document.addEventListener('DOMContentLoaded', async () => {
+  let login = await Herramientas.obtenerLogin();
+
+  const userid = login.idUsuario;
 
   let jsonData = [];
   let jsonRepetidor = [];

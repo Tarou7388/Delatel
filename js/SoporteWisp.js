@@ -1,7 +1,8 @@
 import config from "../env.js";
 import { FichaInstalacion, FichaSoporteporDocServCoordenada, formatoIPinput, validarValorRango, CompletarSoporte } from "./Herramientas.js";
+import * as Herramientas from "../js/Herramientas.js";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   const form = document.getElementById("frmRegistroWisp");
   const urlParams = new URLSearchParams(window.location.search);
   const serv = urlParams.get("tiposervicio");
@@ -48,6 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const chkConfirmacion = document.getElementById("chkConfirmacion");
   const camposRequeridos = document.querySelectorAll(".form-control");
 
+  let login = await Herramientas.obtenerLogin();
   let idSoporte = -1;
   let jsonRepetidores = [];
   let jsonAntenas = [];
@@ -748,9 +750,9 @@ document.addEventListener("DOMContentLoaded", () => {
           operacion: 'actualizarSoporte',
           data: {
             idSoporte: idSoporte,
-            idTecnico: user['idUsuario'],
+            idTecnico: login.idUsuario,
             soporte: data,
-            idUserUpdate: user['idUsuario'],
+            idUserUpdate: login.idUsuario,
             descripcion_solucion: document.getElementById("txtaProceSolucion").value,
           },
         }),

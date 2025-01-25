@@ -121,3 +121,9 @@ export async function CompletarSoporte(idSoporte) {
     console.error('Error en la solicitud:', error);
   }
 }
+
+export async function obtenerLogin() {
+  const response = await fetch(`${config.HOST}app/controllers/Usuario.controllers.php?operacion=obtenerLogin`);
+  const data = await response.json();
+  return data
+}

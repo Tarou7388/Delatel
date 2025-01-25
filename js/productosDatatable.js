@@ -1,7 +1,8 @@
 import config from "../env.js";
 
-document.addEventListener("DOMContentLoaded", function () {
-  const userid = user["idUsuario"];
+document.addEventListener("DOMContentLoaded", async function () {
+  let login = await Herramientas.obtenerLogin();
+  const userid = login.idUsuario;
   const ruta = `${config.HOST}app/controllers/Producto.ssp.php`;
   let idProducto = -1;
 

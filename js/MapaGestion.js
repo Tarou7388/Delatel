@@ -35,8 +35,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   let banderaCable = false;
   let cablePrincipalInicio = true;
   let idSector = "";
+  let login = await Herramientas.obtenerLogin();
   const params = { cajas: true, mufas: true, cables: true, sectores: true };
 
+  console.log(login.idUsuario);
 
   (async () => {
     await initMap(params);
@@ -207,7 +209,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     paramsEnviar.append("idSector", sectorCercano);
     paramsEnviar.append("direccion", direccionCaja);
     paramsEnviar.append("coordenadas", coordenadasEnviar);
-    paramsEnviar.append("idUsuario", user.idUsuario);
+    paramsEnviar.append("idUsuario", login.idUsuario);
     const response = await fetch(`${config.HOST}app/controllers/Caja.controllers.php?operacion=agregarCaja`, {
       method: "POST",
       body: paramsEnviar
@@ -215,6 +217,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const data = await response.json();
     if (data.error) {
       showToast(data.error.message, "ERROR");
+      idCajaRegistro = "";
     } else {
       idCajaRegistro = data[0].id_caja;
     }
@@ -226,7 +229,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     paramsEnviar.append("idMufa", idMufaRegistro);
     paramsEnviar.append("idCaja", idCajaRegistro);
     paramsEnviar.append("coordenadas", JSON.stringify(lineaCableGuardar));
-    paramsEnviar.append("idUsuario", user.idUsuario);
+    paramsEnviar.append("idUsuario", login.idUsuario);
 
     const response = await fetch(`${config.HOST}app/controllers/Caja.controllers.php?operacion=agregarLinea`, {
       method: "POST",
@@ -248,7 +251,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     paramsEnviar.append("sector", document.querySelector("#nombreSector").value);
     paramsEnviar.append("descripcion", document.querySelector("#descripcionSector").value);
     paramsEnviar.append("coordenadas", coordenadasEnviar);
-    paramsEnviar.append("idUsuario", user.idUsuario);
+    paramsEnviar.append("idUsuario", login.idUsuario);
     const response = await fetch(`${config.HOST}app/controllers/Sector.controllers.php`, {
       method: "POST",
       body: paramsEnviar
@@ -272,7 +275,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     paramsEnviar.append("descripcion", document.querySelector("#descripcionMufa").value);
     paramsEnviar.append("coordenadas", Coordenadas);
     paramsEnviar.append("direccion", document.querySelector("#direccionMufa").value);
-    paramsEnviar.append("id_usuario", user.idUsuario);
+    paramsEnviar.append("id_usuario", login.idUsuario);
     const response = await fetch(`${config.HOST}app/controllers/Mufas.controllers.php`, {
       method: "POST",
       body: paramsEnviar
@@ -551,7 +554,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     paramsEnviar.append("operacion", "actualizarLineas");
     paramsEnviar.append("id", -1);
     paramsEnviar.append("coordenadas", JSON.stringify(coordenadas));
-    paramsEnviar.append("idUsuario", user.idUsuario);
+    paramsEnviar.append("idUsuario", login.idUsuario);
     const response = await fetch(`${config.HOST}app/controllers/Lineas.controllers.php`, {
       method: "POST",
       body: paramsEnviar
@@ -648,7 +651,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (await ask("¿Desea eliminar la caja?")) {
         const datos = JSON.stringify({
           idCaja: idCajaRegistro,
-          idUsuario: user.idUsuario,
+          idUsuario: login.idUsuario,
           operacion: "eliminarCaja"
          });
         const response = await fetch(`${config.HOST}app/controllers/Caja.controllers.php`, {
@@ -660,6 +663,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           showToast(data2.error.message, "ERROR");
         } else {
           showToast("Eliminado Correctamente", "SUCCESS");
+          idCajaRegistro = "";
           marcadoresCajas.forEach(marcador => {
             marcador.forEach(item => {
               item.setMap(null);
@@ -685,7 +689,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (await ask("¿Desea eliminar la mufa?")) {
         const datos = JSON.stringify({
           idMufa: idMufaRegistro,
-          idUsuario: user.idUsuario,
+          idUsuario: login.idUsuario,
           operacion: "eliminarMufa"
          });
         const response = await fetch(`${config.HOST}app/controllers/Mufas.controllers.php`, {
@@ -710,7 +714,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (await ask("¿Desea desactivar el sector?")) {
       const datos = JSON.stringify({
         idSector: idSector,
-        idUsuario: user.idUsuario,
+        idUsuario: login.idUsuario,
         operacion: "desactivarSector"
        });
       const response = await fetch(`${config.HOST}app/controllers/Sector.controllers.php`, {
@@ -718,7 +722,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         body: datos
       });
       const data = await response.json();
-      console.log(data);
       if (data.error) {
         showToast(data.error.message, "ERROR");
       } else {

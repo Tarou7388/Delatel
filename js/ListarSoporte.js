@@ -2,7 +2,8 @@ import config from "../env.js";
 import * as mapa from "./Mapa.js";
 import { inicializarDataTable, FichaInstalacion, CompletarSoporte } from "./Herramientas.js";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+  let login = await Herramientas.obtenerLogin();
   let ruta = `${config.HOST}app/controllers/Soporte.controllers.php?operacion=FiltrarSoportePrioridad&prioridad=`;
 
   const Prioridad = document.querySelector("#slcPrioridad");
@@ -62,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
         operacion: 'inhabilitarSoportebyID',
         data: {
           idSoporte: idsoport,
-          idUserInactive: user['idUsuario']
+          idUserInactive: login.idUsuario
         }
       })
     });

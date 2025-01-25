@@ -22,6 +22,9 @@ if (isset($_GET["operacion"])) {
   if ($operacion == "obtenerPermisos") {
     echo json_encode(cargarPermisos($_SESSION['login']['idRol']));
   }
+  if ($operacion == "obtenerLogin") {
+    echo json_encode($_SESSION['login']);
+  }
 }
 
 if (isset($_POST['operacion'])) {

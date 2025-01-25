@@ -1,7 +1,8 @@
 import config from "../env.js";
 import * as Herramientas from "./Herramientas.js";
 document.addEventListener("DOMContentLoaded", async () => {
-  const userid = user["idUsuario"];
+  let login = await Herramientas.obtenerLogin();
+  const userid = login.idUsuario;
   const precioActual = document.querySelector("#txtPrecioActual");
   const tipoProducto = document.querySelector("#slcTipoProducto");
   const Modelo = document.querySelector("#txtModelo");

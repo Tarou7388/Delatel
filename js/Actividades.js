@@ -1,6 +1,8 @@
 import config from "../env.js";
 import * as mapa from "./Mapa.js";
-window.addEventListener("DOMContentLoaded", function () {
+import * as Herramientas from "./Herramientas.js";
+window.addEventListener("DOMContentLoaded",async function () {
+  let login = await Herramientas.obtenerLogin();
   let actividad = null;
   const contenido = document.getElementById("contenido");
   async function cargarActividades() {
@@ -268,33 +270,33 @@ window.addEventListener("DOMContentLoaded", function () {
         <tbody id="tbodyContactos"></tbody>
       </table>
     `;
-  
+
     $('#tablaContactos').DataTable({
       processing: true,
       serverSide: true,
       ajax: {
         url: '../app/controllers/Contactos.ssp.php',
-        dataSrc: function(json) {
+        dataSrc: function (json) {
 
           console.log(json);
           return json.data;
         },
-        error: function(xhr, error, thrown) {
+        error: function (xhr, error, thrown) {
           console.error('Error en la carga de datos:', error, thrown);
           alert('Error al cargar los datos. Por favor, revisa la consola para más detalles.');
         }
       },
       columns: [
-        { data: 0, className: 'text-center' },          
-        { data: 1, className: 'text-center' },          
-        { data: 2, className: 'text-center' },          
-        { data: 8, className: 'text-center' },          
-        { data: 4, className: 'text-center' },          
+        { data: 0, className: 'text-center' },
+        { data: 1, className: 'text-center' },
+        { data: 2, className: 'text-center' },
+        { data: 8, className: 'text-center' },
+        { data: 4, className: 'text-center' },
         {
           data: null,
           orderable: false,
           searchable: false,
-          render: function(data, type, row) {
+          render: function (data, type, row) {
             return `
               <button class="btn btn-primary btn-detalle" data-id="${row[0]}"><i class="fa-regular fa-clipboard"></i></button>
               <button class="btn btn-success btn-whatsapp" data-telefono="${row[2]}" data-nombre="${row[1]}"><i class="fa-brands fa-whatsapp"></i></button>
@@ -303,21 +305,21 @@ window.addEventListener("DOMContentLoaded", function () {
         }
       ],
       columnDefs: [
-        { targets: 0, visible: false } 
+        { targets: 0, visible: false }
       ],
       language: {
         url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
       },
       order: [[0, 'desc']]
     });
-  
-   
-    $('#tablaContactos').on('draw.dt', function() {
+
+
+    $('#tablaContactos').on('draw.dt', function () {
       document.querySelectorAll('.btn-detalle').forEach(button => {
         button.addEventListener('click', (event) => {
           const id = event.currentTarget.getAttribute('data-id');
           const contacto = $('#tablaContactos').DataTable().data().toArray().find(element => element[0] == id);
-    
+
           if (contacto) {
             document.getElementById('detalleId').innerText = contacto[0];
             document.getElementById('detalleNombre').innerText = contacto[1];
@@ -329,14 +331,14 @@ window.addEventListener("DOMContentLoaded", function () {
             document.getElementById('detallePrecio').innerText = contacto[6];
             document.getElementById('detalleNota').innerText = contacto[4];
             document.getElementById('detalleUsuarioCreador').innerText = contacto[11];
-    
+
             new bootstrap.Modal(document.getElementById('detalleModalContactos')).show();
           } else {
             console.error('Contacto no encontrado');
           }
         });
       });
-    
+
       document.querySelectorAll('.btn-whatsapp').forEach(button => {
         button.addEventListener('click', (event) => {
           const telefono = event.currentTarget.getAttribute('data-telefono');
@@ -345,17 +347,17 @@ window.addEventListener("DOMContentLoaded", function () {
         });
       });
     });
-    
+
     window.whatsapp = function (telefono, nombre) {
       if (typeof telefono === 'string') {
         const telefonoFormateado = `51${telefono.replace(/\D/g, '')}`;
         const mensaje = `Hola ${nombre}, Estoy creando pruebas para la empresa delatel sobre contactos por WhatsApp.`;
         const url = `https://api.whatsapp.com/send?phone=${telefonoFormateado}&text=${encodeURIComponent(mensaje)}`;
-  
+
         console.log("Teléfono formateado:", telefonoFormateado);
         console.log("Mensaje:", mensaje);
         console.log("URL:", url);
-  
+
         window.open(url, '_blank');
       } else {
         console.error('Teléfono no válido');

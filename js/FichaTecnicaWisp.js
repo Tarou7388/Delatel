@@ -1,7 +1,8 @@
 import config from "../env.js";
 
-document.addEventListener("DOMContentLoaded", () => {
-  const userid = user["idUsuario"];
+document.addEventListener("DOMContentLoaded", async () => {
+  let login = await Herramientas.obtenerLogin();
+  const userid = login.idUsuario;
   document.getElementById("txtFecha").value = new Date().toISOString().split('T')[0];
   const btnAgregarRouter = document.getElementById("btnAgregarRouter");
   const routersContainer = document.getElementById("routersContainer");

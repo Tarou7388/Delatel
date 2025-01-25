@@ -2,8 +2,8 @@ import config from "../env.js";
 import * as Herramientas from "../js/Herramientas.js";
 
 document.addEventListener("DOMContentLoaded", async function () {
-
-  const userid = user["idUsuario"];
+  let login = await Herramientas.obtenerLogin();
+  const userid = login.idUsuario;
   const tipoMovimientoSelect = document.getElementById("slcTipomovimiento");
   const slcMotivo = document.getElementById("slcMotivo");
   const idproductoField = document.querySelector("#idproducto");
@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
   }
 
-  const mostrarStockActual = async (idproducto,idAlmacen) => {
+  const mostrarStockActual = async (idproducto, idAlmacen) => {
     const [stockRes, productoRes] = await Promise.all([
       fetch(`${config.HOST}app/controllers/Kardex.controllers.php?operacion=buscarStockId&idProducto=${idproducto}&idAlmacen=${idAlmacen}`),
       fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoId&idProducto=${idproducto}`)

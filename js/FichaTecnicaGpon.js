@@ -1,6 +1,9 @@
 import config from "../env.js";
-document.addEventListener("DOMContentLoaded", () => {
-  const userid = user["idUsuario"];
+import * as Herramientas from "./Herramientas.js";
+document.addEventListener("DOMContentLoaded", async () => {
+  let login = await Herramientas.obtenerLogin();
+
+  const userid = login.idUsuario;
 
   const txtCantCable = document.getElementById("txtCantCable");
   const txtPrecioCable = document.getElementById("txtPrecioCable");
