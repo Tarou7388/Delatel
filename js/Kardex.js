@@ -16,6 +16,15 @@ document.addEventListener("DOMContentLoaded", async function () {
   const accesos = await Herramientas.permisos();
   fecha.value = new Date().toISOString().split("T")[0];
 
+  /**
+   * Asynchronously updates the options of a select element based on the provided value.
+   *
+   * This function fetches data from a specified endpoint using the provided value as a query parameter.
+   * It then populates the select element with options created from the fetched data.
+   *
+   * @param {string} valor - The value used to filter the data from the endpoint.
+   * @returns {Promise<void>} A promise that resolves when the select element has been updated.
+   */
   async function actualizarMtv(valor) {
     const respuesta = await fetch(
       `${config.HOST}app/controllers/Movimiento.controllers.php?operacion=FiltrarSoportePrioridad&movimiento=${valor}`
@@ -31,6 +40,13 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
   }
 
+  /**
+   * Muestra el stock actual y el valor histórico de un producto en un almacén específico.
+   *
+   * @param {number} idproducto - El ID del producto.
+   * @param {number} idAlmacen - El ID del almacén.
+   * @returns {Promise<void>} - Una promesa que se resuelve cuando se han actualizado los campos de stock y valor histórico.
+   */
   const mostrarStockActual = async (idproducto, idAlmacen) => {
     const [stockRes, productoRes] = await Promise.all([
       fetch(`${config.HOST}app/controllers/Kardex.controllers.php?operacion=buscarStockId&idProducto=${idproducto}&idAlmacen=${idAlmacen}`),
@@ -44,6 +60,16 @@ document.addEventListener("DOMContentLoaded", async function () {
     txtvalorhistorico.value = productoData[0]?.precio_actual || 0;
   };
 
+  /**
+   * Función asíncrona para guardar un registro en el Kardex.
+   * Verifica si el usuario tiene permisos para crear registros en el inventario.
+   * Si tiene permisos, envía una solicitud POST al servidor con los datos del formulario.
+   * Muestra un mensaje de éxito o error basado en la respuesta del servidor.
+   * 
+   * @async
+   * @function guardarKardex
+   * @returns {void}
+   */
   const guardarKardex = async () => {
     if (accesos?.inventariado?.crear) {
       const params = new FormData();

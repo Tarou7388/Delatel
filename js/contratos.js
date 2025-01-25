@@ -102,13 +102,37 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  /**
+   * Función asíncrona para obtener la lista de sectores desde el servidor.
+   * Realiza una solicitud HTTP GET al endpoint especificado y devuelve la respuesta en formato JSON.
+   *
+   * @returns {Promise<Object>} Una promesa que resuelve con los datos de la lista de sectores en formato JSON.
+   * @throws {Error} Si la solicitud de red falla o la respuesta no es un JSON válido.
+   */
   async function fetchSectores() {
     const response = await fetch(
       `${config.HOST}app/controllers/Sector.controllers.php?operacion=listarSectores`
     );
     return await response.json();
-  }
+  };
 
+  /**
+   * Busca información de un cliente basado en su número de documento.
+   *
+   * @async
+   * @function buscarCliente
+   * @param {string} nroDoc - El número de documento del cliente a buscar.
+   * @returns {Promise<void>} - No retorna un valor, pero actualiza los campos del formulario con la información del cliente.
+   *
+   * @description
+   * Esta función realiza una búsqueda de un cliente utilizando su número de documento.
+   * Si el número de documento está vacío, muestra un mensaje de información.
+   * Si no se encuentra el cliente, muestra un mensaje de advertencia.
+   * Si se encuentra el cliente, actualiza los campos del formulario con la información del cliente.
+   *
+   * @example
+   * buscarCliente("12345678");
+   */
   async function buscarCliente(nroDoc) {
     if (nroDoc == "") {
       showToast("¡Ingrese numero de documento!", "INFO");
@@ -145,8 +169,20 @@ window.addEventListener("DOMContentLoaded", async () => {
         }
       }
     }
-  }
+  };
 
+  /**
+   * Registra un nuevo cliente en el sistema.
+   * 
+   * Esta función envía una solicitud POST al servidor para registrar un cliente
+   * utilizando los datos proporcionados en los campos de entrada. Si no se 
+   * proporciona un ID de persona o empresa, o si alguno de los campos requeridos 
+   * está vacío, se muestra un mensaje de advertencia y la función se detiene.
+   * 
+   * @async
+   * @function registrarCliente
+   * @returns {Promise<void>} Una promesa que se resuelve cuando la solicitud se completa.
+   */
   async function registrarCliente() {
     if (!idPersona && !idEmpresa) {
       showToast("Debe proporcionar un ID de persona o empresa.", "INFO");
@@ -177,6 +213,23 @@ window.addEventListener("DOMContentLoaded", async () => {
     idCliente = data[0].id_cliente;
   }
 
+  /**
+   * Registra un nuevo contrato en el sistema.
+   * 
+   * Este método realiza las siguientes acciones:
+   * 1. Verifica si el usuario tiene permisos para crear contratos.
+   * 2. Valida los campos del formulario.
+   * 3. Solicita confirmación del usuario para registrar el contrato.
+   * 4. Envía los datos del contrato al servidor.
+   * 5. Descuenta la caja correspondiente.
+   * 6. Muestra mensajes de éxito o error según el resultado de las operaciones.
+   * 
+   * @async
+   * @function registrarContrato
+   * @returns {Promise<void>} No retorna ningún valor.
+   * 
+   * @throws {Error} Muestra un mensaje de error si ocurre algún problema durante el registro del contrato o el descuento de la caja.
+   */
   async function registrarContrato() {
     console.log(mapa.idCaja)
     if (accesos?.contratos?.crear) {
@@ -261,6 +314,17 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  /**
+   * Elimina un contrato y actualiza la interfaz de usuario.
+   *
+   * @async
+   * @function eliminar
+   * @param {number} idContrato - El ID del contrato a eliminar.
+   * @param {number} idUsuario - El ID del usuario que realiza la eliminación.
+   * @param {number} idCaja - El ID de la caja asociada al contrato. Si es -1, no se realiza la recontabilización de la caja.
+   * @returns {Promise<void>} - Una promesa que se resuelve cuando la operación de eliminación y actualización de la interfaz de usuario se completa.
+   * @throws {Error} - Lanza un error si la solicitud de eliminación o recontabilización falla.
+   */
   async function eliminar(idContrato, idUsuario, idCaja) {
     if (accesos?.contratos?.eliminar) {
       if (await ask("¿Desea Cancelar el Contrato?")) {

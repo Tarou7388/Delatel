@@ -200,7 +200,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         `${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerFichaInstalacion&id=${idContrato}`
       );
       const data = await response.json();
-      console.log(data);
       document.getElementById("txtCliente").value = data[0].nombre_cliente;
       document.getElementById("txtNumFicha").value = data[0].id_contrato;
       document.getElementById("txtPaquete").value = data[0].paquete;

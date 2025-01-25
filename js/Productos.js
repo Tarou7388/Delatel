@@ -95,7 +95,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   precioActual.addEventListener("keypress", (event) => {
-    // Evitar que se ingrese el signo "-" o letras
     const charCode = event.charCode;
     if (charCode === 45 || (charCode < 48 && charCode !== 46) || charCode > 57) {
       event.preventDefault();
@@ -103,7 +102,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   precioActual.addEventListener("input", (event) => {
-    // Asegurarse de que el valor no sea negativo
     if (parseFloat(event.target.value) < 0) {
       event.target.value = "";
     }

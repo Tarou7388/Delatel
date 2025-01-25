@@ -47,6 +47,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
 
+  /**
+   * Valida si el valor de un elemento de entrada está dentro de un rango especificado.
+   * Si el valor está fuera del rango, agrega una clase de error y muestra un mensaje de error.
+   * Si el valor está dentro del rango, elimina la clase de error y oculta el mensaje de error.
+   *
+   * @param {Event} event - El evento que desencadena la validación.
+   */
   function validarValorRango(event) {
     const elemento = event.target;
     const min = parseFloat(elemento.min);
@@ -76,7 +83,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         `${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerFichaInstalacion&id=${idContrato}`
       );
       const data = await response.json();
-      console.log(data);
 
       if (data.length === 0) {
         console.warn('No se encontraron datos');
@@ -119,6 +125,42 @@ document.addEventListener('DOMContentLoaded', async () => {
   })();
 
 
+  /**
+   * Función asincrónica que recopila datos de varios campos de entrada en un formulario
+   * y los organiza en un objeto JSON para su posterior uso.
+   *
+   * @async
+   * @function fibraOptica
+   * @returns {void}
+   *
+   * @property {string} txtIdCaja - ID de la caja.
+   * @property {string} slcFilaEntrada - Fila de entrada seleccionada.
+   * @property {string} txtPuerto - Puerto de conexión.
+   * @property {string} txtUsuario - Nombre de usuario.
+   * @property {string} txtClaveAcceso - Clave de acceso.
+   * @property {string} txtVlan - VLAN.
+   * @property {string} txtPlan - Plan de servicio.
+   * @property {string} txtPeriodo - Periodo de servicio.
+   * @property {string} txtPotencia - Potencia de la fibra.
+   * @property {string} txtSsid - SSID del router.
+   * @property {string} txtSeguridad - Tipo de seguridad del router.
+   * @property {string} txtMAC - Dirección MAC del router.
+   * @property {string} txtMarca - Marca del router.
+   * @property {string} txtModelo - Modelo del router.
+   * @property {string} txtIp - Dirección IP del router.
+   * @property {string} txtSerie - Número de serie del router.
+   * @property {string} slcBanda - Banda del router.
+   * @property {string} txtAntenas - Número de antenas del router.
+   * @property {boolean} chkCatv - Indica si CATV está habilitado.
+   * @property {string} txtDetalles - Detalles adicionales.
+   * @property {string} txtUsuarioRouter - Usuario del router.
+   * @property {string} txtSeguridadRouter - Seguridad del router.
+   * @property {Object} jsonData - Objeto JSON que contiene todos los datos recopilados.
+   * @property {Object} jsonData.fibraoptica - Datos de la fibra óptica.
+   * @property {Object} jsonData.fibraoptica.router - Datos del router.
+   * @property {Object} jsonData.tipoentrada - Datos del tipo de entrada.
+   * @property {number} jsonData.idcaja - ID de la caja.
+   */
   async function fibraOptica() {
     const txtIdCaja = document.querySelector("#txtIdCaja").value;
     const slcFilaEntrada = document.querySelector("#slcFilaEntrada").value;
@@ -177,6 +219,19 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
 
+  /**
+   * Agrega un nuevo repetidor a la lista y lo muestra en la interfaz de usuario.
+   * 
+   * @async
+   * @function AgregarRepetidor
+   * @returns {void}
+   * 
+   * @description Esta función obtiene los valores de los campos de entrada del repetidor,
+   * valida que todos los campos requeridos estén completos, crea un nuevo objeto repetidor,
+   * lo agrega a la lista de repetidores y actualiza la interfaz de usuario para mostrar el nuevo repetidor.
+   * 
+   * @throws {Error} Si alguno de los campos requeridos no está completo, muestra un mensaje de advertencia.
+   */
   async function AgregarRepetidor() {
     const cardContainer = document.getElementById("cardContainer");
     const contenidoCarta = document.getElementById("cardsRow");
@@ -331,7 +386,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
       const respuesta = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarra&codigoBarra=${encodeURIComponent(codigoBarra)}`);
       const resultado = await respuesta.json();
-      console.log('Resultado de la búsqueda:', resultado);
 
       if (Array.isArray(resultado) && resultado.length > 0) {
         const producto = resultado[0];
@@ -416,6 +470,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     return todosValidos;
   }
 
+  /**
+   * Valida el valor del puerto ingresado en el campo de texto "txtPuerto" basado en la fila seleccionada en "slcFilaEntrada".
+   * Muestra un mensaje de error si el valor es inválido.
+   * 
+   * Reglas de validación:
+   * - Si la fila seleccionada es "1", el valor del puerto debe estar entre 1 y 8.
+   * - Si la fila seleccionada es "2", el valor del puerto debe estar entre 1 y 16.
+   * 
+   * Si el valor del puerto es inválido, se muestra un mensaje de error y se añade la clase "is-invalid" al campo de texto.
+   * Si el valor del puerto es válido, se oculta el mensaje de error y se elimina la clase "is-invalid".
+   */
   function validarPuerto() {
     const filaEntrada = document.getElementById("slcFilaEntrada").value;
     const columnaEntrada = document.getElementById("txtPuerto").value;
@@ -445,6 +510,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
+  /**
+   * Guarda la ficha de instalación de fibra óptica.
+   * 
+   * Esta función valida los campos requeridos, guarda la ficha de instalación
+   * y maneja la respuesta del servidor. Muestra mensajes de éxito o error
+   * según corresponda.
+   * 
+   * @async
+   * @function Guardar
+   * @returns {Promise<void>} No retorna un valor, pero redirige a otra página en caso de éxito.
+   * @throws {Error} Muestra un mensaje de error si ocurre un problema al guardar la ficha de instalación.
+   */
   async function Guardar() {
     if (!validarCampos()) {
       showToast("Por favor, llene todos los campos requeridos.", "WARNING");

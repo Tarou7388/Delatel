@@ -53,6 +53,16 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
   })();
 
+  /**
+   * Verifica si todos los campos requeridos están completos.
+   * 
+   * @async
+   * @function verificarCampos
+   * @returns {Promise<boolean>} Retorna `true` si algún campo está vacío, de lo contrario `false`.
+   * @description Esta función recorre una lista de campos y verifica si alguno de ellos está vacío.
+   * Si encuentra un campo vacío, muestra un mensaje de advertencia y retorna `true`.
+   * Si todos los campos están completos, retorna `false`.
+   */
   async function verificarCampos() {
     const campos = [
       txtRuc, txtRepresentanteLegal, txtRazonSocial,
@@ -69,6 +79,18 @@ document.addEventListener("DOMContentLoaded", async function () {
     return false;
   }
 
+  /**
+   * Registra una nueva empresa en el sistema.
+   * 
+   * Esta función envía una solicitud POST al servidor para registrar una nueva empresa
+   * utilizando los datos proporcionados en los campos de entrada del formulario.
+   * 
+   * @async
+   * @function registrarEmpresa
+   * @returns {Promise<void>} No devuelve ningún valor, pero muestra mensajes de éxito o advertencia.
+   * 
+   * @throws {Error} Si ocurre un error durante la solicitud de registro.
+   */
   async function registrarEmpresa() {
     if (accesos?.personas?.crear) {
       const params = new FormData();
@@ -101,6 +123,21 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   }
 
+  /**
+   * Registra un nuevo contacto para una empresa.
+   *
+   * @async
+   * @function registrarContacto
+   * @param {number} idEmpresa - El ID de la empresa para la cual se registra el contacto.
+   * @returns {Promise<void>} - Una promesa que se resuelve cuando el contacto ha sido registrado.
+   *
+   * @throws {Error} - Lanza un error si la solicitud de registro falla.
+   *
+   * @description
+   * Esta función registra un nuevo contacto para una empresa específica. Si el usuario tiene permisos de creación de personas,
+   * se recopilan los datos necesarios y se envían a un controlador para su registro. Si el registro es exitoso, se muestra un mensaje
+   * de éxito y se pregunta al usuario si desea registrar un contrato.
+   */
   async function registrarContacto(idEmpresa) {
     if (accesos?.personas?.crear) {
       const Paquete = slcPaquetes.value;
@@ -140,6 +177,15 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   }
 
+  /**
+   * Obtiene los datos de una empresa a partir de su RUC (Registro Único de Contribuyentes).
+   *
+   * @async
+   * @function ObtenerDataRUC
+   * @param {string} ruc - El RUC de la empresa que se desea buscar. Debe tener 11 dígitos.
+   * @returns {Promise<void>} No retorna un valor, pero actualiza los campos de texto con la razón social y dirección de la empresa.
+   * @throws {Error} Muestra un mensaje de error si la empresa no es encontrada o si ocurre algún problema durante la solicitud.
+   */
   async function ObtenerDataRUC(ruc) {
     try {
       if (ruc.length < 11) {
@@ -159,6 +205,11 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   }
 
+  /**
+   * Muestra u oculta el mensaje de carga y deshabilita o habilita los campos del formulario.
+   *
+   * @param {boolean} show - Indica si se debe mostrar (true) o ocultar (false) el mensaje de carga.
+   */
   async function showLoadingMessage(show) {
     txtReferencia.disabled = show;
     txtNombreComercial.disabled = show;

@@ -31,6 +31,11 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   slcPaquetes.disabled = true;
 
+  /**
+   * Alterna la visibilidad de los formularios de Persona y Empresa.
+   *
+   * @param {string} value - El valor que determina qué formulario mostrar. Puede ser "Persona" o "Empresa".
+   */
   function toggleForms(value) {
     if (value === "Persona") {
       resetUI();
@@ -72,6 +77,22 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
   })();
 
+  /**
+   * Obtiene y procesa datos para un DNI (Documento Nacional de Identidad) dado.
+   *
+   * @param {string} operacion - La operación a realizar.
+   * @param {string} dni - El número de DNI para obtener datos.
+   * @returns {void}
+   *
+   * @description
+   * Esta función envía una solicitud al servidor para obtener datos asociados con el DNI proporcionado.
+   * Maneja la respuesta actualizando la interfaz de usuario con los datos obtenidos o mostrando mensajes de error apropiados.
+   *
+   * @example
+   * ObtenerDataDNI('buscar', '12345678');
+   *
+   * @throws {Error} Lanza un error si la respuesta no es correcta.
+   */
   function ObtenerDataDNI(operacion, dni) {
     bloquearCargar(true);
     fetch(`${config.HOST}app/controllers/Persona.controllers.php?operacion=${operacion}&dni=${encodeURIComponent(dni)}`)
@@ -123,6 +144,13 @@ document.addEventListener("DOMContentLoaded", async function () {
     slcPaquetes.value = '';
   }
 
+  /**
+   * Verifica que los campos de la persona estén completos y sean válidos.
+   *
+   * @returns {Object} Un objeto con dos propiedades:
+   * - mensaje {string}: Un mensaje indicando el error encontrado, si lo hay.
+   * - confirmacion {boolean}: Un valor booleano que indica si todos los campos son válidos (true) o no (false).
+   */
   function verificarCamposPersona() {
     const camposPersona = [
       slcTipoDocumento, txtNumDocumentoPersona, txtNombresPersona,
@@ -149,6 +177,22 @@ document.addEventListener("DOMContentLoaded", async function () {
     return bandera;
   }
 
+  /**
+   * Registra una nueva persona en el sistema.
+   * 
+   * @async
+   * @function registrarPersona
+   * @returns {Promise<void>} No retorna ningún valor.
+   * @throws {Error} Si ocurre un error durante la solicitud.
+   * 
+   * @description Esta función envía una solicitud POST al servidor para registrar una nueva persona. 
+   * Los datos de la persona se obtienen de varios elementos del DOM y se envían como un FormData. 
+   * Si la respuesta del servidor contiene un error, se muestra un mensaje de advertencia. 
+   * Si la persona se registra correctamente, se llama a la función registrarContacto con el ID de la persona registrada.
+   * 
+   * @example
+   * registrarPersona();
+   */
   async function registrarPersona() {
     if (accesos?.personas?.crear) {
       const params = new FormData();
@@ -179,6 +223,22 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   }
 
+  /**
+   * Registra un contacto para una persona específica.
+   *
+   * @async
+   * @function registrarContacto
+   * @param {number} idPersona - El ID de la persona para registrar el contacto.
+   * @returns {Promise<void>} - Una promesa que se resuelve cuando el contacto ha sido registrado.
+   *
+   * @throws {Error} - Lanza un error si la solicitud de registro de contacto falla.
+   *
+   * @description
+   * Esta función registra un contacto para una persona específica enviando una solicitud POST
+   * al servidor con los datos necesarios. Si el registro es exitoso, muestra un mensaje de éxito
+   * y pregunta al usuario si desea registrar un contrato. Si el usuario acepta, redirige a la página
+   * de registro de contratos con los parámetros correspondientes.
+   */
   async function registrarContacto(idPersona) {
     const Servicio = slcTipoServicio.value;
     const Paquete = slcPaquetes.value;
@@ -215,6 +275,11 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   toggleForms(slcChangeRegistro.value);
 
+  /**
+   * Bloquea o desbloquea los campos del formulario de personas.
+   *
+   * @param {boolean} show - Indica si los campos deben ser bloqueados (true) o desbloqueados (false).
+   */
   async function bloquearCargar(show) {
     txtTelefono.disabled = show;
     txtEmail.disabled = show;
@@ -237,6 +302,27 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     txtNumDocumentoPersona.addEventListener('input', cambiarslc);
 
+    /**
+     * Función que cambia el estado de varios elementos del formulario
+     * basado en la longitud del valor del campo txtNumDocumentoPersona.
+     * 
+     * - Si la longitud es 8:
+     *   - Habilita el botón de búsqueda.
+     *   - Establece el tipo de documento a 'DNI' y lo deshabilita.
+     *   - Establece la nacionalidad a 'Peruano' y la deshabilita.
+     *   - Deshabilita los campos de apellidos y nombres.
+     * - Si la longitud es diferente de 8:
+     *   - Deshabilita el botón de búsqueda.
+     *   - Si la longitud es 9:
+     *     - Establece el tipo de documento a 'CAR' y lo deshabilita.
+     *     - Habilita los campos de apellidos y nombres.
+     *   - Si la longitud es diferente de 9:
+     *     - Limpia el tipo de documento.
+     *     - Deshabilita los campos de apellidos y nombres.
+     *   - Habilita la selección de nacionalidad.
+     * 
+     * @function cambiarslc
+     */
     function cambiarslc() {
       txtApellidosPersona.value = '';
       txtNombresPersona.value = '';

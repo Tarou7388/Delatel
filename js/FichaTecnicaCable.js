@@ -57,6 +57,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
 
+  /**
+   * Valida si el valor de un elemento de entrada es negativo o positivo.
+   * Si el valor es menor que el mínimo permitido, muestra un mensaje de error.
+   * 
+   * @param {Event} event - El evento que desencadena la validación.
+   */
   function validarValorNegativoPositivo(event) {
     const elemento = event.target;
     const min = 0;
@@ -74,6 +80,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
 
+  /**
+   * Valida si el valor de un elemento de entrada está dentro de un rango especificado.
+   * Si el valor está fuera del rango, agrega una clase de error y muestra un mensaje de error.
+   * Si el valor está dentro del rango, elimina la clase de error y oculta el mensaje de error.
+   *
+   * @param {Event} event - El evento que desencadena la validación.
+   */
   function validarValorRango(event) {
     const elemento = event.target;
     const min = parseFloat(elemento.min);
@@ -101,7 +114,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         `${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerFichaInstalacion&id=${idContrato}`
       );
       const data = await response.json();
-      console.log(data);
 
       if (data.length === 0 || !data[0].ficha_instalacion) {
         showToast("No hay datos en Ficha de Instalación", "INFO");
@@ -127,6 +139,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   })();
 
 
+  /**
+   * Función asíncrona que recopila datos de varios campos de entrada en un formulario,
+   * valida que todos los campos estén llenos y crea un objeto JSON con los datos recopilados.
+   * Muestra un mensaje de advertencia si algún campo está vacío.
+   *
+   * @async
+   * @function cable
+   * @returns {void}
+   */
   async function cable() {
     const txtIdCaja = document.querySelector("#txtIdCaja").value;
     const slcFilaEntrada = document.querySelector("#slcFilaEntrada").value;
@@ -192,6 +213,32 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
 
+  /**
+   * Calcula los costos relacionados con la ficha técnica del cable.
+   * 
+   * @async
+   * @function costos
+   * @returns {Promise<Object>} Un objeto JSON que contiene los costos de NAP, casa y cable.
+   * 
+   * @property {Object} nap - Costos relacionados con NAP.
+   * @property {number} nap.gpon - Costo de GPON en NAP.
+   * @property {number} nap.catv - Costo de CATV en NAP.
+   * 
+   * @property {Object} casa - Costos relacionados con la casa.
+   * @property {number} casa.gpon - Costo de GPON en la casa.
+   * @property {number} casa.catv - Costo de CATV en la casa.
+   * 
+   * @property {Object} cablecosto - Costos relacionados con el cable.
+   * @property {number} cablecosto.numerosintotizadores - Número de sintetizadores.
+   * @property {number} cablecosto.costoalquilersintotizador - Costo de alquiler del sintetizador.
+   * @property {number} cablecosto.costocable - Costo del cable.
+   * @property {string} cablecosto.costoconector - Costo del conector.
+   * @property {number} cablecosto.cantidadcable - Cantidad de cable.
+   * @property {string} cablecosto.preciocable - Precio del cable.
+   * @property {string} cablecosto.precioconector - Precio del conector.
+   * @property {number} cablecosto.cantidadconector - Cantidad de conectores.
+   * @property {string} cablecosto.detalle - Detalle adicional.
+   */
   async function costos() {
     const txtCantSintotizador = document.querySelector("#txtCantSintotizador").value;
     const txtCostoAlquiler = document.querySelector("#txtCostoAlquiler").value;
@@ -236,6 +283,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
 
+  /**
+   * Calcula los costos de cable y conector y actualiza los campos correspondientes.
+   * 
+   * La función toma las cantidades y precios de cable y conector desde los elementos
+   * de entrada (input) del DOM, calcula los costos multiplicando la cantidad por el precio,
+   * y luego actualiza los valores de los campos de costo con el resultado formateado a dos decimales.
+   * 
+   * @function
+   */
   function calcularCostos() {
 
     const cantCable = parseFloat(txtCantCable.value) || 0;
@@ -250,12 +306,32 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
 
+  /**
+   * Actualiza la cantidad de sintetizadores y el costo de alquiler en la interfaz de usuario.
+   * 
+   * @async
+   * @function ActualizarCantidadSintotizador
+   * @returns {void}
+   */
   async function ActualizarCantidadSintotizador() {
     document.getElementById("txtCantSintotizador").value = numeroSintotizadores;
     document.getElementById("txtCostoAlquiler").value = numeroSintotizadores * 40;
   }
 
 
+  /**
+   * Agrega un nuevo sintonizador a la lista y actualiza la interfaz de usuario.
+   * 
+   * Esta función obtiene los valores de los campos de entrada del sintonizador,
+   * crea un nuevo objeto sintonizador y lo agrega a la lista de sintonizadores.
+   * Luego, crea una tarjeta visual para el sintonizador y la agrega al DOM.
+   * También agrega un evento de clic al botón de eliminar para eliminar la tarjeta
+   * y actualizar la cantidad de sintonizadores.
+   * 
+   * @async
+   * @function AgregarSintotizador
+   * @returns {Promise<void>} Una promesa que se resuelve cuando la cantidad de sintonizadores se ha actualizado.
+   */
   async function AgregarSintotizador() {
     const txtCodigoBarraSintonizador = document.getElementById("txtCodigoBarraSintonizador").value;
     const txtMarcaSintonizador = document.getElementById("txtMarcaSintonizador").value;
@@ -393,6 +469,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
 
+  /**
+   * Valida el valor del puerto de entrada basado en la fila seleccionada.
+   * 
+   * Si la fila seleccionada es "1", el valor del puerto debe estar entre 1 y 8.
+   * Si la fila seleccionada es "2", el valor del puerto debe estar entre 1 y 16.
+   * 
+   * Muestra un mensaje de error si el valor del puerto es inválido.
+   * 
+   * @function
+   */
   function validarPuerto() {
     const filaEntrada = document.getElementById("slcFilaEntrada").value;
     const columnaEntrada = document.getElementById("txtPuerto").value;
@@ -423,6 +509,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
 
+  /**
+   * Función asincrónica para guardar la ficha técnica del cable.
+   * 
+   * Esta función valida los campos requeridos, guarda la información del cable y los costos,
+   * y envía una solicitud para guardar la ficha de instalación en el servidor.
+   * 
+   * @async
+   * @function guardar
+   * @returns {Promise<void>} No retorna ningún valor.
+   */
   async function guardar() {
     if (!validarCampos()) {
       showToast("Todos los campos son obligatorios.", "WARNING");
@@ -442,15 +538,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     const txtIdCaja = document.querySelector("#txtIdCaja").value;
     jsonData.idcaja = parseInt(txtIdCaja);
 
-    console.log("jsonData:", jsonData);
-
     const data = {
       operacion: "guardarFichaInstalacion",
       fichaInstalacion: jsonData,
       id: idContrato,
       idUsuario: userid,
     };
-    console.log(data);
     const response = await fetch(
       `${config.HOST}app/controllers/Contrato.controllers.php`,
       {
@@ -469,7 +562,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
 
-  document.getElementById("btnAñadirSintotizador").addEventListener("click", function () {
+  document.getElementById("btnAñadirSintotizador").addEventListener("click", async function () {
     const codigoBarra = document.getElementById("txtCodigoBarraSintonizador").value.trim();
     const serie = document.getElementById("txtSerieSintonizador").value.trim();
 
@@ -494,7 +587,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-    AgregarSintotizador();
+    await AgregarSintotizador();
 
 
     campos.forEach(campo => {
@@ -525,7 +618,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     try {
       const respuesta = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarra&codigoBarra=${encodeURIComponent(codigoBarra)}`);
       const resultado = await respuesta.json();
-      console.log(resultado);
 
       if (Array.isArray(resultado) && resultado.length > 0) {
         const producto = resultado[0];

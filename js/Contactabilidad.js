@@ -13,6 +13,16 @@ window.addEventListener("DOMContentLoaded", async function () {
   const accesos = await Herramientas.permisos()
 
 
+  /**
+   * Obtiene una lista de paquetes del servidor.
+   *
+   * Esta función realiza una solicitud HTTP GET asíncrona al endpoint especificado
+   * para recuperar una lista de paquetes en formato JSON.
+   *
+   * @async
+   * @function fetchPlanes
+   * @returns {Promise<Object>} Una promesa que se resuelve con la respuesta JSON que contiene la lista de paquetes.
+   */
   const fetchPlanes = async () => {
     const respuesta = await fetch(
       `${config.HOST}app/controllers/Paquete.controllers.php?operacion=listarPaquetes`
@@ -20,6 +30,16 @@ window.addEventListener("DOMContentLoaded", async function () {
     return await respuesta.json();
   };
 
+  /**
+   * Obtiene una lista de personas del servidor.
+   *
+   * Esta función realiza una solicitud HTTP GET asíncrona al endpoint especificado
+   * para recuperar información de contacto.
+   *
+   * @async
+   * @function fetchPersonas
+   * @returns {Promise<Object>} Una promesa que se resuelve con la respuesta JSON que contiene los datos de las personas.
+   */
   const fetchPersonas = async () => {
     const response = await fetch(
       `${config.HOST}app/controllers/Contactabilidad.controllers.php?operacion=obtenerContactos`
@@ -27,6 +47,15 @@ window.addEventListener("DOMContentLoaded", async function () {
     return await response.json();
   };
 
+  /**
+   * Función asíncrona que carga los planes disponibles en un elemento select.
+   * Obtiene los datos de los planes mediante la función fetchPlanes y los agrega
+   * como opciones en el elemento select 'slcPlanes'.
+   *
+   * @async
+   * @function cargarPlanes
+   * @returns {Promise<void>} No retorna ningún valor.
+   */
   const cargarPlanes = async () => {
     const dataPlanes = await fetchPlanes();
     dataPlanes.forEach((paquete) => {
@@ -38,6 +67,22 @@ window.addEventListener("DOMContentLoaded", async function () {
     });
   };
 
+  /**
+   * Función asíncrona que carga y muestra una lista de personas en una tabla HTML.
+   * 
+   * @async
+   * @function cargarPersonas
+   * @returns {Promise<void>} No retorna ningún valor, pero actualiza el DOM con los datos de las personas.
+   * 
+   * @description
+   * Esta función obtiene los datos de las personas llamando a la función `fetchPersonas`, 
+   * luego itera sobre estos datos y crea filas de tabla (`<tr>`) con la información de cada persona.
+   * Finalmente, inicializa un DataTable en el elemento con el id `#listarPersonasContactabilidad`.
+   * 
+   * @example
+   * // Llamar a la función para cargar y mostrar las personas
+   * cargarPersonas();
+   */
   const cargarPersonas = async () => {
     const dataPersonas = await fetchPersonas();
     const tbody = document.querySelector(
