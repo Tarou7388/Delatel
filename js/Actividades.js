@@ -1,7 +1,7 @@
 import config from "../env.js";
 import * as mapa from "./Mapa.js";
 import * as Herramientas from "./Herramientas.js";
-window.addEventListener("DOMContentLoaded",async function () {
+window.addEventListener("DOMContentLoaded", async function () {
   let login = await Herramientas.obtenerLogin();
   let actividad = null;
   const contenido = document.getElementById("contenido");
@@ -41,35 +41,44 @@ window.addEventListener("DOMContentLoaded",async function () {
 
   async function cargarMapa() {
     contenido.innerHTML = `
-    <div id="map" style="height: 700px;"></div>
+    <div id="mapPagina" style="height: 700px;"></div>
     `;
     const params = { cajas: true, mufas: true, antena: true };
-    const id = "map"
+    const id = "mapPagina"
     const renderizado = "pagina"
-    mapa.iniciarMapa(params, id, renderizado);
+    await mapa.iniciarMapa(params, id, renderizado);
   }
 
   async function cargarSoporte() {
-    contenido.innerHTML = `
-      <table class="table table-striped" id="tablaSoporte">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Fecha Asistencia</th>
-            <th>Tipo Soporte</th>
-            <th>Direccion</th>
-            <th>Prioridad</th>
-          </tr>
-        </thead>
-        <tbody id="tbodySoporte">
-        </tbody>
-      </table>
-      `
+    const soporteContainer = document.createElement('div');
+    soporteContainer.innerHTML = `
+    <h4 class="text-center">Fichas de Soportes Pendientes</h4>
+      <div class="table-responsive">
+        <table class="table table-striped" id="tablaSoporte">
+          <thead>
+            <tr>
+              <th class="text-center">ID</th>
+              <th class="text-center">Cliente</th>
+              <th class="text-center">Servicio</th>
+              <th class="text-center">Fecha</th>
+              <th class="text-center">N° Telefono</th>
+              <th class="text-center">Problema</th>
+              <th class="text-center">Mapa</th>
+              <th class="text-center">Prioridad</th>
+            </tr>
+          </thead>
+          <tbody id="tbodySoporte">
+          </tbody>
+        </table>
+      </div>
+    `;
+    contenido.appendChild(soporteContainer);
+
     const tbodySoporte = document.getElementById("tbodySoporte");
-    const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=FiltrarSoportePrioridad`);
+    const response = await fetch(`${config.HOST}app/controllers/Sticket.controllers.php?operacion=listarAveriasPendientes`);
     const data = await response.json();
-    console.log(data);
     data.forEach(soporte => {
+      console.log(soporte);
       let rowClass = '';
       if (soporte.prioridad === 'Alta') {
         rowClass = 'bg-danger';
@@ -81,11 +90,18 @@ window.addEventListener("DOMContentLoaded",async function () {
 
       tbodySoporte.innerHTML += `
           <tr>
-            <td>${soporte.id_soporte}</td>
-            <td>${soporte.fecha_hora_asistencia}</td>
-            <td>${soporte.tipo_soporte}</td>
-            <td>${soporte.direccion_servicio}</td>
-            <td class="${rowClass}">${soporte.prioridad}</td>
+            <td class="text-center">${soporte.id_soporte}</td>
+            <td class="text-center">${soporte.nombre_cliente}</td>
+            <td class="text-center">${soporte.tipo_servicio}</td>
+            <td class="text-center">${soporte.fecha_creacion}</td>
+            <td class="text-center">${soporte.telefono}</td>
+            <td class="text-center">${soporte.descripcion_problema}</td>
+             <td class="text-center">
+              <button class="btnMapa btn btn-dark" data-id="${soporte.id_soporte}" data-tipo="soporte" data-bs-toggle="modal" data-bs-target="#ModalMapa">
+                <i class="fa-solid fa-location-dot"></i>
+              </button>
+            </td>
+            <td class="${rowClass} text-center">${soporte.prioridad}</td>
           </tr>
         `;
     });
@@ -117,19 +133,20 @@ window.addEventListener("DOMContentLoaded",async function () {
       </table>
     `;
     $('#tablaContratos').DataTable({
-      processing: true,
-      serverSide: true,
       ajax: {
         url: `${config.HOST}app/controllers/Contrato.controllers.php?operacion=listarContratos`,
         type: 'GET',
-        dataSrc: 'data'
+        dataSrc: function (json) {
+          console.log('Respuesta completa del servidor:', json);
+          return json;
+        }
       },
       columns: [
         { data: 'id_contrato' },
         { data: 'nombre_cliente' },
         { data: 'direccion_servicio' },
         { data: 'paquete' },
-        { data: 'tipo_servicio' }
+        { data: 'tipos_servicio' } // Asegúrate de que el nombre de la propiedad coincida
       ],
       columnDefs: [
         { targets: 0, visible: false },
@@ -210,35 +227,48 @@ window.addEventListener("DOMContentLoaded",async function () {
   async function cargarFichas() {
     await cargarSoporte();
 
-    contenido.innerHTML += `
-    <div>
+    const fichasContainer = document.createElement('div');
+    fichasContainer.innerHTML = `
+    <h4 class="text-center">Fichas de Contratos Pendientes</h4>
+    <div class="table-responsive">
       <table class="table table-striped" id="tablaFichaContrato">
       <thead>
         <tr>
           <th>ID</th>
-          <th>Nombre Cliente</th>
-          <th>Direccion</th>
-          <th>Paquete</th>
-          <th>Servicio</th>
+          <th class="text-center">Nombre Cliente</th>
+          <th class="text-center">Servicio</th>
+          <th class="text-center">Paquete</th>
+          <th class="text-center">N° Telefono</th>
+          <th class="text-center">Direccion</th>
+          <th class="text-center">Referencia</th>
+          <th class="text-center">Mapa</th>
         </tr>
       </thead>
       <tbody id="tbodyFichaContrato">
       </tbody>
     </table>
     </div>
-    `
+    `;
+    contenido.appendChild(fichasContainer);
 
     const tbodyFichaContrato = document.getElementById("tbodyFichaContrato");
-    const responseFichaContrato = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=listarContratos`);
+    const responseFichaContrato = await fetch(`${config.HOST}app/controllers/Sticket.controllers.php?operacion=listarContratosPendientes`);
     const dataFichaContrato = await responseFichaContrato.json();
     dataFichaContrato.forEach(contrato => {
       tbodyFichaContrato.innerHTML += `
         <tr>
           <td>${contrato.id_contrato}</td>
-          <td>${contrato.nombre_cliente}</td>
-          <td>${contrato.direccion_servicio}</td>
-          <td>${contrato.paquete}</td>
-          <td>${contrato.servicio}</td>
+          <td class="text-center">${contrato.nombre_cliente}</td>
+          <td class="text-center">${contrato.tipos_servicio}</td>
+          <td class="text-center">${contrato.nombre_paquete}</td>
+          <td class="text-center">${contrato.telefono}</td>
+          <td class="text-center">${contrato.direccion_servicio}</td>
+          <td class="text-center">${contrato.referencia}</td>
+         <td class="text-center">
+            <button class="btnMapa btn btn-dark" data-id="${contrato.id_contrato}" data-tipo="ficha" data-bs-toggle="modal" data-bs-target="#ModalMapa">
+              <i class="fa-solid fa-location-dot"></i>
+            </button>
+          </td>
         </tr>
       `;
     });
@@ -364,4 +394,21 @@ window.addEventListener("DOMContentLoaded",async function () {
       }
     }
   }
+
+  $('.card-body').on('click', '.btnMapa', async function () {
+    const id = $(this).data('id');
+    const tipo = $(this).data('tipo');
+    const params = { cajas: false, mufas: false };
+    const ip = "map";
+    const renderizado = "modal";
+    await mapa.iniciarMapa(params, ip, renderizado);
+
+    if (tipo === 'ficha') {
+      await mapa.renderizarCoordenadaMapa(id);
+    } else if (tipo === 'soporte') {
+      const data = await Herramientas.FichaInstalacion(id);
+      const id_contrato = data[0].id_contrato;
+      await mapa.renderizarCoordenadaMapa(id_contrato);
+    }
+  });
 });

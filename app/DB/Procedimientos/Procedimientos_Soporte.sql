@@ -265,7 +265,9 @@ SELECT
     sec.sector AS sector_cliente,
     sv.tipo_servicio,
     c.coordenada,
-    COALESCE(p.nro_doc, e.ruc) AS nrodocumento
+    COALESCE(p.nro_doc, e.ruc) AS nrodocumento,
+    s.prioridad,
+    p.telefono
 FROM
     tb_soporte s
     JOIN tb_contratos c ON s.id_contrato = c.id_contrato

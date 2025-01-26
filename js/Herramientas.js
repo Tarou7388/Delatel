@@ -101,6 +101,7 @@ export async function validarValorRango(event) {
 
 
 export async function CompletarSoporte(idSoporte) {
+  let login = await obtenerLogin();
   try {
     const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php`, {
       method: 'PUT',
@@ -111,7 +112,7 @@ export async function CompletarSoporte(idSoporte) {
         operacion: 'completarSoportebyId',
         data: {
           idSoporte: idSoporte,
-          idUserUpdate: user['idUsuario'],
+          idUserUpdate: login.idUsuario,
         },
       }),
     });

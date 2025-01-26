@@ -85,8 +85,10 @@ export async function iniciarMapa(params = { cajas: true, mufas: true, antena: t
   if (params.antena) {
     await eventoantena();
   }
-  if (document.getElementById('CoordenadaModel')) {
-    document.getElementById('buscarBtn').addEventListener('click', async () => {
+
+  const buscarBtn = document.getElementById('buscarBtn');
+  if (buscarBtn) {
+    buscarBtn.addEventListener('click', async () => {
       const CoordenadaModel = document.getElementById('CoordenadaModel').value;
       await buscarCoordenadas(CoordenadaModel.split(',')[0], CoordenadaModel.split(',')[1]);
     });
@@ -128,21 +130,24 @@ export async function iniciarMapa(params = { cajas: true, mufas: true, antena: t
           });
         });
       });
-      document.getElementById('btnGuardarModalMapa').addEventListener('click', () => {
-        if (marcadorCoordenada != null) {
-          const modal = bootstrap.Modal.getInstance(document.getElementById('ModalMapa'));
-          if (document.getElementById('txtCoordenadasMapa')) {
-            document.getElementById('txtCoordenadasMapa').value = `${marcadorCoordenada.lat()},${marcadorCoordenada.lng()}`;
-            document.getElementById('txtCoordenadasMapa').dispatchEvent(new Event('change', { bubbles: true }));
+      const btnGuardarModalMapa = document.getElementById('btnGuardarModalMapa');
+      if (btnGuardarModalMapa) {
+        btnGuardarModalMapa.addEventListener('click', () => {
+          if (marcadorCoordenada != null) {
+            const modal = bootstrap.Modal.getInstance(document.getElementById('ModalMapa'));
+            if (document.getElementById('txtCoordenadasMapa')) {
+              document.getElementById('txtCoordenadasMapa').value = `${marcadorCoordenada.lat()},${marcadorCoordenada.lng()}`;
+              document.getElementById('txtCoordenadasMapa').dispatchEvent(new Event('change', { bubbles: true }));
+            }
+            if (document.getElementById('txtCoordenadas')) {
+              document.getElementById('txtCoordenadas').value = `${marcadorCoordenada.lat()},${marcadorCoordenada.lng()}`;
+            }
+            if (document.getElementById('txtCoordenadasPersona')) {
+              document.getElementById('txtCoordenadasPersona').value = `${marcadorCoordenada.lat()},${marcadorCoordenada.lng()}`;
+            }
           }
-          if (document.getElementById('txtCoordenadas')) {
-            document.getElementById('txtCoordenadas').value = `${marcadorCoordenada.lat()},${marcadorCoordenada.lng()}`;
-          }
-          if (document.getElementById('txtCoordenadasPersona')) {
-            document.getElementById('txtCoordenadasPersona').value = `${marcadorCoordenada.lat()},${marcadorCoordenada.lng()}`;
-          }
-        }
-      });
+        });
+      }
       break;
     case "pagina":
       eventoMapa(true);

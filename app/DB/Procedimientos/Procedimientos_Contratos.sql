@@ -399,6 +399,7 @@ SELECT
     p2.paquete AS nombre_paquete,
     s.sector AS nombre_sector,
     CONCAT(rp.apellidos, ' ', rp.nombres) AS nombre_tecnico_registro,
+    rp.telefono,
     c.direccion_servicio,
     c.referencia,
     c.ficha_instalacion,

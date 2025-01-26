@@ -212,7 +212,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const params = { cajas: false, mufas: false }
     const ip = "map"
     const renderizado = "modal"
-    mapa.iniciarMapa(params, ip, renderizado);
+    await mapa.iniciarMapa(params, ip, renderizado);
 
     await mapa.renderizarCoordenadaMapa(id_contrato);
   });
