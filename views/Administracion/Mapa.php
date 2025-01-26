@@ -37,6 +37,10 @@
         <input class="form-check-input" type="checkbox" id="chkCables" checked>
         <label class="form-check-label" for="chkCables">Cables</label>
       </div>
+      <div class="form-check mb-2">
+        <input class="form-check-input" type="checkbox" id="chkAntenas" checked>
+        <label class="form-check-label" for="chkAntenas">Antenas</label>
+      </div>
       <button class="btn btn-primary w-100" id="btnActualizar">Actualizar</button>
     </div>
   </div>
@@ -48,18 +52,18 @@
       <button class="btn btn-success w-100 mb-2" id="modalAgregarCaja" data-bs-toggle="modal" data-bs-target="#modalAgregar" disabled>Caja</button>
       <button class="btn btn-success w-100 mb-2" id="modalAgregarMufa" data-bs-toggle="modal" data-bs-target="#modalAgregarMufa2" disabled>Mufa</button>
       <button class="btn btn-success w-100 mb-2" id="modalAgregarSector" data-bs-toggle="modal" data-bs-target="#modalAgregarSector2" disabled>Sector</button>
+      <button class="btn btn-success w-100 mb-2" id="modalAgregarAntena" data-bs-toggle="modal" data-bs-target="#modalAgregarAntena2" disabled>Antena</button>
     </div>
   </div>
 
-    <div class="card mb-3">
-      <div class="card-header">Eliminar</div>
-      <div class="card-body">
-        <button class="btn btn-danger w-100 mb-2" id="btnEliminarCaja" disabled>Caja</button>
-        <button class="btn btn-danger w-100 mb-2" id="btnEliminarMufa" disabled>Mufa</button>
-        <button class="btn btn-danger w-100 mb-2" id="btnEliminarSector" disabled>Sector</button>
-      </div>
-  </div>
-</div>
+  <div class="card mb-3">
+    <div class="card-header">Eliminar</div>
+    <div class="card-body">
+      <button class="btn btn-danger w-100 mb-2" id="btnEliminarCaja" disabled>Caja</button>
+      <button class="btn btn-danger w-100 mb-2" id="btnEliminarMufa" disabled>Mufa</button>
+      <button class="btn btn-danger w-100 mb-2" id="btnEliminarSector" disabled>Sector</button>
+      <button class="btn btn-danger w-100 mb-2" id="btnEliminarAntena" disabled>Antena</button>
+    </div>
   </div>
 </div>
 
@@ -159,6 +163,37 @@
           <div class="form-floating mb-3">
             <textarea class="form-control" id="descripcionSector" name="descripcion" placeholder="Descripción" rows="3" required></textarea>
             <label for="descripcion">Descripción</label>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalAgregarAntena2" tabindex="-1" aria-labelledby="modalAgregarAntenaLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalAgregarAntenaLabel">Agregar Nueva Antena</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="formAgregarAntena">
+        <form id="formAgregarAntena">
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="nombreAntena" name="nombre" placeholder="Nombre" required>
+            <label for="nombre">Nombre</label>
+          </div>
+          <div class="form-floating mb-3">
+            <textarea class="form-control" id="descripcionAntena" name="descripcion" placeholder="Descripción" rows="3" required></textarea>
+            <label for="descripcion">Descripción</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="direccionAntena" name="direccion" placeholder="Dirección" required>
+            <label for="direccion">Dirección</label>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>

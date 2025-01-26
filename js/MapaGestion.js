@@ -20,6 +20,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   let lineaPrincipal = [];
   let lineaCableGuardar = [];
   let datosLimitesDistritos = [];
+  let datosAntenas = [];
+  let marcadoresAntenas = [];
   let limitesDistritos = [];
   let idDistrito = "";
   let idCajaRegistro = "";
@@ -36,9 +38,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   let cablePrincipalInicio = true;
   let idSector = "";
   let login = await Herramientas.obtenerLogin();
-  const params = { cajas: true, mufas: true, cables: true, sectores: true };
-
-  console.log(login.idUsuario);
+  let idAntena = "";
+  const params = { cajas: true, mufas: true, cables: true, sectores: true , antenas: true};
 
   (async () => {
     await initMap(params);
@@ -47,8 +48,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         const latLng = event.latLng.toJSON();
         Coordenadas = { lat: latLng.lat, lng: latLng.lng };
         idDistrito = item.idDistrito;
+        console.log(idDistrito);
         if (lineaPrincipalAgregando) {
-          blooquearbotones(false, true, false, true, true, true, true);
+          blooquearbotones(false, true, false, false, true, true, true, true, true);
         }
         marcadorPrincipalEvento(latLng)
 
@@ -84,14 +86,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     return params;
   }
 
-  async function blooquearbotones(caja, mufa, sector, principal, eliminarCaja, eliminarmufa, eliminarsector) {
+  async function blooquearbotones(caja, mufa, sector, antena ,principal, eliminarCaja, eliminarmufa, eliminarsector, eliminarantena) {
     document.querySelector("#modalAgregarCaja").disabled = caja;
     document.querySelector("#modalAgregarMufa").disabled = mufa;
     document.querySelector("#modalAgregarSector").disabled = sector;
+    document.querySelector("#modalAgregarAntena").disabled = antena;
     document.querySelector("#btnActualizarPrincipal").disabled = principal;
     document.querySelector("#btnEliminarCaja").disabled = eliminarCaja;
     document.querySelector("#btnEliminarMufa").disabled = eliminarmufa;
     document.querySelector("#btnEliminarSector").disabled = eliminarsector;
+    document.querySelector("#btnEliminarAntena").disabled = eliminarantena;
   }
 
   async function updateMap() {
@@ -100,6 +104,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     params1.mufas = document.querySelector("#chkMufas").checked;
     params1.cables = document.querySelector("#chkCables").checked;
     params1.sectores = document.querySelector("#chkSectores").checked;
+    params1.antenas = document.querySelector("#chkAntenas").checked;
 
     if (params1.cajas != params.cajas) {
       if (params1.cajas) {
@@ -139,11 +144,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
       }
     }
+    if (params1.antenas != params.antenas) {
+      if (params1.antenas) {
+        await eventoAntena();
+      } else {
+        marcadoresAntenas.forEach(marcador => {
+          marcador.setMap(null);
+        });
+      }
+    }
 
     params.cajas = params1.cajas;
     params.mufas = params1.mufas;
     params.cables = params1.cables;
     params.sectores = params1.sectores;
+    params.antenas = params1.antenas;
   }
 
   /* Inicia mapa aqui */
@@ -193,6 +208,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     if (params.sectores) {
       await eventoSectores();
+    }
+    if (params.antenas) {
+      await eventoAntena();
     }
 
   }
@@ -298,11 +316,41 @@ document.addEventListener('DOMContentLoaded', async () => {
     marcadoresCajas.forEach((marcador, index1) => {
       marcador.forEach((item, index2) => {
         item.addListener('click', async () => {
-          blooquearbotones(true, true, true, true, false, true, true);
+          blooquearbotones(true, true, true, true, true, false, true, true, true);
           idCajaRegistro = datosCajas[index1][index2].id_caja;
         });
       });
     });
+  }
+
+  async function agregarAntena() {
+    const coordenadasEnviar = `${Coordenadas.lat},${Coordenadas.lng}`;
+    const paramsEnviar = new FormData();
+    console.log(login.idUsuario);
+    paramsEnviar.append("operacion", "registrarAntena");
+    paramsEnviar.append("nombre", document.querySelector("#nombreAntena").value);
+    paramsEnviar.append("descripcion", document.querySelector("#descripcionAntena").value);
+    paramsEnviar.append("direccion", document.querySelector("#direccionAntena").value);
+    paramsEnviar.append("coordenadas", coordenadasEnviar);
+    paramsEnviar.append("idDistrito", idDistrito);
+    paramsEnviar.append("idUsuario", login.idUsuario);
+    const response = await fetch(`${config.HOST}app/controllers/Antenas.controllers.php`, {
+      method: "POST",
+      body: paramsEnviar
+    });
+    const data = await response.json();
+    console.log(data);
+    if (data.error) {
+      showToast(data.error.message, "ERROR");
+    } else {
+      showToast("Registrado Correctamente", "SUCCESS");
+      marcadoresAntenas.forEach(marcador => {
+        marcador.forEach(item => {
+          item.setMap(null);
+        });
+      });
+      eventoAntena();
+    }
   }
 
   async function eventomufas() {
@@ -339,7 +387,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           }
         }else{
           idMufaRegistro = datos[i].id_mufa;
-          blooquearbotones(true, true, true, true, true, false, true);
+          blooquearbotones(true, true, true, true, true, true, false, true, true);
         }
       });
     }
@@ -364,7 +412,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     CablePrincipal = lineasCables[0];
     CablePrincipal.addListener('click', async (e) => {
       if (lineaPrincipalAgregando) {
-        blooquearbotones(true, false, true, true, true, true, true);
+        blooquearbotones(true, false, true, true, true, true, true, true, true);
       }
       Coordenadas = `${e.latLng.lat()},${e.latLng.lng()}`;
       marcadorPrincipalEvento(e.latLng.toJSON());
@@ -391,7 +439,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           showToast("Agregando linea principal", "INFO");
           lineaPrincipalAgregando = false;
           coordenadasCajaGuardada = true;
-          blooquearbotones(true, true, true, false, true, true, true);
+          blooquearbotones(true, true, true, true, false, true, true, true, true);
         }
       });
     });
@@ -403,7 +451,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     marcadoresSectores.forEach((marcador, index) => {
       marcador.addListener('click', async (e) => {
         idSector = datosSectores[index].id_sector;
-        blooquearbotones(true, true, true, true, true, true, false);
+        blooquearbotones(true, true, true, true, true, true, true, false, true);
+      });
+    });
+  }
+
+  async function eventoAntena() {
+    datosAntenas = await obtenerDatosAnidado(`${config.HOST}app/controllers/Antenas.controllers.php?operacion=listarAntenas`);
+    marcadoresAntenas = await marcadoresAnidado(datosAntenas, "antena");
+    marcadoresAntenas.forEach((marcador, index1) => {
+      marcador.forEach((item, index2) => {
+        item.addListener('click', async () => {
+          idAntena = datosAntenas[index1][index2].id_antena;
+          blooquearbotones(true, true, true, true, true, true, true, true, false);
+        });
       });
     });
   }
@@ -609,6 +670,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     modal.hide();
   });
 
+  document.querySelector("#formAgregarAntena").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const modal = bootstrap.Modal.getInstance(document.getElementById('modalAgregarAntena2'));
+    if (await ask("¿Desea guardar la antena?")) {
+      agregarAntena();
+    }
+    modal.hide();
+  });
+
   document.querySelector("#numEntradasCaja").addEventListener("change", (e) => {
     if (document.querySelector("#numEntradasCaja").value == 8) {
       document.querySelector("#codigoNombre").textContent = "-08";
@@ -706,6 +776,32 @@ document.addEventListener('DOMContentLoaded', async () => {
           });
           eventomufas();
         }
+      }
+    }
+  });
+
+  document.querySelector("#btnEliminarAntena").addEventListener("click", async () => {
+    if (await ask("¿Desea eliminar la antena?")) {
+      const datos = JSON.stringify({
+        idAntena: idAntena,
+        idUsuario: login.idUsuario,
+        operacion: "inhabilitarAntena"
+       });
+      const response = await fetch(`${config.HOST}app/controllers/Antenas.controllers.php`, {
+        method: "PUT",
+        body: datos
+      });
+      const data = await response.json();
+      if (data.error) {
+        showToast(data.error.message, "ERROR");
+      } else {
+        showToast("Eliminado Correctamente", "SUCCESS");
+        marcadoresAntenas.forEach(marcador => {
+          marcador.forEach(item => {
+            item.setMap(null);
+          });
+        });
+        eventoAntena();
       }
     }
   });

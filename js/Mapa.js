@@ -1,11 +1,14 @@
 import config from "../env.js";
 let Map, Circle, Polyline, AdvancedMarkerElement, mapa;
 let datosCajas = [];
+let datosAntenas = [];
 let marcador = null;
 let marcadorCoordenada = null
 let circulosCajas = [];
+let circulosAntenas = [];
 let marcadoresCajas = [];
 let marcadoresMufas = [];
+let marcadoresAntenas = [];
 let datosMufas = [];
 
 export let idCaja = null;
@@ -52,19 +55,17 @@ async function obtenerDatosAnidado(url) {
 
 async function buscarMarcadorCercano(arreglo, condicion = () => true) {
   let marcadorMasCercano = null;
-  let distanciaMinima = 1000;
   arreglo.forEach(marcador => {
     const posicionMarcador = new google.maps.LatLng(marcador.latLng[0], marcador.latLng[1]);
     const distancia = google.maps.geometry.spherical.computeDistanceBetween(posicionMarcador, marcadorCoordenada);
-    if (distancia < distanciaMinima && condicion(marcador)) {
-      marcadorMasCercano = marcador;
-      distanciaMinima = distancia;
+    if ((!marcadorMasCercano || distancia < marcadorMasCercano.distancia) && condicion(marcador)) {
+      marcadorMasCercano = { ...marcador, distancia };
     }
   });
   return marcadorMasCercano;
 }
 
-export async function iniciarMapa(params = { cajas: true, mufas: true }, id = "map", renderizado = "modal") {
+export async function iniciarMapa(params = { cajas: true, mufas: true, antena: true }, id = "map", renderizado = "modal") {
   const posicionInicial = { lat: -13.417077, lng: -76.136585 };
   ({ Map, Circle, Polyline } = await google.maps.importLibrary("maps"));
   ({ AdvancedMarkerElement } = await google.maps.importLibrary("marker"));
@@ -79,7 +80,10 @@ export async function iniciarMapa(params = { cajas: true, mufas: true }, id = "m
     await eventocajas();
   };
   if (params.mufas) {
-    eventomufas();
+    await eventomufas();
+  }
+  if (params.antena) {
+    await eventoantena();
   }
   if (document.getElementById('CoordenadaModel')) {
     document.getElementById('buscarBtn').addEventListener('click', async () => {
@@ -95,16 +99,31 @@ export async function iniciarMapa(params = { cajas: true, mufas: true }, id = "m
         subArray.forEach(circulo => {
           circulo.addListener('click', async (e) => {
             const marcadorMasCercano = await buscarMarcadorCercano(datosCajas[circulo.idValue], (marcador) => marcador.numero_entradas > 0);
-            idCaja = marcadorMasCercano.id_caja;
             if (marcadorMasCercano) {
-              datosCajas.forEach(subArray => {
-                subArray.forEach(cajas => {
-                  if (cajas.id_sector == marcadorMasCercano.id_sector) {
-                    idSector = cajas.id_sector;
-                  }
+              if (marcadorMasCercano.distancia <= 1000) {
+                idCaja = marcadorMasCercano.id_caja;
+                datosCajas.forEach(subArray => {
+                  subArray.forEach(cajas => {
+                    if (cajas.id_sector == marcadorMasCercano.id_sector) {
+                      idSector = cajas.id_sector;
+                    }
+                  });
                 });
-              });
-              document.getElementById('btnGuardarModalMapa').disabled = false;
+                document.getElementById('btnGuardarModalMapa').disabled = false;
+              }
+            }
+          });
+        });
+      });
+      circulosAntenas.forEach(subArray => {
+        subArray.forEach(circulo => {
+          circulo.addListener('click', async (e) => {
+            const marcadorMasCercano = await buscarMarcadorCercano(datosAntenas[circulo.idValue]);
+            console.log(marcadorMasCercano);
+            if (marcadorMasCercano) {
+              if (marcadorMasCercano.distancia <= 4000) {
+                document.getElementById('btnGuardarModalMapa').disabled = false;
+              }
             }
           });
         });
@@ -144,6 +163,13 @@ async function eventomufas() {
   const datos = await obtenerDatosPlano(`${config.HOST}app/controllers/Mufas.controllers.php?operacion=listarMufas`);
   marcadoresMufas = await marcadoresPlano(datos, "mufa");
   datosMufas = datos;
+}
+
+async function eventoantena() {
+  datosAntenas = await obtenerDatosAnidado(`${config.HOST}app/controllers/Antenas.controllers.php?operacion=listarAntenas`);
+  marcadoresAntenas = await marcadoresAnidado(datosAntenas, "antena");
+  circulosAntenas = await circulosAnidado(datosAntenas, "#e84393", 4000);
+  console.log(circulosAntenas);
 }
 
 export async function actualizarMapa(id = "map2") {
@@ -191,13 +217,13 @@ async function ObtenerCordenadas(objeto) {
   });
 }
 
-async function circulosAnidado(datos, color) {
+async function circulosAnidado(datos, color, distancia = 1000) {
   let arregloCirculo = [];
   datos.forEach(subArray => {
     subArray.forEach(async item => {
       const circulo = new Circle({
         center: { lat: item.latLng[0], lng: item.latLng[1] },
-        radius: 1000,
+        radius: distancia,
         map: mapa,
         strokeColor: color,
         strokeOpacity: 0.8,
@@ -304,7 +330,6 @@ async function buscarCoordenadas(latitud, longitud) {
 export async function buscarCercanos(idCaja) {
   const response = await fetch(`${config.HOST}app/controllers/Caja.controllers.php?operacion=listarCajasSectorIdCaja&idCaja=${idCaja}`);
   const data = await response.json();
-  console.log(data);
   return data;
 }
 
@@ -318,12 +343,10 @@ export async function renderizarCoordenadaMapa(id) {
       const latitud = coordenada[0];
       const longitud = coordenada[1];
 
-      console.log('Coordenadas obtenidas:', latitud, longitud);
-
       const posicion = new google.maps.LatLng(latitud, longitud);
       mapa.setCenter(posicion);
       mapa.setZoom(15);
-      
+
       if (marcador) {
         marcador.setMap(null);
       }
@@ -337,8 +360,6 @@ export async function renderizarCoordenadaMapa(id) {
         title: "Ubicación buscada",
         content: img
       });
-
-      console.log('Nueva posición del mapa:', posicion.lat(), posicion.lng());
     } else {
       console.error('No se encontraron coordenadas en la respuesta.');
     }
@@ -369,7 +390,7 @@ export async function buscarCoordenadassinMapa(latitud, longitud) {
           fillColor: "transparent",
           fillOpacity: 0
         });
-        
+
         const distancia = google.maps.geometry.spherical.computeDistanceBetween(posicionBuscada, circulo.getCenter());
         if (distancia <= circulo.getRadius()) {
           posicionDentroDeCirculo = true;
@@ -383,5 +404,5 @@ export async function buscarCoordenadassinMapa(latitud, longitud) {
     console.log("La posición no está dentro de ningún círculo.");
   }
 
-  return idSectorEncontrado; 
+  return idSectorEncontrado;
 }

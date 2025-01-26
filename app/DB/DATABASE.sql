@@ -1,3 +1,4 @@
+-- SQLBook: Code
 CREATE DATABASE Delatel;
 
 USE Delatel;
@@ -406,7 +407,7 @@ CREATE TABLE tb_subbase (
 
 CREATE TABLE tb_antenas(
     id_antena   INT PRIMARY KEY AUTO_INCREMENT,
-    id_sector   INT NOT NULL,
+    id_distrito   INT NOT NULL,
     nombre      VARCHAR(60) NOT NULL UNIQUE,
     descripcion VARCHAR(100) NOT NULL,
     coordenadas VARCHAR(50) NOT NULL,
@@ -418,5 +419,5 @@ CREATE TABLE tb_antenas(
     iduser_update INT NULL,
     iduser_inactive INT NULL,
     CONSTRAINT anten_uk_antena UNIQUE (nombre),
-    CONSTRAINT fk_sector_antena FOREIGN KEY (id_sector) REFERENCES tb_sectores (id_sector)
+    CONSTRAINT fk_sector_antena FOREIGN KEY (id_distrito) REFERENCES tb_distritos (id_distrito)
 ) ENGINE = InnoDB;

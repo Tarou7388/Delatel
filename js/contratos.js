@@ -764,10 +764,12 @@ window.addEventListener("DOMContentLoaded", async () => {
   $(".select2me").parent("div").find("label").css("z-index", "1");
 
   btnBuscarCoordenadas.addEventListener("click", async () => {
-    const params = { cajas: true, mufas: true }
-    const id = "map"
-    const renderizado = "modal"
-    mapa.iniciarMapa(params, id, renderizado);
+    const slcTipoServicio = document.querySelector("#slcTipoServicio");
+    if (slcTipoServicio.value == "2") {
+      await cargarCaracteristicasMapa(false, false, true);
+    }else{
+      await cargarCaracteristicasMapa(true, true, false);
+    }
   });
 
   $('#slcPaquetes').on('change', function () {
@@ -794,19 +796,17 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
+  async function  cargarCaracteristicasMapa(caja, mufa, antena)  {
+    const params = { cajas: caja, mufas: mufa, antena: antena };
+    const id = "map"
+    const renderizado = "modal"
+    mapa.iniciarMapa(params, id, renderizado);
+  }
 
   document.querySelector("#slcTipoServicio").addEventListener("change", function () {
     const idServicio = this.value;
     const btnBuscarCoordenada = document.querySelector("#btnBuscarCoordenadas");
     const sector = document.querySelector("#slcSector");
-
-    if (idServicio === "2") {
-      btnBuscarCoordenada.disabled = true;
-      sector.disabled = false;
-    } else {
-      btnBuscarCoordenada.disabled = false;
-      sector.disabled = true;
-    }
   });
 
 

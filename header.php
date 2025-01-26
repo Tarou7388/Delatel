@@ -141,6 +141,3 @@ if (!isset($_SESSION['login']) || $_SESSION['login']['estado'] == false) {
     </div>
     <div id="layoutSidenav_content">
       <main>
-        <script>
-          const user = <?php echo json_encode($_SESSION['login']); ?>;
-        </script>
