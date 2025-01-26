@@ -43,10 +43,10 @@ window.addEventListener("DOMContentLoaded",async function () {
     contenido.innerHTML = `
     <div id="map" style="height: 700px;"></div>
     `;
-    const params = { cajas: true, mufas: false }
+    const params = { cajas: true, mufas: true, antena: true };
     const id = "map"
     const renderizado = "pagina"
-    await mapa.iniciarMapa(params, id, renderizado);
+    mapa.iniciarMapa(params, id, renderizado);
   }
 
   async function cargarSoporte() {

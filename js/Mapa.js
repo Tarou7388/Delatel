@@ -335,7 +335,7 @@ export async function buscarCercanos(idCaja) {
 
 export async function renderizarCoordenadaMapa(id) {
   try {
-    const response = await fetch(`http://localhost/Delatel/app/controllers/Contrato.controllers.php?operacion=obtenerCoordenadasbyId&id=${id}`);
+    const response = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerCoordenadasbyId&id=${id}`);
     const data = await response.json();
 
     if (data && data.length > 0 && data[0].coordenada) {
