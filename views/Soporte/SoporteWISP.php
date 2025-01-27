@@ -146,14 +146,16 @@
 
         <!-- Segunda Fila -->
 
-        <div class="row g-2 mb-2">
+        <div class="d-flex justify-content-between align-items-center mb-2">
           <div class="col-md-10">
-            <label for="slcWireless">Tipo de Dispositivo</label>
-            <select class="form-select" id="slcWireless">
-              <option value="" disabled selected>Seleccione una opción</option>
-            </select>
+            <div class="form-floating">
+              <select class="form-select" id="slcWireless">
+                <option value="" disabled selected>Seleccione una opción</option>
+              </select>
+              <label for="slcWireless">Tipo de Dispositivo</label>
+            </div>
           </div>
-          <div class="col-md-2 d-flex align-items-end">
+          <div class="form-floating">
             <button id="btnInformacion" class="btn btn-dark">Ver más</button>
           </div>
         </div>
@@ -465,7 +467,7 @@
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtIpNuevo" placeholder="IP (Lan)">
                 <label>IP (Lan) <span class="required-asterisk" style="color: red;">*</span></label>
-                <div class="invalid-feedback">Por favor, complete el campo.</div>
+                <div class="invalid-feedback"></div>
               </div>
             </div>
 
@@ -473,7 +475,7 @@
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtAccesoNuevo" placeholder="Acceso (Lan)">
                 <label>Acceso (Lan) <span class="required-asterisk" style="color: red;">*</span></label>
-                <div class="invalid-feedback">Por favor, complete el campo.</div>
+                <div class="invalid-feedback"></div>
               </div>
             </div>
           </div>
@@ -482,8 +484,8 @@
             <div class="col-md">
               <div class="form-floating">
                 <input type="number" class="form-control" id="txtSenialNuevo" placeholder="Señal (ST)" min="-90" max="-20">
-                <div class="invalid-feedback">Por favor, ingrese su valor válido (-90 a -20).</div>
-                <label>Señal (ST) <span class="required-asterisk" style="color: red;">*</span></label>
+                <label for="txtSenialNuevo">Señal (ST) <span class="required-asterisk" style="color: red;">*</span></label>
+                <div class="invalid-feedback"></div>
               </div>
             </div>
 
@@ -491,7 +493,7 @@
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtRouterCambioSsid" placeholder="SSID">
                 <label>Router SSID (Nombre) <span class="required-asterisk" style="color: red;">*</span></label>
-                <div class="invalid-feedback">Por favor, complete el campo.</div>
+                <div class="invalid-feedback"></div>
               </div>
             </div>
 
@@ -499,7 +501,7 @@
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtRouterCambioSeguridad" placeholder="SEguridad">
                 <label>Seguridad (Clave) <span class="required-asterisk" style="color: red;">*</span></label>
-                <div class="invalid-feedback">Por favor, complete el campo.</div>
+                <div class="invalid-feedback"></div>
               </div>
             </div>
           </div>
@@ -509,7 +511,7 @@
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtRouterCambiopuertaEnlace" placeholder="Puerta de Enlace">
                 <label>Puerta de Enlace <span class="required-asterisk" style="color: red;">*</span></label>
-                <div class="invalid-feedback">Por favor, complete la Puerta de Enlace.</div>
+                <div class="invalid-feedback"></div>
               </div>
             </div>
 
@@ -517,7 +519,7 @@
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtRouterCambioWan" placeholder="Wan">
                 <label>WAN <span class="required-asterisk" style="color: red;">*</span></label>
-                <div class="invalid-feedback">Por favor, complete el campo.</div>
+                <div class="invalid-feedback"></div>
               </div>
             </div>
 
@@ -559,7 +561,7 @@
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtRepetidorCambioSsid" placeholder="SSID">
                 <label>Repetidor SSID (Nombre) <span class="required-asterisk" style="color: red;">*</span></label>
-                <div class="invalid-feedback">Por favor, complete el campo.</div>
+                <div class="invalid-feedback"></div>
               </div>
             </div>
 
@@ -567,7 +569,7 @@
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtRepetidorCambioIp" placeholder="IP">
                 <label>IP (Lan) <span class="required-asterisk" style="color: red;">*</span></label>
-                <div class="invalid-feedback">Por favor, complete el campo.</div>
+                <div class="invalid-feedback"></div>
               </div>
             </div>
 
@@ -575,7 +577,7 @@
               <div class="form-floating">
                 <input type="text" class="form-control" id="txtRepetidorCambioAcceso" placeholder="Acceso">
                 <label>Acceso (Lan) <span class="required-asterisk" style="color: red;">*</span></label>
-                <div class="invalid-feedback">Por favor, complete el campo.</div>
+                <div class="invalid-feedback"></div>
               </div>
             </div>
           </div>

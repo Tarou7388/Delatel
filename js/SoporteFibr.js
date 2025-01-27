@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const idContrato = urlParams.get("idContrato");
   const btnInformacion = document.getElementById('btnInformacion');
+  btnInformacion.type = "button";
   const cardContainer = document.getElementById('cardContainer');
   btnInformacion.disabled = true;
   let login = await Herramientas.obtenerLogin();
@@ -109,8 +110,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const solutionTextarea = document.getElementById("txtaCambiosProceSolucion");
 
-  const camposRequeridos = document.querySelectorAll(".form-control");
-
   const slcEquipo = document.getElementById("slcEquipo");
 
   let idSoporte = -1;
@@ -134,11 +133,41 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  slcEquipo.addEventListener('change', () => {
-    btnInformacion.disabled = false;
-    cardContainer.style.display = 'none';
-    btnInformacion.textContent = 'Ver más';
-    chkConfirmacion.disabled = false;
+  slcEquipo.addEventListener('change', async (event) => {
+    const invalidFields = document.querySelectorAll('.is-invalid');
+    if (invalidFields.length > 0) {
+      showToast("Hay campos con errores que deben ser corregidos antes de cambiar de formulario.", "ERROR");
+      event.preventDefault();
+      slcEquipo.value = slcEquipo.dataset.previousValue;
+      invalidFields[0].focus();
+      return;
+    }
+
+    resetCheckbox();
+    const selectedValue = slcEquipo.value;
+    if (selectedValue === "router") {
+      routerCambiosContainer.style.display = 'block';
+      repetidorCambiosContainer.style.display = 'none';
+      chkConfirmacion.disabled = false;
+      btnInformacion.disabled = false;
+    } else if (selectedValue.startsWith("repetidor")) {
+      routerCambiosContainer.style.display = 'none';
+      repetidorCambiosContainer.style.display = 'block';
+      chkConfirmacion.disabled = false;
+      btnInformacion.disabled = false;
+      await cargarEnInputs();
+    } else if (selectedValue === "") {
+      routerCambiosContainer.style.display = 'none';
+      repetidorCambiosContainer.style.display = 'none';
+      chkConfirmacion.disabled = true;
+      btnInformacion.disabled = true;
+      cardContainer.style.display = 'none';
+      btnInformacion.textContent = 'Ver más';
+    } else {
+      chkConfirmacion.disabled = true;
+      btnInformacion.disabled = true;
+    }
+    slcEquipo.dataset.previousValue = selectedValue; 
   });
 
   if (slcRpetidor) {
@@ -162,36 +191,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("slcRpetidor no encontrado");
   }
 
-  if (slcEquipo) {
-    slcEquipo.addEventListener("change", async () => {
-      resetCheckbox();
-      const selectedValue = slcEquipo.value;
-      if (selectedValue === "router") {
-        routerCambiosContainer.style.display = 'block';
-        repetidorCambiosContainer.style.display = 'none';
-        chkConfirmacion.disabled = false;
-      } else if (selectedValue.startsWith("repetidor")) {
-        routerCambiosContainer.style.display = 'none';
-        repetidorCambiosContainer.style.display = 'block';
-        chkConfirmacion.disabled = false;
-        await cargarEnInputs();
-      } else if (selectedValue === "") {
-        routerCambiosContainer.style.display = 'none';
-        repetidorCambiosContainer.style.display = 'none';
-        chkConfirmacion.disabled = true;
-        btnInformacion.disabled = true;
-        cardContainer.style.display = 'none';
-        btnInformacion.textContent = 'Ver más';
+  const camposValido = document.querySelectorAll('input, select, textarea');
+  camposValido.forEach(field => {
+    field.addEventListener('input', () => {
+      if (field.checkValidity()) {
+        field.classList.remove('is-invalid');
+        field.classList.add('is-valid');
       } else {
-        chkConfirmacion.disabled = true;
+        field.classList.remove('is-valid');
+        field.classList.add('is-invalid');
       }
     });
-  } else {
-    console.error("slcEquipo no encontrado");
-  }
+  });
 
-  async function completarCamposVacios() {
-    const parametros = {
+  async function completarCamposRouter() {
+    const parametrosRouter = {
       txtCambiosPass: txtPass.value,
       txtCambiosPppoe: txtPppoe.value,
       txtCambiosClave: txtClave.value,
@@ -199,12 +213,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       txtCambiosPotencia: txtPotencia.value,
       txtCambiosSsid: txtSsid.value,
       txtCambiosIpRouter: txtIpRouter.value,
-      txtCambiosSsidRepetidor: txtSSIDRepetidor.value,
-      txtCambiosPassRepetidor: txtPassRepetidor.value,
-      txtCambiosIpRepetidor: txtIpRepetidor.value,
-      txtCambiosCodigoBarraRepetidor: txtCodigoBarraRepetidor.value,
-      txtCambiosMarcaRepetidor: txtMarcaRepetidor.value,
-      txtCambiosModeloRepetidor: txtModeloRepetidor.value,
       txtCambiosUsuarioRouter: txtUsuarioRouter.value,
       txtCambiosContraseniaRouter: txtContraseniaRouter.value,
       txtCambiosCodigoBarraRouter: txtCodigoBarraRouter.value,
@@ -215,7 +223,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       txtCambiosAntenas: txtAntenas.value
     };
 
-    for (const [id, value] of Object.entries(parametros)) {
+    for (const [id, value] of Object.entries(parametrosRouter)) {
       const input = document.getElementById(id);
       if (input && !input.value) {
         input.value = value;
@@ -223,18 +231,30 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  async function borrarCamposVacios() {
-    const campos = [
+  async function completarCamposRepetidor() {
+    const parametrosRepetidor = {
+      txtCambiosSsidRepetidor: txtSSIDRepetidor.value,
+      txtCambiosPassRepetidor: txtPassRepetidor.value,
+      txtCambiosIpRepetidor: txtIpRepetidor.value,
+      txtCambiosCodigoBarraRepetidor: txtCodigoBarraRepetidor.value,
+      txtCambiosMarcaRepetidor: txtMarcaRepetidor.value,
+      txtCambiosModeloRepetidor: txtModeloRepetidor.value
+    };
+
+    for (const [id, value] of Object.entries(parametrosRepetidor)) {
+      const input = document.getElementById(id);
+      if (input && !input.value) {
+        input.value = value;
+      }
+    }
+  }
+
+  async function borrarCamposRouter() {
+    const camposRouter = [
       'txtCambiosPotencia',
       'txtCambiosPass',
       'txtCambiosSsid',
       'txtCambiosIpRouter',
-      'txtCambiosSsidRepetidor',
-      'txtCambiosPassRepetidor',
-      'txtCambiosIpRepetidor',
-      'txtCambiosCodigoBarraRepetidor',
-      'txtCambiosMarcaRepetidor',
-      'txtCambiosModeloRepetidor',
       'txtCambiosUsuarioRouter',
       'txtCambiosContraseniaRouter',
       'txtCambiosCodigoBarraRouter',
@@ -245,7 +265,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       'txtCambiosAntenas'
     ];
 
-    campos.forEach(id => {
+    camposRouter.forEach(id => {
       const input = document.getElementById(id);
       if (input) {
         input.value = '';
@@ -253,32 +273,78 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  camposRequeridos.forEach(campo => {
-    campo.addEventListener("input", () => {
-      const grupoFormulario = campo.closest('.form-floating');
-      const etiqueta = grupoFormulario?.querySelector('label');
-      const asterisco = etiqueta?.querySelector('.required-asterisk');
-      const mensajeError = grupoFormulario?.querySelector('.invalid-feedback');
+  async function borrarCamposRepetidor() {
+    const camposRepetidor = [
+      'txtCambiosSsidRepetidor',
+      'txtCambiosPassRepetidor',
+      'txtCambiosIpRepetidor',
+      'txtCambiosCodigoBarraRepetidor',
+      'txtCambiosMarcaRepetidor',
+      'txtCambiosModeloRepetidor'
+    ];
 
-      if (asterisco) {
-        if (campo.value.trim() !== "") {
-          asterisco.style.display = "none";
-          campo.classList.remove("is-invalid");
-          if (mensajeError) {
-            mensajeError.style.display = "none";
-          }
-        } else {
-          asterisco.style.display = "inline";
-          campo.classList.add("is-invalid");
-          if (mensajeError) {
-            mensajeError.style.display = "block";
-          }
-        }
-      } else {
-        console.warn("Asterisco no encontrado para el campo:", campo);
+    camposRepetidor.forEach(id => {
+      const input = document.getElementById(id);
+      if (input) {
+        input.value = '';
       }
     });
+  }
+
+  const fields = [
+    { id: 'txtCambiosPotencia', type: 'number', min: -30, max: 40, message: 'Por favor, ingrese un valor válido (-30 a 40).' },
+    { id: 'txtCambiosUsuarioRouter', type: 'text', message: 'Este campo es obligatorio.' },
+    { id: 'txtCambiosContraseniaRouter', type: 'text', message: 'Este campo es obligatorio.' },
+    { id: 'txtCambiosSsid', type: 'text', message: 'Este campo es obligatorio.' },
+    { id: 'txtCambiosPass', type: 'text', message: 'Este campo es obligatorio.' },
+    { id: 'txtCambiosIpRouter', type: 'ip', message: 'Por favor, ingrese una IP válida con al menos 3 puntos.' },
+    { id: 'txtCambiosCodigoBarraRouter', type: 'text', message: 'Este campo es obligatorio.' },
+    { id: 'slcCambiosBanda', type: 'select', message: 'Por favor, seleccione una opción válida.' },
+    { id: 'txtCambiosAntenas', type: 'number', min: 2, max: 10, message: 'Por favor, ingrese un valor válido (2 a 10).' },
+    { id: 'txtCambiosSerieRouter', type: 'text', message: 'Este campo es obligatorio.' },
+    { id: 'txtCambiosSsidRepetidor', type: 'text', message: 'Este campo es obligatorio.' },
+    { id: 'txtCambiosPassRepetidor', type: 'text', message: 'Este campo es obligatorio.' },
+    { id: 'txtCambiosIpRepetidor', type: 'ip', message: 'Por favor, ingrese una IP válida con al menos 3 puntos.' },
+    { id: 'txtCambiosCodigoBarraRepetidor', type: 'text', message: 'Este campo es obligatorio.' }
+  ];
+
+  fields.forEach(field => {
+    const input = document.getElementById(field.id);
+    input.addEventListener('input', () => validateField(input, field));
   });
+
+  function validateField(input, field) {
+    let valid = true;
+    if (field.type === 'number') {
+      const value = parseInt(input.value, 10);
+      valid = value >= field.min && value <= field.max;
+    } else if (field.type === 'ip') {
+      const ipParts = input.value.split('.');
+      valid = ipParts.length >= 4;
+    } else if (field.type === 'select') {
+      valid = input.value.trim() !== '';
+    } else {
+      valid = input.value.trim() !== '';
+    }
+
+    const grupoFormulario = input.closest('.form-floating');
+    const mensajeError = grupoFormulario?.querySelector('.invalid-feedback');
+
+    if (valid) {
+      input.classList.remove('is-invalid');
+      input.classList.add('is-valid');
+      if (mensajeError) {
+        mensajeError.style.display = 'none';
+      }
+    } else {
+      input.classList.remove('is-valid');
+      input.classList.add('is-invalid');
+      if (mensajeError) {
+        mensajeError.style.display = 'block';
+        mensajeError.textContent = field.message;
+      }
+    }
+  }
 
   async function llamarCajas() {
     const cajas = await mapa.buscarCercanos(idCaja);
@@ -368,20 +434,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     slcEquipo.innerHTML = '<option value="" disabled selected>Seleccione una opción</option>';
-
-    // Añadir opción "Ningún producto seleccionado"
     const optionNingunProducto = document.createElement('option');
     optionNingunProducto.value = '';
     optionNingunProducto.text = 'Restablecer Selección';
     slcEquipo.appendChild(optionNingunProducto);
 
-    // Añadir opción para el router
     const optionRouter = document.createElement('option');
     optionRouter.value = 'router';
     optionRouter.text = `Router (${fibr.cambiosgpon.router.ip})`;
     slcEquipo.appendChild(optionRouter);
 
-    // Añadir opciones para los repetidores
     if (Array.isArray(fibr.cambiosgpon.repetidores) && fibr.cambiosgpon.repetidores.length > 0) {
       jsonRepetidores = fibr.cambiosgpon.repetidores;
       fibr.cambiosgpon.repetidores.forEach(repetidor => {
@@ -526,10 +588,23 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     chkConfirmacion.disabled = true;
     chkConfirmacion.addEventListener("change", async () => {
+      const routerVisible = routerCambiosContainer.style.display === 'block';
+      const repetidorVisible = repetidorCambiosContainer.style.display === 'block';
+
       if (chkConfirmacion.checked) {
-        await completarCamposVacios();
+        if (routerVisible) {
+          await completarCamposRouter();
+        } else if (repetidorVisible) {
+          await completarCamposRepetidor();
+        }
+        showToast("Campos completados y validados.", "SUCCESS");
       } else {
-        await borrarCamposVacios();
+        if (routerVisible) {
+          await borrarCamposRouter();
+        } else if (repetidorVisible) {
+          await borrarCamposRepetidor();
+        }
+        showToast("Campos vaciados.", "INFO");
       }
     });
   }
@@ -567,14 +642,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       slcEquipo.innerHTML = '<option value="" disabled selected>Seleccione una opción</option>';
 
-      // Añadir opción "Ningún producto seleccionado"
       const optionNingunProducto = document.createElement('option');
       optionNingunProducto.value = '';
       optionNingunProducto.text = 'Restablecer Selección';
       slcEquipo.appendChild(optionNingunProducto);
 
-
-      // Añadir opción para el router
       if (fibraFiltrado.router) {
         const optionRouter = document.createElement('option');
         optionRouter.value = 'router';
@@ -584,7 +656,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.error("Datos del router no encontrados en fibraFiltrado");
       }
 
-      // Añadir opciones para los repetidores
       const repetidorContainers = $('.repetidor-container');
       if (Array.isArray(fibraFiltrado.repetidores) && fibraFiltrado.repetidores.length > 0) {
         repetidorContainers.show();
@@ -674,7 +745,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
 
       if (selectedValue === 'router') {
-        // Cargar datos del router
         await cargarDatosRouter(datosgenerales);
       } else if (selectedValue.startsWith('repetidor')) {
         const repetidorNumero = parseInt(selectedValue.split('-')[1]);
@@ -731,7 +801,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const result = await response.json();
 
     const dataFibra = await FichaInstalacion(idSoporte);
-    const fibrafiltrado = JSON.parse(dataFibra[0].ficha_instalacion).fibraoptica; 
+    const fibrafiltrado = JSON.parse(dataFibra[0].ficha_instalacion).fibraoptica;
     const soporte = result[0]?.soporte ? JSON.parse(result[0].soporte) : {};
     const nuevoSoporte = { ...soporte };
     const yaTieneSoporte = soporteAnterior && soporteAnterior.fibr && Object.keys(soporteAnterior.fibr).length > 0;
@@ -824,7 +894,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   async function guardarSoporte(data) {
     try {
-      await completarCamposVacios();
 
       const soporteData = typeof data === "string" ? JSON.parse(data) : data;
 
@@ -861,6 +930,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if ((routerVisible || repetidorVisible) && !chkConfirmacion.checked) {
       showToast("Debe marcar el checkbox de confirmación para guardar la ficha.", "WARNING");
+      return;
+    }
+
+    const invalidFields = document.querySelectorAll('.is-invalid');
+    if (invalidFields.length > 0) {
+      showToast("Hay campos con errores que deben ser corregidos antes de guardar la ficha.", "ERROR");
+      invalidFields[0].focus();
       return;
     }
 

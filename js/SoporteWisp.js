@@ -47,7 +47,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   btnVerMas.type = "button";
 
   const chkConfirmacion = document.getElementById("chkConfirmacion");
-  const camposRequeridos = document.querySelectorAll(".form-control");
 
   let login = await Herramientas.obtenerLogin();
   let idSoporte = -1;
@@ -84,7 +83,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  slcWireless.addEventListener("change", async function () {
+  slcWireless.addEventListener("change", async function (event) {
+    const invalidFields = document.querySelectorAll('.is-invalid');
+    if (invalidFields.length > 0) {
+      showToast("Hay campos con errores que deben ser corregidos antes de cambiar de formulario.", "ERROR");
+      event.preventDefault();
+      slcWireless.value = slcWireless.dataset.previousValue;
+      invalidFields[0].focus();
+      return;
+    }
+
     verificarSeleccion();
     const selectedOption = this.options[this.selectedIndex];
     const tipoDispositivo = selectedOption.getAttribute("data-modelo");
@@ -92,7 +100,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     cardParametros.style.display = "none";
     cardParametrosRepetidor.style.display = "none";
     cardParametrosAntena.style.display = "none";
-    btnVerMas.textContent = "Ver más"; 
+    btnVerMas.textContent = "Ver más";
 
     if (tipoDispositivo === "router") {
       formularioCambiosRouter.style.display = "block";
@@ -125,6 +133,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     verificarCamposLlenos(formularioCambiosRouter);
     verificarCamposLlenos(formularioCambiosRepetidor);
     verificarCamposLlenos(formularioCambiosAntena);
+
+    slcWireless.dataset.previousValue = slcWireless.value;
   });
 
   btnVerMas.addEventListener("click", function (event) {
@@ -329,32 +339,69 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  camposRequeridos.forEach(campo => {
-    campo.addEventListener("input", () => {
-      const grupoFormulario = campo.closest('.form-floating');
-      const etiqueta = grupoFormulario?.querySelector('label');
-      const asterisco = etiqueta?.querySelector('.required-asterisk');
-      const mensajeError = grupoFormulario?.querySelector('.invalid-feedback');
+  const fields = [
+    { id: 'txtIpNuevo', type: 'ip', message: 'Por favor, ingrese una IP válida con al menos 3 puntos.' },
+    { id: 'txtAccesoNuevo', type: 'text', message: 'Este campo es obligatorio.' },
+    { id: 'txtSenialNuevo', type: 'number', min: -90, max: -20, message: 'Por favor, ingrese un valor válido (-90 a -20).' },
+    { id: 'txtRouterCambioSsid', type: 'text', message: 'Este campo es obligatorio.' },
+    { id: 'txtRouterCambioSeguridad', type: 'text', message: 'Este campo es obligatorio.' },
+    { id: 'txtRouterCambiopuertaEnlace', type: 'ip', message: 'Por favor, ingrese una Puerta de Enlace válida con al menos 3 puntos.' },
+    { id: 'txtRouterCambioWan', type: 'ip', message: 'Por favor, ingrese una WAN válida con al menos 3 puntos.' },
+    { id: 'txtRouterCambioCodigoBarra', type: 'text', message: 'Este campo es obligatorio.' },
+    { id: 'txtRepetidorCambioSsid', type: 'text', message: 'Este campo es obligatorio.' },
+    { id: 'txtRepetidorCambioIp', type: 'ip', message: 'Por favor, ingrese una IP válida con al menos 3 puntos.' },
+    { id: 'txtRepetidorCambioAcceso', type: 'text', message: 'Este campo es obligatorio.' },
+    { id: 'slcRepetidorCambioCondicion', type: 'select', message: 'Por favor, seleccione una opción válida.' },
+    { id: 'txtRepetidorCambioCodigoBarra', type: 'text', message: 'Este campo es obligatorio.' },
+    { id: 'txtRepetidorCambioMarca', type: 'text', message: 'Este campo es obligatorio.' },
+    { id: 'txtRepetidorCambioModelo', type: 'text', message: 'Este campo es obligatorio.' },
+    { id: 'txtRepetidorCambioSerie', type: 'text', message: 'Este campo es obligatorio.' },
+    { id: 'txtRepetidorCambioPrecio', type: 'number', min: 0, max: 9999, message: 'Por favor, ingrese un valor válido (0 a 9999).' },
+    { id: 'txtAntenaMacCambios', type: 'text', message: 'Este campo es obligatorio.' },
+    { id: 'txtAntenaMarcaCambios', type: 'text', message: 'Este campo es obligatorio.' },
+    { id: 'txtAntenaModeloCambios', type: 'text', message: 'Este campo es obligatorio.' },
+    { id: 'txtAntenaSerialCambios', type: 'text', message: 'Este campo es obligatorio.' },
+    { id: 'txtAntenaDescripcionCambios', type: 'text', message: 'Este campo es obligatorio.' }
+  ];
 
-      if (asterisco) {
-        if (campo.value.trim() !== "") {
-          asterisco.style.display = "none";
-          campo.classList.remove("is-invalid");
-          if (mensajeError) {
-            mensajeError.style.display = "none";
-          }
-        } else {
-          asterisco.style.display = "inline";
-          campo.classList.add("is-invalid");
-          if (mensajeError) {
-            mensajeError.style.display = "block";
-          }
-        }
-      } else {
-        console.warn("Asterisco no encontrado para el campo:", campo);
-      }
-    });
+  fields.forEach(field => {
+    const input = document.getElementById(field.id);
+    input.addEventListener('input', () => validateField(input, field));
   });
+
+  function validateField(input, field) {
+    let valid = true;
+    if (field.type === 'number') {
+      const value = parseInt(input.value, 10);
+      valid = value >= field.min && value <= field.max;
+    } else if (field.type === 'ip') {
+      const ipParts = input.value.split('.');
+      valid = ipParts.length >= 4;
+    } else if (field.type === 'select') {
+      valid = input.value.trim() !== '';
+    } else {
+      valid = input.value.trim() !== '';
+    }
+
+    const grupoFormulario = input.closest('.form-floating');
+    const mensajeError = grupoFormulario?.querySelector('.invalid-feedback');
+
+    if (valid) {
+      input.classList.remove('is-invalid');
+      input.classList.add('is-valid');
+      if (mensajeError) {
+        mensajeError.style.display = 'none';
+      }
+    } else {
+      input.classList.remove('is-valid');
+      input.classList.add('is-invalid');
+      if (mensajeError) {
+        mensajeError.style.display = 'block';
+        mensajeError.textContent = field.message;
+      }
+    }
+  }
+
 
   (async function () {
     const urlParams = new URLSearchParams(window.location.search);
@@ -425,9 +472,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     routers.forEach(router => {
       const option = document.createElement("option");
-      option.value = router.numero; 
-      option.textContent = `${router.ssid} (${router.modelo})`; 
-      option.setAttribute("data-modelo", "router"); 
+      option.value = router.numero;
+      option.textContent = `${router.ssid} (${router.modelo})`;
+      option.setAttribute("data-modelo", "router");
       slcWireless.appendChild(option);
     });
 
@@ -762,6 +809,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
+
+    const invalidFields = document.querySelectorAll('.is-invalid');
+    if (invalidFields.length > 0) {
+      showToast("Hay campos con errores que deben ser corregidos antes de guardar la ficha.", "ERROR");
+      invalidFields[0].focus();
+      return;
+    }
+
     idSoporte = urlParams.get("idsoporte");
     const data = await ArmadoJsonWisp();
     if (await ask("¿Desea guardar la ficha?")) {
@@ -771,8 +826,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     }
   });
-
-  txtSenial, txtSenialNuevo.addEventListener("input", validarValorRango);
 
   [txtIp, txtRouterCambiopuertaEnlace, txtRouterCambioWan, txtIpNuevo, txtRepetidorCambioIp, txtIpRepetidorModal].forEach(element => {
     element.addEventListener("input", (event) => {

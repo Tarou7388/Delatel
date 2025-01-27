@@ -12,10 +12,6 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="input-group mb-3" id="inputGroupCoordenada">
-        <input type="text" id="CoordenadaModel" class="form-control" placeholder="Coordenada" aria-label="Coordenada">
-        <button class="btn btn-outline-secondary" type="button" id="buscarBtn">Buscar</button>
-      </div>
 
       <div class="modal-body">
         <div id="map" style="height: 600px;"> <!-- Ajustar el alto del mapa si es necesario -->

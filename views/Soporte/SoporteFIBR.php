@@ -148,17 +148,13 @@
 
         <div class="">
           <div class="d-flex justify-content-between align-items-center mb-2">
-            <div class="col-md-10"> <!-- Ajusta el ancho aquí -->
+            <div class="col-md-12"> <!-- Ajusta el ancho aquí -->
               <div class="form-floating">
                 <select id="slcCaja" class="form-select">
                   <option value="" disabled selected>Seleccione una opción</option>
                 </select>
                 <label for="slcCaja">Caja</label>
               </div>
-            </div>
-            <!-- Botón para mostrar/ocultar parámetros -->
-            <div class="form-floating mb-2 text-end">
-              <button id="btnInformacion" class="btn btn-dark">Ver más</button>
             </div>
           </div>
 
@@ -371,12 +367,18 @@
           </button>
         </div>
 
-        <div class="col-md mt-3 mb-3">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <div class="col-md-10">
+            <div class="form-floating">
+              <select id="slcEquipo" class="form-select">
+                <option value="" disabled selected>Seleccione el tipo de equipo</option>
+              </select>
+              <label for="slcEquipo">Tipo de Equipo</label>
+            </div>
+          </div>
+          <!-- Botón para mostrar/ocultar parámetros -->
           <div class="form-floating">
-            <select id="slcEquipo" class="form-select">
-              <option value="" disabled selected>Seleccione el tipo de equipo</option>
-            </select>
-            <label for="slcEquipo">Tipo de Equipo</label>
+            <button id="btnInformacion" class="btn btn-dark">Ver más</button>
           </div>
         </div>
 
@@ -403,7 +405,7 @@
             </div>
             <div class="col-md d-flex align-items-center">
               <div class="form-check form-switch tgl-default">
-                <input class="form-check-input" type="checkbox" id="chkCambiosCatv" checked >
+                <input class="form-check-input" type="checkbox" id="chkCambiosCatv" checked>
                 <label class="form-check-label ms-2" for="chkCambiosCatv">CATV</label>
               </div>
             </div>
@@ -413,20 +415,23 @@
           <div class="row g-3 mb-3 align-items-center">
             <div class="col-md">
               <div class="form-floating">
-                <input type="number" class="form-control" id="txtCambiosPotencia" placeholder="Potencia">
+                <input type="number" class="form-control" id="txtCambiosPotencia" name="txtCambiosPotencia" placeholder="Potencia" min="-30" max="40">
                 <label for="txtCambiosPotencia">Potencia <span class="required-asterisk" style="color: red;">*</span></label>
+                <div class="invalid-feedback"></div>
               </div>
             </div>
             <div class="col-md">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtCambiosUsuarioRouter" placeholder="Usuario">
+                <input type="text" class="form-control" id="txtCambiosUsuarioRouter" name="txtCambiosUsuarioRouter" placeholder="Usuario">
                 <label for="txtCambiosUsuarioRouter">Usuario del Router <span class="required-asterisk" style="color: red;">*</span></label>
+                <div class="invalid-feedback"></div>
               </div>
             </div>
             <div class="col-md">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtCambiosContraseniaRouter" placeholder="Contraseña">
+                <input type="text" class="form-control" id="txtCambiosContraseniaRouter" name="txtCambiosContraseniaRouter" placeholder="Contraseña">
                 <label for="txtCambiosContraseniaRouter">Contraseña del Router <span class="required-asterisk" style="color: red;">*</span></label>
+                <div class="invalid-feedback"></div>
               </div>
             </div>
           </div>
@@ -435,20 +440,23 @@
           <div class="row g-3 mb-3 align-items-center">
             <div class="col-md-4">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtCambiosSsid" placeholder="SSID">
+                <input type="text" class="form-control" id="txtCambiosSsid" placeholder="SSID" name="txtCambiosSsid">
                 <label for="txtCambiosSsid">SSID <span class="required-asterisk" style="color: red;">*</span></label>
+                <div class="invalid-feedback"></div>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtCambiosPass" placeholder="Password">
+                <input type="text" class="form-control" id="txtCambiosPass" placeholder="Password" name="txtCambiosPass">
                 <label for="txtCambiosPass">Password <span class="required-asterisk" style="color: red;">*</span></label>
+                <div class="invalid-feedback"></div>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtCambiosIpRouter" placeholder="IP">
+                <input type="text" class="form-control" id="txtCambiosIpRouter" placeholder="IP" name="txtCambiosIpRouter">
                 <label for="txtCambiosIpRouter">IP <span class="required-asterisk" style="color: red;">*</span></label>
+                <div class="invalid-feedback"></div>
               </div>
             </div>
           </div>
@@ -458,8 +466,9 @@
             <div class="col-md-4">
               <div class="input-group">
                 <div class="form-floating">
-                  <input type="text" class="form-control" id="txtCambiosCodigoBarraRouter" placeholder="Código de Barra">
+                  <input type="text" class="form-control" id="txtCambiosCodigoBarraRouter" placeholder="Código de Barra" name="txtCambiosCodigoBarraRouter">
                   <label for="txtCambiosCodigoBarraRouter">Código de Barra<span class="required-asterisk" style="color: red;">*</span></label>
+                  <div class="invalid-feedback"></div>
                 </div>
                 <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
               </div>
@@ -482,26 +491,28 @@
           <div class="row g-3 mb-3 align-items-center">
             <div class="col-md-4">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtCambiosSerieRouter" placeholder="Serie">
+                <input type="text" class="form-control" id="txtCambiosSerieRouter" placeholder="Serie" name="txtCambiosSerieRouter">
                 <label for="txtCambiosSerieRouter">Serie</label>
+                <div class="invalid-feedback"></div>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-floating">
                 <select class="form-select" id="slcCambiosBanda">
+                  <option value="" selected disabled>Seleccione una Opción</option>
                   <option value="2G">2G</option>
-                  <option value="5G" selected>5G</option>
+                  <option value="5G">5G</option>
                   <option value="2G,5G">5G-2G</option>
                 </select>
                 <label for="slcCambiosBanda">Banda <span class="required-asterisk" style="color: red;">*</span></label>
-                <div class="invalid-feedback">Por favor, seleccione una opción válida.</div>
+                <div class="invalid-feedback"></div>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-floating">
-                <input type="number" class="form-control" id="txtCambiosAntenas" placeholder="Número de Antenas" min="2" max="10" value="2">
+                <input type="number" class="form-control" id="txtCambiosAntenas" placeholder="Número de Antenas" min="2" max="10" name="txtCambiosAntenas">
                 <label for="txtCambiosAntenas">N° de Antenas <span class="required-asterisk" style="color: red;">*</span></label>
-                <div class="invalid-feedback">Por favor, ingrese un valor válido (2 a 10).</div>
+                <div class="invalid-feedback"></div>
               </div>
             </div>
           </div>
@@ -515,20 +526,23 @@
           <div class="row g-3 mb-3">
             <div class="col-md-4">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtCambiosSsidRepetidor" placeholder="SSID">
+                <input type="text" class="form-control" id="txtCambiosSsidRepetidor" name="txtCambiosSsidRepetidor" placeholder="SSID">
                 <label for="txtCambiosSsidRepetidor">SSID <span class="required-asterisk" style="color: red;">*</span></label>
+                <div class="invalid-feedback"></div>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtCambiosPassRepetidor" placeholder="Password">
+                <input type="text" class="form-control" id="txtCambiosPassRepetidor" name="txtCambiosPassRepetidor" placeholder="Password">
                 <label for="txtCambiosPassRepetidor">Password <span class="required-asterisk" style="color: red;">*</span></label>
+                <div class="invalid-feedback"></div>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtCambiosIpRepetidor" placeholder="IP">
+                <input type="text" class="form-control" id="txtCambiosIpRepetidor" name="txtCambiosIpRepetidor" placeholder="IP">
                 <label for="txtCambiosIpRepetidor">IP <span class="required-asterisk" style="color: red;">*</span></label>
+                <div class="invalid-feedback"></div>
               </div>
             </div>
           </div>
@@ -537,21 +551,22 @@
             <div class="col-md-4">
               <div class="input-group">
                 <div class="form-floating">
-                  <input type="text" class="form-control" id="txtCambiosCodigoBarraRepetidor" placeholder="Código de Barra">
+                  <input type="text" class="form-control" id="txtCambiosCodigoBarraRepetidor" name="txtCambiosCodigoBarraRepetidor" placeholder="Código de Barra">
                   <label for="txtCambiosCodigoBarraRepetidor">Código de Barra <span class="required-asterisk" style="color: red;">*</span></label>
+                  <div class="invalid-feedback"></div>
                 </div>
                 <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtCambiosMarcaRepetidor" placeholder="Marca">
+                <input type="text" class="form-control" id="txtCambiosMarcaRepetidor" placeholder="Marca" name="txtCambiosMarcaRepetidor" disabled>
                 <label for="txtCambiosMarcaRepetidor">Marca <span class="required-asterisk" style="color: red;">*</span></label>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtCambiosModeloRepetidor" placeholder="Modelo">
+                <input type="text" class="form-control" id="txtCambiosModeloRepetidor" placeholder="Modelo" name="txtCambiosModeloRepetidor" disabled>
                 <label for="txtCambiosModeloRepetidor">Modelo <span class="required-asterisk" style="color: red;">*</span></label>
               </div>
             </div>

@@ -13,6 +13,8 @@ let datosMufas = [];
 
 export let idCaja = null;
 export let idSector = null;
+let ubicacionMarcador;
+let posicionMarcador; 
 
 async function obtenerDatosPlano(url) {
   const respuesta = await fetch(url);
@@ -345,25 +347,21 @@ export async function renderizarCoordenadaMapa(id) {
 
     if (data && data.length > 0 && data[0].coordenada) {
       const coordenada = data[0].coordenada.split(',');
-      const latitud = coordenada[0];
-      const longitud = coordenada[1];
+      const latitud = parseFloat(coordenada[0]);
+      const longitud = parseFloat(coordenada[1]);
 
       const posicion = new google.maps.LatLng(latitud, longitud);
+      posicionMarcador = posicion; 
+
       mapa.setCenter(posicion);
       mapa.setZoom(15);
+      const img = `${config.HOST}image/ubicacionCliente.png`;
 
-      if (marcador) {
-        marcador.setMap(null);
-      }
-
-      const img = document.createElement('img');
-      img.src = `${config.HOST}image/contrato.png`;
-
-      marcador = new google.maps.Marker({
+      ubicacionMarcador = new google.maps.Marker({
         position: posicion,
         map: mapa,
         title: "Ubicación buscada",
-        content: img
+        icon: img,
       });
     } else {
       console.error('No se encontraron coordenadas en la respuesta.');
