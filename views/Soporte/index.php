@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="../../css/diseñoGlobal.css" />
 
 <div class="container-fluid px-4">
-  <h2 class="mt-4">Registro de Incidencias</h2>
+  <h2 class="mt-4">Registro de Avería</h2>
 
   <!-- Modal de Busqueda Avanzada -->
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -54,7 +54,7 @@
   <!-- Formulario de Registro de Incidencias -->
   <div class="card mb-4">
     <div class="card-header">
-      <i class="fas fa-table me-1"></i> Complete los Datos de la Incidencia
+      <i class="fas fa-table me-1"></i> Complete los Datos de la Avería
     </div>
     <div class="card-body">
       <form id="form-Incidencia">

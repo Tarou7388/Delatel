@@ -60,60 +60,79 @@ window.addEventListener("DOMContentLoaded", async function () {
               <th class="text-center">ID</th>
               <th class="text-center">Cliente</th>
               <th class="text-center">Servicio</th>
-              <th class="text-center">Fecha</th>
-              <th class="text-center">N° Telefono</th>
-              <th class="text-center">Problema</th>
+              <th class="text-center d-none d-md-table-cell">Fecha</th>
+              <th class="text-center d-none d-md-table-cell">N° Teléfono</th>
+              <th class="text-center d-none d-md-table-cell">Problema</th>
               <th class="text-center">Mapa</th>
               <th class="text-center">Prioridad</th>
             </tr>
           </thead>
-          <tbody id="tbodySoporte">
-          </tbody>
+          <tbody id="tbodySoporte"></tbody>
         </table>
       </div>
     `;
     contenido.appendChild(soporteContainer);
 
     const tbodySoporte = document.getElementById("tbodySoporte");
-    const response = await fetch(`${config.HOST}app/controllers/Sticket.controllers.php?operacion=listarAveriasPendientes`);
-    const data = await response.json();
-    data.forEach(soporte => {
-      console.log(soporte);
-      let rowClass = '';
-      if (soporte.prioridad === 'Alta') {
-        rowClass = 'bg-danger';
-      } else if (soporte.prioridad === 'Media') {
-        rowClass = 'bg-warning';
-      } else if (soporte.prioridad === 'Baja') {
-        rowClass = 'bg-success';
+    try {
+      const response = await fetch(`${config.HOST}app/controllers/Sticket.controllers.php?operacion=listarAveriasPendientes`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
       }
+      const data = await response.json();
 
-      tbodySoporte.innerHTML += `
-          <tr>
-            <td class="text-center">${soporte.id_soporte}</td>
-            <td class="text-center">${soporte.nombre_cliente}</td>
-            <td class="text-center">${soporte.tipo_servicio}</td>
-            <td class="text-center">${soporte.fecha_creacion}</td>
-            <td class="text-center">${soporte.telefono}</td>
-            <td class="text-center">${soporte.descripcion_problema}</td>
-             <td class="text-center">
-              <button class="btnMapa btn btn-dark" data-id="${soporte.id_soporte}" data-tipo="soporte" data-bs-toggle="modal" data-bs-target="#ModalMapa">
-                <i class="fa-solid fa-location-dot"></i>
-              </button>
-            </td>
-            <td class="${rowClass} text-center">${soporte.prioridad}</td>
-          </tr>
+      // Limpiar cuerpo de la tabla antes de llenarlo
+      tbodySoporte.innerHTML = '';
+
+      data.forEach(soporte => {
+        let rowClass = '';
+        if (soporte.prioridad === 'Alta') {
+          rowClass = 'bg-danger';
+        } else if (soporte.prioridad === 'Media') {
+          rowClass = 'bg-warning';
+        } else if (soporte.prioridad === 'Baja') {
+          rowClass = 'bg-success';
+        }
+
+        const row = `
+                <tr>
+                    <td class="text-center">${soporte.id_soporte}</td>
+                    <td class="text-center">${soporte.nombre_cliente}</td>
+                    <td class="text-center">${soporte.tipo_servicio}</td>
+                    <td class="text-center d-none d-md-table-cell">${soporte.fecha_creacion}</td>
+                    <td class="text-center d-none d-md-table-cell">${soporte.telefono}</td>
+                    <td class="text-center d-none d-md-table-cell">${soporte.descripcion_problema}</td>
+                    <td class="text-center">
+                        <button class="btnMapa btn btn-dark" data-id="${soporte.id_soporte}" data-tipo="soporte" data-bs-toggle="modal" data-bs-target="#ModalMapa">
+                            <i class="fa-solid fa-location-dot"></i>
+                        </button>
+                    </td>
+                    <td class="${rowClass} text-center">${soporte.prioridad}</td>
+                </tr>
+            `;
+        tbodySoporte.innerHTML += row;
+      });
+
+      // Inicializar DataTables después de llenar la tabla
+      $('#tablaSoporte').DataTable({
+        destroy: true, // Evita errores de inicialización múltiple
+        columnDefs: [
+          { targets: 0, visible: false }
+        ],
+        language: {
+          url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json",
+        },
+        ordering: false
+      });
+
+    } catch (error) {
+      console.error('Error fetching soporte data:', error);
+      tbodySoporte.innerHTML = `
+            <tr>
+                <td colspan="8" class="text-center">Error cargando datos: ${error.message}</td>
+            </tr>
         `;
-    });
-    $('#tablaSoporte').DataTable({
-      columnDefs: [
-        { targets: [], visible: true }
-      ],
-      language: {
-        url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json",
-      },
-      ordering: false
-    });
+    }
   }
 
   async function cargarContratos() {
@@ -235,7 +254,7 @@ window.addEventListener("DOMContentLoaded", async function () {
       <thead>
         <tr>
           <th>ID</th>
-          <th class="text-center">Nombre Cliente</th>
+          <th class="text-center">Cliente</th>
           <th class="text-center">Servicio</th>
           <th class="text-center">Paquete</th>
           <th class="text-center">N° Telefono</th>
