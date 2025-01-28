@@ -1503,11 +1503,6 @@ CREATE TABLE IF NOT EXISTS `tb_antenas` (
 --
 -- Volcado de datos para la tabla `tb_antenas`
 --
-
-INSERT INTO `tb_antenas` (`id_antena`, `id_distrito`, `nombre`, `descripcion`, `coordenadas`, `direccion`, `create_at`, `update_at`, `inactive_at`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
-(1, 110210, 'Antena 1', 'Antena de prueba', '-13.4332261844803,-76.16302085205078', 'XXX-XXX-XX1', '2025-01-26 09:52:35', NULL, NULL, 1, NULL, NULL),
-(2, 110201, 'Antena Central', 'Antena principal del sector', '-13.451882343831118, -76.15656155438536', 'Av. Principal 123', '2025-01-26 09:55:17', NULL, NULL, 1, NULL, NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -4136,30 +4131,6 @@ CREATE TABLE IF NOT EXISTS `tb_productos` (
 -- Volcado de datos para la tabla `tb_productos`
 --
 
-INSERT INTO `tb_productos` (`id_producto`, `id_marca`, `id_tipo`, `id_unidad`, `modelo`, `precio_actual`, `codigo_barra`, `create_at`, `update_at`, `inactive_at`, `iduser_create`, `iduser_update`, `iduser_inactive`) VALUES
-(1, 11, 1, 1, 'Switch Gigabit 16 Puertos', 200.00, '1234567890132', '2025-01-26 09:45:35', NULL, NULL, 1, NULL, NULL),
-(2, 11, 6, 1, 'Conector RJ45 Cat. 6', 0.20, '1234567890133', '2025-01-26 09:45:35', NULL, NULL, 1, NULL, NULL),
-(3, 11, 6, 1, 'Conector SC/APC', 1.50, '1234567890134', '2025-01-26 09:45:35', NULL, NULL, 1, NULL, NULL),
-(4, 5, 5, 1, 'ONT Huawei HG8245H', 80.00, '1234567890135', '2025-01-26 09:45:35', NULL, NULL, 1, NULL, NULL),
-(5, 3, 2, 1, 'Monitor LED 24\"', 250.00, '1234567890136', '2025-01-26 09:45:35', NULL, NULL, 1, NULL, NULL),
-(6, 4, 8, 1, 'Bandeja para Cableado', 50.00, '1234567890137', '2025-01-26 09:45:35', NULL, NULL, 1, NULL, NULL),
-(7, 5, 7, 1, 'UPS 1500VA', 180.00, '1234567890138', '2025-01-26 09:45:35', NULL, NULL, 1, NULL, NULL),
-(8, 6, 2, 1, 'Auriculares con Micrófono', 30.00, '1234567890139', '2025-01-26 09:45:35', NULL, NULL, 1, NULL, NULL),
-(9, 7, 1, 1, 'Router WiFi 6', 120.00, '1234567890140', '2025-01-26 09:45:35', NULL, NULL, 1, NULL, NULL),
-(10, 8, 9, 1, 'Cámara de Vigilancia IP', 90.00, '1234567890141', '2025-01-26 09:45:35', NULL, NULL, 1, NULL, NULL),
-(11, 9, 3, 1, 'Tinta Cyan', 10.00, '1234567890142', '2025-01-26 09:45:35', NULL, NULL, 1, NULL, NULL),
-(12, 10, 6, 1, 'Patch Cord Cat. 6', 2.00, '1234567890143', '2025-01-26 09:45:35', NULL, NULL, 1, NULL, NULL),
-(13, 11, 2, 1, 'Tarjeta de Video Nvidia GTX 1660', 300.00, '1234567890144', '2025-01-26 09:45:35', NULL, NULL, 1, NULL, NULL),
-(14, 1, 7, 1, 'Fuente de Alimentación 500W', 60.00, '1234567890145', '2025-01-26 09:45:35', NULL, NULL, 1, NULL, NULL),
-(15, 1, 1, 1, 'Access Point Ubiquiti', 150.00, '1234567890146', '2025-01-26 09:45:35', NULL, NULL, 1, NULL, NULL),
-(16, 1, 6, 1, 'Módulo SFP 1G', 25.00, '1234567890147', '2025-01-26 09:45:35', NULL, NULL, 1, NULL, NULL),
-(17, 1, 4, 1, 'Disco Duro SSD 1TB', 110.00, '1234567890148', '2025-01-26 09:45:35', NULL, NULL, 1, NULL, NULL),
-(18, 1, 5, 1, 'Fusionadora de Fibra', 1500.00, '1234567890149', '2025-01-26 09:45:35', NULL, NULL, 1, NULL, NULL),
-(19, 1, 2, 1, 'Lector de Huellas USB', 60.00, '1234567890150', '2025-01-26 09:45:35', NULL, NULL, 1, NULL, NULL),
-(20, 1, 9, 1, 'DVR para Cámaras de Seguridad', 200.00, '1234567890151', '2025-01-26 09:45:35', NULL, NULL, 1, NULL, NULL),
-(21, 1, 6, 1, 'Splitters Ópticos 1x8', 8.00, '1234567890152', '2025-01-26 09:45:35', NULL, NULL, 1, NULL, NULL),
-(22, 2, 3, 1, 'Tinta Negra', 10.00, '1234567890153', '2025-01-26 09:45:35', NULL, NULL, 1, NULL, NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -4626,19 +4597,13 @@ CREATE TABLE IF NOT EXISTS `tb_tipoproducto` (
 --
 
 INSERT INTO `tb_tipoproducto` (`id_tipo`, `tipo_nombre`, `create_at`, `update_at`, `inactive_at`, `iduser_inactive`, `iduser_create`, `iduser_update`) VALUES
-(1, 'Equipo de Redes', '2025-01-26 09:45:35', NULL, NULL, NULL, 1, NULL),
-(2, 'Perifericos', '2025-01-26 09:45:35', NULL, NULL, NULL, 1, NULL),
-(3, 'Consumibles', '2025-01-26 09:45:35', NULL, NULL, NULL, 1, NULL),
-(4, 'Componentes', '2025-01-26 09:45:35', NULL, NULL, NULL, 1, NULL),
-(5, 'Equipos de Fibra Óptica', '2025-01-26 09:45:35', NULL, NULL, NULL, 1, NULL),
-(6, 'Accesorios de Fibra Óptica', '2025-01-26 09:45:35', NULL, NULL, NULL, 1, NULL),
-(7, 'Herramientas de Instalación', '2025-01-26 09:45:35', NULL, NULL, NULL, 1, NULL),
-(8, 'Equipos de Transmisión de Datos', '2025-01-26 09:45:35', NULL, NULL, NULL, 1, NULL),
-(9, 'Antenas y Equipos de Radiofrecuencia', '2025-01-26 09:45:35', NULL, NULL, NULL, 1, NULL),
-(10, 'Cableado y Conexiones', '2025-01-26 09:45:35', NULL, NULL, NULL, 1, NULL),
-(11, 'Accesorios de Computación', '2025-01-26 09:45:35', NULL, NULL, NULL, 1, NULL),
-(12, 'Equipos de Seguridad', '2025-01-26 09:45:35', NULL, NULL, NULL, 1, NULL),
-(13, 'Mobiliario Tecnológico', '2025-01-26 09:45:35', NULL, NULL, NULL, 1, NULL);
+(1, 'Router', '2025-01-26 09:45:35', NULL, NULL, NULL, 1, NULL),
+(2, 'sintonizador', '2025-01-26 09:45:35', NULL, NULL, NULL, 1, NULL),
+(3, 'modem', '2025-01-26 09:45:35', NULL, NULL, NULL, 1, NULL),
+(4, 'repetidor', '2025-01-26 09:45:35', NULL, NULL, NULL, 1, NULL),
+(5, 'triplexor', '2025-01-26 09:45:35', NULL, NULL, NULL, 1, NULL),
+(6, 'consumibles', '2025-01-26 09:45:35', NULL, NULL, NULL, 1, NULL),
+(7, 'Herramientas', '2025-01-26 09:45:35', NULL, NULL, NULL, 1, NULL);
 
 -- --------------------------------------------------------
 
