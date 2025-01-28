@@ -115,6 +115,17 @@ document.addEventListener("DOMContentLoaded", async function () {
         idproductoField.appendChild(tagOption);
       });
     }
+
+    $(idproductoField).select2({
+      theme: "bootstrap-5",
+      placeholder: "Seleccione un Producto",
+      allowClear: true
+    });
+
+    $(idproductoField).on('select2:open', function () {
+      $('.select2-container--bootstrap-5 .select2-selection--single').css('height', 'calc(3.5rem + 2px)');
+      $('.select2-container--bootstrap-5 .select2-selection__rendered').css('margin-top', '18px');
+    });
   })();
 
   (async () => {
@@ -134,7 +145,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     await actualizarMtv(tipoMovimientoSelect.value);
   });
 
-
   document.querySelector("#form-validaciones-kardex").addEventListener("submit", async (event) => {
     event.preventDefault();
     if (await ask("¿Estás seguro de realizar esta actualización?")) {
@@ -143,7 +153,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   });
 
   idproductoField.addEventListener("change", () => {
-    console.log(idproductoField.value, Almacen.value)
     if (idproductoField.value >= 1 && Almacen.value >= 1) {
       mostrarStockActual(idproductoField.value, Almacen.value);
     }
@@ -154,6 +163,5 @@ document.addEventListener("DOMContentLoaded", async function () {
       mostrarStockActual(idproductoField.value, Almacen.value);
     }
   });
-
 
 });
