@@ -49,7 +49,6 @@
               <th class="text-center">Sector</th>
               <th class="text-center">Servicio</th>
               <th class="text-center">Estado</th>
-              <th class="text-center">Acciones</th>
             </tr>
           </thead>
           <tbody>

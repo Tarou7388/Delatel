@@ -4707,6 +4707,8 @@ CREATE TABLE IF NOT EXISTS `vw_averias_listar_ficha_null` (
 ,`tipo_servicio` char(4)
 ,`coordenada` varchar(50)
 ,`nrodocumento` varchar(15)
+,`prioridad` varchar(50)
+,`telefono` char(9)
 );
 
 -- --------------------------------------------------------
@@ -4804,6 +4806,7 @@ CREATE TABLE IF NOT EXISTS `vw_contratos_listar_ficha_null` (
 ,`nombre_paquete` varchar(250)
 ,`nombre_sector` varchar(60)
 ,`nombre_tecnico_registro` varchar(61)
+,`telefono` char(9)
 ,`direccion_servicio` varchar(200)
 ,`referencia` varchar(200)
 ,`ficha_instalacion` longtext

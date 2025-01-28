@@ -27,7 +27,7 @@
   <div class="modal-dialog modal-lg" role="document"> <!-- Cambiado a modal-lg -->
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="myModalLabel">Mapa de Cobertura</h5>
+        <h5 class="modal-title" id="myModalLabel">Dirección del Cliente</h5>
         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>

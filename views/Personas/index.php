@@ -229,8 +229,13 @@
 								<option value="Venezolano">Venezolano</option>
 								<option value="Colombiano">Colombiano</option>
 								<option value="Argentino">Argentino</option>
+								<option value="Otros">Otros</option>
 							</select>
 							<label for="slcNacionalidad">Nacionalidad</label>
+						</div>
+						<div class="form-floating mt-3 d-none" id="divOtherNacionalidad">
+							<input type="text" class="form-control" id="txtNacionalidad" placeholder="Otra Nacionalidad">
+							<label for="txtNacionalidad">Otra Nacionalidad</label>
 						</div>
 					</div>
 

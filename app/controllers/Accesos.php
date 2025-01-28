@@ -40,7 +40,7 @@ function obtenerAccesosFiltrados($permissions)
 	];
 
 	$accesosFiltrados = [
-		["ruta" => "views", "texto" => "Actividades", "icono" => "fa-solid fa-chart-line"]
+		["ruta" => "views", "texto" => "Actividades", "icono" => "fa-solid fa-chart-line", "rutasAnexas" => ["SoporteCABL", "SoporteFIBR", "SoporteWISP", "FichaTecnicaCable", "FichaTecnicaGpon", "FichaTecnicaWisp", "FichaTecnicaFibra"]]
 	];
 
 	// Filtrar accesos basados en permisos

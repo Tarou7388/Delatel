@@ -173,20 +173,3 @@
     </table>
   </div>
 <?php endif; ?>
-
-<div>
-  <table style="margin-top:150px; width: 100%;">
-    <tbody>
-      <tr>
-        <td class="no-border">
-          <span style="display: block;">__________________________</span>
-          <span><strong>V°B° CLIENTE</strong></span>
-        </td>
-        <td class="no-border">
-          <span style="display: block;">__________________________</span>
-          <span><strong>TÉCNICO</strong></span>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
