@@ -83,7 +83,6 @@
           <thead>
             <tr>
               <th class="text-center d-none d-sm-table-cell">Prioridad</th>
-              <th class="text-center d-none d-sm-table-cell">Tipo Soporte</th>
               <th class="text-center d-none d-sm-table-cell">Servicios</th>
               <th class="text-center">Nombre Cliente</th>
               <th class="text-center d-none d-sm-table-cell">Dirección</th>

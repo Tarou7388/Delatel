@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const response = await fetch(`${config.HOST}app/controllers/Marcas.controllers.php?operacion=listarmarca`);
       const data = await response.json();
       if (Array.isArray(data)) {
+        slcMarca.innerHTML = ""; // Limpiar opciones existentes
         data.forEach(data => {
           const option = document.createElement("option");
           option.value = data.id_marca;
@@ -32,8 +33,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     try {
       const response = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=listarTipoProductos`);
       const data = await response.json();
-
       if (Array.isArray(data)) {
+        tipoProducto.innerHTML = ""; // Limpiar opciones existentes
         data.forEach(tipoProduc => {
           const option = document.createElement("option");
           option.value = tipoProduc.id_tipo;
@@ -50,8 +51,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     try {
       const response = await fetch(`${config.HOST}app/controllers/Medidas.controllers.php?operacion=listarmedidas`);
       const data = await response.json();
-
       if (Array.isArray(data)) {
+        slcUnidadMedida.innerHTML = ""; // Limpiar opciones existentes
         data.forEach(unidades => {
           const option = document.createElement("option");
           option.value = unidades.id_unidad;
@@ -83,6 +84,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log(data);
         if (data.Guardado) {
           showToast("Se ha guardado correctamente", "SUCCESS");
         } else {
@@ -106,6 +108,4 @@ document.addEventListener("DOMContentLoaded", async () => {
       event.target.value = "";
     }
   });
-
-
 });

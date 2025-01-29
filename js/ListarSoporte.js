@@ -80,14 +80,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         className: "text-center user-select-none d-none d-sm-table-cell"
       },
       {
-        data: "tipo_soporte",
-        title: "Tipo de Soporte",
-        className: "text-center user-select-none d-none d-sm-table-cell",
-        render: function (data, type, row) {
-          return data ? data : '<i>No asignado</i>';
-        }
-      },
-      {
         data: "tipos_servicio",
         title: "Servicios",
         className: "text-center user-select-none d-none d-sm-table-cell",
@@ -103,19 +95,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       {
         data: "direccion_servicio",
         title: "Dirección",
-        className: "text-start user-select-none d-none d-sm-table-cell"
+        className: "text-center user-select-none d-none d-sm-table-cell"
       },
       {
         data: "fecha_hora_solicitud",
         title: "Hora de solicitud",
-        className: "text-end user-select-none d-none d-sm-table-cell",
-        render: function (data, type, row) {
-          return data ? data : '<i>No asignado</i>';
-        }
-      },
-      {
-        data: "nombre_tecnico",
-        title: "Técnico a Cargo",
         className: "text-center user-select-none d-none d-sm-table-cell",
         render: function (data, type, row) {
           return data ? data : '<i>No asignado</i>';
@@ -138,23 +122,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     [
       { width: "4%", targets: 0 },
       { width: "15%", targets: 1 },
-      { width: "10%", targets: 2 },
+      { width: "20%", targets: 2 },
       { width: "20%", targets: 3 },
-      { width: "20%", targets: 4 },
-      { width: "10%", targets: 5 },
-      { width: "10%", targets: 6 },
-      { width: "10%", targets: 7 }
+      { width: "10%", targets: 4 },
+      { width: "10%", targets: 5 }
     ],
     {
       columnDefs: [
         { className: 'text-center', targets: '_all' },
         { targets: [0], visible: false },
-        { targets: [0, 1, 2, 4, 5, 6], className: 'd-none d-sm-table-cell' } 
+        { targets: [0, 1, 3, 4], className: 'd-none d-sm-table-cell' }
       ]
     }
   );
 
-  
+
   function alternarDetalles(fila) {
     if (window.innerWidth < 768) {
       const siguienteFila = fila.nextElementSibling;
@@ -173,7 +155,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  
+
   function agregarEventListenersFilas() {
     const filas = document.querySelectorAll("#tblSoporteIncompleto tbody tr");
 
@@ -184,7 +166,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  
+
   table.on('draw', function () {
     agregarEventListenersFilas();
   });
@@ -202,11 +184,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   $('.card-body').on('click', '.btnMapa', async function () {
-    
+
     let id_soporte = $(this).data('id');
     const data = await FichaInstalacion(id_soporte);
 
-    
+
     const id_contrato = data[0].id_contrato;
 
     const params = { cajas: false, mufas: false }
