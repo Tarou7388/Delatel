@@ -13,6 +13,7 @@
         <div class="container">
           <div class="card mt-2">
             <div class="card-body">
+              <label for="nombre">Actividad Principal:</label>
               <div class="card-text" id="contenido">
                 <select id="selectActividad" class="form-select mb-3">
                   <option value="Mapa" selected>Mapa</option>
