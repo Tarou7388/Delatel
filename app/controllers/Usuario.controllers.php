@@ -105,7 +105,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     case 'actualizarUsuario':
       $parametros = [
         "nombreUsuario" => Herramientas::sanitizarEntrada($datos['parametros']['nombreUsuario']),
-        "clave" => password_hash($datos['parametros']['clave'], PASSWORD_BCRYPT),
         "idUsuarioUpdate" => Herramientas::sanitizarEntrada($datos['parametros']['idUsuarioUpdate']),
         "idUsuario" => Herramientas::sanitizarEntrada($datos['parametros']['idUsuario'])
       ];

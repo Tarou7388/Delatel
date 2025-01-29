@@ -540,7 +540,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     try {
-      const response = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarra&codigoBarra=${encodeURIComponent(codigoBarra)}`);
+      const response = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarraRepetidor&codigoBarra=${encodeURIComponent(codigoBarra)}`);
       const resultado = await response.json();
 
       if (Array.isArray(resultado) && resultado.length > 0) {
@@ -856,7 +856,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     try {
-      const response = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarra&codigoBarra=${encodeURIComponent(codigoBarra)}`);
+      const response = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarraSintonizador&codigoBarra=${encodeURIComponent(codigoBarra)}`);
       const resultado = await response.json();
 
       if (Array.isArray(resultado) && resultado.length > 0) {

@@ -69,7 +69,7 @@
       <h4><i class="fas fa-table me-1"></i> Listado de Fichas a terminar</h4>
       <div class="form-floating mb-3">
         <select class="form-control" name="slcPrioridad" id="slcPrioridad">
-          <option value="" selected>Seleccione la Prioridad</option>
+          <option value="" selected>Mostrar todo</option>
           <option value="Alta">Alta</option>
           <option value="Media">Media</option>
           <option value="Baja">Baja</option>
@@ -83,7 +83,6 @@
           <thead>
             <tr>
               <th class="text-center d-none d-sm-table-cell">Prioridad</th>
-              <th class="text-center d-none d-sm-table-cell">Tipo Soporte</th>
               <th class="text-center d-none d-sm-table-cell">Servicios</th>
               <th class="text-center">Nombre Cliente</th>
               <th class="text-center d-none d-sm-table-cell">Dirección</th>

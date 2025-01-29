@@ -144,21 +144,16 @@
         </div> <!-- Fin de la Primera Fila -->
 
         <!-- Segunda Fila -->
-        <h4 class="mb-4">Parámetros Técnicos de Fibra</h4>
 
         <div class="">
-          <div class="d-flex justify-content-between align-items-center mb-2">
-            <div class="col-md-12"> <!-- Ajusta el ancho aquí -->
-              <div class="form-floating">
-                <select id="slcCaja" class="form-select">
-                  <option value="" disabled selected>Seleccione una opción</option>
-                </select>
-                <label for="slcCaja">Caja</label>
-              </div>
+          <div class="col-md-12"> <!-- Ajusta el ancho aquí -->
+            <div class="form-floating">
+              <select id="slcCaja" class="form-select">
+                <option value="" disabled selected>Seleccione una opción</option>
+              </select>
+              <label for="slcCaja">Caja</label>
             </div>
           </div>
-
-          <div id="cardContainer"></div>
 
           <div id="parametrosContainer" style="display: none;">
 
@@ -367,8 +362,8 @@
           </button>
         </div>
 
-        <div class="d-flex justify-content-between align-items-center mb-2">
-          <div class="col-md-10">
+        <div class="row mb-2">
+          <div class="col-12 col-md-10 mb-2">
             <div class="form-floating">
               <select id="slcEquipo" class="form-select">
                 <option value="" disabled selected>Seleccione el tipo de equipo</option>
@@ -376,11 +371,16 @@
               <label for="slcEquipo">Tipo de Equipo</label>
             </div>
           </div>
-          <!-- Botón para mostrar/ocultar parámetros -->
-          <div class="form-floating">
-            <button id="btnInformacion" class="btn btn-dark">Ver más</button>
+          <div class="col-12 col-md-2">
+            <div class="form-floating">
+              <button id="btnInformacion" class="btn btn-dark w-100">Ver más</button>
+            </div>
           </div>
         </div>
+
+        <div id="cardContainer"></div>
+
+        <hr>
 
         <div id="routerCambiosContainer" style="display: none;">
           <!-- Primera Fila -->
