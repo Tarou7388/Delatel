@@ -53,6 +53,10 @@ if (isset($_GET['operacion'])) {
 			$resultado = $producto->BuscarProductoBarraRepetidor(["codigoBarra" => Herramientas::sanitizarEntrada($_GET['codigoBarra'])]);
 			echo json_encode($resultado);
 			break;
+		case "buscarProductoBarraRouter":
+			$resultado = $producto->BuscarProductoBarraRouter(["codigoBarra" => Herramientas::sanitizarEntrada($_GET['codigoBarra'])]);
+			echo json_encode($resultado);
+			break;
 	}
 }
 

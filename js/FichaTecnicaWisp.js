@@ -437,8 +437,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
 
     jsonParametros = {
+      periodo: txtPeriodo,
       parametros: {
-        periodo: txtPeriodo,
         plan: txtPaquete,
         frecuencia: slcFrecuencia.split(","),
         base: [base],

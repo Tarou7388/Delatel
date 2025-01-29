@@ -265,7 +265,6 @@ window.addEventListener("DOMContentLoaded", async () => {
             idUsuario: login.idUsuario,
           },
         };
-        console.log(datosEnvio);
 
         const response = await fetch(
           `${config.HOST}app/controllers/Contrato.controllers.php`,
@@ -327,7 +326,34 @@ window.addEventListener("DOMContentLoaded", async () => {
    */
   async function eliminar(idContrato, idUsuario, idCaja) {
     if (accesos?.contratos?.eliminar) {
-      if (await ask("¿Desea Cancelar el Contrato?")) {
+      const responsePeriodo = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerFichaInstalacion&id=${idContrato}`);
+      const dataPeriodoini = await responsePeriodo.json();
+      console.log(dataPeriodoini);
+      const dataPeriodo = JSON.parse(dataPeriodoini[0].ficha_instalacion);
+
+
+      let eliminarSi = false
+
+      if ( await dataPeriodo.periodo == null) {
+        if (await ask("Este contrato no esta instalado. ¿Desea cancelar el Contrato?", "Contratos")) {
+          eliminarSi = true
+        }
+      } else if ( await dataPeriodo.periodo != null) {
+        //saber ya se paso la fecha de periodo o no
+        const fechaActual = new Date();
+        const fechaPeriodo = new Date(dataPeriodo.periodo);
+        if (fechaActual > fechaPeriodo) {
+          if (await ask("¿Desea Cancelar el Contrato?")) {
+            eliminarSi = true
+          }
+        } else {
+          if (await ask("El contrato no ha cumplido su periodo. ¿Desea cancelar el contrato?")) {
+            eliminarSi = true
+          }
+        }
+      }
+
+      if (eliminarSi == true) {
         const response = await fetch(
           `${config.HOST}app/controllers/Contrato.controllers.php`,
           {
@@ -364,6 +390,7 @@ window.addEventListener("DOMContentLoaded", async () => {
           tabla.ajax.reload();
         }
       }
+
     } else {
       showToast("No tienes acceso para eliminar un contrato", "ERROR");
     }
@@ -624,7 +651,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     if (
       nroDoc.value == "" ||
       nombre.value == "" ||
-      precio.value == "" || 
+      precio.value == "" ||
       precio.value == 0 ||
       direccion.value == "" ||
       sector.value == "" ||
@@ -803,22 +830,22 @@ window.addEventListener("DOMContentLoaded", async () => {
     const renderizado = "modal"
     mapa.iniciarMapa(params, id, renderizado);
   }
-  
-$("#slcTipoServicio").on("change", function () {
+
+  $("#slcTipoServicio").on("change", function () {
     const txtPrecio = $("#txtPrecio");
     const divSector = $("#divSector");
 
     txtPrecio.prop("disabled", false);
     txtPrecio.val("");
     txtPrecio.prop("disabled", true);
-    
+
     if ($(this).val() === "2") {
-        divSector.attr("hidden", true);
+      divSector.attr("hidden", true);
     } else {
-        divSector.removeAttr("hidden");
-        divSector.trigger("change");
+      divSector.removeAttr("hidden");
+      divSector.trigger("change");
     }
-});
+  });
 
 
 

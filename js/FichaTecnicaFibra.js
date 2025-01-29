@@ -186,11 +186,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const txtSeguridadRouter = document.querySelector("#txtSeguridadRouter").value;
 
     jsonData = {
+      periodo: txtPeriodo,
       fibraoptica: {
         usuario: txtUsuario,
         claveacceso: txtClaveAcceso,
         vlan: parseInt(txtVlan),
-        periodo: txtPeriodo,
         plan: txtPlan,
         potencia: parseInt(txtPotencia),
         router: {
@@ -355,7 +355,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
-      const respuesta = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarra&codigoBarra=${encodeURIComponent(codigoBarra)}`);
+      const respuesta = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarraRouter&codigoBarra=${encodeURIComponent(codigoBarra)}`);
       const resultado = await respuesta.json();
 
       if (Array.isArray(resultado) && resultado.length > 0) {

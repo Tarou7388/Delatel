@@ -149,7 +149,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         await eventoAntena();
       } else {
         marcadoresAntenas.forEach(marcador => {
-          marcador.setMap(null);
+          marcador.forEach(item => {
+            item.setMap(null);
+          });
         });
       }
     }
@@ -179,20 +181,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     const dataLimites = await responseLimites.json();
     datosLimitesDistritos = dataLimites;
 
-    dataLimites.forEach(item => {
-      const limites = item.limites.map(punto => ({ lat: punto.lat, lng: punto.lng }));
+    const colors = [
+      { strokeColor: "#888888", fillColor: "#FF0000" },
+      { strokeColor: "#888888", fillColor: "#00FF00" },
+      { strokeColor: "#888888", fillColor: "#0000FF" },
+      { strokeColor: "#888888", fillColor: "#FFFF00" },
+      { strokeColor: "#888888", fillColor: "#FF00FF" },
+      { strokeColor: "#888888", fillColor: "#00FFFF" },
+      { strokeColor: "#888888", fillColor: "#FFA500" }
+    ];
 
-      const strokeColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
-      const fillColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+    dataLimites.forEach((item, index) => {
+      const limites = item.limites.map(punto => ({ lat: punto.lat, lng: punto.lng }));
+      const color = colors[index % colors.length];
 
       const poligono = new google.maps.Polygon({
-        paths: limites,
-        strokeColor: strokeColor,
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
-        fillColor: fillColor,
-        fillOpacity: 0.35,
-        idDistrito: item.id_distrito
+      paths: limites,
+      strokeColor: color.strokeColor,
+      strokeOpacity: 0.5,
+      strokeWeight: 2,
+      fillColor: color.fillColor,
+      fillOpacity: 0.5,
+      idDistrito: item.id_distrito
       });
       poligono.setMap(mapa);
       limitesDistritos.push(poligono);
@@ -732,11 +742,39 @@ document.addEventListener('DOMContentLoaded', async () => {
         lineaPrincipalAgregando = true;
         CablePrincipalGuardar = "";
         
-        // Actualizar la visualización del mapa
+        // Limpiar todos los elementos del mapa
         lineasCables.forEach(linea => {
           linea.setMap(null);
         });
+        
+        // Limpiar los marcadores existentes del cable principal
+        const marcadores = document.querySelectorAll('img[src*="cable.png"]');
+        marcadores.forEach(marcador => {
+          if (marcador.parentElement) {
+            marcador.parentElement.remove();
+          }
+        });
+        
+        // Resetear arrays
+        lineasCables = [];
+        lineaPrincipal = [];
+        
+        // Volver a cargar todo
         await eventoCables();
+        
+        // Forzar la actualización del CablePrincipal y sus eventos
+        CablePrincipal = lineasCables[0];
+        if (CablePrincipal) {
+          CablePrincipal.addListener('click', async (e) => {
+            lineaCableGuardar = [];
+            lineaPrincipal = [];
+            if (lineaPrincipalAgregando) {
+              blooquearbotones(true, false, true, true, true, true, true, true, true);
+            }
+            Coordenadas = `${e.latLng.lat()},${e.latLng.lng()}`;
+            marcadorPrincipalEvento(e.latLng.toJSON());
+          });
+        }
       } else {
         showToast("No hay coordenadas para guardar", "ERROR");
       }

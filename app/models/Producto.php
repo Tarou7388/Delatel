@@ -162,4 +162,11 @@ class Producto extends Conexion
 				return $this->consultaParametros($sql, $values);
 		}
 
+    public function BuscarProductoBarraRouter($params = [])
+		{
+				$sql = "CALL spu_productos_buscar_barraRouter(?)";
+				$values = array($params['codigoBarra']);
+				return $this->consultaParametros($sql, $values);
+		}
+
 }
