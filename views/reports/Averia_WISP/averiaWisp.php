@@ -1,4 +1,4 @@
-<h3 class="text-center">CONTROL DE AVERÍAS SERVICIO WISP - COMPUIVAN</h3>
+<h3 class="text-center">CONTROL DE AVERÍAS SERVICIO WISP - DELATEL</h3>
 
 <div class="container">
   <div style="text-align: right; font-family: Arial, sans-serif; font-size: 15px; margin-right: 70px;">
@@ -387,23 +387,6 @@ if (!antenasIguales($antenaParametros, $antenaCambios)) {
       <tr>
         <td><strong>TÉCNICO:</strong></td>
         <td colspan="5"><?= $resultado[0]['NombreTecnico'] ?? 'N/A'; ?></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<div>
-  <table style="margin-top:200px; width: 100%;">
-    <tbody>
-      <tr>
-        <td class="no-border">
-          <span style="display: block;">__________________________</span>
-          <span><strong>V°B° CLIENTE</strong></span>
-        </td>
-        <td class="no-border">
-          <span style="display: block;">__________________________</span>
-          <span><strong>TÉCNICO</strong></span>
-        </td>
       </tr>
     </tbody>
   </table>

@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  
+
   $.ajax({
     url: rutaContarContratos,
     type: "GET",
@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  
+
   $.ajax({
     url: rutaContarAverias,
     type: "GET",
@@ -104,13 +104,6 @@ document.addEventListener("DOMContentLoaded", async () => {
           render: function (data, type, row) {
             return '<span class="badge bg-danger">PENDIENTE</span>';
           }
-        },
-        {
-          data: null,
-          className: "text-center",
-          render: function (data, type, row) {
-            return '<button type="button" class="btn btn-primary btn-sm atender-contrato">Atender</button>';
-          }
         }
       ],
       paging: true,
@@ -150,19 +143,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         { data: "descripcion_problema", className: "text-center" },
         { data: "fecha_creacion", className: "text-center" },
         { data: "sector_cliente", className: "text-center" },
-        { data: "tipo_servicio", className: "text-center" }, 
+        { data: "tipo_servicio", className: "text-center" },
         {
           data: "estado",
           className: "text-center",
           render: function (data, type, row) {
             return '<span class="badge bg-danger">PENDIENTE</span>';
-          }
-        },
-        {
-          data: null,
-          className: "text-center",
-          render: function (data, type, row) {
-            return '<button type="button" class="btn btn-primary btn-sm atender-averia">Atender</button>';
           }
         }
       ],
@@ -172,43 +158,4 @@ document.addEventListener("DOMContentLoaded", async () => {
       lengthChange: false,
     });
   });
-
-  //
-  $("#tblStickets tbody").on("click", ".atender-contrato", async function () {
-    var data = $("#tblStickets").DataTable().row($(this).parents("tr")).data();
-    console.log("Datos del contrato:", data);
-
-    const idContrato = data.id_contrato;
-    const tipoServicio = data.tipos_servicio;
-    const tipoFicha = {
-      "FIBR, CABL": "FichaTecnicaGpon",
-      "CABL, FIBR": "FichaTecnicaGpon",
-      WISP: "FichaTecnicaWisp",
-      CABL: "FichaTecnicaCable",
-      FIBR: "FichaTecnicaFibra",
-    };
-
-    
-    window.location.href = `${config.HOST}views/Contratos/${tipoFicha[tipoServicio]}?idContrato=${idContrato}`;
-  });
-
-  
-  $("#tblSticketsAverias tbody").on("click", ".atender-averia", async function () {
-    const data = $("#tblSticketsAverias").DataTable().row($(this).parents("tr")).data();
-    console.log("Datos de la avería:", data);
-
-    const idSoporte = data.id_soporte;
-    const coordenada = data.coordenada;
-    const nrodocumento = data.nrodocumento;
-    const tipoServicio = data.tipo_servicio;
-
-    
-    mostrarFichaServicio(tipoServicio, idSoporte, nrodocumento, coordenada);
-  });
-
-  function mostrarFichaServicio(tipoServicio, id_soporte, nrodocumento, coordenada) {
-    
-    window.location.href = `${config.HOST}views/Soporte/Soporte${tipoServicio}?idsoporte=${id_soporte}&doc=${nrodocumento}&tiposervicio=${tipoServicio}&coordenada=${coordenada}`;
-  }
-
 });

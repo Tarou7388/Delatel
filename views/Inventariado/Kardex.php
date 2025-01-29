@@ -16,10 +16,10 @@
 					<div class="col-md">
 						<div class="input-group">
 							<div class="form-floating">
-								<select name="slcIdproducto" id="idproducto" class="form-select" required>
+								<select name="slcIdproducto" id="idproducto" class="form-select select2me" aria-label="Seleccione un Producto" required>
 									<option value="" disabled selected>Seleccione</option>
 								</select>
-								<label for="slcIdproducto">Tipo Producto</label>
+								<label for="slcIdproducto">Producto</label>
 							</div>
 						</div>
 					</div>

@@ -50,6 +50,26 @@ window.addEventListener("DOMContentLoaded", async function () {
   }
 
   async function cargarSoporte() {
+    function alternarDetalles(fila) {
+      if (window.innerWidth >= 768) {
+        return;
+      }
+
+      const siguienteFila = fila.nextElementSibling;
+      if (siguienteFila && siguienteFila.classList.contains('fila-detalles')) {
+        siguienteFila.remove();
+      } else {
+        const celdasOcultas = fila.querySelectorAll('.d-none.d-md-table-cell');
+        let detallesHtml = '<tr class="fila-detalles"><td colspan="8"><table class="table table-striped">';
+        celdasOcultas.forEach(celda => {
+          const descripcion = celda.getAttribute('data-descripcion');
+          detallesHtml += `<tr><td><strong>${descripcion}:</strong> ${celda.innerHTML}</td></tr>`;
+        });
+        detallesHtml += '</table></td></tr>';
+        fila.insertAdjacentHTML('afterend', detallesHtml);
+      }
+    }
+
     const soporteContainer = document.createElement('div');
     soporteContainer.innerHTML = `
     <h4 class="text-center">Fichas de Soportes Pendientes</h4>
@@ -59,12 +79,12 @@ window.addEventListener("DOMContentLoaded", async function () {
             <tr>
               <th class="text-center">ID</th>
               <th class="text-center">Cliente</th>
-              <th class="text-center">Servicio</th>
-              <th class="text-center d-none d-md-table-cell">Fecha</th>
-              <th class="text-center d-none d-md-table-cell">N° Teléfono</th>
-              <th class="text-center d-none d-md-table-cell">Problema</th>
-              <th class="text-center">Mapa</th>
+              <th class="text-center d-none d-md-table-cell">Servicio</th>
+              <th class="text-center d-none d-md-table-cell" data-descripcion="Fecha">Fecha</th>
+              <th class="text-center d-none d-md-table-cell" data-descripcion="N° Teléfono">N° Teléfono</th>
+              <th class="text-center d-none d-md-table-cell" data-descripcion="Problema">Problema</th>
               <th class="text-center">Prioridad</th>
+              <th class="text-center">Acciones</th>
             </tr>
           </thead>
           <tbody id="tbodySoporte"></tbody>
@@ -80,8 +100,6 @@ window.addEventListener("DOMContentLoaded", async function () {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
-
-      // Limpiar cuerpo de la tabla antes de llenarlo
       tbodySoporte.innerHTML = '';
 
       data.forEach(soporte => {
@@ -95,27 +113,35 @@ window.addEventListener("DOMContentLoaded", async function () {
         }
 
         const row = `
-                <tr>
-                    <td class="text-center">${soporte.id_soporte}</td>
-                    <td class="text-center">${soporte.nombre_cliente}</td>
-                    <td class="text-center">${soporte.tipo_servicio}</td>
-                    <td class="text-center d-none d-md-table-cell">${soporte.fecha_creacion}</td>
-                    <td class="text-center d-none d-md-table-cell">${soporte.telefono}</td>
-                    <td class="text-center d-none d-md-table-cell">${soporte.descripcion_problema}</td>
-                    <td class="text-center">
-                        <button class="btnMapa btn btn-dark" data-id="${soporte.id_soporte}" data-tipo="soporte" data-bs-toggle="modal" data-bs-target="#ModalMapa">
-                            <i class="fa-solid fa-location-dot"></i>
-                        </button>
+        <td class="soporte-row" data-id_soporte="${soporte.id_soporte}" data-coordenada="${soporte.coordenada}" data-nrodocumento="${soporte.nrodocumento}" data-tipo_servicio="${soporte.tipo_servicio}">
+            <td class="text-center">${soporte.id_soporte}</td>
+            <td class="text-center">${soporte.nombre_cliente}</td>
+            <td class="text-center d-none d-md-table-cell" data-descripcion="Servicio">${soporte.tipo_servicio}</td>
+            <td class="text-center d-none d-md-table-cell" data-descripcion="Fecha">${soporte.fecha_creacion}</td>
+            <td class="text-center d-none d-md-table-cell" data-descripcion="N° Teléfono">${soporte.telefono}</td>
+            <td class="text-center d-none d-md-table-cell" data-descripcion="Problema">${soporte.descripcion_problema}</td>
+            <td class="${rowClass} text-center">${soporte.prioridad}</td>
+            <td class="text-center">
+                <div class="d-flex justify-content-center">
+                    <button class="btnMapa btn btn-dark me-2" data-id="${soporte.id_soporte}" data-tipo="soporte" data-bs-toggle="modal" data-bs-target="#ModalMapa" style="font-size: 1rem; padding: 0.375rem 0.75rem;">
+                        <i class="fa-solid fa-location-dot"></i>
+                    </button>
+                    <button type="button" class="btn btn-primary atender-soporte" style="font-size: 1rem; padding: 0.375rem 0.75rem;">
+                        <i class="fa-solid fa-pen"></i>
+                    </button>
+                </div>
+                    </td>
                     </td>
                     <td class="${rowClass} text-center">${soporte.prioridad}</td>
-                </tr>
-            `;
+            </td>
+                    <td class="${rowClass} text-center">${soporte.prioridad}</td>
+        </tr>
+    `;
         tbodySoporte.innerHTML += row;
       });
 
-      // Inicializar DataTables después de llenar la tabla
-      $('#tablaSoporte').DataTable({
-        destroy: true, // Evita errores de inicialización múltiple
+      const table = $('#tablaSoporte').DataTable({
+        destroy: true,
         columnDefs: [
           { targets: 0, visible: false }
         ],
@@ -125,6 +151,20 @@ window.addEventListener("DOMContentLoaded", async function () {
         ordering: false
       });
 
+      $('#tablaSoporte tbody').on('click', 'tr.soporte-row', function () {
+        alternarDetalles(this);
+      });
+
+      $('#tablaSoporte tbody').on('click', '.atender-soporte', async function () {
+        const row = $(this).closest('tr');
+        const idSoporte = row.data('id_soporte');
+        const coordenada = row.data('coordenada');
+        const nrodocumento = row.data('nrodocumento');
+        const tipoServicio = row.data('tipo_servicio');
+
+        mostrarFichaServicio(tipoServicio, idSoporte, nrodocumento, coordenada);
+      });
+
     } catch (error) {
       console.error('Error fetching soporte data:', error);
       tbodySoporte.innerHTML = `
@@ -132,6 +172,10 @@ window.addEventListener("DOMContentLoaded", async function () {
                 <td colspan="8" class="text-center">Error cargando datos: ${error.message}</td>
             </tr>
         `;
+    }
+
+    function mostrarFichaServicio(tipoServicio, id_soporte, nrodocumento, coordenada) {
+      window.location.href = `${config.HOST}views/Soporte/Soporte${tipoServicio}?idsoporte=${id_soporte}&doc=${nrodocumento}&tiposervicio=${tipoServicio}&coordenada=${coordenada}`;
     }
   }
 
@@ -165,7 +209,7 @@ window.addEventListener("DOMContentLoaded", async function () {
         { data: 'nombre_cliente' },
         { data: 'direccion_servicio' },
         { data: 'paquete' },
-        { data: 'tipos_servicio' } // Asegúrate de que el nombre de la propiedad coincida
+        { data: 'tipos_servicio' }
       ],
       columnDefs: [
         { targets: 0, visible: false },
@@ -246,21 +290,43 @@ window.addEventListener("DOMContentLoaded", async function () {
   async function cargarFichas() {
     await cargarSoporte();
 
+    function alternarDetalles(fila) {
+      if (window.innerWidth >= 768) {
+        return;
+      }
+
+      const siguienteFila = fila.nextElementSibling;
+      if (siguienteFila && siguienteFila.classList.contains('fila-detalles')) {
+        siguienteFila.remove();
+      } else {
+        const celdasOcultas = fila.querySelectorAll('.d-none.d-md-table-cell');
+        let detallesHtml = '<tr class="fila-detalles"><td colspan="8"><table class="table table-striped">';
+        celdasOcultas.forEach(celda => {
+          const descripcion = celda.getAttribute('data-descripcion');
+          detallesHtml += `<tr><td><strong>${descripcion}:</strong> ${celda.innerHTML}</td></tr>`;
+        });
+        detallesHtml += '</table></td></tr>';
+        fila.insertAdjacentHTML('afterend', detallesHtml);
+      }
+    }
+
     const fichasContainer = document.createElement('div');
     fichasContainer.innerHTML = `
+    <hr>
     <h4 class="text-center">Fichas de Contratos Pendientes</h4>
     <div class="table-responsive">
       <table class="table table-striped" id="tablaFichaContrato">
       <thead>
         <tr>
-          <th>ID</th>
+          <th class="text-center">ID</th>
           <th class="text-center">Cliente</th>
-          <th class="text-center">Servicio</th>
-          <th class="text-center">Paquete</th>
-          <th class="text-center">N° Telefono</th>
-          <th class="text-center">Direccion</th>
-          <th class="text-center">Referencia</th>
-          <th class="text-center">Mapa</th>
+          <th class="text-center d-none d-md-table-cell" data-descripcion="Servicio">Servicio</th>
+          <th class="text-center d-none d-md-table-cell" data-descripcion="Paquete">Paquete</th>
+          <th class="text-center" data-descripcion="N° Telefono">N° Telefono</th>
+          <th class="text-center d-none d-md-table-cell" data-descripcion="Direccion">Direccion</th>
+          <th class="text-center d-none d-md-table-cell" data-descripcion="Referencia">Referencia</th>
+          <th class="text-center d-none d-md-table-cell" data-descripcion="Nota">Nota</th>
+          <th class="text-center">Acciones</th>
         </tr>
       </thead>
       <tbody id="tbodyFichaContrato">
@@ -271,35 +337,79 @@ window.addEventListener("DOMContentLoaded", async function () {
     contenido.appendChild(fichasContainer);
 
     const tbodyFichaContrato = document.getElementById("tbodyFichaContrato");
-    const responseFichaContrato = await fetch(`${config.HOST}app/controllers/Sticket.controllers.php?operacion=listarContratosPendientes`);
-    const dataFichaContrato = await responseFichaContrato.json();
-    dataFichaContrato.forEach(contrato => {
-      tbodyFichaContrato.innerHTML += `
-        <tr>
-          <td>${contrato.id_contrato}</td>
-          <td class="text-center">${contrato.nombre_cliente}</td>
-          <td class="text-center">${contrato.tipos_servicio}</td>
-          <td class="text-center">${contrato.nombre_paquete}</td>
-          <td class="text-center">${contrato.telefono}</td>
-          <td class="text-center">${contrato.direccion_servicio}</td>
-          <td class="text-center">${contrato.referencia}</td>
-         <td class="text-center">
-            <button class="btnMapa btn btn-dark" data-id="${contrato.id_contrato}" data-tipo="ficha" data-bs-toggle="modal" data-bs-target="#ModalMapa">
-              <i class="fa-solid fa-location-dot"></i>
-            </button>
-          </td>
-        </tr>
-      `;
-    });
-    $('#tablaFichaContrato').DataTable({
-      columnDefs: [
-        { targets: 0, visible: false }
-      ],
-      language: {
-        url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json",
-      },
-      order: [[0, "desc"]]
-    });
+    try {
+      const response = await fetch(`${config.HOST}app/controllers/Sticket.controllers.php?operacion=listarContratosPendientes`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+
+      tbodyFichaContrato.innerHTML = '';
+
+      data.forEach(contrato => {
+        const nota = contrato.nota ? contrato.nota : 'Sin observaciones';
+        const row = `
+                <tr class="ficha-row" data-id_contrato="${contrato.id_contrato}" data-tipo_servicio="${contrato.tipos_servicio}">
+                    <td class="text-center">${contrato.id_contrato}</td>
+                    <td class="text-center">${contrato.nombre_cliente}</td>
+                    <td class="text-center d-none d-md-table-cell" data-descripcion="Servicio">${contrato.tipos_servicio}</td>
+                    <td class="text-center d-none d-md-table-cell" data-descripcion="Paquete">${contrato.nombre_paquete}</td>
+                    <td class="text-center" data-descripcion="N° Telefono">${contrato.telefono}</td>
+                    <td class="text-center d-none d-md-table-cell" data-descripcion="Direccion">${contrato.direccion_servicio}</td>
+                    <td class="text-center d-none d-md-table-cell" data-descripcion="Referencia">${contrato.referencia}</td>
+                    <td class="text-center d-none d-md-table-cell" data-descripcion="Nota">${nota}</td>
+                    <td class="text-center">
+                      <div class="d-flex justify-content-center">
+                        <button class="btnMapa btn btn-dark me-2" data-id="${contrato.id_contrato}" data-tipo="ficha" data-bs-toggle="modal" data-bs-target="#ModalMapa">
+                          <i class="fa-solid fa-location-dot"></i>
+                        </button>
+                        <button type="button" class="btn btn-primary btn-sm atender-contrato"><i class="fa-solid fa-pen"></i></button>
+                      </div>
+                    </td>
+                </tr>
+            `;
+        tbodyFichaContrato.innerHTML += row;
+      });
+
+      const table = $('#tablaFichaContrato').DataTable({
+        destroy: true,
+        columnDefs: [
+          { targets: 0, visible: false }
+        ],
+        language: {
+          url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json",
+        },
+        ordering: false
+      });
+
+      $('#tablaFichaContrato tbody').on('click', 'tr.ficha-row', function () {
+        alternarDetalles(this);
+      });
+
+      $('#tablaFichaContrato tbody').on('click', '.atender-contrato', async function () {
+        const row = $(this).closest('tr');
+        const idContrato = row.data('id_contrato');
+        const tipoServicio = row.data('tipo_servicio');
+
+        const tipoFicha = {
+          "FIBR, CABL": "FichaTecnicaGpon",
+          "CABL, FIBR": "FichaTecnicaGpon",
+          WISP: "FichaTecnicaWisp",
+          CABL: "FichaTecnicaCable",
+          FIBR: "FichaTecnicaFibra",
+        };
+
+        window.location.href = `${config.HOST}views/Contratos/${tipoFicha[tipoServicio]}?idContrato=${idContrato}`;
+      });
+
+    } catch (error) {
+      console.error('Error fetching ficha data:', error);
+      tbodyFichaContrato.innerHTML = `
+            <tr>
+                <td colspan="8" class="text-center">Error cargando datos: ${error.message}</td>
+            </tr>
+        `;
+    }
   }
 
   async function cargarContactos() {

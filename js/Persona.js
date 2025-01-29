@@ -21,6 +21,9 @@ document.addEventListener("DOMContentLoaded", async function () {
   const txtEmail = document.getElementById("txtEmailPersona");
   const txtcoordenadasPersona = document.getElementById("txtCoordenadasPersona");
   const slcNacionalidad = document.getElementById("slcNacionalidad");
+  const divOtherNacionalidad = document.getElementById("divOtherNacionalidad");
+  const txtOtherNacionalidad = document.getElementById("txtOtherNacionalidad");
+  const txtNacionalidad = document.getElementById("txtNacionalidad");
   const txtDireccion = document.getElementById("txtDireccionPersona");
   const txtReferencia = document.getElementById("txtReferenciaPersona");
   const btnBuscar = document.getElementById("btnBuscar");
@@ -30,6 +33,15 @@ document.addEventListener("DOMContentLoaded", async function () {
   let idSector = null;
 
   slcPaquetes.disabled = true;
+
+  slcNacionalidad.addEventListener('change', function () {
+    if (slcNacionalidad.value === 'Otros') {
+      divOtherNacionalidad.classList.remove('d-none');
+    } else {
+      divOtherNacionalidad.classList.add('d-none');
+      txtOtherNacionalidad.value = '';
+    }
+  });
 
   /**
    * Alterna la visibilidad de los formularios de Persona y Empresa.
@@ -202,7 +214,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       params.append("apellidos", txtApellidosPersona.value);
       params.append("nombres", txtNombresPersona.value);
       params.append("telefono", txtTelefono.value);
-      params.append("nacionalidad", slcNacionalidad.value);
+      params.append("nacionalidad", slcNacionalidad.value === 'Otros' ? txtNacionalidad.value : slcNacionalidad.value);
       params.append("email", txtEmail.value);
       params.append("idUsuario", userid);
 

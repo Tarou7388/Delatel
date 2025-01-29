@@ -112,3 +112,11 @@
   #buscarBtn:hover {
     background-color: #0056b3;
   }
+
+  .select2-container--bootstrap-5 .select2-selection--single {
+    height: calc(3.5rem + 2px);
+  }
+
+  .select2-container--bootstrap-5 .select2-selection__rendered {
+    margin-top: 18px;
+  }
