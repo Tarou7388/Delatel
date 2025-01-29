@@ -103,15 +103,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function actualizarUsuario() {
     if (accesos?.usuarios?.actualizar) {
       const usuario = document.getElementById('txtUsuario').value;
-      const nuevaPassword = document.getElementById('txtPassword').value;
 
       const parametros = {
         operacion: 'actualizarUsuario',
         parametros: {
           idUsuarioUpdate: userid,
           nombreUsuario: usuario,
-          idUsuario: idUserTabla,
-          clave: nuevaPassword
+          idUsuario: idUserTabla
         }
       };
 
@@ -182,6 +180,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const resultado = await respuesta.json();
       if (resultado.Actualizado) {
         showToast("Usuario actualizado", "SUCCESS");
+        console.log(resultado);
         $('#editModal').modal('hide');
         $('#tblUsuarios').DataTable().ajax.reload();
       } else {

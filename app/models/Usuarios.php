@@ -80,10 +80,9 @@ class Usuario extends Conexion
    */
   public function actualizarUsuarios($params = [])
   {
-    $sql = "CALL spu_usuario_actualizar(?,?,?,?)";
+    $sql = "CALL spu_usuario_actualizar(?,?,?)";
     $values = array(
       $params['nombreUsuario'],
-      $params['clave'],
       $params['idUsuarioUpdate'],
       $params['idUsuario']
     );

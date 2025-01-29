@@ -217,48 +217,18 @@ INSERT INTO tb_marca (marca, create_at, iduser_create) VALUES
 
 
 INSERT INTO tb_tipoproducto (tipo_nombre, create_at, iduser_create) VALUES
-('Equipo de Redes', NOW(), 1),
-('Perifericos', NOW(), 1),
+('Router', NOW(), 1),
+('Sintonizador', NOW(), 1),
+('Modem', NOW(), 1),
+('Repetidor', NOW(), 1),
+('Triplexor', NOW(), 1),
 ('Consumibles', NOW(), 1),
-('Componentes', NOW(), 1),
-('Equipos de Fibra Óptica', NOW(), 1),
-('Accesorios de Fibra Óptica', NOW(), 1),
-('Herramientas de Instalación', NOW(), 1),
-('Equipos de Transmisión de Datos', NOW(), 1),
-('Antenas y Equipos de Radiofrecuencia', NOW(), 1),
-('Cableado y Conexiones', NOW(), 1),
-('Accesorios de Computación', NOW(), 1),
-('Equipos de Seguridad', NOW(), 1),
-('Mobiliario Tecnológico', NOW(), 1);
+('Herramientas', NOW(), 1);
+
 
 INSERT INTO tb_unidadmedida (unidad_nombre, create_at, iduser_create) VALUES
 ('Unidades', NOW(), 1),
 ('Metros', NOW(), 1);
-
-
-INSERT INTO tb_productos (id_marca, id_tipo, id_unidad, modelo, precio_actual, codigo_barra, create_at, iduser_create) VALUES
-(11, 1, 1, 'Switch Gigabit 16 Puertos', 200.00, '1234567890132', NOW(), 1),
-(11, 6, 1, 'Conector RJ45 Cat. 6', 0.20, '1234567890133', NOW(), 1),
-(11, 6, 1, 'Conector SC/APC', 1.50, '1234567890134', NOW(), 1),
-(5, 5, 1, 'ONT Huawei HG8245H', 80.00, '1234567890135', NOW(), 1),
-(3, 2, 1, 'Monitor LED 24"', 250.00, '1234567890136', NOW(), 1),
-(4, 8, 1, 'Bandeja para Cableado', 50.00, '1234567890137', NOW(), 1),
-(5, 7, 1, 'UPS 1500VA', 180.00, '1234567890138', NOW(), 1),
-(6, 2, 1, 'Auriculares con Micrófono', 30.00, '1234567890139', NOW(), 1),
-(7, 1, 1, 'Router WiFi 6', 120.00, '1234567890140', NOW(), 1),
-(8, 9, 1, 'Cámara de Vigilancia IP', 90.00, '1234567890141', NOW(), 1),
-(9, 3, 1, 'Tinta Cyan', 10.00, '1234567890142', NOW(), 1),
-(10, 6, 1, 'Patch Cord Cat. 6', 2.00, '1234567890143', NOW(), 1),
-(11, 2, 1, 'Tarjeta de Video Nvidia GTX 1660', 300.00, '1234567890144', NOW(), 1),
-(1, 7, 1, 'Fuente de Alimentación 500W', 60.00, '1234567890145', NOW(), 1),
-(1, 1, 1, 'Access Point Ubiquiti', 150.00, '1234567890146', NOW(), 1),
-(1, 6, 1, 'Módulo SFP 1G', 25.00, '1234567890147', NOW(), 1),
-(1, 4, 1, 'Disco Duro SSD 1TB', 110.00, '1234567890148', NOW(), 1),
-(1, 5, 1, 'Fusionadora de Fibra', 1500.00, '1234567890149', NOW(), 1),
-(1, 2, 1, 'Lector de Huellas USB', 60.00, '1234567890150', NOW(), 1),
-(1, 9, 1, 'DVR para Cámaras de Seguridad', 200.00, '1234567890151', NOW(), 1),
-(1, 6, 1, 'Splitters Ópticos 1x8', 8.00, '1234567890152', NOW(), 1),
-(2, 3, 1, 'Tinta Negra', 10.00, '1234567890153', NOW(), 1);
 
 
 INSERT INTO tb_tipooperacion (descripcion, movimiento) VALUES

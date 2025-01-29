@@ -60,14 +60,12 @@ END $$
 DROP PROCEDURE IF EXISTS spu_usuario_actualizar$$
 CREATE PROCEDURE spu_usuario_actualizar (
     IN p_nombre_user VARCHAR(100),
-    IN p_pass CHAR(60),
     IN p_iduser_update INT,
 	IN p_id_usuario INT
 )
 BEGIN
 	UPDATE tb_usuarios
 	SET nombre_user = p_nombre_user,
-		pass = p_pass,
 		update_at = NOW(),
 		iduser_update = p_iduser_update
 	WHERE id_usuario = p_id_usuario;

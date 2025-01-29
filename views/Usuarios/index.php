@@ -58,11 +58,6 @@
             <label for="slcRol">Rol</label>
           </div>
 
-          <div class="form-floating mb-3">
-            <input type="text" id="txtPassword" name="usuario" class="form-control" placeholder="******" required>
-            <label for="txtPassword">Clave Nueva</label>
-          </div>
-
           <!-- NO SE USARA          <div class="form-floating mb-3">
             <input type="text" id="txtPassword" name="usuario" class="form-control" placeholder="Usuario" required>
             <label for="txtPassword">Clave</label>
