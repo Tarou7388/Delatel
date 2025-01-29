@@ -140,6 +140,17 @@ INSERT INTO tb_unidadmedida (unidad_nombre, create_at, iduser_create) VALUES
 ('Unidades', NOW(), 1),
 ('Metros', NOW(), 1);
 
+INSERT INTO tb_productos (id_marca, id_tipo, id_unidad, modelo, precio_actual, codigo_barra, create_at, iduser_create) VALUES
+(1, 1, 1, 'Router TP-Link TL-WR940N', 120.00, '12879878974564654654', NOW(), 1),
+(2, 2, 2, 'Sintonizador Phyhome PH-100', 80.00, 'AKJSBKJCKJ161', NOW(), 1),
+(3, 3, 1, 'Repetidor VSOL VS-300', 150.00, 'AKJBAJBUIB1898', NOW(), 1),
+(4, 4, 2, 'Consumibles Huawei HW-500', 50.00, 'ABC-abc-1234', NOW(), 1),
+(5, 5, 1, 'Herramientas Micronics MC-200', 200.00, 'GAAK1129893J', NOW(), 1),
+(6, 1, 2, 'Router Mercusys MR-70X', 130.00, 'JHAB1287297', NOW(), 1),
+(7, 2, 1, 'Sintonizador Generico GN-100', 70.00, 'AJSFKA128763', NOW(), 1),
+(8, 3, 2, 'Repetidor Sin Marca SM-300', 90.00, '69KAJSBKJB12', NOW(), 1),
+(9, 4, 1, 'Consumibles TP-Link TL-500', 60.00, 'KJBKAJBKAJBC', NOW(), 1),
+(9, 5, 2, 'Herramientas Phyhome PH-200', 110.00, 'KJASBFKJA9', NOW(), 1);
 
 INSERT INTO tb_tipooperacion (descripcion, movimiento) VALUES
 ('Adquisición de activos', 'E'),
@@ -365,55 +376,6 @@ INSERT INTO tb_responsables (id_usuario, id_rol,iduser_create) VALUES
 (3, 3,1),
 (4, 4,1),
 (5, 5,1);
-
-
-
--- INSERT INTO tb_contratos 
--- (id_cliente, id_paquete, id_sector, id_usuario_registro, id_usuario_tecnico, direccion_servicio, referencia, ficha_instalacion, coordenada, fecha_inicio, fecha_registro, nota) VALUES
--- (1,   8,  20, 1, NULL, 'Av. Siempre Viva 123, Springfield', 'Cerca de la plaza principal', NULL, '12.3456, -65.4321', '2024-01-15', '2024-01-01', 'Primer contrato: Servicio WISP Básico con 6 meses de duración'),
--- (2,   9,  20, 1, NULL, 'Calle Falsa 456, Gotham', 'Cerca del cine local', NULL, '34.5678, -76.5432', '2024-02-01', '2024-02-01', 'Renovación de contrato: Fibra + Cable por 6 meses'),
--- (3,   9,  20, 1, NULL, 'Av. Los Pinos 789, Lima', 'Esquina con Av. Las Flores', NULL, '23.4567, -54.3210', '2024-03-01', '2024-03-01', 'Contrato nuevo: Instalación de Fibra + revisión mensual'),
--- (4,   10, 20, 1, NULL, 'Jirón de la Unión 100, Lima', 'Frente a la Plaza Mayor', NULL, '45.6789, -43.2109', '2024-04-01', '2024-04-01', 'Renovación anual: Descuento aplicado por contrato anual'),
--- (5,   8,  20, 1, NULL, 'Calle Mayor 101, Barcelona', 'Cerca del mercado central', NULL, '56.7890, -32.1098', '2024-05-01', '2024-05-01', 'Contrato especial por volumen: Servicio completo por 1 año'),
--- (6,   8,  20, 1, NULL, 'Av. del Libertador 200, Buenos Aires', 'A la vuelta de la oficina', NULL, '12.0011, -66.1122', '2024-06-01', '2024-06-01', 'Servicio premium incluido en el contrato WISP'),
--- (7,   9,  20, 1, NULL, 'Calle de la Alegría 333, Bogotá', 'Cerca de la estación de buses', NULL, '34.3333, -76.6666', '2024-07-01', '2024-07-01', 'Contrato por 6 meses: Soporte técnico 24/7 incluido'),
--- (8,   11, 20, 1, NULL, 'Paseo del Prado 150, Madrid', 'Cerca del parque del Retiro', NULL, '23.8888, -54.7777', '2024-08-01', '2024-08-01', 'Contrato semestral: Mantenimiento semestral incluido'),
--- (9,   4,  20, 1, NULL, 'Av. de la Paz 400, Santiago', 'Frente al hotel Plaza', NULL, '45.2222, -43.8888', '2024-09-01', '2024-09-01', 'Promoción especial: Contrato de 6 meses con descuento'),
--- (10,  5,  20, 1, NULL, 'Calle del Comercio 789, Lima', 'Cerca de la Plaza San Martín', NULL, '56.4444, -32.5555', '2024-10-01', '2024-10-01', 'Contrato especial: Condiciones personalizadas aplicadas'),
--- (11,  2,  20, 1, NULL, 'Av. Principal 111, Quito', 'Frente al centro comercial', NULL, '11.1111, -66.6666', '2024-02-15', '2024-02-15', 'Contrato estándar de WISP con soporte adicional'),
--- (12,  3,  20, 1, NULL, 'Calle Secundaria 222, Caracas', 'Cerca del parque central', NULL, '22.2222, -55.5555', '2024-03-10', '2024-03-10', 'Contrato de Fibra: Instalación y soporte técnico semestral'),
--- (13,  4,  20, 1, NULL, 'Av. Terciaria 333, Montevideo', 'Frente al museo histórico', NULL, '33.3333, -44.4444', '2024-04-20', '2024-04-20', 'Renovación de contrato: Instalación de Fibra con soporte anual'),
--- (14,  5,  20, 1, NULL, 'Jirón Cuarto 444, Lima', 'Esquina con la calle Pinos', NULL, '44.4444, -33.3333', '2024-05-05', '2024-05-05', 'Contrato a medida: Servicio de Fibra + descuento corporativo'),
--- (15,  1,  20, 1, NULL, 'Calle Final 555, La Paz', 'Cerca del edificio principal', NULL, '55.5555, -22.2222', '2024-06-01', '2024-06-01', 'Contrato nuevo: Servicio WISP básico con soporte trimestral'),
--- (16,  42, 20, 1, NULL, 'Calle Estrella 111, Lima', 'Cerca de la Plaza de Armas', '{"cable":{"pagoinstalacion":30,"potencia":"-18","triplexor":{"requerido":"true","cargador":" true"},"conector":{"numeroconector":4,"precio":1.5},"spliter":[{"cantidad":2,"tipo":"1x3"}],"cable":{"metrosadicionales":50,"preciometro":1.1},"sintonizadores":[{"numero":1,"marcaModelo":"ASUS","serie":"1234567890"},{"numero":2,"marcaModelo":"ASUS","serie":"1234567890"}]},"costo":{"nap":{"gpon":"-18","catv":"-14"},"casa":{"gpon":"-15","catv":"-14"},"cableCosto":{"numerosintotizadores":2,"costoAlquilerSintotizador":80,"cantidadCable":"50","precioCable":"1.10","precioConector":"1.50","cantidadConector":"4"}}}', '55.5555, -22.2222', '2024-07-01', '2024-07-01', 'Contrato: Servicio WISP básico con soporte técnico mensual'),
--- (17,  2,  20, 1, NULL, 'Calle Estrella 222, Lima', 'Cerca del Parque Kennedy', NULL, '44.4444, -33.3333', '2024-08-01', '2024-08-01', 'Contrato: Servicio Cable estándar con revisión mensual'),
--- (18,  3,  20, 1, NULL, 'Calle Estrella 333, Lima', 'Cerca del Parque Universitario', NULL, '33.3333, -44.4444', '2024-09-01', '2024-09-01', 'Contrato: Instalación de Fibra con soporte semestral'),
--- (19,  9,  20, 1, NULL, 'Calle Estrella 444, Lima', 'Cerca del Centro Comercial', '{"fibraoptica":{"usuario":"VERQUI22","claveacceso":"@VERQUI22","plan":"Soporte 24\/7 para Clientes WISP","potencia":-7,"moden":{"ssid":"FAMILIA","seguridad":"123456","marca":"PHYHOME","serie":"P18","banda":["2G","5G"],"numeroantena":8,"catv":true},"detalles":"","repetidores":[{"numero":1,"ssid":"VERONICA","contrasenia":"123456","marca":"PHYHOME","ip":"192.168.100.20"}]},"cable":{"pagoinstalacion":30,"potencia":"-16","sintonizador":[],"triplexor":{"Cantidad": 1,"requerido":"true","cargador":"true"},"conector":{"numeroconector":4,"precio":1.5},"spliter":[{"cantidad":2,"tipo":"1x3"}],"cable":{"metrosadicionales":50,"preciometro":1.1},"sintonizadores":[{"numero":1,"marcaModelo":"ASUS","serie":"1234567890"}]},"costo":{"pagoAdelantado":"20","descuento":"0","nap":{"gpon":"-13","catv":"-13"},"casa":{"gpon":"-13","catv":"-14"},"cableCosto":{"numerosintotizadores":1,"costoAlquilerSintotizador":40,"cantidadCable":"50","precioCable":"1.10","precioConector":"1.50","cantidadConector":"4"}}}', '22.2222, -55.5555', '2024-10-01', '2024-10-01', 'Contrato: Contratación de Paquete Gpon con cable y fibra'),
--- (20,  5,  20, 1, NULL, 'Calle Estrella 555, Lima', 'Cerca del Aeropuerto', NULL, '11.1111, -66.6666', '2024-11-01', '2024-11-01', 'Contrato: Servicio especial por volumen, 12 meses');
-
-
-INSERT INTO tb_contactabilidad (id_persona, id_empresa, id_paquete, fecha_hora_contacto, direccion_servicio, nota, iduser_create) VALUES
-(20, NULL, 1, '2024-01-10 14:30:00', 'Av. San Martín 500, Chincha Alta', 'Se realizó la instalación del servicio.', 1),
-(NULL, 21, 2, '2024-01-12 10:15:00', 'Calle Ayacucho 345, Chincha Alta', 'Cliente solicitó soporte técnico.', 1),
-(22, NULL, 3, '2024-01-14 11:45:00', 'Calle Grau 125, Chincha Alta', 'Se acordó la renovación del contrato.', 1),
-(NULL, 23, 4, '2024-01-16 13:00:00', 'Av. Benavides 567, Chincha Alta', 'Se envió la propuesta de nuevos servicios.', 1),
-(24, NULL, 5, '2024-01-18 09:30:00', 'Calle Libertad 890, Chincha Alta', 'Cliente solicitó información adicional.', 1),
-(NULL, 25, 6, '2024-01-20 12:00:00', 'Jirón Pisco 300, Chincha Alta', 'Se confirmó la fecha de instalación.', 1),
-(26, NULL, 7, '2024-01-22 14:45:00', 'Av. América 444, Chincha Alta', 'Se realizó el seguimiento al cliente.', 1),
-(NULL, 27, 8, '2024-01-24 10:00:00', 'Calle Bolognesi 678, Chincha Alta', 'Cliente solicitó una ampliación del servicio.', 1),
-(28, NULL, 9, '2024-01-26 16:15:00', 'Av. Progreso 234, Chincha Alta', 'Se completó la instalación del servicio adicional.', 1),
-(NULL, 29, 10, '2024-01-28 11:30:00', 'Calle Comercio 123, Chincha Alta', 'Cliente confirmó su satisfacción con el servicio.', 1),
-(30, NULL, 11, '2024-01-30 15:00:00', 'Av. Victoria 876, Chincha Alta', 'Se acordó una visita técnica para revisar el servicio.', 1),
-(NULL, 31, 12, '2024-02-01 09:45:00', 'Calle Callao 789, Chincha Alta', 'Cliente solicitó una mejora en el plan contratado.', 1),
-(32, NULL, 13, '2024-02-03 13:15:00', 'Jirón Lima 321, Chincha Alta', 'Se finalizó la modificación solicitada.', 1),
-(NULL, 33, 14, '2024-02-05 16:00:00', 'Calle Loreto 654, Chincha Alta', 'Se discutió la posibilidad de un nuevo contrato.', 1),
-(34, NULL, 15, '2024-02-07 11:45:00', 'Av. Mariscal Castilla 555, Chincha Alta', 'Se realizó una revisión técnica.', 1),
-(NULL, 35, 16, '2024-02-09 14:30:00', 'Calle Zepita 412, Chincha Alta', 'Cliente aceptó el nuevo contrato propuesto.', 1),
-(36, NULL, 17, '2024-02-11 12:15:00', 'Jirón Túpac Amaru 876, Chincha Alta', 'Se confirmó el pago del nuevo contrato.', 1),
-(NULL, 37, 18, '2024-02-13 09:30:00', 'Calle Junín 210, Chincha Alta', 'Se discutió un posible cambio en los términos del contrato.', 1),
-(38, NULL, 19, '2024-02-15 15:45:00', 'Av. Nicolás de Piérola 654, Chincha Alta', 'Cliente solicitó una visita técnica adicional.', 1),
-(NULL, 39, 20, '2024-02-17 13:00:00', 'Calle Sucre 444, Chincha Alta', 'Se realizó el mantenimiento solicitado.', 1),
-(40, NULL, 21, '2024-02-19 10:30:00', 'Av. Arica 765, Chincha Alta', 'Se acordó una renovación del plan actual.', 1);
 
 INSERT INTO tb_base (nombre_base, iduser_create) VALUES
 ('Chincha', 1),
