@@ -624,7 +624,8 @@ window.addEventListener("DOMContentLoaded", async () => {
     if (
       nroDoc.value == "" ||
       nombre.value == "" ||
-      precio.value == "" ||
+      precio.value == "" || 
+      precio.value == 0 ||
       direccion.value == "" ||
       sector.value == "" ||
       referencia.value == "" ||
@@ -767,7 +768,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     const slcTipoServicio = document.querySelector("#slcTipoServicio");
     if (slcTipoServicio.value == "2") {
       await cargarCaracteristicasMapa(false, false, true);
-    }else{
+    } else {
       await cargarCaracteristicasMapa(true, true, false);
     }
   });
@@ -796,18 +797,29 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  async function  cargarCaracteristicasMapa(caja, mufa, antena)  {
+  async function cargarCaracteristicasMapa(caja, mufa, antena) {
     const params = { cajas: caja, mufas: mufa, antena: antena };
     const id = "map"
     const renderizado = "modal"
     mapa.iniciarMapa(params, id, renderizado);
   }
+  
+$("#slcTipoServicio").on("change", function () {
+    const txtPrecio = $("#txtPrecio");
+    const divSector = $("#divSector");
 
-  document.querySelector("#slcTipoServicio").addEventListener("change", function () {
-    const idServicio = this.value;
-    const btnBuscarCoordenada = document.querySelector("#btnBuscarCoordenadas");
-    const sector = document.querySelector("#slcSector");
-  });
+    txtPrecio.prop("disabled", false);
+    txtPrecio.val("");
+    txtPrecio.prop("disabled", true);
+    
+    if ($(this).val() === "2") {
+        divSector.attr("hidden", true);
+    } else {
+        divSector.removeAttr("hidden");
+        divSector.trigger("change");
+    }
+});
+
 
 
   ListarPaquetes.cargarServiciosGenerico("#slcTipoServicio", () => ListarPaquetes.cargarSelectPaquetesGenerico("#slcTipoServicio", "#slcPaquetes"));

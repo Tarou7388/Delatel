@@ -616,8 +616,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     try {
-      const respuesta = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarraSintonizador&codigoBarra=${encodeURIComponent(codigoBarra)}`);
+      const respuesta = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarraSintonizador&codigoBarra=${codigoBarra}`);
       const resultado = await respuesta.json();
+
+      console.log('Resultado:', resultado);
 
       if (Array.isArray(resultado) && resultado.length > 0) {
         const producto = resultado[0];

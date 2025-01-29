@@ -215,7 +215,7 @@
         <div class="row">
 
           <div class="col-12 col-md-4 mb-2 mt-2">
-            <div class="form-floating">
+            <div class="form-floating" id="divSector">
               <select class="form-select select2me" id="slcSector" aria-label=Sectores disabled>
                 <option value="0" disabled selected>Seleccione</option>
               </select>
