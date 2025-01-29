@@ -258,6 +258,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       showToast(data.error.message, "ERROR");
     } else {
       showToast("Registrado Correctamente", "SUCCESS");
+      lineaCableGuardar = [];
     }
   }
 
@@ -411,6 +412,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
     CablePrincipal = lineasCables[0];
     CablePrincipal.addListener('click', async (e) => {
+      lineaCableGuardar = [];
+      lineaPrincipal = [];
       if (lineaPrincipalAgregando) {
         blooquearbotones(true, false, true, true, true, true, true, true, true);
       }
@@ -689,27 +692,56 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   document.querySelector("#btnActualizarPrincipal").addEventListener("click", async () => {
     if (await ask("¿Desea guardar la linea principal?")) {
-      const coordenadasEnviar3 = [];
-      if (CablePrincipalGuardar == "inicio") {
-        lineaCableGuardar.forEach(item => {
-          coordenadasEnviar3.push(item);
-        });
-        lineaPrincipal.forEach(item => {
-          coordenadasEnviar3.push(item);
-        });
-      } else if (CablePrincipalGuardar == "fin") {
-        lineaPrincipal.forEach(item => {
-          coordenadasEnviar3.push(item);
-        });
-        lineaCableGuardar.forEach(item => {
-          coordenadasEnviar3.push(item);
-        });
+      let coordenadasEnviar4 = [];
+      
+      // Limpiar cualquier coordenada duplicada antes de procesar
+      lineaCableGuardar = Array.from(new Set(lineaCableGuardar.map(JSON.stringify))).map(JSON.parse);
+      lineaPrincipal = Array.from(new Set(lineaPrincipal.map(JSON.stringify))).map(JSON.parse);
+      
+      if (CablePrincipalGuardar === "inicio") {
+        // Si estamos agregando al inicio, primero van las nuevas coordenadas
+        coordenadasEnviar4 = [
+          ...lineaCableGuardar,
+          ...lineaPrincipal.filter(coord => 
+            !lineaCableGuardar.some(existing => 
+              existing.lat === coord.lat && existing.lng === coord.lng
+            )
+          )
+        ];
+      } else if (CablePrincipalGuardar === "fin") {
+        // Si estamos agregando al final, primero va la línea principal existente
+        coordenadasEnviar4 = [
+          ...lineaPrincipal,
+          ...lineaCableGuardar.filter(coord => 
+            !lineaPrincipal.some(existing => 
+              existing.lat === coord.lat && existing.lng === coord.lng
+            )
+          )
+        ];
       }
-      await agregarLineasPrincipal(coordenadasEnviar3);
-      showToast("Linea principal guardada", "SUCCESS");
-      lineaPrincipalAgregando = false;
-    };
-  });
+
+      if (coordenadasEnviar4.length > 0) {
+        await agregarLineasPrincipal(coordenadasEnviar4);
+        
+        // Limpiar las variables después de guardar
+        lineaCableGuardar = [];
+        lineaPrincipal = [];
+        coordenadasEnviar4 = [];
+        
+        showToast("Linea principal guardada", "SUCCESS");
+        lineaPrincipalAgregando = true;
+        CablePrincipalGuardar = "";
+        
+        // Actualizar la visualización del mapa
+        lineasCables.forEach(linea => {
+          linea.setMap(null);
+        });
+        await eventoCables();
+      } else {
+        showToast("No hay coordenadas para guardar", "ERROR");
+      }
+    }
+});
 
   document.querySelector("#btnEliminarCaja").addEventListener("click", async () => {
     const response = await fetch(`${config.HOST}app/controllers/Caja.controllers.php?operacion=cajaUso&idCaja=${idCajaRegistro}`);

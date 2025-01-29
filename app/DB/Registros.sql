@@ -1,3 +1,4 @@
+-- SQLBook: Code
 USE Delatel;
 
 
@@ -283,11 +284,186 @@ INSERT INTO tb_usuarios (id_persona, nombre_user, pass, iduser_create) VALUES
 (5, 'Tsaravia', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1);
 
 INSERT INTO tb_roles (rol, permisos, iduser_create) VALUES
-('Administrador', '{"actividad":"Mapa", "administracion":{"leer":true,"crear":true,"actualizar":true,"eliminar":true}, "soporte":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"contratos":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"inventariado":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"personas":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"roles":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"usuarios":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"reportes":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"paquetes":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"ticket":{"leer":true,"crear":true,"actualizar":true,"eliminar":true}}', 1),
-('Tecnico Oficina', '{"actividad":"Soporte", "administracion":{},"soporte":false,"contratos":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"inventariado":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"personas":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"roles":false,"usuarios":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"paquetes":false, "ticket":false}', 1),
-('Oficina', '{"actividad":"Contratos", "administracion":{},"soporte":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"contratos":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"inventariado":false,"personas":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"roles":false,"usuarios":false,"paquetes":false, "ticket":false}', 1),
-('Tecnico Campo', '{"actividad":"Fichas", "administracion":{},"soporte":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"contratos":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"inventariado":false,"personas":false,"roles":false,"usuarios":false,"paquetes":false, "ticket":false}', 1),
-('Almacen - Tecnico', '{"actividad":"Kardex", "administracion":{},"soporte":false,"contratos":false,"inventariado":{"leer":true,"crear":true,"actualizar":true,"eliminar":true},"personas":false,"roles":false,"usuarios":false,"paquetes":false, "ticket":false}', 1);
+('Administrador', '{
+  "actividad": "Mapa",
+  "administracion": {
+    "leer": true,
+    "crear": true,
+    "actualizar": true,
+    "eliminar": true
+  },
+  "contratos": {
+    "leer": true,
+    "crear": true,
+    "actualizar": true,
+    "eliminar": true
+  },
+  "inventariado": {
+    "leer": true,
+    "crear": true,
+    "actualizar": true,
+    "eliminar": true
+  },
+  "personas": {
+    "leer": true,
+    "crear": true,
+    "actualizar": true,
+    "eliminar": true
+  },
+  "ticket": {
+    "leer": true,
+    "crear": true,
+    "actualizar": true,
+    "eliminar": true
+  },
+  "roles": {
+    "leer": true,
+    "crear": true,
+    "actualizar": true,
+    "eliminar": true
+  },
+  "soporte": {
+    "leer": true,
+    "crear": true,
+    "actualizar": true,
+    "eliminar": true
+  },
+  "usuarios": {
+    "leer": true,
+    "crear": true,
+    "actualizar": true,
+    "eliminar": true
+  },
+  "reportes": {
+    "leer": true,
+    "crear": true,
+    "actualizar": true,
+    "eliminar": true
+  },
+  "paquetes": {
+    "leer": true,
+    "crear": true,
+    "actualizar": true,
+    "eliminar": true
+  }
+}', 1),
+('Tecnico Oficina', '{
+  "actividad": "Soporte",
+  "administracion": {},
+  "contratos": {
+    "leer": true,
+    "crear": true,
+    "actualizar": true,
+    "eliminar": true
+  },
+  "inventariado": {
+    "leer": true,
+    "crear": true,
+    "actualizar": true,
+    "eliminar": true
+  },
+  "personas": {
+    "leer": true,
+    "crear": true,
+    "actualizar": true,
+    "eliminar": true
+  },
+  "ticket": {},
+  "roles": {},
+  "soporte": {},
+  "usuarios": {
+    "leer": true,
+    "crear": true,
+    "actualizar": true,
+    "eliminar": true
+  },
+  "reportes": {
+    "leer": true,
+    "crear": true,
+    "actualizar": true,
+    "eliminar": true
+  },
+  "paquetes": {}
+}', 1),
+('Oficina', '{
+  "actividad": "Contratos",
+  "administracion": {},
+  "contratos": {
+    "leer": true,
+    "crear": true,
+    "actualizar": true,
+    "eliminar": true
+  },
+  "inventariado": {},
+  "personas": {
+    "leer": true,
+    "crear": true,
+    "actualizar": true,
+    "eliminar": true
+  },
+  "ticket": {},
+  "roles": {},
+  "soporte": {
+    "leer": true,
+    "crear": true,
+    "actualizar": true,
+    "eliminar": true
+  },
+  "usuarios": {},
+  "reportes": {
+    "leer": true,
+    "crear": true,
+    "actualizar": true,
+    "eliminar": true
+  },
+  "paquetes": {}
+}', 1),
+('Tecnico Campo', '{
+  "actividad": "Fichas",
+  "administracion": {},
+  "contratos": {
+    "leer": true,
+    "crear": true,
+    "actualizar": true,
+    "eliminar": true
+  },
+  "inventariado": {},
+  "personas": {},
+  "ticket": {},
+  "roles": {},
+  "soporte": {
+    "leer": true,
+    "crear": true,
+    "actualizar": true,
+    "eliminar": true
+  },
+  "usuarios": {},
+  "reportes": {
+    "leer": true,
+    "crear": true,
+    "actualizar": true,
+    "eliminar": true
+  },
+  "paquetes": {}
+}', 1),
+('Almacen - Tecnico', '{
+  "actividad": "Kardex",
+  "administracion": {},
+  "contratos": {},
+  "inventariado": {
+    "leer": true,
+    "crear": true,
+    "actualizar": true,
+    "eliminar": true
+  },
+  "personas": {},
+  "ticket": {},
+  "roles": {},
+  "soporte": {},
+  "usuarios": {},
+  "reportes": {},
+  "paquetes": {}
+}', 1);
 
 
 INSERT INTO tb_lineas(coordenadas, iduser_create) VALUES 
