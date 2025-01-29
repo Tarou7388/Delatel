@@ -5,11 +5,11 @@ document.addEventListener("DOMContentLoaded", () => {
     serverSide: true,
     ajax: `${config.HOST}app/controllers/Clientes.ssp.php`,
     columns: [
-      { data: 0, className: "text-center" }, 
-      { data: 1, className: "text-center" }, 
-      { data: 2, className: "text-center" }, 
-      { data: 3, className: "text-center" }, 
-      { data: 4, className: "text-center" }  
+      { data: 0, className: "text-center", visible: false },
+      { data: 1, className: "text-center" },
+      { data: 2, className: "text-center" },
+      { data: 3, className: "text-center" },
+      { data: 4, className: "text-center" }
     ],
     paging: true,
     lengthChange: false,
