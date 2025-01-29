@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     params.append("operacion", "registrarProducto");
     params.append("idmarca", slcMarca.value);
     params.append("idtipoProducto", tipoProducto.value);
-    params.append("idUnidad", tipoProducto.value);
+    params.append("idUnidad", slcUnidadMedida.value);
     params.append("modelo", Modelo.value);
     params.append("precioActual", precioActual.value);
     params.append("codigoBarra", CodigoBarras.value);
