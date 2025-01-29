@@ -45,6 +45,14 @@ if (isset($_GET['operacion'])) {
 			$resultado = $producto->BuscarProductoBarra(["codigoBarra" => Herramientas::sanitizarEntrada($_GET['codigoBarra'])]);
 			echo json_encode($resultado);
 			break;
+		case "buscarProductoBarraSintonizador":
+			$resultado = $producto->BuscarProductoBarraSintonizador(["codigoBarra" => Herramientas::sanitizarEntrada($_GET['codigoBarra'])]);
+			echo json_encode($resultado);
+			break;
+		case "buscarProductoBarraRepetidor":
+			$resultado = $producto->BuscarProductoBarraRepetidor(["codigoBarra" => Herramientas::sanitizarEntrada($_GET['codigoBarra'])]);
+			echo json_encode($resultado);
+			break;
 	}
 }
 

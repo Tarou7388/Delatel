@@ -148,4 +148,18 @@ class Producto extends Conexion
 				return $this->consultaParametros($sql, $values);
 		}
 
+		public function BuscarProductoBarraSintonizador($params = [])
+		{
+				$sql = "CALL	spu_productos_buscar_barraSintonizador(?)";
+				$values = array($params['codigoBarra']);
+				return $this->consultaParametros($sql, $values);
+		}
+    
+		public function BuscarProductoBarraRepetidor($params = [])
+		{
+				$sql = "CALL	spu_productos_buscar_barraRepetidor(?)";
+				$values = array($params['codigoBarra']);
+				return $this->consultaParametros($sql, $values);
+		}
+
 }
