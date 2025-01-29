@@ -689,23 +689,23 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   document.querySelector("#btnActualizarPrincipal").addEventListener("click", async () => {
     if (await ask("¿Desea guardar la linea principal?")) {
-      const coordenadasEnviar = [];
+      const coordenadasEnviar3 = [];
       if (CablePrincipalGuardar == "inicio") {
         lineaCableGuardar.forEach(item => {
-          coordenadasEnviar.push(item);
+          coordenadasEnviar3.push(item);
         });
         lineaPrincipal.forEach(item => {
-          coordenadasEnviar.push(item);
+          coordenadasEnviar3.push(item);
         });
       } else if (CablePrincipalGuardar == "fin") {
         lineaPrincipal.forEach(item => {
-          coordenadasEnviar.push(item);
+          coordenadasEnviar3.push(item);
         });
         lineaCableGuardar.forEach(item => {
-          coordenadasEnviar.push(item);
+          coordenadasEnviar3.push(item);
         });
       }
-      await agregarLineasPrincipal(coordenadasEnviar);
+      await agregarLineasPrincipal(coordenadasEnviar3);
       showToast("Linea principal guardada", "SUCCESS");
       lineaPrincipalAgregando = false;
     };

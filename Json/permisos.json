@@ -1,6 +1,6 @@
 {
   "actividad": "",
-  "soporte": {
+  "administracion": {
 
   },
   "contratos": {
@@ -9,20 +9,23 @@
   "inventariado": {
 
   },
-  "productos":{
-
-  },
   "personas": {
 
   },
-  "roles": {
+  "ticket":{
+
+  },
+  "roles":{
+
+  },
+  "soporte":{
 
   },
   "usuarios":{
 
   },
-  "averias":{
-    
+  "reportes":{
+
   },
   "paquetes":{
 

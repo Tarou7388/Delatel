@@ -35,8 +35,7 @@ function obtenerAccesosFiltrados($permissions)
 		["ruta" => "Soporte", "texto" => "Soporte", "icono" => "fa-solid fa-wrench", "rutasAnexas" => ["registroSoporte", "SoporteEscritorio", "listarSoporte", "SoporteCABL", "SoporteFIBR", "SoporteWISP"]],
 		["ruta" => 'Usuarios', "texto" => "Usuarios", "icono" => "fa-solid fa-users", "rutasAnexas" => ["registrar"]],
 		["ruta" => 'Reportes', "texto" => "Reportes", "icono" => "fa-solid fa-wrench", "rutasAnexas" => ["tablaContrato", "listarReporte"]],
-		["ruta" => 'Paquetes', "texto" => "Paquetes", "icono" => "fa-solid fa-box-open"],
-		["ruta" => "Almacen", "texto" => "Almacen", "icono" => "fa-solid fa-warehouse"]
+		["ruta" => 'Paquetes', "texto" => "Paquetes", "icono" => "fa-solid fa-box-open"]
 	];
 
 	$accesosFiltrados = [
