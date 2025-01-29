@@ -15,9 +15,19 @@ FROM
     tb_clientes c
 LEFT JOIN tb_personas p ON c.id_persona = p.id_persona AND p.inactive_at IS NULL
 LEFT JOIN tb_empresas e ON c.id_empresa = e.id_empresa AND e.inactive_at IS NULL
+LEFT JOIN tb_contratos ct ON c.id_cliente = ct.id_cliente AND ct.inactive_at IS NULL
 WHERE
-    c.inactive_at IS NULL;
-
+    c.inactive_at IS NULL
+    AND ct.ficha_instalacion IS NOT NULL
+GROUP BY
+    c.id_cliente,
+    nombre_cliente,
+    codigo_cliente,
+    email_cliente,
+    telefono_cliente,
+    direccion_cliente,
+    referencia_cliente,
+    coordenadas_cliente;
 DELIMITER $$
 
 DROP PROCEDURE IF EXISTS spu_clientes_registrar$$

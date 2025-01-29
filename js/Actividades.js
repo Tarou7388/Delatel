@@ -113,30 +113,26 @@ window.addEventListener("DOMContentLoaded", async function () {
         }
 
         const row = `
-        <td class="soporte-row" data-id_soporte="${soporte.id_soporte}" data-coordenada="${soporte.coordenada}" data-nrodocumento="${soporte.nrodocumento}" data-tipo_servicio="${soporte.tipo_servicio}">
-            <td class="text-center">${soporte.id_soporte}</td>
-            <td class="text-center">${soporte.nombre_cliente}</td>
-            <td class="text-center d-none d-md-table-cell" data-descripcion="Servicio">${soporte.tipo_servicio}</td>
-            <td class="text-center d-none d-md-table-cell" data-descripcion="Fecha">${soporte.fecha_creacion}</td>
-            <td class="text-center d-none d-md-table-cell" data-descripcion="N° Teléfono">${soporte.telefono}</td>
-            <td class="text-center d-none d-md-table-cell" data-descripcion="Problema">${soporte.descripcion_problema}</td>
-            <td class="${rowClass} text-center">${soporte.prioridad}</td>
-            <td class="text-center">
-                <div class="d-flex justify-content-center">
-                    <button class="btnMapa btn btn-dark me-2" data-id="${soporte.id_soporte}" data-tipo="soporte" data-bs-toggle="modal" data-bs-target="#ModalMapa" style="font-size: 1rem; padding: 0.375rem 0.75rem;">
-                        <i class="fa-solid fa-location-dot"></i>
-                    </button>
-                    <button type="button" class="btn btn-primary atender-soporte" style="font-size: 1rem; padding: 0.375rem 0.75rem;">
-                        <i class="fa-solid fa-pen"></i>
-                    </button>
-                </div>
-                    </td>
-                    </td>
-                    <td class="${rowClass} text-center">${soporte.prioridad}</td>
-            </td>
-                    <td class="${rowClass} text-center">${soporte.prioridad}</td>
-        </tr>
-    `;
+            <tr class="soporte-row" data-id_soporte="${soporte.id_soporte}" data-coordenada="${soporte.coordenada}" data-nrodocumento="${soporte.nrodocumento}" data-tipo_servicio="${soporte.tipo_servicio}">
+                <td class="text-center">${soporte.id_soporte}</td>
+                <td class="text-center">${soporte.nombre_cliente}</td>
+                <td class="text-center d-none d-md-table-cell" data-descripcion="Servicio">${soporte.tipo_servicio}</td>
+                <td class="text-center d-none d-md-table-cell" data-descripcion="Fecha">${soporte.fecha_creacion}</td>
+                <td class="text-center d-none d-md-table-cell" data-descripcion="N° Teléfono">${soporte.telefono}</td>
+                <td class="text-center d-none d-md-table-cell" data-descripcion="Problema">${soporte.descripcion_problema}</td>
+                <td class="${rowClass} text-center">${soporte.prioridad}</td>
+                <td class="text-center">
+                    <div class="d-flex justify-content-center">
+                        <button class="btnMapa btn btn-dark me-2" data-id="${soporte.id_soporte}" data-tipo="soporte" data-bs-toggle="modal" data-bs-target="#ModalMapa" style="font-size: 1rem; padding: 0.375rem 0.75rem;">
+                            <i class="fa-solid fa-location-dot"></i>
+                        </button>
+                        <button type="button" class="btn btn-primary atender-soporte" style="font-size: 1rem; padding: 0.375rem 0.75rem;">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            `;
         tbodySoporte.innerHTML += row;
       });
 

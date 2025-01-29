@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         <td>${contrato.paquete}</td>
         <td>${contrato.direccion_servicio}</td>
         <td>${contrato.fecha_inicio}</td>
-        <td>${contrato.fecha_fin}</td>
+        <td>${contrato.fecha_fin ? contrato.fecha_fin : "Sin Fecha Fin"}</td>
         <td>
           <button class="btn btn-primary btn-averias" data-id="${contrato.id_contrato}">Averías</button>
         </td>
