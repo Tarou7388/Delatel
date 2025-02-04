@@ -86,11 +86,9 @@ Antes de comenzar, asegúrate de tener los siguientes requisitos instalados en t
       1. Registra incorrectamente al cliente
       2. No registra una empresa
    ## 6. Roles
-      ### Avances
-      1. 
-      ### Faltas
-      1. Registrar un rol
-      2. Editar los permisos
+      1. Registrar un Rol
+      2. Actualizar un Rol
+      3.
    ## Datos adicionales
    * Falta implementar el mapa
    * Falta implementar los permisos en el login 

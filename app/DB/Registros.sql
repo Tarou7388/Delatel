@@ -167,12 +167,11 @@ INSERT INTO tb_tipooperacion (descripcion, movimiento) VALUES
 ('Despacho de equipos', 'S');
 
 INSERT INTO tb_usuarios (id_persona, nombre_user, pass, iduser_create) VALUES
-(1, 'Lgarcia', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1), -- 123456
+(1, 'JoseIvan', '$2y$10$jK9ALyQ6CabQCH1U3PqajeqCJQrVflPVEAl0GIU1OLJpp9GsKXCEG', 1),
 (2, 'Mramos', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
 (3, 'Mtasayco', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
 (4, 'Dpeñaloza', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
-(5, 'Tsaravia', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
-(6, 'JoseIvan','$2y$10$jK9ALyQ6CabQCH1U3PqajeqCJQrVflPVEAl0GIU1OLJpp9GsKXCEG',1);
+(5, 'Tsaravia', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1);
 
 INSERT INTO tb_roles (rol, permisos, iduser_create) VALUES
 ('Administrador', '{
