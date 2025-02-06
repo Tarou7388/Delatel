@@ -41,11 +41,15 @@ window.addEventListener("DOMContentLoaded", async function () {
 
   async function cargarMapa() {
     contenido.innerHTML = `
-    <div id="mapPagina" style="height: 700px;"></div>
+      <div class="input-group mb-3" id="inputGroupCoordenada">
+        <input type="text" id="CoordenadaModel" class="form-control" placeholder="Coordenada" aria-label="Coordenada">
+        <button class="btn btn-outline-secondary" type="button" id="buscarBtn">Buscar</button>
+      </div>
+      <div id="mapPagina" style="height: 700px;"></div>
     `;
     const params = { cajas: true, mufas: true, antena: true };
-    const id = "mapPagina"
-    const renderizado = "pagina"
+    const id = "mapPagina";
+    const renderizado = "pagina";
     await mapa.iniciarMapa(params, id, renderizado);
   }
 

@@ -77,7 +77,7 @@
   </div>
 </div>
 
-<div class="container-fluid px-4">
+<div class="container-fluid">
   <h1 class="mt-4">Actividades</h1>
 
   <ol class="breadcrumb mb-4">
