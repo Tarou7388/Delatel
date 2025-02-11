@@ -257,6 +257,9 @@ document.addEventListener("DOMContentLoaded", async function () {
     const direccion = txtDireccion.value;
     const referencia = txtReferencia.value;
     const coordenadas = txtcoordenadasPersona.value;
+
+    idCaja = mapa.idCaja;
+
     const fecha = new Date();
     fecha.setDate(fecha.getDate() + 14);
     const datos = {
@@ -277,9 +280,10 @@ document.addEventListener("DOMContentLoaded", async function () {
     if (data.guardado) {
       await showToast("Persona registrada correctamente", "SUCCESS", 650);
       setTimeout(async () => {
+        idCaja = mapa.idCaja;
         frmPersonas.reset();
         if (await ask("¿Desea registrar un contrato?")) {
-          window.location.href = `${config.HOST}views/Contratos?nroDoc=${dniActual}&idObjeto=${idPersona}&Servicio=${Servicio}&Paquete=${Paquete}&referencia=${referencia}&coordenadas=${coordenadas}&direccion=${direccion}`;
+          window.location.href = `${config.HOST}views/Contratos?nroDoc=${dniActual}&idObjeto=${idPersona}&Servicio=${Servicio}&Paquete=${Paquete}&referencia=${referencia}&coordenadas=${coordenadas}&direccion=${direccion}&idCaja=${idCaja}&idSector=${idSector}`;
         }
       }, 650);
     }
@@ -405,7 +409,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   });
 
   document.querySelector("#txtCoordenadasPersona").addEventListener("input", async () => {
-    idSector = mapa.idSector;
     idCaja = mapa.idCaja;
   });
 });

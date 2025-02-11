@@ -9,25 +9,14 @@ SELECT
     p.id_persona,
     p.tipo_doc,
     p.nro_doc,
-    p.apellidos,
-    p.nombres,
+    CONCAT(p.apellidos, ' ,', p.nombres) as Nombre_Completo,
     p.telefono,
     p.nacionalidad,
     p.email,
-    p.create_at,
-    p.update_at,
-    p.inactive_at,
-    p.iduser_create,
-    u1.nombre_user AS usuario_creador,
-    p.iduser_update,
-    u2.nombre_user AS usuario_modificador,
-    p.iduser_inactive,
-    u3.nombre_user AS usuario_inactivador
+    ct.direccion_servicio as direccion_contacto
 FROM
     tb_personas p
-    LEFT JOIN tb_usuarios u1 ON p.iduser_create = u1.id_usuario
-    LEFT JOIN tb_usuarios u2 ON p.iduser_update = u2.id_usuario
-    LEFT JOIN tb_usuarios u3 ON p.iduser_inactive = u3.id_usuario;
+    LEFT JOIN tb_contactabilidad ct ON p.id_persona = ct.id_persona;
 
 DROP PROCEDURE IF EXISTS spu_personas_registrar$$
 CREATE PROCEDURE spu_personas_registrar(
@@ -42,7 +31,7 @@ CREATE PROCEDURE spu_personas_registrar(
 )
 BEGIN
     INSERT INTO tb_personas (tipo_doc, nro_doc, apellidos, nombres, telefono, nacionalidad, email, iduser_create) 
-    VALUES (p_tipo_doc, p_nro_doc, p_apellidos, p_nombres, p_telefono, p_nacionalidad, p_email, p_iduser_create);
+    VALUES (p_tipo_doc, p_nro_doc, p_apellidos, p_nombres, p_telefono, p_nacionalidad, NULLIF(p_email,''), p_iduser_create);
 
     SELECT LAST_INSERT_ID() AS id_persona;
 END $$
