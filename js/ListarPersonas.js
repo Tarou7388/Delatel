@@ -9,6 +9,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   const userid = login.idUsuario;
   const ruta = `${config.HOST}app/controllers/Persona.ssp.php`;
 
+  const txtNombresActualizar = document.querySelector("txtNombresActualizar");
+  const txtApellidosActualizar = document.querySelector("txtApellidosActualizar");
+  const txtDireccionActualizar = document.querySelector("txtDireccionActualizar");
+  const CoordenadaModel = document.querySelector("CoordenadaModel");
+  const txtTelefono = document.querySelector("txtTelefono");
+  const txtCorreoElectronico = document.querySelector("txtCorreoElectronico");
+  const txtCorreoComplemento = document.querySelector("txtCorreoComplemento");
+
   window.tablaProductos = $("#TbPersonas").DataTable({
     dom: `
       <"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6 text-end"f>>

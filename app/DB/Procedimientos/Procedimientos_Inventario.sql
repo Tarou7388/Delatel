@@ -184,3 +184,25 @@ BEGIN
     AND
         p.inactive_at IS NULL AND t.tipo_nombre = 'Repetidor';
 END $$
+DROP PROCEDURE IF EXISTS spu_productos_buscar_barraRouter$$
+
+CREATE PROCEDURE spu_productos_buscar_barraRouter(
+    IN p_codigo_barra VARCHAR(120)
+)
+BEGIN
+    SELECT
+        p.id_producto,
+        p.modelo,
+        p.precio_actual,
+        m.marca
+    FROM
+        tb_productos p
+    INNER JOIN
+        tb_marca m ON p.id_marca = m.id_marca
+    INNER JOIN 
+        tb_tipoproducto t ON p.id_tipo = t.id_tipo
+    WHERE
+        p.codigo_barra = p_codigo_barra
+    AND
+        p.inactive_at IS NULL AND t.tipo_nombre = 'Router';
+END $$
