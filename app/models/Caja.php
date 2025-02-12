@@ -41,11 +41,12 @@ class Caja extends Conexion
 
   public function registrarLinea($params = [])
   {
-    $sql = "CALL spu_lineas_registrar(?,?,?,?)";
+    $sql = "CALL spu_lineas_registrar(?,?,?,?,?)";
     $params = [
       $params['idMufa'],
       $params['idCaja'],
       $params['coordenadas'],
+      $params['tipoLinea'],
       $params['idUser']
     ];
     return $this->registrar($sql, $params);

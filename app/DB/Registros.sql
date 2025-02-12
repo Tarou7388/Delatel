@@ -357,18 +357,13 @@ INSERT INTO tb_roles (rol, permisos, iduser_create) VALUES
 }', 1);
 
 
-INSERT INTO tb_lineas(coordenadas, iduser_create) VALUES 
+INSERT INTO tb_lineas(coordenadas, tipo_linea, iduser_create) VALUES 
 ('[
-{ "lng": -76.15641392505843, "lat": -13.397719734585584 },
-{ "lng": -76.16154547830996, "lat": -13.410886698897501 },
-{ "lng": -76.14167574818575, "lat": -13.41583679233458 },
-{ "lng": -76.14083525733821, "lat": -13.41600924539936 },
-{ "lng": -76.13984845316173, "lat": -13.416401031545197 },
-{ "lng": -76.13867616029974, "lat": -13.412289403614626 },
-{ "lng": -76.13245952695715, "lat": -13.41515804681155 },
-{ "lng": -76.13089498449008, "lat": -13.40911096082754 },
-{ "lng": -76.12891921992468, "lat": -13.41029929944115 }
-]', 1);
+{ "lng": -76.17508995312564, "lat": -13.429970902608913 },
+{ "lng": -76.17201772401685, "lat": -13.42955462875151 }
+]', "P", 1);
+
+,
 
 INSERT INTO tb_responsables (id_usuario, id_rol,iduser_create) VALUES
 (1, 1,1),

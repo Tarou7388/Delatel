@@ -57,11 +57,12 @@ CREATE PROCEDURE spu_lineas_registrar(
   IN p_id_mufa INT,
   IN p_id_caja INT,
   IN p_coordenadas JSON,
+  IN p_tipo_linea CHAR(1),
   IN p_iduser_create INT
 )
 BEGIN
-  INSERT INTO tb_lineas(id_mufa, id_caja, coordenadas, iduser_create)
-  VALUES(p_id_mufa, p_id_caja, p_coordenadas, p_iduser_create);
+  INSERT INTO tb_lineas(id_mufa, id_caja, coordenadas, tipo_linea, iduser_create)
+  VALUES(p_id_mufa, p_id_caja, p_coordenadas, p_tipo_linea, p_iduser_create);
 END$$
 
 DROP PROCEDURE IF EXISTS spu_descontar_espacio_caja$$

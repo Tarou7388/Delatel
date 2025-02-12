@@ -42,10 +42,14 @@ if (isset($_POST['operacion'])) {
     case 'registrarLinea':
       $coordenadas = json_decode($_POST['coordenadas']);
       $coordenadas = json_encode($coordenadas);
+      if($_POST['idCaja'] == '') {
+        $_POST['idCaja'] = null;
+      }
       $params = [
         'idMufa' => $_POST['idMufa'],
         'idCaja' => $_POST['idCaja'],
         'coordenadas' => $coordenadas,
+        'tipoLinea' => $_POST['tipoLinea'],
         'idUser' => $_POST['idUsuario']
       ];
       $respuesta = $caja->registrarLinea($params);

@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   let Map, Circle, Polyline, AdvancedMarkerElement, mapa
 
   const accesos = await Herramientas.permisos();
+  console.log(accesos);
 
   let marcadorPrincipal = null;
   let Coordenadas = null;
@@ -36,10 +37,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   let lineaPrincipalAgregando = true;
   let banderaCable = false;
   let cablePrincipalInicio = true;
+  let banderaCableSecundario = false;
   let idSector = "";
   let login = await Herramientas.obtenerLogin();
   let idAntena = "";
-  const params = { cajas: true, mufas: true, cables: true, sectores: true , antenas: true};
+  const params = { cajas: true, mufas: true, cables: true, sectores: true, antenas: true };
 
   (async () => {
     await initMap(params);
@@ -48,9 +50,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const latLng = event.latLng.toJSON();
         Coordenadas = { lat: latLng.lat, lng: latLng.lng };
         idDistrito = item.idDistrito;
-        console.log(idDistrito);
         if (lineaPrincipalAgregando) {
-          blooquearbotones(false, true, false, false, true, true, true, true, true);
+          blooquearbotones(false, true, false, false, true, true, true, true, true, true);
         }
         marcadorPrincipalEvento(latLng)
 
@@ -59,6 +60,11 @@ document.addEventListener('DOMContentLoaded', async () => {
           marcarLineaCable(json);
         }
         if (CablePrincipalGuardar != "") {
+          const json = { lat: latLng.lat, lng: latLng.lng };
+          marcarLineaCable(json);
+        }
+        if (banderaCableSecundario) {
+          coordenadasCajaGuardada = true;
           const json = { lat: latLng.lat, lng: latLng.lng };
           marcarLineaCable(json);
         }
@@ -86,7 +92,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     return params;
   }
 
-  async function blooquearbotones(caja, mufa, sector, antena ,principal, eliminarCaja, eliminarmufa, eliminarsector, eliminarantena) {
+  async function blooquearbotones(caja, mufa, sector, antena, principal, eliminarCaja, eliminarmufa, eliminarsector, eliminarantena, agregarSecundario) {
     document.querySelector("#modalAgregarCaja").disabled = caja;
     document.querySelector("#modalAgregarMufa").disabled = mufa;
     document.querySelector("#modalAgregarSector").disabled = sector;
@@ -96,6 +102,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.querySelector("#btnEliminarMufa").disabled = eliminarmufa;
     document.querySelector("#btnEliminarSector").disabled = eliminarsector;
     document.querySelector("#btnEliminarAntena").disabled = eliminarantena;
+    document.querySelector("#btnAgregarFibra12").hidden = agregarSecundario;
   }
 
   async function updateMap() {
@@ -196,13 +203,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       const color = colors[index % colors.length];
 
       const poligono = new google.maps.Polygon({
-      paths: limites,
-      strokeColor: color.strokeColor,
-      strokeOpacity: 0.5,
-      strokeWeight: 2,
-      fillColor: color.fillColor,
-      fillOpacity: 0.5,
-      idDistrito: item.id_distrito
+        paths: limites,
+        strokeColor: color.strokeColor,
+        strokeOpacity: 0.5,
+        strokeWeight: 2,
+        fillColor: color.fillColor,
+        fillOpacity: 0.05,
+        idDistrito: item.id_distrito
       });
       poligono.setMap(mapa);
       limitesDistritos.push(poligono);
@@ -251,12 +258,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  async function agregarCable() {
+  async function agregarCable(tipoLinea) {
     let paramsEnviar = new FormData();
     paramsEnviar.append("operacion", "registrarLinea");
     paramsEnviar.append("idMufa", idMufaRegistro);
     paramsEnviar.append("idCaja", idCajaRegistro);
     paramsEnviar.append("coordenadas", JSON.stringify(lineaCableGuardar));
+    paramsEnviar.append("tipoLinea", tipoLinea);
     paramsEnviar.append("idUsuario", login.idUsuario);
 
     const response = await fetch(`${config.HOST}app/controllers/Caja.controllers.php?operacion=agregarLinea`, {
@@ -269,6 +277,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     } else {
       showToast("Registrado Correctamente", "SUCCESS");
       lineaCableGuardar = [];
+      coordenadasCajaGuardada = false;
     }
   }
 
@@ -327,7 +336,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     marcadoresCajas.forEach((marcador, index1) => {
       marcador.forEach((item, index2) => {
         item.addListener('click', async () => {
-          blooquearbotones(true, true, true, true, true, false, true, true, true);
+          blooquearbotones(true, true, true, true, true, false, true, true, true, true);
           idCajaRegistro = datosCajas[index1][index2].id_caja;
         });
       });
@@ -337,7 +346,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   async function agregarAntena() {
     const coordenadasEnviar = `${Coordenadas.lat},${Coordenadas.lng}`;
     const paramsEnviar = new FormData();
-    console.log(login.idUsuario);
     paramsEnviar.append("operacion", "registrarAntena");
     paramsEnviar.append("nombre", document.querySelector("#nombreAntena").value);
     paramsEnviar.append("descripcion", document.querySelector("#descripcionAntena").value);
@@ -350,7 +358,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       body: paramsEnviar
     });
     const data = await response.json();
-    console.log(data);
     if (data.error) {
       showToast(data.error.message, "ERROR");
     } else {
@@ -378,7 +385,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           if (await ask("¿Desea guardar la caja?")) {
             await agregarCaja();
             if (idCajaRegistro != "") {
-              await agregarCable();
+              await agregarCable("C");
             }
             line.setMap(null);
             idCajaRegistro = "";
@@ -393,12 +400,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
             eventoCables();
             lineaCableGuardar = [];
-            coordenadasCajaGuardada = false;
-            marcadorPrincipal.setMap(null);
           }
-        }else{
+        } else {
           idMufaRegistro = datos[i].id_mufa;
-          blooquearbotones(true, true, true, true, true, true, false, true, true);
+          blooquearbotones(true, true, true, true, true, true, false, true, true, false);
+          Coordenadas = datos[i].coordenadas;
         }
       });
     }
@@ -407,54 +413,81 @@ document.addEventListener('DOMContentLoaded', async () => {
   async function eventoCables() {
     const response = await fetch(`${config.HOST}app/controllers/Lineas.controllers.php?operacion=getLineas`);
     const data = await response.json();
-    data.forEach((linea, index) => {
-      const line = new google.maps.Polyline({
-        path: linea.coordenadas,
-        geodesic: true,
-        strokeColor: index === 0 ? "#227093" : "#cd6133",
-        strokeWeight: index === 0 ? 7 : 3
-      });
-      lineasCables.push(line);
-      line.setMap(mapa);
-    });
-    data[0].coordenadas.forEach(item => {
-      lineaPrincipal.push({ lat: item.lat, lng: item.lng });
-    });
-    CablePrincipal = lineasCables[0];
-    CablePrincipal.addListener('click', async (e) => {
-      lineaCableGuardar = [];
-      lineaPrincipal = [];
-      if (lineaPrincipalAgregando) {
-        blooquearbotones(true, false, true, true, true, true, true, true, true);
-      }
-      Coordenadas = `${e.latLng.lat()},${e.latLng.lng()}`;
-      marcadorPrincipalEvento(e.latLng.toJSON());
-    });
-    const puntos = [
-      { lat: CablePrincipal.getPath().getArray()[0].lat(), lng: CablePrincipal.getPath().getArray()[0].lng(), condicion: "inicio" },
-      { lat: CablePrincipal.getPath().getArray()[CablePrincipal.getPath().getArray().length - 1].lat(), lng: CablePrincipal.getPath().getArray()[CablePrincipal.getPath().getArray().length - 1].lng(), condicion: "fin" }
-    ];
-    puntos.forEach(async (punto, index) => {
+    const funcionMarcador = async (punto, condicion) => {
+      const cond = condicion;
       const img = document.createElement('img');
       img.src = `${config.HOST}image/cable.png`;
       const marcador = new AdvancedMarkerElement({
         position: { lat: punto.lat, lng: punto.lng },
         map: mapa,
-        title: "Principal",
+        title: "Punto",
         content: img,
       });
       marcador.addListener('click', () => {
         if (cablePrincipalInicio) {
-          CablePrincipalGuardar = punto.condicion;
+          CablePrincipalGuardar = cond;
           const { condicion, ...puntoSinCondicion } = punto;
           lineaCableGuardar.push(puntoSinCondicion);
           cablePrincipalInicio = false;
           showToast("Agregando linea principal", "INFO");
           lineaPrincipalAgregando = false;
           coordenadasCajaGuardada = true;
-          blooquearbotones(true, true, true, true, false, true, true, true, true);
+          blooquearbotones(true, true, true, true, false, true, true, true, true, true);
         }
       });
+    };
+    data.forEach(item => {
+      switch (item.tipo_linea) {
+        case "P":
+          lineaPrincipal = item.coordenadas;
+          const line = new google.maps.Polyline({
+            path: item.coordenadas,
+            geodesic: true,
+            strokeColor: "#2c3e50",
+            strokeWeight: 9
+          });
+          line.setMap(mapa);
+          line.addListener('click', async (e) => {
+            if (lineaPrincipalAgregando) {
+              blooquearbotones(true, false, true, true, true, true, true, true, true, true);
+            }
+            Coordenadas = `${e.latLng.lat()},${e.latLng.lng()}`;
+            marcadorPrincipalEvento(e.latLng.toJSON());
+          });
+          const puntoInicial1 = item.coordenadas[0];
+          const puntoFinal1 = item.coordenadas[item.coordenadas.length - 1];
+          funcionMarcador(puntoInicial1, "inicio");
+          funcionMarcador(puntoFinal1, "fin");
+          break;
+        case "S":
+          const line2 = new google.maps.Polyline({
+            path: item.coordenadas,
+            geodesic: true,
+            strokeColor: "#2980b9",
+            strokeWeight: 5
+          });
+          line2.setMap(mapa);
+          line2.addListener('click', async (e) => {
+            if (lineaPrincipalAgregando) {
+              blooquearbotones(true, false, true, true, true, true, true, true, true, true);
+            }
+            Coordenadas = `${e.latLng.lat()},${e.latLng.lng()}`;
+            marcadorPrincipalEvento(e.latLng.toJSON());
+          });
+          const puntoFinal2 = item.coordenadas[item.coordenadas.length - 1];
+          funcionMarcador(puntoFinal2, "fin");
+          break;
+        case "C":
+          const line3 = new google.maps.Polyline({
+            path: item.coordenadas,
+            geodesic: true,
+            strokeColor: "#e67e22",
+            strokeWeight: 3
+          });
+          line3.setMap(mapa);
+          const puntoFinal3 = item.coordenadas[item.coordenadas.length - 1];
+          break;
+      }
     });
   }
 
@@ -464,7 +497,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     marcadoresSectores.forEach((marcador, index) => {
       marcador.addListener('click', async (e) => {
         idSector = datosSectores[index].id_sector;
-        blooquearbotones(true, true, true, true, true, true, true, false, true);
+        blooquearbotones(true, true, true, true, true, true, true, false, true, true);
       });
     });
   }
@@ -476,7 +509,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       marcador.forEach((item, index2) => {
         item.addListener('click', async () => {
           idAntena = datosAntenas[index1][index2].id_antena;
-          blooquearbotones(true, true, true, true, true, true, true, true, false);
+          blooquearbotones(true, true, true, true, true, true, true, true, false, true);
         });
       });
     });
@@ -648,12 +681,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     direccionCaja = document.querySelector("#direccionCaja").value;
     coordenadasCaja = Coordenadas;
     const marcador = await buscarMarcadorCercano(datosSectores, coordenadasCaja);
-    if(marcador.marcador == null){
+    if (marcador.marcador == null) {
       showToast("No se encontro sector cercano", "ERROR");
       return;
-    }else if(marcador.distancia > 1000){
+    } else if (marcador.distancia > 1000) {
       showToast("El sector esta muy lejos", "INFO");
-    }else{
+    } else {
       showToast("Dibuje el cableado", "INFO");
       sectorCercano = marcador.marcador.id_sector;
       banderaCable = true;
@@ -703,27 +736,24 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.querySelector("#btnActualizarPrincipal").addEventListener("click", async () => {
     if (await ask("¿Desea guardar la linea principal?")) {
       let coordenadasEnviar4 = [];
-      
-      // Limpiar cualquier coordenada duplicada antes de procesar
+
       lineaCableGuardar = Array.from(new Set(lineaCableGuardar.map(JSON.stringify))).map(JSON.parse);
       lineaPrincipal = Array.from(new Set(lineaPrincipal.map(JSON.stringify))).map(JSON.parse);
-      
+
       if (CablePrincipalGuardar === "inicio") {
-        // Si estamos agregando al inicio, primero van las nuevas coordenadas
         coordenadasEnviar4 = [
-          ...lineaCableGuardar,
-          ...lineaPrincipal.filter(coord => 
-            !lineaCableGuardar.some(existing => 
+          ...lineaCableGuardar.reverse().filter(coord =>
+            !lineaPrincipal.some(existing =>
               existing.lat === coord.lat && existing.lng === coord.lng
             )
-          )
+          ),
+          ...lineaPrincipal
         ];
       } else if (CablePrincipalGuardar === "fin") {
-        // Si estamos agregando al final, primero va la línea principal existente
         coordenadasEnviar4 = [
           ...lineaPrincipal,
-          ...lineaCableGuardar.filter(coord => 
-            !lineaPrincipal.some(existing => 
+          ...lineaCableGuardar.filter(coord =>
+            !lineaPrincipal.some(existing =>
               existing.lat === coord.lat && existing.lng === coord.lng
             )
           )
@@ -732,21 +762,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       if (coordenadasEnviar4.length > 0) {
         await agregarLineasPrincipal(coordenadasEnviar4);
-        
+
         // Limpiar las variables después de guardar
         lineaCableGuardar = [];
         lineaPrincipal = [];
         coordenadasEnviar4 = [];
-        
+
         showToast("Linea principal guardada", "SUCCESS");
         lineaPrincipalAgregando = true;
         CablePrincipalGuardar = "";
-        
+
         // Limpiar todos los elementos del mapa
         lineasCables.forEach(linea => {
           linea.setMap(null);
         });
-        
+
         // Limpiar los marcadores existentes del cable principal
         const marcadores = document.querySelectorAll('img[src*="cable.png"]');
         marcadores.forEach(marcador => {
@@ -754,14 +784,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             marcador.parentElement.remove();
           }
         });
-        
+
         // Resetear arrays
         lineasCables = [];
         lineaPrincipal = [];
-        
+
         // Volver a cargar todo
         await eventoCables();
-        
+
         // Forzar la actualización del CablePrincipal y sus eventos
         CablePrincipal = lineasCables[0];
         if (CablePrincipal) {
@@ -779,21 +809,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         showToast("No hay coordenadas para guardar", "ERROR");
       }
     }
-});
+  });
 
   document.querySelector("#btnEliminarCaja").addEventListener("click", async () => {
     const response = await fetch(`${config.HOST}app/controllers/Caja.controllers.php?operacion=cajaUso&idCaja=${idCajaRegistro}`);
     const data = await response.json();
-    if(data[0].uso && data[0].uso == true){
+    if (data[0].uso && data[0].uso == true) {
       showToast("La caja esta en uso", "ERROR");
     }
-    else{
+    else {
       if (await ask("¿Desea eliminar la caja?")) {
         const datos = JSON.stringify({
           idCaja: idCajaRegistro,
           idUsuario: login.idUsuario,
           operacion: "eliminarCaja"
-         });
+        });
         const response = await fetch(`${config.HOST}app/controllers/Caja.controllers.php`, {
           method: "PUT",
           body: datos
@@ -822,16 +852,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.querySelector("#btnEliminarMufa").addEventListener("click", async () => {
     const response = await fetch(`${config.HOST}app/controllers/Mufas.controllers.php?operacion=mufaUso&idMufa=${idMufaRegistro}`);
     const data = await response.json();
-    if(data[0].uso && data[0].uso == true){
+    if (data[0].uso && data[0].uso == true) {
       showToast("La mufa esta en uso", "ERROR");
     }
-    else{
+    else {
       if (await ask("¿Desea eliminar la mufa?")) {
         const datos = JSON.stringify({
           idMufa: idMufaRegistro,
           idUsuario: login.idUsuario,
           operacion: "eliminarMufa"
-         });
+        });
         const response = await fetch(`${config.HOST}app/controllers/Mufas.controllers.php`, {
           method: "PUT",
           body: datos
@@ -856,7 +886,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         idAntena: idAntena,
         idUsuario: login.idUsuario,
         operacion: "inhabilitarAntena"
-       });
+      });
       const response = await fetch(`${config.HOST}app/controllers/Antenas.controllers.php`, {
         method: "PUT",
         body: datos
@@ -875,14 +905,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }
   });
-  
+
   document.querySelector("#btnEliminarSector").addEventListener("click", async () => {
     if (await ask("¿Desea desactivar el sector?")) {
       const datos = JSON.stringify({
         idSector: idSector,
         idUsuario: login.idUsuario,
         operacion: "desactivarSector"
-       });
+      });
       const response = await fetch(`${config.HOST}app/controllers/Sector.controllers.php`, {
         method: "PUT",
         body: datos
@@ -900,5 +930,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 
-});
+  document.querySelector("#btnAgregarFibra12").addEventListener("click", async () => {
+    document.querySelector("#btnAgregarFibra12").hidden = true;
+    document.querySelector("#btnAgregarFibra12Guardar").hidden = false;
+    banderaCableSecundario = true;
+    coordenadasCajaGuardada = false;
+    const arrayCoordenadas = Coordenadas.split(',').map(Number);
+    const json = { lat: arrayCoordenadas[0], lng: arrayCoordenadas[1] };
+    lineaCableGuardar.push(json);
+  });
 
+  document.querySelector("#btnAgregarFibra12Guardar").addEventListener("click", async () => {
+    if (await ask("¿Desea guardar la fibra?")) {
+      idCajaRegistro = '';
+      agregarCable("S");
+      document.querySelector("#btnAgregarFibra12Guardar").hidden = true;
+      banderaCableSecundario = false;
+    }
+  });
+});

@@ -53,6 +53,8 @@
       <button class="btn btn-success w-100 mb-2" id="modalAgregarMufa" data-bs-toggle="modal" data-bs-target="#modalAgregarMufa2" disabled>Mufa</button>
       <button class="btn btn-success w-100 mb-2" id="modalAgregarSector" data-bs-toggle="modal" data-bs-target="#modalAgregarSector2" disabled>Sector</button>
       <button class="btn btn-success w-100 mb-2" id="modalAgregarAntena" data-bs-toggle="modal" data-bs-target="#modalAgregarAntena2" disabled>Antena</button>
+      <button class="btn btn-warning w-100 mb-2" id="btnAgregarFibra12" hidden>Secundaria</button>
+      <button class="btn btn-success w-100 mb-2" id="btnAgregarFibra12Guardar" hidden>Guardar</button>
     </div>
   </div>
 

@@ -236,7 +236,7 @@ async function circulosAnidado(datos, color, distancia = 1000) {
         strokeOpacity: 0.8,
         strokeWeight: 2,
         fillColor: color,
-        fillOpacity: 0.35,
+        fillOpacity: 0.01,
         idValue: item.idValue
       });
       await ObtenerCordenadas(circulo);

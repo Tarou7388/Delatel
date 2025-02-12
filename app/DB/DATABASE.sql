@@ -106,6 +106,7 @@ CREATE TABLE tb_lineas (
     id_mufa INT NULL,
     id_caja INT NULL,
     coordenadas JSON NOT NULL,
+    tipo_linea CHAR(1) NOT NULL,
     create_at DATETIME NOT NULL DEFAULT NOW(),
     update_at DATETIME NULL,
     inactive_at DATETIME NULL,
