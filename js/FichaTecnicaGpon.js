@@ -120,6 +120,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       const idCaja = JSON.parse(data[0].ficha_instalacion).idcaja;
 
+      const responseCajaNombre = await fetch(
+        `${config.HOST}app/controllers/Caja.controllers.php?operacion=cajabuscarId&idCaja=${idCaja}`
+      );
+      const dataCaja = await responseCajaNombre.json();
+      console.log(dataCaja);
+
       if (!Array.isArray(data) || data.length === 0) {
         console.warn("No hay datos en ficha_instalacion.");
         return;
@@ -142,7 +148,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       document.getElementById("txtClaveAcceso").value = contrasenia;
       document.getElementById("txtPlan").value = data[0].paquete;
       document.getElementById("txtPlanCable").value = data[0].paquete;
-      document.getElementById("txtIdCaja").value = idCaja;
+      document.getElementById("txtIdCaja").value = dataCaja[0].nombre;
 
       if (ficha.ficha_instalacion) {
         const installationData = JSON.parse(ficha.ficha_instalacion);
@@ -157,7 +163,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   async function fibraOptica() {
     const txtIdCaja = document.querySelector("#txtIdCaja").value;
-    const slcFilaEntrada = document.querySelector("#slcFilaEntrada").value;
     const txtPuerto = document.querySelector("#txtPuerto").value;
     const txtUsuario = document.querySelector("#txtUsuario").value;
     const txtPlan = document.querySelector("#txtPlan").value;
@@ -180,11 +185,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const txtSeguridadRouter = document.querySelector("#txtSeguridadRouter").value;
 
     jsonData = {
+      periodo: txtPeriodo,
       fibraoptica: {
         usuario: txtUsuario,
         claveacceso: txtClaveAcceso,
         vlan: parseInt(txtVlan),
-        periodo: txtPeriodo,
         plan: txtPlan,
         potencia: parseInt(txtPotencia),
         router: {
@@ -205,7 +210,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         repetidores: jsonRepetidor
       },
       tipoentrada: {
-        fila: slcFilaEntrada.split(","),
         puerto: parseInt(txtPuerto)
       },
       idcaja: parseInt(txtIdCaja)
@@ -509,7 +513,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     try {
-      const response = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarra&codigoBarra=${encodeURIComponent(codigoBarra)}`);
+      const response = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarraRouter&codigoBarra=${encodeURIComponent(codigoBarra)}`);
       const resultado = await response.json();
 
       if (Array.isArray(resultado) && resultado.length > 0) {
@@ -678,18 +682,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   function validarPuerto() {
-    const filaEntrada = document.getElementById("slcFilaEntrada").value;
     const columnaEntrada = document.getElementById("txtPuerto").value;
     const columnaError = document.getElementById("columnaError");
     const mensajeError = columnaError.closest('.form-floating').querySelector('.invalid-feedback');
 
     let maxColumnas = 16;
-
-    if (filaEntrada === "1") {
-      maxColumnas = 8;
-    } else if (filaEntrada === "2") {
-      maxColumnas = 16;
-    }
 
     if (columnaEntrada === "" || columnaEntrada < 1 || columnaEntrada > maxColumnas) {
       columnaError.textContent = `Por favor, ingrese un valor válido (1 a ${maxColumnas}).`;
