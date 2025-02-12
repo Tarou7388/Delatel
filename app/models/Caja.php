@@ -75,6 +75,15 @@ class Caja extends Conexion
     return $this->datosPaginados($sql, $array);
   }
 
+  public function cajaBuscar($params = [])
+  {
+    $sql = "CALL spu_buscar_caja_id(?)";
+    $array = [
+      $params['idCaja']
+    ];
+    return $this->consultaParametros($sql, $array);
+  }
+
   public function cajaUso($params = [])
   {
     $sql = "CALL spu_caja_uso(?)";

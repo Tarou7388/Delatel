@@ -29,7 +29,7 @@ function obtenerAccesosFiltrados($permissions)
 		["ruta" => "Administracion", "texto" => "Administracion", "icono" => "fa-solid fa-cogs", "Desplegable" => true, "rutasAnexas" => ["Mapa"], "IconoAnexo" => ["fa-solid fa-map"]],
 		["ruta" => "Contratos", "texto" => "Contratos", "icono" => "fa-solid fa-file-contract", "rutasAnexas" => ["FichaTecnicaCable", "FichaTecnicaGpon", "FichaTecnicaWisp", "FichaTecnicaFibra"]],
 		["ruta" => "Inventariado", "texto" => "Inventariado", "icono" => "fa-solid fa-warehouse", "Desplegable" => true, "rutasAnexas" => ["Kardex", "Productos"], "IconoAnexo" => ["fa-solid fa-warehouse", "fa-solid fa-boxes-stacked"]],
-		["ruta" => "Personas", "texto" => "Personas", "icono" => "fa-solid fa-user"],
+		["ruta" => "Personas", "texto" => "Personas", "icono" => "fa-solid fa-user", "rutasAnexas" => ["listarEditar"]],
 		["ruta" => "Ticket", "texto" => "Ticket", "icono" => "fa-solid fa-tasks", "rutasAnexas" => ["listarAverias"]],
 		["ruta" => "Roles", "texto" => "Roles", "icono" => "fa-regular fa-address-card"],
 		["ruta" => "Soporte", "texto" => "Soporte", "icono" => "fa-solid fa-wrench", "rutasAnexas" => ["registroSoporte", "SoporteEscritorio", "listarSoporte", "SoporteCABL", "SoporteFIBR", "SoporteWISP"]],

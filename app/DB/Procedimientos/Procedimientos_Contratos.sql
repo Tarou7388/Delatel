@@ -114,7 +114,7 @@ BEGIN
         p_coordenada,
         p_fecha_inicio,
         p_fecha_registro,
-        p_nota,
+        NULLIF(p_nota, ''),
         p_ficha_instalacion,
         p_iduser_create
     );

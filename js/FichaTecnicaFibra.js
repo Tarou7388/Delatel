@@ -93,6 +93,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       const idCaja = fichaInstalacion.idcaja;
 
+      const responseCajaNombre = await fetch(
+        `${config.HOST}app/controllers/Caja.controllers.php?operacion=cajabuscarId&idCaja=${idCaja}`
+      );
+      const dataCaja = await responseCajaNombre.json();
+      console.log(dataCaja);
+
       document.getElementById("txtNumFicha").value = data[0].id_contrato;
 
       const nombreCliente = data[0].nombre_cliente.split(", ");
@@ -107,7 +113,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       document.getElementById("txtUsuario").value = usuario;
       document.getElementById("txtClaveAcceso").value = contrasenia;
       document.getElementById("txtPlan").value = data[0].paquete;
-      document.getElementById("txtIdCaja").value = idCaja;
+      document.getElementById("txtIdCaja").value = dataCaja[0].nombre;
 
 
 
@@ -134,7 +140,6 @@ document.addEventListener('DOMContentLoaded', async () => {
    * @returns {void}
    *
    * @property {string} txtIdCaja - ID de la caja.
-   * @property {string} slcFilaEntrada - Fila de entrada seleccionada.
    * @property {string} txtPuerto - Puerto de conexión.
    * @property {string} txtUsuario - Nombre de usuario.
    * @property {string} txtClaveAcceso - Clave de acceso.
@@ -163,7 +168,6 @@ document.addEventListener('DOMContentLoaded', async () => {
    */
   async function fibraOptica() {
     const txtIdCaja = document.querySelector("#txtIdCaja").value;
-    const slcFilaEntrada = document.querySelector("#slcFilaEntrada").value;
     const txtPuerto = document.querySelector("#txtPuerto").value;
     const txtUsuario = document.querySelector("#txtUsuario").value;
     const txtClaveAcceso = document.querySelector("#txtClaveAcceso").value;
@@ -186,6 +190,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const txtSeguridadRouter = document.querySelector("#txtSeguridadRouter").value;
 
     jsonData = {
+      periodo: txtPeriodo,
       periodo: txtPeriodo,
       fibraoptica: {
         usuario: txtUsuario,
@@ -211,7 +216,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         repetidores: jsonRepetidor
       },
       tipoentrada: {
-        fila: slcFilaEntrada.split(","),
         puerto: parseInt(txtPuerto)
       },
       idcaja: parseInt(txtIdCaja)
@@ -355,7 +359,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
-      const respuesta = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarraRouter&codigoBarra=${encodeURIComponent(codigoBarra)}`);
+      const respuesta = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarra&codigoBarra=${encodeURIComponent(codigoBarra)}`);
       const resultado = await respuesta.json();
 
       if (Array.isArray(resultado) && resultado.length > 0) {
@@ -384,7 +388,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
-      const respuesta = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarraRepetidor&codigoBarra=${encodeURIComponent(codigoBarra)}`);
+      const respuesta = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarraRepetidor&codigoBarra=${codigoBarra}`);
       const resultado = await respuesta.json();
 
       if (Array.isArray(resultado) && resultado.length > 0) {
@@ -471,7 +475,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   /**
-   * Valida el valor del puerto ingresado en el campo de texto "txtPuerto" basado en la fila seleccionada en "slcFilaEntrada".
    * Muestra un mensaje de error si el valor es inválido.
    * 
    * Reglas de validación:
@@ -482,18 +485,11 @@ document.addEventListener('DOMContentLoaded', async () => {
    * Si el valor del puerto es válido, se oculta el mensaje de error y se elimina la clase "is-invalid".
    */
   function validarPuerto() {
-    const filaEntrada = document.getElementById("slcFilaEntrada").value;
     const columnaEntrada = document.getElementById("txtPuerto").value;
     const columnaError = document.getElementById("columnaError");
     const mensajeError = columnaError.closest('.form-floating').querySelector('.invalid-feedback');
 
     let maxColumnas = 16;
-
-    if (filaEntrada === "1") {
-      maxColumnas = 8;
-    } else if (filaEntrada === "2") {
-      maxColumnas = 16;
-    }
 
     if (columnaEntrada === "" || columnaEntrada < 1 || columnaEntrada > maxColumnas) {
       columnaError.textContent = `Por favor, ingrese un valor válido (1 a ${maxColumnas}).`;

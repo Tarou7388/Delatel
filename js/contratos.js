@@ -34,6 +34,9 @@ window.addEventListener("DOMContentLoaded", async () => {
       const urlParams = new URLSearchParams(queryString);
       const params = Object.fromEntries(urlParams.entries());
 
+      if (params.idCaja) {
+        idCaja = params.idCaja;
+      }
 
       if (params.Servicio) {
         const slcTipoServicio = document.querySelector("#slcTipoServicio");
@@ -69,7 +72,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       if (params.coordenadas && document.querySelector("#txtCoordenadasMapa")) {
         const coordenada = document.querySelector("#txtCoordenadasMapa");
         coordenada.value = params.coordenadas;
-        coordenada.dispatchEvent(new Event("change", { bubbles: true }));
+
         if (params.coordenadas) {
           const [latitud, longitud] = params.coordenadas.split(',').map(coord => parseFloat(coord.trim()));
           const idSector = await mapa.buscarCoordenadassinMapa(latitud, longitud);
@@ -230,8 +233,7 @@ window.addEventListener("DOMContentLoaded", async () => {
    * 
    * @throws {Error} Muestra un mensaje de error si ocurre algún problema durante el registro del contrato o el descuento de la caja.
    */
-  async function registrarContrato() {
-    console.log(mapa.idCaja)
+  async function registrarContrato() {    
     if (accesos?.contratos?.crear) {
       const fechaRegistro = new Date().toISOString().split("T")[0];
       const nota = txtNota.value;
@@ -248,7 +250,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       }
 
       try {
-        console.log(mapa.idCaja)
+        
         const datosEnvio = {
           operacion: "registrarContrato",
           parametros: {
@@ -261,7 +263,7 @@ window.addEventListener("DOMContentLoaded", async () => {
             fechaInicio: new Date().toISOString().split("T")[0],
             fechaRegistro: fechaRegistro,
             nota: nota,
-            fichainstalacion: JSON.stringify({ idcaja: mapa.idCaja }),
+            fichainstalacion: JSON.stringify({ idcaja: idCaja }),
             idUsuario: login.idUsuario,
           },
         };
@@ -277,10 +279,8 @@ window.addEventListener("DOMContentLoaded", async () => {
           }
         );
         const data = await response.json();
-        if (data.error) {
-          console.log(data.error);
-        } else {
-          console.log(data);
+        if (data.error) {          
+        } else {          
           try {
             const respuesta = await fetch(`${config.HOST}app/controllers/Caja.controllers.php`, {
               method: "PUT",
@@ -299,13 +299,11 @@ window.addEventListener("DOMContentLoaded", async () => {
             resetUI();
             tabla.ajax.reload();
 
-          } catch (error) {
-            console.log(error);
+          } catch (error) {            
             showToast("Ocurrió un error en las cajas.", "ERROR");
           }
         }
-      } catch (error) {
-        console.log(error);
+      } catch (error) {        
         showToast("Ocurrió un error al registrar el contrato. Por favor, inténtelo de nuevo.", "ERROR");
       }
     } else {
@@ -326,34 +324,7 @@ window.addEventListener("DOMContentLoaded", async () => {
    */
   async function eliminar(idContrato, idUsuario, idCaja) {
     if (accesos?.contratos?.eliminar) {
-      const responsePeriodo = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerFichaInstalacion&id=${idContrato}`);
-      const dataPeriodoini = await responsePeriodo.json();
-      console.log(dataPeriodoini);
-      const dataPeriodo = JSON.parse(dataPeriodoini[0].ficha_instalacion);
-
-
-      let eliminarSi = false
-
-      if ( await dataPeriodo.periodo == null) {
-        if (await ask("Este contrato no esta instalado. ¿Desea cancelar el Contrato?", "Contratos")) {
-          eliminarSi = true
-        }
-      } else if ( await dataPeriodo.periodo != null) {
-        //saber ya se paso la fecha de periodo o no
-        const fechaActual = new Date();
-        const fechaPeriodo = new Date(dataPeriodo.periodo);
-        if (fechaActual > fechaPeriodo) {
-          if (await ask("¿Desea Cancelar el Contrato?")) {
-            eliminarSi = true
-          }
-        } else {
-          if (await ask("El contrato no ha cumplido su periodo. ¿Desea cancelar el contrato?")) {
-            eliminarSi = true
-          }
-        }
-      }
-
-      if (eliminarSi == true) {
+      if (await ask("¿Desea Cancelar el Contrato?")) {
         const response = await fetch(
           `${config.HOST}app/controllers/Contrato.controllers.php`,
           {
@@ -382,8 +353,7 @@ window.addEventListener("DOMContentLoaded", async () => {
             });
 
             const data = await respuesta.json();
-
-            console.log(data);
+            
           }
           showToast("¡Contrato eliminado correctamente!", "SUCCESS", 1500);
           resetUI();
@@ -425,8 +395,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         }
       );
 
-      const data = await response.json();
-      console.log(data);
+      const data = await response.json();      
 
       if (data.actualizado) {
         showToast("¡Contrato actualizado correctamente!", "SUCCESS", 1500);
@@ -567,8 +536,7 @@ window.addEventListener("DOMContentLoaded", async () => {
             try {
               const response = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerFichaInstalacion&id=${idContrato}`);
               const data = await response.json();
-              const fichaInstalacion = JSON.parse(data[0].ficha_instalacion);
-              console.log(fichaInstalacion);
+              const fichaInstalacion = JSON.parse(data[0].ficha_instalacion);              
 
               if (fichaInstalacion && Object.keys(fichaInstalacion).length > 1) {
 
@@ -607,19 +575,16 @@ window.addEventListener("DOMContentLoaded", async () => {
 
 
         botonesEliminar.forEach((boton) => {
-          boton.addEventListener("click", async (event) => {
-            console.log("Eliminar contrato");
+          boton.addEventListener("click", async (event) => {            
             const idContrato = event.target.getAttribute("data-idContrato");
-            const tipoServicio = boton.closest('tr').querySelector('td:nth-child(5)').textContent.trim();
-            console.log(tipoServicio);
+            const tipoServicio = boton.closest('tr').querySelector('td:nth-child(5)').textContent.trim();            
             let idCaja = -1;
             if (tipoServicio === "FIBR,CABL" || tipoServicio === "FIBR" || tipoServicio === "CABL") {
               try {
                 const response = await fetch(
                   `${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerJsonFichabyId&id=${idContrato}`
                 );
-                const data = await response.json();
-                console.log(data);
+                const data = await response.json();                
                 idCaja = JSON.parse(data[0].ficha_instalacion).idcaja;
               } catch (error) {
                 console.error("Error al obtener el JSON de la ficha de instalación:", error);
@@ -687,8 +652,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     try {
       const response = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=buscarContratoId&id=${idContrato}`);
-      const data = await response.json();
-      console.log(data);
+      const data = await response.json();      
       document.getElementById("txtIdContratoActualizar").value = data[0].id_contrato;
       document.getElementById("txtNombreActualizar").value = data[0].nombre_cliente;
       document.getElementById("txtFechaInicioActualizar").value = data[0].fecha_inicio;
@@ -774,9 +738,6 @@ window.addEventListener("DOMContentLoaded", async () => {
   });
 
   coordenada.addEventListener("change", async function () {
-
-    idSector = mapa.idSector;
-    idCaja = mapa.idCaja;
     const optionToSelect = document.querySelector(`#slcSector option[value="${idSector}"]`);
 
     if (optionToSelect) {
@@ -847,6 +808,10 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
+  $("#btnGuardarModalMapa").on("click", function () {
+    idSector = mapa.idSector;
+    idCaja = mapa.idCaja;
+  });
 
 
   ListarPaquetes.cargarServiciosGenerico("#slcTipoServicio", () => ListarPaquetes.cargarSelectPaquetesGenerico("#slcTipoServicio", "#slcPaquetes"));

@@ -1,8 +1,8 @@
 USE Delatel;
 
-DELIMITER $$
+DELIMITER;
 
-DROP VIEW IF EXISTS vw_roles_listar$$
+DROP VIEW IF EXISTS vw_roles_listar;
 CREATE VIEW vw_roles_listar AS
 SELECT
     r.id_rol,
@@ -15,6 +15,20 @@ FROM
     tb_roles r 
 WHERE 
     r.rol != 'Administrador';
+
+    
+CREATE VIEW vw_roles_listar_para_Registro AS
+SELECT
+    r.id_rol,
+    r.rol,
+    r.create_at,
+    r.update_at,
+    r.iduser_create,
+    r.inactive_at
+FROM
+    tb_roles r 
+WHERE 
+    r.rol != 'Administrador' AND r.inactive_at IS NULL;
 
 DROP VIEW IF EXISTS vw_rolesdetallado_listar$$
 CREATE VIEW vw_rolesdetallado_listar AS

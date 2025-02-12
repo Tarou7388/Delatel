@@ -201,3 +201,16 @@ CREATE PROCEDURE spu_mufa_eliminar(
 BEGIN
   UPDATE tb_mufas SET inactive_at = NOW(), iduser_update = p_id_user WHERE id_mufa = p_id_mufa;
 END$$
+
+DROP PROCEDURE IF EXISTS spu_buscar_caja_id$$
+
+CREATE PROCEDURE spu_buscar_caja_id(
+  IN p_id_caja INT
+)
+BEGIN
+  SELECT 
+    id_caja, 
+    nombre
+  FROM tb_cajas 
+  WHERE id_caja = p_id_caja;
+END$$

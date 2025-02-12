@@ -734,6 +734,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   document.querySelector("#btnActualizarPrincipal").addEventListener("click", async () => {
+    if(!accesos?.administracion?.actualizar){
+      showToast("Usted no tiene permiso para esto", "ERROR");
+    }
     if (await ask("¿Desea guardar la linea principal?")) {
       let coordenadasEnviar4 = [];
 
@@ -812,6 +815,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   document.querySelector("#btnEliminarCaja").addEventListener("click", async () => {
+    if(!accesos?.administracion?.eliminar){
+      showToast("Usted no tiene permiso para esto", "ERROR");
+    }
     const response = await fetch(`${config.HOST}app/controllers/Caja.controllers.php?operacion=cajaUso&idCaja=${idCajaRegistro}`);
     const data = await response.json();
     if (data[0].uso && data[0].uso == true) {
@@ -850,6 +856,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   document.querySelector("#btnEliminarMufa").addEventListener("click", async () => {
+    if(!accesos?.administracion?.eliminar){
+      showToast("Usted no tiene permiso para esto", "ERROR");
+    }
     const response = await fetch(`${config.HOST}app/controllers/Mufas.controllers.php?operacion=mufaUso&idMufa=${idMufaRegistro}`);
     const data = await response.json();
     if (data[0].uso && data[0].uso == true) {
@@ -881,6 +890,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   document.querySelector("#btnEliminarAntena").addEventListener("click", async () => {
+    if(!accesos?.administracion?.eliminar){
+      showToast("Usted no tiene permiso para esto", "ERROR");
+    }
     if (await ask("¿Desea eliminar la antena?")) {
       const datos = JSON.stringify({
         idAntena: idAntena,
@@ -907,6 +919,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   document.querySelector("#btnEliminarSector").addEventListener("click", async () => {
+    if(!accesos?.administracion?.eliminar){
+      showToast("Usted no tiene permiso para esto", "ERROR");
+    }
     if (await ask("¿Desea desactivar el sector?")) {
       const datos = JSON.stringify({
         idSector: idSector,
@@ -930,22 +945,5 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 
-  document.querySelector("#btnAgregarFibra12").addEventListener("click", async () => {
-    document.querySelector("#btnAgregarFibra12").hidden = true;
-    document.querySelector("#btnAgregarFibra12Guardar").hidden = false;
-    banderaCableSecundario = true;
-    coordenadasCajaGuardada = false;
-    const arrayCoordenadas = Coordenadas.split(',').map(Number);
-    const json = { lat: arrayCoordenadas[0], lng: arrayCoordenadas[1] };
-    lineaCableGuardar.push(json);
-  });
-
-  document.querySelector("#btnAgregarFibra12Guardar").addEventListener("click", async () => {
-    if (await ask("¿Desea guardar la fibra?")) {
-      idCajaRegistro = '';
-      agregarCable("S");
-      document.querySelector("#btnAgregarFibra12Guardar").hidden = true;
-      banderaCableSecundario = false;
-    }
-  });
 });
+

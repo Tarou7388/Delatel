@@ -10,6 +10,7 @@ let marcadoresCajas = [];
 let marcadoresMufas = [];
 let marcadoresAntenas = [];
 let datosMufas = [];
+export let ultimaCoordenada = null; 
 
 export let idCaja = null;
 export let idSector = null;
@@ -80,7 +81,8 @@ export async function iniciarMapa(params = { cajas: true, mufas: true, antena: t
 
   if (params.cajas) {
     await eventocajas();
-  };
+  }
+  
   if (params.mufas) {
     await eventomufas();
   }
@@ -123,7 +125,7 @@ export async function iniciarMapa(params = { cajas: true, mufas: true, antena: t
         subArray.forEach(circulo => {
           circulo.addListener('click', async (e) => {
             const marcadorMasCercano = await buscarMarcadorCercano(datosAntenas[circulo.idValue]);
-            console.log(marcadorMasCercano);
+
             if (marcadorMasCercano) {
               if (marcadorMasCercano.distancia <= 4000) {
                 document.getElementById('btnGuardarModalMapa').disabled = false;
@@ -176,7 +178,7 @@ async function eventoantena() {
   datosAntenas = await obtenerDatosAnidado(`${config.HOST}app/controllers/Antenas.controllers.php?operacion=listarAntenas`);
   marcadoresAntenas = await marcadoresAnidado(datosAntenas, "antena");
   circulosAntenas = await circulosAnidado(datosAntenas, "#e84393", 4000);
-  console.log(circulosAntenas);
+
 }
 
 export async function actualizarMapa(id = "map2") {
@@ -204,6 +206,7 @@ async function eventoMapa(valor) {
       map: mapa,
       title: "Marcador"
     });
+
     if (marcadorCoordenada == null) {
       if (document.getElementById('btnGuardarModalMapa')) {
         document.getElementById('btnGuardarModalMapa').disabled = true;
@@ -233,7 +236,7 @@ async function circulosAnidado(datos, color, distancia = 1000) {
         radius: distancia,
         map: mapa,
         strokeColor: color,
-        strokeOpacity: 0.8,
+        strokeOpacity: 0.3,
         strokeWeight: 2,
         fillColor: color,
         fillOpacity: 0.01,
@@ -404,8 +407,29 @@ export async function buscarCoordenadassinMapa(latitud, longitud) {
   });
 
   if (!posicionDentroDeCirculo) {
-    console.log("La posición no está dentro de ningún círculo.");
+    console.warn("La posición no está dentro de ningún círculo.");
   }
 
   return idSectorEncontrado;
 }
+
+export function obtenerCoordenadasClick() {
+  mapa.addListener("click", (e) => {
+    ultimaCoordenada = {
+      latitud: e.latLng.lat(),
+      longitud: e.latLng.lng()
+    };
+
+    if (marcador) marcador.setMap(null);
+
+    marcador = new AdvancedMarkerElement({
+      position: e.latLng,
+      map: mapa,
+      title: "Marcador"
+    });
+
+    console.log("Coordenadas obtenidas:", ultimaCoordenada);
+  });
+}
+
+

@@ -21,6 +21,11 @@ if (isset($_GET['operacion'])) {
       $respuesta = $caja->cajaUso(['idCaja' => $idCaja]);
       echo json_encode($respuesta);
       break;
+    case 'cajabuscarId':
+      $idCaja = $_GET['idCaja'];
+      $respuesta = $caja->cajaBuscar(['idCaja' => $idCaja]);
+      echo json_encode($respuesta);
+      break;
   }
 }
 

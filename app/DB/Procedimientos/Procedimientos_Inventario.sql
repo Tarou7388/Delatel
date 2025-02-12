@@ -184,8 +184,7 @@ BEGIN
     AND
         p.inactive_at IS NULL AND t.tipo_nombre = 'Repetidor';
 END $$
-
-DROP PROCEDURE IF EXISTS spu_productos_buscar_barraRouter$$     
+DROP PROCEDURE IF EXISTS spu_productos_buscar_barraRouter$$
 
 CREATE PROCEDURE spu_productos_buscar_barraRouter(
     IN p_codigo_barra VARCHAR(120)
@@ -207,4 +206,3 @@ BEGIN
     AND
         p.inactive_at IS NULL AND t.tipo_nombre = 'Router';
 END $$
-
