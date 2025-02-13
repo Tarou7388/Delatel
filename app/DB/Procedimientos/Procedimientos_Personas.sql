@@ -22,8 +22,8 @@ DROP PROCEDURE IF EXISTS spu_personas_registrar$$
 CREATE PROCEDURE spu_personas_registrar(
     p_tipo_doc          CHAR(3),
     p_nro_doc           VARCHAR(15),
-    p_apellidos         VARCHAR(30),
-    p_nombres           VARCHAR(30),
+    p_apellidos         VARCHAR(80),
+    p_nombres           VARCHAR(80),
     p_telefono          CHAR(9),
     p_nacionalidad      VARCHAR(40),
     p_email             VARCHAR(100),
@@ -40,8 +40,8 @@ DROP PROCEDURE IF EXISTS spu_personas_actualizar$$
 CREATE PROCEDURE spu_personas_actualizar(
     p_tipo_doc          CHAR(3),
     p_nro_doc           VARCHAR(15),
-    p_apellidos         VARCHAR(30),
-    p_nombres           VARCHAR(30),
+    p_apellidos         VARCHAR(80),
+    p_nombres           VARCHAR(80),
     p_telefono          CHAR(9),
     p_nacionalidad      VARCHAR(40),
     p_email             VARCHAR(100),
