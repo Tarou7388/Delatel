@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   let jsonData = [];
   let jsonRepetidor = [];
   let numeroRepetidores = 0;
+  let idCaja = 0;
 
   document.getElementById("txtFecha").value = new Date().toISOString().split('T')[0];
 
@@ -91,7 +92,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       const fichaInstalacion = JSON.parse(data[0].ficha_instalacion);
 
-      const idCaja = fichaInstalacion.idcaja;
+      idCaja = fichaInstalacion.idcaja;
 
       const responseCajaNombre = await fetch(
         `${config.HOST}app/controllers/Caja.controllers.php?operacion=cajabuscarId&idCaja=${idCaja}`
@@ -191,7 +192,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     jsonData = {
       periodo: txtPeriodo,
-      periodo: txtPeriodo,
       fibraoptica: {
         usuario: txtUsuario,
         claveacceso: txtClaveAcceso,
@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       tipoentrada: {
         puerto: parseInt(txtPuerto)
       },
-      idcaja: parseInt(txtIdCaja)
+      idcaja: parseInt(idCaja)
     };
   }
 
@@ -359,7 +359,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
-      const respuesta = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarra&codigoBarra=${encodeURIComponent(codigoBarra)}`);
+      const respuesta = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarraRouter&codigoBarra=${codigoBarra}`);
       const resultado = await respuesta.json();
 
       if (Array.isArray(resultado) && resultado.length > 0) {

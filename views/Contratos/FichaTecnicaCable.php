@@ -125,16 +125,8 @@ $idContrato = $_GET['idContrato'];
             </div>
             <div class="col-12 col-md-6 d-flex">
               <div class="form-floating flex-grow-1 me-2">
-                <input type="number" class="form-control" id="txtIdCaja" placeholder="Caja" disabled>
+                <input type="text" class="form-control" id="txtIdCaja" placeholder="Caja" disabled>
                 <label for="lblSerieCaja">Caja</label>
-              </div>
-              <div class="form-floating flex-grow-1 me-2">
-                <select class="form-select" id="slcFilaEntrada">
-                  <option value="1">Fila 1</option>
-                  <option value="2">Fila 2</option>
-                </select>
-                <label for="slcFilaEntrada">Fila Entrada <span class="required-asterisk" style="color: red;">*</span></label>
-                <div class="invalid-feedback">Por favor, seleccione una opción válida.</div>
               </div>
               <div class="form-floating flex-grow-1">
                 <input type="number" class="form-control" id="txtPuerto" placeholder="columnas" min="1" max="16" value="2">
@@ -291,8 +283,8 @@ $idContrato = $_GET['idContrato'];
           </div>
           <div class="col-md-12">
             <div class="form-floating">
-              <textarea class="form-control" id="txtDetalle" placeholder="Detalle" rows="3"></textarea>
-              <label for="txtDetalle">Detalle</label>
+                <textarea class="form-control" id="txtDetalle" placeholder="Detalles" style="height: 100px; width: 100%;"></textarea>
+                <label for="lblDetalle">Detalles</label>
             </div>
           </div>
         </div>

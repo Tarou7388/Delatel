@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   let jsonCosto = {};
   let jsonData = {};
   let jsonCable = {};
+  let idCaja = 0;
 
 
   document.getElementById("txtFecha").value = new Date().toISOString().split('T')[0];
@@ -122,13 +123,18 @@ document.addEventListener("DOMContentLoaded", async () => {
       const fichaInstalacion = JSON.parse(data[0].ficha_instalacion);
 
 
-      const idCaja = fichaInstalacion.idcaja;
+      idCaja = fichaInstalacion.idcaja;
 
+      const responseCajaNombre = await fetch(
+        `${config.HOST}app/controllers/Caja.controllers.php?operacion=cajabuscarId&idCaja=${idCaja}`
+      );
+      const dataCaja = await responseCajaNombre.json();
+      console.log(dataCaja);
 
       document.getElementById("txtUsuario").value = data[0].nombre_cliente;
       document.getElementById("txtPaquete").value = data[0].paquete;
       document.getElementById("txtNumFicha").value = data[0].id_contrato;
-      document.getElementById("txtIdCaja").value = idCaja;
+      document.getElementById("txtIdCaja").value = dataCaja[0].nombre;
 
     } catch (error) {
       console.error(
@@ -150,7 +156,6 @@ document.addEventListener("DOMContentLoaded", async () => {
    */
   async function cable() {
     const txtIdCaja = document.querySelector("#txtIdCaja").value;
-    const slcFilaEntrada = document.querySelector("#slcFilaEntrada").value;
     const txtPuerto = document.querySelector("#txtPuerto").value;
     const txtPaquete = document.querySelector("#txtPaquete").value;
     const txtPeriodo = document.querySelector("#txtPeriodo").value;
@@ -204,10 +209,9 @@ document.addEventListener("DOMContentLoaded", async () => {
           preciometro: txtPrecioCable,
         },
         tipoEntrada: {
-          fila: slcFilaEntrada.split(","),
           puerto: parseInt(txtPuerto)
         },
-        idcaja: parseInt(txtIdCaja),
+        idcaja: parseInt(idCaja),
       };
     }
   }
@@ -480,18 +484,12 @@ document.addEventListener("DOMContentLoaded", async () => {
    * @function
    */
   function validarPuerto() {
-    const filaEntrada = document.getElementById("slcFilaEntrada").value;
     const columnaEntrada = document.getElementById("txtPuerto").value;
     const columnaError = document.getElementById("columnaError");
     const mensajeError = columnaError.closest('.form-floating').querySelector('.invalid-feedback');
 
     let maxColumnas = 16;
 
-    if (filaEntrada === "1") {
-      maxColumnas = 8;
-    } else if (filaEntrada === "2") {
-      maxColumnas = 16;
-    }
 
     if (columnaEntrada === "" || columnaEntrada < 1 || columnaEntrada > maxColumnas) {
       columnaError.textContent = `Por favor, ingrese un valor válido (1 a ${maxColumnas}).`;

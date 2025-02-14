@@ -28,6 +28,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   let jsonCable = {};
   let jsonRepetidor = [];
   let jsonSintotizador = [];
+  let idCaja= 0;
 
   const requiredFields = document.querySelectorAll(".form-control");
 
@@ -118,7 +119,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       );
       const data = await response.json();
 
-      const idCaja = JSON.parse(data[0].ficha_instalacion).idcaja;
+      idCaja = JSON.parse(data[0].ficha_instalacion).idcaja;
 
       const responseCajaNombre = await fetch(
         `${config.HOST}app/controllers/Caja.controllers.php?operacion=cajabuscarId&idCaja=${idCaja}`
@@ -212,7 +213,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       tipoentrada: {
         puerto: parseInt(txtPuerto)
       },
-      idcaja: parseInt(txtIdCaja)
+      idcaja: parseInt(idCaja)
     };
   }
 
