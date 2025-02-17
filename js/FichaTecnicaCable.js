@@ -211,7 +211,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         tipoEntrada: {
           puerto: parseInt(txtPuerto)
         },
-        idcaja: parseInt(idCaja),
       };
     }
   }
@@ -534,7 +533,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     jsonData.cable = jsonCable;
     jsonData.costo = jsonCosto;
     const txtIdCaja = document.querySelector("#txtIdCaja").value;
-    jsonData.idcaja = parseInt(txtIdCaja);
+    jsonData.idcaja = idCaja;
 
     const data = {
       operacion: "guardarFichaInstalacion",

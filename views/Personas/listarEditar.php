@@ -111,16 +111,18 @@
 </div>
 
 <div class="container-fluid px-4">
+  <div class="d-flex justify-content-between mt-3">
+    <a href="./" class="btn btn-primary" id="btnRuta"><- Registrar Personas</a>
+  </div>
   <table class="table table-striped" id="TbPersonas">
     <thead>
       <tr>
-        <th>Nro Identificación</th>
-        <th>Nombre y Apellidos</th>
-        <th>Dirección</th>
-        <th>Teléfono</th>
-        <th>Dirección</th>
-        <th>Coordenadas</th>
-        <th>Acciones</th>
+        <th>ID</th>
+        <th>Tipo Documento</th>
+        <th>Nro°</th>
+        <th>Nombre Completo</th>
+        <th>Telefono</th>
+        <th>Nacionalidad</th>
       </tr>
     </thead>
     <tbody>

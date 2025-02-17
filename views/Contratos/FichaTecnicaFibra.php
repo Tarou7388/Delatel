@@ -116,11 +116,10 @@ $idContrato = $_GET['idContrato'];
 
     <h1 class="mt-4"><i class="fas fa-file-alt"></i> Formulario de Registro de Ficha de Fibra</h1>
 
-    <div class="row g-2 mb-2 justify-content-end">
-      <div class="col-sm-1">
+    <div class="row g-2 mb-2 d-flex justify-content-between align-items-center">
+      <h4 style="font-size: 20px;" class="col-auto">Cliente: <label id="txtnombreCliente"></label> </h4>
+      <div class="col-auto d-flex gap-2">
         <input type="text" class="form-control text-center" id="txtNumFicha" placeholder="N°" disabled>
-      </div>
-      <div class="col-sm-2">
         <input type="date" class="form-control text-center" id="txtFecha" placeholder="Fecha" disabled>
       </div>
     </div>
@@ -192,7 +191,7 @@ $idContrato = $_GET['idContrato'];
 
             <section name="Datos del Router">
               <h5> Datos del Router</h5>
-               <!-- Fila: Información básica -->
+              <!-- Fila: Información básica -->
               <div class="row g-2 mb-3">
                 <div class="col-12 col-md-4">
                   <div class="form-floating">

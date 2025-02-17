@@ -111,6 +111,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       const contrasenia = "@" + usuario;
 
+      document.getElementById("txtnombreCliente").textContent  = data[0].nombre_cliente;
       document.getElementById("txtUsuario").value = usuario;
       document.getElementById("txtClaveAcceso").value = contrasenia;
       document.getElementById("txtPlan").value = data[0].paquete;

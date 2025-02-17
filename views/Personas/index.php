@@ -257,11 +257,14 @@
 						</div>
 					</div>
 				</div>
-
-				<div class="d-flex justify-content-end mt-3">
-					<button type="submit" class="btn btn-success me-2" id="btnRegistrarPersona">Registrar</button>
-					<button type="reset" class="btn btn-secondary" id="btnCancelarPersona">Cancelar</button>
+				<div class="d-flex justify-content-between mt-3">
+					<a href="./listarEditar" class="btn btn-primary" id="btnRuta">Listar Personas -></a>
+					<div>
+						<button type="submit" class="btn btn-success me-2" id="btnRegistrarPersona">Registrar</button>
+						<button type="reset" class="btn btn-secondary" id="btnCancelarPersona">Cancelar</button>
+					</div>
 				</div>
+
 			</form>
 		</div>
 

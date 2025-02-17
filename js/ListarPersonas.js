@@ -17,55 +17,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   const txtCorreoElectronico = document.querySelector("txtCorreoElectronico");
   const txtCorreoComplemento = document.querySelector("txtCorreoComplemento");
 
-  window.tablaProductos = $("#TbPersonas").DataTable({
+  window.tablaPersonas = $("#TbPersonas").DataTable({
     dom: `
-      <"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6 text-end"f>>
+      <"row"<"col-sm-12 col-md-6"><"col-sm-12 col-md-6 text-end"f>>
       <"row"<"col-sm-12"tr>>
       <"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>
     `,
     language: {
       url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json",
     },
-    buttons: [
-      {
-        extend: "csv",
-        text: '<i class="fa-solid fa-file-csv"></i>',
-        className: "btn btn-primary me-2",
-        filename: "Productos",
-        title: "Productos",
-        exportOptions: {
-          columns: ":not(:last-child)",
-        },
-      },
-      {
-        extend: "excel",
-        text: '<i class="fa-solid fa-file-excel"></i>',
-        className: "btn btn-success me-2",
-        filename: "Productos",
-        title: "Productos",
-        exportOptions: {
-          columns: ":not(:last-child)",
-        },
-      },
-      {
-        extend: "pdf",
-        text: '<i class="fa-solid fa-file-pdf"></i>',
-        className: "btn btn-danger me-2",
-        filename: "Productos",
-        title: "Productos",
-        exportOptions: {
-          columns: ":not(:last-child)",
-        },
-      },
-      {
-        extend: "print",
-        text: '<i class="fa-solid fa-print"></i>',
-        className: "btn btn-secondary me-2",
-        exportOptions: {
-          columns: ":not(:last-child)",
-        },
-      },
-    ],
     processing: true,
     serverSide: true,
     ajax: {
@@ -86,7 +46,16 @@ document.addEventListener("DOMContentLoaded", async () => {
       { data: 3, title: "Nombre Completo", className: "text-center" },
       { data: 4, title: "Telefono", className: "text-center" },
       { data: 5, title: "Nacionalidad", className: "text-center" },
-      { data: 6, title: "Email", className: "text-center" },
+      { 
+        data: 6, 
+        title: "Email", 
+        className: "text-center",
+        render: function (data, type, row) {
+          return data && data.trim() !== "" 
+            ? data 
+            : '<em>Email no asignado</em>';
+        }
+      },
       {
         data: 7,
         title: "Acciones",
@@ -111,16 +80,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       { targets: 6, width: "15%" },
       { targets: 7, width: "10%" },
     ],
-    language: {
-      url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json",
-    },
     paging: true,
     searching: true,
     info: true,
     lengthChange: false,
   });
-
-
+  
   async function cargarMapa() {
     await mapa.iniciarMapa({ cajas: false, mufas: false, antena: false }, "map", "modal");
 
