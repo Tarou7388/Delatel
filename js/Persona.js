@@ -167,7 +167,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     const camposPersona = [
       slcTipoDocumento, txtNumDocumentoPersona, txtNombresPersona,
       txtApellidosPersona, txtTelefono,
-      txtDireccion, txtReferencia, txtcoordenadasPersona,
+      txtDireccion, txtcoordenadasPersona,
     ];
     let bandera = {
       mensaje: "",

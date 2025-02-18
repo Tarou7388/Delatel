@@ -113,65 +113,24 @@ END $$
 DELIMITER $$
 DROP PROCEDURE IF EXISTS spu_clientesPersonas_actualizar$$
 CREATE PROCEDURE spu_clientesPersonas_actualizar(
-    p_identificador VARCHAR(15),
-    p_nombre VARCHAR(100),
-    p_apellidos VARCHAR(30),
-    p_email VARCHAR(100),
-    p_telefono CHAR(9),
     p_direccion VARCHAR(250),
     p_referencia VARCHAR(150),
     p_coordenadas VARCHAR(50),
-    p_iduser_update INT
+    p_iduser_update INT,
+    p_id_persona INT
 )
 BEGIN
-    DECLARE v_tipo_doc CHAR(3);
-    DECLARE v_nro_doc VARCHAR(15);
-
-    IF LENGTH(p_identificador) = 8 THEN
-        SET v_tipo_doc = 'DNI';
-        SET v_nro_doc = p_identificador;
-
-        UPDATE tb_personas
-        SET 
-            nombres = p_nombre,
-            apellidos = p_apellidos,
-            email = p_email,
-            telefono = p_telefono,
-            update_at = NOW(),
-            iduser_update = p_iduser_update
-        WHERE nro_doc = v_nro_doc AND tipo_doc = v_tipo_doc AND inactive_at IS NULL;
-
-    ELSEIF LENGTH(p_identificador) = 11 THEN
-        SET v_tipo_doc = 'RUC';
-        SET v_nro_doc = p_identificador;
-
-        UPDATE tb_empresas
-        SET 
-            nombre_comercial = p_nombre,
-            email = p_email,
-            telefono = p_telefono,
-            update_at = NOW(),
-            iduser_update = p_iduser_update
-        WHERE ruc = v_nro_doc AND inactive_at IS NULL;
-    END IF;
-
-    UPDATE tb_clientes
-    SET 
-        direccion = p_direccion,
-        referencia = p_referencia,
-        coordenadas = p_coordenadas,
-        update_at = NOW()
-    WHERE id_cliente = (
-        SELECT id_cliente
-        FROM tb_clientes
-        WHERE (id_persona IN (
-                SELECT id_persona FROM tb_personas WHERE nro_doc = v_nro_doc AND tipo_doc = v_tipo_doc
-            ) OR id_empresa IN (
-                SELECT id_empresa FROM tb_empresas WHERE ruc = v_nro_doc
-            )) AND inactive_at IS NULL
-    );
-
-END $$
+    UPDATE tb_clientes tc
+    INNER JOIN tb_personas tp ON tc.id_persona = tp.id_persona
+    SET
+        tc.direccion = p_direccion,
+        tc.referencia = p_referencia,
+        tc.coordenadas = p_coordenadas,
+        tc.update_at = NOW(),
+        tc.iduser_update = p_iduser_update
+    WHERE
+        tp.id_persona = p_id_persona;
+END$$
 
 DELIMITER $$
 DROP PROCEDURE IF EXISTS spu_clientes_eliminar$$

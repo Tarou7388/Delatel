@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       <"row"<"col-sm-12"tr>>
       <"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>
     `,
+    order: [0,'desc'],
     language: {
       url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json",
     },
@@ -72,13 +73,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     ],
     columnDefs: [
       { targets: 0, visible: false },
-      { targets: 1, width: "10%" },
-      { targets: 2, width: "15%" },
-      { targets: 3, width: "10%" },
-      { targets: 4, width: "15%" },
-      { targets: 5, width: "15%" },
-      { targets: 6, width: "15%" },
-      { targets: 7, width: "10%" },
+      { targets: 1, width: "5%" },
+      { targets: 2, width: "5%" },
+      { targets: 3, width: "15%" },
+      { targets: 4, width: "10%" },
+      { targets: 5, width: "5%" },
+      { targets: 6, width: "10%" },
+      { targets: 7, width: "5%" },
     ],
     paging: true,
     searching: true,

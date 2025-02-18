@@ -9,14 +9,14 @@ SELECT
     p.id_persona,
     p.tipo_doc,
     p.nro_doc,
-    CONCAT(p.apellidos, ' ,', p.nombres) as Nombre_Completo,
+    CONCAT(p.apellidos, ', ', p.nombres) as Nombre_Completo,
     p.telefono,
     p.nacionalidad,
     p.email,
-    ct.direccion_servicio as direccion_contacto
+    cl.direccion as direccion_contacto
 FROM
     tb_personas p
-    LEFT JOIN tb_contactabilidad ct ON p.id_persona = ct.id_persona;
+    LEFT JOIN tb_clientes cl ON p.id_persona = cl.id_persona WHERE p.id_persona != 1;
 
 DROP PROCEDURE IF EXISTS spu_personas_registrar$$
 CREATE PROCEDURE spu_personas_registrar(
@@ -38,25 +38,19 @@ END $$
 
 DROP PROCEDURE IF EXISTS spu_personas_actualizar$$
 CREATE PROCEDURE spu_personas_actualizar(
-    p_tipo_doc          CHAR(3),
-    p_nro_doc           VARCHAR(15),
     p_apellidos         VARCHAR(80),
     p_nombres           VARCHAR(80),
     p_telefono          CHAR(9),
-    p_nacionalidad      VARCHAR(40),
     p_email             VARCHAR(100),
     p_iduser_update     INT,
-    p_id_persona       INT
+    p_id_persona        INT
 )
 BEGIN
     UPDATE tb_personas
-    SET 
-        tipo_doc = p_tipo_doc,
-        nro_doc = p_nro_doc,
+    SET
         apellidos = p_apellidos,
         nombres = p_nombres,
         telefono = p_telefono,
-        nacionalidad = p_nacionalidad,
         email = p_email,
         iduser_update = p_iduser_update,
         update_at = NOW()
