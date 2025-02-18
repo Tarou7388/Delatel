@@ -206,7 +206,7 @@ CREATE TABLE tb_clientes (
     id_empresa INT NULL,
     direccion VARCHAR(250) NOT NULL,
     referencia VARCHAR(150) NOT NULL,
-    coordenadas VARCHAR(50) NOT NULL,
+    coordenadas VARCHAR(50) NULL,
     create_at DATETIME NOT NULL DEFAULT NOW(),
     update_at DATETIME NULL,
     inactive_at DATETIME NULL,

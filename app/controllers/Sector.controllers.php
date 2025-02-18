@@ -39,6 +39,10 @@ if (isset($_GET["operacion"])) {
 			$resultado = $sectores->listarSectoresMapa();
 			echo json_encode($resultado);
 			break;
+		case 'buscarSector':
+			$resultado = $sectores->buscarSector(["idSector" => Herramientas::sanitizarEntrada($_GET['idSector'])]);
+			echo json_encode($resultado);
+			break;
 	}
 }
 

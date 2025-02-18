@@ -5,6 +5,7 @@ window.addEventListener("DOMContentLoaded", async function () {
   let login = await Herramientas.obtenerLogin();
   let actividad = null;
   const contenido = document.getElementById("contenido");
+  const labelSector = document.querySelector('#sectorNombre');
   async function cargarActividades() {
     const response = await fetch(`${config.HOST}app/controllers/Usuario.controllers.php?operacion=obtenerPermisos`);
     const data = await response.json();
@@ -47,31 +48,32 @@ window.addEventListener("DOMContentLoaded", async function () {
       </div>
       <div id="mapPagina" style="height: 700px;"></div>
     `;
+    labelSector.hidden = false;
     const params = { cajas: true, mufas: true, antena: true };
     const id = "mapPagina";
     const renderizado = "pagina";
     await mapa.iniciarMapa(params, id, renderizado);
   }
 
-async function cargarSoporte() {
+  async function cargarSoporte() {
     function alternarDetalles(fila) {
-        if (window.innerWidth >= 768) {
-            return;
-        }
+      if (window.innerWidth >= 768) {
+        return;
+      }
 
-        const siguienteFila = fila.nextElementSibling;
-        if (siguienteFila && siguienteFila.classList.contains('fila-detalles')) {
-            siguienteFila.remove();
-        } else {
-            const celdasOcultas = fila.querySelectorAll('.d-none.d-md-table-cell');
-            let detallesHtml = '<tr class="fila-detalles"><td colspan="8"><table class="table table-striped">';
-            celdasOcultas.forEach(celda => {
-                const descripcion = celda.getAttribute('data-descripcion');
-                detallesHtml += `<tr><td><strong>${descripcion}:</strong> ${celda.innerHTML}</td></tr>`;
-            });
-            detallesHtml += '</table></td></tr>';
-            fila.insertAdjacentHTML('afterend', detallesHtml);
-        }
+      const siguienteFila = fila.nextElementSibling;
+      if (siguienteFila && siguienteFila.classList.contains('fila-detalles')) {
+        siguienteFila.remove();
+      } else {
+        const celdasOcultas = fila.querySelectorAll('.d-none.d-md-table-cell');
+        let detallesHtml = '<tr class="fila-detalles"><td colspan="8"><table class="table table-striped">';
+        celdasOcultas.forEach(celda => {
+          const descripcion = celda.getAttribute('data-descripcion');
+          detallesHtml += `<tr><td><strong>${descripcion}:</strong> ${celda.innerHTML}</td></tr>`;
+        });
+        detallesHtml += '</table></td></tr>';
+        fila.insertAdjacentHTML('afterend', detallesHtml);
+      }
     }
 
     const soporteContainer = document.createElement('div');
@@ -99,24 +101,24 @@ async function cargarSoporte() {
 
     const tbodySoporte = document.getElementById("tbodySoporte");
     try {
-        const response = await fetch(`${config.HOST}app/controllers/Sticket.controllers.php?operacion=listarAveriasPendientes`);
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
+      const response = await fetch(`${config.HOST}app/controllers/Sticket.controllers.php?operacion=listarAveriasPendientes`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      tbodySoporte.innerHTML = '';
+
+      data.forEach(soporte => {
+        let rowClass = '';
+        if (soporte.prioridad === 'Alta') {
+          rowClass = 'bg-danger';
+        } else if (soporte.prioridad === 'Media') {
+          rowClass = 'bg-warning';
+        } else if (soporte.prioridad === 'Baja') {
+          rowClass = 'bg-success';
         }
-        const data = await response.json();
-        tbodySoporte.innerHTML = '';
 
-        data.forEach(soporte => {
-            let rowClass = '';
-            if (soporte.prioridad === 'Alta') {
-                rowClass = 'bg-danger';
-            } else if (soporte.prioridad === 'Media') {
-                rowClass = 'bg-warning';
-            } else if (soporte.prioridad === 'Baja') {
-                rowClass = 'bg-success';
-            }
-
-            const row = `
+        const row = `
             <tr class="soporte-row" data-id_soporte="${soporte.id_soporte}" data-coordenada="${soporte.coordenada}" data-nrodocumento="${soporte.nrodocumento}" data-tipo_servicio="${soporte.tipo_servicio}">
                 <td class="text-center">${soporte.id_soporte}</td>
                 <td class="text-center">${soporte.nombre_cliente}</td>
@@ -137,37 +139,37 @@ async function cargarSoporte() {
                 </td>
             </tr>
             `;
-            tbodySoporte.innerHTML += row;
-        });
+        tbodySoporte.innerHTML += row;
+      });
 
-        const table = $('#tablaSoporte').DataTable({
-            destroy: true,
-            columnDefs: [
-                { targets: 0, visible: false }
-            ],
-            language: {
-                url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json",
-            },
-            ordering: false
-        });
+      const table = $('#tablaSoporte').DataTable({
+        destroy: true,
+        columnDefs: [
+          { targets: 0, visible: false }
+        ],
+        language: {
+          url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json",
+        },
+        ordering: false
+      });
 
-        $('#tablaSoporte tbody').on('click', 'tr.soporte-row', function () {
-            alternarDetalles(this);
-        });
+      $('#tablaSoporte tbody').on('click', 'tr.soporte-row', function () {
+        alternarDetalles(this);
+      });
 
-        $('#tablaSoporte tbody').on('click', '.atender-soporte', async function () {
-            const row = $(this).closest('tr');
-            const idSoporte = row.data('id_soporte');
-            const coordenada = row.data('coordenada');
-            const nrodocumento = row.data('nrodocumento');
-            const tipoServicio = row.data('tipo_servicio');
+      $('#tablaSoporte tbody').on('click', '.atender-soporte', async function () {
+        const row = $(this).closest('tr');
+        const idSoporte = row.data('id_soporte');
+        const coordenada = row.data('coordenada');
+        const nrodocumento = row.data('nrodocumento');
+        const tipoServicio = row.data('tipo_servicio');
 
-            mostrarFichaServicio(tipoServicio, idSoporte, nrodocumento, coordenada);
-        });
+        mostrarFichaServicio(tipoServicio, idSoporte, nrodocumento, coordenada);
+      });
 
     } catch (error) {
-        console.error('Error fetching soporte data:', error);
-        tbodySoporte.innerHTML = `
+      console.error('Error fetching soporte data:', error);
+      tbodySoporte.innerHTML = `
             <tr>
                 <td colspan="8" class="text-center">Error cargando datos: ${error.message}</td>
             </tr>
@@ -175,9 +177,9 @@ async function cargarSoporte() {
     }
 
     function mostrarFichaServicio(tipoServicio, id_soporte, nrodocumento, coordenada) {
-        window.location.href = `${config.HOST}views/Soporte/Soporte${tipoServicio}?idsoporte=${id_soporte}&doc=${nrodocumento}&tiposervicio=${tipoServicio}&coordenada=${coordenada}`;
+      window.location.href = `${config.HOST}views/Soporte/Soporte${tipoServicio}?idsoporte=${id_soporte}&doc=${nrodocumento}&tiposervicio=${tipoServicio}&coordenada=${coordenada}`;
     }
-}
+  }
 
   async function cargarContratos() {
     contenido.innerHTML = `
@@ -200,7 +202,7 @@ async function cargarSoporte() {
         url: `${config.HOST}app/controllers/Contrato.controllers.php?operacion=listarContratos`,
         type: 'GET',
         dataSrc: function (json) {
-          
+
           return json;
         }
       },
@@ -271,7 +273,7 @@ async function cargarSoporte() {
       button.addEventListener('click', (event) => {
         const id = event.currentTarget.getAttribute('data-id');
         const kardex = data.find(element => element.id_kardex == id);
-        
+
 
         document.getElementById('detalleIdKardex').innerText = kardex.id_kardex;
         document.getElementById('detalleUsuario').innerText = kardex.creado_por;
@@ -437,7 +439,7 @@ async function cargarSoporte() {
         url: '../app/controllers/Contactos.ssp.php',
         dataSrc: function (json) {
 
-          
+
           return json.data;
         },
         error: function (xhr, error, thrown) {
@@ -535,5 +537,10 @@ async function cargarSoporte() {
       const id_contrato = data[0].id_contrato;
       await mapa.renderizarCoordenadaMapa(id_contrato);
     }
+  });
+
+
+  mapa.emitter.on('funcionEjecutada',(data) => {
+    labelSector.textContent = mapa.nombreSector;
   });
 });

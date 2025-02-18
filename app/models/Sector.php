@@ -71,4 +71,9 @@ class Sector extends Conexion
     return $this->registrar($sql, $values);
   }
 
+  public function buscarSector($params = [])
+  {
+    $sql = "SELECT * FROM vw_sectores_obtener WHERE id_sector = ?";
+    return $this->consultaParametros($sql, [$params['idSector']]);
+  }
 }

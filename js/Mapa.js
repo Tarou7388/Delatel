@@ -1,4 +1,7 @@
 import config from "../env.js";
+import * as Herramientas from "./Herramientas.js";
+export const emitter = new Herramientas.EventEmitter();
+
 let Map, Circle, Polyline, AdvancedMarkerElement, mapa;
 let datosCajas = [];
 let datosAntenas = [];
@@ -14,6 +17,7 @@ export let ultimaCoordenada = null;
 
 export let idCaja = null;
 export let idSector = null;
+export let nombreSector = null;
 let ubicacionMarcador;
 let posicionMarcador; 
 
@@ -155,6 +159,17 @@ export async function iniciarMapa(params = { cajas: true, mufas: true, antena: t
       break;
     case "pagina":
       eventoMapa(true);
+      circulosCajas.forEach(subArray => {
+        subArray.forEach(circulo => {
+          circulo.addListener('click', async (e) => {
+            const idSector = circulo.idValue;
+            const response = await fetch(`${config.HOST}app/controllers/Sector.controllers.php?operacion=buscarSector&idSector=${idSector}`);
+            const data = await response.json();
+            nombreSector = data[0].sector;
+            emitter.emit('funcionEjecutada');
+          });
+        });
+      });
       break;
     default:
       break;
@@ -164,6 +179,7 @@ export async function iniciarMapa(params = { cajas: true, mufas: true, antena: t
 async function eventocajas() {
   const datos = await obtenerDatosAnidado(`${config.HOST}app/controllers/Caja.controllers.php?operacion=listarCajas`);
   datosCajas = datos;
+  console.log(datos);
   circulosCajas = await circulosAnidado(datos, "#0984e3");
   marcadoresCajas = await marcadoresAnidado(datos, "cajaNAP");
 }
