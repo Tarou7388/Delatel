@@ -238,7 +238,9 @@ BEGIN
     UPDATE 
     tb_contratos 
     SET ficha_instalacion = p_ficha_instalacion,
-    id_usuario_registro = p_id_usuario_registro
+    iduser_update = p_id_usuario_registro,
+    id_usuario_tecnico = p_id_usuario_registro,
+    update_at = NOW()
     WHERE id_contrato = p_id_contrato;
 END$$
 

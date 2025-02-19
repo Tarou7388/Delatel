@@ -533,6 +533,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       id: idContrato,
       idUsuario: userid,
     };
+    
     try {
       const response = await fetch(
         `${config.HOST}app/controllers/Contrato.controllers.php`,
@@ -545,6 +546,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       );
       const datos = await response.json();
+
+      console.log(datos);
+      
       if (response.ok) {
         showToast("Ficha de Instalación Guardarda Correctamente", "SUCCESS");
         setTimeout(() => {
