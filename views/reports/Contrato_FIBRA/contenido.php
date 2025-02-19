@@ -1,13 +1,13 @@
-<?php
-$HOST = "http://localhost/Delatel";
-?>
 
 <h3 class="text-center">CONTROL DE INSTALACIÓN SERVICIO FTTH - DELAFIBER</h3>
 
-<!-- Información de Contrato y Fecha alineada a la derecha -->
 <div class="container">
   <div style="text-align: right; font-family: Arial, sans-serif; font-size: 12px; margin-right: 35px;">
-    <p><strong>N°:</strong> <?= $resultado[0]['id_contrato']; ?> &nbsp; <strong>Fecha:</strong> <?= $fechaActual; ?></p>
+    <p>
+      <strong>TÉCNICO:</strong> <span style="margin-right: 125px;"><?= $resultado[0]['NombreTecnicoFicha']; ?></span>
+      <strong>N°:</strong> <?= $resultado[0]['id_contrato']; ?> &nbsp; 
+      <strong>Fecha Actual:</strong> <?= date('Y-m-d (H:i)', strtotime($resultado[0]['FechaFichaInstalacion'])); ?> &nbsp; 
+    </p>
   </div>
 </div>
 
@@ -21,27 +21,27 @@ $HOST = "http://localhost/Delatel";
     <tbody>
       <tr>
         <td><strong>CLIENTE:</strong></td>
-        <td class="text-center"><?= $resultado[0]['NombreCliente']; ?></td>
+        <td><?= $resultado[0]['NombreCliente']; ?></td>
         <td><strong>DNI:</strong></td>
-        <td class="text-center"><?= $resultado[0]['NumeroDocumento']; ?></td>
+        <td><?= $resultado[0]['NumeroDocumento']; ?></td>
       </tr>
       <tr>
         <td><strong>DIRECCIÓN:</strong></td>
-        <td class="text-center"><?= $resultado[0]['DireccionContrato']; ?></td>
+        <td><?= $resultado[0]['DireccionContrato']; ?></td>
         <td><strong>CELULAR:</strong></td>
-        <td class="text-center"><?= $resultado[0]['Telefono']; ?></td>
+        <td><?= $resultado[0]['Telefono']; ?></td>
       </tr>
       <tr>
         <td><strong>REFERENCIA:</strong></td>
-        <td class="text-center"><?= $resultado[0]['Referencia']; ?></td>
+        <td><?= $resultado[0]['Referencia']; ?></td>
         <td><strong>ZONA:</strong></td>
-        <td class="text-center"><?= $resultado[0]['Sector']; ?></td>
+        <td><?= $resultado[0]['Sector']; ?></td>
       </tr>
       <tr>
         <td><strong>PLAN:</strong></td>
-        <td class="text-center"><?= $resultado[0]['NombrePaquete']; ?></td>
+        <td><?= $resultado[0]['NombrePaquete']; ?></td>
         <td><strong>PRECIO:</strong></td>
-        <td class="text-center">S/. <?= $resultado[0]['PrecioPaquete']; ?></td>
+        <td>S/. <?= $resultado[0]['PrecioPaquete']; ?></td>
       </tr>
     </tbody>
   </table>

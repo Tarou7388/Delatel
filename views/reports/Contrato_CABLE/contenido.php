@@ -1,13 +1,13 @@
-<?php
-$HOST = "http://localhost/Delatel";
-?>
 
 <h3 class="text-center">CONTROL DE INSTALACIÓN SERVICIO FTTH - DELAFIBER</h3>
 
-<!-- Información de Contrato y Fecha alineada a la derecha -->
 <div class="container">
   <div style="text-align: right; font-family: Arial, sans-serif; font-size: 12px; margin-right: 35px;">
-    <p><strong>N°:</strong> <?= $resultado[0]['id_contrato']; ?> &nbsp; <strong>Fecha:</strong> <?= $fechaActual; ?></p>
+    <p>
+      <strong>TÉCNICO:</strong> <span style="margin-right: 230px;"><?= $resultado[0]['NombreTecnicoFicha']; ?></span>
+      <strong>N°:</strong> <?= $resultado[0]['id_contrato']; ?> &nbsp; 
+      <strong>Fecha Actual:</strong> <?= date('Y-m-d (H:i)', strtotime($resultado[0]['FechaFichaInstalacion'])); ?> &nbsp; 
+    </p>
   </div>
 </div>
 
@@ -173,62 +173,3 @@ $HOST = "http://localhost/Delatel";
   </table>
 </div>
 <?php endif; ?>
-
-<!-- Comentado el código de detalles de costos, si es necesario activar -->
-<!-- 
-<div class="container">
-  <table class="tabla2">
-    <thead>
-      <tr>
-        <td colspan="4" class="text-center thead-cabecera"><strong>DETALLES DE COSTOS</strong></td>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="text-center"><strong>PAGO SERVICIO:</strong></td>
-        <td></td>
-        <td rowspan="7" colspan="2"></td>
-      </tr>
-      <tr>
-        <td class="text-center"><strong>PAGO DIGITAL:</strong></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td class="text-center"><strong>INST. DIGITAL:</strong></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td class="text-center"><strong>SINT. ADIC:</strong></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td class="text-center"><strong>CABLE ADIC:</strong></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td class="text-center"><strong>CONECT ADIC:</strong></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td class="text-center"><strong>REPETIDOR:</strong></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td class="text-center"><strong>TOTAL:</strong></td>
-        <td></td>
-        <td class="text-center"><strong>FORMA PAG</strong></td>
-        <td class="text-center"><strong>CONTADO/TRANSF/YAPE</strong></td>
-      </tr>
-      <tr>
-        <td class="text-center"><strong>TÉCNICO:</strong></td>
-        <td></td>
-        <td class="text-center"><strong>HORA:</strong></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td colspan="5" class="text-center thead-cabecera-2"><strong>FICHA DE CONTROL INTERNO PARA TODOS LOS MODOS DE INSTALACIONES</strong></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
--->

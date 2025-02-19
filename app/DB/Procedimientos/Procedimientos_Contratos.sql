@@ -334,7 +334,10 @@ BEGIN
         s.sector AS Sector,
         d.departamento AS Departamento,
         pr.provincia AS Provincia,
-        di.distrito AS Distrito
+        di.distrito AS Distrito,
+        CONCAT(pt.nombres, ' ', pt.apellidos) AS NombreTecnico,
+        CONCAT(rt.nombres, ' ', rt.apellidos) AS NombreTecnicoFicha,
+        co.create_at AS FechaFichaInstalacion
     FROM 
         tb_contratos co
     JOIN 
@@ -353,6 +356,18 @@ BEGIN
         tb_provincias pr ON di.id_provincia = pr.id_provincia
     LEFT JOIN 
         tb_departamentos d ON pr.id_departamento = d.id_departamento
+    LEFT JOIN 
+        tb_responsables r ON co.id_usuario_tecnico = r.id_responsable
+    LEFT JOIN 
+        tb_usuarios u ON r.id_usuario = u.id_usuario
+    LEFT JOIN 
+        tb_personas pt ON u.id_persona = pt.id_persona
+    LEFT JOIN 
+        tb_responsables rt_responsable ON co.id_usuario_registro = rt_responsable.id_responsable
+    LEFT JOIN 
+        tb_usuarios rt_usuario ON rt_responsable.id_usuario = rt_usuario.id_usuario
+    LEFT JOIN 
+        tb_personas rt ON rt_usuario.id_persona = rt.id_persona
     WHERE 
         co.id_contrato = p_id_contrato;
 END$$
