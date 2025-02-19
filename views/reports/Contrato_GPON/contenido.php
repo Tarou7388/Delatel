@@ -1,13 +1,13 @@
-<?php
-$HOST = "http://localhost/Delatel";
-?>
-
 <h3 class="text-center">CONTROL DE INSTALACIÓN SERVICIO FTTH - DELAFIBER</h3>
 
-<!-- Información de Contrato y Fecha alineada a la derecha -->
+
 <div class="container">
   <div style="text-align: right; font-family: Arial, sans-serif; font-size: 12px; margin-right: 35px;">
-    <p><strong>N°:</strong> <?= $resultado[0]['id_contrato']; ?> &nbsp; <strong>Fecha:</strong> <?= $fechaActual; ?></p>
+    <p>
+      <strong>TÉCNICO:</strong> <span style="margin-right: 125px;"><?= $resultado[0]['NombreTecnicoFicha']; ?></span>
+      <strong>N°:</strong> <?= $resultado[0]['id_contrato']; ?> &nbsp; 
+      <strong>Fecha Actual:</strong> <?= date('Y-m-d (H:i)', strtotime($resultado[0]['FechaFichaInstalacion'])); ?> &nbsp; 
+    </p>
   </div>
 </div>
 
@@ -122,7 +122,7 @@ $HOST = "http://localhost/Delatel";
       </tr>
       <tr>
         <td><strong>PERIODO:</strong></td>
-        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['periodo']); ?></td>
+        <td class="text-center"><?= htmlspecialchars($fichaTecnica['periodo']); ?></td>
         <td><strong>SPLITTER:</strong></td>
         <td class="text-center">CANTIDAD: <?= htmlspecialchars($fichaTecnica['cable']['splitter'][0]['cantidad']); ?></td>
         <td><strong>TIPO:</strong></td>

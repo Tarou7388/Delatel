@@ -19,7 +19,7 @@
 
     </div>
     <div class="card-footer">
-      <label id="sectorNombre" hidden></label>
+      <h3> <label id="sectorNombre" hidden></label> </h3>
     </div>
   </div>
 </div>

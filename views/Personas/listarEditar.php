@@ -73,11 +73,6 @@
                 <label for="txtCorreoElectronico" class="form-label">Correo Electrónico</label>
                 <div class="input-group">
                   <input type="email" class="form-control" id="txtCorreoElectronico" placeholder="a@a.com" aria-label="Correo Electrónico">
-                  <select class="form-select" id="txtCorreoComplemento" aria-label="Seleccionar dominio">
-                    <option value="@gmail.com">gmail.com</option>
-                    <option value="@yahoo.com">hotmail.com</option>
-                    <option value="@outlook.com">outlook.com</option>
-                  </select>
                 </div>
               </div>
             </div>
