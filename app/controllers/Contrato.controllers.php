@@ -94,6 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
         "direccionServicio"  => Herramientas::sanitizarEntrada($datos['parametros']['direccionServicio']),
         "referencia"         => Herramientas::sanitizarEntrada($datos['parametros']['referencia']),
         "nota"               => Herramientas::sanitizarEntrada($datos['parametros']['nota']),
+        "fechaInicio"        => Herramientas::sanitizarEntrada($datos['parametros']['fechaInicio']),
         "idUsuarioUpdate"    => Herramientas::sanitizarEntrada($datos['parametros']['idUsuarioUpdate'])
       ];
       $resultado = $contrato->actualizarContrato($datosActualizar);

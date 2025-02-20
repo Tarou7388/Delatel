@@ -413,6 +413,7 @@ window.addEventListener("DOMContentLoaded", async () => {
           direccionServicio: direccionServicio,
           referencia: referencia,
           nota: nota,
+          fechaInicio: document.querySelector("#txtFechaInicioActualizar").value,
           idUsuarioUpdate: idUsuario,
         },
       };
@@ -763,7 +764,6 @@ window.addEventListener("DOMContentLoaded", async () => {
   });
 
   document.querySelector("#btnActualizar").addEventListener("click", async (event) => {
-    event.preventDefault();
     const idContrato = document.querySelector("#txtIdContratoActualizar").value;
     const idUsuario = login.idUsuario;
     const idPaquete = document.getElementById("slcPaquetesActualizar").value;

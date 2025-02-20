@@ -291,6 +291,7 @@ CREATE PROCEDURE spu_contratos_actualizar(
     IN p_direccion_servicio VARCHAR(200),
     IN p_referencia VARCHAR(200),
     IN p_nota TEXT,
+    IN p_fecha_inicio DATE,
     IN p_iduser_update INT
 )
 BEGIN
@@ -300,10 +301,14 @@ BEGIN
         direccion_servicio = p_direccion_servicio,
         referencia = p_referencia,
         nota = p_nota,
+        fecha_inicio = p_fecha_inicio,
         iduser_update = p_iduser_update,
         update_at = NOW()
     WHERE id_contrato = p_id_contrato;
 END$$
+
+
+SELECT * FROM tb_contratos;
 
 DELIMITER $$
 

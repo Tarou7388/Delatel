@@ -51,7 +51,7 @@
 
             <div class="col-md-4 mt-2">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtFechaInicioActualizar" name="Fecha" placeholder="Fecha de Inicio de Contrato" disabled>
+                <input type="date" class="form-control" id="txtFechaInicioActualizar" name="Fecha" placeholder="Fecha de Inicio de Contrato">
                 <label for="txtFechaInicioActualizar" class="form-label">Fecha de Inicio de Contrato</label>
               </div>
             </div>
