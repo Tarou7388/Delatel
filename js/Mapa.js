@@ -13,6 +13,7 @@ let marcadoresCajas = [];
 let marcadoresMufas = [];
 let marcadoresAntenas = [];
 let datosMufas = [];
+let zonaCobertura = null;
 export let ultimaCoordenada = null; 
 
 export let idCaja = null;
@@ -179,7 +180,6 @@ export async function iniciarMapa(params = { cajas: true, mufas: true, antena: t
 async function eventocajas() {
   const datos = await obtenerDatosAnidado(`${config.HOST}app/controllers/Caja.controllers.php?operacion=listarCajas`);
   datosCajas = datos;
-  console.log(datos);
   circulosCajas = await circulosAnidado(datos, "#0984e3");
   marcadoresCajas = await marcadoresAnidado(datos, "cajaNAP");
 }
