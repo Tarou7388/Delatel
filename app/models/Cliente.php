@@ -50,15 +50,15 @@ class Cliente extends Conexion
      * utilizando los parámetros proporcionados.
      *
      * @param array $params Arreglo asociativo que contiene los siguientes elementos:
-     *  - idCliente (int): Identificador del cliente.
-     *  - nombre (string): Nombre del cliente.
      *  - apellidos (string): Apellidos del cliente.
-     *  - email (string): Correo electrónico del cliente.
+     *  - nombres (string): Nombres del cliente.
      *  - telefono (string): Número de teléfono del cliente.
+     *  - email (string): Correo electrónico del cliente.
      *  - direccion (string): Dirección del cliente.
      *  - referencia (string): Referencia de la dirección del cliente.
      *  - coordenadas (string): Coordenadas geográficas de la dirección del cliente.
-     *  - idUsuario (int): Identificador del usuario que realiza la actualización.
+     *  - idUserUpdate (int): Identificador del usuario que realiza la actualización.
+     *  - idPersona (int): Identificador de la persona.
      *
      * @return mixed Resultado de la operación de actualización.
      */
@@ -66,15 +66,15 @@ class Cliente extends Conexion
     {
         $sql = "CALL spu_clientesPersonas_actualizar(?,?,?,?,?,?,?,?,?)";
         $values = array(
-            $params['identificador'],
-            $params['nombre'],
             $params['apellidos'],
-            $params['email'],
+            $params['nombres'],
             $params['telefono'],
+            $params['email'],
             $params['direccion'],
             $params['referencia'],
             $params['coordenadas'],
-            $params['idUsuario']
+            $params['idUserUpdate'],
+            $params['idPersona']
         );
         return $this->registrar($sql, $values);
     }

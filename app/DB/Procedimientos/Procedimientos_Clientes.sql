@@ -1,3 +1,4 @@
+-- Active: 1740495171783@@127.0.0.1@3306@delatel
 USE Delatel;
 
 DROP VIEW IF EXISTS vw_clientes_obtener;
@@ -111,34 +112,19 @@ BEGIN
 END $$
 
 DELIMITER $$
-DROP PROCEDURE IF EXISTS spu_clientesPersonas_actualizar$$
-CREATE PROCEDURE spu_clientesPersonas_actualizar(
-    p_direccion VARCHAR(250),
-    p_referencia VARCHAR(150),
-    p_coordenadas VARCHAR(50),
-    p_iduser_update INT,
-    p_id_persona INT
-)
-BEGIN
-    UPDATE tb_clientes tc
-    INNER JOIN tb_personas tp ON tc.id_persona = tp.id_persona
-    SET
-        tc.direccion = p_direccion,
-        tc.referencia = p_referencia,
-        tc.coordenadas = p_coordenadas,
-        tc.update_at = NOW(),
-        tc.iduser_update = p_iduser_update
-    WHERE
-        tp.id_persona = p_id_persona;
-END$$
 
-CREATE PROCEDURE spu_personas_actualizar(
-    p_apellidos         VARCHAR(80),
-    p_nombres           VARCHAR(80),
-    p_telefono          CHAR(9),
-    p_email             VARCHAR(100),
-    p_iduser_update     INT,
-    p_id_persona        INT
+DROP PROCEDURE IF EXISTS spu_clientesPersonas_actualizar$$
+
+CREATE PROCEDURE spu_clientesPersonas_actualizar(
+    p_apellidos        VARCHAR(80),
+    p_nombres          VARCHAR(80),
+    p_telefono         CHAR(9),
+    p_email            VARCHAR(100),
+    p_direccion        VARCHAR(250),
+    p_referencia       VARCHAR(150),
+    p_coordenadas      VARCHAR(50),
+    p_iduser_update    INT,
+    p_id_persona       INT
 )
 BEGIN
     UPDATE tb_personas
@@ -150,7 +136,19 @@ BEGIN
         iduser_update = p_iduser_update,
         update_at = NOW()
     WHERE id_persona = p_id_persona;
-END $$
+    UPDATE tb_clientes tc
+    INNER JOIN tb_personas tp ON tc.id_persona = tp.id_persona
+    SET
+        tc.direccion = p_direccion,
+        tc.referencia = p_referencia,
+        tc.coordenadas = p_coordenadas,
+        tc.update_at = NOW(),
+        tc.iduser_update = p_iduser_update
+    WHERE tp.id_persona = p_id_persona;
+END$$
+
+DELIMITER $$
+
 
 DELIMITER $$
 DROP PROCEDURE IF EXISTS spu_clientes_eliminar$$

@@ -96,15 +96,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
   switch ($operacion) {
     case 'actualizarCliente':
       $datos = [
-        "identificador"   => Herramientas::formatearFecha($datos['identificador']),
-        "nombre"          => Herramientas::sanitizarEntrada($datos['nombre']),
-        "apellidos"       => Herramientas::sanitizarEntrada($datos['apellidos']),
+        "apellidos"   => Herramientas::formatearFecha($datos['apellidos']),
+        "nombres"          => Herramientas::sanitizarEntrada($datos['nombres']),
+        "telefono"       => Herramientas::sanitizarEntrada($datos['telefono']),
         "email"           => Herramientas::sanitizarEntrada($datos['email']),
-        "telefono"        => Herramientas::sanitizarEntrada($datos['telefono']),
-        "direccion"       => Herramientas::sanitizarEntrada($datos['direccion']),
-        "referencia"      => Herramientas::sanitizarEntrada($datos['referencia']),
-        "coordenadas"     => $datos['coordenadas'],
-        "idUsuario"       => Herramientas::sanitizarEntrada($datos['idUsuario'])
+        "direccion"        => Herramientas::sanitizarEntrada($datos['direccion']),
+        "referencia"       => Herramientas::sanitizarEntrada($datos['referencia']),
+        "coordenadas"      => Herramientas::sanitizarEntrada($datos['coordenadas']),
+        "idUserUpdate"     => $datos['idUserUpdate'],
+        "idPersona"       => Herramientas::sanitizarEntrada($datos['idPersona'])
       ];
 
       $estado = $cliente->actualizarClienteNumdoc($datos);
