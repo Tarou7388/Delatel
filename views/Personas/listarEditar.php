@@ -33,10 +33,22 @@
                 </div>
               </div>
 
-              <!-- Dirección -->
-              <div class="mb-2">
-                <label for="txtDireccionActualizar" class="form-label">Dirección</label>
-                <input type="text" class="form-control" id="txtDireccionActualizar" placeholder="">
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <!-- Dirección -->
+                  <div class="mb-2">
+                    <label for="txtDireccionActualizar" class="form-label">Dirección</label>
+                    <input type="text" class="form-control" id="txtDireccionActualizar" placeholder="">
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <!-- Referencia -->
+                  <div class="mb-2">
+                    <label for="txtReferenciaActualizar" class="form-label">Referencia</label>
+                    <input type="text" class="form-control" id="txtReferenciaActualizar" placeholder="">
+                  </div>
+                </div>
               </div>
 
               <!-- Coordenadas -->

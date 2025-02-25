@@ -132,6 +132,26 @@ BEGIN
         tp.id_persona = p_id_persona;
 END$$
 
+CREATE PROCEDURE spu_personas_actualizar(
+    p_apellidos         VARCHAR(80),
+    p_nombres           VARCHAR(80),
+    p_telefono          CHAR(9),
+    p_email             VARCHAR(100),
+    p_iduser_update     INT,
+    p_id_persona        INT
+)
+BEGIN
+    UPDATE tb_personas
+    SET
+        apellidos = p_apellidos,
+        nombres = p_nombres,
+        telefono = p_telefono,
+        email = p_email,
+        iduser_update = p_iduser_update,
+        update_at = NOW()
+    WHERE id_persona = p_id_persona;
+END $$
+
 DELIMITER $$
 DROP PROCEDURE IF EXISTS spu_clientes_eliminar$$
 CREATE PROCEDURE spu_clientes_eliminar(
