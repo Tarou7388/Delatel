@@ -365,21 +365,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  function validarSoloNumeros(input) {
+    input.value = input.value.replace(/[^0-9.]/g, '');
+  }
+  
   async function cargarServicios() {
     try {
       const response = await fetch(
         `${config.HOST}app/controllers/Servicio.controllers.php?operacion=listarServicio`
       );
       const servicios = await response.json();
-
+  
       const slcTipoServicio = $("#slcTipoServicio");
       const slcTipoServicioActualizar = $("#slcTipoServicioActualizar");
       const serviciosContainer = $("#serviciosContainer");
-
+  
       slcTipoServicio.empty();
       slcTipoServicioActualizar.empty();
       serviciosContainer.empty();
-
+  
       servicios
         .filter((servicio) => servicio.inactive_at === null)
         .forEach((servicio) => {
@@ -387,13 +391,13 @@ document.addEventListener("DOMContentLoaded", async () => {
           slcTipoServicio.append(option);
           slcTipoServicioActualizar.append(option);
         });
-
+  
       const wispServiceId = "2";
-
+  
       function handleServiceChange(selector) {
         const selectedServices = selector.val();
         const isWispSelected = selectedServices.includes(wispServiceId);
-
+  
         selector.find("option").each(function () {
           const optionValue = $(this).val();
           if (isWispSelected) {
@@ -408,15 +412,28 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
           }
         });
-
+  
         selector.trigger("change.select2");
       }
-
+  
+      function calcularMinimaGarantizada() {
+        const bajadaMaxima = parseFloat($("#txtbajadaMaxima").val()) || 0;
+        const subidaMaxima = parseFloat($("#txtsubidaMaxima").val()) || 0;
+        const bajadaMaximaActualizar = parseFloat($("#txtbajadaMaximaActualizar").val()) || 0;
+        const subidaMaximaActualizar = parseFloat($("#txtsubidaMaximaActualizar").val()) || 0;
+        const porcentajeGarantizado = 0.70; // 70%
+  
+        $("#txtbajadaMinima").val(Math.round(bajadaMaxima * porcentajeGarantizado));
+        $("#txtsubidaMinima").val(Math.round(subidaMaxima * porcentajeGarantizado));
+        $("#txtbajadaMinimaActualizar").val(Math.round(bajadaMaximaActualizar * porcentajeGarantizado));
+        $("#txtsubidaMinimaActualizar").val(Math.round(subidaMaximaActualizar * porcentajeGarantizado));
+      }
+  
       slcTipoServicio.on("change", function () {
         handleServiceChange($(this));
         const selectedServices = $(this).val();
         serviciosContainer.empty();
-
+  
         if (selectedServices.includes("3")) {
           const labels = [
             { id: "bajadaMaxima", label: "Bajada Máxima", placeholder: "Bajada Máxima" },
@@ -427,13 +444,13 @@ document.addEventListener("DOMContentLoaded", async () => {
           let row = $('<div class="row g-2"></div>');
           labels.forEach((item, index) => {
             row.append(`
-                <div class="col-md-6">
-                  <div class="form-floating mb-2">
-                    <input type="text" class="form-control" id="txt${item.id}" placeholder="${item.placeholder}" required>
-                    <label for="txt${item.id}">${item.label}</label>
-                  </div>
+              <div class="col-md-6">
+                <div class="form-floating mb-2">
+                  <input type="text" class="form-control" id="txt${item.id}" placeholder="${item.placeholder}" required ${item.id.includes("Minima") ? 'disabled' : ''}>
+                  <label for="txt${item.id}">${item.label}</label>
                 </div>
-              `);
+              </div>
+            `);
             if (index % 2 === 1) {
               serviciosContainer.append(row);
               row = $('<div class="row g-2"></div>');
@@ -442,44 +459,15 @@ document.addEventListener("DOMContentLoaded", async () => {
           if (labels.length % 2 !== 0) {
             serviciosContainer.append(row);
           }
+  
+          $("#txtbajadaMaxima, #txtsubidaMaxima").on("input", function() {
+            validarSoloNumeros(this);
+            calcularMinimaGarantizada();
+          });
         } else if (selectedServices.includes("2")) {
           const labels = [
             { id: "bajadaMaxima", label: "Bajada", placeholder: "Bajada" },
             { id: "subidaMaxima", label: "Subida", placeholder: "Subida" }
-          ];
-          let row = $('<div class="row g-2"></div>');
-          labels.forEach((item, index) => {
-            row.append(`
-                <div class="col-md-6">
-                  <div class="form-floating mb-2">
-                    <input type="text" class="form-control" id="txt${item.id}" placeholder="${item.placeholder}" required>
-                    <label for="txt${item.id}">${item.label}</label>
-                  </div>
-                </div>
-              `);
-            if (index % 2 === 1) {
-              serviciosContainer.append(row);
-              row = $('<div class="row g-2"></div>');
-            }
-          });
-          if (labels.length % 2 !== 0) {
-            serviciosContainer.append(row);
-          }
-        }
-      });
-
-      slcTipoServicioActualizar.on("change", function () {
-        handleServiceChange($(this));
-        const selectedServices = $(this).val();
-        const serviciosContainerActualizar = $("#serviciosContainerActualizar");
-        serviciosContainerActualizar.empty();
-
-        if (selectedServices.includes("3")) {
-          const labels = [
-            { id: "bajadaMaximaActualizar", label: "Bajada Máxima", placeholder: "Bajada Máxima" },
-            { id: "bajadaMinimaActualizar", label: "Bajada Mínima Garantizada", placeholder: "Bajada Mínima Garantizada" },
-            { id: "subidaMaximaActualizar", label: "Subida Máxima", placeholder: "Subida Máxima" },
-            { id: "subidaMinimaActualizar", label: "Subida Mínima Garantizada", placeholder: "Subida Mínima Garantizada" }
           ];
           let row = $('<div class="row g-2"></div>');
           labels.forEach((item, index) => {
@@ -492,6 +480,44 @@ document.addEventListener("DOMContentLoaded", async () => {
               </div>
             `);
             if (index % 2 === 1) {
+              serviciosContainer.append(row);
+              row = $('<div class="row g-2"></div>');
+            }
+          });
+          if (labels.length % 2 !== 0) {
+            serviciosContainer.append(row);
+          }
+  
+          $("#txtbajadaMaxima, #txtsubidaMaxima").on("input", function() {
+            validarSoloNumeros(this);
+          });
+        }
+      });
+  
+      slcTipoServicioActualizar.on("change", function () {
+        handleServiceChange($(this));
+        const selectedServices = $(this).val();
+        const serviciosContainerActualizar = $("#serviciosContainerActualizar");
+        serviciosContainerActualizar.empty();
+  
+        if (selectedServices.includes("3")) {
+          const labels = [
+            { id: "bajadaMaximaActualizar", label: "Bajada Máxima", placeholder: "Bajada Máxima" },
+            { id: "bajadaMinimaActualizar", label: "Bajada Mínima Garantizada", placeholder: "Bajada Mínima Garantizada" },
+            { id: "subidaMaximaActualizar", label: "Subida Máxima", placeholder: "Subida Máxima" },
+            { id: "subidaMinimaActualizar", label: "Subida Mínima Garantizada", placeholder: "Subida Mínima Garantizada" }
+          ];
+          let row = $('<div class="row g-2"></div>');
+          labels.forEach((item, index) => {
+            row.append(`
+              <div class="col-md-6">
+                <div class="form-floating mb-2">
+                  <input type="text" class="form-control" id="txt${item.id}" placeholder="${item.placeholder}" required ${item.id.includes("Minima") ? 'disabled' : ''}>
+                  <label for="txt${item.id}">${item.label}</label>
+                </div>
+              </div>
+            `);
+            if (index % 2 === 1) {
               serviciosContainerActualizar.append(row);
               row = $('<div class="row g-2"></div>');
             }
@@ -499,6 +525,11 @@ document.addEventListener("DOMContentLoaded", async () => {
           if (labels.length % 2 !== 0) {
             serviciosContainerActualizar.append(row);
           }
+  
+          $("#txtbajadaMaximaActualizar, #txtsubidaMaximaActualizar").on("input", function() {
+            validarSoloNumeros(this);
+            calcularMinimaGarantizada();
+          });
         } else if (selectedServices.includes("2")) {
           const labels = [
             { id: "bajadaActualizar", label: "Bajada Máxima", placeholder: "Bajada Máxima" },
@@ -522,6 +553,10 @@ document.addEventListener("DOMContentLoaded", async () => {
           if (labels.length % 2 !== 0) {
             serviciosContainerActualizar.append(row);
           }
+  
+          $("#txtbajadaActualizar, #txtsubidaActualizar").on("input", function() {
+            validarSoloNumeros(this);
+          });
         }
       });
     } catch (error) {
