@@ -46,8 +46,9 @@ if (isset($_GET["operacion"])) {
         echo json_encode($resultado);
       }
       break;
+      /*Esto es importante para la edicion de personas en su vista */
     case 'buscarClienteIdPersona':
-      $resultado = $cliente->buscarClientebyIdPersona([
+      $resultado = $persona->buscarClientebyIdPersona([
         'id' => Herramientas::sanitizarEntrada($_GET['id'])
       ]);
       echo json_encode($resultado);

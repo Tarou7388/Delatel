@@ -8,7 +8,7 @@
       <div class="modal-header">
         <h5 class="modal-title" id="myModalLabel">Actualizar Datos de Persona</h5>
         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+          <span>&times;</span>
         </button>
       </div>
       <div class="modal-body">
@@ -70,14 +70,6 @@
                     </div>
                   </div>
                 </div>
-
-                <div class="col-md-6">
-                  <!-- Nacionalidad -->
-                  <div class="mb-2">
-                    <label for="txtNacionalidadActualizar" class="form-label">Nacionalidad</label>
-                    <input type="text" class="form-control" id="txtNacionalidadActualizar" placeholder="">
-                  </div>
-                </div>
               </div>
 
               <!-- Correo Electrónico -->
@@ -99,7 +91,7 @@
 
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="submit" class="btn btn-primary" id="btnGuardarModalMapa" data-bs-dismiss="modal" disabled>Guardar cambios</button>
+        <button type="submit" class="btn btn-primary" id="btnGuardarModalCliente" data-bs-dismiss="modal">Guardar cambios</button>
       </div>
     </div>
   </div>

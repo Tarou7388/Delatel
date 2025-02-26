@@ -91,9 +91,9 @@ CREATE PROCEDURE spu_buscar_datos_cliente_idPersona (
 BEGIN
     SELECT
         p.id_persona,
-        CONCAT(p.nombres, ', ', p.apellidos) AS nombre_cliente,
+        p.nombres,
+        p.apellidos,
         p.nro_doc AS identificador_cliente,
-        p.nacionalidad,  
         p.telefono,
         p.email,
         c.direccion,
@@ -103,5 +103,3 @@ BEGIN
     LEFT JOIN tb_clientes c ON c.id_persona = p.id_persona
     WHERE p.id_persona = p_id_persona;
 END$$
-
-CALL spu_buscar_datos_cliente_idPersona(1);
