@@ -78,7 +78,7 @@ class Persona extends Conexion
     
     public function buscarClientebyIdPersona($params = []) 
     {
-        $sql = "CALL spu_buscar_datos_cliente_idPersona(?)";
+        $sql = "CALL spu_clientes_por_IdPersona(?)";
         $values = array(
             $params['id']
         );

@@ -51,6 +51,12 @@ if (isset($_GET['operacion'])) {
       $resultado = $cliente->buscarNombreyApellido($datos);
       echo json_encode($resultado);
       break;
+    case 'buscarClienteId':
+      $resultado = $cliente->buscarClientebyId([
+        'id' => Herramientas::sanitizarEntrada($_GET['id'])
+      ]);
+      echo json_encode($resultado);
+      break;
   }
 }
 
@@ -96,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
         "email"           => Herramientas::sanitizarEntrada($datos["parametros"]['email']),
         "direccion"        => Herramientas::sanitizarEntrada($datos["parametros"]['direccion']),
         "referencia"       => Herramientas::sanitizarEntrada($datos["parametros"]['referencia']),
-        "coordenadas"      => Herramientas::sanitizarEntrada($datos["parametros"]['coordenadas']),
+        "coordenadas"      => $datos["parametros"]['coordenadas'],
         "idUserUpdate"     => $datos["parametros"]['idUserUpdate'],
         "idPersona"       => Herramientas::sanitizarEntrada($datos["parametros"]['idPersona'])
       ];

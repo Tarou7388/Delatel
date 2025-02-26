@@ -46,9 +46,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         title: "Email",
         className: "text-center",
         render: function (data, type, row) {
-          return data && data.trim() !== ""
-            ? data
-            : '<em>Email no asignado</em>';
+          return data && data.trim() !== "" ? data : '<em>No asignado</em>';
         }
       },
       {
@@ -92,16 +90,25 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   $("#TbPersonas tbody").on("click", ".btn-edit", async function () {
-    console.log("ID de la persona seleccionada:", $(this).data("id"));
     idPersonaSeleccionada = $(this).data("id");
+
+    let datospersona = await traerdatosPersona(idPersonaSeleccionada);
+
+    if (datospersona < 0) {
+      showToast("Esta persona no figura como cliente", "WARNING");
+      return;
+    };
+
     $("#modalEditarPersona").modal("show");
     await cargarMapa();
-    await traerdatosPersona(idPersonaSeleccionada);
+  });
 
-    document.querySelector("#btnGuardarModalCliente").addEventListener("click", async (e) => {
-      e.preventDefault();
+  document.querySelector("#FormActualizarPersona").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (await ask("¿Desea actualizar a este cliente?")) {
       await actualizarCliente();
-    });
+      $("#modalEditarPersona").modal("hide");
+    }
   });
 
   /******************************************************************************************/
@@ -169,27 +176,35 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (Array.isArray(data) && data.length > 0) {
         console.log("Datos de la persona seleccionada:", data);
 
-        document.querySelector("#txtNombresActualizar").value = data[0].nombres;
-        document.querySelector("#txtApellidosActualizar").value = data[0].apellidos;
-        document.querySelector("#txtTelefono").value = data[0].telefono;
-        document.querySelector("#txtCorreoElectronico").value = data[0].email;
-        document.querySelector("#txtDireccionActualizar").value = data[0].direccion;
-        document.querySelector("#txtReferenciaActualizar").value = data[0].referencia;
-        document.querySelector("#CoordenadaModel").value = data[0].coordenadas;
+        if (data[0].id_cliente == null && data[0].id_cliente == undefined) {
+          return -1;
+        }
+
+        document.querySelector("#txtNombresActualizar").value = data[0].nombres || "";
+        document.querySelector("#txtApellidosActualizar").value = data[0].apellidos || "";
+        document.querySelector("#txtTelefono").value = data[0].telefono || "";
+        document.querySelector("#txtCorreoElectronico").value = data[0].email || "";
+        document.querySelector("#txtDireccionActualizar").value = data[0].direccion || "";
+        document.querySelector("#txtReferenciaActualizar").value = data[0].referencia || "";
+        document.querySelector("#CoordenadaModel").value = data[0].coordenadas || "";
 
         if (data[0].coordenadas) {
           const buscarBtn = document.querySelector("#buscarBtn");
-          buscarBtn.click();
+          setTimeout(() => {
+            buscarBtn.click();
+          }, 500);
+          console.log("Coordenadas:", data[0].coordenadas);
         }
-
+        return 1;
       } else {
         console.error('No se encontraron datos para esta persona.');
-        alert('No se encontraron datos para la persona seleccionada.');
+        showToast('No se encontraron datos para la persona seleccionada.', 'WARNING');
       }
     } catch (error) {
       console.error('Error al obtener los datos de la persona:', error);
-      alert('Hubo un problema al intentar obtener los datos.');
+      showToast('Hubo un problema al intentar obtener los datos.', 'ERROR');
     }
   }
+
 
 });
