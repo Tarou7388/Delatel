@@ -46,6 +46,12 @@ if (isset($_GET["operacion"])) {
         echo json_encode($resultado);
       }
       break;
+    case 'buscarClienteIdPersona':
+      $resultado = $cliente->buscarClientebyIdPersona([
+        'id' => Herramientas::sanitizarEntrada($_GET['id'])
+      ]);
+      echo json_encode($resultado);
+      break;
     default:
       echo json_encode(['error' => 'Operación no válida']);
       break;
