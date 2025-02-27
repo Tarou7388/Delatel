@@ -24,6 +24,19 @@ if (isset($_POST['operacion'])) {
 			$estado = $producto->registrarProducto($datos);
 			echo json_encode(["Guardado" => $estado]);
 			break;
+		case 'registrarTipoProducto':
+			$datos = [
+				"tipoProducto" => Herramientas::sanitizarEntrada($_POST['tipoProducto']),
+				"idUsuario" => Herramientas::sanitizarEntrada($_POST["idUsuario"])
+			];
+			$estado = $producto->registrarTipoProducto($datos);
+			if (!$estado) {
+				echo json_encode(["error" => "Error al registrar"]);
+			} else {
+				echo json_encode(["Guardado" => $estado]);
+			}
+
+			break;
 	}
 }
 

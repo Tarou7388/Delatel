@@ -1,4 +1,4 @@
--- Active: 1733577930028@@127.0.0.1@3306@delatel
+-- Active: 1740619856376@@127.0.0.1@3306@delatel
 USE Delatel;
 
 DROP VIEW IF EXISTS vw_clientes_obtener;

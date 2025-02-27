@@ -167,7 +167,7 @@ INSERT INTO tb_tipooperacion (descripcion, movimiento) VALUES
 ('Despacho de equipos', 'S');
 
 INSERT INTO tb_usuarios (id_persona, nombre_user, pass, iduser_create) VALUES
-(1, 'JoseIvan', '$2y$10$jK9ALyQ6CabQCH1U3PqajeqCJQrVflPVEAl0GIU1OLJpp9GsKXCEG', 1),
+(1, 'JoseIvan', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
 (2, 'Mramos', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
 (3, 'Mtasayco', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
 (4, 'Dpeñaloza', '$2y$10$v33I.gsFvcSz5fGO9zCD6OeTmL65ivYUP63ZlZ7xcQrv100eVaRRK', 1),
@@ -361,8 +361,6 @@ INSERT INTO tb_lineas(coordenadas, tipo_linea, iduser_create) VALUES
 { "lng": -76.17508995312564, "lat": -13.429970902608913 },
 { "lng": -76.17201772401685, "lat": -13.42955462875151 }
 ]', "P", 1);
-
-,
 
 INSERT INTO tb_responsables (id_usuario, id_rol,iduser_create) VALUES
 (1, 1,1),
