@@ -84,6 +84,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         `${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerFichaInstalacion&id=${idContrato}`
       );
       const data = await response.json();
+      console.log(data);
 
       if (data.length === 0) {
         console.warn('No se encontraron datos');
@@ -103,21 +104,21 @@ document.addEventListener('DOMContentLoaded', async () => {
       document.getElementById("txtNumFicha").value = data[0].id_contrato;
 
       const nombreCliente = data[0].nombre_cliente.split(", ");
-      const usuario =
-        (
-          (nombreCliente[0]?.substring(0, 3) || "") +
-          (nombreCliente[1]?.substring(0, 3) || "")
-        ).toUpperCase() + idContrato;
+      const nombres = nombreCliente[0].split(" ");
+      const apellidos = nombreCliente[1].split(" ");
 
-      const contrasenia = "@" + usuario;
+      const primerNombre = nombres[0];
+      const primerApellido = apellidos[0];
+      const segundoApellido = apellidos[1];
 
-      document.getElementById("txtnombreCliente").textContent  = data[0].nombre_cliente;
+      const usuario = (primerNombre.substring(0, 3) + primerApellido.substring(0, 6) + idContrato).toLowerCase();
+      const contrasenia = "@" + segundoApellido.substring(0, 7).toLowerCase() + idContrato;
+
+      document.getElementById("txtnombreCliente").textContent = data[0].nombre_cliente;
       document.getElementById("txtUsuario").value = usuario;
       document.getElementById("txtClaveAcceso").value = contrasenia;
       document.getElementById("txtPlan").value = data[0].paquete;
       document.getElementById("txtIdCaja").value = dataCaja[0].nombre;
-
-
 
       if (!fichaInstalacion || !fichaInstalacion.fibraoptica) {
         showToast('No se encontraron datos de fibra óptica', "INFO");
@@ -533,7 +534,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       id: idContrato,
       idUsuario: userid,
     };
-    
+
     try {
       const response = await fetch(
         `${config.HOST}app/controllers/Contrato.controllers.php`,
@@ -548,7 +549,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const datos = await response.json();
 
       console.log(datos);
-      
+
       if (response.ok) {
         showToast("Ficha de Instalación Guardarda Correctamente", "SUCCESS");
         setTimeout(() => {

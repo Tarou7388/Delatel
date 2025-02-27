@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   let jsonCable = {};
   let jsonRepetidor = [];
   let jsonSintotizador = [];
-  let idCaja= 0;
+  let idCaja = 0;
 
   const requiredFields = document.querySelectorAll(".form-control");
 
@@ -138,19 +138,21 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       tipoServicio = ficha.tipos_servicio || "";
       const nombreCliente = (ficha.nombre_cliente || "").split(", ");
-      const usuario =
-        (
-          (nombreCliente[0]?.substring(0, 3) || "") +
-          (nombreCliente[1]?.substring(0, 3) || "")
-        ).toUpperCase() + idContrato;
+      const nombres = nombreCliente[0].split(" ");
+      const apellidos = nombreCliente[1].split(" ");
 
-      const contrasenia = "@" + usuario;
-      
-      document.getElementById("txtnombreCliente").textContent  = data[0].nombre_cliente;
+      const primerNombre = nombres[0];
+      const primerApellido = apellidos[0];
+      const segundoApellido = apellidos[1];
+
+      const usuario = (primerNombre.substring(0, 3) + primerApellido.substring(0, 6) + idContrato).toLowerCase();
+      const contrasenia = "@" + segundoApellido.substring(0, 7).toLowerCase() + idContrato;
+
+      document.getElementById("txtnombreCliente").textContent = ficha.nombre_cliente;
       document.getElementById("txtUsuario").value = usuario;
       document.getElementById("txtClaveAcceso").value = contrasenia;
-      document.getElementById("txtPlan").value = data[0].paquete;
-      document.getElementById("txtPlanCable").value = data[0].paquete;
+      document.getElementById("txtPlan").value = ficha.paquete;
+      document.getElementById("txtPlanCable").value = ficha.paquete;
       document.getElementById("txtIdCaja").value = dataCaja[0].nombre;
 
       if (ficha.ficha_instalacion) {
