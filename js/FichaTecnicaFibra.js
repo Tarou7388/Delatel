@@ -79,7 +79,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   (async () => {
     try {
-
       const response = await fetch(
         `${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerFichaInstalacion&id=${idContrato}`
       );
@@ -105,11 +104,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       const nombreCliente = data[0].nombre_cliente.split(", ");
       const nombres = nombreCliente[0].split(" ");
-      const apellidos = nombreCliente[1].split(" ");
+      let apellidos = nombreCliente[1].split(" ");
 
       const primerNombre = nombres[0];
-      const primerApellido = apellidos[0];
-      const segundoApellido = apellidos[1];
+      let primerApellido = apellidos[0];
+      let segundoApellido = apellidos[1];
+
+      // Saltar apellidos de dos caracteres
+      apellidos = apellidos.filter(apellido => apellido.length > 2);
+      primerApellido = apellidos[0];
+      segundoApellido = apellidos[1];
 
       const usuario = (primerNombre.substring(0, 3) + primerApellido.substring(0, 6) + idContrato).toLowerCase();
       const contrasenia = "@" + segundoApellido.substring(0, 7).toLowerCase() + idContrato;
@@ -132,7 +136,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       );
     }
   })();
-
 
   /**
    * Función asincrónica que recopila datos de varios campos de entrada en un formulario
