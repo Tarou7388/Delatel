@@ -8,6 +8,7 @@ require_once '../models/Producto.php';
 require_once './Herramientas.php';
 
 $producto = new Producto();
+$input = json_decode(file_get_contents('php://input'), true);
 
 if (isset($_POST['operacion'])) {
 	switch ($_POST['operacion']) {
@@ -23,20 +24,22 @@ if (isset($_POST['operacion'])) {
 			];
 			$estado = $producto->registrarProducto($datos);
 			echo json_encode(["Guardado" => $estado]);
-			break;
-		case 'registrarTipoProducto':
-			$datos = [
-				"tipoProducto" => Herramientas::sanitizarEntrada($_POST['tipoProducto']),
-				"idUsuario" => Herramientas::sanitizarEntrada($_POST["idUsuario"])
-			];
-			$estado = $producto->registrarTipoProducto($datos);
-			if (!$estado) {
-				echo json_encode(["error" => "Error al registrar"]);
-			} else {
-				echo json_encode(["Guardado" => $estado]);
-			}
+			break;	
+	}
+}
 
-			break;
+if($_SERVER['REQUEST_METHOD'] === 'POST'){
+	if(isset($input['operacion'])){
+		switch ($input['operacion']) {
+			case 'registrarTipoProducto':
+				$datos = [
+					"tipoProducto" => Herramientas::sanitizarEntrada($input['tipoProducto']),
+					"idUsuario" => Herramientas::sanitizarEntrada($input["idUsuario"])
+				];
+				$estado = $producto->registrarTipoProducto($datos);
+				echo json_encode(["Guardado" => $estado]);
+				break;
+		}
 	}
 }
 

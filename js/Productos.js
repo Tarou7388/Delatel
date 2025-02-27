@@ -64,6 +64,28 @@ document.addEventListener("DOMContentLoaded", async () => {
       console.error("Error al cargar los Tipos de Producto:", error);
     }
   })();
+  document.getElementById("formRegistrarTipoProductos").addEventListener("submit", (event) => {
+    event.preventDefault();
+    const params = new FormData();
+    params.append("operacion", "registrarTipoProducto");
+    params.append("tipoProducto", document.getElementById("txtTipoProductoModal").value);
+
+    fetch(`${config.HOST}app/controllers/Producto.controllers.php`, {
+      method: "POST",
+      body: params,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        // if (data.Guardado) {
+        //   showToast("Se ha guardado correctamente", "SUCCESS");
+        // } else {
+        //   showToast("Verifique que se haya hecho bien la operación", "ERROR");
+        // }
+        // document.querySelector("#formRegistrarTipoProductos").reset();
+      });
+  });
+
 
   document.getElementById("form-productos").addEventListener("submit", (event) => {
     event.preventDefault();

@@ -65,12 +65,12 @@
     </div>
   </div>
 </div>
-<!-- Modal de registrar -->
+<!-- Modal de registrar tipo de productos -->
 <div class="modal fade" id="RegistrarTipoProductoModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="staticBackdropLabel">Registrar Productos y Marcas</h5>
+        <h5 class="modal-title" id="staticBackdropLabel">Registrar Tipo de Productos</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -81,7 +81,7 @@
                 <input type="text" class="form-control" id="txtTipoProductoModal" name="txtTipoProducto" placeholder="Tipo de Producto">
                 <label for="txtTipoProducto">Tipo de Producto</label>
               </div>
-              <button type="button" class="btn btn-primary" id="btnRegistrarTipoProductoModal">Registrar</button>
+              <button type="submit" class="btn btn-primary" id="btnRegistrarTipoProductoModal">Registrar</button>
             </div>
           </div>
         </form>
@@ -98,7 +98,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+        <h5 class="modal-title" id="staticBackdropLabel">Registrar Marcas</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -109,7 +109,7 @@
                 <input type="text" class="form-control" id="txtMarcaModal" name="txtMarca" placeholder="Marca">
                 <label for="txtMarca">Marca</label>
               </div>
-              <button type="button" class="btn btn-primary" id="btnRegistrarMarcaModal">Registrar</button>
+              <button type="submit" class="btn btn-primary" id="btnRegistrarMarcaModal">Registrar</button>
             </div>
           </div>
         </form>
