@@ -66,23 +66,31 @@ document.addEventListener("DOMContentLoaded", async () => {
   })();
   document.getElementById("formRegistrarTipoProductos").addEventListener("submit", (event) => {
     event.preventDefault();
-    const params = new FormData();
-    params.append("operacion", "registrarTipoProducto");
-    params.append("tipoProducto", document.getElementById("txtTipoProductoModal").value);
 
     fetch(`${config.HOST}app/controllers/Producto.controllers.php`, {
       method: "POST",
-      body: params,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        operacion: "registrarTipoProducto",
+        tipoProducto: document.getElementById("txtTipoProductoModal").value,
+        idUsuario: userid
+      })
     })
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        // if (data.Guardado) {
-        //   showToast("Se ha guardado correctamente", "SUCCESS");
-        // } else {
-        //   showToast("Verifique que se haya hecho bien la operación", "ERROR");
-        // }
-        // document.querySelector("#formRegistrarTipoProductos").reset();
+        if (data.Guardado) {
+          showToast("Se ha guardado correctamente", "SUCCESS");
+        } else {
+          showToast("Verifique que se haya hecho bien la operación", "ERROR");
+        }
+        document.querySelector("#formRegistrarTipoProductos").reset();
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        showToast("Ha ocurrido un error en la operación", "ERROR");
       });
   });
 
