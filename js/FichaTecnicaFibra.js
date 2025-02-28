@@ -435,7 +435,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       "txtSerie",
       "slcBanda",
       "txtPuerto",
-      "txtAntenas"
+      "txtAntenas",
+      "txtUsuarioRouter",
+      "txtSeguridadRouter"
     ];
 
     let todosValidos = true;

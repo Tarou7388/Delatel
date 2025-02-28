@@ -655,7 +655,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       "txtCatvNap",
       "txtGponCasa",
       "txtCatvCasa",
-      "txtPuerto"
+      "txtPuerto",
+      "txtUsuarioRouter",
+      "txtSeguridadRouter"
     ];
 
     let esValido = true;

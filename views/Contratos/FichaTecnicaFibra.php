@@ -284,15 +284,16 @@ $idContrato = $_GET['idContrato'];
               <div class="row g-2 mb-3 align-items-center">
                 <div class="col-12 col-md-6">
                   <div class="form-floating">
-                    <input type="text" class="form-control" id="txtUsuarioRouter" placeholder="Usuario del Router" required>
+                    <input type="text" class="form-control" id="txtUsuarioRouter" placeholder="Usuario del Router">
                     <label for="txtUsuarioRouter">Usuario del Router <span class="required-asterisk" style="color: red;">*</span></label>
-
+                    <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
                   </div>
                 </div>
                 <div class="col-12 col-md-6">
                   <div class="form-floating">
-                    <input type="text" class="form-control" id="txtSeguridadRouter" placeholder="Contraseña del Router" required>
+                    <input type="text" class="form-control" id="txtSeguridadRouter" placeholder="Contraseña del Router">
                     <label for="txtSeguridadRouter">Contraseña del Router <span class="required-asterisk" style="color: red;">*</span></label>
+                    <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
                   </div>
                 </div>
               </div>

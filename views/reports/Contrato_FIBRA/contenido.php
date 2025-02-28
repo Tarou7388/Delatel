@@ -1,12 +1,11 @@
-
 <h3 class="text-center">CONTROL DE INSTALACIÓN SERVICIO FTTH - DELAFIBER</h3>
 
 <div class="container">
   <div style="text-align: right; font-family: Arial, sans-serif; font-size: 12px; margin-right: 35px;">
     <p>
       <strong>TÉCNICO:</strong> <span style="margin-right: 125px;"><?= $resultado[0]['NombreTecnicoFicha']; ?></span>
-      <strong>N°:</strong> <?= $resultado[0]['id_contrato']; ?> &nbsp; 
-      <strong>Fecha Actual:</strong> <?= date('Y-m-d (H:i)', strtotime($resultado[0]['FechaFichaInstalacion'])); ?> &nbsp; 
+      <strong>N°:</strong> <?= $resultado[0]['id_contrato']; ?> &nbsp;
+      <strong>Fecha Actual:</strong> <?= date('Y-m-d (H:i)', strtotime($resultado[0]['FechaFichaInstalacion'])); ?> &nbsp;
     </p>
   </div>
 </div>
@@ -88,6 +87,37 @@
         <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['router']['seguridad']); ?></td>
         <td><strong>MAC:</strong></td>
         <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['router']['codigobarra']) ?></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="container">
+  <table class="tabla2">
+    <thead>
+      <tr>
+        <td colspan="4" class="text-center thead-cabecera"><strong>DETALLES TÉCNICOS</strong></td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>IP:</strong></td>
+        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['router']['ip']); ?></td>
+        <td><strong>POTENCIA:</strong></td>
+        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['potencia']); ?></td>
+      </tr>
+      <tr>
+        <td><strong>USUARIO:</strong></td>
+        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['router']['ingresouserrouter']); ?></td>
+        <td><strong>CLAVE DE ACCESO:</strong></td>
+        <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['router']['ingresopass']); ?></td>
+      </tr>
+      <tr>
+        <td><strong>CAJA:</strong></td>
+        <td class="text-center"><?= htmlspecialchars($fichaTecnica['idcaja']); ?></td>
+        <td><strong>PUERTO:</strong></td>
+        <td class="text-center"><?= htmlspecialchars($fichaTecnica['tipoentrada']['puerto']); ?></td>
+      </tr>
       <?php if (!empty($fichaTecnica['fibraoptica']['detalles'])): ?>
         <tr>
           <td colspan="4" class="text-center"><strong>DETALLES:</strong></td>
