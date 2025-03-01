@@ -21,17 +21,17 @@ $HOST = "http://localhost/Delatel/";
           <tbody>
             <tr>
               <td><img src="<?= $HOST; ?>image/logo2.0.svg" class="logo" alt="Logo"></td>
+            </tr>
+            <tr>
               <td>
-                <h3 style="margin: 10px 0; flex-grow: 1;">CONTRATO DE PRESTACIÓN DEL SERVICIO DE ACCESO A INTERNET FIJO POSTPAGO</h3>
+                <h3>CONTRATO DE PRESTACIÓN DE SERVICIO DE ACCESO A INTERNET FIJO – POSPAGO</h3>
               </td>
             </tr>
           </tbody>
         </table>
 
-        <h3>Reporte Generado el día: <?= $fechaActual; ?></h3>
-
         <h4><img src="<?= $HOST; ?>image/iconoLista.png" class="icono" alt=""> 1) ¿QUÉ ESTÁS CONTRATANDO?</h4>
-        <p><strong>DELAFIBER (DELATEL PERÚ)</strong>, con domicilio en Calle San José 103 – Grocio Prado - Chincha – Ica con RUC; se compromete a prestar el Servicio de acceso a internet fijo Postpago</p>
+        <p><strong>DELAFIBER (DELATEL NETWORK TELECOMUNICACIONES PERU S.A.C.)</strong>, con domicilio en calle San José 103 - Grocio Prado - Chincha - Ica con RUC 20602274277, se compromete a prestar el servicio a acceso a internet fijo pospago.</p>
 
         <h4><img src="<?= $HOST; ?>image/iconoUsuario.png" class="icono" alt=""> 2) DATOS DEL ABONADO</h4>
         <p><b>Nombre / Razón Social:</b></p>
@@ -97,17 +97,17 @@ $HOST = "http://localhost/Delatel/";
               </tr>
             </thead>
             <tbody>
-              <tr style="border: 1px solid #fff;">
-                <td style="border: 1px solid #fff;" class="text-center">Máxima</td>
-                <td style="border: 1px solid #fff;" class="text-center">Mínima Garantizada</td>
-                <td style="border: 1px solid #fff;" class="text-center">Máxima</td>
-                <td style="border: 1px solid #fff;" class="text-center">Mínima Garantizada</td>
+              <tr style="background-color:rgb(248, 216, 222);">
+                <td class="text-center">Máxima</td>
+                <td class="text-center">Mínima Garantizada</td>
+                <td class="text-center">Máxima</td>
+                <td class="text-center">Mínima Garantizada</td>
               </tr>
-              <tr style="border: 1px solid #fff;">
-                <td style="border: 1px solid #fff;" class="input text-center"><?= $velocidadPaquete['bajada']['maxima']; ?>mbps</td>
-                <td style="border: 1px solid #fff;" class="input text-center"><?= $velocidadPaquete['bajada']['minima_garantizada']; ?>mbps</td>
-                <td style="border: 1px solid #fff;" class="input text-center"><?= $velocidadPaquete['subida']['maxima']; ?>mbps</td>
-                <td style="border: 1px solid #fff;" class="input text-center"><?= $velocidadPaquete['subida']['minima_garantizada']; ?>mbps</td>
+              <tr style="background-color:rgb(248, 216, 222);">
+                <td class="text-center"><?= $velocidadPaquete['bajada']['maxima']; ?>mbps</td>
+                <td class="text-center"><?= $velocidadPaquete['bajada']['minima_garantizada']; ?>mbps</td>
+                <td class="text-center"><?= $velocidadPaquete['subida']['maxima']; ?>mbps</td>
+                <td class="text-center"><?= $velocidadPaquete['subida']['minima_garantizada']; ?>mbps</td>
               </tr>
             </tbody>
           </table>
@@ -160,7 +160,7 @@ $HOST = "http://localhost/Delatel/";
                   <th class="text-center" colspan="2"><img src="<?= $HOST; ?>image/iconoTelefono.png" class="icono" alt="">11) COMUNICATE CON DELATEL</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody style="background-color:rgb(248, 216, 222);">
                 <tr>
                   <td class="text-center">Canal Telefónico</td>
                   <td class="text-center">948 629 625</td>
@@ -237,11 +237,11 @@ $HOST = "http://localhost/Delatel/";
             <col style="width: 100%;">
           </colgroup>
           <thead>
-            <tr class="bg-info tex-light">
+            <tr>
               <th class="text-center" colspan="1">ANEXO - CONTENIDO ADICIONALES</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody style="background-color:rgb(248, 216, 222);">
             <tr>
               <td class="contenido-anexo">
                 <strong>SECCIÓN</strong>
