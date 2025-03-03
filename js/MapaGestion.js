@@ -532,6 +532,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         content: img
       });
       marcadorarreglo.push(marcador);
+      console.log(item)
       marcador.addListener('click', () => {
         const ventanaInfo = new google.maps.InfoWindow({
           content: `
@@ -573,6 +574,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           <div id="bodyContent">
             <p>${item.descripcion}</p>
             <p>Coordenadas: ${item.latLng}</p>
+            ${item.id_sector ? `<p>Sector ID: ${item.id_sector}</p>` : ''}
           </div>
         </div>`,
           ariaLabel: "Demo InfoWindow",

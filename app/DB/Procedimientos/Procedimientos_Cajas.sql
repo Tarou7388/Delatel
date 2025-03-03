@@ -210,7 +210,8 @@ CREATE PROCEDURE spu_buscar_caja_id(
 BEGIN
   SELECT 
     id_caja, 
-    nombre
+    nombre,
+    id_sector
   FROM tb_cajas 
   WHERE id_caja = p_id_caja;
 END$$

@@ -27,6 +27,69 @@ window.addEventListener("DOMContentLoaded", async () => {
   let tabla;
   let dataPaquetes = [];
 
+  mapa.emitter.on('coordenadaEncontrada', async () => {
+    const marcadores = mapa.marcadoresCercanos;
+
+    const sectoresInfo = {};
+
+    $('#slcSector').empty();
+
+    $('#slcSector').append(new Option('Seleccione un sector o caja', '', true, true));
+
+    document.querySelector("#slcSector").disabled = false;
+
+    for (const marcador of marcadores) {
+      try {
+        const response = await fetch(`${config.HOST}app/controllers/Caja.controllers.php?operacion=cajabuscarId&idCaja=${marcador.properties.id}`);
+        const data = await response.json();
+
+        if (data && data.length > 0) {
+          const idSector = data[0].id_sector;
+          const idCaja = data[0].id_caja;
+          const nombreCaja = data[0].nombre;
+
+          if (!sectoresInfo[idSector]) {
+            const response2 = await fetch(`${config.HOST}app/controllers/Sector.controllers.php?operacion=buscarSector&idSector=${idSector}`);
+            const data2 = await response2.json();
+
+            if (data2 && data2.length > 0) {
+              sectoresInfo[idSector] = {
+                nombre: data2[0].sector,
+                cajas: []
+              };
+            }
+          }
+
+          if (sectoresInfo[idSector]) {
+            sectoresInfo[idSector].cajas.push({
+              id: idCaja,
+              nombre: nombreCaja
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Error al procesar marcador:', error);
+      }
+    }
+
+    for (const idSector in sectoresInfo) {
+      const sector = sectoresInfo[idSector];
+
+      const optgroup = $('<optgroup></optgroup>').attr('label', sector.nombre);
+
+      sector.cajas.forEach(caja => {
+        optgroup.append(new Option(caja.nombre, caja.id));
+      });
+      $('#slcSector').append(optgroup);
+    }
+    $('#slcSector').trigger('change');
+  });
+
+  $('#slcSector').on('change', async function () {
+    idCaja = $(this).val();
+    console.log('Caja seleccionada:', idCaja);
+  });
+
   async function getQueryParams() {
     try {
 
