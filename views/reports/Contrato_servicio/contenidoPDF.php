@@ -11,7 +11,7 @@ $HOST = "http://localhost/Delatel/";
   <tbody>
     <tr>
       <!-- Primer Contenedor -->
-      <td style="vertical-align: top; padding-right: 5px;">
+      <td style="vertical-align: top; padding-right: 15px;">
         <table>
           <colgroup>
             <col style="width: 50%;">
@@ -20,18 +20,18 @@ $HOST = "http://localhost/Delatel/";
           <thead></thead>
           <tbody>
             <tr>
-              <td><img src="<?= $HOST; ?>image/Logo_Empresa_Delatel.svg" class="logo" alt="Logo"></td>
+              <td><img src="<?= $HOST; ?>image/logo2.0.svg" class="logo" alt="Logo"></td>
+            </tr>
+            <tr>
               <td>
-                <h3 style="margin: 10px 0; flex-grow: 1;">CONTRATO DE PRESTACIÓN DEL SERVICIO DE ACCESO A INTERNET FIJO POSTPAGO</h3>
+                <h3>CONTRATO DE PRESTACIÓN DE SERVICIO DE ACCESO A INTERNET FIJO – POSPAGO</h3>
               </td>
             </tr>
           </tbody>
         </table>
 
-        <h3>Reporte Generado el día: <?= $fechaActual; ?></h3>
-
         <h4><img src="<?= $HOST; ?>image/iconoLista.png" class="icono" alt=""> 1) ¿QUÉ ESTÁS CONTRATANDO?</h4>
-        <p><strong>DELAFIBER (DELATEL PERU)</strong>, con domicilio en Calle San Jose 103 – Grocio Prado - Chincha – Ica con RUC; se compromete a prestar el Servicio de acceso a internet fijo Postpago</p>
+        <p><strong>DELAFIBER (DELATEL NETWORK TELECOMUNICACIONES PERU S.A.C.)</strong>, con domicilio en calle San José 103 - Grocio Prado - Chincha - Ica con RUC 20602274277, se compromete a prestar el servicio a acceso a internet fijo pospago.</p>
 
         <h4><img src="<?= $HOST; ?>image/iconoUsuario.png" class="icono" alt=""> 2) DATOS DEL ABONADO</h4>
         <p><b>Nombre / Razón Social:</b></p>
@@ -64,7 +64,7 @@ $HOST = "http://localhost/Delatel/";
       </td>
 
       <!-- Segundo Contenedor -->
-      <td style="vertical-align: top; padding-left: 5px;">
+      <td style="vertical-align: top; padding-left: 15px;">
         <h4><img src="<?= $HOST; ?>image/iconoLupa.png" class="icono" alt=""> 4) ¿QUÉ DEBES SABER DE TU PLAN?</h4>
         <p>Renta Fija: $/. <?= $resultado[0]['PrecioPaquete']; ?></p>
         <p>El pago se realiza por: </p>
@@ -97,17 +97,17 @@ $HOST = "http://localhost/Delatel/";
               </tr>
             </thead>
             <tbody>
-              <tr style="border: 1px solid #fff;">
-                <td style="border: 1px solid #fff;" class="text-center">Máxima</td>
-                <td style="border: 1px solid #fff;" class="text-center">Mínima Garantizada</td>
-                <td style="border: 1px solid #fff;" class="text-center">Máxima</td>
-                <td style="border: 1px solid #fff;" class="text-center">Mínima Garantizada</td>
+              <tr style="background-color:rgb(248, 216, 222);">
+                <td class="text-center">Máxima</td>
+                <td class="text-center">Mínima Garantizada</td>
+                <td class="text-center">Máxima</td>
+                <td class="text-center">Mínima Garantizada</td>
               </tr>
-              <tr style="border: 1px solid #fff;">
-                <td style="border: 1px solid #fff;" class="input text-center"><?= $velocidadPaquete['bajada']['maxima']; ?></td>
-                <td style="border: 1px solid #fff;" class="input text-center"><?= $velocidadPaquete['bajada']['minima_garantizada']; ?></td>
-                <td style="border: 1px solid #fff;" class="input text-center"><?= $velocidadPaquete['subida']['maxima']; ?></td>
-                <td style="border: 1px solid #fff;" class="input text-center"><?= $velocidadPaquete['subida']['minima_garantizada']; ?></td>
+              <tr style="background-color:rgb(248, 216, 222);">
+                <td class="text-center"><?= $velocidadPaquete['bajada']['maxima']; ?>mbps</td>
+                <td class="text-center"><?= $velocidadPaquete['bajada']['minima_garantizada']; ?>mbps</td>
+                <td class="text-center"><?= $velocidadPaquete['subida']['maxima']; ?>mbps</td>
+                <td class="text-center"><?= $velocidadPaquete['subida']['minima_garantizada']; ?>mbps</td>
               </tr>
             </tbody>
           </table>
@@ -124,7 +124,7 @@ $HOST = "http://localhost/Delatel/";
 
 
     <tr>
-      <td style="vertical-align: top; padding-right: 5px;">
+      <td style="vertical-align: top; padding-right: 15px;">
         <h4><img src="<?= $HOST; ?>image/iconoHerramienta.png" class="icono" alt=""> 6) INSTALACIÓN DEL SERVICIO</h4>
         <p>En caso el servicio requiera de instalación, se realiza en el plazo máximo de 15 días hábiles desde la contratación, previa coordinación con el cliente.</p>
         <h4><img src="<?= $HOST; ?>image/iconoBoleta.png" class="icono" alt=""> 7) RECIBO Y PAGO DEL SERVICIO</h4>
@@ -140,49 +140,49 @@ $HOST = "http://localhost/Delatel/";
         <p>- Debes permitir al personal de DELATEL, el ingreso a tu domicilio para la instalación, verificación o reparación del servicio, así como el retiro de los equipos si fuera el caso.</p>
 
       </td>
-      <td style="vertical-align: top; padding-left: 5px;">
-        <p>- Se te entregara los equipos de comunicación en perfecto estado y se compromete a devolver en las mismas condiciones, salvo el desgaste que el uso normal del tiempo.</p>
-        <p>- Si el equipo se daña por descuido del usuario como son: golpes, caída de agua, cortó circuito y/o manipulaciones EL ARRENDATARIO asumirá el costo de la reparación y/o la totalidad del equipo.</p>
-        <h4><img src="<?= $HOST; ?>image/iconoRegistro.png" class="icono" alt=""> 9) MODIFICACIÓN DEL CONTRATO</h4>
-        <p>- DELATEL solo podrá modificar este contrato por: a) Aumento o reducción de las tarifas y/o atributos del servicio como datos, velocidad y/u otros y b) Aumento de beneficios.</p>
-        <p>- Previamente al aumento de tarifas y/o reducción de atributos del servicio, la empresa te remitirá una comunicación (llamadas telefónicas, mensajes de texto, audio u otros). Si no estás de acuerdo, podrás solicitar la terminación de este contrato sin pago de penalidades, ni cobros similares, aún en caso te encuentres dentro del plazo forzoso.</p>
-        <p>- Usted no podrá traspasar este contrato ni sub-arrendar todos y/o algunos de los equipos de comunicación en materia del presente del contrato.</p>
-        <h4><img src="<?= $HOST; ?>image/iconoDislike.png" class="icono" alt=""> 10) BAJA DE TU SERVICIO</h4>
-        <p>Si deseas dar por terminado este contrato, puedes solicitarlo a DELATEL y la baja se ejecutará en un plazo máximo de 5 días hábiles. También podrás indicar la fecha en la cual requieres la ejecución de la baja, con 1 mes de anticipación.</p>
+      <td style="vertical-align: top; padding-left: 15px;">
+        <p>- Se te entregará los equipos de comunicación en perfecto estado y se compromete a devolver en las mismas condiciones, salvo el desgaste que el uso normal del tiempo.<< /p>
+            <p>- Si el equipo se daña por descuido del usuario como son: golpes, caída de agua, corto circuito y/o manipulaciones el arrendatario asumirá el costo de la reparación y/o la totalidad del equipo.</p>
+            <h4><img src="<?= $HOST; ?>image/iconoRegistro.png" class="icono" alt=""> 9) MODIFICACIÓN DEL CONTRATO</h4>
+            <p>- DELATEL solo podrá modificar este contrato por: a) Aumento o reducción de las tarifas y/o atributos del servicio como datos, velocidad y/u otros y b) Aumento de beneficios.</p>
+            <p>- Previamente al aumento de tarifas y/o reducción de atributos del servicio, la empresa te remitirá una comunicación (llamadas telefónicas, mensajes de texto, audio u otros). Si no estás de acuerdo, podrás solicitar la terminación de este contrato sin pago de penalidades, ni cobros similares, aún en caso te encuentres dentro del plazo forzoso.</p>
+            <p>- Usted no podrá traspasar este contrato ni sub-arrendar todos y/o algunos de los equipos de comunicación en materia del presente del contrato.</p>
+            <h4><img src="<?= $HOST; ?>image/iconoDislike.png" class="icono" alt=""> 10) BAJA DE TU SERVICIO</h4>
+            <p>Si deseas dar por terminado este contrato, puedes solicitarlo a DELATEL y la baja se ejecutará en un plazo máximo de 5 días hábiles. También podrás indicar la fecha en la cual requieres la ejecución de la baja, con 1 mes de anticipación.</p>
 
-        <table class="tabla">
-          <colgroup>
-            <col style="width: 50%;">
-            <col style="width: 50%;">
-          </colgroup>
-          <thead>
-            <tr>
-              <th class="text-center" colspan="2"><img src="<?= $HOST; ?>image/iconoTelefono.png" class="icono" alt="">11) COMUNICATE CON DELATEL</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="text-center">Canal Telefónico</td>
-              <td class="text-center">948 629 625</td>
-            </tr>
+            <table class="tabla">
+              <colgroup>
+                <col style="width: 50%;">
+                <col style="width: 50%;">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th class="text-center" colspan="2"><img src="<?= $HOST; ?>image/iconoTelefono.png" class="icono" alt="">11) COMUNICATE CON DELATEL</th>
+                </tr>
+              </thead>
+              <tbody style="background-color:rgb(248, 216, 222);">
+                <tr>
+                  <td class="text-center">Canal Telefónico</td>
+                  <td class="text-center">948 629 625</td>
+                </tr>
 
-            <tr>
-              <td class="text-center">Página Web</td>
-              <td class="text-center">www.delatel.com</td>
-            </tr>
-            <tr>
-              <td class="text-center">Correo</td>
-              <td class="text-center">Ventasdt@delatel.com</td>
-            </tr>
-          </tbody>
-        </table>
+                <tr>
+                  <td class="text-center">Página Web</td>
+                  <td class="text-center">www.delatel.com</td>
+                </tr>
+                <tr>
+                  <td class="text-center">Correo</td>
+                  <td class="text-center">Ventasdt@delatel.com</td>
+                </tr>
+              </tbody>
+            </table>
       </td>
     </tr>
 
 
 
     <tr>
-      <td style="vertical-align: top; padding-left: 5px;">
+      <td style="vertical-align: top; padding-left: 15px;">
         <h4><img src="<?= $HOST; ?>image/iconoUsuario.png" class="icono" alt=""> 12) USO DE TUS DATOS PERSONALES</h4>
         <p><strong>DELATEL realiza el tratamiento de tus datos personales </strong>para la ejecución y prestación del servicio.
           Para ello, debe informarte sobre las condiciones para el tratamiento de tus datos personales y debe solicitar tu consentimiento
@@ -230,21 +230,21 @@ $HOST = "http://localhost/Delatel/";
         </table>
       </td>
 
-      <td style="vertical-align: top; padding-left: 5px;">
+      <td style="vertical-align: top; padding-left: 15px;">
 
         <table class="tabla">
           <colgroup>
             <col style="width: 100%;">
           </colgroup>
           <thead>
-            <tr class="bg-info tex-light">
+            <tr>
               <th class="text-center" colspan="1">ANEXO - CONTENIDO ADICIONALES</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody style="background-color:rgb(248, 216, 222);">
             <tr>
               <td class="contenido-anexo">
-                <strong>SECCIÓN.-</strong>
+                <strong>SECCIÓN</strong>
                 <p>
                   La instalación será realizada por Fibra Óptica hasta el equipo emisor a instalar, Instalación no comprende canalizado interno.
                   El servicio comprende modem óptico – WIFI (calidad de comodato).
@@ -252,7 +252,7 @@ $HOST = "http://localhost/Delatel/";
                   Se brindará el servicio de soporte de manera remota 24 x 7 llamando al NOC 7480600
                   Las configuraciones se podrán hacer vía online de acuerdo con el requerimiento.
                 </p>
-                <strong>EQUIPOS.-</strong>
+                <strong>EQUIPOS</strong>
                 <p>
                   Los Equipos te serán entregados en Comoda- to, debiendo proceder a la devolución de los mismos una vez concluido el presente Contrato,
                   sin más deterioro que el uso normal del mismo. La devolución la deberá realizar previa coordinación con los técnicos y/o personal autorizado
@@ -266,7 +266,7 @@ $HOST = "http://localhost/Delatel/";
                   vigentes multiplicados por el número de meses que falten para que venza dicho plazo forzoso.
                 </p>
 
-                <strong>OTRO EJEMPLO:</strong>
+                <strong>OTRO EJEMPLO</strong>
                 <p>
                   Si por causas no atribuibles a DELATEL, hubieras contratado a plazo forzoso y decidieras resolver el contrato durante su vigencia,
                   o si DELATEL lo resolviera por falta de pago, siguiendo el procedimiento establecido en el artículo 75° de las Condiciones de Uso,

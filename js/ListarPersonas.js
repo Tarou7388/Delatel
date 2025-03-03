@@ -1,4 +1,3 @@
-
 import config from "../env.js";
 import * as mapa from "./Mapa.js";
 import * as Herramientas from "../js/Herramientas.js";
@@ -10,13 +9,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   const ruta = `${config.HOST}app/controllers/Persona.ssp.php`;
   const accesos = await Herramientas.permisos();
 
-  const txtNombresActualizar = document.querySelector("txtNombresActualizar");
-  const txtApellidosActualizar = document.querySelector("txtApellidosActualizar");
-  const txtDireccionActualizar = document.querySelector("txtDireccionActualizar");
-  const CoordenadaModel = document.querySelector("CoordenadaModel");
-  const txtTelefono = document.querySelector("txtTelefono");
-  const txtCorreoElectronico = document.querySelector("txtCorreoElectronico");
-  const txtReferenciaActualizar = document.querySelector("txtReferenciaActualizar");
   let idPersonaSeleccionada = -1;
 
   window.tablaPersonas = $("#TbPersonas").DataTable({
@@ -54,9 +46,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         title: "Email",
         className: "text-center",
         render: function (data, type, row) {
-          return data && data.trim() !== ""
-            ? data
-            : '<em>Email no asignado</em>';
+          return data && data.trim() !== "" ? data : '<em>No asignado</em>';
         }
       },
       {
@@ -100,15 +90,25 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   $("#TbPersonas tbody").on("click", ".btn-edit", async function () {
-    console.log("ID de la persona seleccionada:", $(this).data("id"));
     idPersonaSeleccionada = $(this).data("id");
+
+    let datospersona = await traerdatosPersona(idPersonaSeleccionada);
+
+    if (datospersona < 0) {
+      showToast("Esta persona no figura como cliente", "WARNING");
+      return;
+    };
+
     $("#modalEditarPersona").modal("show");
     await cargarMapa();
+  });
 
-    $("#btnGuardarModalMapa").addEventListener("click", async (e) => {
-      e.preventDefault();
+  document.querySelector("#FormActualizarPersona").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (await ask("¿Desea actualizar a este cliente?")) {
       await actualizarCliente();
-    });
+      $("#modalEditarPersona").modal("hide");
+    }
   });
 
   /******************************************************************************************/
@@ -117,20 +117,30 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   async function actualizarCliente() {
     if (accesos?.personas?.actualizar) {
+      const txtNombresActualizar = document.querySelector("#txtNombresActualizar").value;
+      const txtApellidosActualizar = document.querySelector("#txtApellidosActualizar").value;
+      const txtTelefono = document.querySelector("#txtTelefono").value;
+      const txtCorreoElectronico = document.querySelector("#txtCorreoElectronico").value;
+      const txtDireccionActualizar = document.querySelector("#txtDireccionActualizar").value;
+      const txtReferenciaActualizar = document.querySelector("#txtReferenciaActualizar").value;
+      const CoordenadaModel = document.querySelector("#CoordenadaModel").value;
+
       const datosEnvio = {
         operacion: "actualizarCliente",
         parametros: {
-          apellidos: txtApellidosActualizar.value,
-          nombres: txtNombresActualizar.value,
-          telefono: txtTelefono.value,
-          email: txtCorreoElectronico.value,
-          direccion: txtDireccionActualizar.value,
-          referencia: txtReferenciaActualizar.value,
-          coordenadas: CoordenadaModel.value,
-          idUserUpdate: idUsuario,
+          apellidos: txtApellidosActualizar,
+          nombres: txtNombresActualizar,
+          telefono: txtTelefono,
+          email: txtCorreoElectronico,
+          direccion: txtDireccionActualizar,
+          referencia: txtReferenciaActualizar,
+          coordenadas: CoordenadaModel,
+          idUserUpdate: userid,
           idPersona: idPersonaSeleccionada,
         },
       };
+
+      console.log("Datos a enviar:", datosEnvio);
 
       const response = await fetch(
         `${config.HOST}app/controllers/Cliente.controllers.php`,
@@ -144,10 +154,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       );
 
       const data = await response.json();
-
-      if (data.actualizado) {
+      if (data.Actualizado) {
         showToast("¡Cliente actualizado correctamente!", "SUCCESS", 1500);
-        resetUI();
         tablaPersonas.ajax.reload();
       } else {
         showToast("Error al actualizar el Cliente.", "ERROR");
@@ -157,11 +165,46 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   async function traerdatosPersona(idPersona) {
     try {
-      const response = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteId&id=${idPersona}`);
+      const response = await fetch(`${config.HOST}app/controllers/Persona.controllers.php?operacion=buscarClienteIdPersona&id=${idPersona}`);
+
+      if (!response.ok) {
+        throw new Error('Error en la respuesta del servidor');
+      }
+
       const data = await response.json();
+
+      if (Array.isArray(data) && data.length > 0) {
+        console.log("Datos de la persona seleccionada:", data);
+
+        if (data[0].id_cliente == null && data[0].id_cliente == undefined) {
+          return -1;
+        }
+
+        document.querySelector("#txtNombresActualizar").value = data[0].nombres || "";
+        document.querySelector("#txtApellidosActualizar").value = data[0].apellidos || "";
+        document.querySelector("#txtTelefono").value = data[0].telefono || "";
+        document.querySelector("#txtCorreoElectronico").value = data[0].email || "";
+        document.querySelector("#txtDireccionActualizar").value = data[0].direccion || "";
+        document.querySelector("#txtReferenciaActualizar").value = data[0].referencia || "";
+        document.querySelector("#CoordenadaModel").value = data[0].coordenadas || "";
+
+        if (data[0].coordenadas) {
+          const buscarBtn = document.querySelector("#buscarBtn");
+          setTimeout(() => {
+            buscarBtn.click();
+          }, 500);
+          console.log("Coordenadas:", data[0].coordenadas);
+        }
+        return 1;
+      } else {
+        console.error('No se encontraron datos para esta persona.');
+        showToast('No se encontraron datos para la persona seleccionada.', 'WARNING');
+      }
     } catch (error) {
-      
+      console.error('Error al obtener los datos de la persona:', error);
+      showToast('Hubo un problema al intentar obtener los datos.', 'ERROR');
     }
   }
+
 
 });

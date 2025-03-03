@@ -30,7 +30,7 @@ FROM
 WHERE 
     r.rol != 'Administrador' AND r.inactive_at IS NULL;
 
-DROP VIEW IF EXISTS vw_rolesdetallado_listar$$
+DROP VIEW IF EXISTS vw_rolesdetallado_listar;
 CREATE VIEW vw_rolesdetallado_listar AS
 SELECT
     r.id_rol,
@@ -51,7 +51,7 @@ FROM
     LEFT JOIN tb_usuarios u2 ON r.iduser_update = u2.id_usuario
     LEFT JOIN tb_usuarios u3 ON r.iduser_inactive = u3.id_usuario ;
 
-DROP PROCEDURE IF EXISTS spu_roles_registrar$$
+DROP PROCEDURE IF EXISTS spu_roles_registrar;
 CREATE PROCEDURE spu_roles_registrar(
     p_rol            VARCHAR(30),
     p_permisos       JSON,
@@ -62,7 +62,7 @@ BEGIN
     VALUES (p_rol, p_permisos, p_iduser_create);
 END $$
 
-DROP PROCEDURE IF EXISTS spu_roles_actualizar$$
+DROP PROCEDURE IF EXISTS spu_roles_actualizar;
 CREATE PROCEDURE spu_roles_actualizar(
     p_id_rol INT,
     p_rol VARCHAR(30),
@@ -78,7 +78,7 @@ BEGIN
         id_rol = p_id_rol;
 END $$
 
-DROP PROCEDURE IF EXISTS spu_roles_eliminar$$
+DROP PROCEDURE IF EXISTS spu_roles_eliminar;
 CREATE PROCEDURE spu_roles_eliminar(
     p_id_rol INT,
     p_iduser_inactive INT
@@ -92,7 +92,7 @@ BEGIN
         id_rol = p_id_rol;
 END $$
 
-DROP PROCEDURE IF EXISTS spu_roles_activar$$
+DROP PROCEDURE IF EXISTS spu_roles_activar;
 CREATE PROCEDURE spu_roles_activar(
     p_id_rol INT,
     p_iduser_update INT

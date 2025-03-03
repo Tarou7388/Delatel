@@ -51,6 +51,12 @@ if (isset($_GET['operacion'])) {
       $resultado = $cliente->buscarNombreyApellido($datos);
       echo json_encode($resultado);
       break;
+    case 'buscarClienteId':
+      $resultado = $cliente->buscarClientebyId([
+        'id' => Herramientas::sanitizarEntrada($_GET['id'])
+      ]);
+      echo json_encode($resultado);
+      break;
   }
 }
 
@@ -90,15 +96,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
   switch ($operacion) {
     case 'actualizarCliente':
       $datos = [
-        "apellidos"   => Herramientas::formatearFecha($datos['apellidos']),
-        "nombres"          => Herramientas::sanitizarEntrada($datos['nombres']),
-        "telefono"       => Herramientas::sanitizarEntrada($datos['telefono']),
-        "email"           => Herramientas::sanitizarEntrada($datos['email']),
-        "direccion"        => Herramientas::sanitizarEntrada($datos['direccion']),
-        "referencia"       => Herramientas::sanitizarEntrada($datos['referencia']),
-        "coordenadas"      => Herramientas::sanitizarEntrada($datos['coordenadas']),
-        "idUserUpdate"     => $datos['idUserUpdate'],
-        "idPersona"       => Herramientas::sanitizarEntrada($datos['idPersona'])
+        "apellidos"   => Herramientas::sanitizarEntrada($datos["parametros"]['apellidos']),
+        "nombres"          => Herramientas::sanitizarEntrada($datos["parametros"]['nombres']),
+        "telefono"       => Herramientas::sanitizarEntrada($datos["parametros"]['telefono']),
+        "email"           => Herramientas::sanitizarEntrada($datos["parametros"]['email']),
+        "direccion"        => Herramientas::sanitizarEntrada($datos["parametros"]['direccion']),
+        "referencia"       => Herramientas::sanitizarEntrada($datos["parametros"]['referencia']),
+        "coordenadas"      => $datos["parametros"]['coordenadas'],
+        "idUserUpdate"     => $datos["parametros"]['idUserUpdate'],
+        "idPersona"       => Herramientas::sanitizarEntrada($datos["parametros"]['idPersona'])
       ];
 
       $estado = $cliente->actualizarClienteNumdoc($datos);

@@ -1,3 +1,4 @@
+-- Active: 1740619856376@@127.0.0.1@3306@delatel
 
 USE Delatel;
 
@@ -84,24 +85,24 @@ END $$
 
 
 DELIMITER $$
-DROP PROCEDURE IF EXISTS spu_buscar_datos_cliente_idPersona$$
-CREATE PROCEDURE spu_buscar_datos_cliente_idPersona (
+DROP PROCEDURE IF EXISTS spu_clientes_por_IdPersona$$
+CREATE PROCEDURE spu_clientes_por_IdPersona (
     IN p_id_persona INT
 )
 BEGIN
     SELECT
         p.id_persona,
-        CONCAT(p.nombres, ', ', p.apellidos) AS nombre_cliente,
+        p.nombres,
+        p.apellidos,
         p.nro_doc AS identificador_cliente,
-        p.nacionalidad,  
         p.telefono,
         p.email,
         c.direccion,
         c.referencia,
-        c.coordenadas
+        c.coordenadas,
+        c.id_cliente
     FROM tb_personas p
     LEFT JOIN tb_clientes c ON c.id_persona = p.id_persona
     WHERE p.id_persona = p_id_persona;
 END$$
 
-CALL spu_buscar_datos_cliente_idPersona(1);

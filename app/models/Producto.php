@@ -82,6 +82,15 @@ class Producto extends Conexion
     );
     return $this->registrar($sql, $values);
   }
+  public function registrarTipoproducto($params = [])
+  {
+    $sql = "CALL spu_registrar_tipo_producto(?,?)";
+    $values = array(
+      $params['tipoProducto'],
+      $params['idUsuario']
+    );
+    return $this->registrar($sql, $values);
+  }
 
   /**
    * Actualiza un producto en la base de datos utilizando los parámetros proporcionados.

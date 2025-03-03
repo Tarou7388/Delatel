@@ -46,6 +46,15 @@ BEGIN
     INSERT INTO tb_productos (id_marca, id_tipo, id_unidad, modelo, precio_actual, codigo_barra, create_at, iduser_create)
     VALUES (p_id_marca, p_id_tipo, p_id_unidad, p_modelo, p_precio_actual, p_codigo_barra, NOW(), p_iduser_create);
 END $$
+DROP PROCEDURE IF EXISTS spu_registrar_tipo_producto$$
+CREATE PROCEDURE spu_registrar_tipo_producto(
+    IN p_tipo_nombre VARCHAR(70),
+    IN p_iduser_create INT
+)
+BEGIN
+    INSERT INTO tb_tipoproducto (tipo_nombre, create_at, iduser_create)
+    VALUES (p_tipo_nombre, NOW(), p_iduser_create);
+END $$
 
 DROP PROCEDURE IF EXISTS spu_productos_actualizar$$
 CREATE PROCEDURE spu_productos_actualizar(

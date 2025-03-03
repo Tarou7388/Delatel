@@ -24,4 +24,13 @@ class Marca extends Conexion
         $sql = "SELECT * FROM vw_marca";
         return $this->listarDatos($sql);
     }
+    public function registrarMarca($params = [])
+    {
+        $sql = "CALL spu_registrar_marca(?, ?)";
+        $values = array(
+            $params['marca'], 
+            $params['idUsuario']
+        );
+        return $this->consultaParametros($sql, $values);
+    }
 }

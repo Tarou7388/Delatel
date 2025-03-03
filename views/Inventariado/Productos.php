@@ -65,6 +65,62 @@
     </div>
   </div>
 </div>
+<!-- Modal de registrar tipo de productos -->
+<div class="modal fade" id="RegistrarTipoProductoModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Registrar Tipo de Productos</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="" id="formRegistrarTipoProductos">
+          <div class="form-floating mb-2">
+            <div class="input-group">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="txtTipoProductoModal" name="txtTipoProducto" placeholder="Tipo de Producto">
+                <label for="txtTipoProducto">Tipo de Producto</label>
+              </div>
+              <button type="submit" class="btn btn-primary" id="btnRegistrarTipoProductoModal">Registrar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de marcas -->
+<div class="modal fade" id="RegistrarMarcasModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Registrar Marcas</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="" id="formRegistrarMarcas">
+          <div class="form-floating mb-2">
+            <div class="input-group">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="txtMarcaModal" name="txtMarca" placeholder="Marca">
+                <label for="txtMarca">Marca</label>
+              </div>
+              <button type="submit" class="btn btn-primary" id="btnRegistrarMarcaModal">Registrar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <!-- Formulario de Registro -->
 <div class="container-fluid px-4">
@@ -80,20 +136,26 @@
         <div class="row g-2 mb-2">
 
           <div class="col-md">
-            <div class="form-floating">
-              <select class="form-select" id="slcTipoProducto" name="slcTipoProducto" required>
-                <option value="" disabled selected>Seleccione Producto</option>
-              </select>
-              <label for="slcTipoProducto">Tipo Producto</label>
+            <div class="input-group">
+              <div class="form-floating">
+                <select class="form-select" id="slcTipoProducto" name="slcTipoProducto" required>
+                  <option value="" disabled selected>Seleccione Producto</option>
+                </select>
+                <label for="slcTipoProducto">Tipo Producto</label>
+              </div>
+              <button class="btn btn-outline-primary" type="button" id="btnRegistrarProducto" data-bs-toggle="modal" data-bs-target="#RegistrarTipoProductoModal">Registrar</button>
             </div>
           </div>
 
           <div class="col-md">
-            <div class="form-floating">
-              <select class="form-select" id="slcMarca" name="slcMarca" required>
-                <option value="" disabled selected>Seleccione Marca</option>
-              </select>
-              <label for="slcMarca">Marca</label>
+            <div class="input-group">
+              <div class="form-floating">
+                <select class="form-select" id="slcMarca" name="slcMarca" required>
+                  <option value="" disabled selected>Seleccione Marca</option>
+                </select>
+                <label for="slcMarca">Marca</label>
+              </div>
+              <button class="btn btn-outline-primary" type="button" id="btnRegistrarProducto" data-bs-toggle="modal" data-bs-target="#RegistrarMarcasModal">Registrar</button>
             </div>
           </div>
 
@@ -167,14 +229,11 @@
   </div>
 </div>
 
-
-
-
 <?php require_once "../../footer.php"; ?>
 
 <script type="module" src="../../js/Productos.js"></script>
 <script type="module" src="../../js/productosDatatable.js"></script>
- 
+
 
 </body>
 

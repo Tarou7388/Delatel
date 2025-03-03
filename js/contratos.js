@@ -524,8 +524,6 @@ window.addEventListener("DOMContentLoaded", async () => {
       }
     }
 
-
-
     const dataSectores = await fetchSectores();
     dataSectores.forEach((sector) => {
       const option = document.createElement("option");
@@ -536,7 +534,6 @@ window.addEventListener("DOMContentLoaded", async () => {
       slcSector.appendChild(option.cloneNode(true));
       slcSectorActualizar.appendChild(option);
     });
-
 
     tabla = new DataTable("#listarContratos", {
       language: {
@@ -595,18 +592,29 @@ window.addEventListener("DOMContentLoaded", async () => {
 
         const filas = document.querySelectorAll("#listarContratos tbody tr");
 
-        filas.forEach((fila) => {
+        filas.forEach(async (fila) => {
+          const idContrato = fila.querySelector(".btn-edit").getAttribute("data-idContrato");
+          try {
+            const response = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerFichaInstalacion&id=${idContrato}`);
+            const data = await response.json();
+            const fichaInstalacion = JSON.parse(data[0].ficha_instalacion);
+
+            if (!fichaInstalacion || Object.keys(fichaInstalacion).length <= 1) {
+              fila.classList.add("ficha-incompleta");
+            }
+          } catch (error) {
+            console.error("Error al obtener el JSON de la ficha de instalación:", error);
+          }
+
           fila.addEventListener("click", (event) => {
             alternarDetalles(fila);
           });
         });
 
-
         const botonesPdf = document.querySelectorAll(".btnGenerar");
         const botonesEliminar = document.querySelectorAll(".btnEliminar");
         const botonesFicha = document.querySelectorAll(".btnFicha");
         const botonesEdit = document.querySelectorAll(".btn-edit");
-
 
         botonesFicha.forEach((boton) => {
           const idContrato = boton.getAttribute("data-idContrato");
@@ -614,9 +622,11 @@ window.addEventListener("DOMContentLoaded", async () => {
           const estadoIcono = localStorage.getItem(`iconFicha${idContrato}`);
           if (estadoIcono === 'lleno') {
             icono.classList.replace('fa-file-signature', 'fa-file-circle-check');
+          } else {
+            const fila = boton.closest('tr');
+            fila.classList.add('ficha-incompleta');
           }
         });
-
 
         botonesFicha.forEach((boton) => {
           boton.addEventListener("click", async (event) => {
@@ -636,10 +646,8 @@ window.addEventListener("DOMContentLoaded", async () => {
               const fichaInstalacion = JSON.parse(data[0].ficha_instalacion);
 
               if (fichaInstalacion && Object.keys(fichaInstalacion).length > 1) {
-
                 const icono = document.getElementById(`iconFicha${idContrato}`);
                 icono.classList.replace('fa-file', 'fa-file-circle-check');
-
                 localStorage.setItem(`iconFicha${idContrato}`, 'lleno');
 
                 if (tipoServicio === "WISP") {
@@ -656,12 +664,10 @@ window.addEventListener("DOMContentLoaded", async () => {
               }
             } catch (error) {
               console.error("Error al obtener el JSON de la ficha de instalación:", error);
-
               window.location.href = `${config.HOST}views/Contratos/${tipoFicha[tipoServicio]}?idContrato=${idContrato}`;
             }
           });
         });
-
 
         botonesEdit.forEach((boton) => {
           boton.addEventListener("click", (event) => {
@@ -669,7 +675,6 @@ window.addEventListener("DOMContentLoaded", async () => {
             abrirModalEditar(idContrato);
           });
         });
-
 
         botonesEliminar.forEach((boton) => {
           boton.addEventListener("click", async (event) => {
@@ -693,7 +698,6 @@ window.addEventListener("DOMContentLoaded", async () => {
           });
         });
 
-
         botonesPdf.forEach((boton) => {
           boton.addEventListener("click", () => {
             const idContrato = boton.getAttribute("data-idContrato");
@@ -707,6 +711,14 @@ window.addEventListener("DOMContentLoaded", async () => {
         });
       }
     });
+
+    const style = document.createElement('style');
+    style.innerHTML = `
+      .ficha-incompleta {
+        background-color:rgb(255, 255, 137) !important; 
+      }
+    `;
+    document.head.appendChild(style);
   }
 
   async function validarCampos() {

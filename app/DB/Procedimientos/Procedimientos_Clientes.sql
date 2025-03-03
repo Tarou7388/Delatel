@@ -1,4 +1,4 @@
--- Active: 1733577930028@@127.0.0.1@3306@delatel
+-- Active: 1740619856376@@127.0.0.1@3306@delatel
 USE Delatel;
 
 DROP VIEW IF EXISTS vw_clientes_obtener;
@@ -112,9 +112,7 @@ BEGIN
 END $$
 
 DELIMITER $$
-
 DROP PROCEDURE IF EXISTS spu_clientesPersonas_actualizar$$
-
 CREATE PROCEDURE spu_clientesPersonas_actualizar(
     p_apellidos        VARCHAR(80),
     p_nombres          VARCHAR(80),
@@ -127,6 +125,8 @@ CREATE PROCEDURE spu_clientesPersonas_actualizar(
     p_id_persona       INT
 )
 BEGIN
+    SET p_email = CASE WHEN p_email = '' THEN NULL ELSE p_email END;
+
     UPDATE tb_personas
     SET
         apellidos = p_apellidos,
@@ -195,3 +195,35 @@ FROM tb_contratos c
 WHERE
     c.ficha_instalacion IS NOT NULL
     AND c.inactive_at IS NULL;
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS spu_buscar_datos_cliente_id$$
+CREATE PROCEDURE spu_buscar_datos_cliente_id  
+(
+    p_id_cliente INT
+)
+BEGIN
+    SELECT
+        c.id_cliente,
+        COALESCE(
+            CONCAT(p.nombres, ", ", p.apellidos),
+            e.nombre_comercial
+        ) AS nombre_cliente,
+        COALESCE(p.nro_doc, e.ruc) AS identificador_cliente,
+        p.nacionalidad,  
+        CASE 
+            WHEN p.nro_doc IS NOT NULL THEN p.tipo_doc
+            ELSE 'RUC'
+        END AS tipo_doc,
+        COALESCE(p.telefono, e.telefono) AS telefono,
+        COALESCE(p.email, e.email) AS email,
+        c.direccion,
+        c.referencia,
+        c.coordenadas
+    FROM
+        tb_clientes c
+        LEFT JOIN tb_personas p ON c.id_persona = p.id_persona
+        LEFT JOIN tb_empresas e ON c.id_empresa = e.id_empresa
+    WHERE
+        c.id_cliente = p_id_cliente;
+END$$
