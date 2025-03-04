@@ -189,9 +189,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.querySelector("#CoordenadaModel").value = data[0].coordenadas || "";
 
         if (data[0].coordenadas) {
-          const buscarBtn = document.querySelector("#buscarBtn");
+          const buscarCoodenada = document.querySelector("#buscarCoodenada");
           setTimeout(() => {
-            buscarBtn.click();
+            buscarCoodenada.click();
           }, 500);
           console.log("Coordenadas:", data[0].coordenadas);
         }

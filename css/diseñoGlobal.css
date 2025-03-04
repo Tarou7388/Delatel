@@ -99,7 +99,7 @@
     border-right: none;
   }
 
-  #buscarBtn {
+  #buscarCoodenada {
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
     border-left: none;
@@ -109,7 +109,7 @@
     cursor: pointer;
   }
 
-  #buscarBtn:hover {
+  #buscarCoodenada:hover {
     background-color: #0056b3;
   }
 

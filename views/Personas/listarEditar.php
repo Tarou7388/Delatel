@@ -51,7 +51,7 @@
                   <label for="CoordenadaModel" class="form-label">Coordenadas</label>
                   <div class="input-group">
                     <input type="text" id="CoordenadaModel" class="form-control" placeholder="Coordenada" required>
-                    <button class="btn btn-outline-secondary" type="button" id="buscarBtn">Buscar</button>
+                    <button class="btn btn-outline-secondary" type="button" id="buscarCoodenada">Buscar</button>
                   </div>
                 </div>
 

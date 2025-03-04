@@ -172,7 +172,7 @@ export async function iniciarMapa(params = { cajas: true, mufas: true, antena: t
   await iniciarRenderizadoPorLotes();
 
   if(document.querySelector('#inputGroupCoordenada')){
-    document.querySelector('#buscarBtn').addEventListener('click', async () => {
+    document.querySelector('#buscarCoodenada').addEventListener('click', async () => {
       if(document.querySelector('#CoordenadaModel').value != ''){
         const coordenada = document.querySelector('#CoordenadaModel').value.split(',');
         const latitud = parseFloat(coordenada[0]);
