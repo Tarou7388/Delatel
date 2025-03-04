@@ -54,6 +54,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
             if (data2 && data2.length > 0) {
               sectoresInfo[idSector] = {
+                id: idSector, // Added sector ID
                 nombre: data2[0].sector,
                 cajas: []
               };
@@ -75,7 +76,9 @@ window.addEventListener("DOMContentLoaded", async () => {
     for (const idSector in sectoresInfo) {
       const sector = sectoresInfo[idSector];
 
-      const optgroup = $('<optgroup></optgroup>').attr('label', sector.nombre);
+      const optgroup = $('<optgroup></optgroup>')
+        .attr('label', sector.nombre)
+        .attr('id', `sector-${sector.id}`); // Set optgroup ID to sector ID
 
       sector.cajas.forEach(caja => {
         optgroup.append(new Option(caja.nombre, caja.id));
@@ -87,6 +90,8 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   $('#slcSector').on('change', async function () {
     idCaja = $(this).val();
+    idSector = $(this).find(':selected').parent().attr('id').split('-')[1];
+    console.log('Sector seleccionado:', idSector);
     console.log('Caja seleccionada:', idCaja);
   });
 
@@ -319,7 +324,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       parametros: {
         idCliente: idCliente,
         idPaquete: idPaquete,
-        idSector: sector.value,
+        idSector: idSector,
         direccion: direccion.value,
         referencia: referencia.value,
         coordenada: coordenada.value,
@@ -523,17 +528,6 @@ window.addEventListener("DOMContentLoaded", async () => {
         }
       }
     }
-
-    const dataSectores = await fetchSectores();
-    dataSectores.forEach((sector) => {
-      const option = document.createElement("option");
-      option.value = sector.id_sector;
-      option.textContent = sector.sector;
-      slcSector.appendChild(option);
-
-      slcSector.appendChild(option.cloneNode(true));
-      slcSectorActualizar.appendChild(option);
-    });
 
     tabla = new DataTable("#listarContratos", {
       language: {

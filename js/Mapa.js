@@ -80,7 +80,6 @@ async function iniciarRenderizadoPorLotes() {
   procesarLote();
 }
 
-
 async function actualizarPoligonoEnMapa(union) {
 
   unionPolygons.forEach(polygon => polygon.setMap(null));
@@ -97,11 +96,11 @@ async function actualizarPoligonoEnMapa(union) {
     union.geometry.coordinates.forEach(polygonCoords => {
       const polygon = new google.maps.Polygon({
         paths: polygonCoords[0].map(coord => ({ lat: coord[1], lng: coord[0] })),
-        strokeColor: '#00FF00',
+        strokeColor: '#130f40',
         strokeOpacity: 0.8,
         strokeWeight: 2,
-        fillColor: '#00FF00',
-        fillOpacity: 0.35,
+        fillColor: '#30336b',
+        fillOpacity: 0.2,
         map: mapa
       });
       unionPolygons.push(polygon); // Almacenar cada polígono creado
@@ -110,11 +109,11 @@ async function actualizarPoligonoEnMapa(union) {
     // Si es un solo polígono, mostrarlo directamente
     unionPolygon = new google.maps.Polygon({
       paths: union.geometry.coordinates[0].map(coord => ({ lat: coord[1], lng: coord[0] })),
-      strokeColor: '#00FF00',
+      strokeColor: '#6c5ce7',
       strokeOpacity: 0.8,
       strokeWeight: 2,
-      fillColor: '#00FF00',
-      fillOpacity: 0.35,
+      fillColor: '#130f40',
+      fillOpacity: 0.25,
       map: mapa
     });
 
@@ -141,7 +140,6 @@ async function actualizarPoligonoEnMapa(union) {
   }
 }
 
-
 export async function iniciarMapa(params = { cajas: true, mufas: true, antena: true }, id = "map", renderizado = "modal") {
   const posicionInicial = { lat: -13.417077, lng: -76.136585 };
   ({ Map, Circle, Polygon } = await google.maps.importLibrary("maps"));
@@ -152,14 +150,6 @@ export async function iniciarMapa(params = { cajas: true, mufas: true, antena: t
     center: posicionInicial,
     mapId: "DEMO_MAP_ID",
   });
-
-  const buscarBtn = document.getElementById('buscarBtn');
-  if (buscarBtn) {
-    buscarBtn.addEventListener('click', async () => {
-      const CoordenadaModel = document.getElementById('CoordenadaModel').value;
-      await buscarCoordenadas(CoordenadaModel.split(',')[0], CoordenadaModel.split(',')[1]);
-    });
-  }
 
   const response = await fetch(`${config.HOST}app/controllers/Caja.controllers.php?operacion=listarCajas`);
   const datosCajas = await response.json();
@@ -180,6 +170,27 @@ export async function iniciarMapa(params = { cajas: true, mufas: true, antena: t
     puntosMarcador.features.push(turf.point([longitud, latitud], { id: caja.id_caja, idSector: caja.id_sector }));
   });
   await iniciarRenderizadoPorLotes();
+
+  if(document.querySelector('#inputGroupCoordenada')){
+    document.querySelector('#buscarBtn').addEventListener('click', async () => {
+      if(document.querySelector('#CoordenadaModel').value != ''){
+        const coordenada = document.querySelector('#CoordenadaModel').value.split(',');
+        const latitud = parseFloat(coordenada[0]);
+        const longitud = parseFloat(coordenada[1]);
+        const posicion = new google.maps.LatLng(latitud, longitud);
+        mapa.setCenter(posicion);
+        mapa.setZoom(15);
+        if(ubicacionMarcador) ubicacionMarcador.setMap(null);
+        if(marcador) marcador.setMap(null);
+        ubicacionMarcador = new google.maps.Marker({
+          position: posicion,
+          map: mapa,
+          title: "Ubicación buscada",
+          icon: `${config.HOST}image/ubicacionCliente.png`,
+        });
+      }
+    });
+  }
 
   switch (renderizado) {
     case "modal":
