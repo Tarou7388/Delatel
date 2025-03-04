@@ -29,12 +29,11 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   mapa.emitter.on('coordenadaEncontrada', async () => {
     const marcadores = mapa.marcadoresCercanos;
-
     const sectoresInfo = {};
-
+    console.log('Marcadores cercanos:', marcadores);
     $('#slcSector').empty();
 
-    $('#slcSector').append(new Option('Seleccione un sector o caja', '', true, true));
+    $('#slcSector').append(new Option('Seleccione una caja', '', true, true));
 
     document.querySelector("#slcSector").disabled = false;
 
@@ -49,6 +48,7 @@ window.addEventListener("DOMContentLoaded", async () => {
           const nombreCaja = data[0].nombre;
 
           if (!sectoresInfo[idSector]) {
+            console.log('Buscando sector:', idSector);
             const response2 = await fetch(`${config.HOST}app/controllers/Sector.controllers.php?operacion=buscarSector&idSector=${idSector}`);
             const data2 = await response2.json();
 
@@ -72,10 +72,10 @@ window.addEventListener("DOMContentLoaded", async () => {
         console.error('Error al procesar marcador:', error);
       }
     }
-
+    console.log('Sectores:', sectoresInfo);
     for (const idSector in sectoresInfo) {
       const sector = sectoresInfo[idSector];
-
+      console.log('Sector:', sector);
       const optgroup = $('<optgroup></optgroup>')
         .attr('label', sector.nombre)
         .attr('id', `sector-${sector.id}`); // Set optgroup ID to sector ID

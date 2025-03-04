@@ -135,7 +135,9 @@ async function actualizarPoligonoEnMapa(union) {
       }
       marcadoresCercanos = encontrarMarcadoresCercanos({ lat: e.latLng.lat(), lng: e.latLng.lng() });
       marcadoresCercanos = marcadoresCercanos.features
-      document.querySelector('#btnGuardarModalMapa').disabled = false;
+      if(document.querySelector('#btnGuardarModalMapa')){
+        document.querySelector('#btnGuardarModalMapa').disabled = false;
+      }
     });
   }
 }
@@ -172,7 +174,11 @@ export async function iniciarMapa(params = { cajas: true, mufas: true, antena: t
   await iniciarRenderizadoPorLotes();
 
   if(document.querySelector('#inputGroupCoordenada')){
+<<<<<<< HEAD
     document.querySelector('#buscarCoodenada').addEventListener('click', async () => {
+=======
+    document.querySelector('#buscarCoordenada').addEventListener('click', async () => {
+>>>>>>> 7747214 (map)
       if(document.querySelector('#CoordenadaModel').value != ''){
         const coordenada = document.querySelector('#CoordenadaModel').value.split(',');
         const latitud = parseFloat(coordenada[0]);
@@ -182,12 +188,22 @@ export async function iniciarMapa(params = { cajas: true, mufas: true, antena: t
         mapa.setZoom(15);
         if(ubicacionMarcador) ubicacionMarcador.setMap(null);
         if(marcador) marcador.setMap(null);
-        ubicacionMarcador = new google.maps.Marker({
+        marcador = new AdvancedMarkerElement({
           position: posicion,
           map: mapa,
-          title: "Ubicación buscada",
-          icon: `${config.HOST}image/ubicacionCliente.png`,
+          title: "Marcador"
         });
+
+        // Verificar si la coordenada está dentro del polígono
+        const punto = turf.point([longitud, latitud]);
+        const dentroDelPoligono = turf.booleanPointInPolygon(punto, union);
+
+        if (dentroDelPoligono) {
+          document.querySelector('#btnGuardarModalMapa').disabled = false;
+          encontrarMarcadoresCercanos({ lat: latitud, lng: longitud });
+        } else {
+          document.querySelector('#btnGuardarModalMapa').disabled = true;
+        }
       }
     });
   }
