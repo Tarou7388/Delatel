@@ -24,7 +24,7 @@ export let nombreSector = null;
 let ubicacionMarcador;
 let posicionMarcador;
 
-function encontrarMarcadoresCercanos(coordenadaClick, radio = 1000) {
+export async function encontrarMarcadoresCercanos(coordenadaClick, radio = 1000) {
   const puntoClick = turf.point([coordenadaClick.lng, coordenadaClick.lat]);
   
   // Filtrar marcadores que están dentro del radio especificado (en metros)
@@ -133,7 +133,7 @@ async function actualizarPoligonoEnMapa(union) {
           title: "Marcador"
         });
       }
-      marcadoresCercanos = encontrarMarcadoresCercanos({ lat: e.latLng.lat(), lng: e.latLng.lng() });
+      marcadoresCercanos = await encontrarMarcadoresCercanos({ lat: e.latLng.lat(), lng: e.latLng.lng() });
       marcadoresCercanos = marcadoresCercanos.features
       if(document.querySelector('#btnGuardarModalMapa')){
         document.querySelector('#btnGuardarModalMapa').disabled = false;
@@ -196,7 +196,8 @@ export async function iniciarMapa(params = { cajas: true, mufas: true, antena: t
 
         if (dentroDelPoligono) {
           document.querySelector('#btnGuardarModalMapa').disabled = false;
-          encontrarMarcadoresCercanos({ lat: latitud, lng: longitud });
+          marcadoresCercanos = await encontrarMarcadoresCercanos({ lat: latitud, lng: longitud });
+          marcadoresCercanos = marcadoresCercanos.features
         } else {
           document.querySelector('#btnGuardarModalMapa').disabled = true;
         }
@@ -222,6 +223,7 @@ export async function iniciarMapa(params = { cajas: true, mufas: true, antena: t
             if (document.getElementById('txtCoordenadasPersona')) {
               document.getElementById('txtCoordenadasPersona').value = `${marcadorCoordenada.lat},${marcadorCoordenada.lng}`;
             }
+            localStorage.setItem('marcadoresCercanos', JSON.stringify(marcadoresCercanos));
             emitter.emit('coordenadaEncontrada');
           }
         });

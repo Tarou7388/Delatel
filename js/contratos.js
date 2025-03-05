@@ -28,14 +28,21 @@ window.addEventListener("DOMContentLoaded", async () => {
   let dataPaquetes = [];
 
   mapa.emitter.on('coordenadaEncontrada', async () => {
-    const marcadores = mapa.marcadoresCercanos;
+    await cargarSelectCajas(mapa.marcadoresCercanos);
+    document.querySelector("#slcSector").disabled = false;
+  });
+
+  $('#slcSector').on('change', async function () {
+    idCaja = $(this).val();
+    idSector = $(this).find(':selected').parent().attr('id').split('-')[1];
+  });
+
+  async function cargarSelectCajas(marcadoresNuevos) {
+    const marcadores = marcadoresNuevos;
     const sectoresInfo = {};
-    console.log('Marcadores cercanos:', marcadores);
     $('#slcSector').empty();
 
     $('#slcSector').append(new Option('Seleccione una caja', '', true, true));
-
-    document.querySelector("#slcSector").disabled = false;
 
     for (const marcador of marcadores) {
       try {
@@ -48,7 +55,6 @@ window.addEventListener("DOMContentLoaded", async () => {
           const nombreCaja = data[0].nombre;
 
           if (!sectoresInfo[idSector]) {
-            console.log('Buscando sector:', idSector);
             const response2 = await fetch(`${config.HOST}app/controllers/Sector.controllers.php?operacion=buscarSector&idSector=${idSector}`);
             const data2 = await response2.json();
 
@@ -72,10 +78,8 @@ window.addEventListener("DOMContentLoaded", async () => {
         console.error('Error al procesar marcador:', error);
       }
     }
-    console.log('Sectores:', sectoresInfo);
     for (const idSector in sectoresInfo) {
       const sector = sectoresInfo[idSector];
-      console.log('Sector:', sector);
       const optgroup = $('<optgroup></optgroup>')
         .attr('label', sector.nombre)
         .attr('id', `sector-${sector.id}`); // Set optgroup ID to sector ID
@@ -86,14 +90,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       $('#slcSector').append(optgroup);
     }
     $('#slcSector').trigger('change');
-  });
-
-  $('#slcSector').on('change', async function () {
-    idCaja = $(this).val();
-    idSector = $(this).find(':selected').parent().attr('id').split('-')[1];
-    console.log('Sector seleccionado:', idSector);
-    console.log('Caja seleccionada:', idCaja);
-  });
+  }
 
   async function getQueryParams() {
     try {
@@ -111,14 +108,9 @@ window.addEventListener("DOMContentLoaded", async () => {
         if (slcTipoServicio) {
           const optionToSelect = document.querySelector(`#slcTipoServicio option[value="${params.Servicio}"]`);
           if (optionToSelect) {
-
             optionToSelect.selected = true;
             slcTipoServicio.dispatchEvent(new Event("change"));
-
-
             await ListarPaquetes.cargarPaquetesGenerico(params.Servicio, "#slcPaquetes");
-
-
             if (params.Paquete) {
               const slcPaquetes = $("#slcPaquetes");
               const waitForOptions = setInterval(() => {
@@ -139,19 +131,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
       if (params.coordenadas && document.querySelector("#txtCoordenadasMapa")) {
         const coordenada = document.querySelector("#txtCoordenadasMapa");
-        coordenada.value = params.coordenadas;
-
-        if (params.coordenadas) {
-          const [latitud, longitud] = params.coordenadas.split(',').map(coord => parseFloat(coord.trim()));
-          const idSector = await mapa.buscarCoordenadassinMapa(latitud, longitud);
-          const slcSector = document.querySelector("#slcSector");
-
-          if (idSector !== null) {
-            slcSector.value = idSector;
-            slcSector.dispatchEvent(new Event('change'));
-          }
-        }
-
+        await cargarSelectCajas(JSON.parse(localStorage.getItem('marcadoresCercanos')));
       }
 
       if (params.direccion && document.querySelector("#txtDireccion")) {
@@ -350,11 +330,9 @@ window.addEventListener("DOMContentLoaded", async () => {
         return;
       }
 
-      console.log("Contrato registrado exitosamente:", data);
       showToast("¡Contrato registrado correctamente!", "SUCCESS", 1500);
 
       try {
-        console.log(`Intentando descontar caja con ID: ${mapa.idCaja}`);
         const respuesta = await fetch(`${config.HOST}app/controllers/Caja.controllers.php`, {
           method: "PUT",
           body: JSON.stringify({
@@ -365,8 +343,6 @@ window.addEventListener("DOMContentLoaded", async () => {
         });
 
         const dataCaja = await respuesta.json();
-        console.log("Respuesta del servidor al descontar caja:", dataCaja);
-
         if (dataCaja.error) {
           showToast("Error al descontar caja.", "ERROR");
         } else {

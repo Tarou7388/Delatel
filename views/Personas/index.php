@@ -13,7 +13,7 @@
 			</div>
 			<div class="input-group mb-3" id="inputGroupCoordenada">
 				<input type="text" id="CoordenadaModel" class="form-control" placeholder="Coordenada" aria-label="Coordenada">
-				<button class="btn btn-outline-secondary" type="button" id="buscarCoodenada">Buscar</button>
+				<button class="btn btn-outline-secondary" type="button" id="buscarCoordenada">Buscar</button>
 			</div>
 			<div class="modal-body">
 				<div id="map" style="height: 600px;">
