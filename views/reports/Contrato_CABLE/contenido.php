@@ -124,7 +124,7 @@
       </tr>
       <tr>
         <td><strong>CAJA:</strong></td>
-        <td>Número <?= htmlspecialchars($fichaTecnica['cable']['idcaja']); ?></td>
+        <td><?= !empty($fichaTecnica['idcaja']) ? 'Número ' . htmlspecialchars($fichaTecnica['idcaja']) : ''; ?></td>
         <td colspan="2"><strong>CASA CATV:</strong></td>
         <td class="text-center"><?= htmlspecialchars($fichaTecnica['costo']['casa']['catv']); ?></td>
       </tr>
