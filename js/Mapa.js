@@ -174,11 +174,7 @@ export async function iniciarMapa(params = { cajas: true, mufas: true, antena: t
   await iniciarRenderizadoPorLotes();
 
   if(document.querySelector('#inputGroupCoordenada')){
-<<<<<<< HEAD
-    document.querySelector('#buscarCoodenada').addEventListener('click', async () => {
-=======
     document.querySelector('#buscarCoordenada').addEventListener('click', async () => {
->>>>>>> 7747214 (map)
       if(document.querySelector('#CoordenadaModel').value != ''){
         const coordenada = document.querySelector('#CoordenadaModel').value.split(',');
         const latitud = parseFloat(coordenada[0]);
@@ -281,18 +277,6 @@ async function eventoMapa(valor) {
         document.getElementById('btnGuardarModalMapa').disabled = true;
       }
     }
-  });
-}
-
-async function ObtenerCordenadas(objeto) {
-  objeto.addListener('click', (e) => {
-    marcadorCoordenada = e.latLng;
-    if (marcador) marcador.setMap(null);
-    marcador = new AdvancedMarkerElement({
-      position: e.latLng,
-      map: mapa,
-      title: "Marcador"
-    });
   });
 }
 
