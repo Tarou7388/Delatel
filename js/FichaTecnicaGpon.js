@@ -221,7 +221,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       tipoentrada: {
         puerto: parseInt(txtPuerto)
       },
-      idcaja: parseInt(idCaja)
+      idcaja: parseInt(idCaja),
+      nombrecaja: txtIdCaja
     };
   }
 

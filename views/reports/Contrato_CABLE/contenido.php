@@ -4,7 +4,6 @@
 <div class="container">
   <div style="text-align: right; font-family: Arial, sans-serif; font-size: 12px; margin-right: 35px;">
     <p>
-      <strong>TÉCNICO:</strong> <span style="margin-right: 230px;"><?= $resultado[0]['NombreTecnicoFicha']; ?></span>
       <strong>N°:</strong> <?= $resultado[0]['id_contrato']; ?> &nbsp; 
       <strong>Fecha Actual:</strong> <?= date('Y-m-d (H:i)', strtotime($resultado[0]['FechaFichaInstalacion'])); ?> &nbsp; 
     </p>
@@ -128,12 +127,16 @@
         <td colspan="2"><strong>CASA CATV:</strong></td>
         <td class="text-center"><?= htmlspecialchars($fichaTecnica['costo']['casa']['catv']); ?></td>
       </tr>
+      <tr>
+        <td><strong>TECNICO:</strong></td>
+        <td colspan="4"><?= $resultado[0]['NombreTecnicoFicha']; ?></td>
+      </tr>
       <?php if (!empty($fichaTecnica['costo']['cablecosto']['detalle'])): ?>
         <tr>
           <td colspan="5" class="text-center"><strong>DETALLES:</strong></td>
         </tr>
         <tr>
-          <td colspan="5"><?= htmlspecialchars($fichaTecnica['costo']['cablecosto']['detalle']); ?></td>
+          <td colspan="3"><?= htmlspecialchars($fichaTecnica['costo']['cablecosto']['detalle']); ?></td>
         </tr>
       <?php endif; ?>
     </tbody>

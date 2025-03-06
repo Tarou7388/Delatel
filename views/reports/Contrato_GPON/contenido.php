@@ -4,7 +4,6 @@
 <div class="container">
   <div style="text-align: right; font-family: Arial, sans-serif; font-size: 12px; margin-right: 35px;">
     <p>
-      <strong>TÉCNICO:</strong> <span style="margin-right: 125px;"><?= $resultado[0]['NombreTecnicoFicha']; ?></span>
       <strong>N°:</strong> <?= $resultado[0]['id_contrato']; ?> &nbsp;
       <strong>Fecha Actual:</strong> <?= date('Y-m-d (H:i)', strtotime($resultado[0]['FechaFichaInstalacion'])); ?> &nbsp;
     </p>
@@ -204,10 +203,20 @@
         <td class="text-center"><?= htmlspecialchars($fichaTecnica['costo']['casa']['gpon']); ?></td>
       </tr>
       <tr>
-        <td><strong>CAJA Y PUERTO:</strong></td>
-        <td class="text-center">Caja: <?= htmlspecialchars($fichaTecnica['idcaja']); ?> / Puerto: <?= htmlspecialchars($fichaTecnica['tipoentrada']['puerto']); ?></td>
+        <td><strong>CAJA:</strong></td>
+        <td class="text-center">
+          <?php
+          $nombreCaja = !empty($fichaTecnica['nombrecaja']) ? htmlspecialchars($fichaTecnica['nombrecaja']) : '';
+          $idCaja = !empty($fichaTecnica['idcaja']) ? htmlspecialchars($fichaTecnica['idcaja']) : '';
+          echo $nombreCaja . (!empty($nombreCaja) && !empty($idCaja) ? " (" . $idCaja . ")" : $idCaja);
+          ?>
+        </td>
         <td colspan="2"><strong>CASA CATV:</strong></td>
         <td class="text-center"><?= htmlspecialchars($fichaTecnica['costo']['casa']['catv']); ?></td>
+      </tr>
+      <tr>
+        <td><strong>TECNICO:</strong></td>
+        <td colspan="4"><?= htmlspecialchars($resultado[0]['NombreTecnicoFicha']); ?></td>
       </tr>
       <?php if (!empty($fichaTecnica['costo']['cablecosto']['detalle'])): ?>
         <tr>
