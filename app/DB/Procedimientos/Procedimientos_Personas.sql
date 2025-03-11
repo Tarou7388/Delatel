@@ -1,4 +1,4 @@
--- Active: 1740619856376@@127.0.0.1@3306@delatel
+-- Active: 1733577930028@@127.0.0.1@3306@delatel
 
 USE Delatel;
 
@@ -53,14 +53,25 @@ BEGIN
     WHERE id_persona = p_id_persona;
 END $$
 
-DROP PROCEDURE IF EXISTS spu_personas_buscar_dni$$
+DELIMITER $$
+DROP PROCEDURE IF EXISTS `spu_personas_buscar_dni`$$
 CREATE PROCEDURE spu_personas_buscar_dni(
     IN p_dni VARCHAR(15)
 )
 BEGIN
-    SELECT id_persona, tipo_doc, nro_doc, apellidos, nombres, telefono, nacionalidad, email
-    FROM vw_personas_listar
-    WHERE nro_doc = p_dni;
+    SELECT 
+        p.id_persona, 
+        p.tipo_doc, 
+        p.nro_doc, 
+        p.apellidos, 
+        p.nombres, 
+        p.telefono, 
+        p.nacionalidad, 
+        p.email,
+        u.id_usuario
+    FROM tb_personas p
+    LEFT JOIN tb_usuarios u ON p.id_persona = u.id_persona
+    WHERE p.nro_doc = p_dni;
 END $$
 
 DROP PROCEDURE IF EXISTS spu_persona_cliente_existencia$$
@@ -106,3 +117,4 @@ BEGIN
     WHERE p.id_persona = p_id_persona;
 END$$
 
+SELECT * FROM tb_personas;
