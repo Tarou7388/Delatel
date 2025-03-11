@@ -341,6 +341,7 @@ CREATE TABLE tb_productos (
 	modelo           VARCHAR(70) NOT NULL,
 	precio_actual    DECIMAL(7, 2) NOT NULL,
 	codigo_barra     VARCHAR(120) NOT NULL,
+    categoria        CHAR(4) NULL,
 	create_at        DATETIME NOT NULL DEFAULT NOW(),
 	update_at        DATETIME NULL,
 	inactive_at      DATETIME NULL,

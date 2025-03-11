@@ -78,7 +78,8 @@ class Producto extends Conexion
       $params['modelo'],
       $params['precioActual'],
       $params['codigoBarra'],
-      $params['idUsuario']
+      $params['idUsuario'],
+      $params['categoria']
     );
     return $this->registrar($sql, $values);
   }
@@ -119,7 +120,8 @@ class Producto extends Conexion
       $params['idUnidad'],
       $params['modelo'],
       $params['precioActual'],
-      $params['idUsuario']
+      $params['idUsuario'],
+      $params['categoria']
     );
     return $this->registrar($sql, $values);
   }

@@ -19,7 +19,7 @@ $idContrato = $_GET['idContrato'];
         <div class="mb-2">
           <div class="input-group">
             <div class="form-floating">
-              <input type="text" class="form-control" id="txtCodigoBarraSintonizador" placeholder="Código Barra">
+              <input type="text" class="form-control" id="txtCodigoBarraSintonizador" placeholder="Código Barra" maxlength="6">
               <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
               <label for="txtCodigoBarraSintonizador">Código de Barra <span class="required-asterisk" style="color: red;">*</span></label>
             </div>
@@ -288,12 +288,8 @@ $idContrato = $_GET['idContrato'];
             </div>
           </div>
         </div>
-        <!-- Botones -->
         <div class="row">
           <div class="col-12 text-center text-md-end mb-3 btn-container">
-            <!-- <button type="button" id="btnReporte" class="btn btn-info px-4 py-2">
-              <i class="fas fa-file-alt"></i> Generar Reporte
-            </button> -->
             <button type="button" id="btnGuardar" class="btn btn-success px-4 py-2">
               <i class="fas fa-save"></i> Guardar
             </button>

@@ -5,7 +5,6 @@
     <h1 class="mt-4">Almacenes</h1>
 
     <div class="row">
-        <!-- Columna de la izquierda con 4 inputs y 2 botones -->
         <div class="col-md-6">
             <div class="card mb-4">
                 <div class="card-header">

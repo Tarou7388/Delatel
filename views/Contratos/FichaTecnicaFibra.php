@@ -15,7 +15,7 @@ $idContrato = $_GET['idContrato'];
         </h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form id="formRepetidor">
+      <form id="formRepetidor" autocomplete="off">
         <div class="modal-body" id="mdlRepetidorBody">
           <div class="row g-2 mb-2">
             <div class="col-12 col-md-6">
@@ -124,7 +124,7 @@ $idContrato = $_GET['idContrato'];
       </div>
     </div>
 
-    <form>
+    <form autocomplete="off">
       <div class="conteiner">
         <div class="card mb-4">
           <div class="card-header">

@@ -11,12 +11,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   const slcUnidadMedida = document.querySelector("#slcUnidadMedida");
   const accesos = await Herramientas.permisos;
 
-  async function cargarMarcas() {
+  (async () => {
     try {
       const response = await fetch(`${config.HOST}app/controllers/Marcas.controllers.php?operacion=listarmarca`);
       const data = await response.json();
       if (Array.isArray(data)) {
-        slcMarca.innerHTML = "";
+        slcMarca.innerHTML = ""; // Limpiar opciones existentes
         data.forEach(data => {
           const option = document.createElement("option");
           option.value = data.id_marca;
@@ -27,9 +27,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     } catch (error) {
       console.error("Error al cargar las marcas:", error);
     }
-  }
+  })();
 
-  async function cargarTiposProductos() {
+  (async () => {
     try {
       const response = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=listarTipoProductos`);
       const data = await response.json();
@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     } catch (error) {
       console.error("Error al cargar los Tipos de Producto:", error);
     }
-  }
+  })();
 
   (async () => {
     try {
@@ -64,72 +64,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       console.error("Error al cargar los Tipos de Producto:", error);
     }
   })();
-
-  (async () => {
-    await cargarTiposProductos();
-    await cargarMarcas();
-  })();
-
-  document.getElementById("formRegistrarMarcas").addEventListener("submit", (event) => {
-    event.preventDefault();
-    fetch(`${config.HOST}app/controllers/Marcas.controllers.php`, {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        operacion: "registrarMarca",
-        marca: document.getElementById("txtMarcaModal").value,
-        idUsuario: userid
-      })
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        if (data.Guardado) {
-          showToast("Se ha guardado correctamente", "SUCCESS");
-          cargarMarcas();
-        } else {
-          showToast("Verifique que se haya hecho bien la operación", "ERROR");
-        }
-        document.querySelector("#formRegistrarMarcas").reset();
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        showToast("Ha ocurrido un error en la operación", "ERROR");
-      });
-  });
-
-  document.getElementById("formRegistrarTipoProductos").addEventListener("submit", (event) => {
-    event.preventDefault();
-    fetch(`${config.HOST}app/controllers/Producto.controllers.php`, {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        operacion: "registrarTipoProducto",
-        tipoProducto: document.getElementById("txtTipoProductoModal").value,
-        idUsuario: userid
-      })
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        if (data.Guardado) {
-          showToast("Se ha guardado correctamente", "SUCCESS");
-          cargarTiposProductos();
-        } else {
-          showToast("Verifique que se haya hecho bien la operación", "ERROR");
-        }
-        document.querySelector("#formRegistrarTipoProductos").reset();
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        showToast("Ha ocurrido un error en la operación", "ERROR");
-      });
-  });
-
 
   document.getElementById("form-productos").addEventListener("submit", (event) => {
     event.preventDefault();
@@ -150,7 +84,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         if (data.Guardado) {
           showToast("Se ha guardado correctamente", "SUCCESS");
         } else {

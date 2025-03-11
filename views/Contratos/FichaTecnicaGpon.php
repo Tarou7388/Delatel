@@ -14,7 +14,7 @@ $idContrato = $_GET['idContrato'];
         </h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form id="formRepetidor">
+      <form id="formSintonizador" autocomplete="off">
         <div class="modal-body" id="mdlSintotizadorBody">
           <div class="mb-2">
             <div class="input-group">
@@ -76,7 +76,7 @@ $idContrato = $_GET['idContrato'];
         </h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form id="formRepetidor">
+      <form id="formRepetidor" autocomplete="off">
         <div class="modal-body" id="mdlRepetidorBody">
           <div class="row g-2 mb-2">
             <div class="col-12 col-md-6">
@@ -582,12 +582,8 @@ $idContrato = $_GET['idContrato'];
             </div>
           </div>
         </div>
-        <!-- Botones -->
         <div class="row">
           <div class="col-12 text-center text-md-end mb-3 btn-container">
-            <!-- <button type="button" id="btnReporte" class="btn btn-info px-4 py-2">
-              <i class="fas fa-file-alt"></i> Generar Reporte
-            </button> -->
             <button type="button" id="btnGuardar" class="btn btn-success px-4 py-2">
               <i class="fas fa-save"></i> Guardar
             </button>

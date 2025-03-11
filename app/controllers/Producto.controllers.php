@@ -20,7 +20,8 @@ if (isset($_POST['operacion'])) {
 				"modelo" => Herramientas::sanitizarEntrada($_POST['modelo']),
 				"precioActual" => Herramientas::sanitizarEntrada($_POST['precioActual']),
 				"codigoBarra" => Herramientas::sanitizarEntrada($_POST['codigoBarra']),
-				"idUsuario" => Herramientas::sanitizarEntrada($_POST["idUsuario"])
+				"idUsuario" => Herramientas::sanitizarEntrada($_POST["idUsuario"]),
+				"categoria" => Herramientas::sanitizarEntrada($_POST["categoria"])
 			];
 			$estado = $producto->registrarProducto($datos);
 			echo json_encode(["Guardado" => $estado]);
@@ -89,7 +90,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
 				"idUnidad" => Herramientas::sanitizarEntrada($data['idUnidad']),
 				"modelo" => Herramientas::sanitizarEntrada($data['modelo']),
 				"precioActual" => Herramientas::sanitizarEntrada($data['precioActual']),
-				"idUsuario" => Herramientas::sanitizarEntrada($data["idUsuario"])
+				"idUsuario" => Herramientas::sanitizarEntrada($data["idUsuario"]),
+				"categoria" => Herramientas::sanitizarEntrada($data["categoria"])
 			];
 			$estado = $producto->actualizarProducto($datos);
 			echo json_encode(["Actualizado" => $estado]);
