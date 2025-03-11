@@ -8,13 +8,16 @@ DELIMITER $$
 CREATE PROCEDURE spu_cajas_listar()
 BEGIN
   SELECT 
-    id_caja, 
-    nombre, 
-    descripcion, 
-    numero_entradas, 
-    id_sector, 
-    coordenadas 
-  FROM tb_cajas WHERE inactive_at IS NULL;
+    c.id_caja, 
+    c.nombre, 
+    c.descripcion, 
+    c.numero_entradas, 
+    c.id_sector,
+    s.sector,
+    c.coordenadas 
+  FROM tb_cajas c
+  INNER JOIN tb_sectores s ON c.id_sector = s.id_sector
+  WHERE c.inactive_at IS NULL;
 END$$
 
 DROP PROCEDURE IF EXISTS spu_mufas_listar$$

@@ -2,7 +2,7 @@ import config from "../env.js";
 import * as Herramientas from "./Herramientas.js";
 export const emitter = new Herramientas.EventEmitter();
 
-let Map, Circle, Polygon, AdvancedMarkerElement, mapa;
+let Map, Circle, Polygon, AdvancedMarkerElement, mapa, InfoWindow;
 let marcador = null;
 let marcadorCoordenada = null
 let circulosAntenas = [];
@@ -12,7 +12,7 @@ let circles = [];
 let unionPolygons = [];
 let unionPolygon = null;
 const RADIO = 1000; // Radio de 1 km
-const BATCH_SIZE = 20; // Tamaño del lote para el renderizado por lotes
+const BATCH_SIZE = 150; // Tamaño del lote para el renderizado por lotes
 let union = null;
 let puntosMarcador = turf.featureCollection([]);
 
@@ -144,8 +144,10 @@ async function actualizarPoligonoEnMapa(union) {
 
 export async function iniciarMapa(params = { cajas: true, mufas: true, antena: true }, id = "map", renderizado = "modal") {
   const posicionInicial = { lat: -13.417077, lng: -76.136585 };
-  ({ Map, Circle, Polygon } = await google.maps.importLibrary("maps"));
+  ({ Map, Circle, Polygon, InfoWindow} = await google.maps.importLibrary("maps"));
   ({ AdvancedMarkerElement } = await google.maps.importLibrary("marker"));
+
+  let infoWindow = new InfoWindow();
 
   mapa = new Map(document.getElementById(id), {
     zoom: 13,
@@ -166,6 +168,26 @@ export async function iniciarMapa(params = { cajas: true, mufas: true, antena: t
       map: mapa,
       title: caja.idCaja,
       content: img,
+    });
+    marcador.addListener('click', async (e) => {
+      console.log(caja);
+      if (infoWindow) {
+        infoWindow.close
+      }
+      const contentString = `
+        <div id="content">
+          <div id="siteNotice"></div>
+          <h1 id="firstHeading" class="firstHeading">${caja.nombre}</h1>
+          <div id="bodyContent">
+            <p><b>Id:</b> ${caja.id_caja}</p>
+            <p><b>Descripcion :</b> ${caja.descripcion}</p>
+            <p><b>Sector:</b> ${caja.sector}</p>
+            <p><b>Coordenadas:</b> ${caja.coordenadas}</p>
+          </div>
+        </div>
+      `;
+      infoWindow.setContent(contentString);
+      infoWindow.open(mapa, marcador);
     });
     circles.push({ lat: latitud, lng: longitud });
     marcadoresCajas.push({id: caja.id_caja, lat: latitud, lng: longitud, idSector: caja.id_sector});
@@ -189,8 +211,6 @@ export async function iniciarMapa(params = { cajas: true, mufas: true, antena: t
           map: mapa,
           title: "Marcador"
         });
-
-        // Verificar si la coordenada está dentro del polígono
         const punto = turf.point([longitud, latitud]);
         const dentroDelPoligono = turf.booleanPointInPolygon(punto, union);
 
@@ -198,6 +218,7 @@ export async function iniciarMapa(params = { cajas: true, mufas: true, antena: t
           document.querySelector('#btnGuardarModalMapa').disabled = false;
           marcadoresCercanos = await encontrarMarcadoresCercanos({ lat: latitud, lng: longitud });
           marcadoresCercanos = marcadoresCercanos.features
+          marcadorCoordenada = { lat: latitud, lng: longitud };
         } else {
           document.querySelector('#btnGuardarModalMapa').disabled = true;
         }
