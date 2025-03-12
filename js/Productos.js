@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const CodigoBarras = document.querySelector("#txtCodigoBarras");
   const slcMarca = document.querySelector("#slcMarca");
   const slcUnidadMedida = document.querySelector("#slcUnidadMedida");
+  const slcCategoria = document.querySelector("#slcCategoria");
   const accesos = await Herramientas.permisos;
 
   (async () => {
@@ -77,6 +78,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     params.append("precioActual", precioActual.value);
     params.append("codigoBarra", CodigoBarras.value);
     params.append("idUsuario", userid);
+    params.append("categoria", slcCategoria.value);
 
     fetch(`${config.HOST}app/controllers/Producto.controllers.php`, {
       method: "POST",
@@ -86,6 +88,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       .then((data) => {
         if (data.Guardado) {
           showToast("Se ha guardado correctamente", "SUCCESS");
+          console.log(data);
         } else {
           showToast("Verifique que se haya hecho bien la operación", "ERROR");
         }

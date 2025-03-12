@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   const btnCancelarEmpresa = document.getElementById("btnCancelarEmpresa");
   const btnBuscarEmpresa = document.getElementById("btnBuscarEmpresa");
 
-  let mapaInicializado = false;
+  let iniciarMapaSi = false;
   let ruc = null;
 
   slcPaquetes.disabled = true;
@@ -235,11 +235,27 @@ document.addEventListener("DOMContentLoaded", async function () {
   });
 
   document.querySelector("#btnBuscarCoordenadasEmpresa").addEventListener("click", async () => {
-    if (mapaInicializado) {
-      return
+    const slcTipoServicio = document.querySelector("#slcTipoServicioEmpresa");
+    if (slcTipoServicio.value == "2") {
+      mapa.eliminarMapa();
+      iniciarMapaSi = false
+      await cargarCaracteristicasMapa("Antenas");
     } else {
-      mapaInicializado = true;
-      await mapa.iniciarMapa(params, id, renderizado);
+      mapa.eliminarMapa();
+      iniciarMapaSi = false
+      await cargarCaracteristicasMapa("Cajas");
     }
   });
+  
+  async function cargarCaracteristicasMapa(objeto) {
+    const id = "map"
+    const renderizado = "modal"
+    if(iniciarMapaSi){
+      return
+    }else{
+      iniciarMapaSi = true
+      mapa.iniciarMapa(objeto, id, renderizado);
+    }
+  }
+  
 });

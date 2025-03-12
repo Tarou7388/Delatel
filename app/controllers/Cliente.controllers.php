@@ -98,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
       $datos = [
         "apellidos"   => Herramientas::sanitizarEntrada($datos["parametros"]['apellidos']),
         "nombres"          => Herramientas::sanitizarEntrada($datos["parametros"]['nombres']),
-        "telefono"       => Herramientas::sanitizarEntrada($datos["parametros"]['telefono']),
+        "telefono"       => Herramientas::sanitizarEntrada($datos["parametros"]['telefono']),    
         "email"           => Herramientas::sanitizarEntrada($datos["parametros"]['email']),
         "direccion"        => Herramientas::sanitizarEntrada($datos["parametros"]['direccion']),
         "referencia"       => Herramientas::sanitizarEntrada($datos["parametros"]['referencia']),

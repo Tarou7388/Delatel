@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   const txtReferencia = document.getElementById("txtReferenciaPersona");
   const btnBuscar = document.getElementById("btnBuscar");
 
-  let mapaInicializado=false;
+  let iniciarMapaSi = false;
   let idCaja = null;
   let dniActual = null;
   let idSector = null;
@@ -399,16 +399,28 @@ document.addEventListener("DOMContentLoaded", async function () {
   });
 
   document.querySelector("#btnBuscarCoordenadas").addEventListener("click", async () => {
-    const params = { cajas: true, mufas: true }
+    const slcTipoServicio = document.querySelector("#slcTipoServicio");
+    if (slcTipoServicio.value == "2") {
+      mapa.eliminarMapa();
+      iniciarMapaSi = false
+      await cargarCaracteristicasMapa("Antenas");
+    } else {
+      mapa.eliminarMapa();
+      iniciarMapaSi = false
+      await cargarCaracteristicasMapa("Cajas");
+    }
+  });
+  
+   async function cargarCaracteristicasMapa(objeto) {
     const id = "map"
     const renderizado = "modal"
-    if(mapaInicializado){
+    if(iniciarMapaSi){
       return
     }else{
-      mapaInicializado=true;
-      await mapa.iniciarMapa(params, id, renderizado);
+      iniciarMapaSi = true
+      mapa.iniciarMapa(objeto, id, renderizado);
     }
-  })
+  }
 
   btnBuscar.addEventListener("click", () => {
     ObtenerDataDNI("obtenerDni", txtNumDocumentoPersona.value);

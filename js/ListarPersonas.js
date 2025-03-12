@@ -58,7 +58,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         render: function (data, type, row) {
           return `
             <button class="btn btn-warning btn-edit" data-id="${row[0]}"><i class="fa-regular fa-pen-to-square"></i></button>
-            <button class="btn btn-danger btn-delete" data-id="${row[0]}"><i class="fa-regular fa-trash-can"></i></button>
           `;
         }
       }
@@ -80,7 +79,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   async function cargarMapa() {
-    await mapa.iniciarMapa({ cajas: false, mufas: false, antena: false }, "map", "modal");
+    await mapa.iniciarMapa({}, "map", "modal");
 
     mapa.obtenerCoordenadasClick();
 
@@ -189,9 +188,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.querySelector("#CoordenadaModel").value = data[0].coordenadas || "";
 
         if (data[0].coordenadas) {
-          const buscarCoodenada = document.querySelector("#buscarCoodenada");
+          const buscarCoordenada = document.querySelector("#buscarCoordenada");
           setTimeout(() => {
-            buscarCoodenada.click();
+            buscarCoordenada.click();
           }, 500);
           console.log("Coordenadas:", data[0].coordenadas);
         }

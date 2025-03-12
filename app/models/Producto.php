@@ -70,7 +70,7 @@ class Producto extends Conexion
    */
   public function registrarProducto($params = [])
   {
-    $sql = "CALL spu_productos_registrar(?,?,?,?,?,?,?)";
+    $sql = "CALL spu_productos_registrar(?,?,?,?,?,?,?,?)";
     $values = array(
       $params['idmarca'],
       $params['idtipoProducto'],
@@ -112,7 +112,7 @@ class Producto extends Conexion
    */
   public function actualizarProducto($params = [])
   {
-    $sql = "CALL spu_productos_actualizar(?,?,?,?,?,?,?)";
+    $sql = "CALL spu_productos_actualizar(?,?,?,?,?,?,?,?)";
     $values = array(
       $params['idProducto'],
       $params['idmarca'],

@@ -40,7 +40,7 @@
 
           <div class="form-group">
             <div class="form-floating mb-2">
-              <select class="form-select" id="slcEditarCategoria" required>
+              <select class="form-select" id="slcEditarCategoria">
                 <option value="" selected>Ninguna</option>
                 <option value="FRIB">Fibra</option>
                 <option value="WISP">Redes</option>
@@ -63,7 +63,7 @@
             </div>
             <div class="col-6">
               <div class="form-floating mb-2">
-                <input type="text" class="form-control" id="txtEditarCodigoBarras" placeholder="Código de Barras" name="codigo_barra" required>
+                <input type="text" class="form-control" id="txtEditarCodigoBarras" placeholder="Código de Barras" name="codigo_barra" disabled required>
                 <label for="txtEditarCodigoBarras">Código Barras</label>
               </div>
             </div>
@@ -119,7 +119,7 @@
 
           <div class="col-md">
             <div class="form-floating">
-              <select class="form-select" id="slcCategoria" required>
+              <select class="form-select" id="slcCategoria">
                 <option value="" selected>Ninguna</option>
                 <option value="FRIB">Fibra</option>
                 <option value="WISP">Redes</option>

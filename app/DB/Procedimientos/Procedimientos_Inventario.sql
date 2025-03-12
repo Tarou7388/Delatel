@@ -160,11 +160,6 @@ END $$
 
 use Delatel;
 
-ALTER TABLE `tb_productos` ADD `categoria` CHAR(4) NULL;
-
-SELECT * FROM tb_productos;
-
-
 DROP PROCEDURE IF EXISTS spu_productos_registrar$$
 CREATE PROCEDURE spu_productos_registrar(
     IN p_id_marca INT,

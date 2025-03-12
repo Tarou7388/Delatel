@@ -80,7 +80,7 @@ if (isset($_GET['operacion'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
 	$inputData = file_get_contents('php://input');
 	$data = json_decode($inputData, true);
-	$operacion = Herramientas::sanitizarEntrada($data['operacion']);
+	$operacion = $data['operacion'];
 	switch ($operacion) {
 		case "actualizarProducto":
 			$datos = [

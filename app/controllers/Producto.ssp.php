@@ -32,9 +32,10 @@ $columns = array(
     array('db' => 'unidad_nombre', 'dt' => 4),
     array('db' => 'precio_actual', 'dt' => 5),
     array('db' => 'codigo_barra', 'dt' => 6),
+    array('db' => 'categoria', 'dt' => 7),
     array(
       'db'        => 'id_producto',
-      'dt'        => 7,
+      'dt'        => 8,
       'formatter' => function( $d, $row ) {
         return '<button class="btn btn-warning btn-actualizar" data-id="'.$d.'">Actualizar</button>
                 <button class="btn btn-danger btn-eliminar" data-id="'.$d.'">Eliminar</button>';
