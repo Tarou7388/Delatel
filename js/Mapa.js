@@ -13,8 +13,9 @@ let inicializado = false;
 let circles = [];
 let unionPolygons = [];
 let unionPolygon = null;
-const RADIO = 1000; // Radio de 1 km
-const BATCH_SIZE = 150; // Tamaño del lote para el renderizado por lotes
+let RADIO = 1000; // Radio de 1 km
+const BATCH_SIZE = 150;
+let COLOR = "#6c5ce7";
 let union = null;
 let puntosMarcador = turf.featureCollection([]);
 
@@ -28,14 +29,14 @@ let posicionMarcador;
 
 export async function encontrarMarcadoresCercanos(coordenadaClick, radio = 1000) {
   const puntoClick = turf.point([coordenadaClick.lng, coordenadaClick.lat]);
-  
+
   // Filtrar marcadores que están dentro del radio especificado (en metros)
   const marcadoresEnRadio = puntosMarcador.features.filter(marcador => {
     const punto = turf.point([marcador.geometry.coordinates[0], marcador.geometry.coordinates[1]]);
-    const distancia = turf.distance(puntoClick, punto, {units: 'meters'});
+    const distancia = turf.distance(puntoClick, punto, { units: 'meters' });
     return distancia <= radio;
   });
-  
+
   // Convertir a formato GeoJSON FeatureCollection
   return turf.featureCollection(marcadoresEnRadio);
 }
@@ -44,14 +45,10 @@ async function iniciarRenderizadoPorLotes() {
   let index = 0;
 
   const procesarLote = () => {
+    console.log("tamaño de circles", circles.length);
     const batch = circles.slice(index, index + BATCH_SIZE);
     batch.forEach(datos => {
       const circle = new google.maps.Circle({
-        strokeColor: '#FF0000',
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
-        fillColor: '#FF0000',
-        fillOpacity: 0.35,
         center: { lat: datos.lat, lng: datos.lng },
         radius: RADIO
       });
@@ -98,55 +95,63 @@ async function actualizarPoligonoEnMapa(union) {
     union.geometry.coordinates.forEach(polygonCoords => {
       const polygon = new google.maps.Polygon({
         paths: polygonCoords[0].map(coord => ({ lat: coord[1], lng: coord[0] })),
-        strokeColor: '#130f40',
+        strokeColor: COLOR,
         strokeOpacity: 0.8,
         strokeWeight: 2,
-        fillColor: '#30336b',
+        fillColor: COLOR + '55',
         fillOpacity: 0.2,
         map: mapa
       });
-      unionPolygons.push(polygon); // Almacenar cada polígono creado
+      unionPolygons.push(polygon);
+      polygon.addListener('click', async (e) => {
+        eventoPoligonos(e);
+      });  
     });
+
   } else {
     // Si es un solo polígono, mostrarlo directamente
     unionPolygon = new google.maps.Polygon({
       paths: union.geometry.coordinates[0].map(coord => ({ lat: coord[1], lng: coord[0] })),
-      strokeColor: '#6c5ce7',
+      strokeColor: COLOR,
       strokeOpacity: 0.8,
       strokeWeight: 2,
-      fillColor: '#130f40',
+      fillColor: COLOR + '55',
       fillOpacity: 0.25,
       map: mapa
     });
 
     unionPolygon.addListener('click', async (e) => {
-      marcadorCoordenada = { lat: e.latLng.lat(), lng: e.latLng.lng() };
-      if(marcador == null){
-        marcador = new AdvancedMarkerElement({
-          position: e.latLng,
-          map: mapa,
-          title: "Marcador"
-        });
-      }else{
-        marcador.setMap(null);
-        marcador = new AdvancedMarkerElement({
-          position: e.latLng,
-          map: mapa,
-          title: "Marcador"
-        });
-      }
-      marcadoresCercanos = await encontrarMarcadoresCercanos({ lat: e.latLng.lat(), lng: e.latLng.lng() });
-      marcadoresCercanos = marcadoresCercanos.features
-      if(document.querySelector('#btnGuardarModalMapa')){
-        document.querySelector('#btnGuardarModalMapa').disabled = false;
-      }
+      eventoPoligonos(e);
     });
   }
 }
 
-export async function iniciarMapa(params = { cajas: true, mufas: true, antena: true }, id = "map", renderizado = "modal") {
+async function eventoPoligonos(e) {
+  marcadorCoordenada = { lat: e.latLng.lat(), lng: e.latLng.lng() };
+  if (marcador == null) {
+    marcador = new AdvancedMarkerElement({
+      position: e.latLng,
+      map: mapa,
+      title: "Marcador"
+    });
+  } else {
+    marcador.setMap(null);
+    marcador = new AdvancedMarkerElement({
+      position: e.latLng,
+      map: mapa,
+      title: "Marcador"
+    });
+  }
+  marcadoresCercanos = await encontrarMarcadoresCercanos({ lat: e.latLng.lat(), lng: e.latLng.lng() });
+  marcadoresCercanos = marcadoresCercanos.features
+  if (document.querySelector('#btnGuardarModalMapa')) {
+    document.querySelector('#btnGuardarModalMapa').disabled = false;
+  }
+}
+
+export async function iniciarMapa(objetoRender = "Cajas", id = "map", renderizado = "modal") {
   const posicionInicial = { lat: -13.417077, lng: -76.136585 };
-  ({ Map, Circle, Polygon, InfoWindow} = await google.maps.importLibrary("maps"));
+  ({ Map, Circle, Polygon, InfoWindow } = await google.maps.importLibrary("maps"));
   ({ AdvancedMarkerElement } = await google.maps.importLibrary("marker"));
 
   let infoWindow = new InfoWindow();
@@ -156,58 +161,99 @@ export async function iniciarMapa(params = { cajas: true, mufas: true, antena: t
     center: posicionInicial,
     mapId: "DEMO_MAP_ID",
   });
-
-  const response = await fetch(`${config.HOST}app/controllers/Caja.controllers.php?operacion=listarCajas`);
-  const datosCajas = await response.json();
-  datosCajas.forEach(caja => {
-    const coordenada = caja.coordenadas.split(',');
-    const latitud = parseFloat(coordenada[0]);
-    const longitud = parseFloat(coordenada[1]);
-    const img = document.createElement('img');
-    img.src = `${config.HOST}image/cajaNAP.png`;
-    const marcador = new AdvancedMarkerElement({
-      position: { lat: latitud, lng: longitud },
-      map: mapa,
-      title: caja.idCaja,
-      content: img,
-    });
-    marcador.addListener('click', async (e) => {
-      console.log(caja);
-      if (infoWindow) {
-        infoWindow.close
-      }
-      const contentString = `
-        <div id="content">
-          <div id="siteNotice"></div>
-          <h1 id="firstHeading" class="firstHeading">${caja.nombre}</h1>
-          <div id="bodyContent">
-            <p><b>Id:</b> ${caja.id_caja}</p>
-            <p><b>Descripcion :</b> ${caja.descripcion}</p>
-            <p><b>Sector:</b> ${caja.sector}</p>
-            <p><b>Coordenadas:</b> ${caja.coordenadas}</p>
+  if (objetoRender == "Cajas") {
+    const response = await fetch(`${config.HOST}app/controllers/Caja.controllers.php?operacion=listarCajas`);
+    const datosCajas = await response.json();
+    datosCajas.forEach(caja => {
+      const coordenada = caja.coordenadas.split(',');
+      const latitud = parseFloat(coordenada[0]);
+      const longitud = parseFloat(coordenada[1]);
+      const img = document.createElement('img');
+      img.src = `${config.HOST}image/cajaNAP.png`;
+      const marcador = new AdvancedMarkerElement({
+        position: { lat: latitud, lng: longitud },
+        map: mapa,
+        title: caja.idCaja,
+        content: img,
+      });
+      marcador.addListener('click', async (e) => {
+        if (infoWindow) {
+          infoWindow.close
+        }
+        const contentString = `
+          <div id="content">
+            <div id="siteNotice"></div>
+            <h1 id="firstHeading" class="firstHeading">${caja.nombre}</h1>
+            <div id="bodyContent">
+              <p><b>Id:</b> ${caja.id_caja}</p>
+              <p><b>Descripcion :</b> ${caja.descripcion}</p>
+              <p><b>Sector:</b> ${caja.sector}</p>
+              <p><b>Coordenadas:</b> ${caja.coordenadas}</p>
+            </div>
           </div>
-        </div>
-      `;
-      infoWindow.setContent(contentString);
-      infoWindow.open(mapa, marcador);
+        `;
+        infoWindow.setContent(contentString);
+        infoWindow.open(mapa, marcador);
+      });
+      circles.push({ lat: latitud, lng: longitud });
+      marcadoresCajas.push({ id: caja.id_caja, lat: latitud, lng: longitud, idSector: caja.id_sector });
+      puntosMarcador.features.push(turf.point([longitud, latitud], { id: caja.id_caja, idSector: caja.id_sector }));
     });
-    circles.push({ lat: latitud, lng: longitud });
-    marcadoresCajas.push({id: caja.id_caja, lat: latitud, lng: longitud, idSector: caja.id_sector});
-    puntosMarcador.features.push(turf.point([longitud, latitud], { id: caja.id_caja, idSector: caja.id_sector }));
-  });
-  await iniciarRenderizadoPorLotes();
+    RADIO = 1000;
+    COLOR = "#6c5ce7";
+    await iniciarRenderizadoPorLotes();
+  } else if (objetoRender == "Antenas") {
+    const response = await fetch(`${config.HOST}app/controllers/Antenas.controllers.php?operacion=listarAntenas`);
+    const datosAntenas = await response.json();
+    datosAntenas.forEach(antena => {
+      const coordenada = antena.coordenadas.split(',');
+      const latitud = parseFloat(coordenada[0]);
+      const longitud = parseFloat(coordenada[1]);
+      const img = document.createElement('img');
+      img.src = `${config.HOST}image/antena.png`;
+      const marcador = new AdvancedMarkerElement({
+        position: { lat: latitud, lng: longitud },
+        map: mapa,
+        title: antena.idAntena,
+        content: img,
+      });
+      marcador.addListener('click', async (e) => {
+        if (infoWindow) {
+          infoWindow.close
+        }
+        const contentString = `
+          <div id="content">
+            <div id="siteNotice"></div>
+            <h1 id="firstHeading" class="firstHeading">${antena.nombre}</h1>
+            <div id="bodyContent">
+              <p><b>Id:</b> ${antena.idAntena}</p>
+              <p><b>Descripcion :</b> ${antena.descripcion}</p>
+              <p><b>Coordenadas:</b> ${antena.coordenadas}</p>
+            </div>
+          </div>
+        `;
+        infoWindow.setContent(contentString);
+        infoWindow.open(mapa, marcador);
+      });
+      circles.push({ lat: latitud, lng: longitud });
+      puntosMarcador.features.push(turf.point([longitud, latitud], { id: antena.idAntena }));
+    });
+    RADIO = 1500;
+    COLOR = "#ee5253";
+    await iniciarRenderizadoPorLotes();
+  }
 
-  if(document.querySelector('#inputGroupCoordenada')){
+  if (document.querySelector('#inputGroupCoordenada')) {
     document.querySelector('#buscarCoordenada').addEventListener('click', async () => {
-      if(document.querySelector('#CoordenadaModel').value != ''){
+      if (document.querySelector('#CoordenadaModel').value != '') {
         const coordenada = document.querySelector('#CoordenadaModel').value.split(',');
         const latitud = parseFloat(coordenada[0]);
         const longitud = parseFloat(coordenada[1]);
         const posicion = new google.maps.LatLng(latitud, longitud);
         mapa.setCenter(posicion);
         mapa.setZoom(15);
-        if(ubicacionMarcador) ubicacionMarcador.setMap(null);
-        if(marcador) marcador.setMap(null);
+        if (ubicacionMarcador) ubicacionMarcador.setMap(null);
+        if (marcador) marcador.setMap(null);
         marcador = new AdvancedMarkerElement({
           position: posicion,
           map: mapa,
@@ -268,6 +314,37 @@ export async function iniciarMapa(params = { cajas: true, mufas: true, antena: t
       break;
     default:
       break;
+  }
+}
+
+export async function eliminarMapa() {
+
+  // Limpiar el arreglo de círculos
+  circles = [];
+
+  // Eliminar todos los polígonos almacenados en unionPolygons
+  if (unionPolygons.length > 0) {
+    unionPolygons.forEach(polygon => polygon.setMap(null));
+    unionPolygons = []; // Reiniciar el arreglo de polígonos
+  }
+
+  // Eliminar el polígono de unión principal (si existe)
+  if (unionPolygon) {
+    unionPolygon.setMap(null);
+    unionPolygon = null;
+  }
+
+  // Limpiar el mapa y otros elementos
+  mapa = null;
+  circulosAntenas = [];
+  marcadoresCajas = [];
+  union = null;
+  puntosMarcador = turf.featureCollection([]);
+
+  // Eliminar el marcador si existe
+  if (marcador) {
+    marcador.setMap(null);
+    marcador = null;
   }
 }
 

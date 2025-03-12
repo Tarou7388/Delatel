@@ -893,9 +893,13 @@ window.addEventListener("DOMContentLoaded", async () => {
   btnBuscarCoordenadas.addEventListener("click", async () => {
     const slcTipoServicio = document.querySelector("#slcTipoServicio");
     if (slcTipoServicio.value == "2") {
-      await cargarCaracteristicasMapa(false, false, true);
+      mapa.eliminarMapa();
+      iniciarMapaSi = false
+      await cargarCaracteristicasMapa("Antenas");
     } else {
-      await cargarCaracteristicasMapa(true, true, false);
+      mapa.eliminarMapa();
+      iniciarMapaSi = false
+      await cargarCaracteristicasMapa("Cajas");
     }
   });
 
@@ -923,15 +927,14 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  async function cargarCaracteristicasMapa(caja, mufa, antena) {
-    const params = { cajas: caja, mufas: mufa, antena: antena };
+  async function cargarCaracteristicasMapa(objeto) {
     const id = "map"
     const renderizado = "modal"
     if(iniciarMapaSi){
       return
     }else{
       iniciarMapaSi = true
-      mapa.iniciarMapa(params, id, renderizado);
+      mapa.iniciarMapa(objeto, id, renderizado);
     }
   }
 
