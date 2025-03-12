@@ -8,6 +8,8 @@ let marcadorCoordenada = null
 let circulosAntenas = [];
 let marcadoresCajas = [];
 
+let inicializado = false;
+
 let circles = [];
 let unionPolygons = [];
 let unionPolygon = null;

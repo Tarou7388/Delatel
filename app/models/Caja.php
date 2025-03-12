@@ -52,6 +52,16 @@ class Caja extends Conexion
     return $this->registrar($sql, $params);
   }
 
+  public function cajasBuscarMultiple($idsString)
+  {
+    try {
+      $sql = "CALL spu_cajas_buscar_multiple(?)";
+      return $this->consultaParametros($sql, [$idsString]);
+    } catch (Exception $e) {
+      die($e->getMessage());
+    }
+  }
+
   public function descontarEspacioCaja($params = [])
   {
     $sql = "CALL spu_descontar_espacio_caja(?)";

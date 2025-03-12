@@ -134,16 +134,49 @@ export class EventEmitter {
     this.events = {};
   }
 
+  // Método para registrar un callback que se ejecuta varias veces
   on(event, callback) {
     if (!this.events[event]) {
       this.events[event] = [];
     }
-    this.events[event].push(callback);
+    if(!this.events[event].includes(callback)){
+      console.log('Registrando evento', callback);
+      this.events[event].push(callback);
+    }
+    console.log('Eventos:', this.events);
+    return this;
   }
 
+  // Método que asegura que el callback se ejecute una sola vez
+  once(event, callback) {
+    const onceCallback = (data) => {
+      callback(data);
+      this.off(event, onceCallback);  // Desregistramos el callback después de ejecutarlo
+    };
+    this.on(event, onceCallback);  // Usamos `on` para registrarlo
+    return this;
+  }
+
+  // Método para eliminar un listener de un evento
+  off(event, callback) {
+    if (this.events[event]) {
+      this.events[event] = this.events[event].filter(cb => cb !== callback);
+    }
+    return this;
+  }
+
+  // Método para emitir un evento y ejecutar los callbacks registrados
   emit(event, data) {
     if (this.events[event]) {
       this.events[event].forEach(callback => callback(data));
     }
+    return this;
+  }
+
+  // Método para verificar si ya existe un listener registrado para un evento específico
+  listenerExist(event) {
+    return this.events[event] && this.events[event].length > 0;
   }
 }
+
+

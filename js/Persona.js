@@ -28,6 +28,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   const txtReferencia = document.getElementById("txtReferenciaPersona");
   const btnBuscar = document.getElementById("btnBuscar");
 
+  let mapaInicializado=false;
   let idCaja = null;
   let dniActual = null;
   let idSector = null;
@@ -401,7 +402,12 @@ document.addEventListener("DOMContentLoaded", async function () {
     const params = { cajas: true, mufas: true }
     const id = "map"
     const renderizado = "modal"
-    mapa.iniciarMapa(params, id, renderizado);
+    if(mapaInicializado){
+      return
+    }else{
+      mapaInicializado=true;
+      await mapa.iniciarMapa(params, id, renderizado);
+    }
   })
 
   btnBuscar.addEventListener("click", () => {

@@ -17,6 +17,8 @@ window.addEventListener("DOMContentLoaded", async () => {
   const accesos = await Herramientas.permisos();
   const btnBuscarCoordenadas = document.querySelector("#btnBuscarCoordenadas");
 
+
+  let iniciarMapaSi = false;
   let idSector = null;
   let idCaja = null;
   let precioServicio = 0;
@@ -27,8 +29,8 @@ window.addEventListener("DOMContentLoaded", async () => {
   let tabla;
   let dataPaquetes = [];
 
-  mapa.emitter.on('coordenadaEncontrada', async () => {
-    await cargarSelectCajas(mapa.marcadoresCercanos);
+  mapa.emitter.on('coordenadaEncontrada', async (coordenada) => {
+    await cargarSelectCajas(JSON.parse(localStorage.getItem('marcadoresCercanos')));
     document.querySelector("#slcSector").disabled = false;
   });
 
@@ -38,58 +40,116 @@ window.addEventListener("DOMContentLoaded", async () => {
   });
 
   async function cargarSelectCajas(marcadoresNuevos) {
-    const marcadores = marcadoresNuevos;
-    const sectoresInfo = {};
-    $('#slcSector').empty();
+    try {
+      const marcadores = marcadoresNuevos || [];
+      const sectoresInfo = {};
 
-    $('#slcSector').append(new Option('Seleccione una caja', '', true, true));
+      // Limpiar y preparar el select
+      $('#slcSector').empty();
+      $('#slcSector').append(new Option('Seleccione una caja', '', true, true));
 
-    for (const marcador of marcadores) {
-      try {
-        const response = await fetch(`${config.HOST}app/controllers/Caja.controllers.php?operacion=cajabuscarId&idCaja=${marcador.properties.id}`);
-        const data = await response.json();
+      // Obtener IDs válidos (asegurarse de que todos sean números)
+      const cajasIds = marcadores
+        .filter(marcador => marcador && marcador.properties && marcador.properties.id)
+        .map(marcador => parseInt(marcador.properties.id))
+        .filter(id => !isNaN(id));
 
-        if (data && data.length > 0) {
-          const idSector = data[0].id_sector;
-          const idCaja = data[0].id_caja;
-          const nombreCaja = data[0].nombre;
-
-          if (!sectoresInfo[idSector]) {
-            const response2 = await fetch(`${config.HOST}app/controllers/Sector.controllers.php?operacion=buscarSector&idSector=${idSector}`);
-            const data2 = await response2.json();
-
-            if (data2 && data2.length > 0) {
-              sectoresInfo[idSector] = {
-                id: idSector, // Added sector ID
-                nombre: data2[0].sector,
-                cajas: []
-              };
-            }
-          }
-
-          if (sectoresInfo[idSector]) {
-            sectoresInfo[idSector].cajas.push({
-              id: idCaja,
-              nombre: nombreCaja
-            });
-          }
-        }
-      } catch (error) {
-        console.error('Error al procesar marcador:', error);
+      if (cajasIds.length === 0) {
+        $('#slcSector').trigger('change');
+        return;
       }
-    }
-    for (const idSector in sectoresInfo) {
-      const sector = sectoresInfo[idSector];
-      const optgroup = $('<optgroup></optgroup>')
-        .attr('label', sector.nombre)
-        .attr('id', `sector-${sector.id}`); // Set optgroup ID to sector ID
 
-      sector.cajas.forEach(caja => {
-        optgroup.append(new Option(caja.nombre, caja.id));
+      // Crear string de IDs separados por comas directamente
+      const idsString = cajasIds.join(',');
+
+      // 1. Obtener información de todas las cajas en una sola solicitud GET
+      const cajasResponse = await fetch(`${config.HOST}app/controllers/Caja.controllers.php?operacion=cajasBuscarMultiple&ids=${idsString}`);
+
+      const cajasData = await cajasResponse.json();
+      console.log(cajasData);
+
+      if (!cajasData || !Array.isArray(cajasData) || cajasData.length === 0) {
+        $('#slcSector').trigger('change');
+        return;
+      }
+
+      // Recopilar IDs de sectores únicos y asegurarse de que sean números
+      const sectoresIds = [...new Set(
+        cajasData
+          .filter(caja => caja && caja.id_sector)
+          .map(caja => parseInt(caja.id_sector))
+          .filter(id => !isNaN(id))
+      )];
+
+      if (sectoresIds.length === 0) {
+        $('#slcSector').trigger('change');
+        return;
+      }
+
+      // Crear string de IDs de sectores separados por comas
+      const sectoresIdsString = sectoresIds.join(',');
+
+      // 2. Obtener información de todos los sectores en una sola solicitud GET
+      const sectoresResponse = await fetch(`${config.HOST}app/controllers/Sector.controllers.php?operacion=sectoresBuscarMultiple&ids=${sectoresIdsString}`);
+
+      const sectoresData = await sectoresResponse.json();
+      console.log(sectoresData);
+
+      // Verificar que tenemos datos de sectores
+      if (!sectoresData || !Array.isArray(sectoresData)) {
+        $('#slcSector').trigger('change');
+        return;
+      }
+
+      // Crear mapa de sectores para acceso rápido
+      const sectoresMap = {};
+      sectoresData.forEach(sector => {
+        if (sector && sector.id_sector) {
+          sectoresMap[sector.id_sector] = sector.sector;
+        }
       });
-      $('#slcSector').append(optgroup);
+
+      // Organizar datos por sector
+      cajasData.forEach(caja => {
+        if (!caja || !caja.id_sector) return;
+
+        const idSector = caja.id_sector;
+        const idCaja = caja.id_caja;
+        const nombreCaja = caja.nombre || 'Sin nombre';
+
+        if (!sectoresInfo[idSector]) {
+          sectoresInfo[idSector] = {
+            id: idSector,
+            nombre: sectoresMap[idSector] || 'Sector Desconocido',
+            cajas: []
+          };
+        }
+
+        sectoresInfo[idSector].cajas.push({
+          id: idCaja,
+          nombre: nombreCaja
+        });
+      });
+
+      // Construir los optgroup y opciones
+      for (const idSector in sectoresInfo) {
+        const sector = sectoresInfo[idSector];
+        const optgroup = $('<optgroup></optgroup>')
+          .attr('label', sector.nombre)
+          .attr('id', `sector-${sector.id}`);
+
+        sector.cajas.forEach(caja => {
+          optgroup.append(new Option(caja.nombre, caja.id));
+        });
+
+        $('#slcSector').append(optgroup);
+      }
+
+    } catch (error) {
+      console.error('Error al cargar cajas:', error.message);
+    } finally {
+      $('#slcSector').trigger('change');
     }
-    $('#slcSector').trigger('change');
   }
 
   async function getQueryParams() {
@@ -867,7 +927,12 @@ window.addEventListener("DOMContentLoaded", async () => {
     const params = { cajas: caja, mufas: mufa, antena: antena };
     const id = "map"
     const renderizado = "modal"
-    mapa.iniciarMapa(params, id, renderizado);
+    if(iniciarMapaSi){
+      return
+    }else{
+      iniciarMapaSi = true
+      mapa.iniciarMapa(params, id, renderizado);
+    }
   }
 
   $("#slcTipoServicio").on("change", function () {

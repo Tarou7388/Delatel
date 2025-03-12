@@ -43,6 +43,26 @@ if (isset($_GET["operacion"])) {
 			$resultado = $sectores->buscarSector(["idSector" => Herramientas::sanitizarEntrada($_GET['idSector'])]);
 			echo json_encode($resultado);
 			break;
+		case 'sectoresBuscarMultiple':
+			$idsSectores = isset($_GET['ids']) ? $_GET['ids'] : '';
+			if (empty($idsSectores)) {
+				echo json_encode([]);
+				exit;
+			}
+			$validos = true;
+			$arrayIds = explode(',', $idsSectores);
+			foreach ($arrayIds as $id) {
+				if (!is_numeric($id)) {
+					$validos = false;
+					break;
+				}
+			}
+			if (!$validos || empty($arrayIds)) {
+				echo json_encode([]);
+				exit;
+			}
+			echo json_encode($sectores->sectoresBuscarMultiple($idsSectores));
+			break;
 	}
 }
 

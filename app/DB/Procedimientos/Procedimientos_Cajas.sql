@@ -218,3 +218,43 @@ BEGIN
   FROM tb_cajas 
   WHERE id_caja = p_id_caja;
 END$$
+
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS spu_cajas_buscar_multiple$$
+
+CREATE PROCEDURE spu_cajas_buscar_multiple(IN _ids_lista VARCHAR(1000))
+BEGIN
+    IF _ids_lista IS NULL OR _ids_lista = '' THEN
+        -- Si la lista está vacía, devolvemos un conjunto vacío
+        SELECT id_caja, nombre, id_sector 
+        FROM cajas 
+        WHERE 1 = 0; -- Condición falsa para devolver conjunto vacío
+    ELSE
+        SET @sql = CONCAT('SELECT id_caja, nombre, id_sector 
+                          FROM tb_cajas 
+                          WHERE id_caja IN (', _ids_lista, ')');
+        PREPARE stmt FROM @sql;
+        EXECUTE stmt;
+        DEALLOCATE PREPARE stmt;
+    END IF;
+END$$
+
+DROP PROCEDURE IF EXISTS spu_sectores_buscar_multiple$$
+
+CREATE PROCEDURE spu_sectores_buscar_multiple(IN _ids_lista VARCHAR(1000))
+BEGIN
+    IF _ids_lista IS NULL OR _ids_lista = '' THEN
+        -- Si la lista está vacía, devolvemos un conjunto vacío
+        SELECT id_sector, sector 
+        FROM sectores 
+        WHERE 1 = 0; -- Condición falsa para devolver conjunto vacío
+    ELSE
+        SET @sql = CONCAT('SELECT id_sector, sector 
+                          FROM tb_sectores 
+                          WHERE id_sector IN (', _ids_lista, ')');
+        PREPARE stmt FROM @sql;
+        EXECUTE stmt;
+        DEALLOCATE PREPARE stmt;
+    END IF;
+END $$

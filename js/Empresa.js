@@ -25,6 +25,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   const btnCancelarEmpresa = document.getElementById("btnCancelarEmpresa");
   const btnBuscarEmpresa = document.getElementById("btnBuscarEmpresa");
 
+  let mapaInicializado = false;
   let ruc = null;
 
   slcPaquetes.disabled = true;
@@ -234,6 +235,11 @@ document.addEventListener("DOMContentLoaded", async function () {
   });
 
   document.querySelector("#btnBuscarCoordenadasEmpresa").addEventListener("click", async () => {
-    await mapa.iniciarMapa();
+    if (mapaInicializado) {
+      return
+    } else {
+      mapaInicializado = true;
+      await mapa.iniciarMapa(params, id, renderizado);
+    }
   });
 });

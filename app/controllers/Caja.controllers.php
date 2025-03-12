@@ -26,6 +26,26 @@ if (isset($_GET['operacion'])) {
       $respuesta = $caja->cajaBuscar(['idCaja' => $idCaja]);
       echo json_encode($respuesta);
       break;
+    case 'cajasBuscarMultiple':
+      $idsCajas = isset($_GET['ids']) ? $_GET['ids'] : '';
+      if (empty($idsCajas)) {
+        echo json_encode([]);
+        exit;
+      }
+      $validos = true;
+      $arrayIds = explode(',', $idsCajas);
+      foreach ($arrayIds as $id) {
+        if (!is_numeric($id)) {
+          $validos = false;
+          break;
+        }
+      }
+      if (!$validos || empty($arrayIds)) {
+        echo json_encode([]);
+        exit;
+      }
+      echo json_encode($caja->cajasBuscarMultiple($idsCajas));
+      break;
   }
 }
 
@@ -47,7 +67,7 @@ if (isset($_POST['operacion'])) {
     case 'registrarLinea':
       $coordenadas = json_decode($_POST['coordenadas']);
       $coordenadas = json_encode($coordenadas);
-      if($_POST['idCaja'] == '') {
+      if ($_POST['idCaja'] == '') {
         $_POST['idCaja'] = null;
       }
       $params = [
