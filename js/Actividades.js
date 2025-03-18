@@ -49,10 +49,9 @@ window.addEventListener("DOMContentLoaded", async function () {
       <div id="mapPagina" style="height: 700px;"></div>
     `;
     labelSector.hidden = false;
-    const params = { cajas: true, mufas: true, antena: true };
     const id = "mapPagina";
     const renderizado = "pagina";
-    await mapa.iniciarMapa(params, id, renderizado);
+    await mapa.iniciarMapa("Cajas", id, renderizado);
   }
 
   async function cargarSoporte() {
