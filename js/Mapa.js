@@ -5,10 +5,7 @@ export const emitter = new Herramientas.EventEmitter();
 let Map, Circle, Polygon, AdvancedMarkerElement, mapa, InfoWindow;
 let marcador = null;
 let marcadorCoordenada = null
-let circulosAntenas = [];
 let marcadoresCajas = [];
-
-let inicializado = false;
 
 let circles = [];
 let unionPolygons = [];
@@ -25,7 +22,6 @@ export let idCaja = null;
 export let idSector = null;
 export let nombreSector = null;
 let ubicacionMarcador;
-let posicionMarcador;
 
 export async function encontrarMarcadoresCercanos(coordenadaClick, radio = 1000) {
   const puntoClick = turf.point([coordenadaClick.lng, coordenadaClick.lat]);
@@ -149,7 +145,7 @@ async function eventoPoligonos(e) {
   }
 }
 
-export async function iniciarMapa(objetoRender = "Cajas", id = "map", renderizado = "modal") {
+export async function iniciarMapa(objetoRender = "Cajas", id = "map", renderizado = "modal", coordenadaCualquiera = false) {
   const posicionInicial = { lat: -13.417077, lng: -76.136585 };
   ({ Map, Circle, Polygon, InfoWindow } = await google.maps.importLibrary("maps"));
   ({ AdvancedMarkerElement } = await google.maps.importLibrary("marker"));
@@ -270,13 +266,14 @@ export async function iniciarMapa(objetoRender = "Cajas", id = "map", renderizad
         } else {
           document.querySelector('#btnGuardarModalMapa').disabled = true;
         }
+        document.querySelector('#btnGuardarModalMapa').disabled = coordenadaCualquiera ? false : true;
       }
     });
   }
 
   switch (renderizado) {
     case "modal":
-      eventoMapa(false);
+      eventoMapa(coordenadaCualquiera);
       const btnGuardarModalMapa = document.getElementById('btnGuardarModalMapa');
       if (btnGuardarModalMapa) {
         btnGuardarModalMapa.addEventListener('click', () => {
@@ -336,7 +333,6 @@ export async function eliminarMapa() {
 
   // Limpiar el mapa y otros elementos
   mapa = null;
-  circulosAntenas = [];
   marcadoresCajas = [];
   union = null;
   puntosMarcador = turf.featureCollection([]);
@@ -365,21 +361,20 @@ export async function actualizarMapa(id = "map2") {
 }
 
 async function eventoMapa(valor) {
-  mapa.addListener('click', async (e) => {
-    marcadorCoordenada = valor ? e.latLng : null;
-    if (marcador) marcador.setMap(null);
-    marcador = new AdvancedMarkerElement({
-      position: e.latLng,
-      map: mapa,
-      title: "Marcador"
-    });
-
-    if (marcadorCoordenada == null) {
+  if(valor){
+    mapa.addListener('click', async (e) => {
+      marcadorCoordenada = { lat: e.latLng.lat(), lng: e.latLng.lng() };
+      if (marcador) marcador.setMap(null);
+      marcador = new AdvancedMarkerElement({
+        position: e.latLng,
+        map: mapa,
+        title: "Marcador"
+      });
       if (document.getElementById('btnGuardarModalMapa')) {
-        document.getElementById('btnGuardarModalMapa').disabled = true;
+        document.getElementById('btnGuardarModalMapa').disabled = false;
       }
-    }
-  });
+    });
+  }
 }
 
 export async function buscarCercanos(idCaja) {
@@ -399,8 +394,6 @@ export async function renderizarCoordenadaMapa(id) {
       const longitud = parseFloat(coordenada[1]);
 
       const posicion = new google.maps.LatLng(latitud, longitud);
-      posicionMarcador = posicion;
-
       mapa.setCenter(posicion);
       mapa.setZoom(15);
       const img = `${config.HOST}image/ubicacionCliente.png`;

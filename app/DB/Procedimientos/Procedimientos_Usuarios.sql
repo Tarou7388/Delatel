@@ -28,7 +28,6 @@ CREATE PROCEDURE spu_usuarios_login(
     BEGIN
         SELECT 
             u.nombre_user,
-            u.id_usuario,
             r.id_responsable AS id_usuario,
             u.pass,
             r.id_rol,

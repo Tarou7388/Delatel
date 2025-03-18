@@ -165,7 +165,6 @@ window.addEventListener("DOMContentLoaded", async function () {
       })
       .catch((error) => {
         showToast("Error al obtener la información de la persona: ", "ERROR");
-        console.log(error.message)
       });
   }
 

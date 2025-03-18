@@ -254,7 +254,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       return
     }else{
       iniciarMapaSi = true
-      mapa.iniciarMapa(objeto, id, renderizado);
+      mapa.iniciarMapa(objeto, id, renderizado, true);
     }
   }
   

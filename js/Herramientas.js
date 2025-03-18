@@ -126,6 +126,7 @@ export async function CompletarSoporte(idSoporte) {
 export async function obtenerLogin() {
   const response = await fetch(`${config.HOST}app/controllers/Usuario.controllers.php?operacion=obtenerLogin`);
   const data = await response.json();
+  console.log('Login:', data);
   return data
 }
 

@@ -342,8 +342,8 @@ BEGIN
         d.departamento AS Departamento,
         pr.provincia AS Provincia,
         di.distrito AS Distrito,
-        CONCAT(pt.nombres, ' ', pt.apellidos) AS NombreTecnico,
-        CONCAT(rt.nombres, ' ', rt.apellidos) AS NombreTecnicoFicha,
+        CONCAT(pt.nombres, ' ', pt.apellidos) AS NombreTecnicoFicha,
+        CONCAT(rt.nombres, ' ', rt.apellidos) AS NombreTecnico,
         co.create_at AS FechaFichaInstalacion
     FROM 
         tb_contratos co
