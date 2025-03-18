@@ -193,7 +193,6 @@ window.addEventListener("DOMContentLoaded", async () => {
           showToast("El rol se ha agregado exitosamente", "SUCCESS", 1500);
           location.reload();
         } else {
-          console.log("No se pudo agregar el Rol");
         }
       } catch (error) {
         console.error("Error:", error);
@@ -244,7 +243,6 @@ window.addEventListener("DOMContentLoaded", async () => {
           showToast("El rol se ha actualizado exitosamente", "SUCCESS");
           location.reload();
         } else {
-          console.log("No se pudo Actualizar el Rol");
         }
       } catch (error) {
         console.error("Error:", error);
@@ -308,7 +306,6 @@ window.addEventListener("DOMContentLoaded", async () => {
             location.reload();
 
           } else {
-            console.log("No se pudo inhabilitar el Rol");
           }
         }
       } catch (error) {
@@ -468,7 +465,6 @@ window.addEventListener("DOMContentLoaded", async () => {
           showToast("Permisos actualizados correctamente.", "SUCCESS");
           form.reset();
         } else {
-          console.log("No se pudo actualizar los permisos");
         }
       } catch (error) {
         console.error("Error:", error);

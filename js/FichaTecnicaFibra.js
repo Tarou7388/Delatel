@@ -83,8 +83,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         `${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerFichaInstalacion&id=${idContrato}`
       );
       const data = await response.json();
-      console.log(data);
-
       if (data.length === 0) {
         console.warn('No se encontraron datos');
         return;
@@ -98,8 +96,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         `${config.HOST}app/controllers/Caja.controllers.php?operacion=cajabuscarId&idCaja=${idCaja}`
       );
       const dataCaja = await responseCajaNombre.json();
-      console.log(dataCaja);
-
       document.getElementById("txtNumFicha").value = data[0].id_contrato;
 
       const nombreCliente = data[0].nombre_cliente.split(", ");
@@ -553,9 +549,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       );
       const datos = await response.json();
-
-      console.log(datos);
-
       if (response.ok) {
         showToast("Ficha de Instalación Guardarda Correctamente", "SUCCESS");
         setTimeout(() => {

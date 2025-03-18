@@ -667,7 +667,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       txtaEstadoInicial.value = (data[0].descripcion_problema);
 
     } catch (error) {
-      console.log("Error en Obtener el estado Inicial:", error);
+      console.error("Error en cargar problema:", error);
     }
   }
 

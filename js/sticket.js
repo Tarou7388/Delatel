@@ -79,7 +79,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         url: rutaContratos,
         type: "GET",
         dataSrc: function (json) {
-          console.log('Datos obtenidos para contratos:', json);
           json.forEach(item => {
             item.estado = 'PENDIENTE';
           });
@@ -120,7 +119,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         url: rutaAveria,
         type: "GET",
         dataSrc: function (json) {
-          console.log('Datos obtenidos para soporte:', json);
           json.forEach(item => {
             item.estado = 'PENDIENTE';
           });

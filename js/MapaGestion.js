@@ -5,8 +5,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   let Map, Circle, Polyline, AdvancedMarkerElement, mapa
 
   const accesos = await Herramientas.permisos();
-  console.log(accesos);
-
   let marcadorPrincipal = null;
   let Coordenadas = null;
   let CablePrincipal = null;
@@ -49,7 +47,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       item.addListener('click', async (event) => {
         const latLng = event.latLng.toJSON();
         Coordenadas = { lat: latLng.lat, lng: latLng.lng };
-        console.log(Coordenadas);
         idDistrito = item.idDistrito;
         if (lineaPrincipalAgregando) {
           blooquearbotones(false, true, false, false, true, true, true, true, true, true);
@@ -268,14 +265,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     paramsEnviar.append("tipoLinea", tipoLinea);
     paramsEnviar.append("idUsuario", login.idUsuario);
     paramsEnviar.forEach((value, key) => {
-        console.log(key + ": " + value);
     });
     const response = await fetch(`${config.HOST}app/controllers/Caja.controllers.php?operacion=agregarLinea`, {
       method: "POST",
       body: paramsEnviar
     });
     const data = await response.json();
-    console.log(data)
     if (data.error) {
       showToast(data.error.message, "ERROR");
     } else {
@@ -388,7 +383,6 @@ document.addEventListener('DOMContentLoaded', async () => {
           banderaCable = false;
           if (await ask("¿Desea guardar la caja?")) {
             await agregarCaja();
-            console.log(idCajaRegistro)
             if (idCajaRegistro != "") {
               await agregarCable("C");
             }
@@ -532,7 +526,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         content: img
       });
       marcadorarreglo.push(marcador);
-      console.log(item)
       marcador.addListener('click', () => {
         const ventanaInfo = new google.maps.InfoWindow({
           content: `

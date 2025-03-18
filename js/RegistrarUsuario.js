@@ -31,9 +31,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       try {
         const url = `${config.HOST}app/controllers/Persona.controllers.php?operacion=buscarPersonaDni&dni=${nroDoc}`;
         const data = await fetchData(url);
-
-        console.log(data);
-
         return data[0].id_usuario;
       } catch (error) {
         return false;
@@ -93,7 +90,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         if (!data) {
           showToast("Error en asignar Rol", "ERROR");
-          console.log(data);
         } else {
           showToast("Rol asignado correctamente", "SUCCESS");
         }

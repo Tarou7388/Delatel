@@ -41,7 +41,6 @@ async function iniciarRenderizadoPorLotes() {
   let index = 0;
 
   const procesarLote = () => {
-    console.log("tamaño de circles", circles.length);
     const batch = circles.slice(index, index + BATCH_SIZE);
     batch.forEach(datos => {
       const circle = new google.maps.Circle({

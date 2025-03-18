@@ -41,7 +41,6 @@ window.tablaKardex = $('#TbKardex').DataTable({
     url: ruta,
     type: "GET",
     dataSrc: function (json) {
-      console.log(json);
       return json.data;
     },
     error: function (xhr, error, thrown) {

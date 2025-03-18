@@ -138,9 +138,6 @@ document.addEventListener("DOMContentLoaded", async () => {
           idPersona: idPersonaSeleccionada,
         },
       };
-
-      console.log("Datos a enviar:", datosEnvio);
-
       const response = await fetch(
         `${config.HOST}app/controllers/Cliente.controllers.php`,
         {
@@ -173,8 +170,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       const data = await response.json();
 
       if (Array.isArray(data) && data.length > 0) {
-        console.log("Datos de la persona seleccionada:", data);
-
         if (data[0].id_cliente == null && data[0].id_cliente == undefined) {
           return -1;
         }
@@ -192,7 +187,6 @@ document.addEventListener("DOMContentLoaded", async () => {
           setTimeout(() => {
             buscarCoordenada.click();
           }, 500);
-          console.log("Coordenadas:", data[0].coordenadas);
         }
         return 1;
       } else {

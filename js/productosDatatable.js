@@ -154,15 +154,11 @@ document.addEventListener("DOMContentLoaded", async function () {
     const data = await response.json();
 
     if (data.Actualizado) {
-      console.log(datosProducto)
-      console.log(data);
       tablaProductos.ajax.reload();
       showToast("Actualizado Correctamente.", "SUCCESS");
       $("#modalEditarProducto").modal("hide");
       idProducto = -1;
     } else {
-      
-      console.log(datosProducto)
       showToast("Error al actualizar el producto.", "ERROR");
       idProducto = -1;
     }

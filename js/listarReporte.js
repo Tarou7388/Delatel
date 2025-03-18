@@ -20,8 +20,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const respuesta = await fetch(`${config.HOST}app/controllers/Averias.controllers.php?operacion=buscarAveriaPorContrato&valor=${idContrato}`);
     const averias = await respuesta.json();
-    console.log(averias);
-
     const tbody = document.querySelector("#listarAverias tbody");
     averias.forEach((averia, index) => {
       const row = document.createElement("tr");

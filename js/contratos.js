@@ -66,7 +66,6 @@ window.addEventListener("DOMContentLoaded", async () => {
       const cajasResponse = await fetch(`${config.HOST}app/controllers/Caja.controllers.php?operacion=cajasBuscarMultiple&ids=${idsString}`);
 
       const cajasData = await cajasResponse.json();
-      console.log(cajasData);
 
       if (!cajasData || !Array.isArray(cajasData) || cajasData.length === 0) {
         $('#slcSector').trigger('change');
@@ -93,7 +92,6 @@ window.addEventListener("DOMContentLoaded", async () => {
       const sectoresResponse = await fetch(`${config.HOST}app/controllers/Sector.controllers.php?operacion=sectoresBuscarMultiple&ids=${sectoresIdsString}`);
 
       const sectoresData = await sectoresResponse.json();
-      console.log(sectoresData);
 
       // Verificar que tenemos datos de sectores
       if (!sectoresData || !Array.isArray(sectoresData)) {

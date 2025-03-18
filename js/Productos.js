@@ -88,7 +88,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       .then((data) => {
         if (data.Guardado) {
           showToast("Se ha guardado correctamente", "SUCCESS");
-          console.log(data);
         } else {
           showToast("Verifique que se haya hecho bien la operación", "ERROR");
         }

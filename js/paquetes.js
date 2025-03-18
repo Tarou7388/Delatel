@@ -114,7 +114,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         idPaquete
       );
       const paquete = await response.json();
-      console.log("Paquete:", paquete);
       $("#txtIdPaquete").val(paquete[0].id_paquete);
       $("#txtPaqueteActualizar").val(paquete[0].paquete);
       $("#txtPrecioActualizar").val(paquete[0].precio);
@@ -216,9 +215,6 @@ document.addEventListener("DOMContentLoaded", async () => {
           idUsuario: userid,
         },
       };
-
-      console.log("Datos a enviar:", datosEnviar);
-
       try {
         const respuesta = await fetch(`${config.HOST}app/controllers/Paquete.controllers.php`, {
           method: "POST",

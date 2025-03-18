@@ -124,8 +124,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         `${config.HOST}app/controllers/Caja.controllers.php?operacion=cajabuscarId&idCaja=${idCaja}`
       );
       const dataCaja = await responseCajaNombre.json();
-      console.log(dataCaja);
-
       if (!Array.isArray(data) || data.length === 0) {
         console.warn("No hay datos en ficha_instalacion.");
         return;

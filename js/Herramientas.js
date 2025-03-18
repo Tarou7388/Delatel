@@ -126,7 +126,6 @@ export async function CompletarSoporte(idSoporte) {
 export async function obtenerLogin() {
   const response = await fetch(`${config.HOST}app/controllers/Usuario.controllers.php?operacion=obtenerLogin`);
   const data = await response.json();
-  console.log('Login:', data);
   return data
 }
 
@@ -141,10 +140,8 @@ export class EventEmitter {
       this.events[event] = [];
     }
     if(!this.events[event].includes(callback)){
-      console.log('Registrando evento', callback);
       this.events[event].push(callback);
     }
-    console.log('Eventos:', this.events);
     return this;
   }
 

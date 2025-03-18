@@ -167,8 +167,6 @@ document.addEventListener("DOMContentLoaded", async () => {
           idResponsable: idresponsabled
         }
       };
-      //console.log(parametros);
-
       const respuesta = await fetch(`${config.HOST}app/controllers/Responsable.controllers.php`, {
         method: 'PUT',
         headers: {
@@ -180,7 +178,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       const resultado = await respuesta.json();
       if (resultado.Actualizado) {
         showToast("Usuario actualizado", "SUCCESS");
-        console.log(resultado);
         $('#editModal').modal('hide');
         $('#tblUsuarios').DataTable().ajax.reload();
       } else {
@@ -251,7 +248,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
 
       const result = await response.json();
-      //console.log(result);
       if (result.eliminado) {
         showToast("Usuario eliminado", "SUCCESS");
         $('#tblUsuarios').DataTable().ajax.reload();
