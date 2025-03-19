@@ -41,7 +41,7 @@
 
                         <!-- Botones -->
                         <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                            <button type="submit" class="btn btn-primary">Guardar</button>
+                            <button type="submit" class="btn btn-primary" id="btnAccionAlmacen">Guardar</button>
                             <button type="reset" class="btn btn-secondary">Limpiar</button>
                         </div>
                     </form>
@@ -55,26 +55,12 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-bordered">
+                        <table class="table table-bordered" id="tablaAlmacenes" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
-                                    <th>Nombre</th>
-                                    <th>Ubicación</th>
-                                    <th>Coordenadas</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Almacén 1</td>
-                                    <td>Ubicación 1</td>
-                                    <td>-13.417793, -76.132671</td>
-                                </tr>
-                                <tr>
-                                    <td>Almacén 2</td>
-                                    <td>Ubicación 2</td>
-                                    <td>-13.418000, -76.133000</td>
-                                </tr>
-                                <!-- Puedes agregar más filas dinámicamente desde PHP o JavaScript -->
                             </tbody>
                         </table>
                     </div>

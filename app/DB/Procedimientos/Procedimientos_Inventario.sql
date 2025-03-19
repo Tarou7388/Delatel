@@ -15,6 +15,8 @@ DROP VIEW IF EXISTS vw_almacen$$
 CREATE VIEW vw_almacen AS
 	SELECT id_almacen,
     nombre_almacen,
+    ubicacion,
+    coordenada,
     iduser_create,
 	iduser_update
     FROM tb_almacen 
