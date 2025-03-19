@@ -71,8 +71,7 @@ if (isset($_POST['operacion'])) {
       $Login["estado"] = false;
     }
     $_SESSION["login"] = $Login;
-    echo json_encode($Login);
-    //echo json_encode($resultados);
+    echo json_encode($resultados);
   }
 
   if ($operacion == "registrarUsuarios") {
