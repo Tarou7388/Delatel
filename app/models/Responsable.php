@@ -46,31 +46,14 @@ class Responsable extends Conexion
    */
   public function actualizarResponsable($params = [])
   {
-    $sql = "CALL spu_responsablesUsuarios_actualizar(?,?,?)";
+    $sql = "CALL spu_responsablesUsuarios_actualizar(?,?,?,?)";
     $values = array(
-      $params['idUsuarioActualizador'],
+      $params['idUsuario'],
       $params['idRol'],
+      $params['idUsuarioCreador'],
       $params['idResponsable']
     );
     return $this->registrar($sql, $values);
   }
 
-  /**
-   * Elimina (o desactiva) un responsable de la base de datos.
-   * 
-   * @param array $params Los parámetros requeridos para la eliminación:
-   * - idResponsable: El ID del responsable a eliminar.
-   * - idUsuarioEliminador: El ID del usuario que realiza la eliminación.
-   * 
-   * @return mixed El resultado de la operación de eliminación.
-   */
-  public function eliminarResponsable($params = [])
-  {
-    $sql = "CALL spu_responsables_eliminar(?,?)";
-    $values = array(
-      $params['idResponsable'],
-      $params['idUsuarioEliminador']
-    );
-    return $this->registrar($sql, $values);
-  }
 }

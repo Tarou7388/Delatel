@@ -24,39 +24,38 @@ BEGIN
     );
 END $$
 
--- ACTUALIZAR PROCEDURE 
+DELIMITER $$
 DROP PROCEDURE IF EXISTS spu_responsablesUsuarios_actualizar$$
 CREATE PROCEDURE spu_responsablesUsuarios_actualizar(
-    IN p_iduser_update INT,
+    IN p_id_usuario INT,
     IN p_id_rol INT,
+    IN p_id_create INT,
     IN p_id_responsable INT
 )
 BEGIN
-    UPDATE tb_responsables
-    SET 
-        id_rol = p_id_rol,
-        iduser_update = p_iduser_update,
-        update_at = NOW()
-    WHERE 
-        p_id_responsable = id_responsable;
-END $$
+    INSERT INTO tb_responsables (
+        id_usuario, 
+        id_rol, 
+        fecha_inicio, 
+        iduser_create
+    ) VALUES (
+        p_id_usuario, 
+        p_id_rol, 
+        NOW(), 
+        p_id_create
+    );
 
--- ELIMINAR PROCEDURE
-DROP PROCEDURE IF EXISTS spu_responsables_eliminar$$
-CREATE PROCEDURE spu_responsables_eliminar (
-    IN p_iduser_inactive INT,
-    IN p_id_responsable INT
-)
-BEGIN
-    UPDATE tb_responsables
-    SET 
-        user_inactive = p_iduser_inactive,
-        fecha_fin = NOW()
-    WHERE 
-        p_id_responsable = id_responsable;
-END $$
+    UPDATE tb_responsables SET
+        iduser_update = p_id_create,
+        fecha_fin = NOW(),
+        iduser_inactive = NOW()
+    WHERE id_responsable = p_id_responsable;
+END$$
+
+DELIMITER ;
 
 
-
-
+-- ELIMINAR PROCEDURE spu_responsables_eliminar
+ 
+SELECT * FROM tb_responsables
 

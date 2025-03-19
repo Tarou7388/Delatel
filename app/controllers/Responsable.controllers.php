@@ -34,9 +34,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
   switch ($operacion) {
     case 'actualizarResponsable':
       $datos = [
-        "idUsuarioActualizador"   => $datos['datos']['idUsuarioActualizador'],  // NO TIENEN EL SANITIZAR POR UN CONFLICTO,
-        "idRol"                   => $datos['datos']['idRol'],                  // DADO QUE NO ES POR CAJA DE TEXTO SE 
-        "idResponsable"           => $datos['datos']['idResponsable']           // MANTENDRA SIN SANITIZAR
+        "idUsuario"   => $datos['datos']['idUsuario'],  
+        "idRol"                   => $datos['datos']['idRol'],                  
+        "idUsuarioCreador"           => $datos['datos']['idUsuarioCreador'],         
+        "idResponsable"           => $datos['datos']['idResponsable']           
       ];
 
       $estado = $responsable->actualizarResponsable($datos);

@@ -152,4 +152,10 @@ class Rol extends Conexion
     );
     return $this->registrar($sql, $values);
   }
+
+  public function listarRolesActivos()
+  {
+    $sql = "SELECT * from vw_roles_listar WHERE inactive_at IS NULL";
+    return $this->listarDatos($sql);
+  }
 }

@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   (async () => {
     try {
-      const respuesta = await fetch(`${config.HOST}app/controllers/Rol.controllers.php?operacion=listarRoles`);
+      const respuesta = await fetch(`${config.HOST}app/controllers/Rol.controllers.php?operacion=listarRolesActivos`);
       const data = await respuesta.json();
       const select = document.getElementById("slcRol");
       data.forEach(({ rol, id_rol }) => select.add(new Option(rol, id_rol)));
@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
     actualizarRolResponsable(idresponsable);
-    //await actualizarRolResponsable();
+    
     await actualizarUsuario();
   });
 
@@ -162,9 +162,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       const parametros = {
         operacion: 'actualizarResponsable',
         datos: {
-          idUsuarioActualizador: userid,
-          idRol: rol,
-          idResponsable: idresponsabled
+          idUsuario:idUserTabla,
+          idRol:rol,
+          idUsuarioCreador:userid,
+          idResponsable:idresponsabled
         }
       };
       const respuesta = await fetch(`${config.HOST}app/controllers/Responsable.controllers.php`, {
@@ -261,6 +262,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
   };
+
+  async function crearun(params) {
+    
+  }
 
 });
 

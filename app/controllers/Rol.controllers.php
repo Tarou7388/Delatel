@@ -17,6 +17,10 @@ if (isset($_GET["operacion"])) {
       $resultado  = $rol->listarRoles();
       echo json_encode($resultado);
       break;
+    case 'listarRolesActivos':
+      $resultado  = $rol->listarRolesActivos();
+      echo json_encode($resultado);
+      break;
     case 'listarPermisosIdRol':
       $datos = [
         "idRol" => Herramientas::sanitizarEntrada($_GET['idRol'])

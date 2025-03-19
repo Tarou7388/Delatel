@@ -18,7 +18,8 @@ FROM
     INNER JOIN tb_personas pe ON us.id_persona = pe.id_persona
     INNER JOIN tb_roles ro ON res.id_rol = ro.id_rol
 WHERE 
-    us.inactive_at IS NULL 
+    us.inactive_at IS NULL AND
+    res.fecha_fin IS NULL
     AND us.id_usuario != 1;
 
 DROP PROCEDURE IF EXISTS spu_usuarios_login$$
@@ -39,7 +40,7 @@ CREATE PROCEDURE spu_usuarios_login(
         JOIN 
             tb_roles ro ON r.id_rol = ro.id_rol
         WHERE 
-            nombre_user = p_nombre_user AND u.inactive_at IS NULL;
+            nombre_user = p_nombre_user AND r.fecha_fin IS NULL;
     END $$
 
 DROP PROCEDURE IF EXISTS spu_usuarios_registrar$$
