@@ -98,4 +98,17 @@ class Kardex extends Conexion
     $values = array($params['idProducto']);
     return $this->consultaParametros($sql, $values);
   }
+
+  public function totalProductosKardex()
+  {
+    try {
+      $cmd = $this->pdo->prepare("SELECT * FROM vw_productos_kardex");
+      $cmd->execute();
+
+      return $cmd->fetchAll(PDO::FETCH_ASSOC);
+    } catch (Exception $e) {
+      error_log($e->getMessage());
+      return [];
+    }
+  }
 }

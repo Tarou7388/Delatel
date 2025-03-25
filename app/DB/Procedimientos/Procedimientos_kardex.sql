@@ -124,3 +124,44 @@ BEGIN
     WHERE id_producto = p_id_producto 
     ORDER BY id_kardex DESC;
 END $$
+
+CREATE VIEW vw_productos_kardex AS
+SELECT 
+    p.id_producto,
+    m.marca,
+    tp.tipo_nombre AS tipo_producto,
+    p.modelo,
+    um.unidad_nombre AS unidad_medida,
+    p.precio_actual,
+    p.codigo_barra,
+    p.categoria,
+    COALESCE(SUM(
+        CASE 
+            WHEN t_op.movimiento = 'E' THEN k.cantidad 
+            WHEN t_op.movimiento = 'S' THEN -k.cantidad 
+            ELSE 0 
+        END
+    ), 0) AS stock_total,
+    GROUP_CONCAT(DISTINCT a.nombre_almacen ORDER BY a.nombre_almacen SEPARATOR ', ') AS almacenes_con_stock,
+    p.create_at,
+    p.update_at,
+    CASE WHEN p.inactive_at IS NULL THEN 'Activo' ELSE 'Inactivo' END AS estado
+FROM 
+    tb_productos p
+INNER JOIN 
+    tb_marca m ON p.id_marca = m.id_marca
+INNER JOIN 
+    tb_tipoproducto tp ON p.id_tipo = tp.id_tipo
+INNER JOIN 
+    tb_unidadmedida um ON p.id_unidad = um.id_unidad
+LEFT JOIN 
+    tb_kardex k ON p.id_producto = k.id_producto
+LEFT JOIN 
+    tb_tipooperacion t_op ON k.id_tipooperacion = t_op.id_tipooperacion
+LEFT JOIN 
+    tb_almacen a ON k.id_almacen = a.id_almacen
+GROUP BY 
+    p.id_producto, m.marca, tp.tipo_nombre, p.modelo, um.unidad_nombre, 
+    p.precio_actual, p.codigo_barra, p.categoria, p.create_at, p.update_at, p.inactive_at
+ORDER BY 
+    m.marca, p.modelo;

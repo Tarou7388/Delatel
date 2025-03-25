@@ -40,9 +40,10 @@ if (isset($_GET["operacion"])) {
       echo json_encode($kardex->buscarStockId(["idProducto" => $idProducto, "idAlmacen" => $idAlmacen]));
       break;
 
-    case "obtenerProducto":
-      echo json_encode(["hola" => "mundo"]);
-      //echo json_encode($kardex->buscarProductoId(["id_producto" => Herramientas::sanitizarEntrada($_GET['id_producto'])]));
+    case "totalProductosKardex":
+      $kardex = $kardex->totalProductosKardex();
+      echo json_encode($kardex);
+
       break;
   }
 }

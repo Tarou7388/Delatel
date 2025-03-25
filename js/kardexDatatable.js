@@ -33,6 +33,13 @@ window.tablaKardex = $('#TbKardex').DataTable({
       extend: 'print',
       text: '<i class="fa-solid fa-print"></i>',
       className: 'btn btn-secondary me-2'
+    },
+    {
+      text: 'Reporte General',
+      className: 'btn btn-info me-2',
+      action: function () {
+        window.open('../reports/Reporte_kardex/ReporteKardex.php', '_blank');
+      }
     }
   ],
   processing: true,
