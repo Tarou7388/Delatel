@@ -374,6 +374,8 @@ window.addEventListener("DOMContentLoaded", async () => {
       },
     };
 
+    console.log(datosEnvio);
+
     try {
       const response = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php`, {
         method: "POST",
@@ -381,6 +383,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         headers: { "Content-Type": "application/json" },
       });
       const data = await response.json();
+      console.log(data);
 
       if (data.error) {
         showToast("Error al registrar el contrato.", "ERROR");
@@ -401,6 +404,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         });
 
         const dataCaja = await respuesta.json();
+        console.log(dataCaja);
         if (dataCaja.error) {
           showToast("Error al descontar caja.", "ERROR");
         } else {
@@ -756,13 +760,10 @@ window.addEventListener("DOMContentLoaded", async () => {
       precio.value == "" ||
       precio.value == 0 ||
       direccion.value == "" ||
-      sector.value == "" ||
       referencia.value == "" ||
       coordenada.value == "" ||
-      slcSector.value == "0" ||
       slcPaquetes.value == "0"
     ) {
-      showToast("¡Llene todos los campos!", "INFO");
       return false;
     } else {
       return true;

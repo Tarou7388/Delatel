@@ -104,5 +104,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
 			$estado = $producto->EliminarProducto($datos);
 			echo json_encode(["Eliminado" => $estado]);
 			break;
+		case "actualizarTipoProducto":
+			$datos = [
+				"idTipo" => Herramientas::sanitizarEntrada($data['idTipo']),
+				"tipoNombre" => Herramientas::sanitizarEntrada($data['tipoNombre']),
+				"idUsuario" => Herramientas::sanitizarEntrada($data["idUsuario"])
+			];
+			$estado = $producto->actualizarTipoProducto($datos);
+			echo json_encode(["Actualizado" => $estado]);
+			break;
 	}
 }

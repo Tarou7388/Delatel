@@ -33,4 +33,15 @@ class Marca extends Conexion
         );
         return $this->consultaParametros($sql, $values);
     }
+
+    public function actualizarMarca($params = [])
+    {
+        $sql = "CALL spu_marcas_actualizar(?, ?, ?)";
+        $values = array(
+            $params['id_marca'],
+            $params['marca'],
+            $params['iduserUpdate']
+        );
+        return $this->consultaParametros($sql, $values);
+    }
 }

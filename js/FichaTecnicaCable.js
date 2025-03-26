@@ -129,6 +129,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         `${config.HOST}app/controllers/Caja.controllers.php?operacion=cajabuscarId&idCaja=${idCaja}`
       );
       const dataCaja = await responseCajaNombre.json();
+      console.log(dataCaja);
+
       document.getElementById("txtUsuario").value = data[0].nombre_cliente;
       document.getElementById("txtPaquete").value = data[0].paquete;
       document.getElementById("txtNumFicha").value = data[0].id_contrato;
@@ -533,6 +535,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const txtIdCaja = document.querySelector("#txtIdCaja").value;
     jsonData.idcaja = idCaja;
     jsonData.nombrecaja = txtIdCaja;
+    console.log(jsonData);
+
     const data = {
       operacion: "guardarFichaInstalacion",
       fichaInstalacion: jsonData,
@@ -613,6 +617,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     try {
       const respuesta = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarraSintonizador&codigoBarra=${codigoBarra}`);
       const resultado = await respuesta.json();
+
+      console.log('Resultado:', resultado);
+
       if (Array.isArray(resultado) && resultado.length > 0) {
         const producto = resultado[0];
         if (producto?.marca && producto?.modelo && producto?.precio_actual) {

@@ -28,7 +28,7 @@ class Producto extends Conexion
     return $this->consultaParametros($sql, $value);
   }
 
-  
+
   /**
    * Listar todos los productos.
    *
@@ -49,7 +49,6 @@ class Producto extends Conexion
     } catch (Exception $e) {
       error_log($e->getMessage());
       return [];
-      
     }
   }
 
@@ -152,32 +151,42 @@ class Producto extends Conexion
     return $this->registrar($sql, $values);
   }
 
-		public function BuscarProductoBarra($params = [])
-		{
-				$sql = "CALL	spu_productos_buscar_barra(?)";
-				$values = array($params['codigoBarra']);
-				return $this->consultaParametros($sql, $values);
-		}
+  public function BuscarProductoBarra($params = [])
+  {
+    $sql = "CALL	spu_productos_buscar_barra(?)";
+    $values = array($params['codigoBarra']);
+    return $this->consultaParametros($sql, $values);
+  }
 
-		public function BuscarProductoBarraSintonizador($params = [])
-		{
-				$sql = "CALL	spu_productos_buscar_barraSintonizador(?)";
-				$values = array($params['codigoBarra']);
-				return $this->consultaParametros($sql, $values);
-		}
-    
-		public function BuscarProductoBarraRepetidor($params = [])
-		{
-				$sql = "CALL	spu_productos_buscar_barraRepetidor(?)";
-				$values = array($params['codigoBarra']);
-				return $this->consultaParametros($sql, $values);
-		}
+  public function BuscarProductoBarraSintonizador($params = [])
+  {
+    $sql = "CALL	spu_productos_buscar_barraSintonizador(?)";
+    $values = array($params['codigoBarra']);
+    return $this->consultaParametros($sql, $values);
+  }
 
-    public function BuscarProductoBarraRouter($params = [])
-		{
-				$sql = "CALL spu_productos_buscar_barraRouter(?)";
-				$values = array($params['codigoBarra']);
-				return $this->consultaParametros($sql, $values);
-		}
+  public function BuscarProductoBarraRepetidor($params = [])
+  {
+    $sql = "CALL	spu_productos_buscar_barraRepetidor(?)";
+    $values = array($params['codigoBarra']);
+    return $this->consultaParametros($sql, $values);
+  }
 
+  public function BuscarProductoBarraRouter($params = [])
+  {
+    $sql = "CALL spu_productos_buscar_barraRouter(?)";
+    $values = array($params['codigoBarra']);
+    return $this->consultaParametros($sql, $values);
+  }
+
+  public function actualizarTipoProducto($params = [])
+  {
+    $sql = "CALL spu_actualizar_tipoproducto(?,?,?)";
+    $values = array(
+      $params['idTipo'],
+      $params['tipoNombre'],
+      $params['idUsuario']
+    );
+    return $this->registrar($sql, $values);
+  }
 }

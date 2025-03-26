@@ -33,4 +33,18 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         break;
     }
   }
+
+
+  if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+    parse_str(file_get_contents('php://input'), $input);
+    if (isset($input['operacion']) && $input['operacion'] === 'actualizarMarca') {
+      $datos = [
+        "id_marca" => Herramientas::sanitizarEntrada($input['id_marca']),
+        "marca" => Herramientas::sanitizarEntrada($input['marca']),
+        "iduserUpdate" => Herramientas::sanitizarEntrada($input['iduserUpdate'])
+      ];
+      $estado = $marca->actualizarMarca($datos);
+      echo json_encode(["Actualizado" => $estado]);
+    }
+  }
 }

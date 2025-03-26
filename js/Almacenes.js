@@ -10,6 +10,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   let tablaAlmacen;
   let accion = "registrar";
   let idAlmacenSeleccionado;
+  let idMarcaSeleccionada;
+  let idTipoProductoActualizado;
 
   async function cargarMapa() {
     await mapa.iniciarMapa({}, "map", "modal");
@@ -19,7 +21,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  async function cargarTabla(params) {
+  async function cargarTabla() {
     tablaAlmacen = new DataTable("#tablaAlmacenes", {
       processing: true,
       serverSide: true,
@@ -66,7 +68,69 @@ document.addEventListener("DOMContentLoaded", async () => {
         url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
       },
       paging: false,
-      info: true
+      info: true,
+      searching: false
+    });
+  }
+
+  async function tablaReutilizable(idTabla, urlAjax, columnas = [], entidad = "") {
+    const columns = columnas.map(col => {
+      const [colName, colWidth] = col.split('=');
+      const width = colWidth ? `${colWidth}%` : 'auto';
+
+      return {
+        data: colName,
+        title: colName.charAt(0).toUpperCase() + colName.slice(1),
+        className: 'text-start',
+        render: colName === 'acciones' ? function (data, type, row) {
+          if (row && typeof row === 'object') {
+            const firstValue = Object.values(row)[0];
+
+            return `
+              <button class="btn btn-primary btn-sm ${entidad ? `actualizar${entidad}` : 'actualizarAlmacen'}" data-id="${firstValue}">
+                <i class="fa-solid fa-pencil"></i>
+              </button>
+              <button class="btn btn-danger btn-sm ${entidad ? `eliminar${entidad}` : 'eliminarAlmacen'}" data-id="${firstValue}">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            `;
+          } else {
+            return '';
+          }
+        } : null
+      };
+    });
+
+    const tablaReutilizable = new DataTable(`#${idTabla}`, {
+      ajax: {
+        url: urlAjax,
+        type: "GET",
+        dataSrc: function (json) {
+          return json;
+        },
+        error: function (xhr, error, thrown) {
+          console.error('Error en la carga de datos:', error, thrown);
+          alert('Error al cargar los datos. Por favor, revisa la consola para más detalles.');
+        }
+      },
+      columnDefs: columnas.map((col, index) => {
+        const [colName, colWidth] = col.split('=');
+        const width = colWidth ? `${colWidth}%` : 'auto';
+
+        return {
+          targets: index,
+          width: width,
+          title: colName.charAt(0).toUpperCase() + colName.slice(1)
+        };
+      }),
+      columns: columns,
+      order: [],
+      language: {
+        url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
+      },
+      paging: false,
+      info: true,
+      searching: false
     });
   }
 
@@ -144,6 +208,57 @@ document.addEventListener("DOMContentLoaded", async () => {
         tablaAlmacen.ajax.reload();
       }
     });
+
+    $("#tablaMarca").on("click", ".actualizarMarcas", async function () {
+      const id = $(this).data("id");
+      idMarcaSeleccionada = id;
+      const response = await fetch(`${config.HOST}/app/controllers/Almacen.controllers.php?operacion=listarAlmacenPorId&id=${id}`);
+      const data = await response.json();
+      console.log(data);
+      if (data.error) {
+        console.error(data.error);
+        showToast("No se pudo obtener el almacén", "ERROR");
+      } else {
+        txtNombreAlmacen.value = data[0].nombre_almacen;
+        txtUbicación.value = data[0].ubicacion;
+        CoordenadaModel.value = data[0].coordenada;
+        accion = "actualizar";
+        document.querySelector("#btnAccionMarcas").innerText = "Actualizar";
+        document.querySelector("#btnAccionMarcas").classList.remove("btn-primary");
+        document.querySelector("#btnAccionMarcas").classList.add("btn-warning");
+      }
+    });
+
+    $("#tablaTipoProducto").on("click", ".actualizarTipoProductos", async function () {
+      console.log("Actualizar almacén");
+      const id = $(this).data("id");
+      idTipoProductoActualizado = id;
+      const response = await fetch(`${config.HOST}/app/controllers/Almacen.controllers.php?operacion=listarAlmacenPorId&id=${id}`);
+      const data = await response.json();
+      console.log(data);
+      if (data.error) {
+        console.error(data.error);
+        showToast("No se pudo obtener el almacén", "ERROR");
+      } else {
+        txtNombreAlmacen.value = data[0].nombre_almacen;
+        txtUbicación.value = data[0].ubicacion;
+        CoordenadaModel.value = data[0].coordenada;
+        accion = "actualizar";
+        document.querySelector("#btnAccionTipoProducto").innerText = "Actualizar";
+        document.querySelector("#btnAccionTipoProducto").classList.remove("btn-primary");
+        document.querySelector("#btnAccionTipoProducto").classList.add("btn-warning");
+      }
+    });
+
+
+    $("#tablaMarca").on("click", ".eliminarMarcas", async function () {
+      console.log("Eliminar almacén");
+
+    });
+    $("#tablaTipoProducto").on("click", ".eliminarTipoProductos", async function () {
+      console.log("Eliminar almacén");
+    });
+
   }
 
   async function actualizar() {
@@ -179,6 +294,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     await cargarMapa();
     await cargarTabla();
     await eventosBotonesTabla();
+    await tablaReutilizable("tablaMarca", `${config.HOST}app/controllers/Marcas.controllers.php?operacion=listarmarca`, ["marca=5", "acciones=10"], "Marcas");
+    await tablaReutilizable("tablaTipoProducto", `${config.HOST}app/controllers/Producto.controllers.php?operacion=listarTipoProductos`, ["tipo_nombre=5", "acciones=5"], "TipoProductos");
   })();
 
   document.querySelector("#formAlmacen").addEventListener("submit", async (event) => {

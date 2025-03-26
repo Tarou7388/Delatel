@@ -34,15 +34,6 @@ CREATE VIEW vw_unidadmedida AS
 	FROM 
         tb_unidadmedida;
 
-DROP PROCEDURE IF EXISTS spu_registrar_tipo_producto$$
-CREATE PROCEDURE spu_registrar_tipo_producto(
-    IN p_tipo_nombre VARCHAR(70),
-    IN p_iduser_create INT
-)
-BEGIN
-    INSERT INTO tb_tipoproducto (tipo_nombre, create_at, iduser_create)
-    VALUES (p_tipo_nombre, NOW(), p_iduser_create);
-END $$
 
 
 

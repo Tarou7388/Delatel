@@ -80,6 +80,105 @@
             </div>
         </div>
     </div>
+
+    <section>
+        <div class="row">
+            <!-- Marca -->
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h4><i class="fas fa-tag me-1"></i> Marca</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="txtMarca" name="txtMarca" placeholder="Marca" required>
+                                <label for="txtMarca">Marca</label>
+                            </div>
+                        </div>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                            <button type="submit" class="btn btn-primary" id="btnAccionMarcas">Guardar</button>
+                            <button type="reset" class="btn btn-secondary">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tipo de producto -->
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h4><i class="fas fa-box me-1"></i> Tipo de producto</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="txtTipoProducto" name="txtTipoProducto" placeholder="Tipo de producto" required>
+                                <label for="txtTipoProducto">Tipo de producto</label>
+                            </div>
+                        </div>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                            <button type="submit" class="btn btn-primary" id="btnAccionTipoProducto">Guardar</button>
+                            <button type="reset" class="btn btn-secondary">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card para las tablas con altura máxima de 250px -->
+        <div class="row">
+            <!-- Marca Tabla -->
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h4><i class="fas fa-tag me-1"></i> Marca - Tabla</h4>
+                    </div>
+                    <div class="card-body" style="overflow-y: auto;">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-sm" id="tablaMarca" width="100%" cellspacing="0" style="max-height: 250px; overflow-y: auto;">
+                                <thead>
+                                    <tr>
+                                        <th>Marca</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Datos de la tabla -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tipo de Producto Tabla -->
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h4><i class="fas fa-box me-1"></i> Tipo de producto - Tabla</h4>
+                    </div>
+                    <div class="card-body" style="overflow-y: auto;">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-sm" id="tablaTipoProducto" width="100%" cellspacing="0" style="max-height: 250px; overflow-y: auto;">
+                                <thead>
+                                    <tr>
+                                        <th>Tipo de producto</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Datos de la tabla -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
 </div>
 
 <?php require_once "../../footer.php"; ?>

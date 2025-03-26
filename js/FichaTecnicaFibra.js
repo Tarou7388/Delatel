@@ -83,6 +83,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         `${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerFichaInstalacion&id=${idContrato}`
       );
       const data = await response.json();
+      console.log(data);
+
       if (data.length === 0) {
         console.warn('No se encontraron datos');
         return;
@@ -96,6 +98,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         `${config.HOST}app/controllers/Caja.controllers.php?operacion=cajabuscarId&idCaja=${idCaja}`
       );
       const dataCaja = await responseCajaNombre.json();
+      console.log(dataCaja);
+
       document.getElementById("txtNumFicha").value = data[0].id_contrato;
 
       const nombreCliente = data[0].nombre_cliente.split(", ");
@@ -111,8 +115,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       primerApellido = apellidos[0];
       segundoApellido = apellidos[1];
 
-      const usuario = (primerNombre.substring(0, 3) + primerApellido.substring(0, 6) + idContrato).toLowerCase();
-      const contrasenia = "@" + segundoApellido.substring(0, 7).toLowerCase() + idContrato;
+      const usuario = (primerNombre.substring(0, 3) + primerApellido.substring(0, 6) + idContrato).toLowerCase().replace(/ñ/g, 'n');
+      const contrasenia = "@" + segundoApellido.substring(0, 7).toLowerCase().replace(/ñ/g, 'n') + idContrato;
 
       document.getElementById("txtnombreCliente").textContent = data[0].nombre_cliente;
       document.getElementById("txtUsuario").value = usuario;
@@ -549,6 +553,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       );
       const datos = await response.json();
+
+      console.log(datos);
+
       if (response.ok) {
         showToast("Ficha de Instalación Guardarda Correctamente", "SUCCESS");
         setTimeout(() => {
