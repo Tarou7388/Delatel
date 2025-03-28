@@ -17,34 +17,40 @@ if (isset($_GET['operacion'])) {
       $respuesta = $marca->listarMarcas();
       echo json_encode($respuesta);
       break;
+    case 'listarMarcaPorId':
+      $respuesta = $marca->listarMarcaPorId(['idMarca' => $_GET['idMarca']]);
+      echo json_encode($respuesta);
+      break;
   }
 }
 
-if($_SERVER['REQUEST_METHOD'] === 'POST'){
-  if(isset($input['operacion'])){
-    switch ($input['operacion']) {
-      case 'registrarMarca':
-        $datos = [
-          "marca" => Herramientas::sanitizarEntrada($input['marca']),
-          "idUsuario" => Herramientas::sanitizarEntrada($input["idUsuario"])
-        ];
-        $estado = $marca->registrarMarca($datos);
-        echo json_encode(["Guardado" => $estado]);
-        break;
-    }
-  }
-
-
-  if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
-    parse_str(file_get_contents('php://input'), $input);
-    if (isset($input['operacion']) && $input['operacion'] === 'actualizarMarca') {
-      $datos = [
-        "id_marca" => Herramientas::sanitizarEntrada($input['id_marca']),
-        "marca" => Herramientas::sanitizarEntrada($input['marca']),
-        "iduserUpdate" => Herramientas::sanitizarEntrada($input['iduserUpdate'])
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $json = file_get_contents('php://input');
+  $datos = json_decode($json, true);
+  $operacion = Herramientas::sanitizarEntrada($datos['operacion']);
+  switch ($operacion) {
+    case 'registrarMarca':
+      $datosEnviar = [
+        "marca" => Herramientas::sanitizarEntrada($datos['marca']),
+        "idUsuario" => Herramientas::sanitizarEntrada($datos['idUsuario'])
       ];
-      $estado = $marca->actualizarMarca($datos);
-      echo json_encode(["Actualizado" => $estado]);
-    }
+      $resultado = $marca->registrarMarca($datosEnviar);
+      echo json_encode(["guardado" => $resultado]);
+      break;
+  }
+}
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+  $input = json_decode(file_get_contents('php://input'), true);
+  if ($input['operacion'] === 'actualizarMarca') {
+    $datos = [
+      "idmarca"      => Herramientas::sanitizarEntrada($input['idmarca']),
+      "marca"        => Herramientas::sanitizarEntrada($input['marca']),
+      "iduserUpdate" => Herramientas::sanitizarEntrada($input['iduserUpdate'])
+    ];
+
+    $estado = $marca->actualizarMarca($datos);
+    echo json_encode(["Actualizado" => $estado]);
   }
 }

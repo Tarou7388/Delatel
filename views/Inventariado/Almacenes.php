@@ -54,7 +54,7 @@
                     <i class="fas fa-table me-1"></i> Lista de Almacenes
                 </div>
                 <div class="card-body">
-                    <div class="table-responsive">
+                    <div class="table-responsive" style="height: 350px;">
                         <table class="table table-bordered" id="tablaAlmacenes" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
@@ -90,16 +90,18 @@
                         <h4><i class="fas fa-tag me-1"></i> Marca</h4>
                     </div>
                     <div class="card-body">
-                        <div class="mb-3">
-                            <div class="form-floating">
-                                <input type="text" class="form-control" id="txtMarca" name="txtMarca" placeholder="Marca" required>
-                                <label for="txtMarca">Marca</label>
+                        <form action="" id="formMarca">
+                            <div class="mb-3">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="txtMarca" name="txtMarca" placeholder="Marca" required>
+                                    <label for="txtMarca">Marca</label>
+                                </div>
                             </div>
-                        </div>
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                            <button type="submit" class="btn btn-primary" id="btnAccionMarcas">Guardar</button>
-                            <button type="reset" class="btn btn-secondary">Cancelar</button>
-                        </div>
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                                <button type="submit" class="btn btn-primary" id="btnAccionMarcas">Guardar</button>
+                                <button type="reset" class="btn btn-secondary">Cancelar</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -111,16 +113,18 @@
                         <h4><i class="fas fa-box me-1"></i> Tipo de producto</h4>
                     </div>
                     <div class="card-body">
-                        <div class="mb-3">
-                            <div class="form-floating">
-                                <input type="text" class="form-control" id="txtTipoProducto" name="txtTipoProducto" placeholder="Tipo de producto" required>
-                                <label for="txtTipoProducto">Tipo de producto</label>
+                        <form action="" id="formTipoPro">
+                            <div class="mb-3">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="txtTipoProducto" name="txtTipoProducto" placeholder="Tipo de producto" required>
+                                    <label for="txtTipoProducto">Tipo de producto</label>
+                                </div>
                             </div>
-                        </div>
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                            <button type="submit" class="btn btn-primary" id="btnAccionTipoProducto">Guardar</button>
-                            <button type="reset" class="btn btn-secondary">Cancelar</button>
-                        </div>
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                                <button type="submit" class="btn btn-primary" id="btnAccionTipoProducto">Guardar</button>
+                                <button type="reset" class="btn btn-secondary">Cancelar</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -135,7 +139,7 @@
                         <h4><i class="fas fa-tag me-1"></i> Marca - Tabla</h4>
                     </div>
                     <div class="card-body" style="overflow-y: auto;">
-                        <div class="table-responsive">
+                        <div class="table-responsive" style="height: 510px;">
                             <table class="table table-bordered table-sm" id="tablaMarca" width="100%" cellspacing="0" style="max-height: 250px; overflow-y: auto;">
                                 <thead>
                                     <tr>
@@ -158,7 +162,7 @@
                         <h4><i class="fas fa-box me-1"></i> Tipo de producto - Tabla</h4>
                     </div>
                     <div class="card-body" style="overflow-y: auto;">
-                        <div class="table-responsive">
+                        <div class="table-responsive" style="height: 510px;">
                             <table class="table table-bordered table-sm" id="tablaTipoProducto" width="100%" cellspacing="0" style="max-height: 250px; overflow-y: auto;">
                                 <thead>
                                     <tr>

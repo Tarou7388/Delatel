@@ -1,7 +1,6 @@
 USE Delatel;
 
 DELIMITER $$
-
 DROP VIEW IF EXISTS vw_marca$$
 CREATE VIEW vw_marca AS
     SELECT id_marca,
@@ -11,6 +10,7 @@ CREATE VIEW vw_marca AS
     FROM tb_marca
     WHERE inactive_at IS NULL;
 
+DELIMITER $$
 DROP PROCEDURE IF EXISTS spu_registrar_marca$$
 CREATE PROCEDURE spu_registrar_marca(
     IN p_marca VARCHAR(70),
@@ -21,6 +21,7 @@ BEGIN
     VALUES (p_marca, NOW(), p_iduser_create);
 END $$
 
+DELIMITER $$
 DROP PROCEDURE IF EXISTS spu_marcas_actualizar$$
 CREATE PROCEDURE spu_marcas_actualizar(
     IN p_id_marca INT,
@@ -36,8 +37,7 @@ BEGIN
 END $$
 
 
---------------------------------------------------------------------------------------------------------------------
---------------------------------------------------------------------------------------------------------------------
+DELIMITER $$
 DROP PROCEDURE IF EXISTS spu_registrar_tipo_producto$$
 CREATE PROCEDURE spu_registrar_tipo_producto(
     IN p_tipo_nombre VARCHAR(70),
@@ -48,7 +48,7 @@ BEGIN
     VALUES (p_tipo_nombre, NOW(), p_iduser_create);
 END $$
 
-
+DELIMITER $$
 DROP PROCEDURE IF EXISTS spu_actualizar_tipoproducto$$
 CREATE PROCEDURE spu_actualizar_tipoproducto(
     IN p_id_tipo INT,
@@ -62,5 +62,3 @@ BEGIN
         iduser_update = p_iduser_update
     WHERE id_tipo = p_id_tipo;
 END $$
-
-

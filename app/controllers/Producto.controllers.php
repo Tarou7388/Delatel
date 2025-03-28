@@ -38,7 +38,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 					"idUsuario" => Herramientas::sanitizarEntrada($input["idUsuario"])
 				];
 				$estado = $producto->registrarTipoProducto($datos);
-				echo json_encode(["Guardado" => $estado]);
+				echo json_encode(["guardado" => $estado]);
 				break;
 		}
 	}
@@ -72,6 +72,10 @@ if (isset($_GET['operacion'])) {
 			break;
 		case "buscarProductoBarraRouter":
 			$resultado = $producto->BuscarProductoBarraRouter(["codigoBarra" => Herramientas::sanitizarEntrada($_GET['codigoBarra'])]);
+			echo json_encode($resultado);
+			break;
+		case "buscarTipoProductobyId":
+			$resultado = $producto->listarTipoProductoPorId(['idTipo' => $_GET['idTipo']]);
 			echo json_encode($resultado);
 			break;
 	}

@@ -82,15 +82,6 @@ class Producto extends Conexion
     );
     return $this->registrar($sql, $values);
   }
-  public function registrarTipoproducto($params = [])
-  {
-    $sql = "CALL spu_registrar_tipo_producto(?,?)";
-    $values = array(
-      $params['tipoProducto'],
-      $params['idUsuario']
-    );
-    return $this->registrar($sql, $values);
-  }
 
   /**
    * Actualiza un producto en la base de datos utilizando los parámetros proporcionados.
@@ -141,6 +132,16 @@ class Producto extends Conexion
     return $this->listarDatos($sql);
   }
 
+  public function registrarTipoproducto($params = [])
+  {
+    $sql = "CALL spu_registrar_tipo_producto(?,?)";
+    $values = array(
+      $params['tipoProducto'],
+      $params['idUsuario']
+    );
+    return $this->registrar($sql, $values);
+  }
+
   public function EliminarProducto($params = []): bool
   {
     $sql = "CALL spu_productos_eliminar(?,?)";
@@ -188,5 +189,24 @@ class Producto extends Conexion
       $params['idUsuario']
     );
     return $this->registrar($sql, $values);
+  }
+
+  // public function eliminarTipoProducto($params = [])
+  // {
+  //   $sql = "CALL spu_eliminar_tipoproducto(?,?)";
+  //   $values = array(
+  //     $params['idTipo'],
+  //     $params['idUsuario']
+  //   );
+  //   return $this->registrar($sql, $values);
+  // }
+
+  public function listarTipoProductoPorId($params = [])
+  {
+    $sql = "SELECT * FROM vw_tipo_productos WHERE id_tipo = ?";
+    $values = array(
+      $params['idTipo']
+    );
+    return $this->consultaParametros($sql, $values);
   }
 }

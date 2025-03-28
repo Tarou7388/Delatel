@@ -24,23 +24,43 @@ class Marca extends Conexion
         $sql = "SELECT * FROM vw_marca";
         return $this->listarDatos($sql);
     }
+
     public function registrarMarca($params = [])
     {
         $sql = "CALL spu_registrar_marca(?, ?)";
         $values = array(
-            $params['marca'], 
+            $params['marca'],
             $params['idUsuario']
         );
-        return $this->consultaParametros($sql, $values);
+        return $this->registrar($sql, $values);
     }
 
     public function actualizarMarca($params = [])
     {
         $sql = "CALL spu_marcas_actualizar(?, ?, ?)";
         $values = array(
-            $params['id_marca'],
+            $params['idmarca'],
             $params['marca'],
             $params['iduserUpdate']
+        );
+        return $this->registrar($sql, $values);
+    }
+
+    // public function eliminarMarca($params = [])
+    // {
+    //     $sql = "CALL spu_marcas_eliminar(?, ?)";
+    //     $values = array(
+    //         $params['id_marca'],
+    //         $params['iduserDelete']
+    //     );
+    //     return $this->consultaParametros($sql, $values);
+    // }
+
+    public function listarMarcaPorId($params = [])
+    {
+        $sql = "SELECT * FROM vw_marca WHERE id_marca = ?";
+        $values = array(
+            $params['idMarca']
         );
         return $this->consultaParametros($sql, $values);
     }
