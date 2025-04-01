@@ -532,9 +532,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     jsonData.cable = jsonCable;
     jsonData.costo = jsonCosto;
-    const txtIdCaja = document.querySelector("#txtIdCaja").value;
     jsonData.idcaja = idCaja;
-    jsonData.nombrecaja = txtIdCaja;
     console.log(jsonData);
 
     const data = {

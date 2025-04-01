@@ -153,6 +153,7 @@ END $$
 
 use Delatel;
 
+DELIMITER $$
 DROP PROCEDURE IF EXISTS spu_productos_registrar$$
 CREATE PROCEDURE spu_productos_registrar(
     IN p_id_marca INT,
@@ -166,7 +167,7 @@ CREATE PROCEDURE spu_productos_registrar(
 )
 BEGIN
     INSERT INTO tb_productos (id_marca, id_tipo, id_unidad, modelo, precio_actual, codigo_barra, create_at, iduser_create, categoria)
-    VALUES (p_id_marca, p_id_tipo, p_id_unidad, p_modelo, p_precio_actual, p_codigo_barra, NOW(), p_iduser_create, NULLIF(p_categoria, ''));
+    VALUES (p_id_marca, p_id_tipo, p_id_unidad, p_modelo, p_precio_actual, NULLIF(p_codigo_barra,''), NOW(), p_iduser_create, NULLIF(p_categoria, ''));
 END $$
 
 DROP PROCEDURE IF EXISTS spu_productos_actualizar$$

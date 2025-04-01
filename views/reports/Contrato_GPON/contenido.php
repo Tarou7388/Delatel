@@ -206,10 +206,7 @@
         <td><strong>CAJA:</strong></td>
         <td class="text-center">
           <?php
-          $nombreCaja = !empty($fichaTecnica['nombrecaja']) ? htmlspecialchars($fichaTecnica['nombrecaja']) : 'N/A';
-          $idCaja = !empty($fichaTecnica['idcaja']) ? htmlspecialchars($fichaTecnica['idcaja']) : 'N/A';
-          $puerto = !empty($fichaTecnica['tipoentrada']['puerto']) ? ' / Puerto ' . htmlspecialchars($fichaTecnica['tipoentrada']['puerto']) : '';
-          echo $nombreCaja . (!empty($nombreCaja) && !empty($idCaja) ? " (" . $idCaja . ")" : $idCaja) . $puerto;
+          echo htmlspecialchars($nombrecaja) . "(" . $fichaTecnica['idcaja'] . ") - (" . $fichaTecnica['tipoentrada']['puerto'] . ")";
           ?>
         </td>
         <td colspan="2"><strong>CASA CATV:</strong></td>

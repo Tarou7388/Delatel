@@ -12,6 +12,7 @@ date_default_timezone_set('America/Lima');
 $fechaActual = date('d/m/Y H:i:s');
 
 $contrato = new Contrato();
+$caja = new Caja();
 $resultado = $contrato->obtenerPDF(["id" => $_GET['id']]);
 
 if (empty($resultado)) {
@@ -31,6 +32,13 @@ $velocidadPaquete = json_decode($velocidadPaqueteJson, true);
 $fichaTecnicaJson = $resultado[0]['FichaTecnica'];
 $fichaTecnica = json_decode($fichaTecnicaJson, true);
 
+$caja = new Caja();
+$cajaid=  intval($fichaTecnica['idcaja']);
+$nombrecaja = $caja->cajaBuscar(['idCaja' =>$cajaid])[0]['nombre'];
+
+
+
+
 if (empty($fichaTecnica)) {
   echo '<script>alert("La ficha técnica está vacía."); window.location.href = "../../Contratos/";</script>';
   exit;
@@ -42,7 +50,7 @@ include 'estilos.html';
 $content = ob_get_clean();
 
 if ($content === false) {
-  echo '<script>alert("Error al generar el contenido del PDF.)</script>';
+  echo '<script>alert("Error al generar el contenido del PDF.")</script>';
   exit;
 }
 
@@ -56,4 +64,3 @@ $canvas = $dompdf->getCanvas();
 $canvas->page_text(50, 30, "Página {PAGE_NUM} de {PAGE_COUNT}", null, 9, array(0, 0, 0));
 
 $dompdf->stream($nombreArchivo, array('Attachment' => 0));
-?>

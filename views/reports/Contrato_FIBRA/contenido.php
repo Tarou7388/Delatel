@@ -132,9 +132,7 @@
           <td><strong>CAJA:</strong></td>
           <td class="text-center">
             <?php
-            $nombreCaja = !empty($fichaTecnica['nombrecaja']) ? htmlspecialchars($fichaTecnica['nombrecaja']) : '';
-            $idCaja = !empty($fichaTecnica['idcaja']) ? htmlspecialchars($fichaTecnica['idcaja']) : '';
-            echo $nombreCaja . (!empty($nombreCaja) && !empty($idCaja) ? " (" . $idCaja . ")" : $idCaja);
+            echo htmlspecialchars($nombrecaja) . "(" . $fichaTecnica['idcaja'] . ") - (".$fichaTecnica['tipoentrada']['puerto'] .")";
             ?>
           </td>
           <td><strong>PUERTO:</strong></td>

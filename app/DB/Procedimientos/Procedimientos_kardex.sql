@@ -11,7 +11,7 @@ BEGIN
     WHERE movimiento = tipo_movimiento;
 END $$
 
-DROP VIEW IF EXISTS vw_kardex_listar$$
+DROP VIEW IF EXISTS vw_kardex_listar;
 
 CREATE VIEW vw_kardex_listar AS
 SELECT
@@ -44,8 +44,11 @@ FROM
     JOIN tb_marca m ON p.id_marca = m.id_marca
     JOIN tb_tipooperacion toper ON k.id_tipooperacion = toper.id_tipooperacion
     JOIN tb_almacen a ON k.id_almacen = a.id_almacen
-    LEFT JOIN tb_personas pe ON k.iduser_create = pe.id_persona
+    LEFT JOIN tb_responsables res ON k.iduser_create = res.id_responsable
+    LEFT JOIN tb_usuarios usu ON res.id_usuario = usu.id_usuario
+    LEFT JOIN tb_personas pe ON usu.id_persona = pe.id_persona
 ORDER BY k.create_at DESC;
+
 
 DROP PROCEDURE IF EXISTS spu_kardex_registrar$$
 
