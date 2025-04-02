@@ -132,11 +132,11 @@
           <td><strong>CAJA:</strong></td>
           <td class="text-center">
             <?php
-            echo htmlspecialchars($nombrecaja) . "(" . $fichaTecnica['idcaja'] . ") - (".$fichaTecnica['tipoentrada']['puerto'] .")";
+            echo htmlspecialchars($nombrecaja) . "(" . $fichaTecnica['idcaja'] . ")";
             ?>
           </td>
           <td><strong>PUERTO:</strong></td>
-          <td class="text-center"><?= htmlspecialchars($fichaTecnica['tipoentrada']['puerto']); ?></td>
+          <td class="text-center"><?= htmlspecialchars($fichaTecnica['puerto']); ?></td>
         </tr>
         <?php if (!empty($fichaTecnica['fibraoptica']['detalles'])): ?>
           <tr>

@@ -631,8 +631,10 @@ window.addEventListener("DOMContentLoaded", async () => {
             const data = await response.json();
             const fichaInstalacion = JSON.parse(data[0].ficha_instalacion);
 
-            if (!fichaInstalacion || Object.keys(fichaInstalacion).length <= 1) {
+            if (Object.keys(fichaInstalacion).length === 1 && fichaInstalacion.idcaja) {
               fila.classList.add("ficha-incompleta");
+            }else{
+              fila.classList.remove("ficha-completa");
             }
           } catch (error) {
             console.error("Error al obtener el JSON de la ficha de instalación:", error);

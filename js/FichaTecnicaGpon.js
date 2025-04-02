@@ -171,10 +171,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   })();
 
   async function fibraOptica() {
-    const txtIdCaja = document.querySelector("#txtIdCaja").value;
-    const txtPuerto = document.querySelector("#txtPuerto").value;
     const txtUsuario = document.querySelector("#txtUsuario").value;
-    const txtPlan = document.querySelector("#txtPlan").value;
     const txtClaveAcceso = document.querySelector("#txtClaveAcceso").value;
     const txtPeriodo = document.querySelector("#txtPeriodo").value;
     const txtVlan = document.querySelector("#txtVlan").value;
@@ -199,7 +196,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         usuario: txtUsuario,
         claveacceso: txtClaveAcceso,
         vlan: parseInt(txtVlan),
-        plan: txtPlan,
         potencia: parseInt(txtPotencia),
         router: {
           ssid: txtSsid,
@@ -217,10 +213,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         },
         detalles: txtDetallesRouter,
         repetidores: jsonRepetidor
-      },
-      tipoentrada: {
-        puerto: parseInt(txtPuerto)
-      },
+      }
     };
   }
 
@@ -239,7 +232,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     jsonCable = {
       pagoinstalacion: parseFloat(txtPagoInst),
       potencia: parseInt(txtPotencia),
-      plan: txtPlanCable,
       triplexor: {
         requerido: slcTriplexor[0],
         cargador: slcTriplexor[1],
@@ -582,6 +574,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   async function guardar() {
+    
+    const txtPuerto = document.getElementById("txtPuerto").value;
     if (!validarCampos()) {
       showToast("Por favor, llene todos los campos requeridos.", "WARNING");
       return;
@@ -610,6 +604,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     jsonData.costo = jsonCosto;
+    jsonData.puerto = parseInt(txtPuerto);
+    jsonData.idcaja = parseInt(idCaja);
 
     const data = {
       operacion: "guardarFichaInstalacion",

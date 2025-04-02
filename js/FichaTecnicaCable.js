@@ -155,8 +155,6 @@ document.addEventListener("DOMContentLoaded", async () => {
    * @returns {void}
    */
   async function cable() {
-    const txtIdCaja = document.querySelector("#txtIdCaja").value;
-    const txtPuerto = document.querySelector("#txtPuerto").value;
     const txtPaquete = document.querySelector("#txtPaquete").value;
     const txtPeriodo = document.querySelector("#txtPeriodo").value;
     const txtPagoInst = document.querySelector("#txtPagoInst").value;
@@ -186,7 +184,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     } else {
       jsonCable = {
-        plan: txtPaquete,
         periodo: txtPeriodo,
         pagoinstalacion: parseFloat(txtPagoInst),
         potencia: parseInt(txtPotencia),
@@ -207,10 +204,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         cable: {
           metrosadicionales: parseInt(txtCantCable),
           preciometro: txtPrecioCable,
-        },
-        tipoEntrada: {
-          puerto: parseInt(txtPuerto)
-        },
+        }
       };
     }
   }
@@ -517,6 +511,8 @@ document.addEventListener("DOMContentLoaded", async () => {
    * @returns {Promise<void>} No retorna ningún valor.
    */
   async function guardar() {
+    const txtPuerto = document.querySelector("#txtPuerto").value;
+
     if (!validarCampos()) {
       showToast("Todos los campos son obligatorios.", "WARNING");
       return;
@@ -532,7 +528,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     jsonData.cable = jsonCable;
     jsonData.costo = jsonCosto;
-    jsonData.idcaja = idCaja;
+    jsonData.idcaja = parseInt(idCaja);
+    jsonData.puerto = parseInt(txtPuerto);
     console.log(jsonData);
 
     const data = {

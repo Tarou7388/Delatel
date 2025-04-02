@@ -201,7 +201,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         usuario: txtUsuario,
         claveacceso: txtClaveAcceso,
         vlan: parseInt(txtVlan),
-        plan: txtPlan,
         potencia: parseInt(txtPotencia),
         router: {
           ssid: txtSsid,
@@ -220,9 +219,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         detalles: txtDetalles,
         repetidores: jsonRepetidor
       },
-      tipoentrada: {
-        puerto: parseInt(txtPuerto)
-      },
+      puerto: parseInt(txtPuerto),
       idcaja: parseInt(idCaja)
     };
   }

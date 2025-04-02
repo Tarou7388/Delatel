@@ -124,7 +124,7 @@
         <td><strong>CAJA:</strong></td>
         <td class="text-center">
           <?php
-          echo htmlspecialchars($nombrecaja) . "(" . $fichaTecnica['idcaja'] . ") - (" . $fichaTecnica['tipoentrada']['puerto'] . ")";
+          echo htmlspecialchars($nombrecaja) . "(" . $fichaTecnica['idcaja'] . ") - (" . $fichaTecnica['puerto'] . ")";
           ?>
         </td>
         <td colspan="2"><strong>CASA CATV:</strong></td>
