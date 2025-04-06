@@ -43,6 +43,10 @@ if (isset($_GET["operacion"])) {
 			$resultado = $sectores->buscarSector(["idSector" => Herramientas::sanitizarEntrada($_GET['idSector'])]);
 			echo json_encode($resultado);
 			break;
+		case 'buscarCajasporSector':
+			$resultado = $sectores->buscarCajasporSector(["idSector" => Herramientas::sanitizarEntrada($_GET['idSector'])]);
+			echo json_encode($resultado);
+			break;
 		case 'sectoresBuscarMultiple':
 			$idsSectores = isset($_GET['ids']) ? $_GET['ids'] : '';
 			if (empty($idsSectores)) {

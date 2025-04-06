@@ -32,8 +32,15 @@ $fichaTecnicaJson = $resultado[0]['FichaTecnica'];
 $fichaTecnica = json_decode($fichaTecnicaJson, true);
 
 $caja = new Caja();
-$cajaid=  intval($fichaTecnica['idcaja']);
-$nombrecaja = $caja->cajaBuscar(['idCaja' =>$cajaid])[0]['nombre'];
+$cajaid = intval($fichaTecnica['idcaja']);
+$nombrecaja = 'Sin caja asignada';
+
+if ($cajaid > 0) {
+  $resultadoCaja = $caja->cajaBuscar(['idCaja' => $cajaid]);
+  if (!empty($resultadoCaja)) {
+    $nombrecaja = $resultadoCaja[0]['nombre'];
+  }
+}
 
 
 if (empty($fichaTecnica)) {
@@ -57,4 +64,3 @@ $canvas->page_text(50, 30, "Página {PAGE_NUM} de {PAGE_COUNT}", null, 9, array(
 
 // Streaming del PDF
 $dompdf->stream($nombreArchivo, array('Attachment' => 0));
-?>

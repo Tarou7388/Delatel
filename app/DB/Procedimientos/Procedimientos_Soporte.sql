@@ -159,6 +159,7 @@ BEGIN
         s.id_soporte;
 END $$
 
+DELIMITER $$
 DROP PROCEDURE IF EXISTS spu_instalacion_ficha_IdSoporte$$
 
 CREATE PROCEDURE spu_instalacion_ficha_IdSoporte(
@@ -169,7 +170,9 @@ BEGIN
         ct.ficha_instalacion,
         ct.id_contrato,
         GROUP_CONCAT(srv.tipo_servicio) AS tipos_servicio,
-        GROUP_CONCAT(srv.servicio) AS servicios
+        GROUP_CONCAT(srv.servicio) AS servicios,
+        ct.id_paquete,
+        ct.id_sector
     FROM tb_soporte s
     INNER JOIN tb_contratos ct ON s.id_contrato = ct.id_contrato
     INNER JOIN tb_clientes cl ON ct.id_cliente = cl.id_cliente
@@ -190,7 +193,17 @@ END $$
 DROP VIEW IF EXISTS vw_soporte_fichadatos$$
 
 CREATE VIEW vw_soporte_fichadatos AS
-SELECT p.nro_doc, s.id_soporte, s.soporte, s.descripcion_problema, s.descripcion_solucion, s.update_at, sv.tipo_servicio, c.coordenada, sv.servicio
+    SELECT p.nro_doc, 
+    s.id_soporte, 
+    s.soporte, 
+    s.descripcion_problema, 
+    s.descripcion_solucion, 
+    s.update_at, 
+    sv.tipo_servicio, 
+    c.coordenada, 
+    sv.servicio,
+    c.id_paquete,
+    c.id_sector
 FROM
     tb_soporte s
     INNER JOIN tb_contratos c ON s.id_contrato = c.id_contrato

@@ -195,7 +195,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       fibraoptica: {
         usuario: txtUsuario,
         claveacceso: txtClaveAcceso,
-        vlan: parseInt(txtVlan),
         potencia: parseInt(txtPotencia),
         router: {
           ssid: txtSsid,
@@ -602,10 +601,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
       jsonData.cable = jsonCable;
     }
+    const txtVlan = document.querySelector("#txtVlan").value;
 
     jsonData.costo = jsonCosto;
     jsonData.puerto = parseInt(txtPuerto);
     jsonData.idcaja = parseInt(idCaja);
+    jsonData.vlan = parseInt(txtVlan);
 
     const data = {
       operacion: "guardarFichaInstalacion",

@@ -382,6 +382,14 @@ export async function buscarCercanos(idCaja) {
   return data;
 }
 
+export async function buscarCajasporSector(idSector) {
+  const response = await fetch(`${config.HOST}app/controllers/Sector.controllers.php?operacion=buscarCajasporSector&idSector=${idSector}`);
+  const data = await response.json();
+  return data;
+}
+
+
+
 export async function renderizarCoordenadaMapa(id) {
   try {
     const response = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerCoordenadasbyId&id=${id}`);

@@ -193,7 +193,7 @@
             <div class="row g-3 mb-3 align-items-center">
               <div class="col-md">
                 <div class="form-floating">
-                  <input type="number" class="form-control" id="txtPotencia" placeholder="Potencia" disabled>
+                  <input type="text" class="form-control" id="txtPotencia" placeholder="Potencia" disabled>
                   <label for="txtPotencia">Potencia</label>
                 </div>
               </div>
@@ -399,7 +399,7 @@
             </div>
             <div class="col-md">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtCambiosVlan" placeholder="VLAN" disabled>
+                <input type="text" class="form-control" id="txtCambiosVlan" placeholder="VLAN">
                 <label for="txtCambiosVlan">VLAN</label>
               </div>
             </div>
@@ -415,7 +415,7 @@
           <div class="row g-3 mb-3 align-items-center">
             <div class="col-md">
               <div class="form-floating">
-                <input type="number" class="form-control" id="txtCambiosPotencia" name="txtCambiosPotencia" placeholder="Potencia" min="-30" max="40">
+                <input type="text" class="form-control" id="txtCambiosPotencia" name="txtCambiosPotencia" placeholder="Potencia" min="-30" max="40">
                 <label for="txtCambiosPotencia">Potencia <span class="required-asterisk" style="color: red;">*</span></label>
                 <div class="invalid-feedback"></div>
               </div>

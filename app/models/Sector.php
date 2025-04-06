@@ -71,19 +71,29 @@ class Sector extends Conexion
     return $this->registrar($sql, $values);
   }
 
-  public function sectoresBuscarMultiple($idsString) {
+  public function sectoresBuscarMultiple($idsString)
+  {
     try {
-        $sql = "CALL spu_sectores_buscar_multiple(?)";
-        return $this->consultaParametros($sql, [$idsString]);
+      $sql = "CALL spu_sectores_buscar_multiple(?)";
+      return $this->consultaParametros($sql, [$idsString]);
+    } catch (Exception $e) {
+      die($e->getMessage());
     }
-    catch(Exception $e) {
-        die($e->getMessage());
-    }
-}
+  }
 
   public function buscarSector($params = [])
   {
     $sql = "SELECT * FROM vw_sectores_obtener WHERE id_sector = ?";
     return $this->consultaParametros($sql, [$params['idSector']]);
+  }
+
+
+  public function buscarCajasporSector($params = [])
+  {
+    $sql = "CALL spu_buscar_cajas_por_sector(?)";
+    $values = array(
+      $params['idSector']
+    );
+    return $this->consultaParametros($sql, $values);
   }
 }

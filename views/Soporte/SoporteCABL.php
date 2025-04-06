@@ -131,6 +131,12 @@
               </div>
             </div>
             <div class="col-md">
+              <div class="form-floating">
+                <input type="number" class="form-control" id="txtPuerto" placeholder="Potencia" disabled required>
+                <label for="txtPuerto">Puerto</label>
+              </div>
+            </div>
+            <div class="col-md">
               <div class="input-group">
                 <div class="form-floating flex-grow-1">
                   <input type="text" class="form-control" id="txtSintonizador" placeholder="Sintonizador" disabled required>
@@ -220,6 +226,12 @@
                 <input type="number" class="form-control" id="txtPotenciaCambio" placeholder="Potencia" max="-7" min="-50" required>
                 <div class="invalid-feedback">Potencia debe estar entre -50 y -7.</div>
                 <label for="txtPotenciaCambio">Potencia</label>
+              </div>
+            </div>
+            <div class="col-md">
+              <div class="form-floating">
+                <input type="number" class="form-control" id="txtPuertoCambio" placeholder="Puerto" required>
+                <label for="txtPuertoCambio">Puerto</label>
               </div>
             </div>
             <div class="col-md">

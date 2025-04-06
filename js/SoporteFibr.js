@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const cardContainer = document.getElementById('cardContainer');
   btnInformacion.disabled = true;
   let login = await Herramientas.obtenerLogin();
+  let idSector = -1;
 
   btnInformacion.addEventListener('click', function () {
     if (cardContainer.style.display === 'none' || cardContainer.style.display === '') {
@@ -167,7 +168,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       chkConfirmacion.disabled = true;
       btnInformacion.disabled = true;
     }
-    slcEquipo.dataset.previousValue = selectedValue; 
+    slcEquipo.dataset.previousValue = selectedValue;
   });
 
   if (slcRpetidor) {
@@ -347,7 +348,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   async function llamarCajas() {
-    const cajas = await mapa.buscarCercanos(idCaja);
+    let cajas = [];
+
+    if (!idCaja || idCaja == 0 || idCaja == -1) {
+      cajas = await mapa.buscarCajasporSector(idSector);
+    } else {
+      cajas = await mapa.buscarCercanos(idCaja);
+    }
+
     const slcCaja = document.getElementById('slcCaja');
     slcCaja.innerHTML = '';
 
@@ -383,7 +391,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const soporte = JSON.parse(respuesta[0].soporte);
 
       if (soporte && soporte.fibr) {
-        await cargarSoporteAnterior(soporte);
+        await cargarSoporteAnterior(soporte, doc, idSoporte);
       } else {
         await CargarDatosInstalacion(doc, idSoporte);
       }
@@ -409,18 +417,36 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  async function cargarSoporteAnterior(data) {
+  async function cargarSoporteAnterior(data, doct, idsoporte) {
+    try {
+      const respuesta = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${doct}`);
+      const data = await respuesta.json();
+      txtCliente.value = data[0].nombre;
+      txtNrodocumento.value = doct;
+    } catch (error) {
+      console.error("Error en CargarDatosInstalacion:", error);
+    }
+
     const fibr = data.fibr;
 
-    txtCliente.value = fibr.parametroscliente.usuario;
-    txtNrodocumento.value = fibr.parametroscliente.Nrodoc;
-    txtPlan.value = fibr.parametroscliente.plan;
+    const dataFibra = await FichaInstalacion(idSoporte);
+    const fichaInstalacion = JSON.parse(dataFibra[0].ficha_instalacion);
+
+    const response = await fetch(
+      `${config.HOST}app/controllers/Paquete.controllers.php?operacion=buscarPaqueteId&idPaquete=${dataFibra[0].id_paquete}`
+    );
+    const paquete = await response.json();
+
+    txtPlan.value = paquete[0].paquete;
+    idSector = dataFibra[0].id_sector;
+
+
 
     txtPppoe.value = fibr.cambiosgpon.pppoe;
     txtClave.value = fibr.cambiosgpon.clave;
     txtPotencia.value = fibr.cambiosgpon.potencia;
     chkCatv.checked = fibr.cambiosgpon.catv;
-    txtVlan.value = fibr.cambiosgpon.vlan;
+    txtVlan.value = fibr.vlan;
 
     txtCambiosPppoe.value = fibr.cambiosgpon.pppoe;
     txtCambiosClave.value = fibr.cambiosgpon.clave;
@@ -629,12 +655,18 @@ document.addEventListener("DOMContentLoaded", async () => {
       const fichaInstalacion = JSON.parse(dataFibra[0].ficha_instalacion);
       const fibraFiltrado = fichaInstalacion.fibraoptica;
 
-      txtPlan.value = fibraFiltrado.plan;
+      const response = await fetch(
+        `${config.HOST}app/controllers/Paquete.controllers.php?operacion=buscarPaqueteId&idPaquete=${dataFibra[0].id_paquete}`
+      );
+      const paquete = await response.json();
+
+      txtPlan.value = paquete[0].paquete;
+      idSector = dataFibra[0].id_sector;
       txtPppoe.value = fibraFiltrado.usuario;
       txtClave.value = fibraFiltrado.claveacceso;
       txtCambiosPppoe.value = fibraFiltrado.usuario;
       txtCambiosClave.value = fibraFiltrado.claveacceso;
-      txtCambiosVlan.value = fibraFiltrado.vlan;
+      txtCambiosVlan.value = fichaInstalacion.vlan;
       txtPotencia.value = fibraFiltrado.potencia;
       chkCatv.checked = fibraFiltrado.router.catv;
       txtVlan.value = fibraFiltrado.vlan;
@@ -815,18 +847,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     const repetidoresCombinados = [...repetidoresActualizados, ...nuevosRepetidoresFiltrados];
 
     const fibraData = {
-      parametroscliente: {
-        plan: txtPlan.value,
-        usuario: txtCliente.value,
-        Nrodoc: txtNrodocumento.value,
-      },
       parametrosgpon: {
         pppoe: txtPppoe.value,
         clave: txtClave.value,
         potencia: yaTieneSoporte ? (document.getElementById("txtPotencia").value || soporteAnterior.fibr?.cambiosgpon?.potencia) : fibrafiltrado.potencia,
         router: yaTieneSoporte ? (soporteAnterior.fibr?.cambiosgpon?.router || JSON.parse(JSON.stringify(fibrafiltrado.router))) : JSON.parse(JSON.stringify(fibrafiltrado.router)),
         catv: yaTieneSoporte ? (soporteAnterior.fibr?.cambiosgpon?.catv || document.getElementById("chkCatv").checked) : fibrafiltrado.router.catv,
-        vlan: txtVlan.value,
         repetidores: yaTieneSoporte ? (soporteAnterior.fibr?.cambiosgpon?.repetidores || JSON.parse(JSON.stringify(fibrafiltrado.repetidores))) : JSON.parse(JSON.stringify(fibrafiltrado.repetidores)),
       },
       cambiosgpon: {
@@ -835,13 +861,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         potencia: txtCambiosPotencia.value || soporteAnterior.fibr?.cambiosgpon?.potencia,
         router: await modificadoRouter(fibrafiltrado.router) || soporteAnterior.fibr?.cambiosgpon?.router,
         catv: chkCambiosCatv.checked || soporteAnterior.fibr?.cambiosgpon?.catv,
-        vlan: txtCambiosVlan.value,
         repetidores: repetidoresCombinados,
-      },
+      }
     };
 
     nuevoSoporte.fibr = fibraData;
     nuevoSoporte.idcaja = idCaja;
+    nuevoSoporte.vlan = txtCambiosVlan.value;
     nuevoSoporte.tipoentrada = JSON.parse(dataFibra[0].ficha_instalacion).tipoentrada;
 
     return nuevoSoporte;
@@ -875,6 +901,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     router.serie = txtCambiosSerieRouter.value || router.serie;
     router.banda = slcCambiosBanda.value || router.banda;
     router.numeroantena = txtCambiosAntenas.value || router.numeroantena;
+    router.catv = chkCambiosCatv.checked || router.catv;
     return router;
   }
 

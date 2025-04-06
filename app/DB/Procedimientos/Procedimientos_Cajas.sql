@@ -121,6 +121,18 @@ BEGIN
   SELECT id_caja, nombre, numero_entradas coordenadas FROM tb_cajas WHERE id_sector = idSector AND numero_entradas > 0;
 END$$
 
+DROP PROCEDURE IF EXISTS spu_buscar_cajas_por_sector$$
+
+CREATE PROCEDURE spu_buscar_cajas_por_sector(
+  IN p_id_sector INT
+)
+BEGIN
+  SELECT id_caja, nombre, numero_entradas, coordenadas 
+  FROM tb_cajas 
+  WHERE id_sector = p_id_sector 
+    AND numero_entradas > 0;
+END$$
+
 DROP PROCEDURE IF EXISTS spu_actualizar_linea$$
 
 CREATE PROCEDURE spu_actualizar_linea(

@@ -629,12 +629,16 @@ window.addEventListener("DOMContentLoaded", async () => {
           try {
             const response = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerFichaInstalacion&id=${idContrato}`);
             const data = await response.json();
-            const fichaInstalacion = JSON.parse(data[0].ficha_instalacion);
 
-            if (Object.keys(fichaInstalacion).length === 1 && fichaInstalacion.idcaja) {
+            const fichaInstalacion = data[0].ficha_instalacion ? JSON.parse(data[0].ficha_instalacion) : null;
+
+            if (fichaInstalacion === null || 
+                (Object.keys(fichaInstalacion).length === 1 && fichaInstalacion.idcaja)) {
               fila.classList.add("ficha-incompleta");
-            }else{
               fila.classList.remove("ficha-completa");
+            } else {
+              fila.classList.remove("ficha-incompleta");
+              fila.classList.add("ficha-completa");
             }
           } catch (error) {
             console.error("Error al obtener el JSON de la ficha de instalación:", error);

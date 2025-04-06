@@ -10,26 +10,47 @@ document.addEventListener("DOMContentLoaded", async () => {
   const Prioridad = document.querySelector("#slcPrioridad");
 
 
-  async function recorrerIdServicio(data, nrodoc, coordenada) {
+  async function recorrerIdServicio(data, nrodoc, coordenada, soporteJson) {
     const modal = new bootstrap.Modal(document.getElementById('soporteModal'));
     const modalBody = document.querySelector('#soporteModal .modal-body');
     modalBody.innerHTML = '';
     const servicios = JSON.parse(data[0].id_servicio).id_servicio;
+    const soporteData = JSON.parse(soporteJson);
+
+    // Verificar qué servicios están completos
+    const serviciosCompletos = {
+      fibr: !!soporteData.fibr,
+      cabl: !!soporteData.cabl
+    };
+
+    console.log('Servicios completos:', serviciosCompletos);
 
     if (servicios.length > 1) {
-      servicios.forEach(async (id, index) => {
+      for (const [index, id] of servicios.entries()) {
         const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=obtenerServiciosId&idservicio=${id}`);
         const nombres = await respuesta.json();
-        const div = document.createElement('div');
-        div.classList.add('my-2', 'p-2', 'border', 'rounded');
-        div.textContent = `Servicio ${index + 1}: ${nombres[0].tipo_servicio}`;
+        const tipoServicio = nombres[0].tipo_servicio.toLowerCase();
+        const estaCompleto = serviciosCompletos[tipoServicio];
 
-        div.addEventListener('click', () => {
-          mostrarFichaServicio(nombres[0].tipo_servicio, data[0].id_soporte, nrodoc, coordenada);
-        });
+        const div = document.createElement('div');
+        div.classList.add('my-2', 'p-2', 'border', 'rounded', 'd-flex', 'justify-content-between', 'align-items-center');
+
+        if (estaCompleto) {
+          div.classList.add('bg-light');
+          div.innerHTML = `
+                    <span>Servicio ${index + 1}: ${nombres[0].tipo_servicio} (Completo)</span>
+                    <span class="text-success"><i class="fas fa-check-circle"></i></span>
+                `;
+        } else {
+          div.innerHTML = `<span>Servicio ${index + 1}: ${nombres[0].tipo_servicio}</span>`;
+          div.addEventListener('click', () => {
+            mostrarFichaServicio(nombres[0].tipo_servicio, data[0].id_soporte, nrodoc, coordenada);
+          });
+          div.style.cursor = 'pointer';
+        }
 
         modalBody.appendChild(div);
-      });
+      }
       modal.show();
     } else if (servicios.length === 1) {
       const id = servicios[0];
@@ -46,7 +67,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function obtenerDataSoporte(idsoport) {
     const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idsoport}`);
     const data = await respuesta.json();
-    await recorrerIdServicio(data, data[0].nro_doc, data[0].coordenada);
+    await recorrerIdServicio(data, data[0].nro_doc, data[0].coordenada, data[0].soporte);
   }
 
   async function inhabilitarSoporte(idsoport) {

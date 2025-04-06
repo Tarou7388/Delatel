@@ -32,6 +32,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const txtCliente = document.getElementById("txtCliente");
   const txtNrodocumento = document.getElementById("txtNrodocumento");
   const slcCaja = document.getElementById("slcCaja");
+  const txtPuerto = document.getElementById("txtPuerto");
+  const txtPuertoCambio = document.getElementById("txtPuertoCambio");
   const checkConfirmacion = document.getElementById("chkConfirmacion");
 
   const form = document.getElementById("form-cable");
@@ -44,6 +46,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   let infoSintonizadores = [];
   let jsonSintonizadorOriginal = [];
   let login = await Herramientas.obtenerLogin();
+  let idSector = -1;
 
   if (!idReporte) {
     btnReporte.style.display = "none";
@@ -64,15 +67,218 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   })();
 
+  async function cargarSoporteAnterior(data, idSoporte) {
+    const dataCambioCable = JSON.parse(data[0].soporte).cabl.cambioscable
+    try {
+
+      const respuestaProblema = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
+      const dataProblema = await respuestaProblema.json();
+
+      const nombreCliente = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${dataProblema[0].nro_doc}`);
+      const dataCliente = await nombreCliente.json();
+
+      const dataCable = await FichaInstalacion(idSoporte);
+      const cableFiltrado = JSON.parse(dataCable[0].ficha_instalacion).cable;
+
+      idCaja = JSON.parse(dataCable[0].ficha_instalacion).idcaja;
+
+      console.log(data);
+      txtCliente.value = dataCliente[0].nombre;
+      txtNrodocumento.value = dataProblema[0].nro_doc;
+
+      if (dataProblema.length > 0 && dataProblema[0].descripcion_problema) {
+        $("#txtaEstadoInicial").val(dataProblema[0].descripcion_problema);
+      } else {
+        console.warn("No se encontró descripción del problema.");
+      }
+
+      txtPotencia.value = dataCambioCable.potencia || "";
+
+      infoSintonizadores = await contabilizarSintonizadores(dataCambioCable.sintonizadores);
+      sintonizadoresData = infoSintonizadores;
+      txtSintonizador.value = infoSintonizadores.length;
+
+      for (let i = 0; i < slcTriplexor.options.length; i++) {
+        if (slcTriplexor.options[i].text.trim().toLowerCase() === dataCambioCable.triplexor?.trim().toLowerCase()) {
+          slcTriplexor.selectedIndex = i;
+          break;
+        }
+      }
+
+      txtNumSpliter.value = dataCambioCable.splitter?.[0]?.cantidad || "";
+      const tipoSpliter = dataCambioCable.splitter?.[0]?.tipo || 0;
+      const opcionesSpliter = slcSpliter.options;
+
+      for (let i = 0; i < opcionesSpliter.length; i++) {
+        if (opcionesSpliter[i].value == tipoSpliter) {
+          slcSpliter.selectedIndex = i;
+          break;
+        }
+      }
+
+      const response = await fetch(
+        `${config.HOST}app/controllers/Paquete.controllers.php?operacion=buscarPaqueteId&idPaquete=${dataCable[0].id_paquete}`
+      );
+      const paquete = await response.json();
+
+      txtPlan.value = paquete[0].paquete;
+      txtPuerto.value = JSON.parse(data[0].soporte).puerto;
+
+      txtCable.value = dataCambioCable.cable?.metrosadicionales || 0;
+
+      txtPrecioCable.value = parseFloat((
+        (dataCambioCable.cable?.metrosadicionales || 0) *
+        (parseFloat(cableFiltrado.cable.preciometro) || 0)
+      ).toFixed(2));
+
+      txtConector.value = dataCambioCable.conector?.numeroconector || 0;
+      txtPrecioConector.value = parseFloat((
+        (dataCambioCable.conector?.numeroconector || 0) *
+        (parseFloat(cableFiltrado.conector.precio) || 0)
+      ).toFixed(2));
+
+
+      txtPrecioCableCambio.value = parseFloat(cableFiltrado.cable.preciometro) || 0;
+      txtPrecioConectorCambio.value = parseFloat(cableFiltrado.conector.precio) || 0;
+
+
+    } catch (error) {
+      console.error("Error al cargar los datos del soporte:", error);
+    }
+  }
+
+  async function CargardatosInstalacion(doc, idSoporte) {
+    try {
+      const respuestaProblema = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
+      const dataProblema = await respuestaProblema.json();
+      $("#txtaEstadoInicial").val(dataProblema[0].descripcion_problema);
+    } catch (error) {
+      console.error("Error en descripcion_problema:", error);
+    };
+
+    try {
+      const respuesta = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${doc}`);
+      const data = await respuesta.json();
+      txtCliente.value = data[0].nombre;
+      txtNrodocumento.value = doc;
+    } catch (error) {
+      console.error("Error en CargarDatosInstalacion:", error);
+    }
+
+    try {
+      const dataCable = await FichaInstalacion(idSoporte);
+      const fichaInstalacion = JSON.parse(dataCable[0].ficha_instalacion);
+      const cableFiltrado = fichaInstalacion.cable;
+      let sintonizadores = null;
+      if (cableFiltrado.sintonizadores) {
+        sintonizadores = cableFiltrado.sintonizadores.length;
+      } else {
+        sintonizadores = 0;
+      }
+
+      infoSintonizadores = await contabilizarSintonizadores(cableFiltrado.sintonizadores);
+
+      const cargador = JSON.parse(cableFiltrado.triplexor.cargador);
+      const requerido = JSON.parse(cableFiltrado.triplexor.requerido);
+
+      const response = await fetch(
+        `${config.HOST}app/controllers/Paquete.controllers.php?operacion=buscarPaqueteId&idPaquete=${dataCable[0].id_paquete}`
+      );
+      const paquete = await response.json();
+
+      txtPlan.value = paquete[0].paquete;
+      idSector = dataCable[0].id_sector;
+      txtPotencia.value = cableFiltrado.potencia;
+      txtSintonizador.value = sintonizadores;
+
+      if (!cargador && requerido) {
+        slcTriplexor.selectedIndex = 3;
+      } else if (cargador && requerido) {
+        slcTriplexor.selectedIndex = 2;
+      } else {
+        slcTriplexor.selectedIndex = 1;
+      }
+
+      txtNumSpliter.value = cableFiltrado.splitter[0].cantidad;
+      slcSpliter.value = cableFiltrado.splitter[0].tipo;
+
+      txtCable.value = cableFiltrado.cable.metrosadicionales;
+      txtPrecioCable.value = (cableFiltrado.cable.metrosadicionales * parseFloat(cableFiltrado.cable.preciometro));
+
+      txtConector.value = cableFiltrado.conector.numeroconector;
+      txtPrecioCableCambio.value = parseFloat(cableFiltrado.cable.preciometro);
+
+      txtPrecioConectorCambio.value = cableFiltrado.conector.precio;
+      txtPrecioConector.value = cableFiltrado.conector.numeroconector * cableFiltrado.conector.precio;
+
+      txtPuerto.value = parseInt(fichaInstalacion.puerto) || 0;
+
+      idCaja = fichaInstalacion.idcaja;
+
+      document.getElementById('btnlistar').addEventListener('click', async () => {
+        try {
+
+          const dataCable = await FichaInstalacion(idSoporte);
+          const cableFiltrado = JSON.parse(dataCable[0].ficha_instalacion).cable;
+
+          const sintonizadores = cableFiltrado.sintonizadores || [];
+          const container = document.getElementById('sintonizadoresContainer');
+          container.innerHTML = '';
+
+
+          sintonizadores.forEach((sintonizador, index) => {
+            const card = document.createElement('div');
+            card.className = 'col-12 col-md-6 col-lg-4';
+
+            card.innerHTML = `
+              <div class="card border-primary">
+                <div class="card-body">
+                  <h5 class="card-title">Sintonizador ${index + 1}</h5>
+                  <p class="card-text">
+                    <strong>Código de barra:</strong> ${sintonizador.codigobarra}<br>
+                    <strong>Marca:</strong> ${sintonizador.marca}<br>
+                    <strong>Modelo:</strong> ${sintonizador.modelo}<br>
+                    <strong>Precio:</strong> ${sintonizador.precio}<br>
+                    <strong>Serie:</strong> ${sintonizador.serie}
+                  </p>
+                </div>
+              </div>
+            `;
+
+            container.appendChild(card);
+          });
+        } catch (error) {
+          console.error("Error al listar los sintonizadores:", error);
+        }
+      });
+
+    } catch (error) {
+      console.error("Error en FichaInstalacion:", error);
+    }
+
+    try {
+      const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
+      const data = await respuesta.json();
+      txtaEstadoInicial.value = data[0].descripcion_problema;
+
+    } catch (error) {
+      console.error("Error en obtener el problema:", error);
+    }
+  }
+
   async function llamarCajas() {
-    const cajas = await mapa.buscarCercanos(idCaja);
+    let cajas = [];
+
+    if (!idCaja || idCaja == 0 || idCaja == -1) {
+      cajas = await mapa.buscarCajasporSector(idSector);
+    } else {
+      cajas = await mapa.buscarCercanos(idCaja);
+    }
+
     const slcCaja = document.getElementById('slcCaja');
+    slcCaja.innerHTML = ''; // Limpiar el select
 
-
-    slcCaja.innerHTML = '';
-
-
-    if (idCaja !== undefined) {
+    if (idCaja !== undefined && idCaja !== null) {
       const cajaActual = cajas.find(caja => caja.id_caja === idCaja);
       if (cajaActual) {
         const option = document.createElement('option');
@@ -83,9 +289,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     }
 
-
     cajas.forEach(caja => {
-
       if (caja.id_caja !== idCaja) {
         const option = document.createElement('option');
         option.value = caja.id_caja;
@@ -95,7 +299,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-
   async function completarCamposDeCambio() {
     const parametrosTecnicos = {
       txtPotenciaCambio: txtPotencia.value,
@@ -104,6 +307,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       txtNumSpliterCambio: txtNumSpliter.value,
       slcSpliterCambio: slcSpliter.value,
       txtCableCambio: txtCable.value,
+      txtPuertoCambio: txtPuerto.value,
       txtPrecioCableCambio: txtPrecioCable.value,
       txtConectorCambio: txtConector.value,
       txtPrecioConectorCambio: txtPrecioConector.value
@@ -125,7 +329,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     await pintarSintonizador(infoSintonizadores);
   }
 
-
   async function borrarCamposDeCambio() {
     const camposCambio = [
       'txtPotenciaCambio',
@@ -134,6 +337,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       'txtNumSpliterCambio',
       'slcSpliterCambio',
       'txtCableCambio',
+      'txtPuertoCambio',
       'txtPrecioCableCambio',
       'txtConectorCambio',
       'txtPrecioConectorCambio'
@@ -199,76 +403,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const respuesta = await FichaSoporteporDocServCoordenada(doc, tiposervicio, coordenada);
 
     if (respuesta[0].soporte != "{}" && JSON.parse(respuesta[0].soporte).cabl) {
-      await cargarSoporteAnterior(JSON.parse(respuesta[0].soporte).cabl.cambioscable, idSoporte);
+      await cargarSoporteAnterior(respuesta, idSoporte);
     } else {
       await CargardatosInstalacion(doc, idSoporte);
     }
   }
-
-  async function cargarSoporteAnterior(data, idSoporte) {
-    try {
-
-      const respuestaProblema = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
-      const dataProblema = await respuestaProblema.json();
-
-
-      const nombreCliente = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${dataProblema[0].nro_doc}`);
-      const dataCliente = await nombreCliente.json();
-
-
-      const dataCable = await FichaInstalacion(idSoporte);
-      const cableFiltrado = JSON.parse(dataCable[0].ficha_instalacion).cable;
-
-      idCaja = cableFiltrado.idcaja;
-      txtCliente.value = dataCliente[0].nombre;
-      txtNrodocumento.value = dataProblema[0].nro_doc;
-
-      if (dataProblema.length > 0 && dataProblema[0].descripcion_problema) {
-        $("#txtaEstadoInicial").val(dataProblema[0].descripcion_problema);
-      } else {
-        console.warn("No se encontró descripción del problema.");
-      }
-
-      txtPotencia.value = data.potencia || "";
-
-      infoSintonizadores = await contabilizarSintonizadores(data.sintonizadores);
-      sintonizadoresData = infoSintonizadores;
-      txtSintonizador.value = infoSintonizadores.length;
-
-      for (let i = 0; i < slcTriplexor.options.length; i++) {
-        if (slcTriplexor.options[i].text.trim().toLowerCase() === data.triplexor?.trim().toLowerCase()) {
-          slcTriplexor.selectedIndex = i;
-          break;
-        }
-      }
-
-      txtNumSpliter.value = data.splitter?.[0]?.cantidad || "";
-      const tipoSpliter = data.splitter?.[0]?.tipo || 0;
-      const opcionesSpliter = slcSpliter.options;
-
-      for (let i = 0; i < opcionesSpliter.length; i++) {
-        if (opcionesSpliter[i].value == tipoSpliter) {
-          slcSpliter.selectedIndex = i;
-          break;
-        }
-      }
-
-      txtPlan.value = data.plan || "";
-      txtCable.value = data.cable?.metrosadicionales || 0;
-
-      txtPrecioCable.value = (data.cable?.metrosadicionales || 0) * (parseFloat(cableFiltrado.cable.preciometro) || 0);
-      txtConector.value = data.conector?.numeroconector || 0;
-      txtPrecioConector.value = (data.conector?.numeroconector || 0) * (parseFloat(cableFiltrado.conector.precio) || 0);
-
-      txtPrecioCableCambio.value = parseFloat(cableFiltrado.cable.preciometro) || 0;
-      txtPrecioConectorCambio.value = parseFloat(cableFiltrado.conector.precio) || 0;
-
-
-    } catch (error) {
-      console.error("Error al cargar los datos del soporte:", error);
-    }
-  }
-
 
   function mostrarSintonizadoresEnModal() {
     const container = document.getElementById("sintonizadoresContainer");
@@ -321,117 +460,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     return sintonizadorContador;
   }
 
-
-  async function CargardatosInstalacion(doc, idSoporte) {
-    try {
-      const respuestaProblema = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
-      const dataProblema = await respuestaProblema.json();
-      $("#txtaEstadoInicial").val(dataProblema[0].descripcion_problema);
-    } catch (error) {
-      console.error("Error en descripcion_problema:", error);
-    };
-
-    try {
-      const respuesta = await fetch(`${config.HOST}app/controllers/Cliente.controllers.php?operacion=buscarClienteDoc&valor=${doc}`);
-      const data = await respuesta.json();
-      txtCliente.value = data[0].nombre;
-      txtNrodocumento.value = doc;
-    } catch (error) {
-      console.error("Error en CargarDatosInstalacion:", error);
-    }
-
-    try {
-      const dataCable = await FichaInstalacion(idSoporte);
-      const fichaInstalacion = JSON.parse(dataCable[0].ficha_instalacion);
-      const cableFiltrado = fichaInstalacion.cable;
-      let sintonizadores = null;
-      if (cableFiltrado.sintonizadores) {
-        sintonizadores = cableFiltrado.sintonizadores.length;
-      } else {
-        sintonizadores = 0;
-      }
-
-      infoSintonizadores = await contabilizarSintonizadores(cableFiltrado.sintonizadores);
-
-      const cargador = JSON.parse(cableFiltrado.triplexor.cargador);
-      const requerido = JSON.parse(cableFiltrado.triplexor.requerido);
-
-      txtPlan.value = cableFiltrado.plan;
-      txtPotencia.value = cableFiltrado.potencia;
-      txtSintonizador.value = sintonizadores;
-
-      if (!cargador && requerido) {
-        slcTriplexor.selectedIndex = 3;
-      } else if (cargador && requerido) {
-        slcTriplexor.selectedIndex = 2;
-      } else {
-        slcTriplexor.selectedIndex = 1;
-      }
-
-      txtNumSpliter.value = cableFiltrado.splitter[0].cantidad;
-      slcSpliter.value = cableFiltrado.splitter[0].tipo;
-
-      txtCable.value = cableFiltrado.cable.metrosadicionales;
-      txtPrecioCable.value = (cableFiltrado.cable.metrosadicionales * parseFloat(cableFiltrado.cable.preciometro));
-
-      txtConector.value = cableFiltrado.conector.numeroconector;
-      txtPrecioCableCambio.value = parseFloat(cableFiltrado.cable.preciometro);
-
-      txtPrecioConectorCambio.value = cableFiltrado.conector.precio;
-      txtPrecioConector.value = cableFiltrado.conector.numeroconector * cableFiltrado.conector.precio;
-
-      idCaja = fichaInstalacion.idcaja;
-
-      document.getElementById('btnlistar').addEventListener('click', async () => {
-        try {
-
-          const dataCable = await FichaInstalacion(idSoporte);
-          const cableFiltrado = JSON.parse(dataCable[0].ficha_instalacion).cable;
-
-          const sintonizadores = cableFiltrado.sintonizadores || [];
-          const container = document.getElementById('sintonizadoresContainer');
-          container.innerHTML = '';
-
-
-          sintonizadores.forEach((sintonizador, index) => {
-            const card = document.createElement('div');
-            card.className = 'col-12 col-md-6 col-lg-4';
-
-            card.innerHTML = `
-              <div class="card border-primary">
-                <div class="card-body">
-                  <h5 class="card-title">Sintonizador ${index + 1}</h5>
-                  <p class="card-text">
-                    <strong>Código de barra:</strong> ${sintonizador.codigobarra}<br>
-                    <strong>Marca:</strong> ${sintonizador.marca}<br>
-                    <strong>Modelo:</strong> ${sintonizador.modelo}<br>
-                    <strong>Precio:</strong> ${sintonizador.precio}<br>
-                    <strong>Serie:</strong> ${sintonizador.serie}
-                  </p>
-                </div>
-              </div>
-            `;
-
-            container.appendChild(card);
-          });
-        } catch (error) {
-          console.error("Error al listar los sintonizadores:", error);
-        }
-      });
-
-    } catch (error) {
-      console.error("Error en FichaInstalacion:", error);
-    }
-    try {
-      const respuesta = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
-      const data = await respuesta.json();
-      txtaEstadoInicial.value = data[0].descripcion_problema;
-
-    } catch (error) {
-      console.error("Error en obtener el problema:", error);
-    }
-  }
-
   async function actualizarContadorSintonizadores() {
     txtSintonizadorCambio.value = parseInt(jsonSintonizador.length);
   }
@@ -482,7 +510,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     await actualizarContadorSintonizadores();
   }
-
 
   async function AgregarSintotizador() {
     const txtCodigoBarraSintonizador = document.getElementById("txtCodigoBarraSintonizador").value;
@@ -546,7 +573,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     actualizarContadorSintonizadores();
   }
 
-
   async function ArmadoJsonCable() {
     const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
     const result = await response.json();
@@ -554,16 +580,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const soporte = result[0]?.soporte ? JSON.parse(result[0].soporte) : {};
     const nuevoSoporte = { ...soporte };
     const dataCable = await FichaInstalacion(idSoporte);
-    const cableFiltrado = JSON.parse(dataCable[0].ficha_instalacion).cable;
 
     const cableData = {
-      parametroscliente: {
-        plan: txtPlan.value,
-        usuario: txtCliente.value,
-        nrodoc: txtNrodocumento.value,
-      },
       parametroscable: {
-        plan: document.getElementById("txtPlan").value,
         potencia: parseInt(document.getElementById("txtPotencia").value) || 0,
         sintonizadores: jsonSintonizadorOriginal,
         triplexor: document.getElementById("slcTriplexor").value === "2" ? "activo" :
@@ -584,7 +603,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
       },
       cambioscable: {
-        plan: document.getElementById("txtPlan").value,
         potencia: parseInt(document.getElementById("txtPotenciaCambio").value) || 0,
         sintonizadores: jsonSintonizador,
         triplexor: document.getElementById("slcTriplexorCambio").value === "2" ? "activo" :
@@ -606,8 +624,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     };
 
+    idCaja = slcCaja.value;
+
     nuevoSoporte.cabl = cableData;
     nuevoSoporte.idcaja = idCaja;
+    nuevoSoporte.puerto = txtPuertoCambio.value || 0;
 
     return nuevoSoporte;
   }

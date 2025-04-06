@@ -200,7 +200,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       fibraoptica: {
         usuario: txtUsuario,
         claveacceso: txtClaveAcceso,
-        vlan: parseInt(txtVlan),
         potencia: parseInt(txtPotencia),
         router: {
           ssid: txtSsid,
@@ -220,7 +219,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         repetidores: jsonRepetidor
       },
       puerto: parseInt(txtPuerto),
-      idcaja: parseInt(idCaja)
+      idcaja: parseInt(idCaja),
+      vlan: parseInt(txtVlan)
     };
   }
 

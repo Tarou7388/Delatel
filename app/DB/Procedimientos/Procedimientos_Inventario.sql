@@ -141,7 +141,7 @@ BEGIN
     WHERE
         p.codigo_barra = p_codigo_barra
     AND
-        p.inactive_at IS NULL AND t.tipo_nombre = 'Router';
+        p.inactive_at IS NULL AND t.tipo_nombre = 'Router' OR t.tipo_nombre = 'ONT';
 END $$
 
 
