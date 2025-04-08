@@ -92,6 +92,8 @@ window.addEventListener('DOMContentLoaded', async () => {
       const respuesta = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerContratoPorCliente&id=${clienteId}`);
       const datos = await respuesta.json();
 
+      console.log(datos); 
+
       if (Array.isArray(datos) && datos.length > 0) {
         datos.forEach(element => {
           const option = document.createElement('option');

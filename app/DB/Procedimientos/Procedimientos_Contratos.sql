@@ -260,7 +260,8 @@ BEGIN
         c.fecha_inicio,
         c.nota,
         c.direccion_servicio,
-        c.nota
+        c.nota,
+        c.ficha_instalacion
     FROM 
         tb_contratos c
     JOIN 
@@ -269,7 +270,7 @@ BEGIN
         tb_sectores s ON c.id_sector = s.id_sector
     LEFT JOIN tb_servicios sv ON JSON_CONTAINS(p.id_servicio, JSON_OBJECT('id_servicio', sv.id_servicio))
     WHERE 
-        c.id_cliente = p_id_cliente AND c.inactive_at IS NULL AND c.ficha_instalacion IS NOT NULL
+        c.id_cliente = p_id_cliente AND c.inactive_at IS NULL
     GROUP BY
         c.id_contrato,
         s.sector,
