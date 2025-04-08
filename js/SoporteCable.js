@@ -63,7 +63,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       await ObtenerValores();
       crearBotones();
       configurarVerMas();
-      await llamarCajas();
     }
   })();
 
@@ -148,6 +147,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   async function CargardatosInstalacion(doc, idSoporte) {
+    console.log("CargardatosInstalacion", doc, idSoporte);
     try {
       const respuestaProblema = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
       const dataProblema = await respuestaProblema.json();
@@ -168,7 +168,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     try {
       const dataCable = await FichaInstalacion(idSoporte);
       const fichaInstalacion = JSON.parse(dataCable[0].ficha_instalacion);
+      console.log(fichaInstalacion);
       const cableFiltrado = fichaInstalacion.cable;
+
       let sintonizadores = null;
       if (cableFiltrado.sintonizadores) {
         sintonizadores = cableFiltrado.sintonizadores.length;
@@ -268,6 +270,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   async function llamarCajas() {
     let cajas = [];
+    console.log("idCaja", idCaja);
+    console.log("idSector", idSector);
 
     if (!idCaja || idCaja == 0 || idCaja == -1) {
       cajas = await mapa.buscarCajasporSector(idSector);
@@ -402,11 +406,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const respuesta = await FichaSoporteporDocServCoordenada(doc, tiposervicio, coordenada);
 
+    console.log(JSON.parse(respuesta[0].soporte));
+
     if (respuesta[0].soporte != "{}" && JSON.parse(respuesta[0].soporte).cabl) {
+      console.log("ANTERIOR")
       await cargarSoporteAnterior(respuesta, idSoporte);
     } else {
+      console.log("INSTALACION")
       await CargardatosInstalacion(doc, idSoporte);
     }
+
+    await llamarCajas();
   }
 
   function mostrarSintonizadoresEnModal() {

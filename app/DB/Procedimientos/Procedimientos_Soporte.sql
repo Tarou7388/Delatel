@@ -37,8 +37,6 @@ FROM
 
 DELIMITER $$
 
-
-
 DELIMITER $$
 
 DROP PROCEDURE IF EXISTS spu_registrar_fichasoporte;
@@ -160,6 +158,7 @@ BEGIN
 END $$
 
 DELIMITER $$
+
 DROP PROCEDURE IF EXISTS spu_instalacion_ficha_IdSoporte$$
 
 CREATE PROCEDURE spu_instalacion_ficha_IdSoporte(
@@ -193,17 +192,7 @@ END $$
 DROP VIEW IF EXISTS vw_soporte_fichadatos$$
 
 CREATE VIEW vw_soporte_fichadatos AS
-    SELECT p.nro_doc, 
-    s.id_soporte, 
-    s.soporte, 
-    s.descripcion_problema, 
-    s.descripcion_solucion, 
-    s.update_at, 
-    sv.tipo_servicio, 
-    c.coordenada, 
-    sv.servicio,
-    c.id_paquete,
-    c.id_sector
+SELECT p.nro_doc, s.id_soporte, s.soporte, s.descripcion_problema, s.descripcion_solucion, s.update_at, sv.tipo_servicio, c.coordenada, sv.servicio, c.id_paquete, c.id_sector
 FROM
     tb_soporte s
     INNER JOIN tb_contratos c ON s.id_contrato = c.id_contrato
@@ -219,6 +208,7 @@ FROM
         )
     );
 
+DELIMITER $$
 DROP PROCEDURE IF EXISTS spu_buscar_ficha_por_dni$$
 
 CREATE PROCEDURE spu_buscar_ficha_por_dni (
@@ -227,16 +217,28 @@ CREATE PROCEDURE spu_buscar_ficha_por_dni (
     IN p_coordenada VARCHAR(50)
 )
 BEGIN
-    SELECT * FROM 
-        vw_soporte_fichadatos
-    WHERE 
-        nro_doc = p_dni
-        AND tipo_servicio = p_servicio
-        AND coordenada = p_coordenada
-    ORDER BY 
-        update_at DESC LIMIT 1;
-END $$
+    DECLARE resultado_count INT;
 
+    SELECT COUNT(*) INTO resultado_count
+    FROM vw_soporte_fichadatos
+    WHERE nro_doc = p_dni
+      AND tipo_servicio = p_servicio;
+    
+    IF resultado_count > 1 THEN
+        SELECT * 
+        FROM vw_soporte_fichadatos
+        WHERE nro_doc = p_dni
+          AND tipo_servicio = p_servicio
+          AND coordenada = p_coordenada
+        ORDER BY update_at DESC;
+    ELSE
+        SELECT * 
+        FROM vw_soporte_fichadatos
+        WHERE nro_doc = p_dni
+          AND tipo_servicio = p_servicio
+        ORDER BY update_at DESC;
+    END IF;
+END $$
 DROP PROCEDURE IF EXISTS spu_soporte_eliminarbyId$$
 
 CREATE PROCEDURE spu_soporte_eliminarbyId (
@@ -358,3 +360,26 @@ BEGIN
 END$$
 
 DELIMITER;
+
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS spu_ultimoSoporte_idcontrato$$
+
+CREATE PROCEDURE spu_ultimoSoporte_idcontrato(IN p_id_contrato INT)
+BEGIN
+    SELECT 
+        c.id_contrato,
+        s.id_soporte,
+        s.soporte,
+        s.create_at,
+        s.update_at
+    FROM 
+        tb_soporte s
+        INNER JOIN tb_contratos c ON s.id_contrato = c.id_contrato    
+    WHERE 
+        c.id_contrato = 672
+        AND s.inactive_at IS NULL
+    ORDER BY 
+        s.update_at DESC
+    LIMIT 1;
+END$$

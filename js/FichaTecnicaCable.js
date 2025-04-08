@@ -549,7 +549,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     );
     const datos = await response.json();
-    showToast("Ficha de Instalación Guardada Correctamente", "SUCCESS");
+    showToast("Ficha de Instalación Guardada Correctamente", "SUCCESS", 1500);
     setTimeout(() => {
       window.location.href = `${config.HOST}views/Contratos/`;
     }, 2500);
