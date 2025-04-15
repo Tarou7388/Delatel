@@ -428,6 +428,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     const fibr = data.fibr;
+    console.log(data);
+
 
     const dataFibra = await FichaInstalacion(idSoporte);
     const fichaInstalacion = JSON.parse(dataFibra[0].ficha_instalacion);
@@ -440,17 +442,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     txtPlan.value = paquete[0].paquete;
     idSector = dataFibra[0].id_sector;
 
-
-
     txtPppoe.value = fibr.cambiosgpon.pppoe;
     txtClave.value = fibr.cambiosgpon.clave;
     txtPotencia.value = fibr.cambiosgpon.potencia;
     chkCatv.checked = fibr.cambiosgpon.catv;
-    txtVlan.value = fibr.vlan;
+    txtVlan.value = data.vlan;
 
     txtCambiosPppoe.value = fibr.cambiosgpon.pppoe;
     txtCambiosClave.value = fibr.cambiosgpon.clave;
-    txtCambiosVlan.value = fibr.cambiosgpon.vlan;
+    txtCambiosVlan.value = data.vlan;
 
     idCaja = data.idcaja;
 

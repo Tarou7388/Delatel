@@ -82,7 +82,7 @@
         </tr>
         <tr>
           <td><strong>VLAN:</strong></td>
-          <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['vlan']); ?></td>
+          <td class="text-center"><?= htmlspecialchars($fichaTecnica['vlan']); ?></td>
           <td><strong>N° ANTENA:</strong></td>
           <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['router']['numeroantena']); ?></td>
         </tr>

@@ -377,7 +377,7 @@ BEGIN
         tb_soporte s
         INNER JOIN tb_contratos c ON s.id_contrato = c.id_contrato    
     WHERE 
-        c.id_contrato = 672
+        c.id_contrato = 673
         AND s.inactive_at IS NULL
     ORDER BY 
         s.update_at DESC

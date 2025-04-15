@@ -387,13 +387,13 @@
           <div class="row g-3 mb-3 align-items-center">
             <div class="col-md">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtCambiosPppoe" placeholder="PPPoE" disabled>
+                <input type="text" class="form-control" id="txtCambiosPppoe" placeholder="PPPoE">
                 <label for="txtCambiosPppoe">PPPoE</label>
               </div>
             </div>
             <div class="col-md">
               <div class="form-floating">
-                <input type="text" class="form-control" id="txtCambiosClave" placeholder="Clave" disabled>
+                <input type="text" class="form-control" id="txtCambiosClave" placeholder="Clave">
                 <label for="txtCambiosClave">Clave</label>
               </div>
             </div>
