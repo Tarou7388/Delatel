@@ -639,6 +639,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     nuevoSoporte.cabl = cableData;
     nuevoSoporte.idcaja = idCaja;
     nuevoSoporte.puerto = txtPuertoCambio.value || 0;
+    nuevoSoporte.periodo = JSON.parse(dataCable[0].ficha_instalacion).periodo || 0;
 
     return nuevoSoporte;
   }

@@ -371,25 +371,6 @@ BEGIN
         c.id_contrato,
         s.id_soporte,
         s.soporte,
-        s.create_at,
-        s.update_at
-    FROM 
-        tb_soporte s
-        INNER JOIN tb_contratos c ON s.id_contrato = c.id_contrato    
-    WHERE 
-        c.id_contrato = p_id_contrato
-        AND s.inactive_at IS NULL
-    ORDER BY 
-        s.update_at DESC
-    LIMIT 1;
-END$$
-
-CREATE PROCEDURE spu_ultimoSoporte_idcontrato(IN p_id_contrato INT)
-BEGIN
-    SELECT 
-        c.id_contrato,
-        s.id_soporte,
-        s.soporte,
         s.create_at AS FechaSoporte,
         s.update_at AS FechaActualizacionSoporte,
         
