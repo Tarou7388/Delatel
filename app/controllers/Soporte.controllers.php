@@ -35,6 +35,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     case 'obtenerHistorialSoporte':
       echo json_encode($soporte->obtenerHistorialSoporte(["docCliente" => $_GET['docCliente']]));
       break;
+    case 'ultimoSoporteIdContrato':
+      echo json_encode($soporte->ultimoSoporteIdContrato(["idContrato" => $_GET['idContrato']]));
+      break;
   }
 }
 

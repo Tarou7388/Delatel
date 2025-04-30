@@ -175,4 +175,11 @@ class Soporte extends Conexion
     $values = array($params['docCliente']);
     return $this->consultaParametros($sql, $values);
   }
+
+  public function ultimoSoporteIdContrato($params = [])
+  {
+    $sql = "CALL spu_ultimoSoporte_idcontrato(?)";
+    $values = array($params['idContrato']);
+    return $this->consultaParametros($sql, $values);
+  }
 }

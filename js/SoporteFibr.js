@@ -873,6 +873,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     return nuevoSoporte;
   }
 
+  slcCaja.addEventListener("change", async () => {
+    idCaja = slcCaja.value;
+    console.log("ID Caja:", idCaja);
+  });
+
   async function moficadoRepetidor() {
     if (!jsonRepetidores) {
       return null;

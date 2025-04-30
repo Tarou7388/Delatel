@@ -12,13 +12,14 @@ date_default_timezone_set('America/Lima');
 $fechaActual = date('d/m/Y H:i:s');
 
 $contrato = new Contrato();
+$soporte = new Soporte();
 $caja = new Caja();
-$resultado = $contrato->obtenerPDF(["id" => $_GET['id']]);
 
-if (empty($resultado)) {
-  echo '<script>alert("No se encontraron registros para el producto seleccionado."); window.location.href = "Contratos/FichaTecnicaFibra.php";</script>';
-  exit;
+$resultado = $soporte->ultimoSoporteIdContrato(["idContrato" => $_GET['id']]);
+if (!$resultado) {
+  $resultado = $contrato->obtenerPDF(["id" => $_GET['id']]);
 }
+
 
 $nombreCliente = $resultado[0]['NombreCliente'];
 $nombreArchivo = $nombreCliente . '.pdf';
@@ -29,7 +30,7 @@ $velocidadPaqueteJson = $resultado[0]['VelocidadPaquete'];
 $velocidadPaquete = json_decode($velocidadPaqueteJson, true);
 
 // Obtener la ficha técnica
-$fichaTecnicaJson = $resultado[0]['FichaTecnica'];
+$fichaTecnicaJson = $resultado[0]['FichaTecnica']||$resultado[0]['soporte'];
 $fichaTecnica = json_decode($fichaTecnicaJson, true);
 
 $caja = new Caja();

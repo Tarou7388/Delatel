@@ -97,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     case 'actualizarCliente':
       $datos = [
         "apellidos"   => Herramientas::sanitizarEntrada($datos["parametros"]['apellidos']),
-        "nombres"          => Herramientas::sanitizarEntrada($datos["parametros"]['nombres']),
+        "nombres"          => $datos["parametros"]['nombres'],
         "telefono"       => Herramientas::sanitizarEntrada($datos["parametros"]['telefono']),    
         "email"           => Herramientas::sanitizarEntrada($datos["parametros"]['email']),
         "direccion"        => Herramientas::sanitizarEntrada($datos["parametros"]['direccion']),

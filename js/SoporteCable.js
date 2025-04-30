@@ -643,6 +643,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     return nuevoSoporte;
   }
 
+  slcCaja.addEventListener("change", async () => {
+    idCaja = slcCaja.value;
+    console.log("ID Caja:", idCaja);
+  });
+
   async function CompletarSoporteSiestaTodo(idSoporte, JSONsoporte) {
     const ServiciosTotales = await FichaInstalacion(idSoporte);
     const tiposServicio = (ServiciosTotales[0].tipos_servicio).toLowerCase().split(",");

@@ -377,7 +377,82 @@ BEGIN
         tb_soporte s
         INNER JOIN tb_contratos c ON s.id_contrato = c.id_contrato    
     WHERE 
-        c.id_contrato = 673
+        c.id_contrato = p_id_contrato
+        AND s.inactive_at IS NULL
+    ORDER BY 
+        s.update_at DESC
+    LIMIT 1;
+END$$
+
+CREATE PROCEDURE spu_ultimoSoporte_idcontrato(IN p_id_contrato INT)
+BEGIN
+    SELECT 
+        c.id_contrato,
+        s.id_soporte,
+        s.soporte,
+        s.create_at AS FechaSoporte,
+        s.update_at AS FechaActualizacionSoporte,
+        
+        cl.id_cliente AS IdCliente,
+        IFNULL(CONCAT(p.nombres, ' ', p.apellidos), e.razon_social) AS NombreCliente,
+        IFNULL(p.nro_doc, e.ruc) AS NumeroDocumento,
+        IFNULL(p.email, e.email) AS Correo,
+        IFNULL(p.telefono, e.telefono) AS Telefono,
+        cl.direccion AS DireccionPersona,
+        c.direccion_servicio AS DireccionContrato,
+        c.referencia AS Referencia,
+        CASE 
+            WHEN e.ruc IS NOT NULL THEN 'Empresa Peruana'
+            WHEN LENGTH(p.nro_doc) = 8 THEN 'Peruano'
+            ELSE 'Extranjero'
+        END AS Nacionalidad,
+        IFNULL(e.representante_legal, '') AS RepresentanteLegal,
+        pa.paquete AS NombrePaquete,
+        pa.precio AS PrecioPaquete,
+        pa.velocidad AS VelocidadPaquete,
+        c.nota,
+        c.create_at AS FechaCreacion,
+        sct.sector AS Sector,
+        d.departamento AS Departamento,
+        pr.provincia AS Provincia,
+        di.distrito AS Distrito,
+        CONCAT(pt.nombres, ' ', pt.apellidos) AS NombreTecnicoFicha,
+        CONCAT(rt.nombres, ' ', rt.apellidos) AS NombreTecnico,
+        c.create_at AS FechaFichaInstalacion
+    FROM 
+        tb_soporte s
+    INNER JOIN 
+        tb_contratos c ON s.id_contrato = c.id_contrato
+    JOIN 
+        tb_clientes cl ON c.id_cliente = cl.id_cliente
+    LEFT JOIN 
+        tb_personas p ON cl.id_persona = p.id_persona
+    LEFT JOIN 
+        tb_empresas e ON cl.id_empresa = e.id_empresa
+    LEFT JOIN 
+        tb_paquetes pa ON c.id_paquete = pa.id_paquete
+    LEFT JOIN 
+        tb_sectores sct ON c.id_sector = sct.id_sector
+    LEFT JOIN 
+        tb_distritos di ON sct.id_distrito = di.id_distrito
+    LEFT JOIN 
+        tb_provincias pr ON di.id_provincia = pr.id_provincia
+    LEFT JOIN 
+        tb_departamentos d ON pr.id_departamento = d.id_departamento
+    LEFT JOIN 
+        tb_responsables r ON c.id_usuario_tecnico = r.id_responsable
+    LEFT JOIN 
+        tb_usuarios u ON r.id_usuario = u.id_usuario
+    LEFT JOIN 
+        tb_personas pt ON u.id_persona = pt.id_persona
+    LEFT JOIN 
+        tb_responsables rt_responsable ON c.id_usuario_registro = rt_responsable.id_responsable
+    LEFT JOIN 
+        tb_usuarios rt_usuario ON rt_responsable.id_usuario = rt_usuario.id_usuario
+    LEFT JOIN 
+        tb_personas rt ON rt_usuario.id_persona = rt.id_persona
+    WHERE 
+        c.id_contrato = p_id_contrato
         AND s.inactive_at IS NULL
     ORDER BY 
         s.update_at DESC
