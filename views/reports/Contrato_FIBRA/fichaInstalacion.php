@@ -12,60 +12,71 @@ date_default_timezone_set('America/Lima');
 $fechaActual = date('d/m/Y H:i:s');
 
 $contrato = new Contrato();
-$soporte = new Soporte();
 $caja = new Caja();
+$soporte = new Soporte();
 
+// Obtener datos del soporte o contrato
 $resultado = $soporte->ultimoSoporteIdContrato(["idContrato" => $_GET['id']]);
-if (!$resultado) {
-  $resultado = $contrato->obtenerPDF(["id" => $_GET['id']]);
+if (empty($resultado)) {
+    $resultado = $contrato->obtenerPDF(["id" => $_GET['id']]);
 }
 
-
 $nombreCliente = $resultado[0]['NombreCliente'];
-$nombreArchivo = $nombreCliente . '.pdf';
+$nombreArchivo = preg_replace('/[^A-Za-z0-9_\-ñÑ]/', '_', $nombreCliente) . '.pdf';
 
-$nombreArchivo = preg_replace('/[^A-Za-z0-9_\-ñÑ]/', '_', $nombreArchivo);
+// Decodificar Ficha Técnica
+$fichaTecnicaRaw = $resultado[0]['FichaTecnica'];
+$fichaTecnica = json_decode($fichaTecnicaRaw, true);
 
-$velocidadPaqueteJson = $resultado[0]['VelocidadPaquete'];
-$velocidadPaquete = json_decode($velocidadPaqueteJson, true);
+// Normalizar si es formato antiguo
+if (isset($fichaTecnica['fibraoptica']) && !isset($fichaTecnica['fibr'])) {
+    $fibra = $fichaTecnica['fibraoptica'];
+    $fichaTecnica['fibr']['parametrosgpon'] = [
+        'pppoe' => $fibra['usuario'],
+        'clave' => $fibra['claveacceso'],
+        'potencia' => $fibra['potencia'],
+        'router' => $fibra['router'],
+        'repetidores' => $fibra['repetidores'] ?? [],
+        'catv' => $fibra['router']['catv'] ?? false,
+    ];
+    $fichaTecnica['idcaja'] = $fichaTecnica['idcaja'] ?? 0;
+    $fichaTecnica['vlan'] = $fichaTecnica['vlan'] ?? '';
+}
 
-// Obtener la ficha técnica
-$fichaTecnicaJson = $resultado[0]['FichaTecnica']||$resultado[0]['soporte'];
-$fichaTecnica = json_decode($fichaTecnicaJson, true);
+// Validar que ficha técnica no esté vacía
+if (empty($fichaTecnica)) {
+    echo '<script>alert("La ficha técnica está vacía."); window.location.href = "../../Contratos/";</script>';
+    exit;
+}
 
-$caja = new Caja();
-$cajaid = intval($fichaTecnica['idcaja']);
+// Buscar caja si existe id
+$cajaid = intval($fichaTecnica['idcaja'] ?? 0);
 $nombrecaja = 'Sin caja asignada';
 
 if ($cajaid > 0) {
-  $resultadoCaja = $caja->cajaBuscar(['idCaja' => $cajaid]);
-  if (!empty($resultadoCaja)) {
-    $nombrecaja = $resultadoCaja[0]['nombre'];
-  }
+    $resultadoCaja = $caja->cajaBuscar(['idCaja' => $cajaid]);
+    if (!empty($resultadoCaja)) {
+        $nombrecaja = $resultadoCaja[0]['nombre'];
+    }
 }
 
-if (empty($fichaTecnica)) {
-  echo '<script>alert("La ficha técnica está vacía."); window.location.href = "../../Contratos/";</script>';
-  exit;
-}
-
+// Incluir contenido HTML y estilos para PDF
 ob_start();
-include 'contenido.php';
+include 'contenido.php';  // Aquí deberías usar los datos de $fichaTecnica ya normalizados
 include 'estilos.html';
 $content = ob_get_clean();
 
 if ($content === false) {
-  echo '<script>alert("Error al generar el contenido del PDF.")</script>';
-  exit;
+    echo '<script>alert("Error al generar el contenido del PDF.")</script>';
+    exit;
 }
 
 $dompdf->loadHtml($content);
 $dompdf->render();
 
-// Obtener el objeto Canvas
+// Agregar número de páginas
 $canvas = $dompdf->getCanvas();
-
-// Añadir numeración de páginas en la cabecera a la izquierda
 $canvas->page_text(50, 30, "Página {PAGE_NUM} de {PAGE_COUNT}", null, 9, array(0, 0, 0));
 
+// Mostrar PDF en el navegador (sin descargar)
 $dompdf->stream($nombreArchivo, array('Attachment' => 0));

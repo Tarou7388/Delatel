@@ -191,9 +191,11 @@ document.addEventListener("DOMContentLoaded", async function () {
         } else {
           const personaAPI = await buscarPersonaAPI("obtenerDni", dni);
 
+          console.log("Persona API:", personaAPI);
+
           if (personaAPI) {
             $("txtNombre").value = personaAPI.nombres;
-            $("txtApe").value = personaAPI.apellidos;
+            $("txtApe").value = personaAPI.apellidoPaterno + " " + personaAPI.apellidoMaterno;
             $("txtEmail").disabled = false;
             $("txtTelefono").disabled = false;
             $("txtUsuario").disabled = false;

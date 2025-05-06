@@ -370,10 +370,9 @@ BEGIN
     SELECT 
         c.id_contrato,
         s.id_soporte,
-        s.soporte,
+        s.soporte as FichaTecnica,
         s.create_at AS FechaSoporte,
         s.update_at AS FechaActualizacionSoporte,
-        
         cl.id_cliente AS IdCliente,
         IFNULL(CONCAT(p.nombres, ' ', p.apellidos), e.razon_social) AS NombreCliente,
         IFNULL(p.nro_doc, e.ruc) AS NumeroDocumento,
@@ -435,6 +434,7 @@ BEGIN
     WHERE 
         c.id_contrato = p_id_contrato
         AND s.inactive_at IS NULL
+        AND s.soporte != '{}'
     ORDER BY 
         s.update_at DESC
     LIMIT 1;
