@@ -174,7 +174,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         if (data.length > 0 && data[0].id_persona) {
           const persona = data[0];
           idPersonaEncontrada = persona.id_persona;
-
+          console.log("Persona encontrada:", persona);
           $("txtNombre").value = persona.nombres;
           $("txtApe").value = persona.apellidos;
           $("txtEmail").value = persona.email;
@@ -190,9 +190,7 @@ document.addEventListener("DOMContentLoaded", async function () {
           showToast("Persona encontrada en la base de datos.", "SUCCESS");
         } else {
           const personaAPI = await buscarPersonaAPI("obtenerDni", dni);
-
           console.log("Persona API:", personaAPI);
-
           if (personaAPI) {
             $("txtNombre").value = personaAPI.nombres;
             $("txtApe").value = personaAPI.apellidoPaterno + " " + personaAPI.apellidoMaterno;
