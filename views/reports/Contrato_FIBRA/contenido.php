@@ -67,51 +67,36 @@
       </tr>
     </thead>
     <tbody>
-      <?php if (!empty($fichaTecnica['fibraoptica']) || $fichaTecnica['fibr']['cambiosgpon']): ?>
-        <?php $fibr = $fichaTecnica['fibr']['cambiosgpon']; ?>
+      <?php if (!empty($fichaTecnica['fibraoptica'])): ?>
         <tr>
           <td><strong>USUARIO:</strong></td>
-          <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['usuario'] ?? $fibr['pppoe']); ?></td>
+          <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['usuario']); ?></td>
           <td><strong>MARCA:</strong></td>
-          <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['router']['marca'] ?? $fibr['router']['marca']); ?></td>
+          <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['router']['marca']); ?></td>
         </tr>
         <tr>
           <td><strong>CLAVE:</strong></td>
-          <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['claveacceso'] ?? $fibr['clave']) ?></td>
+          <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['claveacceso']); ?></td>
           <td><strong>BANDA:</strong></td>
-          <td class="text-center">
-            <?= htmlspecialchars(
-              implode(
-                ", ",
-                array_filter((array) ($fichaTecnica['fibraoptica']['router']['banda'] ?? $fibr['router']['banda'] ?? []))
-              )
-            ); ?>
-          </td>
-
+          <td class="text-center"><?= htmlspecialchars(implode(", ", $fichaTecnica['fibraoptica']['router']['banda'])); ?></td>
         </tr>
         <tr>
           <td><strong>VLAN:</strong></td>
-          <td class="text-center"><?= htmlspecialchars($fichaTecnica['vlan'] ?? ['fibr']['vlan']); ?></td>
+          <td class="text-center"><?= htmlspecialchars($fichaTecnica['vlan']); ?></td>
           <td><strong>N° ANTENA:</strong></td>
-          <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['router']['numeroantena'] ?? $fibr['router']['numeroantena']); ?></td>
+          <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['router']['numeroantena']); ?></td>
         </tr>
         <tr>
           <td><strong>SSID:</strong></td>
-          <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['router']['ssid'] ?? $fibr['router']['ssid']); ?></td>
+          <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['router']['ssid']); ?></td>
           <td><strong>CATV:</strong></td>
-          <td class="text-center">
-            <?=
-            isset($fichaTecnica['fibraoptica']['router']['catv'])
-              ? ($fichaTecnica['fibraoptica']['router']['catv'] ? 'Sí' : 'No')
-              : (isset($fibr['router']['catv']) && $fibr['router']['catv'] ? 'Sí' : 'No');
-            ?>
-          </td>
+          <td class="text-center"><?= $fichaTecnica['fibraoptica']['router']['catv'] ? 'Sí' : 'No'; ?></td>
         </tr>
         <tr>
           <td><strong>SEGURIDAD:</strong></td>
-          <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['router']['seguridad'] ?? $fibr['router']['seguridad']); ?></td>
+          <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['router']['seguridad']); ?></td>
           <td><strong>MAC:</strong></td>
-          <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['router']['codigobarra'] ?? $fibr['router']['codigobarra']) ?></td>
+          <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['router']['codigobarra']) ?></td>
         </tr>
       <?php else: ?>
         <tr>
@@ -130,18 +115,18 @@
       </tr>
     </thead>
     <tbody>
-      <?php if (!empty($fichaTecnica['fibraoptica']) || $fichaTecnica['fibr']['cambiosgpon']): ?>
+      <?php if (!empty($fichaTecnica['fibraoptica'])): ?>
         <tr>
           <td><strong>IP:</strong></td>
-          <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['router']['ip'] ?? $fibr['router']['ip']); ?></td>
+          <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['router']['ip']); ?></td>
           <td><strong>POTENCIA:</strong></td>
-          <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['potencia'] ?? $fibr['potencia']); ?></td>
+          <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['potencia']); ?></td>
         </tr>
         <tr>
           <td><strong>USUARIO:</strong></td>
-          <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['router']['ingresouserrouter'] ?? $fibr['router']['ingresouserrouter']); ?></td>
+          <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['router']['ingresouserrouter']); ?></td>
           <td><strong>CLAVE DE ACCESO:</strong></td>
-          <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['router']['ingresopass'] ?? $fibr['router']['ingresopass']); ?></td>
+          <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['router']['ingresopass']); ?></td>
         </tr>
         <tr>
           <td><strong>CAJA:</strong></td>
@@ -151,14 +136,14 @@
             ?>
           </td>
           <td><strong>PUERTO:</strong></td>
-          <td class="text-center"><?= htmlspecialchars($fichaTecnica['puerto'] ?? $fichaTecnica['fibr']['puerto'] ?? "N/a"); ?></td>
+          <td class="text-center"><?= htmlspecialchars($fichaTecnica['puerto']); ?></td>
         </tr>
-        <?php if (!empty($fichaTecnica['fibraoptica']['detalles'] ?? empty($fibr['detalles']))): ?>
+        <?php if (!empty($fichaTecnica['fibraoptica']['detalles'])): ?>
           <tr>
             <td colspan="4" class="text-center"><strong>DETALLES:</strong></td>
           </tr>
           <tr>
-            <td colspan="4"><?= htmlspecialchars($fichaTecnica['fibraoptica']['detalles'] ?? $fibr['detalles'] ?? ""); ?></td>
+            <td colspan="4"><?= htmlspecialchars($fichaTecnica['fibraoptica']['detalles']); ?></td>
           </tr>
         <?php endif; ?>
         <tr>
@@ -211,5 +196,52 @@
         </tr>
       <?php endif; ?>
         </tbody>
+  </table>
+</div>
+
+<br>
+
+<!-- Detalles de Costo -->
+<div class="container">
+  <table class="tabla2">
+    <thead>
+      <tr>
+        <td colspan="8" class="text-center thead-cabecera-3"><strong>DETALLES DE COSTO</strong></td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>PAGO SERVICIO:</strong></td>
+        <td colspan="2"></td>
+        <td rowspan="6" colspan="5" class="text-center" style="vertical-align: top;">
+        </td>
+      </tr>
+      <tr>
+        <td><strong>PAGO DIGITAL:</strong></td>
+        <td colspan="2"></td>
+      </tr>
+      <tr>
+        <td><strong>INST. DIGITAL:</strong></td>
+        <td colspan="2"></td>
+      </tr>
+      <tr>
+        <td><strong>SINT. ADIC:</strong></td>
+        <td colspan="2"></td>
+      </tr>
+      <tr>
+        <td><strong>CABLE ADIC:</strong></td>
+        <td colspan="2"></td>
+      </tr>
+      <tr>
+        <td><strong>CONECT ADIC:</strong></td>
+        <td colspan="2"></td>
+      </tr>
+      <tr>
+        <td><strong>TOTAL:</strong></td>
+        <td colspan="2"></td>
+        <td><strong>FORMA PAG:</strong></td>
+        <td colspan="4"></td>
+      </tr>
+    </tbody>
   </table>
 </div>
