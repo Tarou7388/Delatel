@@ -21,7 +21,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   let iniciarMapaSi = false;
   let idSector = null;
   let idCaja = null;
-  let precioServicio = 0;
+  let cambioServicio = 0;
   let idCliente = null;
   let idPersona = "";
   let idEmpresa = "";
@@ -356,7 +356,9 @@ window.addEventListener("DOMContentLoaded", async () => {
     const fechaRegistro = new Date().toISOString().split("T")[0];
     const nota = txtNota.value;
     const idPaquete = slcPaquetes.value.split(' - ')[0];
-
+    if(idSector == null){
+      idSector = 0;
+    }
     const datosEnvio = {
       operacion: "registrarContrato",
       parametros: {
@@ -897,14 +899,20 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   btnBuscarCoordenadas.addEventListener("click", async () => {
     const slcTipoServicio = document.querySelector("#slcTipoServicio");
-    if (slcTipoServicio.value == "2") {
-      mapa.eliminarMapa();
+    if(cambioServicio == slcTipoServicio.value){
+      cambioServicio = slcTipoServicio.value;
       iniciarMapaSi = false
-      await cargarCaracteristicasMapa("Antenas");
-    } else {
-      mapa.eliminarMapa();
-      iniciarMapaSi = false
-      await cargarCaracteristicasMapa("Cajas");
+    }else{
+      cambioServicio = slcTipoServicio.value;
+      if (slcTipoServicio.value == "2") {
+        mapa.eliminarMapa();
+        iniciarMapaSi = false
+        await cargarCaracteristicasMapa("Antenas");
+      } else {
+        mapa.eliminarMapa();
+        iniciarMapaSi = false
+        await cargarCaracteristicasMapa("Cajas");
+      }
     }
   });
 

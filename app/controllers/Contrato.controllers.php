@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         "idUsuario"           => Herramientas::sanitizarEntrada($datos['parametros']['idUsuario'])
       ];
       $resultado = $contrato->registrarContrato($datosEnviar);
-      echo json_encode(["guardado" => $resultado]);
+      echo json_encode($resultado);
       break;
   }
 }

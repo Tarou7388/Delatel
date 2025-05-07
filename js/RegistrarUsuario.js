@@ -31,6 +31,9 @@ document.addEventListener("DOMContentLoaded", async function () {
       try {
         const url = `${config.HOST}app/controllers/Persona.controllers.php?operacion=buscarPersonaDni&dni=${nroDoc}`;
         const data = await fetchData(url);
+
+        console.log(data);
+
         return data[0].id_usuario;
       } catch (error) {
         return false;
@@ -90,6 +93,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         if (!data) {
           showToast("Error en asignar Rol", "ERROR");
+          console.log(data);
         } else {
           showToast("Rol asignado correctamente", "SUCCESS");
         }
@@ -174,7 +178,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         if (data.length > 0 && data[0].id_persona) {
           const persona = data[0];
           idPersonaEncontrada = persona.id_persona;
-          console.log("Persona encontrada:", persona);
+            console.log("Persona encontrada:", persona);
           $("txtNombre").value = persona.nombres;
           $("txtApe").value = persona.apellidos;
           $("txtEmail").value = persona.email;
@@ -186,11 +190,10 @@ document.addEventListener("DOMContentLoaded", async function () {
           $("txtUsuario").disabled = false;
           $("txtContrasenia").disabled = false;
           $("slcRol").disabled = false;
-
           showToast("Persona encontrada en la base de datos.", "SUCCESS");
         } else {
           const personaAPI = await buscarPersonaAPI("obtenerDni", dni);
-          console.log("Persona API:", personaAPI);
+            console.log(personaAPI)
           if (personaAPI) {
             $("txtNombre").value = personaAPI.nombres;
             $("txtApe").value = personaAPI.apellidoPaterno + " " + personaAPI.apellidoMaterno;
@@ -221,8 +224,8 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       const DniPersona = $("txtNumDocumentoPersona").value;
       const usuarioExistente = await verificarUsuarioExistente(DniPersona);
-
-      if (usuarioExistente != null) {
+      console.log(usuarioExistente);
+      if (usuarioExistente) {
         showToast("Esta persona ya esta registrada con un usuario", "ERROR");
         return;
       }
