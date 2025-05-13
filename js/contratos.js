@@ -8,11 +8,9 @@ window.addEventListener("DOMContentLoaded", async () => {
   const nombre = document.querySelector("#txtNombre");
   const precio = document.querySelector("#txtPrecio");
   const direccion = document.querySelector("#txtDireccion");
-  const sector = document.querySelector("#slcSector");
   const referencia = document.querySelector("#txtReferencia");
   const coordenada = document.querySelector("#txtCoordenadasMapa");
   const slcPaquetes = document.querySelector("#slcPaquetes");
-  const slcPaquetesActualizar = document.querySelector("#slcPaquetesActualizar");
   const txtNota = document.querySelector("#txtNota");
   const accesos = await Herramientas.permisos();
   const btnBuscarCoordenadas = document.querySelector("#btnBuscarCoordenadas");
@@ -21,7 +19,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   let iniciarMapaSi = false;
   let idSector = null;
   let idCaja = null;
-  let precioServicio = 0;
+  let cambioServicio = 0;
   let idCliente = null;
   let idPersona = "";
   let idEmpresa = "";
@@ -356,7 +354,9 @@ window.addEventListener("DOMContentLoaded", async () => {
     const fechaRegistro = new Date().toISOString().split("T")[0];
     const nota = txtNota.value;
     const idPaquete = slcPaquetes.value.split(' - ')[0];
-
+    if (idSector == null) {
+      idSector = 0;
+    }
     const datosEnvio = {
       operacion: "registrarContrato",
       parametros: {
@@ -435,20 +435,21 @@ window.addEventListener("DOMContentLoaded", async () => {
    * @returns {Promise<void>} - Una promesa que se resuelve cuando la operación de eliminación y actualización de la interfaz de usuario se completa.
    * @throws {Error} - Lanza un error si la solicitud de eliminación o recontabilización falla.
    */
-  async function eliminar(idContrato, idUsuario, idCaja) {
+  async function eliminar(idContrato, idUsuario) {
     if (accesos?.contratos?.eliminar) {
       const responsePeriodo = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerFichaInstalacion&id=${idContrato}`);
       const dataPeriodoini = await responsePeriodo.json();
       const dataPeriodo = JSON.parse(dataPeriodoini[0].ficha_instalacion);
 
-
       let eliminarSi = false
+      
+      console.log(dataPeriodoini);
 
-      if (await dataPeriodo.periodo == null) {
-        if (await ask("Este contrato no esta instalado. ¿Desea cancelar el Contrato?", "Contratos")) {
-          eliminarSi = true
+      if (!dataPeriodo || !dataPeriodo.periodo) {
+        if (await ask("Este contrato no está instalado. ¿Desea cancelar el Contrato?", "Contratos")) {
+          eliminarSi = true;
         }
-      } else if (await dataPeriodo.periodo != null) {
+      }else if (await dataPeriodo.periodo != null) {
         //saber ya se paso la fecha de periodo o no
         const fechaActual = new Date();
         const fechaPeriodo = new Date(dataPeriodo.periodo);
@@ -479,21 +480,6 @@ window.addEventListener("DOMContentLoaded", async () => {
         );
         const data = await response.json();
         if (data.eliminado) {
-          if (idCaja != -1) {
-            const respuesta = await fetch(`${config.HOST}app/controllers/Caja.controllers.php`, {
-              method: "PUT",
-              body: JSON.stringify({
-                operacion: "recontarCaja",
-                idContrato: idCaja
-              }),
-              headers: {
-                "Content-Type": "application/json",
-              },
-            });
-
-            const data = await respuesta.json();
-
-          }
           showToast("¡Contrato eliminado correctamente!", "SUCCESS", 1500);
           resetUI();
           tabla.ajax.reload();
@@ -632,8 +618,8 @@ window.addEventListener("DOMContentLoaded", async () => {
 
             const fichaInstalacion = data[0].ficha_instalacion ? JSON.parse(data[0].ficha_instalacion) : null;
 
-            if (fichaInstalacion === null || 
-                (Object.keys(fichaInstalacion).length === 1 && fichaInstalacion.idcaja)) {
+            if (fichaInstalacion === null ||
+              (Object.keys(fichaInstalacion).length === 1 && fichaInstalacion.idcaja)) {
               fila.classList.add("ficha-incompleta");
               fila.classList.remove("ficha-completa");
             } else {
@@ -717,22 +703,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         botonesEliminar.forEach((boton) => {
           boton.addEventListener("click", async (event) => {
             const idContrato = event.target.getAttribute("data-idContrato");
-            const tipoServicio = boton.closest('tr').querySelector('td:nth-child(5)').textContent.trim();
-            let idCaja = -1;
-            if (tipoServicio === "FIBR,CABL" || tipoServicio === "FIBR" || tipoServicio === "CABL") {
-              try {
-                const response = await fetch(
-                  `${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerJsonFichabyId&id=${idContrato}`
-                );
-                const data = await response.json();
-                idCaja = JSON.parse(data[0].ficha_instalacion).idcaja;
-              } catch (error) {
-                console.error("Error al obtener el JSON de la ficha de instalación:", error);
-                idCaja = -1;
-              }
-            }
-
-            eliminar(idContrato, 1, idCaja);
+            eliminar(idContrato, login.idUsuario);
           });
         });
 
@@ -897,14 +868,20 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   btnBuscarCoordenadas.addEventListener("click", async () => {
     const slcTipoServicio = document.querySelector("#slcTipoServicio");
-    if (slcTipoServicio.value == "2") {
-      mapa.eliminarMapa();
+    if (cambioServicio == slcTipoServicio.value) {
+      cambioServicio = slcTipoServicio.value;
       iniciarMapaSi = false
-      await cargarCaracteristicasMapa("Antenas");
     } else {
-      mapa.eliminarMapa();
-      iniciarMapaSi = false
-      await cargarCaracteristicasMapa("Cajas");
+      cambioServicio = slcTipoServicio.value;
+      if (slcTipoServicio.value == "2") {
+        mapa.eliminarMapa();
+        iniciarMapaSi = false
+        await cargarCaracteristicasMapa("Antenas");
+      } else {
+        mapa.eliminarMapa();
+        iniciarMapaSi = false
+        await cargarCaracteristicasMapa("Cajas");
+      }
     }
   });
 
@@ -935,9 +912,9 @@ window.addEventListener("DOMContentLoaded", async () => {
   async function cargarCaracteristicasMapa(objeto) {
     const id = "map"
     const renderizado = "modal"
-    if(iniciarMapaSi){
+    if (iniciarMapaSi) {
       return
-    }else{
+    } else {
       iniciarMapaSi = true
       mapa.iniciarMapa(objeto, id, renderizado);
     }

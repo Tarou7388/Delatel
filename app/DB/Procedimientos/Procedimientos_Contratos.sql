@@ -108,7 +108,7 @@ BEGIN
     ) VALUES (
         p_id_cliente,
         p_id_paquete,
-        p_id_sector,
+        NULLIF(p_id_sector, 0),
         p_direccion_servicio,
         p_referencia,
         p_coordenada,
