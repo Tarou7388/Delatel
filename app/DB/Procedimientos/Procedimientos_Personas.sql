@@ -116,5 +116,3 @@ BEGIN
     LEFT JOIN tb_clientes c ON c.id_persona = p.id_persona
     WHERE p.id_persona = p_id_persona;
 END$$
-
-SELECT * FROM tb_personas;

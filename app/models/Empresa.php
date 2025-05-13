@@ -58,4 +58,13 @@ class Empresa extends Conexion
         );
         return $this->consultaParametros($sql, $values);
     }
+
+    public function buscarEmpresaClienteId($params = [])
+    {
+        $sql = "CALL spu_empresa_cliente_idEmpresa(?)";
+        $values = array(
+            $params['id']
+        );
+        return $this->consultaParametros($sql, $values);
+    }
 }

@@ -167,5 +167,21 @@ class Cliente extends Conexion
         return $this->consultaParametros($sql, $values);
     }
 
+    public function actualizarClienteRuc($params = [])
+    {
+        $sql = "CALL spu_clientesEmpresas_actualizar(?,?,?,?,?,?,?,?,?)";
+        $values = array(
+            $params['apellidos'],
+            $params['nombres'],
+            $params['telefono'],
+            $params['email'],
+            $params['direccion'],
+            $params['referencia'],
+            $params['coordenadas'],
+            $params['idUserUpdate'],
+            $params['idPersona']
+        );
+        return $this->registrar($sql, $values);
+    }
 
 }

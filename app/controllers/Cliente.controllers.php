@@ -110,6 +110,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
       $estado = $cliente->actualizarClienteNumdoc($datos);
       echo json_encode(["Actualizado" => $estado]);
       break;
+    case 'actualizarClienteRuc':
+      $datos = [
+        "razonSocial"   => Herramientas::sanitizarEntrada($datos["parametros"]['razonSocial']),
+        "nombreComercial" => Herramientas::sanitizarEntrada($datos["parametros"]['nombreComercial']),
+        "telefono"       => Herramientas::sanitizarEntrada($datos["parametros"]['telefono']),    
+        "email"           => Herramientas::sanitizarEntrada($datos["parametros"]['email']),
+        "direccion"        => Herramientas::sanitizarEntrada($datos["parametros"]['direccion']),
+        "referencia"       => Herramientas::sanitizarEntrada($datos["parametros"]['referencia']),
+        "coordenadas"      => $datos["parametros"]['coordenadas'],
+        "idUserUpdate"     => $datos["parametros"]['idUserUpdate'],
+        "idEmpresa"       => Herramientas::sanitizarEntrada($datos["parametros"]['idEmpresa'])
+      ];
+
+      $estado = $cliente->actualizarClienteRuc($datos);
+      echo json_encode(["Actualizado" => $estado]);
+      break;
     case 'eliminarCliente':
       $datosDelete = [
         "idCliente"   => Herramientas::sanitizarEntrada($datos['idCliente']),

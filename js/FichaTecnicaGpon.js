@@ -136,25 +136,33 @@ document.addEventListener("DOMContentLoaded", async () => {
       document.getElementById("txtNumFicha").value = ficha.id_contrato || "";
 
       tipoServicio = ficha.tipos_servicio || "";
-      const nombreCliente = (ficha.nombre_cliente || "").split(", ");
-      const nombres = nombreCliente[0].split(" ");
-      let apellidos = nombreCliente[1].split(" ");
-
-      const primerNombre = nombres[0];
-      let primerApellido = apellidos[0];
-      let segundoApellido = apellidos[1];
-
-      // Saltar apellidos de dos caracteres
-      apellidos = apellidos.filter(apellido => apellido.length > 2);
-      primerApellido = apellidos[0];
-      segundoApellido = apellidos[1];
-
-      const usuario = (primerNombre.substring(0, 3) + primerApellido.substring(0, 6) + idContrato).toLowerCase().replace(/ñ/g, 'n');
-      const contrasenia = "@" + segundoApellido.substring(0, 7).toLowerCase().replace(/ñ/g, 'n') + idContrato;
-
+      const nombreCliente = data[0].nombre_cliente.split(", ");
+      
+      if (nombreCliente.length === 2)
+      {
+          const nombres = nombreCliente[0].split(" ");
+          let apellidos = nombreCliente[1].split(" ");
+    
+          const primerNombre = nombres[0];
+          let primerApellido = apellidos[0];
+          let segundoApellido = apellidos[1];
+    
+          // Saltar apellidos de dos caracteres
+          apellidos = apellidos.filter(apellido => apellido.length > 2);
+          primerApellido = apellidos[0];
+          segundoApellido = apellidos[1];
+    
+          const usuario = (primerNombre.substring(0, 3) + primerApellido.substring(0, 6) + idContrato).toLowerCase().replace(/ñ/g, 'n');
+          const contrasenia = "@" + segundoApellido.substring(0, 7).toLowerCase().replace(/ñ/g, 'n') + idContrato;
+          document.getElementById("txtUsuario").value = usuario;
+          document.getElementById("txtClaveAcceso").value = contrasenia;
+      }
+      else{
+        document.getElementById("txtUsuario").disabled = false;
+        document.getElementById("txtClaveAcceso").disabled = false;
+      }
+      
       document.getElementById("txtnombreCliente").textContent = ficha.nombre_cliente;
-      document.getElementById("txtUsuario").value = usuario;
-      document.getElementById("txtClaveAcceso").value = contrasenia;
       document.getElementById("txtPlan").value = ficha.paquete;
       document.getElementById("txtPlanCable").value = ficha.paquete;
       document.getElementById("txtIdCaja").value = dataCaja[0].nombre;

@@ -4,12 +4,15 @@ import * as Herramientas from "../js/Herramientas.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
 
+  const slchangeRegistro = document.querySelector("#slchangeRegistro");
+
   let login = await Herramientas.obtenerLogin();
   const userid = login.idUsuario;
   const ruta = `${config.HOST}app/controllers/Persona.ssp.php`;
   const accesos = await Herramientas.permisos();
 
   let idPersonaSeleccionada = -1;
+  let idEmpresaSeleccionada = -1;
 
   window.tablaPersonas = $("#TbPersonas").DataTable({
     dom: `
@@ -78,6 +81,57 @@ document.addEventListener("DOMContentLoaded", async () => {
     lengthChange: false,
   });
 
+  let tablaEmpresas;
+
+  async function inicializarTablaEmpresas() {
+    if ($.fn.DataTable.isDataTable("#TbEmpresas")) return;
+
+    tablaEmpresas = $("#TbEmpresas").DataTable({
+      dom: `<'row'<'col-sm-12 col-md-6'><'col-sm-12 col-md-6 text-end'f>>
+            <'row'<'col-sm-12'tr>>
+            <'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>`,
+      language: {
+        url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json",
+      },
+      processing: true,
+      serverSide: true,
+      ajax: {
+        url: `${config.HOST}app/controllers/Empresa.ssp.php`,
+        type: "GET",
+        dataSrc: function (json) {
+          console.log(json.data); // Para verificar estructura
+          return json.data;
+        }
+      },
+      columns: [
+        { data: 2, title: "Razón Social", className: "text-start" },
+        { data: 3, title: "Nombre Comercial", className: "text-start" },
+        { data: 4, title: "RUC", className: "text-center" },
+        { data: 5, title: "Teléfono", className: "text-center" },
+        {
+          data: 6,
+          title: "Email",
+          className: "text-center",
+          render: function (data) {
+            return data && data.trim() !== "" ? data : '<em>No asignado</em>';
+          }
+        },
+        {
+          data: 1, // ID de empresa
+          title: "Acciones",
+          className: "text-center",
+          orderable: false,
+          searchable: false,
+          render: function (data) {
+            return `<button class="btn btn-warning btn-edit" data-id="${data}">
+                      <i class="fa-regular fa-pen-to-square"></i>
+                    </button>`;
+          }
+        }
+      ]
+    });
+  }
+
   async function cargarMapa() {
     await mapa.iniciarMapa({}, "map", "modal");
 
@@ -102,6 +156,22 @@ document.addEventListener("DOMContentLoaded", async () => {
     await cargarMapa();
   });
 
+  $("#TbEmpresas tbody").on("click", ".btn-edit", async function () {
+    idEmpresaSeleccionada = $(this).data("id");
+
+    let datospersona = await traerdatosEmpresa(idEmpresaSeleccionada);
+
+    console.log(datospersona);
+
+    if (datospersona < 0 || datospersona.length == 0) {
+      showToast("Esta persona no figura como cliente", "WARNING");
+      return;
+    };
+
+    await cargarMapa();
+    $("#modalEditarEmpresa").modal("show");
+  });
+
   document.querySelector("#FormActualizarPersona").addEventListener("submit", async (e) => {
     e.preventDefault();
     if (await ask("¿Desea actualizar a este cliente?")) {
@@ -109,6 +179,21 @@ document.addEventListener("DOMContentLoaded", async () => {
       $("#modalEditarPersona").modal("hide");
     }
   });
+
+  slchangeRegistro.addEventListener("change", async (e) => {
+    const selectedValue = e.target.value;
+
+    if (selectedValue === "Persona") {
+      document.querySelector("#contenedorPersonas").style.display = "block";
+      document.querySelector("#contenedorEmpresas").style.display = "none";
+
+    } else if (selectedValue === "Empresa") {
+      document.querySelector("#contenedorPersonas").style.display = "none";
+      document.querySelector("#contenedorEmpresas").style.display = "block";
+      await inicializarTablaEmpresas();
+    }
+  });
+
 
   /******************************************************************************************/
   /***************************ESTA PARTE ES PARA EL ACTUALIZAR*******************************/
@@ -195,6 +280,46 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     } catch (error) {
       console.error('Error al obtener los datos de la persona:', error);
+      showToast('Hubo un problema al intentar obtener los datos.', 'ERROR');
+    }
+  }
+  async function traerdatosEmpresa(idEmpresa) {
+    try {
+      const response = await fetch(`${config.HOST}app/controllers/Empresa.controllers.php?operacion=buscarClienteIdEmpresa&id=${idEmpresa}`);
+
+      if (!response.ok) {
+        throw new Error('Error en la respuesta del servidor');
+      }
+
+      const data = await response.json();
+
+      if (Array.isArray(data) && data.length > 0) {
+        if (data[0].id_cliente == null && data[0].id_cliente == undefined) {
+          return -1;
+        }
+
+        document.querySelector("#txtRUC").value = data[0].ruc || "";
+        document.querySelector("#txtRazonSocial").value = data[0].razon_social || "";
+        document.querySelector("#txtNombreComercial").value = data[0].nombre_comercial || "";
+        document.querySelector("#txtTelefono").value = data[0].telefono || "";
+        document.querySelector("#txtEmail").value = data[0].email || "";
+        document.querySelector("#txtCoordenadas").value = data[0].coordenadas || "";
+        document.querySelector("#txtDireccionContacto").value = data[0].direccion || "";
+
+        if (data[0].coordenadas) {
+          const buscarCoordenada = document.querySelector("#buscarCoordenada");
+          setTimeout(() => {
+            buscarCoordenada.click();
+          }, 500);
+        }
+
+        return 1;
+      } else {
+        console.error('No se encontraron datos para esta Empresa.');
+        showToast('No se encontraron datos para la Empresa seleccionada.', 'WARNING');
+      }
+    } catch (error) {
+      console.error('Error al obtener los datos de la empresa:', error);
       showToast('Hubo un problema al intentar obtener los datos.', 'ERROR');
     }
   }
