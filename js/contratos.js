@@ -15,7 +15,6 @@ window.addEventListener("DOMContentLoaded", async () => {
   const accesos = await Herramientas.permisos();
   const btnBuscarCoordenadas = document.querySelector("#btnBuscarCoordenadas");
 
-
   let iniciarMapaSi = false;
   let idSector = null;
   let idCaja = null;
@@ -42,11 +41,9 @@ window.addEventListener("DOMContentLoaded", async () => {
       const marcadores = marcadoresNuevos || [];
       const sectoresInfo = {};
 
-      // Limpiar y preparar el select
       $('#slcSector').empty();
       $('#slcSector').append(new Option('Seleccione una caja', '', true, true));
 
-      // Obtener IDs válidos (asegurarse de que todos sean números)
       const cajasIds = marcadores
         .filter(marcador => marcador && marcador.properties && marcador.properties.id)
         .map(marcador => parseInt(marcador.properties.id))
@@ -57,10 +54,8 @@ window.addEventListener("DOMContentLoaded", async () => {
         return;
       }
 
-      // Crear string de IDs separados por comas directamente
       const idsString = cajasIds.join(',');
 
-      // 1. Obtener información de todas las cajas en una sola solicitud GET
       const cajasResponse = await fetch(`${config.HOST}app/controllers/Caja.controllers.php?operacion=cajasBuscarMultiple&ids=${idsString}`);
 
       const cajasData = await cajasResponse.json();
@@ -70,7 +65,6 @@ window.addEventListener("DOMContentLoaded", async () => {
         return;
       }
 
-      // Recopilar IDs de sectores únicos y asegurarse de que sean números
       const sectoresIds = [...new Set(
         cajasData
           .filter(caja => caja && caja.id_sector)
@@ -83,21 +77,17 @@ window.addEventListener("DOMContentLoaded", async () => {
         return;
       }
 
-      // Crear string de IDs de sectores separados por comas
       const sectoresIdsString = sectoresIds.join(',');
 
-      // 2. Obtener información de todos los sectores en una sola solicitud GET
       const sectoresResponse = await fetch(`${config.HOST}app/controllers/Sector.controllers.php?operacion=sectoresBuscarMultiple&ids=${sectoresIdsString}`);
 
       const sectoresData = await sectoresResponse.json();
 
-      // Verificar que tenemos datos de sectores
       if (!sectoresData || !Array.isArray(sectoresData)) {
         $('#slcSector').trigger('change');
         return;
       }
 
-      // Crear mapa de sectores para acceso rápido
       const sectoresMap = {};
       sectoresData.forEach(sector => {
         if (sector && sector.id_sector) {
@@ -105,7 +95,6 @@ window.addEventListener("DOMContentLoaded", async () => {
         }
       });
 
-      // Organizar datos por sector
       cajasData.forEach(caja => {
         if (!caja || !caja.id_sector) return;
 
@@ -127,7 +116,6 @@ window.addEventListener("DOMContentLoaded", async () => {
         });
       });
 
-      // Construir los optgroup y opciones
       for (const idSector in sectoresInfo) {
         const sector = sectoresInfo[idSector];
         const optgroup = $('<optgroup></optgroup>')
@@ -442,14 +430,14 @@ window.addEventListener("DOMContentLoaded", async () => {
       const dataPeriodo = JSON.parse(dataPeriodoini[0].ficha_instalacion);
 
       let eliminarSi = false
-      
+
       console.log(dataPeriodoini);
 
       if (!dataPeriodo || !dataPeriodo.periodo) {
         if (await ask("Este contrato no está instalado. ¿Desea cancelar el Contrato?", "Contratos")) {
           eliminarSi = true;
         }
-      }else if (await dataPeriodo.periodo != null) {
+      } else if (await dataPeriodo.periodo != null) {
         //saber ya se paso la fecha de periodo o no
         const fechaActual = new Date();
         const fechaPeriodo = new Date(dataPeriodo.periodo);
@@ -920,21 +908,33 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  $("#slcTipoServicio").on("change", function () {
-    const txtPrecio = $("#txtPrecio");
-    const divSector = $("#divSector");
+  document.getElementById("slcTipoServicio").addEventListener("change", function () {
+    const txtPrecio = document.getElementById("txtPrecio");
+    const divSector = document.getElementById("divSector");
+    const btnBuscarCoordenadas = document.getElementById("btnBuscarCoordenadas");
 
-    txtPrecio.prop("disabled", false);
-    txtPrecio.val("");
-    txtPrecio.prop("disabled", true);
+    txtPrecio.disabled = false;
+    txtPrecio.value = "";
+    txtPrecio.disabled = true;
 
-    if ($(this).val() === "2") {
-      divSector.attr("hidden", true);
+    const valor = this.value;
+
+    if (valor === "0") {
+      btnBuscarCoordenadas.disabled = true;
+      divSector.hidden = true;
     } else {
-      divSector.removeAttr("hidden");
-      divSector.trigger("change");
+      btnBuscarCoordenadas.disabled = false;
+
+      if (valor === "2") {
+        divSector.hidden = true;
+      } else {
+        divSector.hidden = false;
+        // Dispara manualmente el evento 'change' en divSector
+        divSector.dispatchEvent(new Event("change"));
+      }
     }
   });
+
 
   $("#btnGuardarModalMapa").on("click", function () {
     idSector = mapa.idSector;

@@ -168,7 +168,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     try {
       const dataCable = await FichaInstalacion(idSoporte);
       const fichaInstalacion = JSON.parse(dataCable[0].ficha_instalacion);
-      console.log(fichaInstalacion);
+      console.log( JSON.parse(dataCable[0].ficha_instalacion).cable.periodo);
       const cableFiltrado = fichaInstalacion.cable;
 
       let sintonizadores = null;
@@ -639,7 +639,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     nuevoSoporte.cabl = cableData;
     nuevoSoporte.idcaja = idCaja;
     nuevoSoporte.puerto = txtPuertoCambio.value || 0;
-    nuevoSoporte.periodo = JSON.parse(dataCable[0].ficha_instalacion).periodo || 0;
+    nuevoSoporte.periodo = JSON.parse(dataCable[0].ficha_instalacion).cable.periodo;
 
     return nuevoSoporte;
   }

@@ -204,7 +204,7 @@
                 <input type="text" class="form-control" id="txtCoordenadasMapa" placeholder="Referencia" required disabled>
                 <label for="txtCoordenadasMapa">Coordenadas</label>
               </div>
-              <button class="btn btn-primary" type="button" id="btnBuscarCoordenadas" data-bs-toggle="modal" data-bs-target="#ModalMapa">
+              <button class="btn btn-primary" type="button" id="btnBuscarCoordenadas" data-bs-toggle="modal" data-bs-target="#ModalMapa" disabled>
                 <i class="fa-solid fa-magnifying-glass"></i>
               </button>
             </div>

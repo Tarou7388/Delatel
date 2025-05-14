@@ -12,11 +12,13 @@ date_default_timezone_set('America/Lima');
 $fechaActual = date('d/m/Y H:i:s');
 
 $contrato = new Contrato();
+$caja = new Caja();
+$soporte = new Soporte();
 $resultado = $contrato->obtenerPDF(["id" => $_GET['id']]);
 
+$resultado = $soporte->ultimoSoporteIdContrato(["idContrato" => $_GET['id']]);
 if (empty($resultado)) {
-  echo '<script>alert("No se encontraron registros para el producto seleccionado.");</script>';
-  exit;
+  $resultado = $contrato->obtenerPDF(["id" => $_GET['id']]);
 }
 
 $nombreCliente = $resultado[0]['NombreCliente'];
@@ -31,7 +33,6 @@ $velocidadPaquete = json_decode($velocidadPaqueteJson, true);
 $fichaTecnicaJson = $resultado[0]['FichaTecnica'];
 $fichaTecnica = json_decode($fichaTecnicaJson, true);
 
-$caja = new Caja();
 $cajaid = intval($fichaTecnica['idcaja']);
 $nombrecaja = 'Sin caja asignada';
 

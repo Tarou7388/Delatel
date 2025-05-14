@@ -2,7 +2,7 @@
 
 <link rel="stylesheet" href="../../css/diseñoGlobal.css" />
 <!-- Modal añadir -->
-<div class="modal fade" id="modalSintonizador" tabindex="-1" aria-labelledby="modalSintonizadorLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" >
+<div class="modal fade" id="modalSintonizador" tabindex="-1" aria-labelledby="modalSintonizadorLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -58,7 +58,7 @@
 
 
 <!-- modal listar -->
-<div class="modal fade" id="modalListarSintonizadores" tabindex="-1" aria-labelledby="modalListarSintonizadoresLabel" data-bs-backdrop="static" data-bs-keyboard="false"  aria-hidden="true">
+<div class="modal fade" id="modalListarSintonizadores" tabindex="-1" aria-labelledby="modalListarSintonizadoresLabel" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
@@ -300,6 +300,55 @@
                   <input type="number" class="form-control" id="txtPrecioConectorCambio" placeholder="Precio Conector" disabled required>
                   <label for="txtPrecioConectorCambio">Precio Conector</label>
                 </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row g-2 mb-2">
+            <div class="col-md">
+              <div class="input-group">
+                <div class="form-floating flex-fill">
+                  <input type="number" class="form-control" id="txtCantidadCable" placeholder="Cantidad Cable" required min="0" max="999">
+                  <label for="txtCantidadCable">Cantidad Cable</label>
+                </div>
+                <div class="form-floating">
+                  <input type="number" class="form-control" id="txtPrecioCable" placeholder="Precio Cable" disabled required>
+                  <label for="txtPrecioCable">Precio Cable</label>
+                </div>
+              </div>
+            </div>
+            <div class="col-md">
+              <div class="input-group">
+                <div class="form-floating flex-fill">
+                  <input type="number" class="form-control" id="txtCantidadConector" placeholder="Cantidad Conector" required>
+                  <label for="txtCantidadConector">Cantidad Conector</label>
+                </div>
+                <div class="form-floating">
+                  <input type="number" class="form-control" id="txtPrecioConector" placeholder="Precio Conector" disabled required>
+                  <label for="txtPrecioConector">Precio Conector</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row g-2 mb-2">
+            <div class="col-md">
+              <div class="form-floating">
+                <input type="number" class="form-control" id="txtNumeroSintonizadores" placeholder="Número Sintonizadores" required min="0" max="999">
+                <label for="txtNumeroSintonizadores">Número Sintonizadores</label>
+              </div>
+            </div>
+            <div class="col-md">
+              <div class="form-floating">
+                <input type="number" class="form-control" id="txtCostoAlquilerSintonizador" placeholder="Costo Alquiler Sintonizador" required>
+                <label for="txtCostoAlquilerSintonizador">Costo Alquiler Sintonizador</label>
+              </div>
+            </div>
+          </div>
+          <div class="row g-2 mb-2">
+            <div class="col-md">
+              <div class="form-floating">
+                <textarea class="form-control" id="txtDetalleCosto" style="height: 100px" required></textarea>
+                <label for="txtDetalleCosto">Detalle</label>
               </div>
             </div>
           </div>

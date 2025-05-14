@@ -265,7 +265,7 @@ export async function iniciarMapa(objetoRender = "Cajas", id = "map", renderizad
         } else {
           document.querySelector('#btnGuardarModalMapa').disabled = true;
         }
-        document.querySelector('#btnGuardarModalMapa').disabled = coordenadaCualquiera ? false : true;
+        
       }
     });
   }

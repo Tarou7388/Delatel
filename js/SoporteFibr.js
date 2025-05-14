@@ -869,7 +869,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     nuevoSoporte.idcaja = idCaja;
     nuevoSoporte.vlan = txtCambiosVlan.value;
     nuevoSoporte.tipoentrada = JSON.parse(dataFibra[0].ficha_instalacion).tipoentrada;
-    nuevoSoporte.periodo = JSON.parse(dataFibra[0].ficha_instalacion).periodo || 0;
+    nuevoSoporte.periodo = JSON.parse(dataFibra[0].ficha_instalacion).fibra.periodo;
 
     return nuevoSoporte;
   }
