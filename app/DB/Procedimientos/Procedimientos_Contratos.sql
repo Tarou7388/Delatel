@@ -270,7 +270,7 @@ BEGIN
         tb_sectores s ON c.id_sector = s.id_sector
     LEFT JOIN tb_servicios sv ON JSON_CONTAINS(p.id_servicio, JSON_OBJECT('id_servicio', sv.id_servicio))
     WHERE 
-        c.id_cliente = 811 AND c.inactive_at IS NULL 
+        c.id_cliente = p_id_cliente AND c.inactive_at IS NULL 
         AND NOT (
         c.ficha_instalacion LIKE '{"idcaja":"%"}'
         AND c.ficha_instalacion NOT LIKE '%,"%:%'

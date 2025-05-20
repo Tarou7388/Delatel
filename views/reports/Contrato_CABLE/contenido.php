@@ -67,7 +67,7 @@
         <td><strong>PERIODO:</strong></td>
         <td class="text-center"><?= !empty($fichaTecnica['cable']['periodo']) ? htmlspecialchars($fichaTecnica['cable']['periodo']) : 'N/A'; ?></td>
         <td><strong>SPLITTER:</strong></td>
-        <td class="text-center">CANTIDAD: <?= htmlspecialchars($fichaTecnica['cable']['splitter'][0]['cantidad']); ?></td>
+        <td class="text-center"> <?= htmlspecialchars($fichaTecnica['cable']['splitter'][0]['cantidad']); ?></td>
         <td><strong>TIPO:</strong></td>
         <td class="text-center"> <?= !empty($fichaTecnica['cable']['splitter'][0]['tipo']) ? htmlspecialchars($fichaTecnica['cable']['splitter'][0]['tipo']) : 'N/A'; ?></td>
       </tr>

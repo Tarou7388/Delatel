@@ -192,7 +192,7 @@ END $$
 DROP VIEW IF EXISTS vw_soporte_fichadatos$$
 
 CREATE VIEW vw_soporte_fichadatos AS
-SELECT p.nro_doc, s.id_soporte, s.soporte, s.descripcion_problema, s.descripcion_solucion, s.update_at, sv.tipo_servicio, c.coordenada, sv.servicio, c.id_paquete, c.id_sector
+SELECT p.nro_doc, s.id_soporte, s.soporte, s.descripcion_problema, s.descripcion_solucion, s.update_at, sv.tipo_servicio,s.inactive_at, c.coordenada, sv.servicio, c.id_paquete, c.id_sector
 FROM
     tb_soporte s
     INNER JOIN tb_contratos c ON s.id_contrato = c.id_contrato
@@ -230,15 +230,18 @@ BEGIN
         WHERE nro_doc = p_dni
           AND tipo_servicio = p_servicio
           AND coordenada = p_coordenada
-        ORDER BY update_at DESC;
+        ORDER BY update_at DESC WHERE inactive_at IS NULL AND soporte != '{}';
     ELSE
         SELECT * 
         FROM vw_soporte_fichadatos
-        WHERE nro_doc = p_dni
-          AND tipo_servicio = p_servicio
-        ORDER BY update_at DESC;
+        WHERE nro_doc = 45123518
+          AND tipo_servicio = 'FIBR' 
+        ORDER BY update_at DESC ;
     END IF;
 END $$
+
+CALL spu_buscar_ficha_por_dni (45123518, 'FIBR', null)
+
 DROP PROCEDURE IF EXISTS spu_soporte_eliminarbyId$$
 
 CREATE PROCEDURE spu_soporte_eliminarbyId (

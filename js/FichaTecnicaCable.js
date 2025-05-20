@@ -290,7 +290,6 @@ document.addEventListener("DOMContentLoaded", async () => {
    * @function
    */
   function calcularCostos() {
-
     const cantCable = parseFloat(txtCantCable.value) || 0;
     const precioCable = parseFloat(txtPrecioCable.value) || 0;
     const costoCable = cantCable * precioCable;

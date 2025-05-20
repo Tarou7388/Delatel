@@ -111,7 +111,6 @@
         </section>
 
         <hr>
-
         <!-- Parámetros Técnicos -->
         <h5>Parámetros Técnicos</h5>
         <section>
@@ -206,6 +205,35 @@
               </div>
             </div>
           </div>
+
+          <div class="row g-2 mb-2">
+            <div class="col-md">
+              <div class="form-floating">
+                <input type="number" class="form-control" id="txtNapGpon" placeholder="NAP GPON" min="-70" max="20" required disabled>
+                <label for="txtNapGpon" id="lblnapgpon">NAP GPON</label>
+              </div>
+            </div>
+            <div class="col-md">
+              <div class="form-floating">
+                <input type="number" class="form-control" id="txtNapCatv" placeholder="NAP CATV" min="-70" max="20" required disabled>
+                <label for="txtNapCatv" id="lblnapcatv">NAP CATV</label>
+              </div>
+            </div>
+            <div class="col-md">
+              <div class="form-floating">
+                <input type="number" class="form-control" id="txtCasaGpon" placeholder="Casa GPON" min="-70" max="20" required disabled>
+                <label for="txtCasaGpon" id="lblcasagpon">Casa GPON</label>
+              </div>
+            </div>
+            <div class="col-md">
+              <div class="form-floating">
+                <input type="number" class="form-control" id="txtCasaCatv" placeholder="Casa CATV" min="-70" max="20" required disabled>
+                <label for="txtCasaCatv" id="lblcasacatv">Casa CATV</label>
+              </div>
+            </div>
+          </div>
+
+
 
           <div class="col-md">
             <div class="form-floating">
@@ -306,44 +334,31 @@
 
           <div class="row g-2 mb-2">
             <div class="col-md">
-              <div class="input-group">
-                <div class="form-floating flex-fill">
-                  <input type="number" class="form-control" id="txtCantidadCable" placeholder="Cantidad Cable" required min="0" max="999">
-                  <label for="txtCantidadCable">Cantidad Cable</label>
-                </div>
-                <div class="form-floating">
-                  <input type="number" class="form-control" id="txtPrecioCable" placeholder="Precio Cable" disabled required>
-                  <label for="txtPrecioCable">Precio Cable</label>
-                </div>
-              </div>
-            </div>
-            <div class="col-md">
-              <div class="input-group">
-                <div class="form-floating flex-fill">
-                  <input type="number" class="form-control" id="txtCantidadConector" placeholder="Cantidad Conector" required>
-                  <label for="txtCantidadConector">Cantidad Conector</label>
-                </div>
-                <div class="form-floating">
-                  <input type="number" class="form-control" id="txtPrecioConector" placeholder="Precio Conector" disabled required>
-                  <label for="txtPrecioConector">Precio Conector</label>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row g-2 mb-2">
-            <div class="col-md">
               <div class="form-floating">
-                <input type="number" class="form-control" id="txtNumeroSintonizadores" placeholder="Número Sintonizadores" required min="0" max="999">
-                <label for="txtNumeroSintonizadores">Número Sintonizadores</label>
+                <input type="number" class="form-control" id="txtCambioNapGpon" placeholder="NAP GPON" min="-70" max="20" required>
+                <label for="txtNapGpon">NAP GPON</label>
               </div>
             </div>
             <div class="col-md">
               <div class="form-floating">
-                <input type="number" class="form-control" id="txtCostoAlquilerSintonizador" placeholder="Costo Alquiler Sintonizador" required>
-                <label for="txtCostoAlquilerSintonizador">Costo Alquiler Sintonizador</label>
+                <input type="number" class="form-control" id="txtCambioNapCatv" placeholder="NAP CATV" min="-70" max="20" required>
+                <label for="txtNapCatv">NAP CATV</label>
+              </div>
+            </div>
+            <div class="col-md">
+              <div class="form-floating">
+                <input type="number" class="form-control" id="txtCambioCasaGpon" placeholder="Casa GPON" min="-70" max="20" required>
+                <label for="txtCasaGpon">Casa GPON</label>
+              </div>
+            </div>
+            <div class="col-md">
+              <div class="form-floating">
+                <input type="number" class="form-control" id="txtCambioCasaCatv" placeholder="Casa CATV" min="-70" max="20" required>
+                <label for="txtCasaCatv">Casa CATV</label>
               </div>
             </div>
           </div>
+
           <div class="row g-2 mb-2">
             <div class="col-md">
               <div class="form-floating">
