@@ -146,14 +146,18 @@
         <!-- Segunda Fila -->
 
         <div class="">
-          <div class="col-md-12"> <!-- Ajusta el ancho aquí -->
-            <div class="form-floating">
+            <div class="col-md-12 d-flex align-items-end"> <!-- Ajusta el ancho aquí -->
+            <div class="form-floating flex-grow-1 me-2">
               <select id="slcCaja" class="form-select">
-                <option value="" disabled selected>Seleccione una opción</option>
+              <option value="" disabled selected>Seleccione una opción</option>
               </select>
               <label for="slcCaja">Caja</label>
             </div>
-          </div>
+            <div class="form-floating" style="width: 120px;">
+              <input type="text" name="" id="txtPuertoCambio" class="form-control" placeholder="Puerto">
+              <label for="txtPuertoCambio">Puerto</label>
+            </div>
+            </div>
 
           <div id="parametrosContainer" style="display: none;">
 

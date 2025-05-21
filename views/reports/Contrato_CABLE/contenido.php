@@ -67,7 +67,7 @@
         <td><strong>PERIODO:</strong></td>
         <td class="text-center"><?= !empty($fichaTecnica['cable']['periodo']) ? htmlspecialchars($fichaTecnica['cable']['periodo']) : 'N/A'; ?></td>
         <td><strong>SPLITTER:</strong></td>
-        <td class="text-center"> <?= htmlspecialchars($fichaTecnica['cable']['splitter'][0]['cantidad']); ?></td>
+        <td class="text-center">CANTIDAD: <?= htmlspecialchars($fichaTecnica['cable']['splitter'][0]['cantidad']); ?></td>
         <td><strong>TIPO:</strong></td>
         <td class="text-center"> <?= !empty($fichaTecnica['cable']['splitter'][0]['tipo']) ? htmlspecialchars($fichaTecnica['cable']['splitter'][0]['tipo']) : 'N/A'; ?></td>
       </tr>
@@ -146,6 +146,53 @@
   </table>
 </div>
 
+
+<br>
+
+<!-- Detalles de Costo -->
+<div class="container">
+  <table class="tabla2">
+    <thead>
+      <tr>
+        <td colspan="8" class="text-center thead-cabecera-3"><strong>DETALLES DE COSTO</strong></td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>PAGO SERVICIO:</strong></td>
+        <td colspan="2"></td>
+        <td rowspan="6" colspan="5" class="text-center" style="vertical-align: top;">
+        </td>
+      </tr>
+      <tr>
+        <td><strong>PAGO DIGITAL:</strong></td>
+        <td colspan="2"></td>
+      </tr>
+      <tr>
+        <td><strong>INST. DIGITAL:</strong></td>
+        <td colspan="2"></td>
+      </tr>
+      <tr>
+        <td><strong>SINT. ADIC:</strong></td>
+        <td colspan="2"></td>
+      </tr>
+      <tr>
+        <td><strong>CABLE ADIC:</strong></td>
+        <td colspan="2"></td>
+      </tr>
+      <tr>
+        <td><strong>CONECT ADIC:</strong></td>
+        <td colspan="2"></td>
+      </tr>
+      <tr>
+        <td><strong>TOTAL:</strong></td>
+        <td colspan="2"></td>
+        <td><strong>FORMA PAG:</strong></td>
+        <td colspan="4"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 <div class="container">
   <table class="tabla2">

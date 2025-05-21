@@ -1,3 +1,26 @@
+<?php
+// Unificar datos de instalación: soporte (nuevo) o contrato (antiguo)
+$gpon = null;
+
+if (isset($fichaTecnica['fibr']['cambiosgpon'])) {
+    $gpon = $fichaTecnica['fibr']['cambiosgpon'];
+} elseif (isset($fichaTecnica['fibraoptica'])) {
+    $gpon = [
+        'pppoe' => $fichaTecnica['fibraoptica']['usuario'],
+        'clave' => $fichaTecnica['fibraoptica']['claveacceso'],
+        'potencia' => $fichaTecnica['fibraoptica']['potencia'],
+        'router' => $fichaTecnica['fibraoptica']['router'],
+        'repetidores' => $fichaTecnica['fibraoptica']['repetidores'] ?? [],
+        'catv' => $fichaTecnica['fibraoptica']['router']['catv'] ?? false,
+    ];
+}
+
+$idCaja = $fichaTecnica['idcaja'] ?? 0;
+$vlan = $fichaTecnica['vlan'] ?? '';
+$puerto = $fichaTecnica['puerto'] ?? '';
+$periodo = $fichaTecnica['periodo'] ?? '';
+?>
+
 <h3 class="text-center">CONTROL DE INSTALACIÓN SERVICIO FTTH - DELAFIBER</h3>
 
 <div class="container">
@@ -5,7 +28,7 @@
     <p>
       <?php if (!empty($resultado) && isset($resultado[0])): ?>
         <strong>N°:</strong> <?= htmlspecialchars($resultado[0]['id_contrato']); ?> &nbsp;
-        <strong>Fecha Actual:</strong> <?= htmlspecialchars(date('Y-m-d (H:i)', strtotime($resultado[0]['FechaFichaInstalacion']))); ?> &nbsp;
+        <strong>Fecha Actual:</strong> <?= htmlspecialchars(date('Y-m-d (H:i)', strtotime($resultado[0]['FechaFichaInstalacion'] ?? $periodo))); ?> &nbsp;
       <?php else: ?>
         <strong>Error:</strong> Datos del contrato no disponibles.
       <?php endif; ?>
@@ -67,36 +90,36 @@
       </tr>
     </thead>
     <tbody>
-      <?php if (!empty($fichaTecnica['fibraoptica'])): ?>
+      <?php if (!empty($gpon)): ?>
         <tr>
           <td><strong>USUARIO:</strong></td>
-          <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['usuario']); ?></td>
+          <td class="text-center"><?= htmlspecialchars($gpon['pppoe']); ?></td>
           <td><strong>MARCA:</strong></td>
-          <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['router']['marca']); ?></td>
+          <td class="text-center"><?= htmlspecialchars($gpon['router']['marca']); ?></td>
         </tr>
         <tr>
           <td><strong>CLAVE:</strong></td>
-          <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['claveacceso']); ?></td>
+          <td class="text-center"><?= htmlspecialchars($gpon['clave']); ?></td>
           <td><strong>BANDA:</strong></td>
-          <td class="text-center"><?= htmlspecialchars(implode(", ", $fichaTecnica['fibraoptica']['router']['banda'])); ?></td>
+          <td class="text-center"><?= htmlspecialchars(is_array($gpon['router']['banda']) ? implode(", ", $gpon['router']['banda']) : $gpon['router']['banda']); ?></td>
         </tr>
         <tr>
           <td><strong>VLAN:</strong></td>
-          <td class="text-center"><?= htmlspecialchars($fichaTecnica['vlan']); ?></td>
+          <td class="text-center"><?= htmlspecialchars($vlan); ?></td>
           <td><strong>N° ANTENA:</strong></td>
-          <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['router']['numeroantena']); ?></td>
+          <td class="text-center"><?= htmlspecialchars($gpon['router']['numeroantena']); ?></td>
         </tr>
         <tr>
           <td><strong>SSID:</strong></td>
-          <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['router']['ssid']); ?></td>
+          <td class="text-center"><?= htmlspecialchars($gpon['router']['ssid']); ?></td>
           <td><strong>CATV:</strong></td>
-          <td class="text-center"><?= $fichaTecnica['fibraoptica']['router']['catv'] ? 'Sí' : 'No'; ?></td>
+          <td class="text-center"><?= $gpon['router']['catv'] ? 'Sí' : 'No'; ?></td>
         </tr>
         <tr>
           <td><strong>SEGURIDAD:</strong></td>
-          <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['router']['seguridad']); ?></td>
+          <td class="text-center"><?= htmlspecialchars($gpon['router']['seguridad']); ?></td>
           <td><strong>MAC:</strong></td>
-          <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['router']['codigobarra']) ?></td>
+          <td class="text-center"><?= htmlspecialchars($gpon['router']['codigobarra']); ?></td>
         </tr>
       <?php else: ?>
         <tr>
@@ -115,40 +138,36 @@
       </tr>
     </thead>
     <tbody>
-      <?php if (!empty($fichaTecnica['fibraoptica'])): ?>
+      <?php if (!empty($gpon)): ?>
         <tr>
           <td><strong>IP:</strong></td>
-          <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['router']['ip']); ?></td>
+          <td class="text-center"><?= htmlspecialchars($gpon['router']['ip']); ?></td>
           <td><strong>POTENCIA:</strong></td>
-          <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['potencia']); ?></td>
+          <td class="text-center"><?= htmlspecialchars($gpon['potencia']); ?></td>
         </tr>
         <tr>
           <td><strong>USUARIO:</strong></td>
-          <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['router']['ingresouserrouter']); ?></td>
+          <td class="text-center"><?= htmlspecialchars($gpon['router']['ingresouserrouter']); ?></td>
           <td><strong>CLAVE DE ACCESO:</strong></td>
-          <td class="text-center"><?= htmlspecialchars($fichaTecnica['fibraoptica']['router']['ingresopass']); ?></td>
+          <td class="text-center"><?= htmlspecialchars($gpon['router']['ingresopass']); ?></td>
         </tr>
         <tr>
           <td><strong>CAJA:</strong></td>
-          <td class="text-center">
-            <?php
-            echo htmlspecialchars($nombrecaja) . "(" . $fichaTecnica['idcaja'] . ")";
-            ?>
-          </td>
+          <td class="text-center"><?= htmlspecialchars($nombrecaja) . " ($idCaja)"; ?></td>
           <td><strong>PUERTO:</strong></td>
-          <td class="text-center"><?= htmlspecialchars($fichaTecnica['puerto']); ?></td>
+          <td class="text-center"><?= htmlspecialchars($puerto); ?></td>
         </tr>
-        <?php if (!empty($fichaTecnica['fibraoptica']['detalles'])): ?>
+        <?php if (!empty($gpon['detalles'] ?? '')): ?>
           <tr>
             <td colspan="4" class="text-center"><strong>DETALLES:</strong></td>
           </tr>
           <tr>
-            <td colspan="4"><?= htmlspecialchars($fichaTecnica['fibraoptica']['detalles']); ?></td>
+            <td colspan="4"><?= htmlspecialchars($gpon['detalles']); ?></td>
           </tr>
         <?php endif; ?>
         <tr>
           <td><strong>TECNICO:</strong></td>
-          <td colspan="3"><?= htmlspecialchars($resultado[0]['NombreTecnicoFicha']); ?></td>
+          <td colspan="3"><?= htmlspecialchars($resultado[0]['NombreTecnicoFicha'] ?? ''); ?></td>
         </tr>
       <?php else: ?>
         <tr>
@@ -161,8 +180,8 @@
 
 <div class="container">
   <table class="tabla2">
-    <?php if (!empty($fichaTecnica['fibraoptica']['repetidores'])): ?>
-      <?php foreach ($fichaTecnica['fibraoptica']['repetidores'] as $repetidor): ?>
+    <?php if (!empty($gpon['repetidores'])): ?>
+      <?php foreach ($gpon['repetidores'] as $repetidor): ?>
         <thead>
           <tr>
             <td colspan="6" class="text-center thead-cabecera"><strong>EQUIPOS ADICIONALES WIFI</strong></td>
@@ -195,13 +214,12 @@
           <td colspan="6" class="text-center">No Hay Repetidores Adicionales.</td>
         </tr>
       <?php endif; ?>
-        </tbody>
+    </tbody>
   </table>
 </div>
 
 <br>
 
-<!-- Detalles de Costo -->
 <div class="container">
   <table class="tabla2">
     <thead>
@@ -213,8 +231,7 @@
       <tr>
         <td><strong>PAGO SERVICIO:</strong></td>
         <td colspan="2"></td>
-        <td rowspan="6" colspan="5" class="text-center" style="vertical-align: top;">
-        </td>
+        <td rowspan="6" colspan="5" class="text-center" style="vertical-align: top;"></td>
       </tr>
       <tr>
         <td><strong>PAGO DIGITAL:</strong></td>

@@ -258,7 +258,7 @@
             </div>
             <div class="col-md">
               <div class="form-floating">
-                <input type="number" class="form-control" id="txtPuertoCambio" placeholder="Puerto" required>
+                <input type="number" class="form-control" id="txtPuertoCambio" placeholder="Puerto" min="0" max="16" required>
                 <label for="txtPuertoCambio">Puerto</label>
               </div>
             </div>

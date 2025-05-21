@@ -223,24 +223,25 @@ BEGIN
     FROM vw_soporte_fichadatos
     WHERE nro_doc = p_dni
       AND tipo_servicio = p_servicio;
-    
-    IF resultado_count > 1 THEN
+
+    -- Verificamos que haya más de un resultado y que la coordenada NO esté vacía ni nula
+    IF resultado_count > 1 AND p_coordenada IS NOT NULL AND p_coordenada != '' THEN
         SELECT * 
         FROM vw_soporte_fichadatos
         WHERE nro_doc = p_dni
           AND tipo_servicio = p_servicio
           AND coordenada = p_coordenada
-        ORDER BY update_at DESC WHERE inactive_at IS NULL AND soporte != '{}';
+          AND inactive_at IS NULL
+        ORDER BY update_at DESC;
     ELSE
         SELECT * 
         FROM vw_soporte_fichadatos
-        WHERE nro_doc = 45123518
-          AND tipo_servicio = 'FIBR' 
-        ORDER BY update_at DESC ;
+        WHERE nro_doc = p_dni
+          AND tipo_servicio = p_servicio
+          AND inactive_at IS NULL
+        ORDER BY update_at DESC;
     END IF;
 END $$
-
-CALL spu_buscar_ficha_por_dni (45123518, 'FIBR', null)
 
 DROP PROCEDURE IF EXISTS spu_soporte_eliminarbyId$$
 

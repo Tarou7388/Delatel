@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const lblConector = document.getElementById("lblConector");
   const lblPrecioConector = document.getElementById("lblPrecioConector");
   const lblEstadoInicial = document.getElementById("lblEstadoInicial");
+  const txtDetalleCosto = document.getElementById("txtDetalleCosto");
 
   const txtNapGpon = document.getElementById("txtNapGpon");
   const txtNapCatv = document.getElementById("txtNapCatv");
@@ -110,6 +111,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
 
       txtPotencia.value = dataCambioCable.potencia || "";
+      txtNapGpon.value = dataCambioCable.costo.nap.gpon;
+      txtNapCatv.value = dataCambioCable.costo.nap.catv;
+      txtCasaGpon.value = dataCambioCable.costo.casa.gpon;
+      txtCasaCatv.value = dataCambioCable.costo.casa.catv;
+
+      txtDetalleCosto.value = dataCambioCable.costo.cablecosto.detalle;
 
       infoSintonizadores = await contabilizarSintonizadores(dataCambioCable.sintonizadores);
       sintonizadoresData = infoSintonizadores;
@@ -165,7 +172,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   async function CargardatosInstalacion(doc, idSoporte) {
-    console.log("CargardatosInstalacion", doc, idSoporte);
     try {
       const respuestaProblema = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
       const dataProblema = await respuestaProblema.json();
@@ -195,6 +201,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       txtNapCatv.value = fichaInstalacion.costo.nap.catv;
       txtCasaGpon.value = fichaInstalacion.costo.casa.gpon;
       txtCasaCatv.value = fichaInstalacion.costo.casa.catv;
+
+      txtDetalleCosto.value = fichaInstalacion.costo.cablecosto.detalle;
 
       let sintonizadores = null;
       if (cableFiltrado.sintonizadores) {
@@ -339,7 +347,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       slcSpliterCambio: slcSpliter.value,
       txtCableCambio: txtCable.value,
       txtPuertoCambio: txtPuerto.value,
-      txtConectorCambio: txtConector.value
+      txtConectorCambio: txtConector.value,
+      txtCambioCasaCatv: txtCasaCatv.value,
+      txtCambioCasaGpon: txtCasaGpon.value,
+      txtCambioNapCatv: txtNapCatv.value,
+      txtCambioNapGpon: txtNapGpon.value,
     };
 
     for (const [id, value] of Object.entries(parametrosTecnicos)) {
@@ -367,7 +379,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       'slcSpliterCambio',
       'txtCableCambio',
       'txtPuertoCambio',
-      'txtConectorCambio'
+      'txtConectorCambio',
+      'txtCambioCasaCatv',
+      'txtCambioCasaGpon',
+      'txtCambioNapCatv',
+      'txtCambioNapGpon',
+
     ];
 
     camposCambio.forEach(id => {
@@ -616,6 +633,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const nuevoSoporte = { ...soporte };
     const dataCable = await FichaInstalacion(idSoporte);
 
+    calcularCostos();
+
     const cableData = {
       parametroscable: {
         potencia: parseInt(document.getElementById("txtPotencia").value) || 0,
@@ -645,7 +664,8 @@ document.addEventListener("DOMContentLoaded", async () => {
           nap: {
             gpon: txtNapGpon.value,
             catv: txtNapCatv.value
-          }
+          },
+          pagoinstalacion:JSON.parse(dataCable[0].ficha_instalacion).cable.pagoinstalacion
         }
       },
       cambioscable: {
@@ -673,8 +693,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             costoalquilersintotizador: 40,
             costocable: CostosCable,
             costoconector: CostosConector,
-            detalle: document.getElementById("txtDetalleCosto").value,
-            costoalquilersintotizador: parseInt(document.getElementById("txtSintonizadorCambio").value) * 40
+            detalle: txtDetalleCosto.value,
+            costoalquilersintotizadortotal: parseInt(document.getElementById("txtSintonizadorCambio").value) * 40
           },
           casa: {
             gpon: txtCambioCasaGpon.value,
@@ -683,7 +703,8 @@ document.addEventListener("DOMContentLoaded", async () => {
           nap: {
             gpon: txtCambioNapGpon.value,
             catv: txtCambioNapCatv.value
-          }
+          },
+          pagoinstalacion:JSON.parse(dataCable[0].ficha_instalacion).cable.pagoinstalacion
         }
       }
     };
@@ -691,8 +712,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     idCaja = slcCaja.value;
 
     nuevoSoporte.cabl = cableData;
-    nuevoSoporte.idcaja = idCaja;
-    nuevoSoporte.puerto = txtPuertoCambio.value || 0;
+    nuevoSoporte.idcaja = parseInt(idCaja);
+    nuevoSoporte.puerto = parseInt(txtPuertoCambio.value) || 0;
     nuevoSoporte.periodo = JSON.parse(dataCable[0].ficha_instalacion).cable.periodo;
 
     return nuevoSoporte;

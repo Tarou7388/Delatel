@@ -13,6 +13,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   let login = await Herramientas.obtenerLogin();
   let idSector = -1;
 
+  const txtPuertoCambio = document.getElementById("txtPuertoCambio");
+
   btnInformacion.addEventListener('click', function () {
     if (cardContainer.style.display === 'none' || cardContainer.style.display === '') {
       mostrarCard();
@@ -384,7 +386,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const doc = urlParams.get("doc");
     const tiposervicio = urlParams.get("tiposervicio");
-    const coordenada = urlParams.get("coordenada");
+    
+    let coordenada = urlParams.get("coordenada");
+    if (coordenada === null || coordenada === 'null' || coordenada.trim() === '') {
+      coordenada = null;
+    }
+    
     const respuesta = await FichaSoporteporDocServCoordenada(doc, tiposervicio, coordenada);
 
     try {
@@ -430,7 +437,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const fibr = data.fibr;
     console.log(data);
 
-
     const dataFibra = await FichaInstalacion(idSoporte);
     const fichaInstalacion = JSON.parse(dataFibra[0].ficha_instalacion);
 
@@ -447,6 +453,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     txtPotencia.value = fibr.cambiosgpon.potencia;
     chkCatv.checked = fibr.cambiosgpon.catv;
     txtVlan.value = data.vlan;
+
+    txtPuertoCambio.value = fibr.puerto;
 
     txtCambiosPppoe.value = fibr.cambiosgpon.pppoe;
     txtCambiosClave.value = fibr.cambiosgpon.clave;
@@ -654,6 +662,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const dataFibra = await FichaInstalacion(idSoporte);
       const fichaInstalacion = JSON.parse(dataFibra[0].ficha_instalacion);
       const fibraFiltrado = fichaInstalacion.fibraoptica;
+      txtPuertoCambio.value = fichaInstalacion.puerto;
 
       const response = await fetch(
         `${config.HOST}app/controllers/Paquete.controllers.php?operacion=buscarPaqueteId&idPaquete=${dataFibra[0].id_paquete}`
@@ -869,7 +878,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     nuevoSoporte.idcaja = idCaja;
     nuevoSoporte.vlan = txtCambiosVlan.value;
     nuevoSoporte.tipoentrada = JSON.parse(dataFibra[0].ficha_instalacion).tipoentrada;
-    nuevoSoporte.periodo = JSON.parse(dataFibra[0].ficha_instalacion).fibra.periodo;
+    nuevoSoporte.periodo = JSON.parse(dataFibra[0].ficha_instalacion).periodo || 0;
+    nuevoSoporte.puerto = parseInt(txtPuertoCambio.value) || 0;
 
     return nuevoSoporte;
   }
