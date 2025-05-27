@@ -626,4 +626,4 @@ INSERT INTO `tb_contratos` (`id_cliente`, `id_paquete`, `id_sector`, `id_usuario
 (460, 58, 33, 1, 1, 'Av. Arenales s/n', NULL, NULL, '-1325328  -7607216', '2023-01-17', '2023-01-17', NULL, NULL, '2025-03-21 12:17:03', NULL, NULL, NULL, NULL);
 
 
-SELECT
+ALTER TABLE tb_productos DROP INDEX producto_uk_codigo;

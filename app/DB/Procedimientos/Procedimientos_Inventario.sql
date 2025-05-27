@@ -74,7 +74,7 @@ BEGIN
         p.inactive_at IS NULL;
 END $$
 
-
+DELIMITER $$
 DROP PROCEDURE IF EXISTS spu_productos_buscar_barraSintonizador$$
 
 CREATE PROCEDURE spu_productos_buscar_barraSintonizador(
@@ -93,7 +93,7 @@ BEGIN
     INNER JOIN 
         tb_tipoproducto t ON p.id_tipo = t.id_tipo
     WHERE
-        p.codigo_barra = p_codigo_barra
+        p.codigo_barra LIKE CONCAT(p_codigo_barra, '%')
     AND
         p.inactive_at IS NULL AND t.tipo_nombre = 'Sintonizador';
 END $$
@@ -117,7 +117,7 @@ BEGIN
     INNER JOIN 
         tb_tipoproducto t ON p.id_tipo = t.id_tipo
     WHERE
-        p.codigo_barra = p_codigo_barra
+        p.codigo_barra LIKE CONCAT(p_codigo_barra, '%')
     AND
         p.inactive_at IS NULL AND t.tipo_nombre = 'Repetidor';
 END $$
@@ -139,11 +139,38 @@ BEGIN
     INNER JOIN 
         tb_tipoproducto t ON p.id_tipo = t.id_tipo
     WHERE
-        p.codigo_barra = p_codigo_barra
+        p.codigo_barra LIKE CONCAT(p_codigo_barra, '%')
     AND
         p.inactive_at IS NULL AND t.tipo_nombre = 'Router' OR t.tipo_nombre = 'ONT';
 END $$
 
+DROP PROCEDURE IF EXISTS spu_productos_listar_tiposproductos$$
+CREATE PROCEDURE spu_productos_listar_tiposproductos(
+    IN codigobarra VARCHAR(120),
+    IN tipo_producto VARCHAR(30)
+)
+BEGIN
+    SELECT 
+        p.id_producto,
+        p.modelo,
+        p.precio_actual,
+        m.marca,
+        t.tipo_nombre
+    FROM 
+        tb_productos p
+    INNER JOIN 
+        tb_marca m ON p.id_marca = m.id_marca
+    INNER JOIN 
+        tb_tipoproducto t ON p.id_tipo = t.id_tipo
+    INNER JOIN 
+        tb_unidadmedida u ON p.id_unidad = u.id_unidad
+    WHERE 
+        p.codigo_barra LIKE CONCAT(codigobarra, '%')
+    AND 
+        t.tipo_nombre = tipo_producto
+    AND 
+        p.inactive_at IS NULL;
+END $$
 
 /*/************************************************************************************************/
 /*/************************************************************************************************/

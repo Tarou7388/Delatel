@@ -14,6 +14,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   const txtNota = document.querySelector("#txtNota");
   const accesos = await Herramientas.permisos();
   const btnBuscarCoordenadas = document.querySelector("#btnBuscarCoordenadas");
+  const slcSector = document.querySelector("#slcSector");
 
   let iniciarMapaSi = false;
   let idSector = null;
@@ -719,6 +720,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 
   async function validarCampos() {
+    console.log(slcSector.value);
     if (
       nroDoc.value == "" ||
       nombre.value == "" ||
@@ -727,7 +729,10 @@ window.addEventListener("DOMContentLoaded", async () => {
       direccion.value == "" ||
       referencia.value == "" ||
       coordenada.value == "" ||
-      slcPaquetes.value == "0"
+      slcPaquetes.value == "0" ||
+      slcSector.value == "" ||
+      slcSector.value == null ||
+      slcSector.value == "0" 
     ) {
       return false;
     } else {
@@ -919,16 +924,21 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     const valor = this.value;
 
+    divSector.dispatchEvent(new Event("change"));
+
     if (valor === "0") {
       btnBuscarCoordenadas.disabled = true;
       divSector.hidden = true;
+      divSector.setAttribute('required', 'required');
     } else {
       btnBuscarCoordenadas.disabled = false;
 
       if (valor === "2") {
         divSector.hidden = true;
+        divSector.removeAttribute('required');
       } else {
         divSector.hidden = false;
+        divSector.setAttribute('required', 'required');
         // Dispara manualmente el evento 'change' en divSector
         divSector.dispatchEvent(new Event("change"));
       }

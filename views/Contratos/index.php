@@ -216,10 +216,10 @@
 
           <div class="col-12 col-md-4 mb-2 mt-2">
             <div class="form-floating" id="divSector">
-              <select class="form-select select2me" id="slcSector" aria-label=Sectores disabled>
+              <select class="form-select select2me" id="slcSector" aria-label=Sectores disabled required>
                 <option value="0" disabled selected>Seleccione</option>
               </select>
-              <label for="slcSector" class="form-label">Sectores</label>
+              <label for="slcSector" class="form-label">Sector - Caja</label>
             </div>
           </div>
 
