@@ -161,14 +161,14 @@ class Producto extends Conexion
 
   public function BuscarProductoBarraSintonizador($params = [])
   {
-    $sql = "CALL	spu_productos_buscar_barraSintonizador(?)";
+    $sql = "CALL spu_productos_buscar_barraSintonizador(?)";
     $values = array($params['codigoBarra']);
     return $this->consultaParametros($sql, $values);
   }
 
   public function BuscarProductoBarraRepetidor($params = [])
   {
-    $sql = "CALL	spu_productos_buscar_barraRepetidor(?)";
+    $sql = "CALL spu_productos_buscar_barraRepetidor(?)";
     $values = array($params['codigoBarra']);
     return $this->consultaParametros($sql, $values);
   }
@@ -206,6 +206,16 @@ class Producto extends Conexion
     $sql = "SELECT * FROM vw_tipo_productos WHERE id_tipo = ?";
     $values = array(
       $params['idTipo']
+    );
+    return $this->consultaParametros($sql, $values);
+  }
+
+  public function listarProductosPorTipo($params = [])
+  {
+    $sql = "CALL spu_productos_listar_tiposproductos(?,?)";
+    $values = array(
+      $params['codigoBarra'],
+      $params['tipoProducto']
     );
     return $this->consultaParametros($sql, $values);
   }

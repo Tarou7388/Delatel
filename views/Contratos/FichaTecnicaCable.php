@@ -17,14 +17,11 @@ $idContrato = $_GET['idContrato'];
       </div>
       <div class="modal-body" id="mdlSintotizadorBody">
         <div class="mb-2">
-          <div class="input-group">
-            <div class="form-floating">
-              <select class="form-select" id="txtCodigoBarraSintonizador" style="width: 100%;">
-              </select>
-              <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
-              <label for="txtCodigoBarraSintonizador">Código de Barra <span class="required-asterisk" style="color: red;">*</span></label>
-            </div>
-            <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
+          <div class="form-floating">
+            <select class="form-select select2me" id="slcCodigoBarraSintonizador" style="width: 100%;">
+            </select>
+            <label for="slcCodigoBarraSintonizador">Sintonizador</label>
+            <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
           </div>
         </div>
         <div class="mb-2">
@@ -285,7 +282,7 @@ $idContrato = $_GET['idContrato'];
           <div class="col-md-12">
             <div class="form-floating">
               <textarea class="form-control" id="txtDetalle" placeholder="Detalles" style="height: 100px; width: 100%;"></textarea>
-              <label for="lblDetalle">Detalles</label>
+              <label for="lblDetalle">Detalles<span class="required-asterisk" style="color: red;">*</span></label>
             </div>
           </div>
         </div>

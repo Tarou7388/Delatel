@@ -25,12 +25,12 @@ if (isset($_POST['operacion'])) {
 			];
 			$estado = $producto->registrarProducto($datos);
 			echo json_encode(["Guardado" => $estado]);
-			break;	
+			break;
 	}
 }
 
-if($_SERVER['REQUEST_METHOD'] === 'POST'){
-	if(isset($input['operacion'])){
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+	if (isset($input['operacion'])) {
 		switch ($input['operacion']) {
 			case 'registrarTipoProducto':
 				$datos = [
@@ -76,6 +76,15 @@ if (isset($_GET['operacion'])) {
 			break;
 		case "buscarTipoProductobyId":
 			$resultado = $producto->listarTipoProductoPorId(['idTipo' => $_GET['idTipo']]);
+			echo json_encode($resultado);
+			break;
+		case "listarProductosPorTipo":
+			$resultado = $producto->listarProductosPorTipo(
+				[
+					"codigoBarra" => Herramientas::sanitizarEntrada($_GET['codigoBarra']),
+					"tipoProducto" => Herramientas::sanitizarEntrada($_GET['tipoProducto'])
+				]
+			);
 			echo json_encode($resultado);
 			break;
 	}

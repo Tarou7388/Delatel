@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   let jsonData = {};
   let jsonCable = {};
   let idCaja = 0;
+  let codigoBarraSintonizador = "";
 
 
   document.getElementById("txtFecha").value = new Date().toISOString().split('T')[0];
@@ -329,7 +330,10 @@ document.addEventListener("DOMContentLoaded", async () => {
    * @returns {Promise<void>} Una promesa que se resuelve cuando la cantidad de sintonizadores se ha actualizado.
    */
   async function AgregarSintotizador() {
-    const txtCodigoBarraSintonizador = document.getElementById("txtCodigoBarraSintonizador").value;
+
+    const slcCodigoBarraSintonizador = document.getElementById("slcCodigoBarraSintonizador").options[
+      document.getElementById("slcCodigoBarraSintonizador").selectedIndex
+    ]?.text?.split(" - ")[0] || "";
     const txtMarcaSintonizador = document.getElementById("txtMarcaSintonizador").value;
     const txtModeloSintonizador = document.getElementById("txtModeloSintonizador").value;
     const txtSerieSintonizador = document.getElementById("txtSerieSintonizador").value;
@@ -337,7 +341,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     numeroSintotizadores++;
     const jsonSintotizadorNuevo = {
       numero: numeroSintotizadores,
-      codigobarra: txtCodigoBarraSintonizador,
+      codigobarra: slcCodigoBarraSintonizador,
       marca: txtMarcaSintonizador,
       modelo: txtModeloSintonizador,
       serie: txtSerieSintonizador,
@@ -352,7 +356,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           <p class="card-text" style="color: gray;">
             Código de Barra:
             <span style="background-color: #d3d3d3; border-radius: 10px; padding: 2px 5px; color: black;">
-              ${txtCodigoBarraSintonizador}
+              ${slcCodigoBarraSintonizador}
             </span>
           </p>
           <p class="card-text" style="color: gray;">
@@ -556,11 +560,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
   document.getElementById("btnAñadirSintotizador").addEventListener("click", async function () {
-    const codigoBarra = document.getElementById("txtCodigoBarraSintonizador").value.trim();
     const serie = document.getElementById("txtSerieSintonizador").value.trim();
 
     const campos = [
-      { id: "txtCodigoBarraSintonizador", valor: codigoBarra },
+      { id: "slcCodigoBarraSintonizador", valor: codigoBarraSintonizador },
       { id: "txtSerieSintonizador", valor: serie }
     ];
 
@@ -601,38 +604,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
 
-  document.getElementById('txtCodigoBarraSintonizador').addEventListener('input', async function () {
-    const codigoBarra = this.value.trim();
-
-    if (codigoBarra === "") {
-      return;
-    }
-
-    try {
-      const respuesta = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarraSintonizador&codigoBarra=${codigoBarra}`);
-      const resultado = await respuesta.json();
-
-      console.log('Resultado:', resultado);
-
-      if (Array.isArray(resultado) && resultado.length > 0) {
-        const producto = resultado[0];
-        if (producto?.marca && producto?.modelo && producto?.precio_actual) {
-          document.getElementById("txtMarcaSintonizador").value = producto.marca;
-          document.getElementById("txtModeloSintonizador").value = producto.modelo;
-          document.getElementById("txtPrecioSintonizador").value = producto.precio_actual;
-          showToast(`Producto encontrado: ${producto.marca} - ${producto.modelo} - Precio: ${producto.precio_actual}`, "SUCCESS");
-        } else {
-          showToast("Producto no encontrado o datos incompletos", "INFO");
-        }
-      } else {
-        showToast("Producto no encontrado", "INFO");
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      showToast("Hubo un error al escanear el código de barras.", "ERROR");
-    }
-  });
-
   txtCantCable.addEventListener("input", calcularCostos);
   txtCantConector.addEventListener("input", calcularCostos);
 
@@ -646,7 +617,54 @@ document.addEventListener("DOMContentLoaded", async () => {
   txtCatvCasa.addEventListener("input", validarValorRango);
 
 
-  $(".select2me").select2({ theme: "bootstrap-5", allowClear: true });
+  // Inicializa select2
+  // Inicializar Select2 con búsqueda dinámica
+  $("#slcCodigoBarraSintonizador").select2({
+    theme: "bootstrap-5",
+    dropdownParent: $("#mdlSintotizadorBody"), // importante para modales
+    placeholder: "Buscar producto...",
+    allowClear: true,
+    ajax: {
+      url: `${config.HOST}app/controllers/Producto.controllers.php`,
+      dataType: "json",
+      delay: 300,
+      data: function (params) {
+        return {
+          operacion: "listarProductosPorTipo",
+          tipoProducto: "Sintonizador",
+          codigoBarra: params.term || ""
+        };
+      },
+      processResults: function (data) {
+        return {
+          results: Array.isArray(data)
+            ? data.map(item => ({
+              id: item.id_producto,
+              text: `${item.codigo_barra} - ${item.precio_actual} - ${item.marca}`,
+              data: item
+            }))
+            : []
+        };
+      },
+      cache: true
+    }
+  });
+
+  $("#slcCodigoBarraSintonizador").on("select2:select", function (e) {
+    const selected = e.params.data.data;
+    codigoBarraSintonizador = selected.codigo_barra;
+
+    $("#txtMarcaSintonizador").val(selected.marca);
+    $("#txtModeloSintonizador").val(selected.modelo);
+    $("#txtPrecioSintonizador").val(selected.precio_actual);
+  });
+
+  $("#slcCodigoBarraSintonizador").on("select2:clear", function () {
+    $("#txtMarcaSintonizador").val("");
+    $("#txtModeloSintonizador").val("");
+    $("#txtPrecioSintonizador").val("");
+  });
+
   $(".select2me").parent("div").children("span").children("span").children("span").css("height", " calc(3.5rem + 2px)");
   $(".select2me").parent("div").children("span").children("span").children("span").children("span").css("margin-top", "18px");
   $(".select2me").parent("div").find("label").css("z-index", "1");

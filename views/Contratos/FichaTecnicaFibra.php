@@ -61,13 +61,10 @@ $idContrato = $_GET['idContrato'];
               </div>
             </div>
             <div class="col-12 col-md-6">
-              <div class="input-group">
-                <div class="form-floating">
-                  <input type="text" class="form-control" id="txtCodigoBarrasRepetidor" placeholder="Codigo de barras">
-                  <label for="lblCodigoBarrasRepetidor">Codigo de barras <span class="required-asterisk" style="color: red;">*</span></label>
-                  <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
-                </div>
-                <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
+              <div class="form-floating" id="divSector">
+                <select class="form-select select2me" id="slcCodigoBarrasRepetidor" aria-label=Repetidores required>
+                </select>
+                <label for="slcCodigoBarrasRepetidor" class="form-label">Repetidor</label>
               </div>
             </div>
           </div>
@@ -216,18 +213,17 @@ $idContrato = $_GET['idContrato'];
                 </div>
               </div>
 
-              <!-- Fila: Información del dispositivo -->
+              <!-- Fila: Información del dispositivo slcCodigoBarraRouterOnt-->
               <div class="row g-2 mb-3">
-                <div class="col-12 col-md-4">
-                  <div class="input-group">
-                    <div class="form-floating">
-                      <input type="text" class="form-control" id="txtCodigoBarra" placeholder="Código de Barras">
-                      <label for="txtCodigoBarra">Código de Barras <span class="required-asterisk" style="color: red;">*</span></label>
-                      <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
-                    </div>
-                    <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
+                <div class="col-12 col-md-4 mb-2 mt-2">
+                  <div class="form-floating" id="divSector">
+                    <select class="form-select select2me" id="slcCodigoBarraRouterOnt" aria-label=Sectores required>
+
+                    </select>
+                    <label for="slcCodigoBarraRouterOnt" class="form-label">Router/ONT</label>
                   </div>
                 </div>
+
                 <div class="col-12 col-md-4">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="txtMarca" placeholder="Marca" disabled>
@@ -315,7 +311,7 @@ $idContrato = $_GET['idContrato'];
             <div class="mt-4">
               <div class="form-floating">
                 <textarea type="text" class="form-control" id="txtDetalles" placeholder="Detalles"></textarea>
-                <label for="lblDetalle">Detalles</label>
+                <label for="lblDetalle">Detalles<span class="required-asterisk" style="color: red;">*</span></label>
               </div>
             </div>
           </div>

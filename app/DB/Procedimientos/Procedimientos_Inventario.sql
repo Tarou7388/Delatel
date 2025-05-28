@@ -144,6 +144,7 @@ BEGIN
         p.inactive_at IS NULL AND t.tipo_nombre = 'Router' OR t.tipo_nombre = 'ONT';
 END $$
 
+DELIMITER $$
 DROP PROCEDURE IF EXISTS spu_productos_listar_tiposproductos$$
 CREATE PROCEDURE spu_productos_listar_tiposproductos(
     IN codigobarra VARCHAR(120),
@@ -155,6 +156,7 @@ BEGIN
         p.modelo,
         p.precio_actual,
         m.marca,
+        P.codigo_barra,
         t.tipo_nombre
     FROM 
         tb_productos p
