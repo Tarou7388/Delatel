@@ -141,7 +141,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   function limpiarFormulario(form) {
     const inputs = form.querySelectorAll('input, textarea, select');
     inputs.forEach(input => {
-      input.value = ''; 
+      input.value = '';
     });
   }
 
@@ -411,7 +411,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         jsonRouter[routerIndex].numero = index + 1;
       }
     });
-    numeroRouter = routerCards.length; 
+    numeroRouter = routerCards.length;
   }
 
   async function parametros() {
@@ -437,7 +437,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
 
     jsonParametros = {
-      periodo: txtPeriodo,
       parametros: {
         plan: txtPaquete,
         frecuencia: slcFrecuencia.split(","),
@@ -449,9 +448,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         txrate: txtTxRate,
         rxrate: txtRxRate,
         routers: jsonRouter,
-        repetidores: [],
+        repetidores: []
       },
     }
+    console.log("Parametros:", txtPeriodo);
     jsonData.parametros = jsonParametros.parametros;
   }
 
@@ -707,9 +707,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         const frmAlquiler = document.getElementById('frmAlquiler');
 
         if (formularioLleno(frmVenta) || formularioLleno(frmAlquiler)) {
-          slcOperacion.disabled = true; 
+          slcOperacion.disabled = true;
         } else {
-          slcOperacion.disabled = false; 
+          slcOperacion.disabled = false;
         }
       });
     });
@@ -794,11 +794,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     jsonData.venta = null;
     jsonData.alquilado = null;
+    
+    jsonData.periodo = txtPeriodo.value; 
 
     const tipoOperacion = document.getElementById('slcOperacion').value;
 
     if (tipoOperacion === 'venta') {
-      await venta(); 
+      await venta();
     } else if (tipoOperacion === 'alquiler') {
       await alquilado_prestado();
     } else {
@@ -844,10 +846,21 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   function calcularSubtotal() {
-    const adelanto = parseFloat(document.getElementById('txtAdelantoVenta').value) || 0;
-    const materialAdicional = parseFloat(document.getElementById('txtMaterialAdicionalVenta').value) || 0;
-    const subtotal = adelanto + materialAdicional;
-    document.getElementById('txtSubTotalVenta').value = subtotal.toFixed(2);
+    const txtCostoAntenaVenta = document.getElementById('txtCostoAntenaVenta');
+    const txtCostoRouterVenta = document.getElementById('txtCostoRouterVenta');
+    const txtAdelantoVenta = document.getElementById('txtAdelantoVenta');
+    const txtMaterialAdicionalVenta = document.getElementById('txtMaterialAdicionalVenta');
+    const txtSubTotalVenta = document.getElementById('txtSubTotalVenta');
+
+    const costoAntena = txtCostoAntenaVenta ? parseFloat(txtCostoAntenaVenta.value) || 0 : 0;
+    const costoRouter = txtCostoRouterVenta ? parseFloat(txtCostoRouterVenta.value) || 0 : 0;
+    const adelanto = txtAdelantoVenta ? parseFloat(txtAdelantoVenta.value) || 0 : 0;
+    const materialAdicional = txtMaterialAdicionalVenta ? parseFloat(txtMaterialAdicionalVenta.value) || 0 : 0;
+
+    const subtotal = costoAntena + costoRouter + adelanto + materialAdicional;
+    if (txtSubTotalVenta) {
+      txtSubTotalVenta.value = subtotal.toFixed(2);
+    }
   }
 
   $("#slcBaseParametros").on("change", function () {

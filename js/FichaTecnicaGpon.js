@@ -13,6 +13,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const txtPrecioConector = document.getElementById("txtPrecioConector");
   const txtCostoConector = document.getElementById("txtCostoConector");
 
+  document.getElementById("txtFecha").value = today;
+
   const periodoDate = new Date();
   periodoDate.setMonth(periodoDate.getMonth() + 6);
   const DateFormateado = periodoDate.toISOString().split("T")[0];
@@ -29,6 +31,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   let jsonRepetidor = [];
   let jsonSintotizador = [];
   let idCaja = 0;
+  let codigoRepetidor = "";
+  let codigoRouterONT = "";
+  let codigoBarraSintonizador = "";
 
   const requiredFields = document.querySelectorAll(".form-control");
 
@@ -137,31 +142,30 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       tipoServicio = ficha.tipos_servicio || "";
       const nombreCliente = data[0].nombre_cliente.split(", ");
-      
-      if (nombreCliente.length === 2)
-      {
-          const nombres = nombreCliente[0].split(" ");
-          let apellidos = nombreCliente[1].split(" ");
-    
-          const primerNombre = nombres[0];
-          let primerApellido = apellidos[0];
-          let segundoApellido = apellidos[1];
-    
-          // Saltar apellidos de dos caracteres
-          apellidos = apellidos.filter(apellido => apellido.length > 2);
-          primerApellido = apellidos[0];
-          segundoApellido = apellidos[1];
-    
-          const usuario = (primerNombre.substring(0, 3) + primerApellido.substring(0, 6) + idContrato).toLowerCase().replace(/ñ/g, 'n');
-          const contrasenia = "@" + segundoApellido.substring(0, 7).toLowerCase().replace(/ñ/g, 'n') + idContrato;
-          document.getElementById("txtUsuario").value = usuario;
-          document.getElementById("txtClaveAcceso").value = contrasenia;
+
+      if (nombreCliente.length === 2) {
+        const nombres = nombreCliente[0].split(" ");
+        let apellidos = nombreCliente[1].split(" ");
+
+        const primerNombre = nombres[0];
+        let primerApellido = apellidos[0];
+        let segundoApellido = apellidos[1];
+
+        // Saltar apellidos de dos caracteres
+        apellidos = apellidos.filter(apellido => apellido.length > 2);
+        primerApellido = apellidos[0];
+        segundoApellido = apellidos[1];
+
+        const usuario = (primerNombre.substring(0, 3) + primerApellido.substring(0, 6) + idContrato).toLowerCase().replace(/ñ/g, 'n');
+        const contrasenia = "@" + segundoApellido.substring(0, 7).toLowerCase().replace(/ñ/g, 'n') + idContrato;
+        document.getElementById("txtUsuario").value = usuario;
+        document.getElementById("txtClaveAcceso").value = contrasenia;
       }
-      else{
+      else {
         document.getElementById("txtUsuario").disabled = false;
         document.getElementById("txtClaveAcceso").disabled = false;
       }
-      
+
       document.getElementById("txtnombreCliente").textContent = ficha.nombre_cliente;
       document.getElementById("txtPlan").value = ficha.paquete;
       document.getElementById("txtPlanCable").value = ficha.paquete;
@@ -179,14 +183,18 @@ document.addEventListener("DOMContentLoaded", async () => {
   })();
 
   async function fibraOptica() {
+    const txtPuerto = document.querySelector("#txtPuerto").value;
     const txtUsuario = document.querySelector("#txtUsuario").value;
     const txtClaveAcceso = document.querySelector("#txtClaveAcceso").value;
-    const txtPeriodo = document.querySelector("#txtPeriodo").value;
     const txtVlan = document.querySelector("#txtVlan").value;
+    const txtPlan = document.querySelector("#txtPlan").value;
+    const txtPeriodo = document.querySelector("#txtPeriodo").value;
     const txtPotencia = document.querySelector("#txtPotenciaFibra").value;
     const txtSsid = document.querySelector("#txtSsid").value;
     const txtSeguridad = document.querySelector("#txtSeguridad").value;
-    const txtCodigoBarra = document.querySelector("#txtCodigoBarra").value;
+    const txtMAC = document.getElementById("slcCodigoBarraRouterOnt").options[
+      document.getElementById("slcCodigoBarraRouterOnt").selectedIndex
+    ]?.text?.split(" - ")[0] || "";
     const txtMarca = document.querySelector("#txtMarca").value;
     const txtModelo = document.querySelector("#txtModelo").value;
     const txtIp = document.querySelector("#txtIp").value;
@@ -194,7 +202,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const slcBanda = document.querySelector("#slcBanda").value;
     const txtAntenas = document.querySelector("#txtAntenas").value;
     const chkCatv = document.querySelector("#chkCatv").checked;
-    const txtDetallesRouter = document.querySelector("#txtDetalleRouter").value;
+    const txtDetalles = document.querySelector("#txtDetalleRouter").value;
     const txtUsuarioRouter = document.querySelector("#txtUsuarioRouter").value;
     const txtSeguridadRouter = document.querySelector("#txtSeguridadRouter").value;
 
@@ -207,7 +215,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         router: {
           ssid: txtSsid,
           seguridad: txtSeguridad,
-          codigobarra: txtCodigoBarra,
+          codigobarra: txtMAC,
           ip: txtIp,
           marca: txtMarca,
           modelo: txtModelo,
@@ -218,14 +226,18 @@ document.addEventListener("DOMContentLoaded", async () => {
           ingresouserrouter: txtUsuarioRouter,
           ingresopass: txtSeguridadRouter
         },
-        detalles: txtDetallesRouter,
+        detalles: txtDetalles,
         repetidores: jsonRepetidor
-      }
+      },
+      puerto: parseInt(txtPuerto),
+      idcaja: parseInt(idCaja),
+      vlan: parseInt(txtVlan)
     };
   }
 
   async function cable() {
-    const txtPlanCable = document.querySelector("#txtPlanCable").value;
+    const txtPaquete = document.querySelector("#txtPlan").value;
+    const txtPeriodo = document.querySelector("#txtPeriodo").value;
     const txtPagoInst = document.querySelector("#txtPagoInst").value;
     const txtPotencia = document.querySelector("#txtPotenciaCable").value;
     const slcTriplexor = document.querySelector("#slcTriplexor").value.split(",");
@@ -236,28 +248,46 @@ document.addEventListener("DOMContentLoaded", async () => {
     const txtCantCable = document.querySelector("#txtCantCable").value;
     const txtPrecioCable = document.querySelector("#txtPrecioCable").value;
 
-    jsonCable = {
-      pagoinstalacion: parseFloat(txtPagoInst),
-      potencia: parseInt(txtPotencia),
-      triplexor: {
-        requerido: slcTriplexor[0],
-        cargador: slcTriplexor[1],
-      },
-      conector: {
-        numeroconector: parseInt(txtCantConector),
-        precio: txtPrecioConector,
-      },
-      splitter: [
-        {
-          cantidad: parseInt(txtSplitter),
-          tipo: slcSplitter,
+    if (
+      txtPaquete === "" ||
+      txtPagoInst === "" ||
+      txtPeriodo === "" ||
+      txtPotencia === "" ||
+      slcTriplexor === "" ||
+      txtCantConector === "" ||
+      txtPrecioConector === "" ||
+      txtSplitter === "" ||
+      slcSplitter === "" ||
+      txtCantCable === "" ||
+      txtPrecioCable === ""
+    ) {
+      showToast("Por favor, llene todos los campos del Cable.", "WARNING");
+      return;
+    } else {
+      jsonCable = {
+        periodo: txtPeriodo,
+        pagoinstalacion: parseFloat(txtPagoInst),
+        potencia: parseInt(txtPotencia),
+        triplexor: {
+          requerido: slcTriplexor[0],
+          cargador: slcTriplexor[1],
         },
-      ],
-      cable: {
-        metrosadicionales: parseInt(txtCantCable),
-        preciometro: txtPrecioCable,
-      },
-    };
+        conector: {
+          numeroconector: parseInt(txtCantConector),
+          precio: txtPrecioConector,
+        },
+        splitter: [
+          {
+            cantidad: parseInt(txtSplitter),
+            tipo: slcSplitter,
+          },
+        ],
+        cable: {
+          metrosadicionales: parseInt(txtCantCable),
+          preciometro: txtPrecioCable,
+        }
+      };
+    }
   }
 
   async function costos() {
@@ -336,35 +366,39 @@ document.addEventListener("DOMContentLoaded", async () => {
     const nuevoRepetidor = document.createElement("div");
     nuevoRepetidor.classList.add("col-12", "col-md-6", "col-lg-3");
 
-    const ssid = document.getElementById("txtSsidRepetidor").value;
-    const contrasenia = document.getElementById("txtContraseniaRepetidor").value;
-    const codigoBarra = document.getElementById("txtCodigoBarrasRepetidor").value;
+    const ssid = document.getElementById("txtSsidRepetidor")?.value;
+    const contrasenia = document.getElementById("txtContraseniaRepetidor")?.value;
+    const codigoBarra = document.getElementById("slcCodigoBarrasRepetidor").options[
+      document.getElementById("slcCodigoBarrasRepetidor").selectedIndex
+    ]?.text?.split(" - ")[0] || "";
     const marca = document.getElementById("txtMarcaRepetidor")?.value;
     const modelo = document.getElementById("txtModeloRepetidor")?.value;
     const precio = document.getElementById("txtPrecioRepetidor")?.value;
     const serie = document.getElementById("txtSerieRepetidor")?.value;
-    const ip = document.getElementById("txtIpRepetidor").value;
-    const condicion = document.getElementById("slcCondicionRepetidor").value;
+    const ip = document.getElementById("txtIpRepetidor")?.value;
+    const condicion = document.getElementById("slcCondicionRepetidor")?.value;
 
-    if (ssid === "" || contrasenia === "" || codigoBarra === "" || ip === "") {
-      showToast("Por favor, llene todos los campos.", "WARNING");
+    if (!ssid || !contrasenia || !codigoBarra || !marca || !modelo || !serie || !ip) {
+      showToast("Por favor, complete todos los campos del repetidor.", "WARNING");
       return;
-    } else {
-      numeroRepetidores++;
-      const repetidor = {
-        numero: numeroRepetidores,
-        ssid: ssid,
-        contrasenia: contrasenia,
-        codigobarra: codigoBarra,
-        modelo: modelo,
-        marca: marca,
-        precio: precio,
-        serie: serie,
-        ip: ip,
-        condicion: condicion
-      };
-      jsonRepetidor.push(repetidor);
-      nuevoRepetidor.innerHTML = `
+    }
+
+    numeroRepetidores++;
+    const repetidor = {
+      numero: numeroRepetidores,
+      ssid: ssid,
+      contrasenia: contrasenia,
+      codigobarrarepetidor: codigoBarra,
+      marca: marca,
+      modelo: modelo,
+      precio: precio,
+      serie: serie,
+      ip: ip,
+      condicion: condicion
+    };
+    console.log(repetidor);
+    jsonRepetidor.push(repetidor);
+    nuevoRepetidor.innerHTML = `
         <div class="card repetidor-card" id="carta${numeroRepetidores}">
             <div class="header">
                 <h2 class="title">Repetidor - N° ${numeroRepetidores}</h2>
@@ -405,19 +439,18 @@ document.addEventListener("DOMContentLoaded", async () => {
                         <label>IP:</label>
                         <span>${ip}</span>
                     </div>
-                    
                 </div>
                 <div class="row">
-                  <div class="field">
-                      <i class="fas fa-dollar-sign icon"></i>
-                      <label>Precio:</label>
-                      <span>${precio}</span>
-                  </div>
-                  <div class="field">
-                      <i class="fas fa-hand-holding-dollar icon"></i>
-                      <label>Condición:</label>
-                      <span>${condicion}</span>
-                  </div>
+                    <div class="field">
+                        <i class="fas fa-dollar-sign icon"></i>
+                        <label>Precio:</label>
+                        <span>${precio}</span>
+                    </div>
+                    <div class="field">
+                        <i class="fas fa-hand-holding-dollar icon"></i>
+                        <label>Condición:</label>
+                        <span>${condicion}</span>
+                    </div>
                 </div>
                 <hr>
                 <div class="row">
@@ -429,24 +462,25 @@ document.addEventListener("DOMContentLoaded", async () => {
                 </div>
             </div>
         </div>
-      `;
-      if (cardContainer.hidden) {
-        cardContainer.removeAttribute("hidden");
-      }
-      contenidoCarta.appendChild(nuevoRepetidor);
-      document.getElementById("txtSsidRepetidor").value = "";
-      document.getElementById("txtContraseniaRepetidor").value = "";
-      document.getElementById("txtCodigoBarrasRepetidor").value = "";
-      document.getElementById("txtMarcaRepetidor").value = "";
-      document.getElementById("txtModeloRepetidor").value = "";
-      document.getElementById("txtIpRepetidor").value = "";
-      document.getElementById("txtSerieRepetidor").value = "";
-      $("#mdlRepetidor").modal("hide");
+    `;
+    if (cardContainer.hidden) {
+      cardContainer.removeAttribute("hidden");
     }
+    contenidoCarta.appendChild(nuevoRepetidor);
+    document.getElementById("txtSsidRepetidor").value = "";
+    document.getElementById("txtContraseniaRepetidor").value = "";
+    document.getElementById("txtMarcaRepetidor").value = "";
+    document.getElementById("txtModeloRepetidor").value = "";
+    document.getElementById("txtIpRepetidor").value = "";
+    document.getElementById("txtSerieRepetidor").value = "";
+    $("#mdlRepetidor").modal("hide");
   }
 
   async function AgregarSintotizador() {
-    const txtCodigoBarraSintonizador = document.getElementById("txtCodigoBarraSintonizador").value;
+
+    const slcCodigoBarraSintonizador = document.getElementById("slcCodigoBarraSintonizador").options[
+      document.getElementById("slcCodigoBarraSintonizador").selectedIndex
+    ]?.text?.split(" - ")[0] || "";
     const txtMarcaSintonizador = document.getElementById("txtMarcaSintonizador").value;
     const txtModeloSintonizador = document.getElementById("txtModeloSintonizador").value;
     const txtSerieSintonizador = document.getElementById("txtSerieSintonizador").value;
@@ -454,7 +488,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     numeroSintotizadores++;
     const jsonSintotizadorNuevo = {
       numero: numeroSintotizadores,
-      codigobarra: txtCodigoBarraSintonizador,
+      codigobarra: slcCodigoBarraSintonizador,
       marca: txtMarcaSintonizador,
       modelo: txtModeloSintonizador,
       serie: txtSerieSintonizador,
@@ -464,43 +498,43 @@ document.addEventListener("DOMContentLoaded", async () => {
     const card = document.createElement("div");
     card.className = "card mt-2";
     card.innerHTML = `
-            <div class="card-body">
-              <h5 class="card-title"><i class="fa-solid fa-desktop" style="color: #0459ad;"></i> Sintonizador</h5>
-              <p class="card-text" style="color: gray;">
-                Código de Barra:
-                <span style="background-color: #d3d3d3; border-radius: 10px; padding: 2px 5px; color: black;">
-                  ${txtCodigoBarraSintonizador}
-                </span>
-              </p>
-              <p class="card-text" style="color: gray;">
-                Marca:
-                <span style="background-color: #d3d3d3; border-radius: 10px; padding: 2px 5px; color: black;">
-                  ${txtMarcaSintonizador}
-                </span>
-              </p>
-              <p class="card-text" style="color: gray;">
-                Modelo:
-                <span style="background-color: #d3d3d3; border-radius: 10px; padding: 2px 5px; color: black;">
-                  ${txtModeloSintonizador}
-                </span>
-              </p>
-              <p class="card-text" style="color: gray;">
-                Serie:
-                <span style="background-color: #d3d3d3; border-radius: 10px; padding: 2px 5px; color: black;">
-                  ${txtSerieSintonizador}
-                </span>
-              </p>
-              <p class="card-text" style="color: gray;">
-                Precio:
-                <span style="background-color: #d3d3d3; border-radius: 10px; padding: 2px 5px; color: black;">
-                  ${txtPrecioSintonizador}
-                </span>
-              </p>
-              <button class="btn btn-danger btn-sm mt-2 btnEliminar">
-                <i class="fas fa-times"></i> Eliminar
-              </button>
-            </div>
-          `;
+        <div class="card-body">
+          <h5 class="card-title"><i class="fa-solid fa-desktop" style="color: #0459ad;"></i> Sintonizador</h5>
+          <p class="card-text" style="color: gray;">
+            Código de Barra:
+            <span style="background-color: #d3d3d3; border-radius: 10px; padding: 2px 5px; color: black;">
+              ${slcCodigoBarraSintonizador}
+            </span>
+          </p>
+          <p class="card-text" style="color: gray;">
+            Marca:
+            <span style="background-color: #d3d3d3; border-radius: 10px; padding: 2px 5px; color: black;">
+            ${txtMarcaSintonizador}
+            </span>
+          </p>
+          <p class="card-text" style="color: gray;">
+            Modelo:
+            <span style="background-color: #d3d3d3; border-radius: 10px; padding: 2px 5px; color: black;">
+            ${txtModeloSintonizador}
+            </span>
+          </p>
+          <p class="card-text" style="color: gray;">
+            Serie:
+            <span style="background-color: #d3d3d3; border-radius: 10px; padding: 2px 5px; color: black;">
+              ${txtSerieSintonizador}
+            </span>
+          </p>
+          <p class="card-text" style="color: gray;">
+            Precio:
+            <span style="background-color: #d3d3d3; border-radius: 10px; padding: 2px 5px; color: black;">
+              ${txtPrecioSintonizador}
+            </span>
+          </p>
+          <button class="btn btn-danger btn-sm mt-2 btnEliminar">
+            <i class="fas fa-times"></i> Eliminar
+          </button>
+        </div>
+      `;
 
     document.getElementById("mdlSintotizadorBody").appendChild(card);
 
@@ -510,78 +544,16 @@ document.addEventListener("DOMContentLoaded", async () => {
       numeroSintotizadores--;
       jsonSintotizador.pop();
     });
+
     await ActualizarCantidadSintotizador();
   }
-  document.getElementById('txtCodigoBarra').addEventListener('input', async function () {
-    const codigoBarra = this.value.trim();
-
-    if (codigoBarra === "") {
-      return;
-    }
-
-    try {
-      const response = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarraRouter&codigoBarra=${encodeURIComponent(codigoBarra)}`);
-      const resultado = await response.json();
-
-      if (Array.isArray(resultado) && resultado.length > 0) {
-        const producto = resultado[0];
-        if (producto && producto.marca && producto.modelo) {
-          const marca = producto.marca;
-          const modelo = producto.modelo;
-          document.getElementById('txtMarca').value = marca;
-          document.getElementById('txtModelo').value = modelo;
-          showToast(`Producto encontrado: ${producto.marca} - ${producto.modelo}`, "SUCCESS");
-        } else {
-          showToast("Producto no encontrado o datos incompletos.", "INFO");
-        }
-      } else {
-        showToast("Producto no encontrado", "INFO");
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      showToast("Hubo un error al buscar el producto.", "ERROR");
-    }
-  });
-
-  document.getElementById('txtCodigoBarrasRepetidor').addEventListener('input', async function () {
-    const codigoBarra = this.value.trim();
-
-    if (codigoBarra === "") {
-      return;
-    }
-
-    try {
-      const response = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarraRepetidor&codigoBarra=${encodeURIComponent(codigoBarra)}`);
-      const resultado = await response.json();
-
-      if (Array.isArray(resultado) && resultado.length > 0) {
-        const producto = resultado[0];
-        if (producto && producto.marca && producto.modelo) {
-          const marca = producto.marca;
-          const modelo = producto.modelo;
-          const precio = producto.precio_actual;
-          document.getElementById('txtMarcaRepetidor').value = marca;
-          document.getElementById('txtModeloRepetidor').value = modelo;
-          document.getElementById('txtPrecioRepetidor').value = precio;
-          showToast(`Producto encontrado: ${producto.marca} - ${producto.modelo}`, "SUCCESS");
-        } else {
-          showToast("Producto no encontrado o datos incompletos.", "INFO");
-        }
-      } else {
-        showToast("Producto no encontrado o datos incompletos.", "INFO");
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      showToast("Hubo un error al buscar el producto.", "ERROR");
-    }
-  });
 
   document.getElementById("txtPuerto").addEventListener("input", function () {
     validarPuerto();
   });
 
   async function guardar() {
-    
+
     const txtPuerto = document.getElementById("txtPuerto").value;
     if (!validarCampos()) {
       showToast("Por favor, llene todos los campos requeridos.", "WARNING");
@@ -640,26 +612,36 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   function validarCampos() {
     const campos = [
+      "txtUsuario",
+      "txtClaveAcceso",
       "txtVlan",
+      "txtPlan",
       "txtPeriodo",
-      "txtPotenciaFibra",
-      "txtSsid",
-      "txtSeguridad",
-      "txtCodigoBarra",
-      "txtIp",
-      "txtSerie",
-      "txtAntenas",
+      "txtPaquete",
+      "txtNumFicha",
+      "txtPagoInst",
       "txtPotenciaCable",
+      "txtPotenciaFibra",
+      "slcTriplexor",
       "txtCantConector",
+      "txtPrecioConector",
       "txtSplitter",
+      "slcSplitter",
       "txtCantCable",
-      "txtPagoAdelantado",
-      "txtDescuento",
+      "txtPrecioCable",
+      "txtCantSintotizador",
+      "txtCostoAlquiler",
       "txtGponNap",
       "txtCatvNap",
       "txtGponCasa",
       "txtCatvCasa",
       "txtPuerto",
+      "txtSsid",
+      "txtIp",
+      "txtSeguridad",
+      "txtSerie",
+      "slcBanda",
+      "txtAntenas",
       "txtUsuarioRouter",
       "txtSeguridadRouter"
     ];
@@ -669,29 +651,36 @@ document.addEventListener("DOMContentLoaded", async () => {
     for (const campo of campos) {
       const elemento = document.getElementById(campo);
 
-      if (elemento.value.trim() === "") {
+      if (!elemento) continue;
+
+      const valor = elemento.value.trim();
+
+      // Validar campo vacío
+      if (valor === "") {
         elemento.classList.add("is-invalid");
         esValido = false;
+        continue;
       } else {
         elemento.classList.remove("is-invalid");
       }
 
-      const valor = parseFloat(elemento.value);
-      const min = parseFloat(elemento.min);
-      const max = parseFloat(elemento.max);
+      // Validar valores numéricos si aplica
+      if (!isNaN(valor)) {
+        const num = parseFloat(valor);
+        const min = elemento.hasAttribute("min") ? parseFloat(elemento.min) : null;
+        const max = elemento.hasAttribute("max") ? parseFloat(elemento.max) : null;
 
-      if (valor < 0 && elemento.hasAttribute('min') && valor < min) {
-        elemento.classList.add("is-invalid");
-        esValido = false;
-      }
-
-      if (valor < min || valor > max) {
-        elemento.classList.add("is-invalid");
-        esValido = false;
+        if ((min !== null && num < min) || (max !== null && num > max)) {
+          elemento.classList.add("is-invalid");
+          esValido = false;
+        }
       }
     }
 
-    validarPuerto();
+    // Validar puerto si es necesario
+    if (typeof validarPuerto === "function") {
+      validarPuerto();
+    }
 
     return esValido;
   }
@@ -721,100 +710,86 @@ document.addEventListener("DOMContentLoaded", async () => {
   txtCantCable.addEventListener("input", calcularCostos);
   txtCantConector.addEventListener("input", calcularCostos);
 
-  document.getElementById("btnAñadirSintotizador").addEventListener("click", function () {
-    const codigoBarra = document.getElementById("txtCodigoBarraSintonizador").value.trim();
+  document.getElementById("btnAñadirSintotizador").addEventListener("click", async function () {
     const serie = document.getElementById("txtSerieSintonizador").value.trim();
 
-    if (!codigoBarra || !serie) {
-      if (!codigoBarra) {
-        document.getElementById("txtCodigoBarraSintonizador").classList.add("is-invalid");
-      } else {
-        document.getElementById("txtCodigoBarraSintonizador").classList.remove("is-invalid");
-      }
+    const campos = [
+      { id: "slcCodigoBarraSintonizador", valor: codigoBarraSintonizador },
+      { id: "txtSerieSintonizador", valor: serie }
+    ];
 
-      if (!serie) {
-        document.getElementById("txtSerieSintonizador").classList.add("is-invalid");
-      } else {
-        document.getElementById("txtSerieSintonizador").classList.remove("is-invalid");
-      }
+    let todosValidos = true;
 
+    campos.forEach(campo => {
+      const elemento = document.getElementById(campo.id);
+      if (campo.valor === "") {
+        elemento.classList.add("is-invalid");
+        todosValidos = false;
+      } else {
+        elemento.classList.remove("is-invalid");
+      }
+    });
+
+    if (!todosValidos) {
       return;
     }
 
-    document.getElementById("txtCodigoBarraSintonizador").classList.remove("is-invalid");
-    document.getElementById("txtSerieSintonizador").classList.remove("is-invalid");
+    await AgregarSintotizador();
 
-    AgregarSintotizador();
 
-    document.getElementById("txtCodigoBarraSintonizador").value = "";
+    campos.forEach(campo => {
+      document.getElementById(campo.id).value = "";
+    });
     document.getElementById("txtMarcaSintonizador").value = "";
     document.getElementById("txtModeloSintonizador").value = "";
-    document.getElementById("txtSerieSintonizador").value = "";
   });
 
   document.getElementById("btnAñadirRepetidor").addEventListener("click", async function () {
-    const codigoBarra = document.getElementById("txtCodigoBarrasRepetidor").value;
-    const ssid = document.getElementById("txtSsidRepetidor").value;
-    const contrasenia = document.getElementById("txtContraseniaRepetidor").value;
-    const ip = document.getElementById("txtIpRepetidor").value;
-    const condicion = document.getElementById("slcCondicionRepetidor").value;
-    const serie = document.getElementById("txtSerieRepetidor").value;
+    const ssid = document.getElementById("txtSsidRepetidor").value.trim();
+    const contrasenia = document.getElementById("txtContraseniaRepetidor").value.trim();
+    const ip = document.getElementById("txtIpRepetidor").value.trim();
+    const condicion = document.getElementById("slcCondicionRepetidor").value.trim();
+    const serie = document.getElementById("txtSerieRepetidor").value.trim();
+    const codigoBarra = $("#slcCodigoBarrasRepetidor").val();
 
-    if (codigoBarra === "" || ssid === "" || contrasenia === "" || ip === "" || condicion === "") {
-      if (!codigoBarra) {
-        document.getElementById("txtCodigoBarrasRepetidor").classList.add("is-invalid");
+    const campos = [
+      { id: "slcCodigoBarrasRepetidor", valor: codigoBarra },
+      { id: "txtSsidRepetidor", valor: ssid },
+      { id: "txtContraseniaRepetidor", valor: contrasenia },
+      { id: "txtIpRepetidor", valor: ip },
+      { id: "slcCondicionRepetidor", valor: condicion },
+      { id: "txtSerieRepetidor", valor: serie }
+    ];
+
+    let todosValidos = true;
+
+    campos.forEach(campo => {
+      const elemento = document.getElementById(campo.id) || document.getElementById("slcCodigoBarrasRepetidor");
+      if (!campo.valor || campo.valor === "") {
+        if (elemento) elemento.classList.add("is-invalid");
+        todosValidos = false;
       } else {
-        document.getElementById("txtCodigoBarrasRepetidor").classList.remove("is-invalid");
+        if (elemento) elemento.classList.remove("is-invalid");
       }
+    });
 
-      if (!ssid) {
-        document.getElementById("txtSsidRepetidor").classList.add("is-invalid");
-      } else {
-        document.getElementById("txtSsidRepetidor").classList.remove("is-invalid");
-      }
-
-      if (!contrasenia) {
-        document.getElementById("txtContraseniaRepetidor").classList.add("is-invalid");
-      } else {
-        document.getElementById("txtContraseniaRepetidor").classList.remove("is-invalid");
-      }
-
-      if (!ip) {
-        document.getElementById("txtIpRepetidor").classList.add("is-invalid");
-      } else {
-        document.getElementById("txtIpRepetidor").classList.remove("is-invalid");
-      }
-
-      if (!condicion) {
-        document.getElementById("slcCondicionRepetidor").classList.add("is-invalid");
-      } else {
-        document.getElementById("slcCondicionRepetidor").classList.remove("is-invalid");
-      }
-
-      if (!serie) {
-        document.getElementById("txtSerieRepetidor").classList.add("is-invalid");
-      } else {
-        document.getElementById("txtSerieRepetidor").classList.remove("is-invalid");
-      }
-
+    if (!todosValidos) {
+      showToast("Por favor, complete todos los campos del repetidor.", "WARNING");
       return;
     }
 
-    document.getElementById("txtCodigoBarrasRepetidor").classList.remove("is-invalid");
-    document.getElementById("txtSsidRepetidor").classList.remove("is-invalid");
-    document.getElementById("txtContraseniaRepetidor").classList.remove("is-invalid");
-    document.getElementById("txtIpRepetidor").classList.remove("is-invalid");
-    document.getElementById("slcCondicionRepetidor").classList.remove("is-invalid");
-    document.getElementById("txtSerieRepetidor").classList.remove("is-invalid");
-    AgregarRepetidor();
+    await AgregarRepetidor();
 
-    document.getElementById("txtCodigoBarrasRepetidor").value = "";
+    // Limpiar campos después de agregar
+    $("#slcCodigoBarrasRepetidor").val(null).trigger("change");
     document.getElementById("txtSsidRepetidor").value = "";
     document.getElementById("txtContraseniaRepetidor").value = "";
-    document.getElementById("txtIpRepetidor").value = "";
-    document.getElementById("slcCondicionRepetidor").value = "";
-    document.getElementById("txtSerieRepetidor").value = "";
+    document.getElementById("txtMarcaRepetidor").value = "";
+    document.getElementById("txtModeloRepetidor").value = "";
     document.getElementById("txtPrecioRepetidor").value = "";
+    document.getElementById("txtIpRepetidor").value = "";
+    document.getElementById("txtSerieRepetidor").value = "";
+    document.getElementById("slcCondicionRepetidor").value = "";
   });
 
   document.querySelector("#eliminarRepetidor").addEventListener("click", () => {
@@ -839,8 +814,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     await guardar();
   });
 
-  document.getElementById("txtFecha").value = today;
-
   document.getElementById("btnCancelar").addEventListener("click", () => {
     window.location.href = `${config.HOST}views/Contratos/`;
   });
@@ -860,36 +833,176 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   });
 
-  document.getElementById('txtCodigoBarraSintonizador').addEventListener('input', async function () {
-    const codigoBarra = this.value.trim();
 
-    if (codigoBarra === "") {
-      return;
-    }
-
-    try {
-      const response = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarraSintonizador&codigoBarra=${encodeURIComponent(codigoBarra)}`);
-      const resultado = await response.json();
-
-      if (Array.isArray(resultado) && resultado.length > 0) {
-        const producto = resultado[0];
-        if (producto && producto.marca && producto.modelo && producto.precio_actual) {
-          const marca = producto.marca;
-          const modelo = producto.modelo;
-          const precio = producto.precio_actual;
-          document.getElementById("txtMarcaSintonizador").value = marca;
-          document.getElementById("txtModeloSintonizador").value = modelo;
-          document.getElementById("txtPrecioSintonizador").value = precio;
-          showToast(`Producto encontrado: ${producto.marca} - ${producto.modelo} - Precio: ${producto.precio}`, "SUCCESS");
-        } else {
-          showToast("Producto no encontrado o datos incompletos", "INFO");
-        }
-      } else {
-        showToast("Producto no encontrado", "INFO");
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      showToast("Hubo un error al escanear el código de barras.", "ERROR");
+  $("#slcCodigoBarrasRepetidor").select2({
+    theme: "bootstrap-5",
+    dropdownParent: $("#mdlRepetidorBody"),
+    placeholder: "Buscar producto...",
+    allowClear: true,
+    ajax: {
+      url: `${config.HOST}app/controllers/Producto.controllers.php`,
+      dataType: "json",
+      delay: 300,
+      data: function (params) {
+        return {
+          operacion: "listarProductosPorTipo",
+          tipoProducto: "Repetidor",
+          codigoBarra: params.term || ""
+        };
+      },
+      processResults: function (data) {
+        console.log(data)
+        return {
+          results: Array.isArray(data)
+            ? data.map(item => ({
+              id: item.id_producto,
+              text: `${item.codigo_barra} - ${item.precio_actual} - ${item.marca}`,
+              data: item
+            }))
+            : []
+        };
+      },
+      cache: true
     }
   });
+
+  $("#slcCodigoBarrasRepetidor").on("select2:select", function (e) {
+    const selected = e.params.data.data;
+    codigoRepetidor = selected.codigo_barra;
+
+    $("#txtMarcaRepetidor").val(selected.marca);
+    $("#txtModeloRepetidor").val(selected.modelo);
+    $("#txtPrecioRepetidor").val(selected.precio_actual);
+  });
+
+  $("#slcCodigoBarrasRepetidor").on("select2:clear", function () {
+    $("#txtMarcaRepetidor").val("");
+    $("#txtModeloRepetidor").val("");
+    $("#txtPrecioRepetidor").val("");
+  });
+
+  $("#slcCodigoBarraRouterOnt").select2({
+    theme: "bootstrap-5",
+    placeholder: "Buscar producto...",
+    allowClear: true,
+    ajax: {
+      url: `${config.HOST}app/controllers/Producto.controllers.php`,
+      dataType: "json",
+      delay: 300,
+      data: function (params) {
+        return {
+          operacion: "listarProductosPorTipo",
+          tipoProducto: "",
+          codigoBarra: params.term || ""
+        };
+      },
+      transport: function (params, success, failure) {
+        const url = params.url;
+        const term = params.data.codigoBarra;
+        const fetchTipo = tipo =>
+          $.ajax({
+            url,
+            dataType: "json",
+            data: {
+              operacion: "listarProductosPorTipo",
+              tipoProducto: tipo,
+              codigoBarra: term
+            }
+          });
+        $.when(fetchTipo("Router"), fetchTipo("ONT"))
+          .done(function (routerRes, ontRes) {
+            const routerData = routerRes[0];
+            const ontData = ontRes[0];
+
+            const merged = []
+              .concat(
+                Array.isArray(routerData)
+                  ? routerData.map(item => ({ ...item, _tipo: "Router" }))
+                  : [],
+                Array.isArray(ontData)
+                  ? ontData.map(item => ({ ...item, _tipo: "ONT" }))
+                  : []
+              );
+            success({ results: merged });
+          })
+          .fail(failure);
+      },
+      processResults: function (data) {
+        return {
+          results: Array.isArray(data.results)
+            ? data.results.map(item => ({
+              id: item.id_producto,
+              text: `${item.codigo_barra} - ${item.precio_actual} - ${item.marca} (${item._tipo})`,
+              data: item
+            }))
+            : []
+        };
+      },
+      cache: true
+    }
+  });
+
+  $("#slcCodigoBarraRouterOnt").on("select2:select", function (e) {
+    const selected = e.params.data.data;
+    codigoRouterONT = selected.codigo_barra;
+
+    $("#txtMarca").val(selected.marca);
+    $("#txtModelo").val(selected.modelo);
+  });
+
+  $("#slcCodigoBarraRouterOnt").on("select2:clear", function () {
+    $("#txtMarca").val("");
+    $("#txtModelo").val("");
+  });
+
+  $("#slcCodigoBarraSintonizador").select2({
+    theme: "bootstrap-5",
+    dropdownParent: $("#mdlSintotizadorBody"), // importante para modales
+    placeholder: "Buscar producto...",
+    allowClear: true,
+    ajax: {
+      url: `${config.HOST}app/controllers/Producto.controllers.php`,
+      dataType: "json",
+      delay: 300,
+      data: function (params) {
+        return {
+          operacion: "listarProductosPorTipo",
+          tipoProducto: "Sintonizador",
+          codigoBarra: params.term || ""
+        };
+      },
+      processResults: function (data) {
+        return {
+          results: Array.isArray(data)
+            ? data.map(item => ({
+              id: item.id_producto,
+              text: `${item.codigo_barra} - ${item.precio_actual} - ${item.marca}`,
+              data: item
+            }))
+            : []
+        };
+      },
+      cache: true
+    }
+  });
+
+  $("#slcCodigoBarraSintonizador").on("select2:select", function (e) {
+    const selected = e.params.data.data;
+    codigoBarraSintonizador = selected.codigo_barra;
+
+    $("#txtMarcaSintonizador").val(selected.marca);
+    $("#txtModeloSintonizador").val(selected.modelo);
+    $("#txtPrecioSintonizador").val(selected.precio_actual);
+  });
+
+  $("#slcCodigoBarraSintonizador").on("select2:clear", function () {
+    $("#txtMarcaSintonizador").val("");
+    $("#txtModeloSintonizador").val("");
+    $("#txtPrecioSintonizador").val("");
+  });
+
+
+  $(".select2me").parent("div").children("span").children("span").children("span").css("height", " calc(3.5rem + 2px)");
+  $(".select2me").parent("div").children("span").children("span").children("span").children("span").css("margin-top", "18px");
+  $(".select2me").parent("div").find("label").css("z-index", "1");
 });

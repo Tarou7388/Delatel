@@ -66,11 +66,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   let jsonSintonizadorOriginal = [];
   let login = await Herramientas.obtenerLogin();
   let idSector = -1;
+  let codigoBarraSintonizador = "";
 
   if (!idReporte) {
     btnReporte.style.display = "none";
   }
-  let numeroSintotizadores = 0;
+
   let jsonSintonizador = [];
   let sintonizadoresData = [];
   let idSoporte = -1;
@@ -169,8 +170,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     } catch (error) {
       console.error("Error al cargar los datos del soporte:", error);
     }
-  }
-
+  };
   async function CargardatosInstalacion(doc, idSoporte) {
     try {
       const respuestaProblema = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
@@ -301,8 +301,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     } catch (error) {
       console.error("Error en obtener el problema:", error);
     }
-  }
-
+  };
   async function llamarCajas() {
     let cajas = [];
     console.log("idCaja", idCaja);
@@ -336,8 +335,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         slcCaja.appendChild(option);
       }
     });
-  }
-
+  };
   async function completarCamposDeCambio() {
     const parametrosTecnicos = {
       txtPotenciaCambio: txtPotencia.value,
@@ -368,8 +366,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     jsonSintonizadorOriginal = JSON.parse(JSON.stringify(jsonSintonizador));
 
     await pintarSintonizador(infoSintonizadores);
-  }
-
+  };
   async function borrarCamposDeCambio() {
     const camposCambio = [
       'txtPotenciaCambio',
@@ -400,8 +397,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     jsonSintonizador = [];
 
-  }
-
+  };
   function configurarVerMas() {
     const elementosOcultar = [
       slcTriplexor, slcSpliter, txtNumSpliter, txtCable, txtConector, txtPrecioCable,
@@ -437,8 +433,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     } else {
       form.appendChild(verMasBtn);
     }
-  }
-
+  };
   async function ObtenerValores() {
     const urlParams = new URLSearchParams(window.location.search);
     const doc = urlParams.get("doc");
@@ -459,8 +454,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     await llamarCajas();
-  }
-
+  };
   function mostrarSintonizadoresEnModal() {
     const container = document.getElementById("sintonizadoresContainer");
     container.innerHTML = "";
@@ -486,14 +480,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       `;
       container.appendChild(card);
     });
-  }
-
+  };
   async function obtenerReferencias() {
     const urlParams = new URLSearchParams(window.location.search);
     const idSoporte = urlParams.get("idsoporte");
     return idSoporte;
   };
-
   async function contabilizarSintonizadores(sintonizadores) {
     let sintonizadorContador = [];
 
@@ -510,12 +502,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     return sintonizadorContador;
-  }
-
+  };
   async function actualizarContadorSintonizadores() {
     txtSintonizadorCambio.value = parseInt(jsonSintonizador.length);
-  }
-
+  };
   async function pintarSintonizador(sintonizadores) {
     const divSintonizadores = document.getElementById("divSintonizadores");
     divSintonizadores.innerHTML = "";
@@ -561,16 +551,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     await actualizarContadorSintonizadores();
-  }
-
+  };
   async function AgregarSintotizador() {
-    const txtCodigoBarraSintonizador = document.getElementById("txtCodigoBarraSintonizador").value;
+    const slcCodigoBarraSintonizador = document.getElementById("slcCodigoBarraSintonizador").options[
+      document.getElementById("slcCodigoBarraSintonizador").selectedIndex
+    ]?.text?.split(" - ")[0] || "";
     const txtMarcaSintonizador = document.getElementById("txtMarcaSintonizador").value;
     const txtModeloSintonizador = document.getElementById("txtModeloSintonizador").value;
     const txtSerieSintonizador = document.getElementById("txtSerieSintonizador").value;
     const txtPrecioSintonizador = parseFloat(document.getElementById("txtPrecioSintonizador").value) || 0;
 
-    if (!txtCodigoBarraSintonizador || !txtMarcaSintonizador || !txtModeloSintonizador || !txtSerieSintonizador || !txtPrecioSintonizador) {
+    if (!slcCodigoBarraSintonizador || !txtMarcaSintonizador || !txtModeloSintonizador || !txtSerieSintonizador || !txtPrecioSintonizador) {
       showToast("Por favor, complete todos los campos del sintonizador.", "ERROR");
       return;
     }
@@ -581,7 +572,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const nuevoSintonizador = {
       numero: numeroSintonizadores,
-      codigobarra: txtCodigoBarraSintonizador,
+      codigobarra: slcCodigoBarraSintonizador,
       marca: txtMarcaSintonizador,
       modelo: txtModeloSintonizador,
       serie: txtSerieSintonizador,
@@ -597,7 +588,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     card.innerHTML = `
       <div class="card-body p-4">
         <h5 class="card-title text-primary">Sintonizador #${nuevoSintonizador.numero}</h5>
-        <p class="card-text"><strong>Código de Barra:</strong> ${txtCodigoBarraSintonizador}</p>
+        <p class="card-text"><strong>Código de Barra:</strong> ${slcCodigoBarraSintonizador}</p>
         <p class="card-text"><strong>Marca:</strong> ${txtMarcaSintonizador}</p>
         <p class="card-text"><strong>Modelo:</strong> ${txtModeloSintonizador}</p>
         <p class="card-text"><strong>Precio:</strong> $${txtPrecioSintonizador.toFixed(2)}</p>  <!-- Mejor formato para el precio -->
@@ -623,8 +614,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       actualizarContadorSintonizadores();
     });
     actualizarContadorSintonizadores();
-  }
-
+  };
   async function ArmadoJsonCable() {
     const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
     const result = await response.json();
@@ -665,7 +655,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             gpon: txtNapGpon.value,
             catv: txtNapCatv.value
           },
-          pagoinstalacion:JSON.parse(dataCable[0].ficha_instalacion).cable.pagoinstalacion
+          pagoinstalacion: JSON.parse(dataCable[0].ficha_instalacion).cable.pagoinstalacion
         }
       },
       cambioscable: {
@@ -704,7 +694,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             gpon: txtCambioNapGpon.value,
             catv: txtCambioNapCatv.value
           },
-          pagoinstalacion:JSON.parse(dataCable[0].ficha_instalacion).cable.pagoinstalacion
+          pagoinstalacion: JSON.parse(dataCable[0].ficha_instalacion).cable.pagoinstalacion
         }
       }
     };
@@ -717,13 +707,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     nuevoSoporte.periodo = JSON.parse(dataCable[0].ficha_instalacion).cable.periodo;
 
     return nuevoSoporte;
-  }
-
+  };
   slcCaja.addEventListener("change", async () => {
     idCaja = slcCaja.value;
     console.log("ID Caja:", idCaja);
   });
-
   async function CompletarSoporteSiestaTodo(idSoporte, JSONsoporte) {
     const ServiciosTotales = await FichaInstalacion(idSoporte);
     const tiposServicio = (ServiciosTotales[0].tipos_servicio).toLowerCase().split(",");
@@ -734,8 +722,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (todosValidos) {
       await CompletarSoporte(idSoporte);
     }
-  }
-
+  };
   function crearBotones() {
     const rowDiv = document.createElement("div");
     rowDiv.className = "row g-2 mb-2 mt-2";
@@ -795,8 +782,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         await borrarCamposDeCambio();
       }
     });
-  }
-
+  };
   async function guardarSoporte(data) {
     try {
       const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php`, {
@@ -821,8 +807,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     } catch (error) {
       console.error('Error en la solicitud:', error);
     }
-  }
-
+  };
   function calcularCostos() {
     const cantCable = parseFloat(txtCableCambio.value) || 0;
     const precioCable = parseFloat(txtPrecioCableCambio.value) || 0;
@@ -833,40 +818,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const precioConector = parseFloat(txtPrecioConectorCambio.value) || 0;
     const costoConector = cantConector * precioConector;
     CostosConector = costoConector.toFixed(2);
-  }
-
-  document.getElementById("btnAgregarSintonizador").addEventListener("click", async function () {
-    await AgregarSintotizador();
-  });
-
-  document.getElementById("btnBuscarSintonizador").addEventListener("click", async function () {
-    const codigoBarra = document.getElementById("txtCodigoBarraSintonizador").value.trim();
-    if (codigoBarra === "") {
-      return;
-    }
-    try {
-      const respuesta = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=buscarProductoBarra&codigoBarra=${encodeURIComponent(codigoBarra)}`);
-      const resultado = await respuesta.json();
-
-      if (Array.isArray(resultado) && resultado.length > 0) {
-        const producto = resultado[0];
-        if (producto?.marca && producto?.modelo && producto?.precio_actual) {
-          document.getElementById("txtMarcaSintonizador").value = producto.marca;
-          document.getElementById("txtModeloSintonizador").value = producto.modelo;
-          document.getElementById("txtPrecioSintonizador").value = producto.precio_actual;
-          showToast(`Producto encontrado: ${producto.marca} - ${producto.modelo} - Precio: ${producto.precio_actual}`, "SUCCESS");
-        } else {
-          showToast("Producto no encontrado o datos incompletos", "INFO");
-        }
-      } else {
-        showToast("Producto no encontrado", "INFO");
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      showToast("Hubo un error al escanear el código de barras.", "ERROR");
-    }
-  });
-
+  };
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const data = await ArmadoJsonCable();
@@ -876,11 +828,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
     }
   });
-
   document.getElementById("btnlistar").addEventListener("click", () => {
     mostrarSintonizadoresEnModal();
   });
-
   document.getElementById("btnReporte").addEventListener("click", async () => {
     if (idReporte) {
       window.open(`${config.HOST}views/reports/Averia_Cable/soporte.php?idSoporte=${idReporte}`, '_blank');
@@ -888,6 +838,59 @@ document.addEventListener("DOMContentLoaded", async () => {
       console.error("No se ha encontrado el id del reporte");
     }
   });
+  document.getElementById("btnAgregarSintonizador").addEventListener("click", async function () {
+    await AgregarSintotizador();
+  });
 
   txtPotencia, txtPotenciaCambio, txtSintonizadorCambio.addEventListener("input", validarValorRango);
+
+  $("#slcCodigoBarraSintonizador").select2({
+    theme: "bootstrap-5",
+    dropdownParent: $("#mdlSintotizadorBody"), // importante para modales
+    placeholder: "Buscar producto...",
+    allowClear: true,
+    ajax: {
+      url: `${config.HOST}app/controllers/Producto.controllers.php`,
+      dataType: "json",
+      delay: 300,
+      data: function (params) {
+        return {
+          operacion: "listarProductosPorTipo",
+          tipoProducto: "Sintonizador",
+          codigoBarra: params.term || ""
+        };
+      },
+      processResults: function (data) {
+        return {
+          results: Array.isArray(data)
+            ? data.map(item => ({
+              id: item.id_producto,
+              text: `${item.codigo_barra} - ${item.precio_actual} - ${item.marca}`,
+              data: item
+            }))
+            : []
+        };
+      },
+      cache: true
+    }
+  });
+
+  $("#slcCodigoBarraSintonizador").on("select2:select", function (e) {
+    const selected = e.params.data.data;
+    codigoBarraSintonizador = selected.codigo_barra;
+
+    $("#txtMarcaSintonizador").val(selected.marca);
+    $("#txtModeloSintonizador").val(selected.modelo);
+    $("#txtPrecioSintonizador").val(selected.precio_actual);
+  });
+
+  $("#slcCodigoBarraSintonizador").on("select2:clear", function () {
+    $("#txtMarcaSintonizador").val("");
+    $("#txtModeloSintonizador").val("");
+    $("#txtPrecioSintonizador").val("");
+  });
+
+  $(".select2me").parent("div").children("span").children("span").children("span").css("height", " calc(3.5rem + 2px)");
+  $(".select2me").parent("div").children("span").children("span").children("span").children("span").css("margin-top", "18px");
+  $(".select2me").parent("div").find("label").css("z-index", "1");
 });

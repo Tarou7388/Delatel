@@ -73,64 +73,6 @@ window.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  async function obtenerContratosCliente(clienteId) {
-    if (!clienteId) {
-      console.error("ID de cliente no válido");
-      return;
-    }
-
-    try {
-      slcContratos.innerHTML = "";
-
-      const opcionInicial = document.createElement('option');
-      opcionInicial.value = "";
-      opcionInicial.disabled = true;
-      opcionInicial.selected = true;
-      opcionInicial.textContent = "Seleccione un Contrato";
-      slcContratos.appendChild(opcionInicial);
-
-      const respuesta = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerContratoPorCliente&id=${clienteId}`);
-      const datos = await respuesta.json();
-
-      console.log(datos); 
-
-      if (Array.isArray(datos) && datos.length > 0) {
-        datos.forEach(element => {
-          const option = document.createElement('option');
-          option.value = element.id_contrato;
-          option.textContent = ` | ${element.tipos_servicio} | ${element.direccion_servicio}`;
-          option.dataset.nota = element.nota;
-          option.dataset.direccion = element.direccion_servicio;
-          slcContratos.appendChild(option);
-        });
-
-        if (datos.length === 1) {
-          slcContratos.selectedIndex = 1;
-          const unicoContrato = datos[0];
-          txtContratoObservacion.value = `${unicoContrato.nota} | ${unicoContrato.direccion_servicio}`;
-          idContratoSeleccionado = unicoContrato.id_contrato;
-        }
-      }
-    } catch (error) {
-      console.error("Error al obtener contratos:", error);
-      showToast("Ocurrió un error al obtener los contratos", "ERROR");
-    }
-
-    slcContratos.addEventListener('change', () => {
-      idContratoSeleccionado = slcContratos.value;
-      const selectedOption = slcContratos.options[slcContratos.selectedIndex];
-      if (selectedOption.value) {
-        const nota = selectedOption.dataset.nota;
-        const direccion = selectedOption.dataset.direccion;
-        txtContratoObservacion.value = `${nota} | ${direccion}`;
-      } else {
-        txtContratoObservacion.value = '';
-      }
-    });
-  }
-
-
-
   async function BuscarcontratoNDoc(numdocumento) {
     if (!numdocumento) {
       showToast("El número de documento es obligatorio", "INFO");
@@ -226,4 +168,67 @@ window.addEventListener('DOMContentLoaded', async () => {
   btnModal.addEventListener("click", () => {
     myModal.show();
   });
+
+  async function obtenerContratosCliente(clienteId) {
+    if (!clienteId) return console.error("ID de cliente no válido");
+
+    try {
+      $(slcContratos).empty();
+
+      const datos = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=obtenerContratoPorCliente&id=${clienteId}`)
+        .then(res => res.json());
+
+      if (Array.isArray(datos) && datos.length > 0) {
+        datos.forEach(c => {
+          const opt = new Option(`${c.tipos_servicio}`, c.id_contrato);
+          opt.dataset.nota = c.nota;
+          opt.dataset.direccion = c.direccion_servicio;
+          opt.dataset.paquete = c.paquete;
+          slcContratos.add(opt);
+        });
+
+
+        $(slcContratos).select2({
+          minimumResultsForSearch: Infinity,
+          width: '100%',
+          theme: "bootstrap-5",
+          allowClear: true,
+          placeholder: "Seleccione un Contrato",
+          templateResult: function (data) {
+            if (!data.id) return data.text;
+            const el = data.element.dataset;
+            return $(`
+            <div style="white-space: normal; font-size: 0.85em;">
+              <strong>${data.text}</strong><br>
+              Dir.: ${el.direccion}<br>
+              Paquete: ${el.paquete}
+            </div>
+            `);
+          },
+          templateSelection: data => data.text
+        });
+
+        if (datos.length === 1) {
+          $(slcContratos).val(datos[0].id_contrato).trigger('change');
+          txtContratoObservacion.value = `${datos[0].nota} | ${datos[0].direccion_servicio}`;
+          idContratoSeleccionado = datos[0].id_contrato;
+        }
+      }
+    } catch (e) {
+      console.error("Error al obtener contratos:", e);
+      showToast("Ocurrió un error al obtener los contratos", "ERROR");
+    }
+
+    $(slcContratos).off('change').on('change', function () {
+      const opt = this.selectedOptions[0];
+      idContratoSeleccionado = this.value;
+      console.log("Contrato seleccionado:", idContratoSeleccionado);
+      txtContratoObservacion.value = opt ? `${opt.dataset.nota} | ${opt.dataset.direccion}` : '';
+    });
+  }
+
+
+  $(".select2me").parent("div").children("span").children("span").children("span").css("height", " calc(3.5rem + 2px)");
+  $(".select2me").parent("div").children("span").children("span").children("span").children("span").css("margin-top", "18px");
+  $(".select2me").parent("div").find("label").css("z-index", "1");
 });

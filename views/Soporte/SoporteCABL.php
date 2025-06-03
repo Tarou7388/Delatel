@@ -9,15 +9,14 @@
         <h5 class="modal-title" id="modalSintonizadorLabel">Detalles del Sintonizador</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" id="mdlSintotizadorBody">
         <form id="formSintonizador">
           <div class="mb-3">
-            <div class="input-group">
-              <div class="form-floating">
-                <input type="text" class="form-control" id="txtCodigoBarraSintonizador" placeholder="Ingrese el código de barra">
-                <label for="txtCodigoBarra" class="form-label">Código de Barra</label>
-              </div>
-              <button class="btn btn-primary" id="btnBuscarSintonizador" type="button">Buscar</button>
+            <div class="form-floating">
+              <select class="form-select select2me" id="slcCodigoBarraSintonizador" style="width: 100%;">
+              </select>
+              <label for="slcCodigoBarraSintonizador">Sintonizador</label>
+              <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
             </div>
           </div>
           <div class="mb-3">

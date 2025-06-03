@@ -346,6 +346,12 @@ window.addEventListener("DOMContentLoaded", async () => {
     if (idSector == null) {
       idSector = 0;
     }
+    // Construir el objeto fichainstalacion solo si idCaja tiene valor
+    let fichainstalacion = {};
+    if (idCaja !== null && idCaja !== "" && typeof idCaja !== "undefined") {
+      fichainstalacion.idcaja = idCaja;
+    }
+
     const datosEnvio = {
       operacion: "registrarContrato",
       parametros: {
@@ -358,7 +364,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         fechaInicio: fechaRegistro,
         fechaRegistro: fechaRegistro,
         nota: nota,
-        fichainstalacion: JSON.stringify({ idcaja: idCaja }),
+        fichainstalacion: JSON.stringify(fichainstalacion),
         idUsuario: login.idUsuario,
       },
     };
@@ -720,7 +726,9 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 
   async function validarCampos() {
-    console.log(slcSector.value);
+    const slcTipoServicio = document.querySelector("#slcTipoServicio");
+    const tipoServicioValor = slcTipoServicio ? slcTipoServicio.value : "";
+
     if (
       nroDoc.value == "" ||
       nombre.value == "" ||
@@ -730,15 +738,16 @@ window.addEventListener("DOMContentLoaded", async () => {
       referencia.value == "" ||
       coordenada.value == "" ||
       slcPaquetes.value == "0" ||
-      slcSector.value == "" ||
-      slcSector.value == null ||
-      slcSector.value == "0" 
+      (
+        tipoServicioValor !== "2" &&
+        (slcSector.value == "" || slcSector.value == null || slcSector.value == "0")
+      )
     ) {
       return false;
     } else {
       return true;
     }
-  }
+  };
 
   async function resetUI() {
     nroDoc.value = "";
@@ -913,37 +922,36 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  document.getElementById("slcTipoServicio").addEventListener("change", function () {
-    const txtPrecio = document.getElementById("txtPrecio");
-    const divSector = document.getElementById("divSector");
-    const btnBuscarCoordenadas = document.getElementById("btnBuscarCoordenadas");
-
-    txtPrecio.disabled = false;
-    txtPrecio.value = "";
-    txtPrecio.disabled = true;
-
-    const valor = this.value;
-
-    divSector.dispatchEvent(new Event("change"));
-
-    if (valor === "0") {
-      btnBuscarCoordenadas.disabled = true;
-      divSector.hidden = true;
-      divSector.setAttribute('required', 'required');
-    } else {
-      btnBuscarCoordenadas.disabled = false;
-
-      if (valor === "2") {
+    document.getElementById("slcTipoServicio").addEventListener("change", function () {
+      const txtPrecio = document.getElementById("txtPrecio");
+      const divSector = document.getElementById("divSector");
+      const btnBuscarCoordenadas = document.getElementById("btnBuscarCoordenadas");
+    
+      txtPrecio.disabled = false;
+      txtPrecio.value = "";
+      txtPrecio.disabled = true;
+    
+      const valor = this.value;
+    
+      if (valor === "0") {
+        btnBuscarCoordenadas.disabled = true;
         divSector.hidden = true;
         divSector.removeAttribute('required');
       } else {
-        divSector.hidden = false;
-        divSector.setAttribute('required', 'required');
-        // Dispara manualmente el evento 'change' en divSector
-        divSector.dispatchEvent(new Event("change"));
+        btnBuscarCoordenadas.disabled = false;
+    
+        if (valor === "2") {
+          divSector.hidden = true;
+          divSector.removeAttribute('required');
+        } else {
+          divSector.hidden = false;
+          divSector.setAttribute('required', 'required');
+          // Dispara manualmente el evento 'change' en divSector
+          divSector.dispatchEvent(new Event("change"));
+        }
       }
-    }
-  });
+    });
+
 
 
   $("#btnGuardarModalMapa").on("click", function () {

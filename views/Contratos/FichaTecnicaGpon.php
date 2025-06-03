@@ -17,13 +17,11 @@ $idContrato = $_GET['idContrato'];
       <form id="formSintonizador" autocomplete="off">
         <div class="modal-body" id="mdlSintotizadorBody">
           <div class="mb-2">
-            <div class="input-group">
-              <div class="form-floating">
-                <input type="text" class="form-control" id="txtCodigoBarraSintonizador" placeholder="Código Barra">
-                <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
-                <label for="txtCodigoBarraSintonizador">Código de Barra <span class="required-asterisk" style="color: red;">*</span></label>
-              </div>
-              <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
+            <div class="form-floating">
+              <select class="form-select select2me" id="slcCodigoBarraSintonizador" style="width: 100%;">
+              </select>
+              <label for="slcCodigoBarraSintonizador">Sintonizador</label>
+              <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
             </div>
           </div>
           <div class="mb-2">
@@ -122,13 +120,10 @@ $idContrato = $_GET['idContrato'];
               </div>
             </div>
             <div class="col-12 col-md-6">
-              <div class="input-group">
-                <div class="form-floating">
-                  <input type="text" class="form-control" id="txtCodigoBarrasRepetidor" placeholder="Codigo de barras">
-                  <label for="lblCodigoBarrasRepetidor">Código de barras <span class="required-asterisk" style="color: red;">*</span></label>
-                  <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
-                </div>
-                <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
+              <div class="form-floating" id="divSector">
+                <select class="form-select select2me" id="slcCodigoBarrasRepetidor" aria-label=Repetidores required>
+                </select>
+                <label for="slcCodigoBarrasRepetidor" class="form-label">Repetidor</label>
               </div>
             </div>
           </div>
@@ -183,7 +178,7 @@ $idContrato = $_GET['idContrato'];
         <input type="date" class="form-control text-center" id="txtFecha" placeholder="Fecha" disabled>
       </div>
     </div>
-    
+
     <div class="conteiner">
       <div class="card mb-4">
         <div class="card-header">
@@ -280,16 +275,15 @@ $idContrato = $_GET['idContrato'];
 
               <!-- Fila: Información del dispositivo -->
               <div class="row g-2 mb-3">
-                <div class="col-12 col-md-4">
-                  <div class="input-group">
-                    <div class="form-floating">
-                      <input type="text" class="form-control" id="txtCodigoBarra" placeholder="Código de Barras">
-                      <label for="txtCodigoBarra">Código de Barras <span class="required-asterisk" style="color: red;">*</span></label>
-                      <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
-                    </div>
-                    <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
+                <div class="col-12 col-md-4 mb-2 mt-2">
+                  <div class="form-floating" id="divSector">
+                    <select class="form-select select2me" id="slcCodigoBarraRouterOnt" aria-label=Sectores required>
+
+                    </select>
+                    <label for="slcCodigoBarraRouterOnt" class="form-label">Router/ONT</label>
                   </div>
                 </div>
+
                 <div class="col-12 col-md-4">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="txtMarca" placeholder="Marca" disabled>
@@ -353,7 +347,7 @@ $idContrato = $_GET['idContrato'];
                 </div>
                 <div class="col-12 col-md-6">
                   <div class="form-floating">
-                    <input type="text" class="form-control" id="txtSeguridadRouter" placeholder="Contraseña del Router" >
+                    <input type="text" class="form-control" id="txtSeguridadRouter" placeholder="Contraseña del Router">
                     <label for="txtSeguridadRouter">Contraseña del Router <span class="required-asterisk" style="color: red;">*</span></label>
                     <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
                   </div>
