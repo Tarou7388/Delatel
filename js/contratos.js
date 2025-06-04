@@ -613,14 +613,18 @@ window.addEventListener("DOMContentLoaded", async () => {
 
             const fichaInstalacion = data[0].ficha_instalacion ? JSON.parse(data[0].ficha_instalacion) : null;
 
-            if (fichaInstalacion === null ||
-              (Object.keys(fichaInstalacion).length === 1 && fichaInstalacion.idcaja)) {
+            if (
+              !fichaInstalacion ||
+              Object.keys(fichaInstalacion).length === 0 ||
+              (Object.keys(fichaInstalacion).length === 1 && fichaInstalacion.idcaja)
+            ) {
               fila.classList.add("ficha-incompleta");
               fila.classList.remove("ficha-completa");
             } else {
               fila.classList.remove("ficha-incompleta");
               fila.classList.add("ficha-completa");
             }
+
           } catch (error) {
             console.error("Error al obtener el JSON de la ficha de instalación:", error);
           }
@@ -863,11 +867,6 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  $(".select2me").select2({ theme: "bootstrap-5", allowClear: true });
-  $(".select2me").parent("div").children("span").children("span").children("span").css("height", " calc(3.5rem + 2px)");
-  $(".select2me").parent("div").children("span").children("span").children("span").children("span").css("margin-top", "18px");
-  $(".select2me").parent("div").find("label").css("z-index", "1");
-
   btnBuscarCoordenadas.addEventListener("click", async () => {
     const slcTipoServicio = document.querySelector("#slcTipoServicio");
     if (cambioServicio == slcTipoServicio.value) {
@@ -887,18 +886,6 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  $('#slcPaquetes').on('change', function () {
-    const selectedOption = $(this).find("option:selected");
-    const precio = selectedOption.data("precio");
-    const txtPrecio = document.querySelector("#txtPrecio");
-
-    if (precio) {
-      txtPrecio.value = precio;
-    } else {
-      txtPrecio.value = "";
-    }
-  });
-
   $('#slcPaquetesActualizar').on('change', function () {
     const selectedOption = $(this).find("option:selected");
     const precio = selectedOption.data("precio");
@@ -911,6 +898,18 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
+  $('#slcPaquetes').on('change', function () {
+    const selectedOption = $(this).find("option:selected");
+    const precio = selectedOption.data("precio");
+    const txtPrecio = document.querySelector("#txtPrecio");
+
+    if (precio) {
+      txtPrecio.value = precio;
+    } else {
+      txtPrecio.value = "";
+    }
+  });
+
   async function cargarCaracteristicasMapa(objeto) {
     const id = "map"
     const renderizado = "modal"
@@ -920,46 +919,44 @@ window.addEventListener("DOMContentLoaded", async () => {
       iniciarMapaSi = true
       mapa.iniciarMapa(objeto, id, renderizado);
     }
-  }
+  };
 
-    document.getElementById("slcTipoServicio").addEventListener("change", function () {
-      const txtPrecio = document.getElementById("txtPrecio");
-      const divSector = document.getElementById("divSector");
-      const btnBuscarCoordenadas = document.getElementById("btnBuscarCoordenadas");
-    
-      txtPrecio.disabled = false;
-      txtPrecio.value = "";
-      txtPrecio.disabled = true;
-    
-      const valor = this.value;
-    
-      if (valor === "0") {
-        btnBuscarCoordenadas.disabled = true;
+  document.getElementById("slcTipoServicio").addEventListener("change", function () {
+    const txtPrecio = document.getElementById("txtPrecio");
+    const divSector = document.getElementById("divSector");
+    const btnBuscarCoordenadas = document.getElementById("btnBuscarCoordenadas");
+
+    txtPrecio.disabled = false;
+    txtPrecio.value = "";
+    txtPrecio.disabled = true;
+
+    const valor = this.value;
+
+    if (valor === "0") {
+      btnBuscarCoordenadas.disabled = true;
+      divSector.hidden = true;
+      divSector.removeAttribute('required');
+    } else {
+      btnBuscarCoordenadas.disabled = false;
+
+      if (valor === "2") {
         divSector.hidden = true;
         divSector.removeAttribute('required');
       } else {
-        btnBuscarCoordenadas.disabled = false;
-    
-        if (valor === "2") {
-          divSector.hidden = true;
-          divSector.removeAttribute('required');
-        } else {
-          divSector.hidden = false;
-          divSector.setAttribute('required', 'required');
-          // Dispara manualmente el evento 'change' en divSector
-          divSector.dispatchEvent(new Event("change"));
-        }
+        divSector.hidden = false;
+        divSector.setAttribute('required', 'required');
+        divSector.dispatchEvent(new Event("change"));
       }
-    });
-
-
-
-  $("#btnGuardarModalMapa").on("click", function () {
-    idSector = mapa.idSector;
-    idCaja = mapa.idCaja;
+    }
   });
-
 
   ListarPaquetes.cargarServiciosGenerico("#slcTipoServicio", () => ListarPaquetes.cargarSelectPaquetesGenerico("#slcTipoServicio", "#slcPaquetes"));
   ListarPaquetes.cargarServiciosGenerico("#slcTipoServicioActualizar", () => ListarPaquetes.cargarSelectPaquetesGenerico("#slcTipoServicioActualizar", "#slcPaquetesActualizar"));
+
+
+  $(".select2me").select2({ theme: "bootstrap-5", allowClear: true });
+  $(".select2me").parent("div").children("span").children("span").children("span").css("height", " calc(3.5rem + 2px)");
+  $(".select2me").parent("div").children("span").children("span").children("span").children("span").css("margin-top", "18px");
+  $(".select2me").parent("div").find("label").css("z-index", "1");
+
 });

@@ -557,7 +557,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   async function deuda() {
-    const txtPagoServicio = document.getElementById('txtPagoServicio').value;
     const txtAdelantoEquipo = document.getElementById('txtAdelantoEquipo').value;
     const txtCostoAlquiler = document.getElementById('txtCostoAlquiler').value;
     const txtMaterialAdicional = document.getElementById('txtMaterialAdicional').value;
@@ -566,7 +565,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const txtDetalleDeuda = document.getElementById('txtDetalleDeuda').value;
     jsonDeuda = {
       deuda: {
-        pagoservicio: txtPagoServicio,
         adelantoequipo: txtAdelantoEquipo,
         costoalquiler: txtCostoAlquiler,
         materialadicional: txtMaterialAdicional,
@@ -726,7 +724,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       "txtTransmiTccqParametros",
       "txtTxRateParametros",
       "txtRxRateParametros",
-      "txtPagoServicio",
       "txtAdelantoEquipo",
       "txtCostoAlquiler",
       "txtMaterialAdicional",

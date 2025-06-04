@@ -160,7 +160,7 @@
             </div>
           </div>
 
-          <div id="parametrosContainer" style="display: none;">
+          <div id="parametrosContainer">
 
             <div class="mt-3 mb-3">
               <h5> Datos del router </h5>

@@ -439,7 +439,7 @@ $idContrato = $_GET['idContrato'];
             <div class="row">
               <div class="col-12 mt-3"> <!-- Añadí mt-3 para separar de la fila superior -->
                 <div class="form-floating">
-                  <textarea class="form-control" rows="3" id="txtDetalleVenta" placeholder="Detalle"></textarea>
+                  <textarea class="form-control" rows="3" id="txtDetalleVenta" placeholder="Detalle" style="height: 100px; width: 100%;"></textarea>
                   <label class="form-label" for="txtDetalleVenta">Detalles</label>
                 </div>
               </div>
@@ -590,14 +590,6 @@ $idContrato = $_GET['idContrato'];
       </div>
       <div class="card-body">
         <div class="row g-2 mb-2">
-          <div class="col-md">
-            <div class="form-floating">
-              <input type="number" class="form-control" id="txtPagoServicio"
-                placeholder="Pago Servicio" min="0" step="0.01">
-              <label for="txtPagoServicio">Pago Servicio <span class="required-asterisk" style="color: red;">*</span></label>
-              <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
-            </div>
-          </div>
           <div class="col-md">
             <div class="form-floating">
               <input type="number" class="form-control" id="txtAdelantoEquipo"

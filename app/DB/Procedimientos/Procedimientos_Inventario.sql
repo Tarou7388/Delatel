@@ -74,6 +74,7 @@ BEGIN
         p.inactive_at IS NULL;
 END $$
 
+-- A ELIMINAR
 DELIMITER $$
 DROP PROCEDURE IF EXISTS spu_productos_buscar_barraSintonizador$$
 
@@ -98,9 +99,9 @@ BEGIN
         p.inactive_at IS NULL AND t.tipo_nombre = 'Sintonizador';
 END $$
 
-
+-- A ELIMINAR
 DROP PROCEDURE IF EXISTS spu_productos_buscar_barraRepetidor$$
-
+-- A ELIMINAR
 CREATE PROCEDURE spu_productos_buscar_barraRepetidor(
     IN p_codigo_barra VARCHAR(120)
 )
@@ -120,7 +121,9 @@ BEGIN
         p.codigo_barra LIKE CONCAT(p_codigo_barra, '%')
     AND
         p.inactive_at IS NULL AND t.tipo_nombre = 'Repetidor';
-END $$
+END $$ 
+-- A ELIMINAR
+
 DROP PROCEDURE IF EXISTS spu_productos_buscar_barraRouter$$
 
 CREATE PROCEDURE spu_productos_buscar_barraRouter(
@@ -143,12 +146,13 @@ BEGIN
     AND
         p.inactive_at IS NULL AND t.tipo_nombre = 'Router' OR t.tipo_nombre = 'ONT';
 END $$
-
+-- A ELIMINAR spu_productos_buscar_barraRouter
 DELIMITER $$
 DROP PROCEDURE IF EXISTS spu_productos_listar_tiposproductos$$
 CREATE PROCEDURE spu_productos_listar_tiposproductos(
     IN codigobarra VARCHAR(120),
-    IN tipo_producto VARCHAR(30)
+    IN tipo_producto VARCHAR(30),
+    IN categoria CHAR(4)
 )
 BEGIN
     SELECT 
@@ -156,7 +160,7 @@ BEGIN
         p.modelo,
         p.precio_actual,
         m.marca,
-        P.codigo_barra,
+        p.codigo_barra,
         t.tipo_nombre
     FROM 
         tb_productos p
@@ -168,12 +172,16 @@ BEGIN
         tb_unidadmedida u ON p.id_unidad = u.id_unidad
     WHERE 
         p.codigo_barra LIKE CONCAT(codigobarra, '%')
-    AND 
-        t.tipo_nombre = tipo_producto
-    AND 
-        p.inactive_at IS NULL;
+        AND t.tipo_nombre = tipo_producto
+        AND p.inactive_at IS NULL
+        AND (
+            categoria IS NULL 
+            OR categoria = '' 
+            OR p.categoria = categoria
+        );
 END $$
 
+CALL spu_productos_listar_tiposproductos('123456','Router',"");
 /*/************************************************************************************************/
 /*/************************************************************************************************/
 /*/************************************************************************************************/
