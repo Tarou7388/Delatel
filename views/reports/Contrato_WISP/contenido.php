@@ -9,7 +9,6 @@
       </p>
     </div>
   </div>
-
   <div>
     <table class="tabla2">
       <thead>
@@ -20,31 +19,21 @@
       <tbody>
         <tr>
           <td><strong>CLIENTE:</strong></td>
-          <td colspan="5" class="text-center"><?= $resultado[0]['NombreCliente']; ?></td>
+          <td colspan="4" class="text-center"><?= htmlspecialchars($resultado[0]['NombreCliente']); ?></td>
           <td><strong>DNI:</strong></td>
-          <td colspan="2" class="text-center"><?= $resultado[0]['NumeroDocumento']; ?></td>
+          <td colspan="3" class="text-center"><?= htmlspecialchars($resultado[0]['NumeroDocumento']); ?></td>
         </tr>
         <tr>
           <td><strong>CELULAR:</strong></td>
-          <td colspan="2" class="text-center"><?= $resultado[0]['Telefono']; ?></td>
-          <td colspan="2"><strong>DIRECCIÓN:</strong></td>
-          <td colspan="4" class="text-center"><?= $resultado[0]['DireccionContrato']; ?></td>
+          <td colspan="2" class="text-center"><?= htmlspecialchars($resultado[0]['Telefono']); ?></td>
+          <td><strong>DIRECCIÓN:</strong></td>
+          <td colspan="5" class="text-center"><?= htmlspecialchars($resultado[0]['DireccionContrato']); ?></td>
         </tr>
         <tr>
-          <td><strong>ZONA:</strong></td>
-          <td colspan="2" class="text-center"><?= $resultado[0]['Sector']; ?></td>
-          <td><strong>DISTRITO:</strong></td>
-          <td colspan="2" class="text-center"><?= $resultado[0]['Distrito']; ?></td>
-          <td><strong>PROVINCIA:</strong></td>
-          <td colspan="2" class="text-center"><?= $resultado[0]['Provincia']; ?></td>
-        </tr>
-        <tr>
-          <td><strong>DPTO:</strong></td>
-          <td class="text-center"><?= $resultado[0]['Departamento']; ?></td>
-          <td colspan="2"><strong>PLAN CONTRATADO:</strong></td>
-          <td colspan="3" class="text-center"><?= $resultado[0]['NombrePaquete']; ?></td>
+          <td><strong>PLAN CONTRATADO:</strong></td>
+          <td colspan="5" class="text-center"><?= htmlspecialchars($resultado[0]['NombrePaquete']); ?></td>
           <td><strong>COSTO:</strong></td>
-          <td class="text-center">S/. <?= $resultado[0]['PrecioPaquete']; ?></td>
+          <td colspan="2" class="text-center">S/. <?= htmlspecialchars($resultado[0]['PrecioPaquete']); ?></td>
         </tr>
       </tbody>
     </table>
@@ -60,7 +49,7 @@
       <tbody>
         <tr>
           <td><strong>PERIODO:</strong></td>
-          <td class="text-center"><?= htmlspecialchars($fichaTecnica['parametros']['periodo']) ?></td>
+          <td class="text-center"><?= htmlspecialchars($fichaTecnica['periodo']) ?></td>
           <td><strong>SIGNAL STRENGTH</strong></td>
           <td class="text-center"><?= htmlspecialchars($fichaTecnica['parametros']['signalstrength']) ?></td>
           <td><strong>FRECUENCIA:</strong></td>
@@ -72,11 +61,11 @@
           <td><strong>TRANSMIT CCQ:</strong></td>
           <td class="text-center"><?= htmlspecialchars($fichaTecnica['parametros']['transmitccq']) ?></td>
           <td><strong>BASE:</strong></td>
-          <td class="text-center"><?= htmlspecialchars($fichaTecnica['parametros']['base'][0]['nombre']) ?> (ID: <?= htmlspecialchars($fichaTecnica['parametros']['base'][0]['id']) ?>)</td>
+          <td class="text-center"><?= htmlspecialchars($fichaTecnica['parametros']['base'][0]['nombre']) ?></td>
         </tr>
         <tr>
           <td><strong>SUB-BASE:</strong></td>
-          <td class="text-center" colspan="2"><?= htmlspecialchars($fichaTecnica['parametros']['subbase'][0]['nombre']) ?> (ID: <?= htmlspecialchars($fichaTecnica['parametros']['subbase'][0]['id']) ?>)</td>
+          <td class="text-center" colspan="2"><?= htmlspecialchars($fichaTecnica['parametros']['subbase'][0]['nombre']) ?></td>
           <td><strong>TX/RX RATE:</strong></td>
           <td class="text-center"><?= htmlspecialchars($fichaTecnica['parametros']['txrate']) ?></td>
           <td class="text-center"><?= htmlspecialchars($fichaTecnica['parametros']['rxrate']) ?></td>
@@ -181,7 +170,7 @@
           </tr>
           <tr>
             <td><strong>F. INICIO:</strong></td>
-            <td><?= htmlspecialchars($fichaTecnica['alquilado']['fechaInicio']) ?></td>
+            <td><?= htmlspecialchars($fichaTecnica['alquilado']['fechainicio']) ?></td>
             <td><strong>MODELO:</strong></td>
             <td><?= htmlspecialchars($fichaTecnica['alquilado']['antena']['modelo']) ?></td>
             <td><strong>MODELO:</strong></td>
@@ -230,18 +219,16 @@
       </thead>
       <tbody>
         <tr>
-          <td colspan="2"><strong>PAGO SERVICIO:</strong></td>
-          <td colspan="1" class="text-center">S/. <?= htmlspecialchars($fichaTecnica['deuda']['pagoservicio']) ?></td>
           <td colspan="2"><strong>SALDO PENDIENTE:</strong></td>
-          <td colspan="1" class="text-center">S/. <?= htmlspecialchars($fichaTecnica['deuda']['saldopendiente']) ?></td>
-          <td colspan="2"><strong>ADELANTO EQUIPO:</strong></td>
-          <td colspan="1" class="text-center">S/. <?= htmlspecialchars($fichaTecnica['deuda']['adelantoequipo']) ?></td>
+          <td colspan="2" class="text-center">S/. <?= htmlspecialchars($fichaTecnica['deuda']['saldopendiente']) ?></td>
+          <td colspan="3"><strong>ADELANTO DE EQUIPO:</strong></td>
+          <td colspan="2" class="text-center">S/. <?= htmlspecialchars($fichaTecnica['deuda']['adelantoequipo']) ?></td>
         </tr>
         <tr>
           <td colspan="2"><strong>COSTO DE ALQUILER:</strong></td>
           <td class="text-center">S/. <?= htmlspecialchars($fichaTecnica['deuda']['costoalquiler']) ?></td>
           <td colspan="2"><strong>MATERIAL ADICIONAL:</strong></td>
-          <td class="text-center"><?= htmlspecialchars($fichaTecnica['deuda']['materialadicional']) ?></td>
+          <td class="text-center">S/.<?= htmlspecialchars($fichaTecnica['deuda']['materialadicional']) ?></td>
           <td colspan="2"><strong>TOTAL CANCELADO:</strong></td>
           <td class="text-center">S/. <?= htmlspecialchars($fichaTecnica['deuda']['totalcancelado']) ?></td>
         </tr>
@@ -316,6 +303,12 @@
             <td class="text-center"><?= htmlspecialchars($router['dns2']) ?></td>
             <td><strong>OTROS:</strong></td>
             <td class="text-center"><?= htmlspecialchars($router['otros']) ?></td>
+          </tr>
+          <tr>
+            <td><strong>USUARIO:</strong></td>
+            <td class="text-center"></td>
+            <td><strong>CLAVE:</strong></td>
+            <td class="text-center"></td>
           </tr>
         <?php endforeach; ?>
         </tbody>

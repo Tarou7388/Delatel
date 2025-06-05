@@ -61,7 +61,7 @@ $idContrato = $_GET['idContrato'];
               </div>
             </div>
             <div class="col-12 col-md-6">
-              <div class="form-floating" id="divSector">
+              <div class="form-floating">
                 <select class="form-select select2me" id="slcCodigoBarrasRepetidor" aria-label=Repetidores required>
                 </select>
                 <label for="slcCodigoBarrasRepetidor" class="form-label">Repetidor</label>

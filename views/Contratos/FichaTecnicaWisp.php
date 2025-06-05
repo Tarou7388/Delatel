@@ -170,20 +170,19 @@ $idContrato = $_GET['idContrato'];
         <h5 class="modal-title" id="routerConfigModalLabel">Configuración del Router</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" id="mdlRouterBody">
         <div class="container">
           <!-- Modo Router -->
           <h5 class="mb-3">Modo Router</h5>
 
           <div class="row g-2 mb-2">
             <div class="col-md">
-              <div class="input-group">
-                <div class="form-floating">
-                  <input type="text" id="txtCodigoBarraRouter" class="form-control" value="" placeholder="Código de Barra" required>
-                  <label for="txtCodigoBarraRouter">Código de Barra <span class="required-asterisk" style="color: red;">*</span></label>
-                  <div class="invalid-feedback">Por favor, ingrese su valor válido.</div>
-                </div>
-                <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
+              <div class="form-floating">
+                <select class="form-select select2me" id="slcCodigoBarraRouter" style="width: 100%;">
+                  <option value="0" selected disabled>Seleccione</option>
+                </select>
+                <label for="slcCodigoBarraRouter">Router</label>
+                <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
               </div>
             </div>
             <div class="col-md">
@@ -647,9 +646,6 @@ $idContrato = $_GET['idContrato'];
     <div class="row">
       <div class="col-12 mb-3 btn-container">
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-          <!-- <button type="button" id="btnReporte" class="btn btn-info px-4 py-2 mb-2 mb-md-0">
-            <i class="fas fa-file-alt"></i> Generar Reporte
-          </button> -->
           <button type="button" id="btnRegistrar" class="btn btn-success px-4 py-2 mb-2 mb-md-0">
             <i class="fas fa-save"></i> Guardar
           </button>

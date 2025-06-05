@@ -43,7 +43,9 @@
               <select class="form-select" id="slcEditarCategoria">
                 <option value="" selected>Ninguna</option>
                 <option value="FRIB">Fibra</option>
-                <option value="WISP">Redes</option>
+                <option value="WISP">Wisp</option>
+                <option value="CATV">Catv</option>
+                <option value="REDS">Redes</option>
               </select>
               <label for="slcEditarCategoria">Categoria del Producto</label>
             </div>
@@ -122,7 +124,9 @@
               <select class="form-select" id="slcCategoria">
                 <option value="" selected>Ninguna</option>
                 <option value="FRIB">Fibra</option>
-                <option value="WISP">Redes</option>
+                <option value="WISP">Wisp</option>
+                <option value="CATV">Catv</option>
+                <option value="REDS">Redes</option>
               </select>
               <label for="slcCategoria">Categoria del Producto</label>
             </div>
@@ -148,7 +152,7 @@
 
           <div class="col-md">
             <div class="form-floating">
-              <input type="text" class="form-control" id="txtCodigoBarras" name="txtCodigoBarras" placeholder="Código de Barras" required maxlength="6">
+              <input type="text" class="form-control" id="txtCodigoBarras" name="txtCodigoBarras" placeholder="Código de Barras" maxlength="6">
               <label for="txtCodigoBarras">MAC</label>
             </div>
           </div>

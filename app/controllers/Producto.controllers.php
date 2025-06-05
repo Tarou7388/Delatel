@@ -82,7 +82,8 @@ if (isset($_GET['operacion'])) {
 			$resultado = $producto->listarProductosPorTipo(
 				[
 					"codigoBarra" => Herramientas::sanitizarEntrada($_GET['codigoBarra']),
-					"tipoProducto" => Herramientas::sanitizarEntrada($_GET['tipoProducto'])
+					"tipoProducto" => Herramientas::sanitizarEntrada($_GET['tipoProducto']),
+					"categoria" => Herramientas::sanitizarEntrada($_GET['categoria'])
 				]
 			);
 			echo json_encode($resultado);

@@ -857,7 +857,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         return {
           operacion: "listarProductosPorTipo",
           tipoProducto: "Sintonizador",
-          codigoBarra: params.term || ""
+          codigoBarra: params.term || "",
+          categoria: ""
         };
       },
       processResults: function (data) {

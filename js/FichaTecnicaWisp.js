@@ -26,6 +26,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   let jsonDeuda = {};
   let jsonData = {};
 
+  let codigoRouter = "";
+
   const txtPeriodo = document.getElementById("txtPeriodo");
   const periodoDate = new Date();
   periodoDate.setMonth(periodoDate.getMonth() + 6);
@@ -79,7 +81,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
   const valoresRouter = {
-    codigoBarra: '',
     modelo: '',
     marca: '',
     wan: '192.168.',
@@ -95,7 +96,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   };
 
   document.getElementById('routerConfigModal').addEventListener('show.bs.modal', (event) => {
-    document.getElementById('txtCodigoBarraRouter').value = valoresRouter.codigoBarra;
     document.getElementById('txtModeloRouter').value = valoresRouter.modelo;
     document.getElementById('txtMarcaRouter').value = valoresRouter.marca;
     document.getElementById('txtWanRouter').value = valoresRouter.wan;
@@ -219,7 +219,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     routerConfigModal.show();
 
     saveButton.onclick = function () {
-      const codigoBarra = document.getElementById("txtCodigoBarraRouter").value;
       const modelo = document.getElementById("txtModeloRouter").value;
       const marca = document.getElementById("txtMarcaRouter").value;
       const wan = document.getElementById("txtWanRouter").value;
@@ -234,7 +233,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       const otros = document.getElementById("txtOtrosWireless").value;
 
       const campos = [
-        { id: 'txtCodigoBarraRouter', valor: codigoBarra },
         { id: 'txtWanRouter', valor: wan },
         { id: 'txtMascaraRouter', valor: mascara },
         { id: 'txtPuertaEnlaceRouter', valor: puertaEnlace },
@@ -619,16 +617,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     return data;
   }
 
-  document.querySelector('#txtCodigoBarraRouter').addEventListener('input', async function () {
-    const datos = await productoBarraBuscar('txtCodigoBarraRouter');
-    if (datos.length > 0) {
-      document.querySelector('#txtMarcaRouter').value = datos[0].marca;
-      document.querySelector('#txtModeloRouter').value = datos[0].modelo;
-    } else {
-      showToast("Producto no encontrado", "WARNING");
-    }
-  });
-
   document.querySelector('#txtMacAntenaAlquilados').addEventListener('input', async function () {
     const datos = await productoBarraBuscar('txtMacAntenaAlquilados');
     if (datos.length > 0) {
@@ -791,8 +779,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     jsonData.venta = null;
     jsonData.alquilado = null;
-    
-    jsonData.periodo = txtPeriodo.value; 
+
+    jsonData.periodo = txtPeriodo.value;
 
     const tipoOperacion = document.getElementById('slcOperacion').value;
 
@@ -860,37 +848,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  $("#slcBaseParametros").on("change", function () {
-    const baseId = this.value;
-    cargarSubBases(baseId);
-  });
-
-  $(document).ready(function () {
-    $(".select2me").select2({
-      theme: "bootstrap-5",
-      allowClear: true,
-      placeholder: "Seleccione"
-    }).on('select2:clear', function (e) {
-      const selectElement = $(this);
-      const baseId = selectElement.val();
-      if (baseId) {
-        cargarSubBases(baseId);
-      } else {
-        console.warn("No hay Bases seleccionada para cargar sub-bases.");
-        $('#slcSubBaseParametros').html('<option value="0" selected disabled>Seleccione</option>');
-      }
-    });
-
-    $(".select2me").parent("div").children("span").children("span").children("span").css("height", "calc(3.5rem + 2px)");
-    $(".select2me").parent("div").children("span").children("span").children("span").children("span").css("margin-top", "18px");
-    $(".select2me").parent("div").find("label").css("z-index", "1");
-  });
-
-  $(".select2me").select2({ theme: "bootstrap-5", allowClear: true });
-  $(".select2me").parent("div").children("span").children("span").children("span").css("height", " calc(3.5rem + 2px)");
-  $(".select2me").parent("div").children("span").children("span").children("span").children("span").css("margin-top", "18px");
-  $(".select2me").parent("div").find("label").css("z-index", "1");
-
   document.getElementById("txtSignalStrengthParametros").addEventListener("input", validarValorRango);
   document.getElementById("txtNoiseFloorParametros").addEventListener("input", validarValorRango);
   document.getElementById("txtTransmiTccqParametros").addEventListener("input", validarValorRango);
@@ -907,5 +864,88 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   document.getElementById('txtAdelantoVenta').addEventListener('input', calcularSubtotal);
   document.getElementById('txtMaterialAdicionalVenta').addEventListener('input', calcularSubtotal);
+
+
+
+  $("#slcBaseParametros").on("change", function () {
+    const baseId = this.value;
+    cargarSubBases(baseId);
+  });
+
+  $(document).ready(function () {
+    $("#slcBaseParametros").select2({
+      theme: "bootstrap-5",
+      allowClear: true,
+      placeholder: "Seleccione"
+    }).on('select2:clear', function (e) {
+      const baseId = $(this).val();
+      if (baseId) {
+        cargarSubBases(baseId);
+      } else {
+        console.warn("No hay Bases seleccionada para cargar sub-bases.");
+        $('#slcSubBaseParametros').html('<option value="0" selected disabled>Seleccione</option>');
+      }
+    });
+
+    $("#slcBaseParametros").parent("div").children("span").children("span").children("span").css("height", "calc(3.5rem + 2px)");
+    $("#slcBaseParametros").parent("div").children("span").children("span").children("span").children("span").css("margin-top", "18px");
+    $("#slcBaseParametros").parent("div").find("label").css("z-index", "1");
+  });
+
+
+  $("#slcCodigoBarraRouter").select2({
+      theme: "bootstrap-5",
+      dropdownParent: $("#mdlRouterBody"),
+      placeholder: "Buscar producto...",
+      allowClear: true,
+      ajax: {
+        url: `${config.HOST}app/controllers/Producto.controllers.php`,
+        dataType: "json",
+        delay: 300,
+        data: function (params) {
+          return {
+            operacion: "listarProductosPorTipo",
+            tipoProducto: "Router",
+            codigoBarra: params.term || "",
+            categoria: ""
+          };
+        },
+        processResults: function (data) {
+          console.log("Datos recibidos:", data);
+
+          if (!Array.isArray(data)) {
+            console.warn("Respuesta inesperada del servidor:", data);
+            return { results: [] };
+          }
+
+          return {
+            results: data.map(item => ({
+              id: item.codigo_barra,
+              text: `${item.codigo_barra} - ${item.precio_actual} - ${item.marca}`,
+              data: item
+            }))
+          };
+        },
+        cache: true
+      }
+    });
+
+  $("#slcCodigoBarraRouter").on("select2:select", function (e) {
+    const selected = e.params.data.data;
+    codigoRouter = selected.codigo_barra;
+
+    $("#txtMarcaRouter").val(selected.marca);
+    $("#txtModeloRouter").val(selected.modelo);
+  });
+
+  $("#slcCodigoBarraRouter").on("select2:clear", function () {
+    $("#txtMarcaRouter").val("");
+    $("#txtModeloRouter").val("");
+    codigoRouter = "";
+  });
+
+  $(".select2me").parent("div").children("span").children("span").children("span").css("height", "calc(3.5rem + 2px)");
+  $(".select2me").parent("div").children("span").children("span").children("span").children("span").css("margin-top", "18px");
+  $(".select2me").parent("div").find("label").css("z-index", "1");
 });
 

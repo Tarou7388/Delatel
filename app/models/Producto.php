@@ -212,10 +212,11 @@ class Producto extends Conexion
 
   public function listarProductosPorTipo($params = [])
   {
-    $sql = "CALL spu_productos_listar_tiposproductos(?,?)";
+    $sql = "CALL spu_productos_listar_tiposproductos(?,?,?)";
     $values = array(
       $params['codigoBarra'],
-      $params['tipoProducto']
+      $params['tipoProducto'],
+      $params['categoria']
     );
     return $this->consultaParametros($sql, $values);
   }

@@ -76,8 +76,9 @@ document.addEventListener("DOMContentLoaded", async function () {
       { data: 4, title: "Unidad de Medida", className: "text-center" },
       { data: 5, title: "Precio Actual", className: "text-center" },
       { data: 6, title: "MAC", className: "text-center" },
+      { data: 7, title: "Categoria", className: "text-center" },
       {
-        data: 7,
+        data: 8,
         title: "Acciones",
         className: "text-center",
         orderable: false,
@@ -154,11 +155,15 @@ document.addEventListener("DOMContentLoaded", async function () {
     const data = await response.json();
 
     if (data.Actualizado) {
+      console.log(datosProducto)
+      console.log(data);
       tablaProductos.ajax.reload();
       showToast("Actualizado Correctamente.", "SUCCESS");
       $("#modalEditarProducto").modal("hide");
       idProducto = -1;
     } else {
+      
+      console.log(datosProducto)
       showToast("Error al actualizar el producto.", "ERROR");
       idProducto = -1;
     }

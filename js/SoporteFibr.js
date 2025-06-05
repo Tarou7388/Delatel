@@ -1213,7 +1213,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         return {
           operacion: "listarProductosPorTipo",
           tipoProducto: "Repetidor",
-          codigoBarra: params.term || ""
+          codigoBarra: params.term || "",
+          categoria: ""
         };
       },
       processResults: function (data) {
@@ -1259,7 +1260,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         return {
           operacion: "listarProductosPorTipo",
           tipoProducto: "",
-          codigoBarra: params.term || ""
+          codigoBarra: params.term || "",
+          categoria: ""
         };
       },
       transport: function (params, success, failure) {
@@ -1272,7 +1274,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             data: {
               operacion: "listarProductosPorTipo",
               tipoProducto: tipo,
-              codigoBarra: term
+              codigoBarra: term,
+              categoria: ""
             }
           });
         $.when(fetchTipo("Router"), fetchTipo("ONT"))
