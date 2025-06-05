@@ -1,0 +1,52 @@
+{
+    "cabl": {
+        "cambioscable": {
+            "potencia": -40,
+            "sintonizadores": [
+                {
+                    "numero": 1,
+                    "codigobarra": "NG168S",
+                    "marca": "NEXTGEN",
+                    "modelo": "NG16811A",
+                    "serie": "EJEMPLO_DE_SERIE",
+                    "precio": "95.00"
+                }
+            ],
+            "triplexor": "pasivo",
+            "splitter": [
+                {
+                    "cantidad": 20,
+                    "tipo": "1x3"
+                }
+            ],
+            "conector": {
+                "numeroconector": 120,
+                "precio": 180
+            },
+            "cable": {
+                "metrosadicionales": 120,
+                "preciometro": 156
+            },
+            "costo": {
+                "cablecosto": {
+                    "numerosintotizadores": 1,
+                    "costoalquilersintotizador": 40,
+                    "costocable": 0,
+                    "costoconector": 0,
+                    "detalle": "Se cambio el detalle para coincidir con los nuevos datos se le suma a todo +20"
+                },
+                "casa": {
+                    "gpon": "-20",
+                    "catv": "-20"
+                },
+                "nap": {
+                    "gpon": "-20",
+                    "catv": "-20"
+                }
+            }
+        }
+    },
+    "idcaja": "73",
+    "puerto": "4",
+    "periodo": "2025-11-20"
+}

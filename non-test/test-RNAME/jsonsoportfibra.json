@@ -1,0 +1,52 @@
+{
+    "fibr": {
+        "parametrosgpon": {
+            "pppoe": "rauhuayta712",
+            "clave": "@huillca712",
+            "potencia": -18,
+            "router": {
+                "ssid": "Antoanet",
+                "seguridad": "1993ANTOANETH",
+                "codigobarra": "DC-51-93-6E-AB-08",
+                "ip": "192.168.10.1",
+                "marca": "ZTE",
+                "modelo": "F670L",
+                "serie": "ZTEEQJNQCA02811",
+                "banda": [
+                    "2G",
+                    "5G"
+                ],
+                "numeroantena": 2,
+                "catv": false,
+                "ingresouserrouter": "admin",
+                "ingresopass": "Gpon26"
+            },
+            "catv": false,
+            "repetidores": []
+        },
+        "cambiosgpon": {
+            "pppoe": "rauhuayta71221",
+            "clave": "@huillca712123",
+            "potencia": "-25",
+            "router": {
+                "ssid": "Antoanet123",
+                "seguridad": "1993ANTOANETH123",
+                "codigobarra": "DC-51-93-6E-AB-08",
+                "ip": "192.168.10.12",
+                "marca": "ZTE",
+                "modelo": "F670L",
+                "serie": "ZTEEQJNQCA02811123",
+                "banda": "2G,5G",
+                "numeroantena": "3",
+                "catv": true,
+                "ingresouserrouter": "adminOS",
+                "ingresopass": "Gpon27"
+            },
+            "catv": true,
+            "repetidores": []
+        }
+    },
+    "idcaja": 85,
+    "vlan": "1051",
+    "periodo": "2025-11-19"
+}

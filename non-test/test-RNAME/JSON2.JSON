@@ -1,0 +1,97 @@
+{
+    "periodo": "2025-12-03",
+    "fibraoptica": {
+        "usuario": "bramesias723",
+        "claveacceso": "@tasayco723",
+        "potencia": -30,
+        "router": {
+            "ssid": "DatoSSIDROUTER",
+            "seguridad": "Seguridad23131router",
+            "codigobarra": "3C64CF",
+            "ip": "192.168.111.111",
+            "marca": "TpLink",
+            "modelo": "Archer C24ES",
+            "serie": "60D2DD24895ASDAS",
+            "banda": [
+                "5G"
+            ],
+            "numeroantena": 2,
+            "catv": true,
+            "ingresouserrouter": "60D2DD24895FUSUARIOROUTER",
+            "ingresopass": "60D2DD24895FPASWOUTER"
+        },
+        "detalles": "Detalles de Router FIBRA",
+        "repetidores": [
+            {
+                "numero": 1,
+                "ssid": "123",
+                "contrasenia": "456",
+                "codigobarrarepetidor": "sdasda",
+                "marca": "Satra",
+                "modelo": "asdasda",
+                "precio": "12.64",
+                "serie": "789",
+                "ip": "192.168.101.112",
+                "condicion": "alquilado"
+            }
+        ]
+    },
+    "puerto": 1,
+    "idcaja": 121,
+    "vlan": 1,
+    "cable": {
+        "pagoinstalacion": 30,
+        "potencia": -30,
+        "triplexor": {
+            "requerido": "false",
+            "cargador": " false"
+        },
+        "conector": {
+            "numeroconector": 123,
+            "precio": "1.50"
+        },
+        "splitter": [
+            {
+                "cantidad": 12,
+                "tipo": "1x3"
+            }
+        ],
+        "cable": {
+            "metrosadicionales": 123,
+            "preciometro": "1.30"
+        },
+        "sintonizadores": [
+            {
+                "numero": 1,
+                "codigobarra": "NG168S",
+                "marca": "NEXTGEN",
+                "modelo": "NG16811A",
+                "serie": "SINESTECIA SINTONIZADOR",
+                "precio": "95.00"
+            }
+        ]
+    },
+    "costo": {
+        "pagoadelantado": 0,
+        "descuento": 20,
+        "nap": {
+            "gpon": -32,
+            "catv": -33
+        },
+        "casa": {
+            "gpon": -33,
+            "catv": -33
+        },
+        "cablecosto": {
+            "numerosintotizadores": 1,
+            "costoalquilersintotizador": 40,
+            "costocable": 159.9,
+            "costoconector": 184.5,
+            "cantidadcable": 123,
+            "preciocable": "1.30",
+            "precioconector": "1.50",
+            "cantidadconector": 123,
+            "detalle": "Detalle obligatorio de Cable"
+        }
+    }
+}

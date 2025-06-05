@@ -1,0 +1,76 @@
+{
+    "fibr": {
+        "parametrosgpon": {
+            "pppoe": "bramesias725",
+            "clave": "@tasayco725",
+            "potencia": "-20",
+            "router": {
+                "ssid": "123",
+                "seguridad": "123",
+                "codigobarra": "6C68A4",
+                "ip": "192.168.123.123",
+                "marca": "V-SOL",
+                "modelo": "V2804NZ",
+                "serie": "123213123",
+                "banda": "5G",
+                "numeroantena": "3",
+                "catv": true,
+                "ingresouserrouter": "1231321",
+                "ingresopass": "3123123"
+            },
+            "catv": true,
+            "repetidores": [
+                {
+                    "numero": 1,
+                    "ssid": "1111",
+                    "contrasenia": "123123",
+                    "codigobarrarepetidor": "sdasda",
+                    "marca": "Satra",
+                    "modelo": "asdasda",
+                    "precio": "12.64",
+                    "serie": "123123",
+                    "ip": "123.123.123.123",
+                    "condicion": "alquilado"
+                }
+            ]
+        },
+        "cambiosgpon": {
+            "pppoe": "bramesias725",
+            "clave": "@tasayco725",
+            "potencia": "-24",
+            "router": {
+                "ssid": "LOLO",
+                "seguridad": "ZTE",
+                "codigobarra": "DC5193",
+                "ip": "192.168.123.123",
+                "marca": "ZTE",
+                "modelo": "F670L",
+                "serie": "SERIESERIESEIRE",
+                "banda": "5G",
+                "numeroantena": "6",
+                "catv": true,
+                "ingresouserrouter": "MAOR",
+                "ingresopass": "IANWFMAOR"
+            },
+            "catv": true,
+            "repetidores": [
+                {
+                    "numero": 1,
+                    "ssid": "1111",
+                    "contrasenia": "123123",
+                    "codigobarrarepetidor": "sdasda",
+                    "marca": "Satra",
+                    "modelo": "asdasda",
+                    "precio": "12.64",
+                    "serie": "123123",
+                    "ip": "123.123.123.123",
+                    "condicion": "alquilado"
+                }
+            ]
+        }
+    },
+    "idcaja": 120,
+    "vlan": "23",
+    "periodo": "2025-12-03",
+    "puerto": 99
+}
