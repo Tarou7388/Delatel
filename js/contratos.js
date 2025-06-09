@@ -198,19 +198,6 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  /**
-   * Función asíncrona para obtener la lista de sectores desde el servidor.
-   * Realiza una solicitud HTTP GET al endpoint especificado y devuelve la respuesta en formato JSON.
-   *
-   * @returns {Promise<Object>} Una promesa que resuelve con los datos de la lista de sectores en formato JSON.
-   * @throws {Error} Si la solicitud de red falla o la respuesta no es un JSON válido.
-   */
-  async function fetchSectores() {
-    const response = await fetch(
-      `${config.HOST}app/controllers/Sector.controllers.php?operacion=listarSectores`
-    );
-    return await response.json();
-  };
 
   /**
    * Busca información de un cliente basado en su número de documento.
@@ -793,6 +780,15 @@ window.addEventListener("DOMContentLoaded", async () => {
         await ListarPaquetes.cargarPaquetesActualizar(idServicio, data[0].id_paquete);
       }
 
+      mapa.eliminarMapa();
+      iniciarMapaSi = false
+
+      if (tiposServicio.value == "2") {
+        await cargarCaracteristicasMapa("Antenas","mapActualizar");
+      } else {
+        await cargarCaracteristicasMapa("Cajas","mapActualizar");
+      }
+
       const slcSector = document.getElementById("slcSectorActualizar");
       const sectorId = data[0].id_sector;
       const sectorTexto = data[0].nombre_sector;
@@ -860,6 +856,8 @@ window.addEventListener("DOMContentLoaded", async () => {
   coordenada.addEventListener("change", async function () {
     const optionToSelect = document.querySelector(`#slcSector option[value="${idSector}"]`);
 
+    console.log("Coordenada cambiada:", coordenada.value);
+
     if (optionToSelect) {
       optionToSelect.selected = true;
       const selectElement = document.querySelector("#slcSector");
@@ -877,11 +875,11 @@ window.addEventListener("DOMContentLoaded", async () => {
       if (slcTipoServicio.value == "2") {
         mapa.eliminarMapa();
         iniciarMapaSi = false
-        await cargarCaracteristicasMapa("Antenas");
+        await cargarCaracteristicasMapa("Antenas","map");
       } else {
         mapa.eliminarMapa();
         iniciarMapaSi = false
-        await cargarCaracteristicasMapa("Cajas");
+        await cargarCaracteristicasMapa("Cajas","map");
       }
     }
   });
@@ -910,8 +908,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  async function cargarCaracteristicasMapa(objeto) {
-    const id = "map"
+  async function cargarCaracteristicasMapa(objeto,id) {
     const renderizado = "modal"
     if (iniciarMapaSi) {
       return

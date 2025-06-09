@@ -51,6 +51,9 @@ BEGIN
     SELECT LAST_INSERT_ID() AS id_cliente;
 END $$
 
+USE Delatel;
+SELECT * FROM tb_personas;
+
 DELIMITER $$
 
 DROP PROCEDURE IF EXISTS spu_cliente_buscar_NombreApp;
