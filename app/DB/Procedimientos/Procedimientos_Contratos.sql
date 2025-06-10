@@ -192,7 +192,7 @@ BEGIN
         LEFT JOIN tb_empresas e ON cl.id_cliente = e.id_empresa
         INNER JOIN tb_paquetes t ON c.id_paquete = t.id_paquete
         LEFT JOIN tb_servicios sv ON JSON_CONTAINS(t.id_servicio, JSON_OBJECT('id_servicio', sv.id_servicio))
-        INNER JOIN tb_sectores s ON c.id_sector = s.id_sector
+        LEFT JOIN tb_sectores s ON c.id_sector = s.id_sector
         INNER JOIN tb_responsables ur ON c.id_usuario_registro = ur.id_responsable
         INNER JOIN tb_usuarios ur_usuario ON ur.id_usuario = ur_usuario.id_usuario
         INNER JOIN tb_personas ur_persona ON ur_usuario.id_persona = ur_persona.id_persona
@@ -297,6 +297,8 @@ CREATE PROCEDURE spu_contratos_actualizar(
     IN p_referencia VARCHAR(200),
     IN p_nota TEXT,
     IN p_fecha_inicio DATE,
+    IN p_id_sector INT,
+    IN p_ficha_instalacion JSON,
     IN p_iduser_update INT
 )
 BEGIN
@@ -308,6 +310,8 @@ BEGIN
         nota = p_nota,
         fecha_inicio = p_fecha_inicio,
         iduser_update = p_iduser_update,
+        id_sector = NULLIF(p_id_sector, 0),
+        ficha_instalacion = p_ficha_instalacion,
         update_at = NOW()
     WHERE id_contrato = p_id_contrato;
 END$$

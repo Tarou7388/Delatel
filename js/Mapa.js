@@ -100,7 +100,7 @@ async function actualizarPoligonoEnMapa(union) {
       unionPolygons.push(polygon);
       polygon.addListener('click', async (e) => {
         eventoPoligonos(e);
-      });  
+      });
     });
 
   } else {
@@ -264,8 +264,9 @@ export async function iniciarMapa(objetoRender = "Cajas", id = "map", renderizad
           marcadorCoordenada = { lat: latitud, lng: longitud };
         } else {
           document.querySelector('#btnGuardarModalMapa').disabled = true;
+          console.log(marcadorCoordenada);
         }
-        
+
       }
     });
   }
@@ -274,6 +275,7 @@ export async function iniciarMapa(objetoRender = "Cajas", id = "map", renderizad
     case "modal":
       eventoMapa(coordenadaCualquiera);
       const btnGuardarModalMapa = document.getElementById('btnGuardarModalMapa');
+      const actualizarMapa = document.getElementById('mapActualizar');
       if (btnGuardarModalMapa) {
         btnGuardarModalMapa.addEventListener('click', () => {
           if (marcadorCoordenada != null) {
@@ -285,14 +287,22 @@ export async function iniciarMapa(objetoRender = "Cajas", id = "map", renderizad
             if (document.getElementById('txtCoordenadas')) {
               document.getElementById('txtCoordenadas').value = `${marcadorCoordenada.lat},${marcadorCoordenada.lng}`;
             }
-            if (document.getElementById('txtCoordenadasPersona')) {
-              document.getElementById('txtCoordenadasPersona').value = `${marcadorCoordenada.lat},${marcadorCoordenada.lng}`;
+            if (document.getElementById('txtCoordenadaActualizar')) {
+              document.getElementById('txtCoordenadaActualizar').value = `${marcadorCoordenada.lat},${marcadorCoordenada.lng}`;
             }
             localStorage.setItem('marcadoresCercanos', JSON.stringify(marcadoresCercanos));
             emitter.emit('coordenadaEncontrada');
           }
         });
       }
+      if (actualizarMapa) {
+        actualizarMapa.addEventListener("click", () => {
+          if (document.getElementById('txtCoordenadaActualizar')) {
+            document.getElementById('txtCoordenadaActualizar').value = `${marcadorCoordenada.lat},${marcadorCoordenada.lng}`;
+          }
+        })
+      }
+
       break;
     case "pagina":
       eventoMapa(true);
@@ -360,7 +370,7 @@ export async function actualizarMapa(id = "map2") {
 }
 
 async function eventoMapa(valor) {
-  if(valor){
+  if (valor) {
     mapa.addListener('click', async (e) => {
       marcadorCoordenada = { lat: e.latLng.lat(), lng: e.latLng.lng() };
       if (marcador) marcador.setMap(null);
@@ -387,8 +397,6 @@ export async function buscarCajasporSector(idSector) {
   const data = await response.json();
   return data;
 }
-
-
 
 export async function renderizarCoordenadaMapa(id) {
   try {
@@ -419,36 +427,40 @@ export async function renderizarCoordenadaMapa(id) {
   }
 }
 
+let marcadorActivo = null;
+
 export async function buscarCoordenadassinMapa(latitud, longitud) {
-  const datos = await obtenerDatosAnidado(`${config.HOST}app/controllers/Caja.controllers.php?operacion=listarCajas`);
-  datosCajas = datos;
+  if (!mapa) return;
 
-  const posicionBuscada = new google.maps.LatLng(latitud, longitud);
-  let posicionDentroDeCirculo = false;
-  let idSectorEncontrado = null;
+  const posicion = new google.maps.LatLng(latitud, longitud);
+  mapa.setCenter(posicion);
+  mapa.setZoom(15);
 
-  if (!posicionDentroDeCirculo) {
-    console.warn("La posición no está dentro de ningún círculo.");
-  }
-
-  return idSectorEncontrado;
-}
-
-export function obtenerCoordenadasClick() {
-  mapa.addListener("click", (e) => {
-    ultimaCoordenada = {
-      latitud: e.latLng.lat(),
-      longitud: e.latLng.lng()
-    };
-
-    if (marcador) marcador.setMap(null);
-
-    marcador = new AdvancedMarkerElement({
-      position: e.latLng,
-      map: mapa,
-      title: "Marcador"
-    });
+  if (marcadorActivo) marcadorActivo.setMap(null);
+  marcadorActivo = new AdvancedMarkerElement({
+    position: posicion,
+    map: mapa,
+    title: "Ubicación buscada"
   });
 }
 
+export function obtenerCoordenadasClick() {
+  if (!mapa) return;
 
+  mapa.setOptions({ draggableCursor: "default" });
+  mapa.addListener("click", (e) => {
+    const latitud = e.latLng.lat();
+    const longitud = e.latLng.lng();
+    const punto = turf.point([longitud, latitud]);
+
+    if (!union || !turf.booleanPointInPolygon(punto, union)) {
+      ultimaCoordenada = { latitud, longitud };
+      if (marcadorActivo) marcadorActivo.setMap(null);
+      marcadorActivo = new AdvancedMarkerElement({
+        position: { lat: latitud, lng: longitud },
+        map: mapa,
+        title: "Coordenada Seleccionada"
+      });
+    }
+  });
+}

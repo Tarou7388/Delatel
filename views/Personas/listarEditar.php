@@ -51,7 +51,7 @@
                   <label for="CoordenadaModel" class="form-label">Coordenadas</label>
                   <div class="input-group">
                     <input type="text" id="CoordenadaModel" class="form-control" placeholder="Coordenada" required>
-                    <button class="btn btn-outline-secondary" type="button" id="buscarCoodenada">Buscar</button>
+                    <button class="btn btn-outline-secondary" type="button" id="buscarCoordenada">Buscar</button>
                   </div>
                 </div>
 
@@ -137,7 +137,7 @@
                   <label for="txtCoordenadas" class="form-label">Coordenadas</label>
                   <div class="input-group">
                     <input type="text" id="txtCoordenadas" class="form-control" placeholder="Coordenada" required>
-                    <button class="btn btn-outline-secondary" type="button" id="buscarCoordenada">Buscar</button>
+                    <button class="btn btn-outline-secondary" type="button" id="buscarCoordenadaEmpresa">Buscar</button>
                   </div>
                 </div>
 
@@ -149,7 +149,7 @@
               </div>
 
               <div class="col-md-6">
-                <div id="map" style="height: 450px; width: 100%;"></div>
+                <div id="mapEmpresa" style="height: 450px; width: 100%;"></div>
               </div>
             </div>
           </div>

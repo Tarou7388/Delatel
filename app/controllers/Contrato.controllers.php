@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   switch (Herramientas::sanitizarEntrada($_GET['operacion'])) {
     case 'listarContratos':
       $resultado = $contrato->listarContratos();
-      echo json_encode($resultado); 
+      echo json_encode($resultado);
       break;
     case 'buscarContratoId':
       $resultado = $contrato->buscarContratoId(["id" => Herramientas::sanitizarEntrada($_GET['id'])]);
@@ -95,6 +95,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
         "referencia"         => Herramientas::sanitizarEntrada($datos['parametros']['referencia']),
         "nota"               => Herramientas::sanitizarEntrada($datos['parametros']['nota']),
         "fechaInicio"        => Herramientas::sanitizarEntrada($datos['parametros']['fechaInicio']),
+        "idsector"           => Herramientas::sanitizarEntrada($datos['parametros']['idsector']),
+        "fichaInstalacion"   => $datos['parametros']['fichaInstalacion'],
         "idUsuarioUpdate"    => Herramientas::sanitizarEntrada($datos['parametros']['idUsuarioUpdate'])
       ];
       $resultado = $contrato->actualizarContrato($datosActualizar);

@@ -85,14 +85,12 @@
                   </div>
                 </div>
                 <div class="col-12 col-md-6 mt-2">
-                  <div class="input-group">
+                  <div class="input-group inputGroupCoordenada">
                     <div class="form-floating flex-grow-1">
-                      <input type="text" class="form-control" id="txtCoordenadaActualizar" placeholder="Coordenada" name="coordenada" disabled>
+                      <input type="text" class="form-control" id="txtCoordenadaActualizar" placeholder="Coordenada" name="coordenada">
                       <label for="txtCoordenadaActualizar" class="form-label">Coordenada</label>
                     </div>
-                    <button class="btn btn-primary" type="button" id="btnBuscarCoordenadasActualizar">
-                      <i class="fa-solid fa-magnifying-glass"></i>
-                    </button>
+                    <button class="btn btn-outline-secondary" type="button" id="buscarCoordenada"><i class="fa-solid fa-magnifying-glass"></i></button>
                   </div>
                 </div>
               </div>
@@ -100,7 +98,7 @@
               <div class="row mb-2">
                 <div class="col-12 col-md-6 mt-2">
                   <div class="form-floating">
-                    <select class="form-select select2me" id="slcSectorActualizar" aria-label="Sectores" disabled>
+                    <select class="form-select select2me" id="slcSectorActualizar" aria-label="Sectores">
                       <option value="0" disabled selected>Sectores</option>
                     </select>
                     <label for="slcSectorActualizar" class="form-label">Sectores</label>
@@ -130,7 +128,7 @@
               </div>
 
               <div class="text-end mt-2">
-                <button type="submit" class="btn btn-success" id="btnActualizar">Guardar Cambios</button>
+                <button type="button" class="btn btn-success" id="btnActualizar">Guardar Cambios</button>
               </div>
             </form>
           </div>
@@ -140,10 +138,6 @@
               <div id="mapActualizar" style="height: 600px;">
 
               </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-              <button type="button" class="btn btn-primary" id="btnGuardarModalMapa" data-bs-dismiss="modal" disabled>Guardar cambios</button>
             </div>
           </div>
         </div>

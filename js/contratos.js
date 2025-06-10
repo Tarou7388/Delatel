@@ -34,7 +34,13 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   $('#slcSector').on('change', async function () {
     idCaja = $(this).val();
-    idSector = $(this).find(':selected').parent().attr('id').split('-')[1];
+    const optgroup = $(this).find(':selected').parent();
+    const optgroupId = optgroup.attr('id');
+    if (optgroupId && optgroupId.includes('-')) {
+      idSector = optgroupId.split('-')[1];
+    } else {
+      idSector = null;
+    }
   });
 
   async function cargarSelectCajas(marcadoresNuevos) {
@@ -134,6 +140,106 @@ window.addEventListener("DOMContentLoaded", async () => {
       console.error('Error al cargar cajas:', error.message);
     } finally {
       $('#slcSector').trigger('change');
+    }
+  }
+
+  async function cargarSelectCajasActualizar(marcadoresNuevos) {
+    try {
+      const marcadores = marcadoresNuevos || [];
+      const sectoresInfo = {};
+
+      $('#slcSectorActualizar').empty();
+      $('#slcSectorActualizar').append(new Option('Seleccione una caja', '', true, true));
+
+      const cajasIds = marcadores
+        .filter(marcador => marcador && marcador.properties && marcador.properties.id)
+        .map(marcador => parseInt(marcador.properties.id))
+        .filter(id => !isNaN(id));
+
+      if (cajasIds.length === 0) {
+        $('#slcSectorActualizar').trigger('change');
+        return;
+      }
+
+      const idsString = cajasIds.join(',');
+
+      const cajasResponse = await fetch(`${config.HOST}app/controllers/Caja.controllers.php?operacion=cajasBuscarMultiple&ids=${idsString}`);
+
+      const cajasData = await cajasResponse.json();
+
+      if (!cajasData || !Array.isArray(cajasData) || cajasData.length === 0) {
+        $('#slcSectorActualizar').trigger('change');
+        return;
+      }
+
+      const sectoresIds = [...new Set(
+        cajasData
+          .filter(caja => caja && caja.id_sector)
+          .map(caja => parseInt(caja.id_sector))
+          .filter(id => !isNaN(id))
+      )];
+
+      if (sectoresIds.length === 0) {
+        $('#slcSectorActualizar').trigger('change');
+        return;
+      }
+
+      const sectoresIdsString = sectoresIds.join(',');
+
+      const sectoresResponse = await fetch(`${config.HOST}app/controllers/Sector.controllers.php?operacion=sectoresBuscarMultiple&ids=${sectoresIdsString}`);
+
+      const sectoresData = await sectoresResponse.json();
+
+      if (!sectoresData || !Array.isArray(sectoresData)) {
+        $('#slcSectorActualizar').trigger('change');
+        return;
+      }
+
+      const sectoresMap = {};
+      sectoresData.forEach(sector => {
+        if (sector && sector.id_sector) {
+          sectoresMap[sector.id_sector] = sector.sector;
+        }
+      });
+
+      cajasData.forEach(caja => {
+        if (!caja || !caja.id_sector) return;
+
+        const idSector = caja.id_sector;
+        const idCaja = caja.id_caja;
+        const nombreCaja = caja.nombre || 'Sin nombre';
+
+        if (!sectoresInfo[idSector]) {
+          sectoresInfo[idSector] = {
+            id: idSector,
+            nombre: sectoresMap[idSector] || 'Sector Desconocido',
+            cajas: []
+          };
+        }
+
+        sectoresInfo[idSector].cajas.push({
+          id: idCaja,
+          nombre: nombreCaja
+        });
+      });
+
+      for (const idSector in sectoresInfo) {
+        const sector = sectoresInfo[idSector];
+        const optgroup = $('<optgroup></optgroup>')
+          .attr('label', sector.nombre)
+          .attr('id', `sector-${sector.id}`);
+
+        sector.cajas.forEach(caja => {
+          optgroup.append(new Option(caja.nombre, caja.id));
+        });
+
+        $('#slcSectorActualizar').append(optgroup);
+      }
+
+    } catch (error) {
+      console.error('Error al cargar cajas:', error.message);
+    } finally {
+      $('#slcSectorActualizar').trigger('change');
     }
   }
 
@@ -475,45 +581,100 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 
   async function actualizarContrato(idContrato, idUsuario, idPaquete) {
-    if (accesos?.contratos?.actualizar) {
-      const direccionServicio = document.querySelector("#txtDireccionActualizar").value;
-      const referencia = document.querySelector("#txtReferenciaActualizar").value;
-      const nota = document.querySelector("#txtNotaActualizar").value;
-      const datosEnvio = {
-        operacion: "actualizarContrato",
-        parametros: {
-          idContrato: idContrato,
-          idPaquete: idPaquete,
-          direccionServicio: direccionServicio,
-          referencia: referencia,
-          nota: nota,
-          fechaInicio: document.querySelector("#txtFechaInicioActualizar").value,
-          idUsuarioUpdate: idUsuario,
+    if (!accesos?.contratos?.actualizar) {
+      showToast("No tienes acceso para actualizar contratos", "ERROR");
+      return;
+    }
+
+    const direccionServicio = document.querySelector("#txtDireccionActualizar").value.trim();
+    const referencia = document.querySelector("#txtReferenciaActualizar").value.trim();
+    const nota = document.querySelector("#txtNotaActualizar").value.trim();
+    const fechaInicio = document.querySelector("#txtFechaInicioActualizar").value;
+    const slcSectorActualizar = document.getElementById("slcSectorActualizar");
+    const idCaja = slcSectorActualizar.value;
+    let idSectorActualizar = null;
+
+    if (slcSectorActualizar.selectedIndex !== -1) {
+      const selectedOption = slcSectorActualizar.options[slcSectorActualizar.selectedIndex];
+      const optgroup = selectedOption.parentElement;
+      if (
+        optgroup &&
+        optgroup.tagName === "OPTGROUP" &&
+        typeof optgroup.id === "string" &&
+        optgroup.id.startsWith("sector-")
+      ) {
+        idSectorActualizar = optgroup.id.split('-')[1];
+      }
+    }
+
+    // Validación de campos obligatorios
+    if (
+      !direccionServicio ||
+      !referencia ||
+      !idPaquete ||
+      (slcSectorActualizar && !idCaja)
+    ) {
+      showToast("¡Llene todos los campos obligatorios!", "INFO");
+      return;
+    }
+
+    let fichaInstalacion = {};
+    if (idCaja) {
+      fichaInstalacion.idcaja = idCaja;
+    }
+
+    const datosEnvio = {
+      operacion: "actualizarContrato",
+      parametros: {
+        idContrato: idContrato,
+        idPaquete: idPaquete,
+        direccionServicio: direccionServicio,
+        referencia: referencia,
+        nota: nota,
+        fechaInicio: fechaInicio,
+        idsector: idSectorActualizar,
+        fichaInstalacion: JSON.stringify(fichaInstalacion),
+        idUsuarioUpdate: idUsuario,
+      },
+    };
+
+    console.log(datosEnvio);
+
+    const response = await fetch(
+      `${config.HOST}app/controllers/Contrato.controllers.php`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
         },
-      };
+        body: JSON.stringify(datosEnvio),
+      }
+    );
 
-      const response = await fetch(
-        `${config.HOST}app/controllers/Contrato.controllers.php`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(datosEnvio),
-        }
-      );
+    const data = await response.text();
+    console.log(data);
 
-      const data = await response.json();
+    const modalElement = document.getElementById("modalEditarContrato");
+    const modal = bootstrap.Modal.getInstance(modalElement);
 
-      if (data.actualizado) {
-        showToast("¡Contrato actualizado correctamente!", "SUCCESS", 1500);
-        resetUI();
-        tabla.ajax.reload();
-      } else {
-        showToast("Error al actualizar el contrato.", "ERROR");
+    if (data.actualizado) {
+      showToast("¡Contrato actualizado correctamente!", "SUCCESS", 1500);
+      resetUI();
+      tabla.ajax.reload();
+      if (modal) {
+        modal.hide();
+        // Destruir el modal completamente
+        modalElement.parentNode.removeChild(modalElement);
+      }
+    } else {
+      showToast("Error al actualizar el contrato.", "ERROR");
+      if (modal) {
+        modal.hide();
+        modalElement.parentNode.removeChild(modalElement);
       }
     }
   }
+
 
   async function cargarDatos() {
 
@@ -682,6 +843,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         botonesEdit.forEach((boton) => {
           boton.addEventListener("click", (event) => {
             const idContrato = event.target.getAttribute("data-idContrato");
+            console.log(idContrato);
             abrirModalEditar(idContrato);
           });
         });
@@ -757,7 +919,6 @@ window.addEventListener("DOMContentLoaded", async () => {
   async function abrirModalEditar(idContrato) {
     const modal = new bootstrap.Modal(document.getElementById("modalEditarContrato"));
     modal.show();
-
     try {
       const response = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=buscarContratoId&id=${idContrato}`);
       const data = await response.json();
@@ -767,11 +928,16 @@ window.addEventListener("DOMContentLoaded", async () => {
       document.getElementById("txtDireccionActualizar").value = data[0].direccion_servicio;
       document.getElementById("txtReferenciaActualizar").value = data[0].referencia;
       document.getElementById("txtCoordenadaActualizar").value = data[0].coordenada;
+      if (data[0].coordenada && data[0].coordenada.includes(',')) {
+        const [lat, lng] = data[0].coordenada.split(',').map(x => parseFloat(x.trim()));
+        if (!isNaN(lat) && !isNaN(lng)) {
+          mapa.buscarCoordenadassinMapa({ lat, lng });
+        }
+      }
       document.getElementById("txtNotaActualizar").value = data[0].nota;
-
+      await cargarSelectCajasActualizar(JSON.parse(localStorage.getItem('marcadoresCercanos')));
       const idServicio = JSON.parse(data[0].id_servicio).id_servicio;
       const tiposServicio = data[0].tipos_servicio.split(',').length;
-
       if (tiposServicio === 2) {
         await ListarPaquetes.cargarTipoServicioActualizar('duos');
         await ListarPaquetes.cargarPaquetesMultiplesActualizar("duos", data[0].id_paquete);
@@ -779,53 +945,29 @@ window.addEventListener("DOMContentLoaded", async () => {
         await ListarPaquetes.cargarTipoServicioActualizar(idServicio);
         await ListarPaquetes.cargarPaquetesActualizar(idServicio, data[0].id_paquete);
       }
-
       mapa.eliminarMapa();
-      iniciarMapaSi = false
-
-      if (tiposServicio.value == "2") {
-        await cargarCaracteristicasMapa("Antenas","mapActualizar");
+      iniciarMapaSi = false;
+      if (tiposServicio === 2) {
+        await cargarCaracteristicasMapa("Antenas", "mapActualizar");
       } else {
-        await cargarCaracteristicasMapa("Cajas","mapActualizar");
+        await cargarCaracteristicasMapa("Cajas", "mapActualizar");
       }
-
-      const slcSector = document.getElementById("slcSectorActualizar");
-      const sectorId = data[0].id_sector;
-      const sectorTexto = data[0].nombre_sector;
-      let optionExists = false;
-
-      for (let i = 0; i < slcSector.options.length; i++) {
-        if (slcSector.options[i].value == sectorId) {
-          optionExists = true;
-          break;
+      
+      const optgroup = $(`#slcSectorActualizar optgroup#sector-${data[0].id_sector}`);
+      if (optgroup.length > 0) {
+        const firstOption = optgroup.find('option').first();
+        if (firstOption.length > 0) {
+          $('#slcSectorActualizar').val(firstOption.val()).trigger('change');
         }
       }
-
-      if (optionExists) {
-        slcSector.value = sectorId;
-      } else {
-        const newOption = new Option(sectorTexto, sectorId, true, true);
-        slcSector.add(newOption);
-      }
-
-      $('#slcSectorActualizar').trigger('change');
-      document.querySelector(".btn-close").addEventListener("click", () => {
+      
+      document.querySelector("#modalEditarContrato .btn-close").addEventListener("click", () => {
         modal.hide();
       });
-
-      const slcPaquetes = document.getElementById("slcPaquetesActualizar");
-      slcPaquetes.addEventListener('change', (e) => {
-        const paqueteId = e.target.value;
-        if (paqueteId) {
-          const paqueteSeleccionado = dataPaquetes.find(p => p.id_paquete == paqueteId);
-          document.getElementById("txtPrecioActualizar").value = paqueteSeleccionado ? paqueteSeleccionado.precio : '0';
-        }
-      });
-
     } catch (error) {
       console.error("Error al obtener los detalles del contrato:", error);
     }
-  };
+  }
 
   (async () => {
     await cargarDatos();
@@ -875,11 +1017,11 @@ window.addEventListener("DOMContentLoaded", async () => {
       if (slcTipoServicio.value == "2") {
         mapa.eliminarMapa();
         iniciarMapaSi = false
-        await cargarCaracteristicasMapa("Antenas","map");
+        await cargarCaracteristicasMapa("Antenas", "map");
       } else {
         mapa.eliminarMapa();
         iniciarMapaSi = false
-        await cargarCaracteristicasMapa("Cajas","map");
+        await cargarCaracteristicasMapa("Cajas", "map");
       }
     }
   });
@@ -908,7 +1050,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  async function cargarCaracteristicasMapa(objeto,id) {
+  async function cargarCaracteristicasMapa(objeto, id) {
     const renderizado = "modal"
     if (iniciarMapaSi) {
       return
