@@ -25,11 +25,15 @@ window.addEventListener("DOMContentLoaded", async () => {
   let idEmpresa = "";
   slcPaquetes.disabled = true;
   let tabla;
-  let dataPaquetes = [];
+  let fichaInstalacion = {};
 
   mapa.emitter.on('coordenadaEncontrada', async (coordenada) => {
     await cargarSelectCajas(JSON.parse(localStorage.getItem('marcadoresCercanos')));
     document.querySelector("#slcSector").disabled = false;
+  });
+
+  mapa.emitter.on('coordenadaEncontradaActualizar', async (coordenada) => {
+    await cargarSelectCajasActualizar(JSON.parse(localStorage.getItem('marcadoresCercanosActualizar')));
   });
 
   $('#slcSector').on('change', async function () {
@@ -43,6 +47,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
+  // Cargar cajas para el registro (slcSector)
   async function cargarSelectCajas(marcadoresNuevos) {
     try {
       const marcadores = marcadoresNuevos || [];
@@ -141,74 +146,81 @@ window.addEventListener("DOMContentLoaded", async () => {
     } finally {
       $('#slcSector').trigger('change');
     }
-  }
+  };
+
 
   async function cargarSelectCajasActualizar(marcadoresNuevos) {
     try {
+      const $slcSectorActualizar = $('#slcSectorActualizar');
+
+      // Reset: eliminar select2 anterior, vaciar y deshabilitar
+      if ($slcSectorActualizar.hasClass('select2-hidden-accessible')) {
+        $slcSectorActualizar.select2('destroy');
+      }
+      $slcSectorActualizar.empty().prop('disabled', true);
+      $slcSectorActualizar.append(new Option('Seleccione una caja', '', true, true));
+
       const marcadores = marcadoresNuevos || [];
       const sectoresInfo = {};
 
-      $('#slcSectorActualizar').empty();
-      $('#slcSectorActualizar').append(new Option('Seleccione una caja', '', true, true));
-
       const cajasIds = marcadores
-        .filter(marcador => marcador && marcador.properties && marcador.properties.id)
-        .map(marcador => parseInt(marcador.properties.id))
+        .filter(m => m?.properties?.id)
+        .map(m => parseInt(m.properties.id))
         .filter(id => !isNaN(id));
 
       if (cajasIds.length === 0) {
-        $('#slcSectorActualizar').trigger('change');
+        $slcSectorActualizar.select2({
+          theme: "bootstrap-5",
+          allowClear: true,
+          minimumResultsForSearch: Infinity
+        });
+        $slcSectorActualizar.trigger('change');
         return;
       }
 
-      const idsString = cajasIds.join(',');
-
-      const cajasResponse = await fetch(`${config.HOST}app/controllers/Caja.controllers.php?operacion=cajasBuscarMultiple&ids=${idsString}`);
-
+      const cajasResponse = await fetch(`${config.HOST}app/controllers/Caja.controllers.php?operacion=cajasBuscarMultiple&ids=${cajasIds.join(',')}`);
       const cajasData = await cajasResponse.json();
 
-      if (!cajasData || !Array.isArray(cajasData) || cajasData.length === 0) {
-        $('#slcSectorActualizar').trigger('change');
+      if (!Array.isArray(cajasData) || cajasData.length === 0) {
+        $slcSectorActualizar.select2({
+          theme: "bootstrap-5",
+          allowClear: true,
+          minimumResultsForSearch: Infinity
+        });
+        $slcSectorActualizar.trigger('change');
         return;
       }
 
       const sectoresIds = [...new Set(
-        cajasData
-          .filter(caja => caja && caja.id_sector)
-          .map(caja => parseInt(caja.id_sector))
-          .filter(id => !isNaN(id))
+        cajasData.map(c => parseInt(c.id_sector)).filter(id => !isNaN(id))
       )];
 
       if (sectoresIds.length === 0) {
-        $('#slcSectorActualizar').trigger('change');
+        $slcSectorActualizar.select2({
+          theme: "bootstrap-5",
+          allowClear: true,
+          minimumResultsForSearch: Infinity
+        });
+        $slcSectorActualizar.trigger('change');
         return;
       }
 
-      const sectoresIdsString = sectoresIds.join(',');
-
-      const sectoresResponse = await fetch(`${config.HOST}app/controllers/Sector.controllers.php?operacion=sectoresBuscarMultiple&ids=${sectoresIdsString}`);
-
+      const sectoresResponse = await fetch(`${config.HOST}app/controllers/Sector.controllers.php?operacion=sectoresBuscarMultiple&ids=${sectoresIds.join(',')}`);
       const sectoresData = await sectoresResponse.json();
 
-      if (!sectoresData || !Array.isArray(sectoresData)) {
-        $('#slcSectorActualizar').trigger('change');
-        return;
+      const sectoresMap = {};
+      if (Array.isArray(sectoresData)) {
+        sectoresData.forEach(sector => {
+          if (sector?.id_sector) {
+            sectoresMap[sector.id_sector] = sector.sector;
+          }
+        });
       }
 
-      const sectoresMap = {};
-      sectoresData.forEach(sector => {
-        if (sector && sector.id_sector) {
-          sectoresMap[sector.id_sector] = sector.sector;
-        }
-      });
-
       cajasData.forEach(caja => {
-        if (!caja || !caja.id_sector) return;
+        if (!caja?.id_sector) return;
 
         const idSector = caja.id_sector;
-        const idCaja = caja.id_caja;
-        const nombreCaja = caja.nombre || 'Sin nombre';
-
         if (!sectoresInfo[idSector]) {
           sectoresInfo[idSector] = {
             id: idSector,
@@ -218,8 +230,8 @@ window.addEventListener("DOMContentLoaded", async () => {
         }
 
         sectoresInfo[idSector].cajas.push({
-          id: idCaja,
-          nombre: nombreCaja
+          id: caja.id_caja,
+          nombre: caja.nombre || 'Sin nombre'
         });
       });
 
@@ -233,13 +245,22 @@ window.addEventListener("DOMContentLoaded", async () => {
           optgroup.append(new Option(caja.nombre, caja.id));
         });
 
-        $('#slcSectorActualizar').append(optgroup);
+        $slcSectorActualizar.append(optgroup);
       }
+
+      // Inicializar select2 sin buscador
+      $slcSectorActualizar.select2({
+        theme: "bootstrap-5",
+        allowClear: true,
+        minimumResultsForSearch: Infinity
+      });
+
+      // Habilitar si hay al menos una opción válida
+      const hasOptions = $slcSectorActualizar.find('option').length > 1 || $slcSectorActualizar.find('optgroup').length > 0;
+      $slcSectorActualizar.prop('disabled', !hasOptions).val(null).trigger('change');
 
     } catch (error) {
       console.error('Error al cargar cajas:', error.message);
-    } finally {
-      $('#slcSectorActualizar').trigger('change');
     }
   }
 
@@ -462,8 +483,6 @@ window.addEventListener("DOMContentLoaded", async () => {
       },
     };
 
-    console.log(datosEnvio);
-
     try {
       const response = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php`, {
         method: "POST",
@@ -471,7 +490,6 @@ window.addEventListener("DOMContentLoaded", async () => {
         headers: { "Content-Type": "application/json" },
       });
       const data = await response.json();
-      console.log(data);
 
       if (data.error) {
         showToast("Error al registrar el contrato.", "ERROR");
@@ -492,7 +510,6 @@ window.addEventListener("DOMContentLoaded", async () => {
         });
 
         const dataCaja = await respuesta.json();
-        console.log(dataCaja);
         if (dataCaja.error) {
           showToast("Error al descontar caja.", "ERROR");
         } else {
@@ -530,8 +547,6 @@ window.addEventListener("DOMContentLoaded", async () => {
       const dataPeriodo = JSON.parse(dataPeriodoini[0].ficha_instalacion);
 
       let eliminarSi = false
-
-      console.log(dataPeriodoini);
 
       if (!dataPeriodo || !dataPeriodo.periodo) {
         if (await ask("Este contrato no está instalado. ¿Desea cancelar el Contrato?", "Contratos")) {
@@ -617,9 +632,12 @@ window.addEventListener("DOMContentLoaded", async () => {
       showToast("¡Llene todos los campos obligatorios!", "INFO");
       return;
     }
+    console.log("ID Caja:", idCaja);
 
-    let fichaInstalacion = {};
     if (idCaja) {
+      if (!fichaInstalacion) {
+        fichaInstalacion = {};
+      }
       fichaInstalacion.idcaja = idCaja;
     }
 
@@ -634,11 +652,12 @@ window.addEventListener("DOMContentLoaded", async () => {
         fechaInicio: fechaInicio,
         idsector: idSectorActualizar,
         fichaInstalacion: JSON.stringify(fichaInstalacion),
+        coordenada: document.querySelector("#txtCoordenadaActualizar").value.trim(),
         idUsuarioUpdate: idUsuario,
       },
     };
 
-    console.log(datosEnvio);
+    console.log("Datos a enviar:", datosEnvio);
 
     const response = await fetch(
       `${config.HOST}app/controllers/Contrato.controllers.php`,
@@ -651,20 +670,26 @@ window.addEventListener("DOMContentLoaded", async () => {
       }
     );
 
-    const data = await response.text();
-    console.log(data);
+    const data = await response.json();
+
+    console.log("Respuesta del servidor:", data);
 
     const modalElement = document.getElementById("modalEditarContrato");
     const modal = bootstrap.Modal.getInstance(modalElement);
 
     if (data.actualizado) {
       showToast("¡Contrato actualizado correctamente!", "SUCCESS", 1500);
-      resetUI();
       tabla.ajax.reload();
       if (modal) {
         modal.hide();
-        // Destruir el modal completamente
-        modalElement.parentNode.removeChild(modalElement);
+        // Limpiar los campos del formulario dentro del modal
+        modalElement.querySelectorAll('input, textarea, select').forEach(el => {
+          if (el.tagName === 'SELECT') {
+            el.selectedIndex = 0;
+          } else {
+            el.value = '';
+          }
+        });
       }
     } else {
       showToast("Error al actualizar el contrato.", "ERROR");
@@ -842,9 +867,19 @@ window.addEventListener("DOMContentLoaded", async () => {
 
         botonesEdit.forEach((boton) => {
           boton.addEventListener("click", (event) => {
-            const idContrato = event.target.getAttribute("data-idContrato");
-            console.log(idContrato);
-            abrirModalEditar(idContrato);
+            // Si el botón de editar fue clickeado (o su hijo)
+            if (event.target.closest(".btn-edit")) {
+              const btn = event.target.closest(".btn-edit");
+              const fila = btn.closest("tr");
+              const tipoServicio = fila && fila.querySelector(".btnGenerar") ? fila.querySelector(".btnGenerar").getAttribute("data-tipoServicio") : "";
+              if (tipoServicio === "WISP") {
+                showToast("Falta completar Actualizar para este servicio", "WARNING");
+                event.stopPropagation();
+                return;
+              }
+              const idContrato = btn.getAttribute("data-idContrato");
+              abrirModalEditar(idContrato);
+            }
           });
         });
 
@@ -917,27 +952,48 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 
   async function abrirModalEditar(idContrato) {
-    const modal = new bootstrap.Modal(document.getElementById("modalEditarContrato"));
+    const modalElement = document.getElementById("modalEditarContrato");
+    const modal = new bootstrap.Modal(modalElement);
     modal.show();
+
     try {
       const response = await fetch(`${config.HOST}app/controllers/Contrato.controllers.php?operacion=buscarContratoId&id=${idContrato}`);
       const data = await response.json();
-      document.getElementById("txtIdContratoActualizar").value = data[0].id_contrato;
-      document.getElementById("txtNombreActualizar").value = data[0].nombre_cliente;
-      document.getElementById("txtFechaInicioActualizar").value = data[0].fecha_inicio;
-      document.getElementById("txtDireccionActualizar").value = data[0].direccion_servicio;
-      document.getElementById("txtReferenciaActualizar").value = data[0].referencia;
-      document.getElementById("txtCoordenadaActualizar").value = data[0].coordenada;
+      if (!data || !data[0]) {
+        showToast("No se encontró el contrato.", "ERROR");
+        return;
+      }
+
+      document.getElementById("txtIdContratoActualizar").value = data[0].id_contrato || "";
+      document.getElementById("txtNombreActualizar").value = data[0].nombre_cliente || "";
+      document.getElementById("txtFechaInicioActualizar").value = data[0].fecha_inicio || "";
+      document.getElementById("txtDireccionActualizar").value = data[0].direccion_servicio || "";
+      document.getElementById("txtReferenciaActualizar").value = data[0].referencia || "";
+      document.getElementById("txtCoordenadaActualizar").value = data[0].coordenada || "";
+      document.getElementById("txtNotaActualizar").value = data[0].nota || "";
+
+
+      fichaInstalacion = JSON.parse(data[0].ficha_instalacion);
+      console.log("Datos del contrato:", fichaInstalacion);
+      // Buscar coordenada en el mapa si existe
       if (data[0].coordenada && data[0].coordenada.includes(',')) {
         const [lat, lng] = data[0].coordenada.split(',').map(x => parseFloat(x.trim()));
         if (!isNaN(lat) && !isNaN(lng)) {
           mapa.buscarCoordenadassinMapa({ lat, lng });
         }
       }
-      document.getElementById("txtNotaActualizar").value = data[0].nota;
-      await cargarSelectCajasActualizar(JSON.parse(localStorage.getItem('marcadoresCercanos')));
-      const idServicio = JSON.parse(data[0].id_servicio).id_servicio;
-      const tiposServicio = data[0].tipos_servicio.split(',').length;
+
+      // Cargar servicios y paquetes
+      let idServicio = "";
+      let tiposServicio = 1;
+      try {
+        idServicio = JSON.parse(data[0].id_servicio).id_servicio;
+        tiposServicio = data[0].tipos_servicio ? data[0].tipos_servicio.split(',').length : 1;
+      } catch (e) {
+        idServicio = data[0].id_servicio || "";
+        tiposServicio = 1;
+      }
+
       if (tiposServicio === 2) {
         await ListarPaquetes.cargarTipoServicioActualizar('duos');
         await ListarPaquetes.cargarPaquetesMultiplesActualizar("duos", data[0].id_paquete);
@@ -945,27 +1001,42 @@ window.addEventListener("DOMContentLoaded", async () => {
         await ListarPaquetes.cargarTipoServicioActualizar(idServicio);
         await ListarPaquetes.cargarPaquetesActualizar(idServicio, data[0].id_paquete);
       }
+
+      // Mapa y cajas
       mapa.eliminarMapa();
       iniciarMapaSi = false;
-      if (tiposServicio === 2) {
+      if (data[0].tipos_servicio === "WISP") {
         await cargarCaracteristicasMapa("Antenas", "mapActualizar");
       } else {
         await cargarCaracteristicasMapa("Cajas", "mapActualizar");
       }
-      
-      const optgroup = $(`#slcSectorActualizar optgroup#sector-${data[0].id_sector}`);
-      if (optgroup.length > 0) {
-        const firstOption = optgroup.find('option').first();
-        if (firstOption.length > 0) {
-          $('#slcSectorActualizar').val(firstOption.val()).trigger('change');
+
+
+      if (data[0].coordenada) {
+        const buscarCoordenada = document.querySelector("#buscarCoordenadaActualizar");
+        btnBuscarCoordenadas.addEventListener("click", async () => {
+          slcSectorActualizar.disabled = false;
+        });
+      }
+
+      if (data[0].id_sector) {
+        const optgroup = $(`#slcSectorActualizar optgroup#sector-${data[0].id_sector}`);
+        if (optgroup.length > 0) {
+          const firstOption = optgroup.find('option').first();
+          if (firstOption.length > 0) {
+            $('#slcSectorActualizar').val(firstOption.val()).trigger('change');
+          }
         }
       }
-      
-      document.querySelector("#modalEditarContrato .btn-close").addEventListener("click", () => {
-        modal.hide();
-      });
+
+      // Cerrar modal al hacer click en la X
+      const closeBtn = modalElement.querySelector(".btn-close");
+      if (closeBtn) {
+        closeBtn.onclick = () => modal.hide();
+      }
     } catch (error) {
       console.error("Error al obtener los detalles del contrato:", error);
+      showToast("Error al cargar los datos del contrato.", "ERROR");
     }
   }
 
@@ -997,8 +1068,6 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   coordenada.addEventListener("change", async function () {
     const optionToSelect = document.querySelector(`#slcSector option[value="${idSector}"]`);
-
-    console.log("Coordenada cambiada:", coordenada.value);
 
     if (optionToSelect) {
       optionToSelect.selected = true;

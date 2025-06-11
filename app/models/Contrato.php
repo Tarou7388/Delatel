@@ -192,7 +192,7 @@ class Contrato extends Conexion
      */
     public function actualizarContrato($params = [])
     {
-        $sql = "CALL spu_contratos_actualizar(?,?,?,?,?,?,?,?,?)";
+        $sql = "CALL spu_contratos_actualizar(?,?,?,?,?,?,?,?,?,?)";
         $values = array(
             $params['idContrato'],
             $params['idPaquete'],
@@ -202,6 +202,7 @@ class Contrato extends Conexion
             $params['fechaInicio'],
             $params['idsector'],
             $params['fichaInstalacion'],
+            $params['coordenada'],
             $params['idUsuarioUpdate']
         );
         return $this->registrar($sql, $values);

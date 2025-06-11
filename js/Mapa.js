@@ -156,7 +156,14 @@ export async function iniciarMapa(objetoRender = "Cajas", id = "map", renderizad
     center: posicionInicial,
     mapId: "DEMO_MAP_ID",
   });
-  if (objetoRender == "Cajas") {
+
+  // Limpiar datos previos
+  circles = [];
+  marcadoresCajas = [];
+  puntosMarcador = turf.featureCollection([]);
+  union = null;
+
+  if (objetoRender === "Cajas") {
     const response = await fetch(`${config.HOST}app/controllers/Caja.controllers.php?operacion=listarCajas`);
     const datosCajas = await response.json();
     datosCajas.forEach(caja => {
@@ -171,10 +178,8 @@ export async function iniciarMapa(objetoRender = "Cajas", id = "map", renderizad
         title: caja.idCaja,
         content: img,
       });
-      marcador.addListener('click', async (e) => {
-        if (infoWindow) {
-          infoWindow.close
-        }
+      marcador.addListener('click', async () => {
+        if (infoWindow) infoWindow.close();
         const contentString = `
           <div id="content">
             <div id="siteNotice"></div>
@@ -197,7 +202,7 @@ export async function iniciarMapa(objetoRender = "Cajas", id = "map", renderizad
     RADIO = 1000;
     COLOR = "#6c5ce7";
     await iniciarRenderizadoPorLotes();
-  } else if (objetoRender == "Antenas") {
+  } else if (objetoRender === "Antenas") {
     const response = await fetch(`${config.HOST}app/controllers/Antenas.controllers.php?operacion=listarAntenas`);
     const datosAntenas = await response.json();
     datosAntenas.forEach(antena => {
@@ -212,10 +217,8 @@ export async function iniciarMapa(objetoRender = "Cajas", id = "map", renderizad
         title: antena.idAntena,
         content: img,
       });
-      marcador.addListener('click', async (e) => {
-        if (infoWindow) {
-          infoWindow.close
-        }
+      marcador.addListener('click', async () => {
+        if (infoWindow) infoWindow.close();
         const contentString = `
           <div id="content">
             <div id="siteNotice"></div>
@@ -238,38 +241,44 @@ export async function iniciarMapa(objetoRender = "Cajas", id = "map", renderizad
     await iniciarRenderizadoPorLotes();
   }
 
-  if (document.querySelector('#inputGroupCoordenada')) {
-    document.querySelector('#buscarCoordenada').addEventListener('click', async () => {
-      if (document.querySelector('#CoordenadaModel').value != '') {
-        const coordenada = document.querySelector('#CoordenadaModel').value.split(',');
-        const latitud = parseFloat(coordenada[0]);
-        const longitud = parseFloat(coordenada[1]);
-        const posicion = new google.maps.LatLng(latitud, longitud);
-        mapa.setCenter(posicion);
-        mapa.setZoom(15);
-        if (ubicacionMarcador) ubicacionMarcador.setMap(null);
-        if (marcador) marcador.setMap(null);
-        marcador = new AdvancedMarkerElement({
-          position: posicion,
-          map: mapa,
-          title: "Marcador"
-        });
-        const punto = turf.point([longitud, latitud]);
-        const dentroDelPoligono = turf.booleanPointInPolygon(punto, union);
+  // Manejar búsqueda por coordenada en ambos casos
+  function buscarYMarcarCoordenada(inputId, btnId) {
+    const btn = document.querySelector(btnId);
+    if (btn) {
+      btn.addEventListener('click', async () => {
+        const input = document.querySelector(inputId);
+        if (input && input.value !== '') {
+          const coordenada = input.value.split(',');
+          const latitud = parseFloat(coordenada[0]);
+          const longitud = parseFloat(coordenada[1]);
+          const posicion = new google.maps.LatLng(latitud, longitud);
+          mapa.setCenter(posicion);
+          mapa.setZoom(15);
+          if (ubicacionMarcador) ubicacionMarcador.setMap(null);
+          if (marcador) marcador.setMap(null);
+          marcador = new AdvancedMarkerElement({
+            position: posicion,
+            map: mapa,
+            title: "Marcador"
+          });
+          const punto = turf.point([longitud, latitud]);
+          const dentroDelPoligono = union && turf.booleanPointInPolygon(punto, union);
 
-        if (dentroDelPoligono) {
-          document.querySelector('#btnGuardarModalMapa').disabled = false;
-          marcadoresCercanos = await encontrarMarcadoresCercanos({ lat: latitud, lng: longitud });
-          marcadoresCercanos = marcadoresCercanos.features
-          marcadorCoordenada = { lat: latitud, lng: longitud };
-        } else {
-          document.querySelector('#btnGuardarModalMapa').disabled = true;
-          console.log(marcadorCoordenada);
+          if (dentroDelPoligono) {
+            if (document.querySelector('#btnGuardarModalMapa')) document.querySelector('#btnGuardarModalMapa').disabled = false;
+            marcadoresCercanos = await encontrarMarcadoresCercanos({ lat: latitud, lng: longitud });
+            marcadoresCercanos = marcadoresCercanos.features;
+            marcadorCoordenada = { lat: latitud, lng: longitud };
+          } else {
+            if (document.querySelector('#btnGuardarModalMapa')) document.querySelector('#btnGuardarModalMapa').disabled = true;
+          }
         }
-
-      }
-    });
+      });
+    }
   }
+
+  buscarYMarcarCoordenada('#CoordenadaModel', '#buscarCoordenada');
+  buscarYMarcarCoordenada('#txtCoordenadaActualizar', '#buscarCoordenadaActualizar');
 
   switch (renderizado) {
     case "modal":
@@ -277,7 +286,9 @@ export async function iniciarMapa(objetoRender = "Cajas", id = "map", renderizad
       const btnGuardarModalMapa = document.getElementById('btnGuardarModalMapa');
       const actualizarMapa = document.getElementById('mapActualizar');
       if (btnGuardarModalMapa) {
-        btnGuardarModalMapa.addEventListener('click', () => {
+        btnGuardarModalMapa.replaceWith(btnGuardarModalMapa.cloneNode(true));
+        const nuevoBtnGuardar = document.getElementById('btnGuardarModalMapa');
+        nuevoBtnGuardar.addEventListener('click', () => {
           if (marcadorCoordenada != null) {
             const modal = bootstrap.Modal.getInstance(document.getElementById('ModalMapa'));
             if (document.getElementById('txtCoordenadasMapa')) {
@@ -288,6 +299,8 @@ export async function iniciarMapa(objetoRender = "Cajas", id = "map", renderizad
               document.getElementById('txtCoordenadas').value = `${marcadorCoordenada.lat},${marcadorCoordenada.lng}`;
             }
             if (document.getElementById('txtCoordenadaActualizar')) {
+              localStorage.setItem('marcadoresCercanosActualizar', JSON.stringify(marcadoresCercanos));
+              emitter.emit('coordenadaEncontradaActualizar');
               document.getElementById('txtCoordenadaActualizar').value = `${marcadorCoordenada.lat},${marcadorCoordenada.lng}`;
             }
             localStorage.setItem('marcadoresCercanos', JSON.stringify(marcadoresCercanos));
@@ -295,28 +308,56 @@ export async function iniciarMapa(objetoRender = "Cajas", id = "map", renderizad
           }
         });
       }
+
       if (actualizarMapa) {
-        actualizarMapa.addEventListener("click", () => {
+        actualizarMapa.onclick = () => {
           if (document.getElementById('txtCoordenadaActualizar')) {
             document.getElementById('txtCoordenadaActualizar').value = `${marcadorCoordenada.lat},${marcadorCoordenada.lng}`;
           }
-        })
+          if (document.getElementById('txtCoordenadasMapa')) {
+            localStorage.setItem('marcadoresCercanosActualizar', JSON.stringify(marcadoresCercanos));
+            emitter.emit('coordenadaEncontradaActualizar');
+          }
+        };
       }
 
+      if (document.getElementById('buscarCoordenadaActualizar')) {
+        document.getElementById('buscarCoordenadaActualizar').addEventListener('click', async () => {
+          const input = document.querySelector('#txtCoordenadaActualizar');
+          if (input && input.value !== '') {
+            const coordenada = input.value.split(',');
+            const latitud = parseFloat(coordenada[0]);
+            const longitud = parseFloat(coordenada[1]);
+            const posicion = new google.maps.LatLng(latitud, longitud);
+            mapa.setCenter(posicion);
+            mapa.setZoom(15);
+            if (ubicacionMarcador) ubicacionMarcador.setMap(null);
+            if (marcador) marcador.setMap(null);
+            marcador = new AdvancedMarkerElement({
+              position: posicion,
+              map: mapa,
+              title: "Marcador"
+            });
+            const punto = turf.point([longitud, latitud]);
+            const dentroDelPoligono = union && turf.booleanPointInPolygon(punto, union);
+
+            if (dentroDelPoligono) {
+              if (document.querySelector('#btnGuardarModalMapa')) document.querySelector('#btnGuardarModalMapa').disabled = false;
+              marcadoresCercanos = await encontrarMarcadoresCercanos({ lat: latitud, lng: longitud });
+              marcadoresCercanos = marcadoresCercanos.features;
+              marcadorCoordenada = { lat: latitud, lng: longitud };
+              localStorage.setItem('marcadoresCercanosActualizar', JSON.stringify(marcadoresCercanos));
+              emitter.emit('coordenadaEncontradaActualizar');
+            } else {
+              if (document.querySelector('#btnGuardarModalMapa')) document.querySelector('#btnGuardarModalMapa').disabled = true;
+            }
+          }
+        });
+      }
       break;
     case "pagina":
       eventoMapa(true);
-      /*       circulosCajas.forEach(subArray => {
-              subArray.forEach(circulo => {
-                circulo.addListener('click', async (e) => {
-                  const idSector = circulo.idValue;
-                  const response = await fetch(`${config.HOST}app/controllers/Sector.controllers.php?operacion=buscarSector&idSector=${idSector}`);
-                  const data = await response.json();
-                  nombreSector = data[0].sector;
-                  emitter.emit('funcionEjecutada');
-                });
-              });
-            }); */
+      // Aquí puedes agregar lógica adicional para el modo "pagina" si es necesario
       break;
     default:
       break;

@@ -1,0 +1,81 @@
+{
+    "parametros": {
+        "plan": "Plan  Wisp Residencial 30MB  50",
+        "frecuencia": [
+            "5GHZ"
+        ],
+        "base": [
+            {
+                "id": "1",
+                "nombre": "Chincha"
+            }
+        ],
+        "subbase": [
+            {
+                "id": "2",
+                "nombre": "Rosedal"
+            }
+        ],
+        "signalstrength": "-55",
+        "noisefloor": "-90",
+        "transmitccq": 98.1,
+        "txrate": 72.2,
+        "rxrate": 72.2,
+        "routers": [
+            {
+                "numero": 1,
+                "codigobarra": "60D9C7",
+                "modelo": "F3",
+                "marca": "Mercusys",
+                "wan": "10.154.1.42",
+                "mascara": "255.255.255.0",
+                "puertaenlace": "10.154.1.1",
+                "dns1": "8.8.8.8",
+                "dns2": "8.8.4.4",
+                "lan": "192.168.10.1",
+                "acceso": "admin",
+                "ssid": "familia",
+                "seguridad": "@familia",
+                "otros": ""
+            }
+        ],
+        "repetidores": []
+    },
+    "venta": null,
+    "alquilado": {
+        "condicion": "Alquilado",
+        "periodo": "1 a\u00f1o",
+        "fechainicio": "2025-05-30",
+        "fechafin": "2026-05-30",
+        "costoalquiler": 50,
+        "condiciontiempo": {
+            "adelantado": true,
+            "cumpliendo el mes": ""
+        },
+        "antena": {
+            "marca": "Ubiquiti",
+            "modelo": "Litebeam M5",
+            "mac": "788A20",
+            "serial": "AA-BB-68",
+            "descripcion": "Equipo de segunda"
+        },
+        "router": {
+            "marca": "Mercusys",
+            "modelo": "F3",
+            "mac": "60D9C7\t",
+            "serial": "AA-BB-68",
+            "descripcion": "Equipo de segunda"
+        },
+        "detalle": "los equipos se instalaron sin problema, son equipos de segunda, quedo todo operativo."
+    },
+    "periodo": "2025-12-02",
+    "deuda": {
+        "pagoservicio": "50.00",
+        "adelantoequipo": "50.00",
+        "costoalquiler": "50.00",
+        "materialadicional": "0.00",
+        "totalcancelado": "100.00",
+        "saldopendiente": "0.00",
+        "detalle": "Realizo el pago de los 100 soles por yape, 50 del servicio y 50 de alquiler de los equipos."
+    }
+}

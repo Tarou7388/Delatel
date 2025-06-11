@@ -24,7 +24,13 @@ if (isset($_GET["operacion"])) {
       echo json_encode($resultado);
       break;
     case "buscarPaquete":
-      $sql = "SELECT * FROM tb_paquetes WHERE paquete LIKE ? LIMIT 10";
+      $sql = "SELECT * FROM vw_clientes_paquetes WHERE paquete LIKE ? LIMIT 10";
+      $params = ["%" . $_GET["nombre"] . "%"];
+      $resultado = $objeto->consultaParametros($sql, $params);
+      echo json_encode($resultado);
+      break;
+    case "buscarPersonaCliente":
+      $sql = "SELECT * FROM vw_clientes_personas_nombres WHERE nombre_completo LIKE ?";
       $params = ["%" . $_GET["nombre"] . "%"];
       $resultado = $objeto->consultaParametros($sql, $params);
       echo json_encode($resultado);
