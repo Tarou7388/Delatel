@@ -58,9 +58,8 @@
           <div class="col-6">
             <div class="input-group">
               <div class="form-floating">
-                <select class="form-select select2me" id="slcCodigoBarrasRepetidor" style="width: 100%;">
-                </select>
-                <label for="slcCodigoBarrasRepetidor">Sintonizador</label>
+                <input type="text" class="form-control" id="txtCodigoBarrasRepetidorModal" placeholder="Codigo de barras">
+                <label for="lblCodigoBarrasRepetidor">Codigo de Barra<span class="required-asterisk" style="color: red;">*</span></label>
                 <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
               </div>
               <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
@@ -71,14 +70,14 @@
           <div class="col-6">
             <div class="form-floating">
               <input type="text" class="form-control" id="txtMarcaRepetidorModal" placeholder="Marca" disabled>
-              <label for="txtMarcaRepetidorModal">Marca <span class="required-asterisk" style="color: red;">*</span></label>
+              <label for="lblMarcaRepetidor">Marca <span class="required-asterisk" style="color: red;">*</span></label>
               <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
             </div>
           </div>
           <div class="col-6">
             <div class="form-floating">
               <input type="text" class="form-control" id="txtModeloRepetidorModal" placeholder="Modelo" disabled>
-              <label for="txtModeloRepetidorModal">Modelo <span class="required-asterisk" style="color: red;">*</span></label>
+              <label for="lblModeloRepetidor">Modelo <span class="required-asterisk" style="color: red;">*</span></label>
               <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
             </div>
           </div>
@@ -147,20 +146,20 @@
         <!-- Segunda Fila -->
 
         <div class="">
-          <div class="col-md-12 d-flex align-items-end"> <!-- Ajusta el ancho aquí -->
+            <div class="col-md-12 d-flex align-items-end"> <!-- Ajusta el ancho aquí -->
             <div class="form-floating flex-grow-1 me-2">
               <select id="slcCaja" class="form-select">
-                <option value="" disabled selected>Seleccione una opción</option>
+              <option value="" disabled selected>Seleccione una opción</option>
               </select>
               <label for="slcCaja">Caja</label>
             </div>
             <div class="form-floating" style="width: 120px;">
-              <input type="number" name="" id="txtPuertoCambio" class="form-control" placeholder="Puerto">
+              <input type="text" name="" id="txtPuertoCambio" class="form-control" placeholder="Puerto">
               <label for="txtPuertoCambio">Puerto</label>
             </div>
-          </div>
+            </div>
 
-          <div id="parametrosContainer">
+          <div id="parametrosContainer" style="display: none;">
 
             <div class="mt-3 mb-3">
               <h5> Datos del router </h5>
@@ -466,15 +465,14 @@
             </div>
           </div>
 
-          <!-- Cuarta Fila slcCambiosCodigoBarraRouter-->
+          <!-- Cuarta Fila -->
           <div class="row g-3 mb-3 align-items-center">
             <div class="col-md-4">
               <div class="input-group">
                 <div class="form-floating">
-                  <select class="form-select select2me" id="slcCambiosCodigoBarraRouter" style="width: 100%;">
-                  </select>
-                  <label for="slcCambiosCodigoBarraRouter">Sintonizador</label>
-                  <div class="invalid-feedback">Por favor, ingrese un valor válido.</div>
+                  <input type="text" class="form-control" id="txtCambiosCodigoBarraRouter" placeholder="Código de Barra" name="txtCambiosCodigoBarraRouter">
+                  <label for="txtCambiosCodigoBarraRouter">Código de Barra<span class="required-asterisk" style="color: red;">*</span></label>
+                  <div class="invalid-feedback"></div>
                 </div>
                 <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
               </div>

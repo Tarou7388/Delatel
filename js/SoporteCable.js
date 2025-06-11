@@ -822,10 +822,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const data = await ArmadoJsonCable();
-    if (await ask("¿Desea guardar la ficha?")) {
-      await guardarSoporte(data);
-      showToast("Ficha guardada correctamente", "SUCCESS");
-      window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
+
+    if (idCaja == undefined || idCaja <= 0) {
+      console.log(idCaja);
+      showToast("Seleccione una CAJA PRIMERO", "ERROR");
+    } else {
+      if (await ask("¿Desea guardar la ficha?")) {
+        await guardarSoporte(data);
+        showToast("Ficha guardada correctamente", "SUCCESS");
+        window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
+      }
     }
   });
   document.getElementById("btnlistar").addEventListener("click", () => {

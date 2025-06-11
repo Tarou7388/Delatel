@@ -1014,10 +1014,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     const data = await armadoJsonFibra();
-    if (await ask("¿Desea guardar la ficha?")) {
-      await guardarSoporte(data);
-      window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
+    if (idCaja == undefined || idCaja <= 0) {
+      console.log(idCaja);
+      showToast("Seleccione una CAJA PRIMERO", "ERROR");
+    } else {
+      if (await ask("¿Desea guardar la ficha?")) {
+        await guardarSoporte(data);
+        window.location.href = `${config.HOST}views/Soporte/listarSoporte`;
+      }
     }
+
   });
 
   [txtIpRouter, txtIpRepetidorModal, txtIpRepetidor, txtCambiosIpRouter, txtCambiosIpRepetidor].forEach(element => {
@@ -1068,7 +1074,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const modelo = document.getElementById('txtModeloRepetidorModal')?.value;
     const precio = document.getElementById('txtPrecioRepetidorModal')?.value;
 
-    if (!ssid || !contrasenia || !codigoBarra || !marca || !modelo || !serie || !ip) {
+    if (!ssid || !contrasenia || !codigoBarra || !marca || !modelo || !serie || !ip || idCaja < 0) {
       showToast("Por favor, complete todos los campos del repetidor.", "WARNING");
       return;
     }

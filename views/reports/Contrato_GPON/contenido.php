@@ -72,7 +72,16 @@
       </tr>
       <tr>
         <td><strong>VLAN:</strong></td>
-        <td class="text-center"><?= !empty($fichaTecnica['fibraoptica']['vlan']) ? htmlspecialchars($fichaTecnica['fibraoptica']['vlan']) : 'N/A'; ?></td>
+        <td class="text-center">
+            <?= 
+                !empty($fichaTecnica['vlan']) ? 
+                    htmlspecialchars($fichaTecnica['vlan']) : 
+                    (!empty($fichaTecnica['fibraoptica']['vlan']) ? 
+                        htmlspecialchars($fichaTecnica['fibraoptica']['vlan']) : 
+                        'N/A'
+                    ); 
+            ?>
+        </td>
         <td><strong>N° ANTENA:</strong></td>
         <td class="text-center"><?= !empty($fichaTecnica['fibraoptica']['router']['numeroantena']) ? htmlspecialchars($fichaTecnica['fibraoptica']['router']['numeroantena']) : 'N/A'; ?></td>
       </tr>
@@ -134,7 +143,7 @@
     <tbody>
       <tr>
         <td><strong>PLAN:</strong></td>
-        <td colspan="3"><?= !empty($fichaTecnica['cable']['plan']) ? htmlspecialchars($fichaTecnica['cable']['plan']) : 'N/A'; ?></td>
+        <td colspan="3"><?= !empty($resultado[0]['NombrePaquete']) ? htmlspecialchars($resultado[0]['NombrePaquete']) : 'N/A'; ?></td>
         <td><strong>POTENCIA CABLE:</strong></td>
         <td class="text-center"><?= !empty($fichaTecnica['cable']['potencia']) ? htmlspecialchars($fichaTecnica['cable']['potencia']) : 'N/A'; ?></td>
       </tr>
@@ -142,15 +151,25 @@
         <td><strong>PAGO INST:</strong></td>
         <td class="text-center">S./ <?= !empty($fichaTecnica['cable']['pagoinstalacion']) ? htmlspecialchars($fichaTecnica['cable']['pagoinstalacion']) : 'N/A'; ?></td>
         <td><strong>TRIPLEXOR:</strong></td>
-        <td class="text-center"><?= !empty($fichaTecnica['cable']['triplexor']['requerido']) ? htmlspecialchars($fichaTecnica['cable']['triplexor']['requerido']) : 'N/A'; ?></td>
+        <td class="text-center">
+        <?php
+            $valor = isset($fichaTecnica['cable']['triplexor']['requerido']) ? trim(strtolower($fichaTecnica['cable']['triplexor']['requerido'])) : '';
+            echo ($valor === 'false' || $valor === '') ? 'No tiene' : htmlspecialchars($fichaTecnica['cable']['triplexor']['requerido']);
+        ?>
+        </td>
         <td><strong>CARGADOR:</strong></td>
-        <td class="text-center"><?= !empty($fichaTecnica['cable']['triplexor']['cargador']) ? htmlspecialchars($fichaTecnica['cable']['triplexor']['cargador']) : 'N/A'; ?></td>
+       <td class="text-center">
+        <?php
+            $valor = isset($fichaTecnica['cable']['triplexor']['cargador']) ? trim(strtolower($fichaTecnica['cable']['triplexor']['cargador'])) : '';
+            echo ($valor === 'false' || $valor === '') ? 'No tiene' : htmlspecialchars($fichaTecnica['cable']['triplexor']['cargador']);
+        ?>
+        </td>
       </tr>
       <tr>
         <td><strong>PERIODO:</strong></td>
         <td class="text-center"><?= !empty($fichaTecnica['periodo']) ? htmlspecialchars($fichaTecnica['periodo']) : 'N/A'; ?></td>
         <td><strong>SPLITTER:</strong></td>
-        <td class="text-center"> <?= htmlspecialchars($fichaTecnica['cable']['splitter'][0]['cantidad']); ?></td>
+        <td class="text-center">CANTIDAD: <?= htmlspecialchars($fichaTecnica['cable']['splitter'][0]['cantidad']); ?></td>
         <td><strong>TIPO:</strong></td>
         <td class="text-center"> <?= !empty($fichaTecnica['cable']['splitter'][0]['tipo']) ? htmlspecialchars($fichaTecnica['cable']['splitter'][0]['tipo']) : 'N/A'; ?></td>
       </tr>
@@ -230,7 +249,62 @@
 <br>
 <br>
 <br>
+
 <br>
+
+<!-- Detalles de Costo -->
+<div class="container">
+  <table class="tabla2">
+    <thead>
+      <tr>
+        <td colspan="8" class="text-center thead-cabecera-3"><strong>DETALLES DE COSTO</strong></td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>PAGO SERVICIO:</strong></td>
+        <td colspan="2"></td>
+        <td rowspan="8" colspan="5" class="text-center" style="vertical-align: top;">
+        </td>
+      </tr>
+      <tr>
+        <td><strong>PAGO DIGITAL:</strong></td>
+        <td colspan="2"></td>
+      </tr>
+      <tr>
+        <td><strong>INST. DIGITAL:</strong></td>
+        <td colspan="2"></td>
+      </tr>
+      <tr>
+        <td><strong>SINT. ADIC:</strong></td>
+        <td colspan="2"></td>
+      </tr>
+      <tr>
+        <td><strong>CABLE ADIC:</strong></td>
+        <td colspan="2"></td>
+      </tr>
+      <tr>
+        <td><strong>CONECT ADIC:</strong></td>
+        <td colspan="2"></td>
+      </tr>
+       <tr>
+        <td><strong>SUBTOTAL:</strong></td>
+        <td colspan="2"></td>
+      </tr>
+       <tr>
+        <td><strong>ABONO:</strong></td>
+        <td colspan="2"></td>
+      </tr>
+      <tr>
+        <td><strong>SALDO:</strong></td>
+        <td colspan="2"></td>
+        <td><strong>FORMA PAG:</strong></td>
+        <td colspan="4"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 <?php if (!empty($fichaTecnica['fibraoptica']['repetidores'])): ?>
   <div class="container">
     <table class="tabla2">

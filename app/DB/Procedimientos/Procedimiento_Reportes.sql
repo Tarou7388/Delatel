@@ -63,7 +63,9 @@ BEGIN
     LEFT JOIN 
         tb_responsables r ON s.id_tecnico = r.id_responsable
     LEFT JOIN 
-        tb_personas pt ON r.id_usuario = pt.id_persona
+        tb_usuarios u ON r.id_usuario = u.id_usuario
+    LEFT JOIN 
+        tb_personas pt ON u.id_persona = pt.id_persona
     LEFT JOIN 
         tb_paquetes pa ON co.id_paquete = pa.id_paquete
     LEFT JOIN 
@@ -71,5 +73,8 @@ BEGIN
     WHERE 
         s.id_soporte = p_id_soporte;
 END$$
+
+
+CALL spu_soporte_pdf(386);
 
 DELIMITER;
