@@ -61,7 +61,7 @@
               <div class="row mb-2">
                 <div class="col-12 col-md-6">
                   <div class="form-floating mb-2">
-                    <select class="form-select" id="slcTipoServicioActualizar" aria-label="Servicios" disabled>
+                    <select class="form-select" id="slcTipoServicioActualizar" aria-label="Servicios"  data-placeholder="Seleccione una opción" disabled>
                       <option value="" disabled selected>Seleccione</option>
                       <option value="1">CABL (Cable)</option>
                       <option value="2">WISP (Wireless Internet Service Provider)</option>
@@ -102,7 +102,7 @@
               <div class="row mb-2">
                 <div class="col-12 col-md-6">
                   <div class="form-floating mb-2">
-                    <select class="form-select select2me" id="slcSectorActualizar" aria-label="Sectores" disabled>
+                    <select class="form-select select2me" id="slcSectorActualizar" aria-label="Sectores">
                       <option value="0" disabled selected>Sectores</option>
                     </select>
                     <label for="slcSectorActualizar" class="form-label">Sectores</label>

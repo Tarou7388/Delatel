@@ -1,6 +1,5 @@
 <h3 class="text-center">CONTROL DE INSTALACIÓN SERVICIO FTTH - DELAFIBER</h3>
 
-
 <div class="container">
   <div style="text-align: right; font-family: Arial, sans-serif; font-size: 12px; margin-right: 35px;">
     <p>
@@ -60,27 +59,41 @@
     <tbody>
       <tr>
         <td><strong>USUARIO:</strong></td>
-        <td class="text-center"><?= !empty($fichaTecnica['fibraoptica']['usuario']) ? htmlspecialchars($fichaTecnica['fibraoptica']['usuario']) : 'N/A'; ?></td>
+        <td class="text-center">
+          <?= !empty($fichaTecnica['fibraoptica']['usuario']) ? htmlspecialchars($fichaTecnica['fibraoptica']['usuario']) : (!empty($fichaTecnica['fibraoptica']['pppoe']) ? htmlspecialchars($fichaTecnica['fibraoptica']['pppoe']) : 'N/A'); ?>
+        </td>
         <td><strong>MARCA:</strong></td>
         <td class="text-center"><?= !empty($fichaTecnica['fibraoptica']['router']['marca']) ? htmlspecialchars($fichaTecnica['fibraoptica']['router']['marca']) : 'N/A'; ?></td>
       </tr>
       <tr>
         <td><strong>CLAVE:</strong></td>
-        <td class="text-center"><?= !empty($fichaTecnica['fibraoptica']['claveacceso']) ? htmlspecialchars($fichaTecnica['fibraoptica']['claveacceso']) : 'N/A'; ?></td>
+        <td class="text-center">
+          <?= !empty($fichaTecnica['fibraoptica']['claveacceso']) ? htmlspecialchars($fichaTecnica['fibraoptica']['claveacceso']) : (!empty($fichaTecnica['fibraoptica']['clave']) ? htmlspecialchars($fichaTecnica['fibraoptica']['clave']) : 'N/A'); ?>
+        </td>
         <td><strong>BANDA:</strong></td>
-        <td class="text-center"><?= !empty($fichaTecnica['fibraoptica']['router']['banda']) ? htmlspecialchars(implode(", ", $fichaTecnica['fibraoptica']['router']['banda'])) : 'N/A'; ?></td>
+        <td class="text-center">
+          <?php
+          $banda = $fichaTecnica['fibraoptica']['router']['banda'] ?? null;
+          if (is_array($banda)) {
+            echo htmlspecialchars(implode(", ", $banda));
+          } elseif (is_string($banda)) {
+            echo htmlspecialchars($banda);
+          } else {
+            echo 'N/A';
+          }
+          ?>
+        </td>
       </tr>
       <tr>
         <td><strong>VLAN:</strong></td>
         <td class="text-center">
-            <?= 
-                !empty($fichaTecnica['vlan']) ? 
-                    htmlspecialchars($fichaTecnica['vlan']) : 
-                    (!empty($fichaTecnica['fibraoptica']['vlan']) ? 
-                        htmlspecialchars($fichaTecnica['fibraoptica']['vlan']) : 
-                        'N/A'
-                    ); 
-            ?>
+          <?=
+          !empty($fichaTecnica['vlan']) ?
+            htmlspecialchars($fichaTecnica['vlan']) : (!empty($fichaTecnica['fibraoptica']['vlan']) ?
+              htmlspecialchars($fichaTecnica['fibraoptica']['vlan']) :
+              'N/A'
+            );
+          ?>
         </td>
         <td><strong>N° ANTENA:</strong></td>
         <td class="text-center"><?= !empty($fichaTecnica['fibraoptica']['router']['numeroantena']) ? htmlspecialchars($fichaTecnica['fibraoptica']['router']['numeroantena']) : 'N/A'; ?></td>
@@ -113,7 +126,7 @@
         <td><strong>IP:</strong></td>
         <td class="text-center"><?= !empty($fichaTecnica['fibraoptica']['router']['ip']) ? htmlspecialchars($fichaTecnica['fibraoptica']['router']['ip']) : 'N/A'; ?></td>
         <td><strong>POTENCIA:</strong></td>
-        <td class="text-center"><?= !empty($fichaTecnica['fibraoptica']['potencia']) ? htmlspecialchars($fichaTecnica['fibraoptica']['potencia']) : 'N/A'; ?></td>
+        <td class="text-center"><?= isset($fichaTecnica['fibraoptica']['potencia']) ? htmlspecialchars($fichaTecnica['fibraoptica']['potencia']) : 'N/A'; ?></td>
       </tr>
       <tr>
         <td><strong>USUARIO:</strong></td>
@@ -121,12 +134,20 @@
         <td><strong>CLAVE DE ACCESO:</strong></td>
         <td class="text-center"><?= !empty($fichaTecnica['fibraoptica']['router']['ingresopass']) ? htmlspecialchars($fichaTecnica['fibraoptica']['router']['ingresopass']) : 'N/A'; ?></td>
       </tr>
-      <?php if (!empty($fichaTecnica['fibraoptica']['detalles'])): ?>
+      <?php
+      $detalles = '';
+      if (isset($fichaTecnica['fibraoptica']['detalles'])) {
+        $detalles = $fichaTecnica['fibraoptica']['detalles'];
+      } elseif (isset($fichaTecnica['fibraoptica']['detalle'])) {
+        $detalles = $fichaTecnica['fibraoptica']['detalle'];
+      }
+      ?>
+      <?php if (!empty($detalles)): ?>
         <tr>
           <td colspan="4" class="text-center"><strong>DETALLES:</strong></td>
         </tr>
         <tr>
-          <td colspan="4"><?= htmlspecialchars($fichaTecnica['fibraoptica']['detalles']); ?></td>
+          <td colspan="4"><?= htmlspecialchars($detalles); ?></td>
         </tr>
       <?php endif; ?>
     </tbody>
@@ -145,41 +166,44 @@
         <td><strong>PLAN:</strong></td>
         <td colspan="3"><?= !empty($resultado[0]['NombrePaquete']) ? htmlspecialchars($resultado[0]['NombrePaquete']) : 'N/A'; ?></td>
         <td><strong>POTENCIA CABLE:</strong></td>
-        <td class="text-center"><?= !empty($fichaTecnica['cable']['potencia']) ? htmlspecialchars($fichaTecnica['cable']['potencia']) : 'N/A'; ?></td>
+        <td class="text-center"><?= isset($fichaTecnica['cable']['potencia']) ? htmlspecialchars($fichaTecnica['cable']['potencia']) : 'N/A'; ?></td>
       </tr>
       <tr>
         <td><strong>PAGO INST:</strong></td>
-        <td class="text-center">S./ <?= !empty($fichaTecnica['cable']['pagoinstalacion']) ? htmlspecialchars($fichaTecnica['cable']['pagoinstalacion']) : 'N/A'; ?></td>
+        <td class="text-center">S./ <?= isset($fichaTecnica['cable']['costo']['pagoinstalacion']) ? htmlspecialchars($fichaTecnica['cable']['costo']['pagoinstalacion']) : 'N/A'; ?></td>
         <td><strong>TRIPLEXOR:</strong></td>
         <td class="text-center">
-        <?php
-            $valor = isset($fichaTecnica['cable']['triplexor']['requerido']) ? trim(strtolower($fichaTecnica['cable']['triplexor']['requerido'])) : '';
-            echo ($valor === 'false' || $valor === '') ? 'No tiene' : htmlspecialchars($fichaTecnica['cable']['triplexor']['requerido']);
-        ?>
+          <?php
+          $valor = isset($fichaTecnica['cable']['triplexor']['requerido']) ? trim(strtolower($fichaTecnica['cable']['triplexor']['requerido'])) : '';
+          if ($valor === '' && isset($fichaTecnica['cable']['triplexor'])) {
+            $valor = trim(strtolower($fichaTecnica['cable']['triplexor']));
+          }
+          echo ($valor === 'false' || $valor === '') ? 'No tiene' : htmlspecialchars($fichaTecnica['cable']['triplexor']['requerido'] ?? $fichaTecnica['cable']['triplexor']);
+          ?>
         </td>
         <td><strong>CARGADOR:</strong></td>
-       <td class="text-center">
-        <?php
-            $valor = isset($fichaTecnica['cable']['triplexor']['cargador']) ? trim(strtolower($fichaTecnica['cable']['triplexor']['cargador'])) : '';
-            echo ($valor === 'false' || $valor === '') ? 'No tiene' : htmlspecialchars($fichaTecnica['cable']['triplexor']['cargador']);
-        ?>
+        <td class="text-center">
+          <?php
+          $valor = isset($fichaTecnica['cable']['triplexor']['cargador']) ? trim(strtolower($fichaTecnica['cable']['triplexor']['cargador'])) : '';
+          echo ($valor === 'false' || $valor === '') ? 'No tiene' : htmlspecialchars($fichaTecnica['cable']['triplexor']['cargador'] ?? '');
+          ?>
         </td>
       </tr>
       <tr>
         <td><strong>PERIODO:</strong></td>
         <td class="text-center"><?= !empty($fichaTecnica['periodo']) ? htmlspecialchars($fichaTecnica['periodo']) : 'N/A'; ?></td>
         <td><strong>SPLITTER:</strong></td>
-        <td class="text-center">CANTIDAD: <?= htmlspecialchars($fichaTecnica['cable']['splitter'][0]['cantidad']); ?></td>
+        <td class="text-center">CANTIDAD: <?= isset($fichaTecnica['cable']['splitter'][0]['cantidad']) ? htmlspecialchars($fichaTecnica['cable']['splitter'][0]['cantidad']) : 'N/A'; ?></td>
         <td><strong>TIPO:</strong></td>
-        <td class="text-center"> <?= !empty($fichaTecnica['cable']['splitter'][0]['tipo']) ? htmlspecialchars($fichaTecnica['cable']['splitter'][0]['tipo']) : 'N/A'; ?></td>
+        <td class="text-center"> <?= isset($fichaTecnica['cable']['splitter'][0]['tipo']) ? htmlspecialchars($fichaTecnica['cable']['splitter'][0]['tipo']) : 'N/A'; ?></td>
       </tr>
       <tr>
         <td><strong>CABLE:</strong></td>
-        <td class="text-center"><?= htmlspecialchars($fichaTecnica['cable']['cable']['metrosadicionales']); ?> METROS</td>
-        <td class="text-center">S./ <?= htmlspecialchars($fichaTecnica['cable']['cable']['preciometro']); ?></td>
+        <td class="text-center"><?= isset($fichaTecnica['cable']['cable']['metrosadicionales']) ? htmlspecialchars($fichaTecnica['cable']['cable']['metrosadicionales']) : 'N/A'; ?> METROS</td>
+        <td class="text-center">S./ <?= isset($fichaTecnica['cable']['cable']['preciometro']) ? htmlspecialchars($fichaTecnica['cable']['cable']['preciometro']) : 'N/A'; ?></td>
         <td><strong>CONECTORES:</strong></td>
-        <td class="text-center"><?= htmlspecialchars($fichaTecnica['cable']['conector']['numeroconector']); ?></td>
-        <td class="text-center">S./ <?= htmlspecialchars($fichaTecnica['cable']['conector']['precio']); ?></td>
+        <td class="text-center"><?= isset($fichaTecnica['cable']['conector']['numeroconector']) ? htmlspecialchars($fichaTecnica['cable']['conector']['numeroconector']) : 'N/A'; ?></td>
+        <td class="text-center">S./ <?= isset($fichaTecnica['cable']['conector']['precio']) ? htmlspecialchars($fichaTecnica['cable']['conector']['precio']) : 'N/A'; ?></td>
       </tr>
     </tbody>
   </table>
@@ -195,52 +219,58 @@
     <tbody>
       <tr>
         <td><strong>CANTIDAD SINTONIZADOR:</strong></td>
-        <td><?= !empty($fichaTecnica['costo']['cablecosto']['numerosintotizadores']) ? htmlspecialchars($fichaTecnica['costo']['cablecosto']['numerosintotizadores']) : 'No tiene'; ?></td>
+        <td><?= isset($fichaTecnica['costo']['cablecosto']['numerosintotizadores']) ? htmlspecialchars($fichaTecnica['costo']['cablecosto']['numerosintotizadores']) : 'No tiene'; ?></td>
         <td colspan="3" class="text-center thead-cabecera-4"><strong>MEDICIÓN EN CAJA NAP</strong></td>
       </tr>
       <tr>
         <td><strong>COSTO ALQUILER:</strong></td>
-        <td><?= !empty($fichaTecnica['costo']['cablecosto']['costoalquilersintotizador']) ? 'S./ ' . htmlspecialchars($fichaTecnica['costo']['cablecosto']['costoalquilersintotizador']) : 'No tiene'; ?></td>
+        <td><?= isset($fichaTecnica['costo']['cablecosto']['costoalquilersintotizadortotal']) ? 'S./ ' . htmlspecialchars($fichaTecnica['costo']['cablecosto']['costoalquilersintotizadortotal']) : 'No tiene'; ?></td>
         <td colspan="2"><strong>CAJA GPON:</strong></td>
-        <td class="text-center"><?= !empty($fichaTecnica['costo']['nap']['gpon']) ? htmlspecialchars($fichaTecnica['costo']['nap']['gpon']) : 'N/A'; ?></td>
+        <td class="text-center"><?= isset($fichaTecnica['costo']['nap']['gpon']) ? htmlspecialchars($fichaTecnica['costo']['nap']['gpon']) : 'N/A'; ?></td>
       </tr>
       <tr>
         <td><strong>FORMA DE PAGO:</strong></td>
         <td>CONTADO / TRANSF / YAPE</td>
         <td colspan="2"><strong>CAJA CATV:</strong></td>
-        <td class="text-center"><?= !empty($fichaTecnica['costo']['nap']['catv']) ? htmlspecialchars($fichaTecnica['costo']['nap']['catv']) : 'N/A'; ?></td>
+        <td class="text-center"><?= isset($fichaTecnica['costo']['nap']['catv']) ? htmlspecialchars($fichaTecnica['costo']['nap']['catv']) : 'N/A'; ?></td>
       </tr>
       <tr>
         <td><strong>COSTO CABLE:</strong></td>
-        <td>S./ <?= htmlspecialchars($fichaTecnica['costo']['cablecosto']['costocable']); ?></td>
+        <td>S./ <?= isset($fichaTecnica['costo']['cablecosto']['costocable']) ? htmlspecialchars($fichaTecnica['costo']['cablecosto']['costocable']) : 'N/A'; ?></td>
         <td colspan="3" class="text-center thead-cabecera-4"><strong>MEDICIÓN EN INTERIOR DE LA CASA</strong></td>
       </tr>
       <tr>
         <td><strong>COSTO CONECTOR:</strong></td>
-        <td>S./ <?= htmlspecialchars($fichaTecnica['costo']['cablecosto']['costoconector']); ?></td>
+        <td>S./ <?= isset($fichaTecnica['costo']['cablecosto']['costoconector']) ? htmlspecialchars($fichaTecnica['costo']['cablecosto']['costoconector']) : 'N/A'; ?></td>
         <td colspan="2"><strong>CASA GPON:</strong></td>
-        <td class="text-center"><?= !empty($fichaTecnica['costo']['casa']['gpon']) ? htmlspecialchars($fichaTecnica['costo']['casa']['gpon']) : 'N/A'; ?></td>
+        <td class="text-center"><?= isset($fichaTecnica['costo']['casa']['gpon']) ? htmlspecialchars($fichaTecnica['costo']['casa']['gpon']) : 'N/A'; ?></td>
       </tr>
       <tr>
         <td><strong>CAJA:</strong></td>
         <td class="text-center">
           <?php
-          echo htmlspecialchars($nombrecaja) . "(" . $fichaTecnica['idcaja'] . ") - P:" . $fichaTecnica['puerto'];
+          echo htmlspecialchars($nombrecaja) . "(" . htmlspecialchars($fichaTecnica['idcaja']) . ") - P:" . htmlspecialchars($fichaTecnica['puerto']);
           ?>
         </td>
         <td colspan="2"><strong>CASA CATV:</strong></td>
-        <td class="text-center"><?= !empty($fichaTecnica['costo']['casa']['catv']) ? htmlspecialchars($fichaTecnica['costo']['casa']['catv']) : 'N/A'; ?></td>
+        <td class="text-center"><?= isset($fichaTecnica['costo']['casa']['catv']) ? htmlspecialchars($fichaTecnica['costo']['casa']['catv']) : 'N/A'; ?></td>
       </tr>
       <tr>
         <td><strong>TECNICO:</strong></td>
         <td colspan="4"><?= !empty($resultado[0]['NombreTecnicoFicha']) ? htmlspecialchars($resultado[0]['NombreTecnicoFicha']) : 'N/A'; ?></td>
       </tr>
-      <?php if (!empty($fichaTecnica['costo']['cablecosto']['detalle'])): ?>
+      <?php
+      $detalleCosto = '';
+      if (isset($fichaTecnica['costo']['cablecosto']['detalle'])) {
+        $detalleCosto = $fichaTecnica['costo']['cablecosto']['detalle'];
+      }
+      ?>
+      <?php if (!empty($detalleCosto)): ?>
         <tr>
           <td colspan="5" class="text-center"><strong>DETALLES:</strong></td>
         </tr>
         <tr>
-          <td colspan="5"><?= htmlspecialchars($fichaTecnica['costo']['cablecosto']['detalle']); ?></td>
+          <td colspan="5"><?= htmlspecialchars($detalleCosto); ?></td>
         </tr>
       <?php endif; ?>
     </tbody>
@@ -249,7 +279,6 @@
 <br>
 <br>
 <br>
-
 <br>
 
 <!-- Detalles de Costo -->
@@ -287,11 +316,11 @@
         <td><strong>CONECT ADIC:</strong></td>
         <td colspan="2"></td>
       </tr>
-       <tr>
+      <tr>
         <td><strong>SUBTOTAL:</strong></td>
         <td colspan="2"></td>
       </tr>
-       <tr>
+      <tr>
         <td><strong>ABONO:</strong></td>
         <td colspan="2"></td>
       </tr>
@@ -305,7 +334,13 @@
   </table>
 </div>
 
-<?php if (!empty($fichaTecnica['fibraoptica']['repetidores'])): ?>
+<?php
+$repetidores = [];
+if (isset($fichaTecnica['fibraoptica']['repetidores']) && is_array($fichaTecnica['fibraoptica']['repetidores']) && count($fichaTecnica['fibraoptica']['repetidores']) > 0) {
+  $repetidores = $fichaTecnica['fibraoptica']['repetidores'];
+}
+?>
+<?php if (!empty($repetidores)): ?>
   <div class="container">
     <table class="tabla2">
       <thead>
@@ -314,7 +349,7 @@
         </tr>
       </thead>
       <tbody>
-        <?php foreach ($fichaTecnica['fibraoptica']['repetidores'] as $repetidor): ?>
+        <?php foreach ($repetidores as $repetidor): ?>
           <tr>
             <td class="text-center"><strong>REPETIDOR:</strong></td>
             <td class="text-center"><?= !empty($repetidor['numero']) ? htmlspecialchars($repetidor['numero']) : 'N/A'; ?></td>
@@ -325,7 +360,7 @@
             <td class="text-center"><strong>MARCA:</strong></td>
             <td class="text-center"><?= !empty($repetidor['marca']) ? htmlspecialchars($repetidor['marca']) : 'N/A'; ?></td>
             <td rowspan="5" class="text-center"><strong>DETALLES:</strong></td>
-            <td rowspan="5" class="text-center"><?= !empty($fichaTecnica['fibraoptica']['detalles']) ? htmlspecialchars($fichaTecnica['fibraoptica']['detalles']) : 'N/A'; ?></td>
+            <td rowspan="5" class="text-center"><?= !empty($detalles) ? htmlspecialchars($detalles) : 'N/A'; ?></td>
           </tr>
           <tr>
             <td class="text-center"><strong>CONDICIÓN:</strong></td>
@@ -353,7 +388,13 @@
 <br>
 <br>
 <br>
-<?php if (!empty($fichaTecnica['cable']['sintonizadores'])): ?>
+<?php
+$sintonizadores = [];
+if (isset($fichaTecnica['cable']['sintonizadores']) && is_array($fichaTecnica['cable']['sintonizadores']) && count($fichaTecnica['cable']['sintonizadores']) > 0) {
+  $sintonizadores = $fichaTecnica['cable']['sintonizadores'];
+}
+?>
+<?php if (!empty($sintonizadores)): ?>
   <div class="container">
     <table class="tabla2">
       <thead>
@@ -362,7 +403,7 @@
         </tr>
       </thead>
       <tbody>
-        <?php foreach ($fichaTecnica['cable']['sintonizadores'] as $sintonizador): ?>
+        <?php foreach ($sintonizadores as $sintonizador): ?>
           <tr>
             <td><strong>SINTONIZADOR:</strong></td>
             <td class="text-center" colspan="1"><?= !empty($sintonizador['numero']) ? htmlspecialchars($sintonizador['numero']) : 'N/A'; ?></td>

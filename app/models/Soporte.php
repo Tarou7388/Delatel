@@ -182,4 +182,14 @@ class Soporte extends Conexion
     $values = array($params['idContrato']);
     return $this->consultaParametros($sql, $values);
   }
+
+  // public function actualizarJsonSoporte($params = [])
+  // {
+  //   $sql = "CALL spu_actualizar_json_soporte(?,?)";
+  //   $values = [
+  //     $params['idSoporte'],
+  //     json_encode($params['jsonSoporte'])
+  //   ];
+  //   return $this->registrar($sql, $values);
+  // }
 }

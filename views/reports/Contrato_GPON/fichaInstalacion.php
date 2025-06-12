@@ -12,21 +12,63 @@ date_default_timezone_set('America/Lima');
 $fechaActual = date('d/m/Y H:i:s');
 
 $contrato = new Contrato();
-$resultado = $contrato->obtenerPDF(["id" => $_GET['id']]);
+$caja = new Caja();
+$soporte = new Soporte();
 
-if (empty($resultado)) {
-  echo '<script>alert("No se encontraron registros para el producto seleccionado.");</script>';
-  exit;
+/**
+ * Normaliza la ficha técnica para que tenga la misma estructura,
+ * sin importar si viene de soporte o de contrato.
+ * Si falta una sección en soporte, la completa con los datos de contrato.
+ */
+function normalizarFichaTecnica($ficha, $fichaContrato = null) {
+    // Si viene de soporte (estructura anidada)
+    if (isset($ficha['cabl']) || isset($ficha['fibr'])) {
+        $cable = isset($ficha['cabl']['cambioscable']) ? $ficha['cabl']['cambioscable'] : ($fichaContrato['cable'] ?? []);
+        $fibraoptica = isset($ficha['fibr']['cambiosgpon']) ? $ficha['fibr']['cambiosgpon'] : ($fichaContrato['fibraoptica'] ?? []);
+        $costo = isset($ficha['cabl']['cambioscable']['costo']) ? $ficha['cabl']['cambioscable']['costo'] : ($fichaContrato['costo'] ?? []);
+        return [
+            'idcaja' => $ficha['idcaja'] ?? ($fichaContrato['idcaja'] ?? null),
+            'puerto' => $ficha['puerto'] ?? ($fichaContrato['puerto'] ?? null),
+            'periodo' => $ficha['periodo'] ?? ($fichaContrato['periodo'] ?? null),
+            'vlan' => $ficha['vlan'] ?? ($fichaContrato['vlan'] ?? null),
+            'cable' => $cable,
+            'fibraoptica' => $fibraoptica,
+            'costo' => $costo,
+        ];
+    }
+    // Si viene de contrato (estructura plana)
+    return [
+        'idcaja' => $ficha['idcaja'] ?? null,
+        'puerto' => $ficha['puerto'] ?? null,
+        'periodo' => $ficha['periodo'] ?? null,
+        'vlan' => $ficha['vlan'] ?? null,
+        'cable' => $ficha['cable'] ?? [],
+        'fibraoptica' => $ficha['fibraoptica'] ?? [],
+        'costo' => $ficha['costo'] ?? [],
+    ];
 }
+
+// Intentamos obtener soporte primero
+$resultado = $soporte->ultimoSoporteIdContrato(["idContrato" => $_GET['id']]);
+
+// Si no hay soporte, usamos los datos del contrato
+if (empty($resultado)) {
+    $resultado = $contrato->obtenerPDF(["id" => $_GET['id']]);
+}
+
+// Obtener la ficha técnica del contrato para usar como respaldo
+$resultadoContrato = $contrato->obtenerPDF(["id" => $_GET['id']]);
+$fichaTecnicaContratoRaw = json_decode($resultadoContrato[0]['FichaTecnica'], true);
+
+// Obtener la ficha técnica principal
+$fichaTecnicaJson = $resultado[0]['FichaTecnica'];
+$fichaTecnicaRaw = json_decode($fichaTecnicaJson, true);
+$fichaTecnica = normalizarFichaTecnica($fichaTecnicaRaw, $fichaTecnicaContratoRaw);
 
 $nombreCliente = $resultado[0]['NombreCliente'];
 $nombreArchivo = $nombreCliente . '.pdf';
 
 $nombreArchivo = preg_replace('/[^A-Za-z0-9_\-ñÑ]/', '_', $nombreArchivo);
-
-// Obtener la ficha técnica
-$fichaTecnicaJson = $resultado[0]['FichaTecnica'];
-$fichaTecnica = json_decode($fichaTecnicaJson, true);
 
 $caja = new Caja();
 $cajaid = intval($fichaTecnica['idcaja']);

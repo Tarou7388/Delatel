@@ -899,11 +899,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     };
 
+    idCaja = slcCaja.value;
+
     nuevoSoporte.fibr = fibraData;
     nuevoSoporte.idcaja = idCaja;
     nuevoSoporte.vlan = txtCambiosVlan.value;
     nuevoSoporte.tipoentrada = JSON.parse(dataFibra[0].ficha_instalacion).tipoentrada;
-    nuevoSoporte.periodo = JSON.parse(dataFibra[0].ficha_instalacion).periodo || 0;
+    nuevoSoporte.periodo = JSON.parse(dataFibra[0].ficha_instalacion).periodo;
     nuevoSoporte.puerto = parseInt(txtPuertoCambio.value) || 0;
 
     return nuevoSoporte;
@@ -954,8 +956,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function verificarServicioEnSoporte(idSoporte, JSONsoporte) {
     const ServiciosTotales = await FichaInstalacion(idSoporte);
     const tiposServicio = (ServiciosTotales[0].tipos_servicio).toLowerCase().split(",");
-
-
     const todosValidos = tiposServicio.every(servicio =>
       JSONsoporte?.[servicio] && Object.keys(JSONsoporte[servicio]).length > 0
     );
@@ -967,8 +967,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   async function guardarSoporte(data) {
     try {
+      // Leer el soporte actual antes de guardar
+      const soporteActualResp = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
+      const soporteActualArr = await soporteActualResp.json();
+      let soporteActual = soporteActualArr[0]?.soporte ? JSON.parse(soporteActualArr[0].soporte) : {};
 
-      const soporteData = typeof data === "string" ? JSON.parse(data) : data;
+      // Actualizar solo la parte de fibra
+      soporteActual.fibr = data.fibr;
+      soporteActual.idcaja = data.idcaja;
+      soporteActual.vlan = data.vlan;
+      soporteActual.tipoentrada = data.tipoentrada;
+      soporteActual.periodo = data.periodo;
+      soporteActual.puerto = data.puerto;
+
+      console.log('Respuesta del servidor:', data);
 
       const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php`, {
         method: 'PUT',
@@ -980,16 +992,16 @@ document.addEventListener("DOMContentLoaded", async () => {
           data: {
             idSoporte: idSoporte,
             idTecnico: login.idUsuario,
-            soporte: soporteData,
+            soporte: soporteActual,
             idUserUpdate: login.idUsuario,
             descripcion_solucion: solutionTextarea.value,
           },
         }),
       });
 
-      const result = await response.json();
 
       await verificarServicioEnSoporte(idSoporte, data);
+
     } catch (error) {
       console.error('Error en la solicitud:', error);
     }

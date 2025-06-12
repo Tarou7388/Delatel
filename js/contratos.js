@@ -172,7 +172,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         $slcSectorActualizar.select2({
           theme: "bootstrap-5",
           allowClear: true,
-          minimumResultsForSearch: Infinity
+          minimumResultsForSearch: 0 // Habilita el buscador siempre
         });
         $slcSectorActualizar.trigger('change');
         return;
@@ -185,7 +185,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         $slcSectorActualizar.select2({
           theme: "bootstrap-5",
           allowClear: true,
-          minimumResultsForSearch: Infinity
+          minimumResultsForSearch: 0
         });
         $slcSectorActualizar.trigger('change');
         return;
@@ -199,7 +199,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         $slcSectorActualizar.select2({
           theme: "bootstrap-5",
           allowClear: true,
-          minimumResultsForSearch: Infinity
+          minimumResultsForSearch: 0
         });
         $slcSectorActualizar.trigger('change');
         return;
@@ -248,11 +248,17 @@ window.addEventListener("DOMContentLoaded", async () => {
         $slcSectorActualizar.append(optgroup);
       }
 
-      // Inicializar select2 sin buscador
+      // Inicializar select2 con buscador dinámico
       $slcSectorActualizar.select2({
         theme: "bootstrap-5",
         allowClear: true,
-        minimumResultsForSearch: Infinity
+        minimumResultsForSearch: 0, // Siempre muestra el buscador
+        width: '100%',
+        language: {
+          noResults: function () {
+            return "No se encontraron resultados";
+          }
+        }
       });
 
       // Habilitar si hay al menos una opción válida
@@ -679,6 +685,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     if (data.actualizado) {
       showToast("¡Contrato actualizado correctamente!", "SUCCESS", 1500);
+      document.getElementById("form-editar-contrato").reset();
       tabla.ajax.reload();
       if (modal) {
         modal.hide();
@@ -952,6 +959,8 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 
   async function abrirModalEditar(idContrato) {
+    document.getElementById("form-editar-contrato").reset();
+    console.log("Abriendo modal de edición para el contrato:", idContrato);
     const modalElement = document.getElementById("modalEditarContrato");
     const modal = new bootstrap.Modal(modalElement);
     modal.show();
@@ -1014,20 +1023,41 @@ window.addEventListener("DOMContentLoaded", async () => {
 
       if (data[0].coordenada) {
         const buscarCoordenada = document.querySelector("#buscarCoordenadaActualizar");
-        btnBuscarCoordenadas.addEventListener("click", async () => {
+        buscarCoordenada.addEventListener("click", async () => {
           slcSectorActualizar.disabled = false;
         });
       }
 
-      if (data[0].id_sector) {
-        const optgroup = $(`#slcSectorActualizar optgroup#sector-${data[0].id_sector}`);
-        if (optgroup.length > 0) {
-          const firstOption = optgroup.find('option').first();
-          if (firstOption.length > 0) {
-            $('#slcSectorActualizar').val(firstOption.val()).trigger('change');
+      await cargarSelectCajasActualizar(JSON.parse(localStorage.getItem('marcadoresCercanosActualizar')));
+      // Esperar 0.6 segundos antes de buscar y seleccionar la caja
+      setTimeout(() => {
+        if (fichaInstalacion && fichaInstalacion.idcaja !== null && fichaInstalacion.idcaja !== undefined && fichaInstalacion.idcaja !== 0 && fichaInstalacion.idcaja !== "0") {
+          console.log("Intentando seleccionar por idcaja:", fichaInstalacion.idcaja);
+          const optionCaja = $(`#slcSectorActualizar option[value="${fichaInstalacion.idcaja}"]`);
+          if (optionCaja.length > 0) {
+            console.log("Opción encontrada para idcaja, seleccionando...");
+            $('#slcSectorActualizar').val(fichaInstalacion.idcaja).trigger('change');
+          } else {
+            console.log("No se encontró opción para idcaja en el select.");
           }
+        } else if (data[0].id_sector) {
+          console.log("No hay idcaja válido, intentando seleccionar por id_sector:", data[0].id_sector);
+          const optgroup = $(`#slcSectorActualizar optgroup#sector-${data[0].id_sector}`);
+          if (optgroup.length > 0) {
+            const firstOption = optgroup.find('option').first();
+            if (firstOption.length > 0) {
+              console.log("Opción encontrada en el optgroup del sector, seleccionando...");
+              $('#slcSectorActualizar').val(firstOption.val()).trigger('change');
+            } else {
+              console.log("No hay opciones dentro del optgroup del sector.");
+            }
+          } else {
+            console.log("No se encontró optgroup para el id_sector en el select.");
+          }
+        } else {
+          console.log("No hay idcaja ni id_sector válidos para seleccionar.");
         }
-      }
+      }, 600);
 
       // Cerrar modal al hacer click en la X
       const closeBtn = modalElement.querySelector(".btn-close");
@@ -1166,5 +1196,6 @@ window.addEventListener("DOMContentLoaded", async () => {
   $(".select2me").parent("div").children("span").children("span").children("span").css("height", " calc(3.5rem + 2px)");
   $(".select2me").parent("div").children("span").children("span").children("span").children("span").css("margin-top", "18px");
   $(".select2me").parent("div").find("label").css("z-index", "1");
+
 
 });

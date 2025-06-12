@@ -192,7 +192,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     try {
       const dataCable = await FichaInstalacion(idSoporte);
       const fichaInstalacion = JSON.parse(dataCable[0].ficha_instalacion);
-      console.log(JSON.parse(dataCable[0].ficha_instalacion).cable.periodo);
+      console.log(JSON.parse(dataCable[0].ficha_instalacion).periodo);
       const cableFiltrado = fichaInstalacion.cable;
 
       console.log(fichaInstalacion.costo);
@@ -336,6 +336,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     });
   };
+
   async function completarCamposDeCambio() {
     const parametrosTecnicos = {
       txtPotenciaCambio: txtPotencia.value,
@@ -452,7 +453,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       console.log("INSTALACION")
       await CargardatosInstalacion(doc, idSoporte);
     }
-
     await llamarCajas();
   };
   function mostrarSintonizadoresEnModal() {
@@ -704,7 +704,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     nuevoSoporte.cabl = cableData;
     nuevoSoporte.idcaja = parseInt(idCaja);
     nuevoSoporte.puerto = parseInt(txtPuertoCambio.value) || 0;
-    nuevoSoporte.periodo = JSON.parse(dataCable[0].ficha_instalacion).cable.periodo;
+    nuevoSoporte.periodo = JSON.parse(dataCable[0].ficha_instalacion).periodo;
 
     return nuevoSoporte;
   };
@@ -723,6 +723,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       await CompletarSoporte(idSoporte);
     }
   };
+
   function crearBotones() {
     const rowDiv = document.createElement("div");
     rowDiv.className = "row g-2 mb-2 mt-2";
@@ -785,6 +786,17 @@ document.addEventListener("DOMContentLoaded", async () => {
   };
   async function guardarSoporte(data) {
     try {
+      // Leer el soporte actual antes de guardar
+      const soporteActualResp = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php?operacion=ObtenerDatosSoporteByID&idSoporte=${idSoporte}`);
+      const soporteActualArr = await soporteActualResp.json();
+      let soporteActual = soporteActualArr[0]?.soporte ? JSON.parse(soporteActualArr[0].soporte) : {};
+
+      // Actualizar solo la parte de cable
+      soporteActual.cabl = data.cabl;
+      soporteActual.idcaja = data.idcaja;
+      soporteActual.puerto = data.puerto;
+      soporteActual.periodo = data.periodo;
+
       const response = await fetch(`${config.HOST}app/controllers/Soporte.controllers.php`, {
         method: 'PUT',
         headers: {
@@ -795,12 +807,14 @@ document.addEventListener("DOMContentLoaded", async () => {
           data: {
             idSoporte: idSoporte,
             idTecnico: login.idUsuario,
-            soporte: data,
+            soporte: soporteActual,
             idUserUpdate: login.idUsuario,
             descripcion_solucion: document.getElementById("txtaEstadoFinal").value,
           },
         }),
       });
+
+      console.log("Respuesta del servidor:", data);
 
       await CompletarSoporteSiestaTodo(idSoporte, data);
 
