@@ -34,9 +34,6 @@ CREATE VIEW vw_unidadmedida AS
 	FROM 
         tb_unidadmedida;
 
-
-
-
 DROP PROCEDURE IF EXISTS spu_productos_eliminar$$
 CREATE PROCEDURE spu_productos_eliminar(
     IN p_id_producto INT,
@@ -74,79 +71,6 @@ BEGIN
         p.inactive_at IS NULL;
 END $$
 
--- A ELIMINAR
-DELIMITER $$
-DROP PROCEDURE IF EXISTS spu_productos_buscar_barraSintonizador$$
-
-CREATE PROCEDURE spu_productos_buscar_barraSintonizador(
-    IN p_codigo_barra VARCHAR(120)
-)
-BEGIN
-    SELECT
-        p.id_producto,
-        p.modelo,
-        p.precio_actual,
-        m.marca
-    FROM
-        tb_productos p
-    INNER JOIN
-        tb_marca m ON p.id_marca = m.id_marca
-    INNER JOIN 
-        tb_tipoproducto t ON p.id_tipo = t.id_tipo
-    WHERE
-        p.codigo_barra LIKE CONCAT(p_codigo_barra, '%')
-    AND
-        p.inactive_at IS NULL AND t.tipo_nombre = 'Sintonizador';
-END $$
-
--- A ELIMINAR
-DROP PROCEDURE IF EXISTS spu_productos_buscar_barraRepetidor$$
--- A ELIMINAR
-CREATE PROCEDURE spu_productos_buscar_barraRepetidor(
-    IN p_codigo_barra VARCHAR(120)
-)
-BEGIN
-    SELECT
-        p.id_producto,
-        p.modelo,
-        p.precio_actual,
-        m.marca
-    FROM
-        tb_productos p
-    INNER JOIN
-        tb_marca m ON p.id_marca = m.id_marca
-    INNER JOIN 
-        tb_tipoproducto t ON p.id_tipo = t.id_tipo
-    WHERE
-        p.codigo_barra LIKE CONCAT(p_codigo_barra, '%')
-    AND
-        p.inactive_at IS NULL AND t.tipo_nombre = 'Repetidor';
-END $$ 
--- A ELIMINAR
-
-DROP PROCEDURE IF EXISTS spu_productos_buscar_barraRouter$$
-
-CREATE PROCEDURE spu_productos_buscar_barraRouter(
-    IN p_codigo_barra VARCHAR(120)
-)
-BEGIN
-    SELECT
-        p.id_producto,
-        p.modelo,
-        p.precio_actual,
-        m.marca
-    FROM
-        tb_productos p
-    INNER JOIN
-        tb_marca m ON p.id_marca = m.id_marca
-    INNER JOIN 
-        tb_tipoproducto t ON p.id_tipo = t.id_tipo
-    WHERE
-        p.codigo_barra LIKE CONCAT(p_codigo_barra, '%')
-    AND
-        p.inactive_at IS NULL AND t.tipo_nombre = 'Router' OR t.tipo_nombre = 'ONT';
-END $$
--- A ELIMINAR spu_productos_buscar_barraRouter
 DELIMITER $$
 DROP PROCEDURE IF EXISTS spu_productos_listar_tiposproductos$$
 CREATE PROCEDURE spu_productos_listar_tiposproductos(
@@ -181,21 +105,10 @@ BEGIN
         );
 END $$
 
-CALL spu_productos_listar_tiposproductos('','Router',"");
-
-SELECT * from tb_productos;
---REDS
---WISP
---CATV
---FIBR
---NULL
 /*/************************************************************************************************/
 /*/************************************************************************************************/
 /*/************************************************************************************************/
 /*/************************************************************************************************/
-
-
-use Delatel;
 
 DELIMITER $$
 DROP PROCEDURE IF EXISTS spu_productos_registrar$$

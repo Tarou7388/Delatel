@@ -62,18 +62,6 @@ if (isset($_GET['operacion'])) {
 			$resultado = $producto->BuscarProductoBarra(["codigoBarra" => Herramientas::sanitizarEntrada($_GET['codigoBarra'])]);
 			echo json_encode($resultado);
 			break;
-		// case "buscarProductoBarraSintonizador":
-		// 	$resultado = $producto->BuscarProductoBarraSintonizador(["codigoBarra" => Herramientas::sanitizarEntrada($_GET['codigoBarra'])]);
-		// 	echo json_encode($resultado);
-		// 	break;
-		// case "buscarProductoBarraRepetidor":
-		// 	$resultado = $producto->BuscarProductoBarraRepetidor(["codigoBarra" => Herramientas::sanitizarEntrada($_GET['codigoBarra'])]);
-		// 	echo json_encode($resultado);
-		// 	break;
-		// case "buscarProductoBarraRouter":
-		// 	$resultado = $producto->BuscarProductoBarraRouter(["codigoBarra" => Herramientas::sanitizarEntrada($_GET['codigoBarra'])]);
-		// 	echo json_encode($resultado);
-		// 	break;
 		case "buscarTipoProductobyId":
 			$resultado = $producto->listarTipoProductoPorId(['idTipo' => $_GET['idTipo']]);
 			echo json_encode($resultado);
