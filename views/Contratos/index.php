@@ -2,152 +2,6 @@
 <link rel="stylesheet" href="../../css/contratos.css">
 <link rel="stylesheet" href="../../css/diseñoGlobal.css" />
 
-<div class="modal fade" id="ModalMapa" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-bs-backdrop="static">
-  <div class="modal-dialog modal-xl" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="myModalLabel">Mapa de Cobertura</h5>
-        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-          <span>&times;</span>
-        </button>
-      </div>
-      <div class="input-group mb-3" id="inputGroupCoordenada">
-        <input type="text" id="CoordenadaModel" class="form-control" placeholder="Coordenada" aria-label="Coordenada">
-        <button class="btn btn-outline-secondary" type="button" id="buscarCoordenada">Buscar</button>
-      </div>
-      <div class="modal-body">
-        <div id="map" style="height: 600px;">
-
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary" id="btnGuardarModalMapa" data-bs-dismiss="modal" disabled>Guardar cambios</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Modal de Actualización de Contrato -->
-<div class="modal fade" id="modalEditarContrato" tabindex="-1" aria-labelledby="modalEditarContratoLabel" data-bs-backdrop="static">
-  <div class="modal-dialog modal-xl" style="max-width: 1200px;">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h6 class="modal-title" id="modalEditarContratoLabel">Editar Contrato</h6>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="row g-3">
-          <!-- Formulario a la izquierda -->
-          <div class="col-12 col-lg-7">
-            <form id="form-editar-contrato">
-              <input type="hidden" id="txtIdContratoActualizar" name="id_contrato">
-
-              <div class="row mb-2">
-                <div class="col-12 col-md-6">
-                  <div class="form-floating mb-2">
-                    <input type="text" class="form-control" id="txtNombreActualizar" name="nombre" placeholder="Nombre de Cliente" disabled>
-                    <label for="txtNombreActualizar" class="form-label">Nombre de Cliente</label>
-                  </div>
-                </div>
-                <div class="col-12 col-md-6">
-                  <div class="form-floating mb-2">
-                    <input type="date" class="form-control" id="txtFechaInicioActualizar" name="Fecha" placeholder="Fecha de Inicio de Contrato">
-                    <label for="txtFechaInicioActualizar" class="form-label">Fecha de Inicio de Contrato</label>
-                  </div>
-                </div>
-              </div>
-
-              <div class="row mb-2">
-                <div class="col-12 col-md-6">
-                  <div class="form-floating mb-2">
-                    <select class="form-select" id="slcTipoServicioActualizar" aria-label="Servicios"  data-placeholder="Seleccione una opción" disabled>
-                      <option value="" disabled selected>Seleccione</option>
-                      <option value="1">CABL (Cable)</option>
-                      <option value="2">WISP (Wireless Internet Service Provider)</option>
-                      <option value="3">FIBR (Fibra Óptica)</option>
-                      <option value="duos">FIBRA + CABLE (GPON)</option>
-                    </select>
-                    <label for="slcTipoServicioActualizar" class="form-label">Servicio</label>
-                  </div>
-                </div>
-                <div class="col-12 col-md-6">
-                  <div class="form-floating mb-2">
-                    <select class="form-select select2me" id="slcPaquetesActualizar" aria-label="Paquetes">
-                      <option value="0" disabled selected>Seleccione</option>
-                    </select>
-                    <label for="slcPaquetesActualizar" class="form-label">Paquetes</label>
-                  </div>
-                </div>
-              </div>
-
-              <div class="row mb-2">
-                <div class="col-12 col-md-6">
-                  <div class="form-floating mb-2">
-                    <input type="number" class="form-control" id="txtPrecioActualizar" value="0" placeholder="Precio" disabled>
-                    <label for="txtPrecioActualizar" class="form-label">Precio</label>
-                  </div>
-                </div>
-                <div class="col-12 col-md-6">
-                  <div class="input-group mb-2">
-                    <div class="form-floating flex-grow-1">
-                      <input type="text" id="txtCoordenadaActualizar" class="form-control" placeholder="Coordenada" aria-label="Coordenada">
-                      <label for="txtCoordenadaActualizar">Coordenada</label>
-                    </div>
-                    <button class="btn btn-outline-secondary ms-2" type="button" id="buscarCoordenadaActualizar">Buscar</button>
-                  </div>
-                </div>
-              </div>
-
-              <div class="row mb-2">
-                <div class="col-12 col-md-6">
-                  <div class="form-floating mb-2">
-                    <select class="form-select select2me" id="slcSectorActualizar" aria-label="Sectores">
-                      <option value="0" disabled selected>Sectores</option>
-                    </select>
-                    <label for="slcSectorActualizar" class="form-label">Sectores</label>
-                  </div>
-                </div>
-                <div class="col-12 col-md-6">
-                  <div class="form-floating mb-2">
-                    <input type="text" class="form-control" id="txtDireccionActualizar" placeholder="Dirección de Servicio">
-                    <label for="txtDireccionActualizar" class="form-label">Dirección de Servicio</label>
-                  </div>
-                </div>
-              </div>
-
-              <div class="row mb-2">
-                <div class="col-12 col-md-6">
-                  <div class="form-floating mb-2">
-                    <input type="text" class="form-control" id="txtReferenciaActualizar" placeholder="Referencia" name="referencia">
-                    <label for="txtReferenciaActualizar" class="form-label">Referencia</label>
-                  </div>
-                </div>
-                <div class="col-12 col-md-6">
-                  <div class="form-floating mb-2">
-                    <textarea class="form-control" id="txtNotaActualizar" placeholder="Nota" name="nota" style="height: 58px;"></textarea>
-                    <label for="txtNotaActualizar" class="form-label">Nota</label>
-                  </div>
-                </div>
-              </div>
-
-              <div class="d-flex justify-content-end mt-3">
-                <button type="button" class="btn btn-success" id="btnActualizar">Guardar Cambios</button>
-              </div>
-            </form>
-          </div>
-          <!-- Mapa a la derecha -->
-          <div class="col-12 col-lg-5 d-flex align-items-start justify-content-center">
-            <div class="w-100">
-              <div id="mapActualizar" style="height: 480px; min-height: 300px; border-radius: 8px; border: 1px solid #ddd; width: 100%;"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <div class="container-fluid px-4">
   <h1 class="mt-4">Contratos</h1>
 
@@ -295,6 +149,158 @@
     </div>
   </div>
 </div>
+
+
+<div class="div">
+  
+</div>
+
+<div class="modal fade" id="ModalMapa" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-bs-backdrop="static">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="myModalLabel">Mapa de Cobertura</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="input-group mb-3" id="inputGroupCoordenada">
+        <input type="text" id="CoordenadaModel" class="form-control" placeholder="Coordenada" aria-label="Coordenada">
+        <button class="btn btn-outline-secondary" type="button" id="buscarCoordenada">Buscar</button>
+      </div>
+      <div class="modal-body">
+        <div id="map" style="height: 600px;">
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary" id="btnGuardarModalMapa" data-bs-dismiss="modal" disabled>Guardar cambios</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Actualización de Contrato -->
+<div class="modal fade" id="modalEditarContrato" tabindex="-1" aria-labelledby="modalEditarContratoLabel" data-bs-backdrop="static">
+  <div class="modal-dialog modal-xl" style="max-width: 1200px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title" id="modalEditarContratoLabel">Editar Contrato</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <!-- Formulario a la izquierda -->
+          <div class="col-12 col-lg-7">
+            <form id="form-editar-contrato">
+              <input type="hidden" id="txtIdContratoActualizar" name="id_contrato">
+
+              <div class="row mb-2">
+                <div class="col-12 col-md-6">
+                  <div class="form-floating mb-2">
+                    <input type="text" class="form-control" id="txtNombreActualizar" name="nombre" placeholder="Nombre de Cliente" disabled>
+                    <label for="txtNombreActualizar" class="form-label">Nombre de Cliente</label>
+                  </div>
+                </div>
+                <div class="col-12 col-md-6">
+                  <div class="form-floating mb-2">
+                    <input type="date" class="form-control" id="txtFechaInicioActualizar" name="Fecha" placeholder="Fecha de Inicio de Contrato">
+                    <label for="txtFechaInicioActualizar" class="form-label">Fecha de Inicio de Contrato</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row mb-2">
+                <div class="col-12 col-md-6">
+                  <div class="form-floating mb-2">
+                    <select class="form-select" id="slcTipoServicioActualizar" aria-label="Servicios" data-placeholder="Seleccione una opción" disabled>
+                      <option value="" disabled selected>Seleccione</option>
+                      <option value="1">CABL (Cable)</option>
+                      <option value="2">WISP (Wireless Internet Service Provider)</option>
+                      <option value="3">FIBR (Fibra Óptica)</option>
+                      <option value="duos">FIBRA + CABLE (GPON)</option>
+                    </select>
+                    <label for="slcTipoServicioActualizar" class="form-label">Servicio</label>
+                  </div>
+                </div>
+                <div class="col-12 col-md-6">
+                  <div class="form-floating mb-2">
+                    <select class="form-select select2me" id="slcPaquetesActualizar" aria-label="Paquetes">
+                      <option value="0" disabled selected>Seleccione</option>
+                    </select>
+                    <label for="slcPaquetesActualizar" class="form-label">Paquetes</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row mb-2">
+                <div class="col-12 col-md-6">
+                  <div class="form-floating mb-2">
+                    <input type="number" class="form-control" id="txtPrecioActualizar" value="0" placeholder="Precio" disabled>
+                    <label for="txtPrecioActualizar" class="form-label">Precio</label>
+                  </div>
+                </div>
+                <div class="col-12 col-md-6">
+                  <div class="input-group mb-2">
+                    <div class="form-floating flex-grow-1">
+                      <input type="text" id="txtCoordenadaActualizar" class="form-control" placeholder="Coordenada" aria-label="Coordenada">
+                      <label for="txtCoordenadaActualizar">Coordenada</label>
+                    </div>
+                    <button class="btn btn-outline-secondary ms-2" type="button" id="buscarCoordenadaActualizar">Buscar</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row mb-2">
+                <div class="col-12 col-md-6">
+                  <div class="form-floating mb-2">
+                    <select class="form-select select2me" id="slcSectorActualizar" aria-label="Sectores">
+                      <option value="0" disabled selected>Sectores</option>
+                    </select>
+                    <label for="slcSectorActualizar" class="form-label">Sectores</label>
+                  </div>
+                </div>
+                <div class="col-12 col-md-6">
+                  <div class="form-floating mb-2">
+                    <input type="text" class="form-control" id="txtDireccionActualizar" placeholder="Dirección de Servicio">
+                    <label for="txtDireccionActualizar" class="form-label">Dirección de Servicio</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row mb-2">
+                <div class="col-12 col-md-6">
+                  <div class="form-floating mb-2">
+                    <input type="text" class="form-control" id="txtReferenciaActualizar" placeholder="Referencia" name="referencia">
+                    <label for="txtReferenciaActualizar" class="form-label">Referencia</label>
+                  </div>
+                </div>
+                <div class="col-12 col-md-6">
+                  <div class="form-floating mb-2">
+                    <textarea class="form-control" id="txtNotaActualizar" placeholder="Nota" name="nota" style="height: 58px;"></textarea>
+                    <label for="txtNotaActualizar" class="form-label">Nota</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-end mt-3">
+                <button type="button" class="btn btn-success" id="btnActualizar">Guardar Cambios</button>
+              </div>
+            </form>
+          </div>
+          <!-- Mapa a la derecha -->
+          <div class="col-12 col-lg-5 d-flex align-items-start justify-content-center">
+            <div class="w-100">
+              <div id="mapActualizar" style="height: 480px; min-height: 300px; border-radius: 8px; border: 1px solid #ddd; width: 100%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <script type="module">
   const user = <?php echo json_encode($_SESSION['login']); ?>;

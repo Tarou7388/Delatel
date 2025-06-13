@@ -756,6 +756,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         {
           data: null,
           render: function (data, type, row) {
+            //ESTO ES EXPERIMENTAL, NO SE DEBE USAR EL btnLOG
             return `
                       <div class="btn-group" role="group">
                         <button class="btn btn-sm btn-warning btn-edit" data-idContrato="${row[0]}" title="Actualizar">
@@ -768,6 +769,9 @@ window.addEventListener("DOMContentLoaded", async () => {
                             <i class="fa-solid fa-file-pdf icon-disabled"></i>
                         </button>
                         <button class="btn btn-sm btn-success btnFicha" data-tipoServicio="${row[6]}" data-idContrato="${row[0]}" title="Ficha Técnica">
+                            <i class="fa-solid fa-file-signature icon-disabled" id="iconFicha${row[0]}"></i>
+                        </button>
+                        <button class="btn btn-sm btn-secondary btnLog" data-tipoServicio="${row[6]}" data-idContrato="${row[0]}" title="Ficha Técnica">
                             <i class="fa-solid fa-file-signature icon-disabled" id="iconFicha${row[0]}"></i>
                         </button>
                       </div>
@@ -818,6 +822,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         const botonesEliminar = document.querySelectorAll(".btnEliminar");
         const botonesFicha = document.querySelectorAll(".btnFicha");
         const botonesEdit = document.querySelectorAll(".btn-edit");
+        const botonesLog = document.querySelectorAll(".btnLog");
 
         botonesFicha.forEach((boton) => {
           const idContrato = boton.getAttribute("data-idContrato");
@@ -906,6 +911,14 @@ window.addEventListener("DOMContentLoaded", async () => {
             } else {
               window.open(`${config.HOST}views/reports/Contrato_servicio/soporte.php?id=${idContrato}`);
             }
+          });
+        });
+
+        //ESTO ES EXPERIMENTAL, NO SE DEBE USAR
+        botonesLog.forEach((boton) => {
+          boton.addEventListener("click", async (event) => {
+            const idContrato = event.target.getAttribute("data-idContrato");
+            abrirModalLog(idContrato);
           });
         });
       }
@@ -1068,6 +1081,13 @@ window.addEventListener("DOMContentLoaded", async () => {
       console.error("Error al obtener los detalles del contrato:", error);
       showToast("Error al cargar los datos del contrato.", "ERROR");
     }
+  };
+
+  //ESTO ES EXPERIMENTAL, NO SE DEBE USAR
+  async function abrirModalLog(idContrato) {
+    
+    const modalElement = document.getElementById("modalLog");
+    modal.show();
   }
 
   (async () => {
