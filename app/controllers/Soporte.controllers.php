@@ -17,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     case 'FiltrarSoportePrioridad':
       echo json_encode($soporte->FiltrarSoportePrioridad(["prioridad" => $_GET['prioridad']]));
       break;
+      //A eliminar
     case 'listarSoporte':
       echo json_encode($soporte->listarSoporte());
       break;

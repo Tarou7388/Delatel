@@ -1085,8 +1085,29 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   //ESTO ES EXPERIMENTAL, NO SE DEBE USAR
   async function abrirModalLog(idContrato) {
-    
-    const modalElement = document.getElementById("modalLog");
+    const modalElement = document.getElementById("ModalContrato");
+    const modal = new bootstrap.Modal(modalElement);
+    try {
+      const response = await fetch(
+        `${config.HOST}app/controllers/Contrato.controllers.php`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(
+            {
+              operacion: "obtenerRegistrosContrato",
+              idContrato: idContrato,
+              tbOption: 16
+            }
+          ),
+        }
+      );
+      const data = await response.json();
+      // Aquí puedes procesar los datos recibidos y mostrarlos en el modal si lo deseas
+      console.log("Registros del contrato:", data);
+    } catch (error) {
+      console.error("Error al obtener los registros del contrato:", error);
+    }
     modal.show();
   }
 

@@ -420,7 +420,7 @@ BEGIN
     WHERE 
         c.id_contrato = p_id_contrato;
 END$$
-
+DELIMITER $$
 DROP VIEW IF EXISTS vw_contratos_listar_ficha_null$$
 
 CREATE VIEW vw_contratos_listar_ficha_null AS
@@ -463,9 +463,15 @@ FROM
         JSON_OBJECT('id_servicio', sv.id_servicio)
     )
 WHERE
-    JSON_UNQUOTE(JSON_EXTRACT(c.ficha_instalacion, '$.id_ficha')) IS NULL
-    AND JSON_LENGTH(c.ficha_instalacion) = 1
-    AND c.inactive_at IS NULL
+    c.inactive_at IS NULL
+    AND ficha_instalacion IS NULL 
+    OR ficha_instalacion = '{}' 
+    OR ficha_instalacion = '[]' 
+    OR ficha_instalacion = 'null'
+    OR (
+        JSON_LENGTH(ficha_instalacion) = 1
+        AND JSON_EXTRACT(ficha_instalacion, '$.idcaja') IS NOT NULL
+    )
 GROUP BY
     c.id_contrato,
     nombre_cliente,

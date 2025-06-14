@@ -68,10 +68,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       break;
     case 'obtenerRegistrosContrato':
       $data = [
-        "idContrato"         => Herramientas::sanitizarEntrada($datos['idContrato'])
+        "idContrato"         => Herramientas::sanitizarEntrada($datos['idContrato']),
+        "tbOption"         => Herramientas::sanitizarEntrada($datos['tbOption'])
       ];
       $resultado = $contrato->obtenerRegistrosContrato($data);
-      echo json_encode(["guardado" => $resultado]);
+      echo json_encode([$resultado]);
       break;
   }
 }

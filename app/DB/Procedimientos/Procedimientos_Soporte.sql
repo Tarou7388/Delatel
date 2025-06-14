@@ -6,6 +6,20 @@ CREATE VIEW vw_soporte_detalle AS
 SELECT
     s.id_soporte,
     c.coordenada,
+    CASE
+        WHEN cl.id_persona IS NOT NULL THEN TRIM(
+            REGEXP_REPLACE(
+                CONCAT(p_cliente.apellidos, ' ', p_cliente.nombres),
+                '[ ]+',
+                ' '
+            )
+        )
+        ELSE emp.razon_social
+    END AS nombre_cliente,
+    CASE
+        WHEN cl.id_persona IS NOT NULL THEN p_cliente.nro_doc
+        ELSE emp.ruc
+    END AS num_identificacion,
     s.id_contrato,
     c.id_sector,
     sct.sector,
@@ -22,7 +36,9 @@ SELECT
     p_tecnico.nombres AS tecnico_nombres,
     p_tecnico.apellidos AS tecnico_apellidos,
     pk.id_paquete,
-    pk.id_servicio
+    pk.id_servicio,
+    s.inactive_at,
+    s.estaCompleto
 FROM
     tb_soporte s
     LEFT JOIN tb_contratos c ON s.id_contrato = c.id_contrato

@@ -19,6 +19,48 @@ CREATE TABLE tb_detalle_cambios (
     FOREIGN KEY (id_log) REFERENCES tb_logs_sistema(id_log) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB;
 
+CREATE TABLE IF NOT EXISTS tb_tablas_log (
+    id_opcion INT PRIMARY KEY AUTO_INCREMENT,
+    nombre_tabla VARCHAR(64) NOT NULL UNIQUE,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NULL DEFAULT NULL,
+    inactive_at TIMESTAMP NULL DEFAULT NULL
+) ENGINE=InnoDB;
+
+
+INSERT INTO tb_tablas_log (nombre_tabla) VALUES
+('tb_departamentos'),
+('tb_provincias'),
+('tb_distritos'),
+('tb_roles'),
+('tb_servicios'),
+('tb_sectores'),
+('tb_mufas'),
+('tb_cajas'),
+('tb_lineas'),
+('tb_personas'),
+('tb_empresas'),
+('tb_usuarios'),
+('tb_responsables'),
+('tb_paquetes'),
+('tb_clientes'),
+('tb_contratos'),
+('tb_contactabilidad'),
+('tb_soporte'),
+('tb_almacen'),
+('tb_marca'),
+('tb_tipoproducto'),
+('tb_unidadmedida'),
+('tb_productos'),
+('tb_tipooperacion'),
+('tb_kardex'),
+('tb_base'),
+('tb_subbase'),
+('tb_antenas');
+
+SELECT * FROM 
+;
+
 -- TRIGGER: Registro, actualización e inhabilitación de contrato (INSERT/UPDATE)
 DROP TRIGGER IF EXISTS trg_contratos_log;
 CREATE TRIGGER trg_contratos_log
@@ -186,24 +228,37 @@ SELECT * FROM tb_detalle_cambios;
 
 DELIMITER $$
 
-DROP PROCEDURE IF EXISTS sp_getlogs_by_table_and_id$$
+DROP PROCEDURE IF EXISTS SP_GETLOGS_BY_TABLE_AND_ID$$
+
 CREATE PROCEDURE sp_getlogs_by_table_and_id(
-    IN p_table_name VARCHAR(64),
+    IN p_table_option INT,
     IN p_id_registro BIGINT
 )
 BEGIN
-    SELECT 
-        l.*, 
-        d.id_detalle, d.campo, d.valor_anterior, d.valor_nuevo
-    FROM tb_logs_sistema l
-    LEFT JOIN tb_detalle_cambios d
-        ON l.id_log = d.id_log
-        AND d.id_registro = p_id_registro
-    WHERE l.table_name = p_table_name
-      AND l.id_registro_modificado = p_id_registro
-    ORDER BY l.log_time DESC, d.id_detalle ASC;
+    DECLARE v_table_name VARCHAR(64);
+
+    -- Busca el nombre de la tabla según la opción
+    SELECT nombre_tabla INTO v_table_name
+    FROM tb_tablas_log
+    WHERE id_opcion = p_table_option
+    LIMIT 1;
+
+    IF v_table_name IS NOT NULL THEN
+        SELECT 
+            l.*, 
+            d.id_detalle, d.campo, d.valor_anterior, d.valor_nuevo
+        FROM tb_logs_sistema l
+        LEFT JOIN tb_detalle_cambios d
+            ON l.id_log = d.id_log
+            AND d.id_registro = p_id_registro
+        WHERE l.table_name = v_table_name
+          AND l.id_registro_modificado = p_id_registro
+        ORDER BY l.log_time DESC, d.id_detalle ASC;
+    ELSE
+        SELECT 'Opción de tabla no válida.' AS error;
+    END IF;
 END$$
 
 DELIMITER ;
 
-CALL sp_getlogs_by_table_and_id('tb_contratos', 748);
+CALL sp_getlogs_by_table_and_id(16, 748);

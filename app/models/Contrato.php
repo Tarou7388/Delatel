@@ -263,9 +263,10 @@ class Contrato extends Conexion
     //ESTO ES EXPERIMENTAL, NO SE DEBE USAR
     public function obtenerRegistrosContrato($params = [])
     {
-        $sql = "CALL sp_getlogs_by_table_and_id(?)";
+        $sql = "CALL sp_getlogs_by_table_and_id(?,?)";
         $values = array(
-            $params['id']
+            $params['tbOption'],
+            $params['idContrato']
         );
         return $this->consultaParametros($sql, $values);
     }

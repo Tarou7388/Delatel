@@ -180,6 +180,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
       if (Array.isArray(datos) && datos.length > 0) {
         datos.forEach(c => {
+          console.log("Contrato:", c);
           const opt = new Option(`${c.tipos_servicio}`, c.id_contrato);
           opt.dataset.nota = c.nota;
           opt.dataset.direccion = c.direccion_servicio;
@@ -195,6 +196,7 @@ window.addEventListener('DOMContentLoaded', async () => {
           allowClear: true,
           placeholder: "Seleccione un Contrato",
           templateResult: function (data) {
+            console.log("Data:", data);
             if (!data.id) return data.text;
             const el = data.element.dataset;
             return $(`

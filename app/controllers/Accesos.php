@@ -28,11 +28,21 @@ function obtenerAccesosFiltrados($permissions)
 	$accesosV2 = [
 		["ruta" => "Administracion", "texto" => "Administracion", "icono" => "fa-solid fa-cogs", "Desplegable" => true, "rutasAnexas" => ["Mapa"], "IconoAnexo" => ["fa-solid fa-map"]],
 		["ruta" => "Contratos", "texto" => "Contratos", "icono" => "fa-solid fa-file-contract", "rutasAnexas" => ["FichaTecnicaCable", "FichaTecnicaGpon", "FichaTecnicaWisp", "FichaTecnicaFibra"]],
-		["ruta" => "Inventariado", "texto" => "Inventariado", "icono" => "fa-solid fa-warehouse", "Desplegable" => true, "rutasAnexas" => ["Kardex", "Productos","Almacenes"], "IconoAnexo" => ["fa-solid fa-warehouse", "fa-solid fa-boxes-stacked","fa-solid fa-boxes-stacked"]],
+		["ruta" => "Inventariado", "texto" => "Inventariado", "icono" => "fa-solid fa-warehouse", "Desplegable" => true, "rutasAnexas" => ["Kardex", "Productos", "Almacenes"], "IconoAnexo" => ["fa-solid fa-warehouse", "fa-solid fa-boxes-stacked", "fa-solid fa-boxes-stacked"]],
 		["ruta" => "Personas", "texto" => "Personas", "icono" => "fa-solid fa-user", "rutasAnexas" => ["listarEditar"]],
 		["ruta" => "Ticket", "texto" => "Ticket", "icono" => "fa-solid fa-tasks", "rutasAnexas" => ["listarAverias"]],
 		["ruta" => "Roles", "texto" => "Roles", "icono" => "fa-regular fa-address-card"],
-		["ruta" => "Soporte", "texto" => "Soporte", "icono" => "fa-solid fa-wrench", "rutasAnexas" => ["registroSoporte", "SoporteEscritorio", "listarSoporte", "SoporteCABL", "SoporteFIBR", "SoporteWISP"]],
+		[
+			"ruta" => "Soporte",
+			"texto" => "Soporte",
+			"icono" => "fa-solid fa-wrench",
+			"Desplegable" => true,
+			"OpcionVariada" => true,
+			"textosAnexos" => ["Registro Soporte", "Gestion Soporte"],
+			"rutasAnexas" => ["", "SoporteControl"],
+			"IconoAnexo" => ["fa-solid fa-plus", "fa-solid fa-boxes-stacked"],
+			"rutasNoVisibles" => ["SoporteCABL", "SoporteFIBR", "SoporteWISP", "listarSoporte"]
+		],
 		["ruta" => 'Usuarios', "texto" => "Usuarios", "icono" => "fa-solid fa-users", "rutasAnexas" => ["registrar"]],
 		["ruta" => 'Reportes', "texto" => "Reportes", "icono" => "fa-solid fa-wrench", "rutasAnexas" => ["tablaContrato", "listarReporte"]],
 		["ruta" => 'Paquetes', "texto" => "Paquetes", "icono" => "fa-solid fa-box-open"]

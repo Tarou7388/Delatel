@@ -197,12 +197,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       console.log(fichaInstalacion.costo);
 
-      txtNapGpon.value = fichaInstalacion.costo.nap.gpon;
-      txtNapCatv.value = fichaInstalacion.costo.nap.catv;
-      txtCasaGpon.value = fichaInstalacion.costo.casa.gpon;
-      txtCasaCatv.value = fichaInstalacion.costo.casa.catv;
+      txtNapGpon.value = (fichaInstalacion.costo?.nap?.gpon ?? 0) || 0;
+      txtNapCatv.value = (fichaInstalacion.costo?.nap?.catv ?? 0) || 0;
+      txtCasaGpon.value = (fichaInstalacion.costo?.casa?.gpon ?? 0) || 0;
+      txtCasaCatv.value = (fichaInstalacion.costo?.casa?.catv ?? 0) || 0;
 
-      txtDetalleCosto.value = fichaInstalacion.costo.cablecosto.detalle;
+      txtDetalleCosto.value = fichaInstalacion.costo?.cablecosto?.detalle ?? "";
 
       let sintonizadores = null;
       if (cableFiltrado.sintonizadores) {

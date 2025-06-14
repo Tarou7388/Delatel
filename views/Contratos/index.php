@@ -151,8 +151,26 @@
 </div>
 
 
-<div class="div">
-  
+<!-- Modal Información del Contrato -->
+<div class="modal fade" id="ModalContrato" tabindex="-1" aria-labelledby="myModalLabel" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="myModalLabel">Información del Contrato</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-12 col-md-6 mb-3 mb-md-0" id="mdlftLogs">
+            <!-- Contenido de la sección izquierda -->
+          </div>
+          <div class="col-12 col-md-6" id="mdrgtLogs">
+            <!-- Contenido de la sección derecha -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="modal fade" id="ModalMapa" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-bs-backdrop="static">
