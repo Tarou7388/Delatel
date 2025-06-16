@@ -253,7 +253,7 @@ BEGIN
             AND d.id_registro = p_id_registro
         WHERE l.table_name = v_table_name
           AND l.id_registro_modificado = p_id_registro
-        ORDER BY l.log_time DESC, d.id_detalle ASC;
+        ORDER BY l.id_log ASC;
     ELSE
         SELECT 'Opción de tabla no válida.' AS error;
     END IF;
@@ -261,4 +261,15 @@ END$$
 
 DELIMITER ;
 
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS sp_getlogs_cascade$$
+CREATE PROCEDURE sp_getlogs_by_table_and_id(
+    IN p_id_log BIGINT
+)
+
+
+
 CALL sp_getlogs_by_table_and_id(16, 748);
+
+SELECT * FROM vw_contratos_listar_ficha_null

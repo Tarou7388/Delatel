@@ -24,15 +24,16 @@ $primaryKey = 'id_soporte';
 
 $columns = array(
   array('db' => 'id_soporte', 'dt' => 0),
-  array('db' => 'nombre_cliente', 'dt' => 2),
   array('db' => 'nombre_cliente', 'dt' => 1),
+  array('db' => 'num_identificacion', 'dt' => 2),
   array('db' => 'fecha_hora_solicitud', 'dt' => 3),
-  array('db' => 'fecha_hora_asistencia', 'dt' => 5),
-  array('db' => 'descripcion_problema', 'dt' => 6),
-  array('db' => 'prioridad', 'dt' => 7),
-  array('db' => 'soporte', 'dt' => 8),
-  array('db' => 'inactive_at', 'dt' => 9),
-  array('db' => 'estaCompleto', 'dt' => 10),
+  array('db' => 'fecha_hora_asistencia', 'dt' => 4),
+  array('db' => 'descripcion_problema', 'dt' => 5),
+  array('db' => 'prioridad', 'dt' => 6),
+  array('db' => 'soporte', 'dt' => 7),
+  array('db' => 'inactive_at', 'dt' => 8),
+  array('db' => 'estaCompleto', 'dt' => 9),
+  array('db' => 'descripcion_solucion', 'dt' => 10),
 );
 
 $sql_details = array(
@@ -52,5 +53,6 @@ $sql_details = array(
 require('../models/ssp.class.php');
 
 echo json_encode(
-  SSP::simple($_GET, $sql_details, $table, $primaryKey, $columns, null, null, 'ORDER BY id_soporte DESC')
+  SSP::simple($_GET, $sql_details, $table, $primaryKey, $columns, null, null, ' ORDER BY
+    s.fecha_hora_solicitud DESC')
 );

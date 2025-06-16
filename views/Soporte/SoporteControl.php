@@ -35,7 +35,8 @@
                                 <th class="text-center d-none d-md-table-cell">DNI</th>
                                 <th class="text-center d-none d-md-table-cell">Fecha programada</th>
                                 <th class="text-center d-none d-md-table-cell">Fecha Completada</th>
-                                <th class="text-center d-none d-md-table-cell">Fecha de Creación</th>
+                                <th class="text-center d-none d-md-table-cell">Problema Inicial</th>
+                                <th class="text-center d-none d-md-table-cell">Solucion</th>
                                 <th class="text-center d-none d-md-table-cell">Prioridad</th>
                                 <th class="text-center">Detalle</th>
                             </tr>

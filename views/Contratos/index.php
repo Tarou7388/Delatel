@@ -161,12 +161,12 @@
       </div>
       <div class="modal-body">
         <div class="row">
-          <div class="col-12 col-md-6 mb-3 mb-md-0" id="mdlftLogs">
+            <div class="col-12 col-md-7 mb-3 mb-md-0" id="mdlftLogs">
             <!-- Contenido de la sección izquierda -->
-          </div>
-          <div class="col-12 col-md-6" id="mdrgtLogs">
+            </div>
+            <div class="col-12 col-md-5" id="mdrgtLogs">
             <!-- Contenido de la sección derecha -->
-          </div>
+            </div>
         </div>
       </div>
     </div>

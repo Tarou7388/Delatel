@@ -735,7 +735,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       processing: true,
       serverSide: true,
       ajax: {
-        url: `${config.HOST}app/controllers/Contrato.ssp.php`,
+        url: `${config.HOST}app/controllers/Contrato.ssp.php?vista=listarContratoSimple`,
         type: 'GET',
         dataSrc: function (json) {
           return json.data;
@@ -1087,29 +1087,95 @@ window.addEventListener("DOMContentLoaded", async () => {
   async function abrirModalLog(idContrato) {
     const modalElement = document.getElementById("ModalContrato");
     const modal = new bootstrap.Modal(modalElement);
+    const mdlftLogs = document.getElementById("mdlftLogs");
+    const mdrgtLogs = document.getElementById("mdrgtLogs");
+    mdlftLogs.innerHTML = `
+      <div class="d-flex justify-content-center align-items-center my-4" style="min-height:80px;">
+        <div class="spinner-border text-primary" role="status"></div>
+      </div>
+    `;
+    if (mdrgtLogs) mdrgtLogs.innerHTML = "";
     try {
       const response = await fetch(
         `${config.HOST}app/controllers/Contrato.controllers.php`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(
-            {
-              operacion: "obtenerRegistrosContrato",
-              idContrato: idContrato,
-              tbOption: 16
-            }
-          ),
+          body: JSON.stringify({
+            operacion: "obtenerRegistrosContrato",
+            idContrato: idContrato,
+            tbOption: 16
+          }),
         }
       );
       const data = await response.json();
-      // Aquí puedes procesar los datos recibidos y mostrarlos en el modal si lo deseas
-      console.log("Registros del contrato:", data);
+      if (Array.isArray(data[0]) && data[0].length > 0) {
+        let html = `
+          <div class="table-responsive">
+            <table class="table table-hover table-bordered align-middle mb-0 shadow-sm rounded">
+              <thead class="table-primary">
+                <tr>
+                  <th class="text-center" style="width: 140px;">Fecha/Hora</th>
+                  <th class="text-center" style="width: 180px;">Responsable</th>
+                  <th class="text-center">Mensaje</th>
+                </tr>
+              </thead>
+              <tbody>
+        `;
+        data[0].forEach((log, idx) => {
+          html += `
+            <tr class="log-row" data-message="${encodeURIComponent(log.message || "")}" style="cursor:pointer;">
+              <td class="text-center text-nowrap">
+                <span class="badge bg-light text-dark border border-primary px-2 py-1">${log.log_time || ""}</span>
+              </td>
+              <td class="text-center">
+                <span class="fw-semibold text-primary">${log.operador || ""}</span>
+              </td>
+              <td>
+                <span class="text-dark">${log.message || ""}</span>
+              </td>
+            </tr>
+          `;
+        });
+        html += `
+              </tbody>
+            </table>
+          </div>
+        `;
+        mdlftLogs.innerHTML = html;
+
+        // Agregar evento para mostrar mensaje centrado al hacer click
+        const rows = mdlftLogs.querySelectorAll('.log-row');
+        rows.forEach(row => {
+          row.addEventListener('click', function () {
+            // Remover highlight de otros
+            rows.forEach(r => r.classList.remove('table-active'));
+            this.classList.add('table-active');
+            const msg = decodeURIComponent(this.getAttribute('data-message') || "");
+            if (mdrgtLogs) {
+              mdrgtLogs.innerHTML = `<div class="fw-bold fs-5 text-primary">${msg || "Sin mensaje"}</div>`;
+            }
+          });
+        });
+      } else {
+        mdlftLogs.innerHTML = `
+          <div class="alert alert-info text-center my-4 shadow-sm rounded">
+            <i class="fa fa-info-circle me-2"></i>No hay registros para este contrato.
+          </div>
+        `;
+        if (mdrgtLogs) mdrgtLogs.innerHTML = "";
+      }
     } catch (error) {
+      mdlftLogs.innerHTML = `
+        <div class="alert alert-danger text-center my-4 shadow-sm rounded">
+          <i class="fa fa-exclamation-triangle me-2"></i>Error al obtener los registros del contrato.
+        </div>
+      `;
+      if (mdrgtLogs) mdrgtLogs.innerHTML = "";
       console.error("Error al obtener los registros del contrato:", error);
     }
     modal.show();
-  }
+  };
 
   (async () => {
     await cargarDatos();

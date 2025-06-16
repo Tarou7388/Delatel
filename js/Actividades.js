@@ -339,38 +339,48 @@ window.addEventListener("DOMContentLoaded", async function () {
 
     const tbodyFichaContrato = document.getElementById("tbodyFichaContrato");
     try {
-      const response = await fetch(`${config.HOST}app/controllers/Sticket.controllers.php?operacion=listarContratosPendientes`);
+      const response = await fetch(`${config.HOST}app/controllers/Contrato.ssp.php?vista=listarContratoPendiente`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
 
+      console.log(data);
+
       tbodyFichaContrato.innerHTML = '';
 
-      data.forEach(contrato => {
-        const nota = contrato.nota ? contrato.nota : 'Sin observaciones';
-        const row = `
-                <tr class="ficha-row" data-id_contrato="${contrato.id_contrato}" data-tipo_servicio="${contrato.tipos_servicio}">
-                    <td class="text-center">${contrato.id_contrato}</td>
-                    <td class="text-center">${contrato.nombre_cliente}</td>
-                    <td class="text-center d-none d-md-table-cell" data-descripcion="Servicio">${contrato.tipos_servicio}</td>
-                    <td class="text-center d-none d-md-table-cell" data-descripcion="Paquete">${contrato.nombre_paquete}</td>
-                    <td class="text-center" data-descripcion="N° Telefono">${contrato.telefono}</td>
-                    <td class="text-center d-none d-md-table-cell" data-descripcion="Direccion">${contrato.direccion_servicio}</td>
-                    <td class="text-center d-none d-md-table-cell" data-descripcion="Referencia">${contrato.referencia}</td>
-                    <td class="text-center d-none d-md-table-cell" data-descripcion="Nota">${nota}</td>
-                    <td class="text-center">
-                      <div class="d-flex justify-content-center">
-                        <button class="btnMapa btn btn-dark me-2" data-id="${contrato.id_contrato}" data-tipo="ficha" data-bs-toggle="modal" data-bs-target="#ModalMapa">
-                          <i class="fa-solid fa-location-dot"></i>
-                        </button>
-                        <button type="button" class="btn btn-primary btn-sm atender-contrato"><i class="fa-solid fa-pen"></i></button>
-                      </div>
-                    </td>
-                </tr>
-            `;
-        tbodyFichaContrato.innerHTML += row;
+      let html = '';
+
+      data.data.forEach(contrato => {
+        console.log(contrato);
+        const nota = contrato[8] ? contrato[8].trim() !== "" ? contrato[8] : 'Sin observaciones' : 'Sin observaciones';
+        const Referencia = contrato[7] ? contrato[7].trim() !== "" ? contrato[7] : 'Sin referencia' : 'Sin referencia';
+        html += `
+          <tr class="ficha-row" data-id_contrato="${contrato[0]}" data-tipo_servicio="${contrato[1]}">
+            <td class="text-center">${contrato[0]}</td>
+            <td class="text-center">${contrato[2]}</td>
+            <td class="text-center d-none d-md-table-cell" data-descripcion="Servicio">${contrato[3]}</td>
+            <td class="text-center d-none d-md-table-cell" data-descripcion="Paquete">${contrato[4]}</td>
+            <td class="text-center" data-descripcion="N° Telefono">${contrato[5]}</td>
+            <td class="text-center d-none d-md-table-cell" data-descripcion="Direccion">${contrato[6]}</td>
+            <td class="text-center d-none d-md-table-cell" data-descripcion="Referencia">${Referencia}</td>
+            <td class="text-center d-none d-md-table-cell" data-descripcion="Nota">${nota}</td>
+            <td class="text-center">
+              <div class="d-flex justify-content-center">
+                <button class="btnMapa btn btn-dark me-2" data-id="${contrato[0]}" data-tipo="ficha" data-bs-toggle="modal" data-bs-target="#ModalMapa">
+                  <i class="fa-solid fa-location-dot"></i>
+                </button>
+                <button type="button" class="btn btn-primary btn-sm atender-contrato">
+                  <i class="fa-solid fa-pen"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
       });
+
+      // Inserta todas las filas de golpe
+      tbodyFichaContrato.innerHTML = html;
 
       const table = $('#tablaFichaContrato').DataTable({
         destroy: true,
@@ -539,7 +549,7 @@ window.addEventListener("DOMContentLoaded", async function () {
   });
 
 
-  mapa.emitter.on('funcionEjecutada',(data) => {
+  mapa.emitter.on('funcionEjecutada', (data) => {
     labelSector.textContent = mapa.nombreSector;
   });
 });
