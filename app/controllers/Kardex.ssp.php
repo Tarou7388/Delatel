@@ -36,7 +36,8 @@ $columns = array(
     array('db' => 'valor_unico_historico', 'dt' => 10),
     array('db' => 'nombre_almacen', 'dt' => 11),
     array('db' => 'creado_por', 'dt' => 12),
-    array('db' => 'tipo_movimiento', 'dt' => 13)
+    array('db' => 'tipo_movimiento', 'dt' => 13),
+    array('db' => 'producto', 'dt' => 14),
 );
 
 $sql_details = array(

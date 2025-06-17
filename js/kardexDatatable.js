@@ -68,15 +68,22 @@ window.tablaKardex = $('#TbKardex').DataTable({
   ],
   columns: [
     {
-      data: function (row) {
-        return `${row[3]} ${row[2]}`;
-      },
+      data: 14,
       title: 'Producto',
       className: 'text-center'
     },
     { data: 11, title: 'Almacén', className: 'text-center' },
     { data: 6, title: 'Fecha', className: 'text-center' },
-    { data: 13, title: 'Movimiento', className: 'text-center' },
+    {
+      data: 13,
+      title: 'Movimiento',
+      className: 'text-center',
+      render: function (data) {
+        if (data === 'E') return 'ENTRADA';
+        if (data === 'S') return 'SALIDA';
+        return data;
+      }
+    },
     { data: 7, title: 'Operación', className: 'text-center' },
     { data: 8, title: 'Cantidad', className: 'text-center' },
     { data: 9, title: 'Saldo Total', className: 'text-center' },

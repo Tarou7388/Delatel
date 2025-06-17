@@ -123,7 +123,7 @@
     </div>
   </div>
 
-  <div class="card mt-3">
+  <div class="card mt-3" id="cardContratos">
     <div class="card-header">
       <i class="fas fa-table me-1"></i> Listado de Contratos
     </div>
@@ -148,30 +148,32 @@
       </div>
     </div>
   </div>
-</div>
 
-
-<!-- Modal Información del Contrato -->
-<div class="modal fade" id="ModalContrato" tabindex="-1" aria-labelledby="myModalLabel" data-bs-backdrop="static">
-  <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="myModalLabel">Información del Contrato</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  <div class="card mt-3" style="display: none;" id="cardLogs">
+    <div class="card-header">
+      <i class="fas fa-table me-1"></i> Listado de Contratos
+    </div>
+    <div class="card-body">
+      <div class="container-fluid mb-3">
+        <button type="button" id="btnRetornarLista" class="btn btn-primary">
+          <i class="fa-solid fa-arrow-left"></i> Regresar a la Lista de Contratos 
+        </button>
       </div>
-      <div class="modal-body">
-        <div class="row">
-            <div class="col-12 col-md-7 mb-3 mb-md-0" id="mdlftLogs">
-            <!-- Contenido de la sección izquierda -->
-            </div>
-            <div class="col-12 col-md-5" id="mdrgtLogs">
-            <!-- Contenido de la sección derecha -->
-            </div>
+      <div class="row">
+        <div class="col-12 col-md-7 mb-3 mb-md-0" id="mdlftLogs">
+          <!-- Contenido de la sección izquierda -->
+        </div>
+        <div class="col-12 col-md-5" id="mdrgtLogs">
+          <!-- Contenido de la sección derecha -->
         </div>
       </div>
     </div>
   </div>
+
 </div>
+
+
+
 
 <div class="modal fade" id="ModalMapa" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-bs-backdrop="static">
   <div class="modal-dialog modal-xl" role="document">

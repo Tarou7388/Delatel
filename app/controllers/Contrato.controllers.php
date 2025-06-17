@@ -66,14 +66,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $resultado = $contrato->registrarContrato($datosEnviar);
       echo json_encode($resultado);
       break;
-    case 'obtenerRegistrosContrato':
-      $data = [
-        "idContrato"         => Herramientas::sanitizarEntrada($datos['idContrato']),
-        "tbOption"         => Herramientas::sanitizarEntrada($datos['tbOption'])
-      ];
-      $resultado = $contrato->obtenerRegistrosContrato($data);
-      echo json_encode([$resultado]);
-      break;
   }
 }
 

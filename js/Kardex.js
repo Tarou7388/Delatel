@@ -104,6 +104,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   };
 
   (async () => {
+    if (!idproductoField) return;
     const response = await fetch(`${config.HOST}app/controllers/Producto.controllers.php?operacion=listarProductos`);
     const data = await response.json();
 
@@ -111,21 +112,23 @@ document.addEventListener("DOMContentLoaded", async function () {
       data.forEach(producto => {
         const tagOption = document.createElement("option");
         tagOption.value = producto.id_producto;
-        tagOption.textContent = `${producto.marca} ${producto.modelo}`;
+        tagOption.textContent = `${producto.marca} ${producto.modelo}  ${producto.tipo_nombre}`;
         idproductoField.appendChild(tagOption);
       });
     }
 
-    $(idproductoField).select2({
-      theme: "bootstrap-5",
-      placeholder: "Seleccione un Producto",
-      allowClear: true
-    });
+    if (typeof $ !== "undefined" && typeof $(idproductoField).select2 === "function") {
+      $(idproductoField).select2({
+        theme: "bootstrap-5",
+        placeholder: "Seleccione un Producto",
+        allowClear: true
+      });
 
-    $(idproductoField).on('select2:open', function () {
-      $('.select2-container--bootstrap-5 .select2-selection--single').css('height', 'calc(3.5rem + 2px)');
-      $('.select2-container--bootstrap-5 .select2-selection__rendered').css('margin-top', '18px');
-    });
+      $(idproductoField).on('select2:open', function () {
+        $('.select2-container--bootstrap-5 .select2-selection--single').css('height', 'calc(3.5rem + 2px)');
+        $('.select2-container--bootstrap-5 .select2-selection__rendered').css('margin-top', '18px');
+      });
+    }
   })();
 
   (async () => {

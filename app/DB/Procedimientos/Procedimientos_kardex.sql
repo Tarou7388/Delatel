@@ -18,6 +18,7 @@ SELECT
     k.id_kardex,
     p.id_producto,
     p.modelo,
+    CONCAT(tp.tipo_nombre, ' ', p.modelo) AS producto,
     p.id_tipo AS id_tipo_producto,
     tp.tipo_nombre AS tipo_producto,
     p.id_marca AS id_marca,
@@ -33,10 +34,7 @@ SELECT
     k.id_almacen,
     a.nombre_almacen,
     CONCAT(pe.nombres,' ',pe.apellidos) AS creado_por,
-    CASE
-        WHEN toper.movimiento = 'E' THEN 'ENTRADA'
-        WHEN toper.movimiento = 'S' THEN 'SALIDA'
-    END AS tipo_movimiento
+    toper.movimiento AS tipo_movimiento
 FROM
     tb_productos p
     JOIN tb_kardex k ON p.id_producto = k.id_producto

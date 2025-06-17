@@ -918,7 +918,11 @@ window.addEventListener("DOMContentLoaded", async () => {
         botonesLog.forEach((boton) => {
           boton.addEventListener("click", async (event) => {
             const idContrato = event.target.getAttribute("data-idContrato");
-            abrirModalLog(idContrato);
+            const cardLogs = document.querySelector("#cardLogs");
+            const cardContratos = document.querySelector("#cardContratos");
+            if (cardLogs) cardLogs.style.display = "block";
+            if (cardContratos) cardContratos.style.display = "none";
+            await cargarDatosLogs(idContrato);
           });
         });
       }
@@ -1083,10 +1087,20 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
   };
 
+
+  const btnRetornarLista = document.getElementById("btnRetornarLista");
+
+  btnRetornarLista.addEventListener("click", () => {
+    const cardLogs = document.querySelector("#cardLogs");
+    if (cardLogs) cardLogs.style.display = "none";
+    const cardContratos = document.querySelector("#cardContratos");
+    if (cardContratos) cardContratos.style.display = "block";
+    tabla.ajax.reload();
+
+  });
   //ESTO ES EXPERIMENTAL, NO SE DEBE USAR
-  async function abrirModalLog(idContrato) {
-    const modalElement = document.getElementById("ModalContrato");
-    const modal = new bootstrap.Modal(modalElement);
+  // Versión comprimida y responsive para vista móvil
+  async function cargarDatosLogs(idContrato) {
     const mdlftLogs = document.getElementById("mdlftLogs");
     const mdrgtLogs = document.getElementById("mdrgtLogs");
     mdlftLogs.innerHTML = `
@@ -1097,7 +1111,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     if (mdrgtLogs) mdrgtLogs.innerHTML = "";
     try {
       const response = await fetch(
-        `${config.HOST}app/controllers/Contrato.controllers.php`,
+        `${config.HOST}app/controllers/Logs.controllers.php`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -1113,7 +1127,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         let html = `
           <div class="table-responsive">
             <table class="table table-hover table-bordered align-middle mb-0 shadow-sm rounded">
-              <thead class="table-primary">
+              <thead class="table-primary d-none d-md-table-header-group">
                 <tr>
                   <th class="text-center" style="width: 140px;">Fecha/Hora</th>
                   <th class="text-center" style="width: 180px;">Responsable</th>
@@ -1124,7 +1138,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         `;
         data[0].forEach((log, idx) => {
           html += `
-            <tr class="log-row" data-message="${encodeURIComponent(log.message || "")}" style="cursor:pointer;">
+            <tr class="log-row" data-id="${log.id_log}" style="cursor:pointer;">
               <td class="text-center text-nowrap">
                 <span class="badge bg-light text-dark border border-primary px-2 py-1">${log.log_time || ""}</span>
               </td>
@@ -1135,28 +1149,221 @@ window.addEventListener("DOMContentLoaded", async () => {
                 <span class="text-dark">${log.message || ""}</span>
               </td>
             </tr>
+            <!-- Responsive: Card para móvil -->
+            <tr class="d-md-none log-mobile-row" data-id="${log.id_log}">
+              <td colspan="3" style="padding:0;">
+                <div class="p-2 border rounded mb-2" style="background:#f8f9fa;">
+                  <div><b>Fecha/Hora:</b> <span class="badge bg-light text-dark border border-primary px-2 py-1">${log.log_time || ""}</span></div>
+                  <div><b>Responsable:</b> <span class="fw-semibold text-primary">${log.operador || ""}</span></div>
+                  <div><b>Mensaje:</b> <span class="text-dark">${log.message || ""}</span></div>
+                  <div class="mt-2 text-end">
+                    <button class="btn btn-link btn-sm btn-detalle-mobile" data-id="${log.id_log}" style="text-decoration:none;">
+                      <i class="fa fa-list-alt me-1"></i>Ver detalle
+                    </button>
+                  </div>
+                  <div class="detalle-mobile-container"></div>
+                </div>
+              </td>
+            </tr>
           `;
         });
         html += `
               </tbody>
             </table>
           </div>
+          <style>
+            @media (max-width: 767.98px) {
+              #mdlftLogs table thead { display: none; }
+              #mdlftLogs tr.log-row { display: none; }
+              #mdlftLogs tr.d-md-none { display: table-row; }
+            }
+            @media (min-width: 768px) {
+              #mdlftLogs tr.d-md-none { display: none !important; }
+            }
+          </style>
         `;
         mdlftLogs.innerHTML = html;
 
-        // Agregar evento para mostrar mensaje centrado al hacer click
+        // Evento para mostrar detalles (solo en desktop)
         const rows = mdlftLogs.querySelectorAll('.log-row');
         rows.forEach(row => {
-          row.addEventListener('click', function () {
-            // Remover highlight de otros
+          row.addEventListener('click', async function () {
             rows.forEach(r => r.classList.remove('table-active'));
             this.classList.add('table-active');
-            const msg = decodeURIComponent(this.getAttribute('data-message') || "");
+            const logId = this.getAttribute('data-id');
+            if (!logId) return;
             if (mdrgtLogs) {
-              mdrgtLogs.innerHTML = `<div class="fw-bold fs-5 text-primary">${msg || "Sin mensaje"}</div>`;
+              mdrgtLogs.innerHTML = `
+                <div class="d-flex justify-content-center align-items-center my-4" style="min-height:80px;">
+                  <div class="spinner-border text-primary" role="status"></div>
+                </div>
+              `;
+            }
+            try {
+              const response = await fetch(
+                `${config.HOST}app/controllers/Logs.controllers.php`,
+                {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    operacion: "obtenerDetallados",
+                    id: logId,
+                  }),
+                }
+              );
+              const data = await response.json();
+              if (mdrgtLogs) {
+                if (Array.isArray(data[0]) && data[0].length > 0) {
+                  let html = `
+                    <div class="table-responsive">
+                      <table class="table table-sm table-bordered table-striped align-middle mb-0 shadow-sm rounded" style="font-size:0.85rem;">
+                        <thead class="table-primary">
+                          <tr>
+                            <th class="text-center px-2 py-1" style="width:120px;">Campo</th>
+                            <th class="text-center px-2 py-1" style="width:120px;">Antes</th>
+                            <th class="text-center px-2 py-1" style="width:120px;">Después</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                  `;
+                  data[0].forEach(det => {
+                    function renderJsonAsText(jsonStr) {
+                      try {
+                        const obj = JSON.parse(jsonStr);
+                        if (typeof obj === 'object' && obj !== null) {
+                          return `<pre class="mb-0" style="font-size:0.82rem; max-height:200px; overflow:auto; white-space:pre-wrap; word-break:break-all;">${JSON.stringify(obj, null, 2)}</pre>`;
+                        }
+                      } catch (e) { }
+                      return `<pre class="mb-0" style="font-size:0.82rem; max-height:200px; overflow:auto; white-space:pre-wrap; word-break:break-all;">${jsonStr || ''}</pre>`;
+                    }
+                    html += `
+                      <tr>
+                        <td class="text-center px-2 py-1">${det.campo || ''}</td>
+                        <td class="px-2 py-1">${renderJsonAsText(det.valor_anterior)}</td>
+                        <td class="px-2 py-1">${renderJsonAsText(det.valor_nuevo)}</td>
+                      </tr>
+                    `;
+                  });
+                  html += `
+                        </tbody>
+                      </table>
+                    </div>
+                  `;
+                  mdrgtLogs.innerHTML = html;
+                } else {
+                  mdrgtLogs.innerHTML = `
+                    <div class="alert alert-info text-center my-4 shadow-sm rounded">
+                      <i class="fa fa-info-circle me-2"></i>No hay detalles para este registro.
+                    </div>
+                  `;
+                }
+              }
+            } catch (error) {
+              if (mdrgtLogs) {
+                mdrgtLogs.innerHTML = `
+                  <div class="alert alert-danger text-center my-4 shadow-sm rounded">
+                    <i class="fa fa-exclamation-triangle me-2"></i>Error al obtener el detalle del registro.
+                  </div>
+                `;
+              }
+              console.error("Error al obtener el detalle del log:", error);
             }
           });
         });
+
+        // Evento para mostrar detalles en móvil (debajo del registro)
+        const btnsDetalleMobile = mdlftLogs.querySelectorAll('.btn-detalle-mobile');
+        btnsDetalleMobile.forEach(btn => {
+          btn.addEventListener('click', async function (e) {
+            e.preventDefault();
+            const logId = this.getAttribute('data-id');
+            const parentCard = this.closest('.log-mobile-row');
+            const detalleContainer = parentCard.querySelector('.detalle-mobile-container');
+            // Toggle: si ya está abierto, ciérralo
+            if (detalleContainer.getAttribute('data-open') === '1') {
+              detalleContainer.innerHTML = '';
+              detalleContainer.setAttribute('data-open', '0');
+              return;
+            }
+            // Cierra otros detalles abiertos
+            mdlftLogs.querySelectorAll('.detalle-mobile-container').forEach(dc => {
+              dc.innerHTML = '';
+              dc.setAttribute('data-open', '0');
+            });
+            detalleContainer.innerHTML = `
+              <div class="d-flex justify-content-center align-items-center my-2" style="min-height:40px;">
+                <div class="spinner-border text-primary" role="status" style="width:1.5rem;height:1.5rem;"></div>
+              </div>
+            `;
+            detalleContainer.setAttribute('data-open', '1');
+            try {
+              const response = await fetch(
+                `${config.HOST}app/controllers/Logs.controllers.php`,
+                {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    operacion: "obtenerDetallados",
+                    id: logId,
+                  }),
+                }
+              );
+              const data = await response.json();
+              if (Array.isArray(data[0]) && data[0].length > 0) {
+                let html = `
+                  <div class="table-responsive mt-2">
+                    <table class="table table-sm table-bordered table-striped align-middle mb-0 shadow-sm rounded" style="font-size:0.85rem;">
+                      <thead class="table-primary">
+                        <tr>
+                          <th class="text-center px-2 py-1" style="width:90px;">Campo</th>
+                          <th class="text-center px-2 py-1" style="width:90px;">Antes</th>
+                          <th class="text-center px-2 py-1" style="width:90px;">Después</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                `;
+                data[0].forEach(det => {
+                  function renderJsonAsText(jsonStr) {
+                    try {
+                      const obj = JSON.parse(jsonStr);
+                      if (typeof obj === 'object' && obj !== null) {
+                        return `<pre class="mb-0" style="font-size:0.82rem; max-height:120px; overflow:auto; white-space:pre-wrap; word-break:break-all;">${JSON.stringify(obj, null, 2)}</pre>`;
+                      }
+                    } catch (e) { }
+                    return `<pre class="mb-0" style="font-size:0.82rem; max-height:120px; overflow:auto; white-space:pre-wrap; word-break:break-all;">${jsonStr || ''}</pre>`;
+                  }
+                  html += `
+                    <tr>
+                      <td class="text-center px-2 py-1">${det.campo || ''}</td>
+                      <td class="px-2 py-1">${renderJsonAsText(det.valor_anterior)}</td>
+                      <td class="px-2 py-1">${renderJsonAsText(det.valor_nuevo)}</td>
+                    </tr>
+                  `;
+                });
+                html += `
+                      </tbody>
+                    </table>
+                  </div>
+                `;
+                detalleContainer.innerHTML = html;
+              } else {
+                detalleContainer.innerHTML = `
+                  <div class="alert alert-info text-center my-2 shadow-sm rounded">
+                    <i class="fa fa-info-circle me-2"></i>No hay detalles para este registro.
+                  </div>
+                `;
+              }
+            } catch (error) {
+              detalleContainer.innerHTML = `
+                <div class="alert alert-danger text-center my-2 shadow-sm rounded">
+                  <i class="fa fa-exclamation-triangle me-2"></i>Error al obtener el detalle del registro.
+                </div>
+              `;
+              console.error("Error al obtener el detalle del log:", error);
+            }
+          });
+        });
+
       } else {
         mdlftLogs.innerHTML = `
           <div class="alert alert-info text-center my-4 shadow-sm rounded">
@@ -1174,7 +1381,6 @@ window.addEventListener("DOMContentLoaded", async () => {
       if (mdrgtLogs) mdrgtLogs.innerHTML = "";
       console.error("Error al obtener los registros del contrato:", error);
     }
-    modal.show();
   };
 
   (async () => {

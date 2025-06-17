@@ -16,7 +16,7 @@ CREATE TABLE tb_detalle_cambios (
     campo VARCHAR(64) NOT NULL,
     valor_anterior TEXT,
     valor_nuevo TEXT,
-    FOREIGN KEY (id_log) REFERENCES tb_logs_sistema(id_log) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (id_log) REFERENCES tb_logs_sistema (id_log) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS tb_tablas_log (
@@ -25,44 +25,42 @@ CREATE TABLE IF NOT EXISTS tb_tablas_log (
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NULL DEFAULT NULL,
     inactive_at TIMESTAMP NULL DEFAULT NULL
-) ENGINE=InnoDB;
+) ENGINE = InnoDB;
 
-
-INSERT INTO tb_tablas_log (nombre_tabla) VALUES
-('tb_departamentos'),
-('tb_provincias'),
-('tb_distritos'),
-('tb_roles'),
-('tb_servicios'),
-('tb_sectores'),
-('tb_mufas'),
-('tb_cajas'),
-('tb_lineas'),
-('tb_personas'),
-('tb_empresas'),
-('tb_usuarios'),
-('tb_responsables'),
-('tb_paquetes'),
-('tb_clientes'),
-('tb_contratos'),
-('tb_contactabilidad'),
-('tb_soporte'),
-('tb_almacen'),
-('tb_marca'),
-('tb_tipoproducto'),
-('tb_unidadmedida'),
-('tb_productos'),
-('tb_tipooperacion'),
-('tb_kardex'),
-('tb_base'),
-('tb_subbase'),
-('tb_antenas');
-
-SELECT * FROM 
-;
+INSERT INTO
+    tb_tablas_log (nombre_tabla)
+VALUES ('tb_departamentos'),
+    ('tb_provincias'),
+    ('tb_distritos'),
+    ('tb_roles'),
+    ('tb_servicios'),
+    ('tb_sectores'),
+    ('tb_mufas'),
+    ('tb_cajas'),
+    ('tb_lineas'),
+    ('tb_personas'),
+    ('tb_empresas'),
+    ('tb_usuarios'),
+    ('tb_responsables'),
+    ('tb_paquetes'),
+    ('tb_clientes'),
+    ('tb_contratos'),
+    ('tb_contactabilidad'),
+    ('tb_soporte'),
+    ('tb_almacen'),
+    ('tb_marca'),
+    ('tb_tipoproducto'),
+    ('tb_unidadmedida'),
+    ('tb_productos'),
+    ('tb_tipooperacion'),
+    ('tb_kardex'),
+    ('tb_base'),
+    ('tb_subbase'),
+    ('tb_antenas');
 
 -- TRIGGER: Registro, actualización e inhabilitación de contrato (INSERT/UPDATE)
 DROP TRIGGER IF EXISTS trg_contratos_log;
+
 CREATE TRIGGER trg_contratos_log
 AFTER INSERT ON tb_contratos
 FOR EACH ROW
@@ -100,13 +98,16 @@ BEGIN
     );
 END;
 
+DELIMITER $$
+
+DROP TRIGGER IF EXISTS trg_contratos_log_update$$
+
 CREATE TRIGGER trg_contratos_log_update
 AFTER UPDATE ON tb_contratos
 FOR EACH ROW
 BEGIN
-    -- UPDATE: Actualización de contrato
+    -- Inhabilitación de contrato
     IF (OLD.inactive_at IS NULL AND NEW.inactive_at IS NOT NULL) THEN
-        -- Inhabilitación de contrato
         INSERT INTO tb_logs_sistema (
             id_responsable,
             log_level,
@@ -183,48 +184,45 @@ BEGIN
                   LIMIT 1)
             );
 
-            -- Insertar detalle de cambios solo para los campos que cambiaron
+            SET @last_log_id = LAST_INSERT_ID();
+
             IF OLD.id_paquete <> NEW.id_paquete THEN
                 INSERT INTO tb_detalle_cambios (id_log, id_registro, campo, valor_anterior, valor_nuevo)
-                VALUES (LAST_INSERT_ID(), NEW.id_contrato, 'id_paquete', OLD.id_paquete, NEW.id_paquete);
+                VALUES (@last_log_id, NEW.id_contrato, 'id_paquete', OLD.id_paquete, NEW.id_paquete);
             END IF;
             IF OLD.id_sector <> NEW.id_sector THEN
                 INSERT INTO tb_detalle_cambios (id_log, id_registro, campo, valor_anterior, valor_nuevo)
-                VALUES (LAST_INSERT_ID(), NEW.id_contrato, 'id_sector', OLD.id_sector, NEW.id_sector);
+                VALUES (@last_log_id, NEW.id_contrato, 'id_sector', OLD.id_sector, NEW.id_sector);
             END IF;
             IF OLD.direccion_servicio <> NEW.direccion_servicio THEN
                 INSERT INTO tb_detalle_cambios (id_log, id_registro, campo, valor_anterior, valor_nuevo)
-                VALUES (LAST_INSERT_ID(), NEW.id_contrato, 'direccion_servicio', OLD.direccion_servicio, NEW.direccion_servicio);
+                VALUES (@last_log_id, NEW.id_contrato, 'direccion_servicio', OLD.direccion_servicio, NEW.direccion_servicio);
             END IF;
             IF OLD.referencia <> NEW.referencia THEN
                 INSERT INTO tb_detalle_cambios (id_log, id_registro, campo, valor_anterior, valor_nuevo)
-                VALUES (LAST_INSERT_ID(), NEW.id_contrato, 'referencia', OLD.referencia, NEW.referencia);
+                VALUES (@last_log_id, NEW.id_contrato, 'referencia', OLD.referencia, NEW.referencia);
             END IF;
             IF OLD.coordenada <> NEW.coordenada THEN
                 INSERT INTO tb_detalle_cambios (id_log, id_registro, campo, valor_anterior, valor_nuevo)
-                VALUES (LAST_INSERT_ID(), NEW.id_contrato, 'coordenada', OLD.coordenada, NEW.coordenada);
+                VALUES (@last_log_id, NEW.id_contrato, 'coordenada', OLD.coordenada, NEW.coordenada);
             END IF;
             IF OLD.fecha_inicio <> NEW.fecha_inicio THEN
                 INSERT INTO tb_detalle_cambios (id_log, id_registro, campo, valor_anterior, valor_nuevo)
-                VALUES (LAST_INSERT_ID(), NEW.id_contrato, 'fecha_inicio', OLD.fecha_inicio, NEW.fecha_inicio);
+                VALUES (@last_log_id, NEW.id_contrato, 'fecha_inicio', OLD.fecha_inicio, NEW.fecha_inicio);
             END IF;
             IF OLD.nota <> NEW.nota THEN
                 INSERT INTO tb_detalle_cambios (id_log, id_registro, campo, valor_anterior, valor_nuevo)
-                VALUES (LAST_INSERT_ID(), NEW.id_contrato, 'nota', OLD.nota, NEW.nota);
+                VALUES (@last_log_id, NEW.id_contrato, 'nota', OLD.nota, NEW.nota);
             END IF;
             IF OLD.ficha_instalacion <> NEW.ficha_instalacion THEN
                 INSERT INTO tb_detalle_cambios (id_log, id_registro, campo, valor_anterior, valor_nuevo)
-                VALUES (LAST_INSERT_ID(), NEW.id_contrato, 'ficha_instalacion', OLD.ficha_instalacion, NEW.ficha_instalacion);
+                VALUES (@last_log_id, NEW.id_contrato, 'ficha_instalacion', OLD.ficha_instalacion, NEW.ficha_instalacion);
             END IF;
         END IF;
     END IF;
-END;
+END$$
 
-
-SELECT * FROM tb_logs_sistema;
-SELECT * FROM tb_detalle_cambios;
-
-
+DELIMITER ;
 
 DELIMITER $$
 
@@ -253,23 +251,34 @@ BEGIN
             AND d.id_registro = p_id_registro
         WHERE l.table_name = v_table_name
           AND l.id_registro_modificado = p_id_registro
+          GROUP BY l.id_log
         ORDER BY l.id_log ASC;
     ELSE
         SELECT 'Opción de tabla no válida.' AS error;
     END IF;
 END$$
 
-DELIMITER ;
+DELIMITER;
 
 DELIMITER $$
 
 DROP PROCEDURE IF EXISTS sp_getlogs_cascade$$
-CREATE PROCEDURE sp_getlogs_by_table_and_id(
+
+CREATE PROCEDURE sp_getlogs_cascade(
     IN p_id_log BIGINT
 )
+BEGIN
+    SELECT *
+    FROM tb_detalle_cambios
+    WHERE id_log = p_id_log;
+END$$
 
+CALL sp_getlogs_by_table_and_id (16, 748);
 
-
-CALL sp_getlogs_by_table_and_id(16, 748);
+CALL sp_getlogs_cascade (748);
 
 SELECT * FROM vw_contratos_listar_ficha_null
+
+SELECT * FROM tb_logs_sistema;
+
+SELECT * FROM tb_detalle_cambios;

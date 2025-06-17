@@ -655,7 +655,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     placeholder: "Buscar producto...",
     allowClear: true,
     ajax: {
-      url: `${config.HOST}app/controllers/Producto.controllers.php`,
       dataType: "json",
       delay: 300,
       data: function (params) {
@@ -667,7 +666,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
       },
       transport: function (params, success, failure) {
-        const url = params.url;
+        const url = `${config.HOST}app/controllers/Producto.controllers.php`;
         const term = params.data.codigoBarra;
         const fetchTipo = tipo =>
           $.ajax({
@@ -680,10 +679,11 @@ document.addEventListener('DOMContentLoaded', async () => {
               categoria: "",
             }
           });
-        $.when(fetchTipo("Router"), fetchTipo("ONT"))
-          .done(function (routerRes, ontRes) {
+        $.when(fetchTipo("Router"), fetchTipo("ONT"), fetchTipo("OnuBridge"))
+          .done(function (routerRes, ontRes,OnuRes) {
             const routerData = routerRes[0];
             const ontData = ontRes[0];
+            const OnuBridge = OnuRes[0];
 
             const merged = []
               .concat(
@@ -692,6 +692,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                   : [],
                 Array.isArray(ontData)
                   ? ontData.map(item => ({ ...item, _tipo: "ONT" }))
+                  : [],
+                Array.isArray(OnuBridge)
+                  ? OnuBridge.map(item => ({ ...item, _tipo: "OnuBridge" }))
                   : []
               );
             success({ results: merged });
