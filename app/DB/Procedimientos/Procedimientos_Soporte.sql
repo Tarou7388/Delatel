@@ -117,6 +117,7 @@ BEGIN
     WHERE id_soporte = p_id_soporte;
 END $$
 
+DELIMITER $$
 DROP PROCEDURE IF EXISTS spu_soporte_filtrar_prioridad;
 
 CREATE PROCEDURE spu_soporte_filtrar_prioridad (
@@ -144,7 +145,8 @@ BEGIN
         r.id_usuario AS id_tecnico,
         CONCAT(p_tecnico.nombres, ' ', p_tecnico.apellidos) AS nombre_tecnico,
         GROUP_CONCAT(DISTINCT srv.tipo_servicio) AS tipos_servicio,
-        GROUP_CONCAT(DISTINCT srv.servicio) AS servicios
+        GROUP_CONCAT(DISTINCT srv.servicio) AS servicios,
+        u_create.nombre_user AS nombre_usuario
     FROM
         tb_soporte s
         LEFT JOIN tb_contratos c ON s.id_contrato = c.id_contrato
@@ -164,6 +166,8 @@ BEGIN
                 '}'
             )
         )
+        INNER JOIN tb_responsables r_create ON s.iduser_create = r_create.id_responsable
+        INNER JOIN tb_usuarios u_create ON r_create.id_usuario = u_create.id_usuario
     WHERE
         c.inactive_at IS NULL
         AND s.estaCompleto != 1

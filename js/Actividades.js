@@ -238,52 +238,68 @@ window.addEventListener("DOMContentLoaded", async function () {
       </thead>
       <tbody id="tbodyKardex"></tbody>
     </table>
-    `
+    `;
     let tablaKardex = null;
 
-    function renderDataTable() {
-      tablaKardex = new DataTable("#tablaKardex", {
-        order: [[0, 'desc']],
-        columnDefs: [{ targets: 0, visible: false }],
-        language: { url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json" }
-      });
-    }
-
-    const response = await fetch(`${config.HOST}app/controllers/Kardex.controllers.php?operacion=listarKardex`);
+    const response = await fetch(`${config.HOST}app/controllers/Kardex.ssp.php`);
     const data = await response.json();
 
     const tbody = document.querySelector("#tablaKardex tbody");
-    tbody.innerHTML = data.map(element => `
+    tbody.innerHTML = data.data.map(element => `
       <tr>
-        <td class="text-center">${element.id_kardex}</td>
-        <td class="text-center">${element.fecha}</td>
-        <td class="text-center">${element.nombre_marca}</td>
-        <td class="text-center">${element.tipo_producto}</td>
-        <td class="text-center">${element.saldo_total}</td>
-        <td class="text-center">${element.tipo_operacion}</td>
+        <td class="text-center">${element[0]}</td>
+        <td class="text-center">${element[6]}</td>
+        <td class="text-center">${element[4]}</td>
+        <td class="text-center">${element[3]}</td>
+        <td class="text-center">${element[10]}</td>
+        <td class="text-center">${element[7]}</td>
         <td class="text-center">
-          <button class="btn btn-primary btn-detalle" data-id="${element.id_kardex}"><i class="fa-regular fa-clipboard"></i></button>
+          <button class="btn btn-primary btn-detalle" data-id="${element[0]}"><i class="fa-regular fa-clipboard"></i></button>
         </td>
       </tr>`).join('');
 
-    renderDataTable();
+    tablaKardex = $('#tablaKardex').DataTable({
+      order: [[0, 'desc']],
+      columnDefs: [{ targets: 0, visible: false }],
+      language: { url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json" }
+    });
 
     document.querySelectorAll('.btn-detalle').forEach(button => {
       button.addEventListener('click', (event) => {
         const id = event.currentTarget.getAttribute('data-id');
-        const kardex = data.find(element => element.id_kardex == id);
+        // Buscar el registro en data.data (array de arrays)
+        const row = data.data.find(element => element[0] == id);
+        if (!row) return;
 
+        // Asignar valores a los campos del modal solo si existen
+        const idElem = document.getElementById('detalleIdKardex');
+        if (idElem) idElem.innerText = row[0];
 
-        document.getElementById('detalleIdKardex').innerText = kardex.id_kardex;
-        document.getElementById('detalleUsuario').innerText = kardex.creado_por;
-        document.getElementById('detalleFecha').innerText = kardex.fecha;
-        document.getElementById('detalleMarca').innerText = kardex.nombre_marca;
-        document.getElementById('detalleTipo').innerText = kardex.tipo_producto;
-        document.getElementById('detalleSaldo').innerText = kardex.saldo_total;
-        document.getElementById('detalleTipoMovimiento').innerText = kardex.tipo_movimiento;
-        document.getElementById('detalleMotivo').innerText = kardex.tipo_operacion;
+        const usuarioElem = document.getElementById('detalleUsuario');
+        if (usuarioElem) usuarioElem.innerText = row[1] || '';
 
-        new bootstrap.Modal(document.getElementById('detalleModalKardex')).show();
+        const fechaElem = document.getElementById('detalleFecha');
+        if (fechaElem) fechaElem.innerText = row[6] || '';
+
+        const marcaElem = document.getElementById('detalleMarca');
+        if (marcaElem) marcaElem.innerText = row[4] || '';
+
+        const tipoElem = document.getElementById('detalleTipo');
+        if (tipoElem) tipoElem.innerText = row[3] || '';
+
+        const saldoElem = document.getElementById('detalleSaldo');
+        if (saldoElem) saldoElem.innerText = row[10] || '';
+
+        const tipoMovElem = document.getElementById('detalleTipoMovimiento');
+        if (tipoMovElem) tipoMovElem.innerText = row[8] || '';
+
+        const motivoElem = document.getElementById('detalleMotivo');
+        if (motivoElem) motivoElem.innerText = row[7] || '';
+
+        const modalElem = document.getElementById('detalleModalKardex');
+        if (modalElem) {
+          new bootstrap.Modal(modalElem).show();
+        }
       });
     });
   }

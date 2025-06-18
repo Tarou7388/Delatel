@@ -101,6 +101,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         className: "text-center user-select-none d-none d-sm-table-cell"
       },
       {
+        data: "nombre_usuario",
+        title: "Usuario",
+        className: "text-center user-select-none d-none d-sm-table-cell"
+      },
+      {
         data: "tipos_servicio",
         title: "Servicios",
         className: "text-center user-select-none d-none d-sm-table-cell",
@@ -142,10 +147,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     ],
     [
       { width: "4%", targets: 0 },
-      { width: "15%", targets: 1 },
-      { width: "20%", targets: 2 },
+      { width: "10%", targets: 1 },
+      { width: "10%", targets: 2 },
       { width: "20%", targets: 3 },
-      { width: "10%", targets: 4 },
+      { width: "25%", targets: 4 },
       { width: "10%", targets: 5 }
     ],
     {
